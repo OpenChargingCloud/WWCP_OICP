@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Net.Security;
 using System.Security.Authentication;
 
@@ -481,7 +480,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
                             LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
                             RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
-                            SslProtocols                          AllowedTLSProtocols                = SslProtocols.Tls12 | SslProtocols.Tls13,
+                            SslProtocols?                         AllowedTLSProtocols                = null,
+                            Boolean?                              ClientCertificateRequired          = null,
+                            Boolean?                              CheckCertificateRevocation         = null,
 
                             String?                               ServerThreadName                   = null,
                             ThreadPriority?                       ServerThreadPriority               = null,
@@ -526,6 +527,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
+                   ClientCertificateRequired,
+                   CheckCertificateRevocation,
 
                    ServerThreadName,
                    ServerThreadPriority,

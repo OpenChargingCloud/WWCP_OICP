@@ -727,7 +727,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
                             LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
                             RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
-                            SslProtocols                          AllowedTLSProtocols                = SslProtocols.Tls12 | SslProtocols.Tls13,
+                            SslProtocols?                         AllowedTLSProtocols                = null,
+                            Boolean?                              ClientCertificateRequired          = null,
+                            Boolean?                              CheckCertificateRevocation         = null,
 
                             String?                               ServerThreadName                   = null,
                             ThreadPriority?                       ServerThreadPriority               = null,
@@ -772,6 +774,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
+                   ClientCertificateRequired,
+                   CheckCertificateRevocation,
 
                    ServerThreadName,
                    ServerThreadPriority,
@@ -1042,11 +1046,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEDataResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                          CustomStatusCodeSerializer).
-                                                                                                                   ToString(JSONFormatting).
-                                                                                                                   ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                           CustomStatusCodeSerializer).
+                                                                                                                    ToString(JSONFormatting).
+                                                                                                                    ToUTF8Bytes()
+                                                                                                          ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1241,11 +1246,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEStatusResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                            CustomStatusCodeSerializer).
-                                                                                                                     ToString(JSONFormatting).
-                                                                                                                     ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                             CustomStatusCodeSerializer).
+                                                                                                                      ToString(JSONFormatting).
+                                                                                                                      ToUTF8Bytes()
+                                                                                                            ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1428,12 +1434,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizationStartResponse.Response.ToJSON(CustomAuthorizationStartSerializer,
-                                                                                                                                CustomStatusCodeSerializer,
-                                                                                                                                CustomIdentificationSerializer).
-                                                                                                                         ToString(JSONFormatting).
-                                                                                                                         ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = authorizationStartResponse.Response?.ToJSON(CustomAuthorizationStartSerializer,
+                                                                                                                                 CustomStatusCodeSerializer,
+                                                                                                                                 CustomIdentificationSerializer).
+                                                                                                                          ToString(JSONFormatting).
+                                                                                                                          ToUTF8Bytes()
+                                                                                                                ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1615,11 +1622,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizationStopResponse.Response.ToJSON(CustomAuthorizationStopSerializer,
-                                                                                                                               CustomStatusCodeSerializer).
-                                                                                                                        ToString(JSONFormatting).
-                                                                                                                        ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = authorizationStopResponse.Response?.ToJSON(CustomAuthorizationStopSerializer,
+                                                                                                                                CustomStatusCodeSerializer).
+                                                                                                                         ToString(JSONFormatting).
+                                                                                                                         ToUTF8Bytes()
+                                                                                                               ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -2276,11 +2284,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = acknowledgement.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                     CustomStatusCodeSerializer).
-                                                                                                              ToString(JSONFormatting).
-                                                                                                              ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = acknowledgement.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                      CustomStatusCodeSerializer).
+                                                                                                               ToString(JSONFormatting).
+                                                                                                               ToUTF8Bytes()
+                                                                                                     ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -2476,10 +2485,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = chargeDetailRecordResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                CustomStatusCodeSerializer).
-                                                                                                                         ToString(JSONFormatting).
-                                                                                                                         ToUTF8Bytes(),
+                                                        Content                    = chargeDetailRecordResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                                          ToString(JSONFormatting).
+                                                                                                                          ToUTF8Bytes()
+                                                                                                                ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 

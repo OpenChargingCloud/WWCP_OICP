@@ -65,7 +65,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
         /// </summary>
         public EMPClientAPI        EMPClientAPI          { get; }
 
-        private HashSet<EMPServerAPIClient> empServerAPIClients;
+        private readonly HashSet<EMPServerAPIClient> empServerAPIClients;
 
         /// <summary>
         /// All EMP Server API clients.
@@ -79,7 +79,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
         /// </summary>
         public CPOClientAPI        CPOClientAPI          { get; }
 
-        private HashSet<CPOServerAPIClient> cpoServerAPIClients;
+        private readonly HashSet<CPOServerAPIClient> cpoServerAPIClients;
 
         /// <summary>
         /// All CPO Server API clients.
@@ -91,22 +91,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
         #region Events
 
-        #region Generic HTTP/SOAP server logging
+        #region Generic HTTP server logging
 
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public HTTPRequestLogEvent   RequestLog    = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent   RequestLog    = new ();
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public HTTPResponseLogEvent  ResponseLog   = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent  ResponseLog   = new ();
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public HTTPErrorLogEvent     ErrorLog      = new HTTPErrorLogEvent();
+        public HTTPErrorLogEvent     ErrorLog      = new ();
 
         #endregion
 
@@ -138,6 +138,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                               RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
                               LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
                               SslProtocols?                         AllowedTLSProtocols                = null,
+                              Boolean?                              ClientCertificateRequired          = null,
+                              Boolean?                              CheckCertificateRevocation         = null,
 
                               String?                               ServerThreadName                   = null,
                               ThreadPriority?                       ServerThreadPriority               = null,
@@ -182,10 +184,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                       ClientCertificateValidator,
                                       ClientCertificateSelector,
                                       AllowedTLSProtocols,
+                                      ClientCertificateRequired,
+                                      CheckCertificateRevocation,
 
                                       ServerThreadName,
                                       ServerThreadPriority,
                                       ServerThreadIsBackground,
+
                                       ConnectionIdBuilder,
                                       ConnectionThreadsNameBuilder,
                                       ConnectionThreadsPriorityBuilder,
@@ -284,8 +289,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
         #endregion
 
+        #region Dispose()
+
         public void Dispose()
-        { }
+        {
+
+            if (EMPClientAPI is not null)
+                EMPClientAPI.Dispose();
+
+            if (CPOClientAPI is not null)
+                CPOClientAPI.Dispose();
+
+            foreach (var empServerAPIClient in EMPServerAPIClients)
+                empServerAPIClient.Dispose();
+
+            foreach (var cpoServerAPIClient in CPOServerAPIClients)
+                cpoServerAPIClient.Dispose();
+
+        }
+
+        #endregion
 
     }
 

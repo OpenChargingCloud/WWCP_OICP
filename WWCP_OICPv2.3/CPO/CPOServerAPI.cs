@@ -418,7 +418,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
                             LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
                             RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
-                            SslProtocols                          AllowedTLSProtocols                = SslProtocols.Tls12 | SslProtocols.Tls13,
+                            SslProtocols?                         AllowedTLSProtocols                = null,
+                            Boolean?                              ClientCertificateRequired          = null,
+                            Boolean?                              CheckCertificateRevocation         = null,
 
                             String?                               ServerThreadName                   = null,
                             ThreadPriority?                       ServerThreadPriority               = null,
@@ -463,6 +465,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
+                   ClientCertificateRequired,
+                   CheckCertificateRevocation,
 
                    ServerThreadName,
                    ServerThreadPriority,

@@ -485,17 +485,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given PullEVSEData request must not be null!");
-
             //Request = _CustomPullEVSEDataRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEData request must not be null!");
-
-
-            Byte                              TransmissionRetry   = 0;
-            OICPResult<PullEVSEDataResponse>  result              = null;
+            Byte                               TransmissionRetry   = 0;
+            OICPResult<PullEVSEDataResponse>?  result              = null;
 
             #endregion
 
@@ -908,17 +901,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given PullEVSEStatus request must not be null!");
-
             //Request = _CustomPullEVSEStatusRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEStatus request must not be null!");
-
-
-            Byte                                TransmissionRetry   = 0;
-            OICPResult<PullEVSEStatusResponse>  result              = null;
+            Byte                                 TransmissionRetry   = 0;
+            OICPResult<PullEVSEStatusResponse>?  result              = null;
 
             #endregion
 
@@ -1280,17 +1266,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given PullEVSEStatusById request must not be null!");
-
             //Request = _CustomPullEVSEStatusByIdRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEStatusById request must not be null!");
-
-
-            Byte                                    TransmissionRetry   = 0;
-            OICPResult<PullEVSEStatusByIdResponse>  result              = null;
+            Byte                                     TransmissionRetry   = 0;
+            OICPResult<PullEVSEStatusByIdResponse>?  result              = null;
 
             #endregion
 
@@ -1652,17 +1631,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given PullEVSEStatusByOperatorId request must not be null!");
-
             //Request = _CustomPullEVSEStatusByOperatorIdRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped PullEVSEStatusByOperatorId request must not be null!");
-
-
-            Byte                                TransmissionRetry   = 0;
-            OICPResult<PullEVSEStatusByOperatorIdResponse>  result              = null;
+            Byte                                             TransmissionRetry   = 0;
+            OICPResult<PullEVSEStatusByOperatorIdResponse>?  result              = null;
 
             #endregion
 
@@ -2810,17 +2782,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteReservationStop request must not be null!");
-
             //Request = _CustomAuthorizeRemoteReservationStopRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteReservationStop request must not be null!");
-
-
-            Byte                                                     TransmissionRetry   = 0;
-            OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>  result              = null;
+            Byte                                                                 TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>?  result              = null;
 
             #endregion
 
@@ -3209,14 +3174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request is null)
-                throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteStart request must not be null!");
-
             //Request = _CustomAuthorizeRemoteStartRequestMapper(Request);
-
-            if (Request is null)
-                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteStart request must not be null!");
-
 
             Byte                                                       TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>?  result              = null;
@@ -3608,17 +3566,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given AuthorizeRemoteStop request must not be null!");
-
             //Request = _CustomAuthorizeRemoteStopRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeRemoteStop request must not be null!");
-
-
-            Byte                                                     TransmissionRetry   = 0;
-            OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>  result              = null;
+            Byte                                                      TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>?  result              = null;
 
             #endregion
 
@@ -4008,14 +3959,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (Request is null)
-                throw new ArgumentNullException(nameof(Request), "The given GetChargeDetailRecords request must not be null!");
-
             //Request = _CustomGetChargeDetailRecordsRequestMapper(Request);
-
-            if (Request is null)
-                throw new ArgumentNullException(nameof(Request), "The mapped GetChargeDetailRecords request must not be null!");
-
 
             Byte                                         TransmissionRetry   = 0;
             OICPResult<GetChargeDetailRecordsResponse>?  result              = null;

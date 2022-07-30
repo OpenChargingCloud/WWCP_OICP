@@ -997,7 +997,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region HardwareManufacturer                    [optional]
 
+#pragma warning disable CA1507 // Use nameof to express symbol names
                 var HardwareManufacturer = JSON["HardwareManufacturer"]?.Value<String>();
+#pragma warning restore CA1507 // Use nameof to express symbol names
 
                 #endregion
 
@@ -1017,7 +1019,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region SubOperatorName                         [optional]
 
+#pragma warning disable CA1507 // Use nameof to express symbol names
                 var SubOperatorName = JSON["SubOperatorName"]?.Value<String>();
+#pragma warning restore CA1507 // Use nameof to express symbol names
 
                 #endregion
 
@@ -1100,13 +1104,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (ErrorResponse is not null)
                     {
 
-                        if ((JSON["AdditionalInfo"] as JArray).Count == 0)
-                        {
-                            // Allow "[]", because of Hubject data quality issues!
-                        }
-
-                        else
-                            return false;
+                        // Allow "[]", because of Hubject data quality issues!
+                        return JSON[nameof(AdditionalInfo)] is JArray array &&
+                               array.Count == 0;
 
                     }
                 }
@@ -1186,7 +1186,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                        [optional]
 
+#pragma warning disable CA1507 // Use nameof to express symbol names
                 var CustomData = JSON["CustomData"] as JObject;
+#pragma warning restore CA1507 // Use nameof to express symbol names
 
                 #endregion
 
@@ -1422,46 +1424,46 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EVSEDataRecord Clone
 
-            => new EVSEDataRecord(Id.                               Clone,
-                                  OperatorId.                       Clone,
-                                  new String(OperatorName.ToCharArray()),
-                                  ChargingStationName.              Clone,
-                                  Address.                          Clone,
-                                  GeoCoordinates.                   Clone,
-                                  PlugTypes.                        ToArray(),
-                                  ChargingFacilities.               ToArray(),
-                                  RenewableEnergy,
-                                  CalibrationLawDataAvailability,
-                                  AuthenticationModes.              ToArray(),
-                                  PaymentOptions.                   ToArray(),
-                                  ValueAddedServices.               ToArray(),
-                                  Accessibility,
-                                  HotlinePhoneNumber?.              Clone,
-                                  IsOpen24Hours,
-                                  IsHubjectCompatible,
-                                  DynamicInfoAvailable,
+            => new (Id.                               Clone,
+                    OperatorId.                       Clone,
+                    new String(OperatorName.ToCharArray()),
+                    ChargingStationName.              Clone,
+                    Address.                          Clone,
+                    GeoCoordinates.                   Clone,
+                    PlugTypes.                        ToArray(),
+                    ChargingFacilities.               ToArray(),
+                    RenewableEnergy,
+                    CalibrationLawDataAvailability,
+                    AuthenticationModes.              ToArray(),
+                    PaymentOptions.                   ToArray(),
+                    ValueAddedServices.               ToArray(),
+                    Accessibility,
+                    HotlinePhoneNumber?.              Clone,
+                    IsOpen24Hours,
+                    IsHubjectCompatible,
+                    DynamicInfoAvailable,
 
-                                  DeltaType,
-                                  LastUpdate,
+                    DeltaType,
+                    LastUpdate,
 
-                                  ChargingStationId?.               Clone,
-                                  ChargingPoolId?.                  Clone,
-                                  HardwareManufacturer != null ? new String(HardwareManufacturer.ToCharArray()) : null,
-                                  ChargingStationImageURL?.         Clone,
-                                  SubOperatorName      != null ? new String(SubOperatorName.     ToCharArray()) : null,
-                                  DynamicPowerLevel,
-                                  EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray(),
-                                  EnvironmentalImpact?.             Clone,
-                                  MaxCapacity,
-                                  AccessibilityLocationType,
-                                  AdditionalInfo?.                  Clone,
-                                  ChargingStationLocationReference?.Clone,
-                                  GeoChargingPointEntrance?.        Clone,
-                                  OpeningTimes. SafeSelect(openingTime  => openingTime. Clone).ToArray(),
-                                  HubOperatorId?.                   Clone,
-                                  ClearingHouseId?.                 Clone,
+                    ChargingStationId?.               Clone,
+                    ChargingPoolId?.                  Clone,
+                    HardwareManufacturer is not null ? new String(HardwareManufacturer.ToCharArray()) : null,
+                    ChargingStationImageURL?.         Clone,
+                    SubOperatorName      is not null ? new String(SubOperatorName.     ToCharArray()) : null,
+                    DynamicPowerLevel,
+                    EnergySources        is not null ? EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray() : null,
+                    EnvironmentalImpact?.             Clone,
+                    MaxCapacity,
+                    AccessibilityLocationType,
+                    AdditionalInfo?.                  Clone,
+                    ChargingStationLocationReference?.Clone,
+                    GeoChargingPointEntrance?.        Clone,
+                    OpeningTimes         is not null ? OpeningTimes. SafeSelect(openingTime  => openingTime. Clone).ToArray() : null,
+                    HubOperatorId?.                   Clone,
+                    ClearingHouseId?.                 Clone,
 
-                                  CustomData           != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+                    CustomData           is not null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
 
         #endregion
 

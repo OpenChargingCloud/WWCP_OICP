@@ -416,7 +416,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON-representation of this object.
         /// </summary>
         /// <param name="CustomGetChargeDetailRecordsRequestSerializer">A delegate to customize the serialization of GetChargeDetailRecordsRequest responses.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -425,7 +425,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("From",               From.      ToIso8601()),
                            new JProperty("To",                 To.        ToIso8601()),
 
-                           SessionIds is not null && SessionIds.Any()
+                           SessionIds  is not null && SessionIds .Any()
                                ? new JProperty("SessionID",    new JArray(SessionIds. Select(sessionId  => sessionId. ToString())))
                                : null,
 

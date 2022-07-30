@@ -489,17 +489,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given PushEVSEData request must not be null!");
-
             //Request = _CustomPushEVSEDataRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped PushEVSEData request must not be null!");
-
-
-            Byte                                             TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<PushEVSEDataRequest>> result             = null;
+            Byte                                               TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<PushEVSEDataRequest>>?  result              = null;
 
             #endregion
 
@@ -991,17 +984,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given PushEVSEStatus request must not be null!");
-
             //Request = _CustomPushEVSEStatusRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped PushEVSEStatus request must not be null!");
-
-
-            Byte                                               TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<PushEVSEStatusRequest>> result             = null;
+            Byte                                                 TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<PushEVSEStatusRequest>>?  result              = null;
 
             #endregion
 
@@ -1491,17 +1477,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given AuthorizeStart request must not be null!");
-
             //Request = _CustomAuthorizeStartRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStart request must not be null!");
-
-
-            Byte                                    TransmissionRetry   = 0;
-            OICPResult<AuthorizationStartResponse>  result              = null;
+            Byte                                     TransmissionRetry   = 0;
+            OICPResult<AuthorizationStartResponse>?  result              = null;
 
             #endregion
 
@@ -1885,17 +1864,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given AuthorizeStop request must not be null!");
-
             //Request = _CustomAuthorizeStopRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped AuthorizeStop request must not be null!");
-
-
-            Byte                                   TransmissionRetry   = 0;
-            OICPResult<AuthorizationStopResponse>  result              = null;
+            Byte                                    TransmissionRetry   = 0;
+            OICPResult<AuthorizationStopResponse>?  result              = null;
 
             #endregion
 
@@ -2302,17 +2274,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingStartNotification request must not be null!");
-
             //Request = _CustomSendChargingStartNotificationRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingStartNotification request must not be null!");
-
-
-            Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingStartNotificationRequest>> result             = null;
+            Byte                                                            TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<ChargingStartNotificationRequest>>?  result              = null;
 
             #endregion
 
@@ -2764,17 +2729,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingProgressNotification request must not be null!");
-
             //Request = _CustomSendChargingProgressNotificationRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingProgressNotification request must not be null!");
-
-
-            Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingProgressNotificationRequest>> result             = null;
+            Byte                                                               TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>?  result              = null;
 
             #endregion
 
@@ -3226,17 +3184,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingEndNotification request must not be null!");
-
             //Request = _CustomSendChargingEndNotificationRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingEndNotification request must not be null!");
-
-
-            Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingEndNotificationRequest>> result             = null;
+            Byte                                                          TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<ChargingEndNotificationRequest>>?  result              = null;
 
             #endregion
 
@@ -3688,17 +3639,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The given ChargingErrorNotification request must not be null!");
-
             //Request = _CustomSendChargingErrorNotificationRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request),  "The mapped ChargingErrorNotification request must not be null!");
-
-
-            Byte                                                           TransmissionRetry  = 0;
-            OICPResult<Acknowledgement<ChargingErrorNotificationRequest>> result             = null;
+            Byte                                                            TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>?  result              = null;
 
             #endregion
 
@@ -3942,8 +3886,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      errorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
@@ -4151,17 +4095,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The given SendChargeDetailRecord request must not be null!");
-
             //Request = _CustomSendChargeDetailRecordRequestMapper(Request);
 
-            if (Request == null)
-                throw new ArgumentNullException(nameof(Request), "The mapped SendChargeDetailRecord request must not be null!");
-
-
-            Byte                                                        TransmissionRetry   = 0;
-            OICPResult<Acknowledgement<ChargeDetailRecordRequest>>  result              = null;
+            Byte                                                     TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<ChargeDetailRecordRequest>>?  result              = null;
 
             #endregion
 

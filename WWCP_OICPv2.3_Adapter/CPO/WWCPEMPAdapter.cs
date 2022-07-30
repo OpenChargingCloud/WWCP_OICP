@@ -624,7 +624,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Response mapping
 
-                    if (response != null)
+                    if (response is not null)
                     {
                         switch (response.Result)
                         {

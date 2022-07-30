@@ -321,10 +321,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                         if (evseDataRecordJSON is JObject evseDataRecordJObject &&
                             EVSEDataRecord.TryParse(evseDataRecordJObject,
-                                                    out EVSEDataRecord  evseDataRecord,
-                                                    out                 ErrorResponse2))
+                                                    out EVSEDataRecord?  evseDataRecord,
+                                                    out                  ErrorResponse2))
                         {
-                            EVSEDataRecords.Add(evseDataRecord);
+                            EVSEDataRecords.Add(evseDataRecord!);
                         }
 
                         else
@@ -333,7 +333,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             if (evseDataRecordJSON is JObject evseDataRecordJObject2)
                                 ErrorResponse2 = "EVSE " + evseDataRecordJObject2["EvseID"]?.Value<String>() + ": " + ErrorResponse2;
 
-                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, ErrorResponse2)));
+                            if (ErrorResponse2 is not null)
+                                Warnings.Add(Warning.Create(I18NString.Create(Languages.en, ErrorResponse2)));
 
                         }
 

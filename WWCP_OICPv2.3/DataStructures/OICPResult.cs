@@ -56,7 +56,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The result.
         /// </summary>
-        public T                     Response            { get; }
+        public T?                    Response            { get; }
 
         /// <summary>
         /// The request was successful.
@@ -77,14 +77,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The timestamp of the response.
         /// </summary>
-        public DateTime              ResponseTimestamp
-            => Response.ResponseTimestamp;
+        public DateTime?             ResponseTimestamp
+            => Response?.ResponseTimestamp;
 
         /// <summary>
         /// The runtime of the request leading to this response.
         /// </summary>
-        public TimeSpan              Runtime
-            => Response.Runtime;
+        public TimeSpan?             Runtime
+            => Response?.Runtime;
 
         #endregion
 
@@ -99,7 +99,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ValidationErrors">Possible request data validation errors.</param>
         /// <param name="ProcessId">The process identification of the result.</param>
         private OICPResult(Object                Request,
-                           T                     Response,
+                           T?                    Response,
                            Boolean               WasSuccessful,
                            ValidationErrorList?  ValidationErrors   = null,
                            Process_Id?           ProcessId          = null)
@@ -189,7 +189,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             where T2 : IResponse
 
             => new (OICPResult.Request,
-                    (T) (Object) OICPResult.Response,
+                    OICPResult.Response is not null
+                        ? (T) (Object) OICPResult.Response
+                        : default,
                     OICPResult.WasSuccessful,
                     OICPResult.ValidationErrors,
                     OICPResult.ProcessId);

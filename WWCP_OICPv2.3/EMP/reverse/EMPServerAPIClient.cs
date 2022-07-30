@@ -731,7 +731,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -1113,7 +1113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -1491,7 +1491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -1868,7 +1868,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -2245,7 +2245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -2622,7 +2622,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -3000,7 +3000,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }

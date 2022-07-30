@@ -119,12 +119,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SubOperatorName">An optional name of the charging pool suboperator.</param>
         /// <param name="Length">The maximum size of the generated charging pool identification suffix [12 &lt; n &lt; 50].</param>
         /// <param name="Mapper">A delegate to modify a generated charging pool identification suffix.</param>
-        public static ChargingPool_Id Generate(Operator_Id           OperatorId,
-                                               Address               Address,
-                                               GeoCoordinates?       GeoLocation       = null,
-                                               String                SubOperatorName   = null,
-                                               Byte                  Length            = 15,
-                                               Func<String, String>  Mapper            = null)
+        public static ChargingPool_Id Generate(Operator_Id            OperatorId,
+                                               Address                Address,
+                                               GeoCoordinates?        GeoLocation       = null,
+                                               String?                SubOperatorName   = null,
+                                               Byte                   Length            = 15,
+                                               Func<String, String>?  Mapper            = null)
         {
 
             if (Length < 12)
@@ -133,7 +133,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (Length > 50)
                 Length = 50;
 
-            var Suffix = new SHA256CryptoServiceProvider().
+            var Suffix = SHA256.Create().
                              ComputeHash(Encoding.UTF8.GetBytes(
                                              String.Concat(
                                                  OperatorId.  ToString(),
@@ -146,7 +146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          SubstringMax(Length).
                                          ToUpper();
 
-            return Parse(Mapper != null
+            return Parse(Mapper is not null
                             ? Mapper(Suffix)
                             : Suffix);
 
@@ -160,9 +160,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Generate a new unique identification of a charging pool identification.
         /// </summary>
         /// <param name="Mapper">A delegate to modify the newly generated charging pool identification.</param>
-        public static ChargingPool_Id Random(Func<String, String> Mapper = null)
+        public static ChargingPool_Id Random(Func<String, String>? Mapper = null)
 
-            => new ChargingPool_Id(Mapper != null
+            => new ChargingPool_Id(Mapper is not null
                                        ? Mapper(_Random.RandomString(50))
                                        :        _Random.RandomString(50));
 
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out ChargingPool_Id ChargingPoolId)
         {
 
-            Text = Text?.Trim();
+            Text = Text.Trim();
 
             if (Text.IsNotNullOrEmpty())
             {

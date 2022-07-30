@@ -310,9 +310,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             //Request = _CustomAuthorizeRemoteReservationStartMapper(Request);
 
-            Byte                                                                 TransmissionRetry   = 0;
+            Byte                                                                  TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>?  result              = null;
-            var                                                                  processId           = Process_Id.NewRandom;
+            var                                                                   processId           = Process_Id.NewRandom;
 
             #endregion
 
@@ -657,7 +657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -1034,7 +1034,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -1065,9 +1065,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             //Request = _CustomAuthorizeRemoteStartMapper(Request);
 
-            Byte                                                                 TransmissionRetry   = 0;
+            Byte                                                       TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>?  result              = null;
-            var                                                                  processId           = Process_Id.NewRandom;
+            var                                                        processId           = Process_Id.NewRandom;
 
             #endregion
 
@@ -1412,7 +1412,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
@@ -1442,9 +1442,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             //Request = _CustomAuthorizeRemoteStopMapper(Request);
 
-            Byte                                                                 TransmissionRetry   = 0;
+            Byte                                                      TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>?  result              = null;
-            var                                                                  processId           = Process_Id.NewRandom;
+            var                                                       processId           = Process_Id.NewRandom;
 
             #endregion
 
@@ -1789,7 +1789,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        Select(e => e(endtime,
                                                      this,
                                                      result,
-                                                     result.Runtime))).
+                                                     result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
 
             }
