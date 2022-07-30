@@ -603,11 +603,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return OperatorId.GetHashCode() * 5 ^
-
-                       (OperatorName.IsNotNullOrEmpty()
-                            ? OperatorName.   GetHashCode()
-                            : 0) * 3 ^
+                return OperatorId.   GetHashCode()       * 5 ^
+                      (OperatorName?.GetHashCode() ?? 0) * 3 ^
 
                        (EVSEDataRecords.Any()
                             ? EVSEDataRecords.GetHashCode()

@@ -37,42 +37,54 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The unique identification of the e-mobility provider.
         /// </summary>
+        [Mandatory]
         public Provider_Id                                     ProviderId                              { get; }
 
         /// <summary>
         /// The optional timestamp of the last call.
         /// </summary>
+        [Optional]
         public DateTime?                                       LastCall                                { get; }
 
 
         /// <summary>
         /// Only return EVSEs belonging to the given optional enumeration of EVSE operators.
         /// </summary>
+        [Optional]
         public IEnumerable<Operator_Id>?                       OperatorIdFilter                        { get; }
 
         /// <summary>
         /// An optional enumeration of countries whose EVSE's a provider wants to retrieve.
         /// </summary>
+        [Optional]
         public IEnumerable<Country>?                           CountryCodeFilter                       { get; }
 
         /// <summary>
         /// 
         /// </summary>
+        [Optional]
         public IEnumerable<AccessibilityTypes>?                AccessibilityFilter                     { get; }
 
         /// <summary>
         /// 
         /// </summary>
+        [Optional]
         public IEnumerable<AuthenticationModes>?               AuthenticationModeFilter                { get; }
 
         /// <summary>
         /// 
         /// </summary>
+        [Optional]
         public IEnumerable<CalibrationLawDataAvailabilities>?  CalibrationLawDataAvailabilityFilter    { get; }
 
 
+        [Optional]
         public Boolean?                                        RenewableEnergyFilter                   { get; }
+
+        [Optional]
         public Boolean?                                        IsHubjectCompatibleFilter               { get; }
+
+        [Optional]
         public Boolean?                                        IsOpen24HoursFilter                     { get; }
 
 
@@ -80,16 +92,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The optional geo coordinate of the search center.
         /// </summary>
+        [Optional]
         public GeoCoordinates?                                 SearchCenter                            { get; }
 
         /// <summary>
         /// The optional search distance relative to the search center.
         /// </summary>
+        [Optional]
         public Single?                                         DistanceKM                              { get; }
 
         /// <summary>
         /// The optional response format for representing geo coordinates.
         /// </summary>
+        [Optional]
         public GeoCoordinatesFormats                           GeoCoordinatesResponseFormat            { get; }
 
         #endregion
@@ -241,7 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PullEVSEDataRequest?  pullEVSEDataResponse,
+                         out PullEVSEDataRequest?  pullEVSEDataRequest,
                          out String?               errorResponse,
                          Page,
                          Size,
@@ -250,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          EventTrackingId,
                          CustomPullEVSEDataRequestParser))
             {
-                return pullEVSEDataResponse!;
+                return pullEVSEDataRequest!;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEData request is invalid: " + errorResponse, nameof(JSON));
@@ -276,7 +291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out PullEVSEDataRequest?  pullEVSEDataResponse,
+                         out PullEVSEDataRequest?  pullEVSEDataRequest,
                          out String?               errorResponse,
                          Page,
                          Size,
@@ -285,7 +300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          EventTrackingId,
                          CustomPullEVSEDataRequestParser))
             {
-                return pullEVSEDataResponse!;
+                return pullEVSEDataRequest!;
             }
 
             throw new ArgumentException("The given text representation of a PullEVSEData request is invalid: " + errorResponse, nameof(Text));
@@ -517,7 +532,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                                [optional]
 
+#pragma warning disable CA1507 // Use nameof to express symbol names
                 var CustomData = JSON["CustomData"] as JObject;
+#pragma warning restore CA1507 // Use nameof to express symbol names
 
                 #endregion
 
