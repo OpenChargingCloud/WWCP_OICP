@@ -219,6 +219,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #endregion
 
+                #region PullPricingProductData/EVSEPricing
+
+                RegisterEvent("PullPricingProductDataHTTPRequest",
+                              handler => EMPClient.OnPullPricingProductDataHTTPRequest += handler,
+                              handler => EMPClient.OnPullPricingProductDataHTTPRequest -= handler,
+                              "PullPricingProductData", "PullPricing", "pull", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("PullPricingProductDataHTTPResponse",
+                              handler => EMPClient.OnPullPricingProductDataHTTPResponse += handler,
+                              handler => EMPClient.OnPullPricingProductDataHTTPResponse -= handler,
+                              "PullPricingProductData", "PullPricing", "pull", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("PullEVSEPricingHTTPRequest",
+                              handler => EMPClient.OnPullEVSEPricingHTTPRequest += handler,
+                              handler => EMPClient.OnPullEVSEPricingHTTPRequest -= handler,
+                              "PullEVSEPricing", "PullPricing", "pull", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("PullEVSEPricingHTTPResponse",
+                              handler => EMPClient.OnPullEVSEPricingHTTPResponse += handler,
+                              handler => EMPClient.OnPullEVSEPricingHTTPResponse -= handler,
+                              "PullEVSEPricing", "PullPricing", "pull", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
                 #region PushAuthenticationData
 
                 //RegisterEvent("PushAuthenticationDataRequest",

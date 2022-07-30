@@ -49,22 +49,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             public APICounterValues  PullEVSEStatus                { get; }
             public APICounterValues  PullEVSEStatusById            { get; }
             public APICounterValues  PullEVSEStatusByOperatorId    { get; }
+
+            public APICounterValues  PullPricingProductData        { get; }
+            public APICounterValues  PullEVSEPricing               { get; }
+
             public APICounterValues  PushAuthenticationData        { get; }
+
             public APICounterValues  RemoteReservationStart        { get; }
             public APICounterValues  RemoteReservationStop         { get; }
             public APICounterValues  RemoteStart                   { get; }
             public APICounterValues  RemoteStop                    { get; }
+
             public APICounterValues  GetChargeDetailRecords        { get; }
 
             public Counters(APICounterValues? PullEVSEData                 = null,
                             APICounterValues? PullEVSEStatus               = null,
                             APICounterValues? PullEVSEStatusById           = null,
                             APICounterValues? PullEVSEStatusByOperatorId   = null,
+
+                            APICounterValues? PullPricingProductData       = null,
+                            APICounterValues? PullEVSEPricing              = null,
+
                             APICounterValues? PushAuthenticationData       = null,
+
                             APICounterValues? RemoteReservationStart       = null,
                             APICounterValues? RemoteReservationStop        = null,
                             APICounterValues? RemoteStart                  = null,
                             APICounterValues? RemoteStop                   = null,
+
                             APICounterValues? GetChargeDetailRecords       = null)
             {
 
@@ -72,11 +84,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 this.PullEVSEStatus              = PullEVSEStatus             ?? new APICounterValues();
                 this.PullEVSEStatusById          = PullEVSEStatusById         ?? new APICounterValues();
                 this.PullEVSEStatusByOperatorId  = PullEVSEStatusByOperatorId ?? new APICounterValues();
+
+                this.PullPricingProductData      = PullPricingProductData     ?? new APICounterValues();
+                this.PullEVSEPricing             = PullEVSEPricing            ?? new APICounterValues();
+
                 this.PushAuthenticationData      = PushAuthenticationData     ?? new APICounterValues();
+
                 this.RemoteReservationStart      = RemoteReservationStart     ?? new APICounterValues();
                 this.RemoteReservationStop       = RemoteReservationStop      ?? new APICounterValues();
                 this.RemoteStart                 = RemoteStart                ?? new APICounterValues();
                 this.RemoteStop                  = RemoteStop                 ?? new APICounterValues();
+
                 this.GetChargeDetailRecords      = GetChargeDetailRecords     ?? new APICounterValues();
 
             }
@@ -88,11 +106,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                        new JProperty("PullEVSEStatus",              PullEVSEStatus.            ToJSON()),
                        new JProperty("PullEVSEStatusById",          PullEVSEStatusById.        ToJSON()),
                        new JProperty("PullEVSEStatusByOperatorId",  PullEVSEStatusByOperatorId.ToJSON()),
+
+                       new JProperty("PullPricingProductData",      PullPricingProductData.    ToJSON()),
+                       new JProperty("PullEVSEPricing",             PullEVSEPricing.           ToJSON()),
+
                        new JProperty("PushAuthenticationData",      PushAuthenticationData.    ToJSON()),
+
                        new JProperty("RemoteReservationStart",      RemoteReservationStart.    ToJSON()),
                        new JProperty("RemoteReservationStop",       RemoteReservationStop.     ToJSON()),
                        new JProperty("RemoteStart",                 RemoteStart.               ToJSON()),
                        new JProperty("RemoteStop",                  RemoteStop.                ToJSON()),
+
                        new JProperty("GetChargeDetailRecords",      GetChargeDetailRecords.    ToJSON())
                    );
 
@@ -243,6 +267,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// An event fired whenever a response for a PullEVSEStatusByOperatorId request had been received.
         /// </summary>
         public event OnPullEVSEStatusByOperatorIdResponseDelegate  OnPullEVSEStatusByOperatorIdResponse;
+
+        #endregion
+
+
+        #region OnPullPricingProductDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullPricingProductData request will be send.
+        /// </summary>
+        public event OnPullPricingProductDataRequestDelegate   OnPullPricingProductDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullPricingProductData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                   OnPullPricingProductDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullPricingProductData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                  OnPullPricingProductDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullPricingProductData request had been received.
+        /// </summary>
+        public event OnPullPricingProductDataResponseDelegate  OnPullPricingProductDataResponse;
+
+        #endregion
+
+        #region OnPullEVSEPricingRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEPricing request will be send.
+        /// </summary>
+        public event OnPullEVSEPricingRequestDelegate   OnPullEVSEPricingRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEPricing HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnPullEVSEPricingHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnPullEVSEPricingHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEPricing request had been received.
+        /// </summary>
+        public event OnPullEVSEPricingResponseDelegate  OnPullEVSEPricingResponse;
 
         #endregion
 
@@ -737,8 +810,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<PullEVSEDataResponse>.Failed(Request,
@@ -1130,8 +1203,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusResponse>.Failed(Request,
@@ -1495,8 +1568,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusByIdResponse>.Failed(Request,
@@ -1860,8 +1933,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(Request,
@@ -1972,6 +2045,839 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             catch (Exception e)
             {
                 DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+
+        #region PullPricingProductData    (Request)
+
+        /// <summary>
+        /// Upload the given PullPricingProductData.
+        /// </summary>
+        /// <param name="Request">A PullPricingProductData request.</param>
+        public async Task<OICPResult<PullPricingProductDataResponse>>
+
+            PullPricingProductData(PullPricingProductDataRequest Request)
+
+        {
+
+            #region Initial checks
+
+            //Request = _CustomPullPricingProductDataRequestMapper(Request);
+
+            Byte                                         TransmissionRetry   = 0;
+            OICPResult<PullPricingProductDataResponse>?  result              = null;
+
+            #endregion
+
+            #region Send OnPullPricingProductDataRequest event
+
+            var StartTime = Timestamp.Now;
+
+            Counter.PullPricingProductData.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullPricingProductDataRequest != null)
+                    await Task.WhenAll(OnPullPricingProductDataRequest.GetInvocationList().
+                                       Cast<OnPullPricingProductDataRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullPricingProductDataRequest));
+            }
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    #region Create pagination query string
+
+                    // ?page=0&size=20
+
+                    var queryStrings = new List<String>();
+
+                    if (Request.Page.HasValue)
+                        queryStrings.Add("page=" + Request.Page.Value);
+
+                    if (Request.Size.HasValue)
+                        queryStrings.Add("size=" + Request.Size.Value);
+
+                    var queryString = queryStrings.Count > 0
+                                          ? "?" + queryStrings.AggregateWith("&")
+                                          : "";
+
+                    #endregion
+
+                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                                                                      VirtualHostname,
+                                                                      Description,
+                                                                      RemoteCertificateValidator,
+                                                                      ClientCertificateSelector,
+                                                                      ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
+                                                                      HTTPUserAgent,
+                                                                      RequestTimeout,
+                                                                      TransmissionRetryDelay,
+                                                                      MaxNumberOfRetries,
+                                                                      false,
+                                                                      null,
+                                                                      DNSClient).
+
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/pricing-products" + queryString),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
+                                                                                   }),
+
+                                                      RequestLogDelegate:   OnPullPricingProductDataHTTPRequest,
+                                                      ResponseLogDelegate:  OnPullPricingProductDataHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                              ConfigureAwait(false);
+
+                    #endregion
+
+
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (PullPricingProductDataResponse.TryParse(Request,
+                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                            HTTPResponse.Timestamp,
+                                                                            HTTPResponse.EventTrackingId,
+                                                                            HTTPResponse.Runtime,
+                                                                            out PullPricingProductDataResponse  pullEVSEDataResponse,
+                                                                            out String                          ErrorResponse,
+                                                                            processId,
+                                                                            HTTPResponse))
+                                {
+
+                                    result = OICPResult<PullPricingProductDataResponse>.Success(Request,
+                                                                                                pullEVSEDataResponse,
+                                                                                                processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullPricingProductDataResponse>.Failed(
+                                             Request,
+                                             new PullPricingProductDataResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<PricingProductData>(),
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400 BadRequest
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
+                            {
+
+                                result = OICPResult<PullPricingProductDataResponse>.BadRequest(Request,
+                                                                                               validationErrorList,
+                                                                                               processId);
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401 Unauthorized
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullPricingProductDataResponse>.Failed(Request,
+                                                                                               new PullPricingProductDataResponse(
+                                                                                                   Request,
+                                                                                                   HTTPResponse.Timestamp,
+                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                   HTTPResponse.Runtime,
+                                                                                                   Array.Empty<PricingProductData>(),
+                                                                                                   null,
+                                                                                                   null,
+                                                                                                   null,
+                                                                                                   null,
+                                                                                                   null,
+                                                                                                   null,
+                                                                                                   null,
+                                                                                                   statusCode,
+                                                                                                   processId
+                                                                                               ),
+                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullPricingProductDataResponse>.Failed(
+                                             Request,
+                                             new PullPricingProductDataResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<PricingProductData>(),
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<PullPricingProductDataResponse>.Failed(
+                             Request,
+                             new PullPricingProductDataResponse(
+                                 Request,
+                                 Timestamp.Now,
+                                 Request.EventTrackingId,
+                                 Timestamp.Now - Request.Timestamp,
+                                 Array.Empty<PricingProductData>(),
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
+                             )
+                         );
+
+            }
+
+            result ??= OICPResult<PullPricingProductDataResponse>.Failed(
+                           Request,
+                           new PullPricingProductDataResponse(
+                               Request,
+                               Timestamp.Now,
+                               Request.EventTrackingId,
+                               Timestamp.Now - Request.Timestamp,
+                               Array.Empty<PricingProductData>(),
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!"
+                               )
+                           )
+                       );
+
+
+            #region Send OnPullPricingProductDataResponse event
+
+            var Endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullPricingProductDataResponse != null)
+                    await Task.WhenAll(OnPullPricingProductDataResponse.GetInvocationList().
+                                       Cast<OnPullPricingProductDataResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullPricingProductDataResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region PullEVSEPricing           (Request)
+
+        /// <summary>
+        /// Upload the given PullEVSEPricing.
+        /// </summary>
+        /// <param name="Request">A PullEVSEPricing request.</param>
+        public async Task<OICPResult<PullEVSEPricingResponse>>
+
+            PullEVSEPricing(PullEVSEPricingRequest Request)
+
+        {
+
+            #region Initial checks
+
+            //Request = _CustomPullEVSEPricingRequestMapper(Request);
+
+            Byte                                  TransmissionRetry   = 0;
+            OICPResult<PullEVSEPricingResponse>?  result              = null;
+
+            #endregion
+
+            #region Send OnPullEVSEPricingRequest event
+
+            var StartTime = Timestamp.Now;
+
+            Counter.PullEVSEPricing.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullEVSEPricingRequest != null)
+                    await Task.WhenAll(OnPullEVSEPricingRequest.GetInvocationList().
+                                       Cast<OnPullEVSEPricingRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEPricingRequest));
+            }
+
+            #endregion
+
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    #region Create pagination query string
+
+                    // ?page=0&size=20
+
+                    var queryStrings = new List<String>();
+
+                    if (Request.Page.HasValue)
+                        queryStrings.Add("page=" + Request.Page.Value);
+
+                    if (Request.Size.HasValue)
+                        queryStrings.Add("size=" + Request.Size.Value);
+
+                    var queryString = queryStrings.Count > 0
+                                          ? "?" + queryStrings.AggregateWith("&")
+                                          : "";
+
+                    #endregion
+
+                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                                                                      VirtualHostname,
+                                                                      Description,
+                                                                      RemoteCertificateValidator,
+                                                                      ClientCertificateSelector,
+                                                                      ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
+                                                                      HTTPUserAgent,
+                                                                      RequestTimeout,
+                                                                      TransmissionRetryDelay,
+                                                                      MaxNumberOfRetries,
+                                                                      false,
+                                                                      null,
+                                                                      DNSClient).
+
+                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/evse-pricing" + queryString),
+                                                                                   requestbuilder => {
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Connection   = "close";
+                                                                                   }),
+
+                                                      RequestLogDelegate:   OnPullEVSEPricingHTTPRequest,
+                                                      ResponseLogDelegate:  OnPullEVSEPricingHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
+                                                      EventTrackingId:      Request.EventTrackingId,
+                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                              ConfigureAwait(false);
+
+                    #endregion
+
+
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (PullEVSEPricingResponse.TryParse(Request,
+                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                     HTTPResponse.Timestamp,
+                                                                     HTTPResponse.EventTrackingId,
+                                                                     HTTPResponse.Runtime,
+                                                                     out PullEVSEPricingResponse?  pullEVSEDataResponse,
+                                                                     out String?                   ErrorResponse,
+                                                                     processId,
+                                                                     HTTPResponse))
+                                {
+
+                                    result = OICPResult<PullEVSEPricingResponse>.Success(Request,
+                                                                                         pullEVSEDataResponse!,
+                                                                                         processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullEVSEPricingResponse>.Failed(
+                                             Request,
+                                             new PullEVSEPricingResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<OperatorEVSEPricing>(),
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400 BadRequest
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                                             out ValidationErrorList?  validationErrorList,
+                                                             out String?               errorResponse))
+                            {
+
+                                result = OICPResult<PullEVSEPricingResponse>.BadRequest(Request,
+                                                                                        validationErrorList,
+                                                                                        processId);
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+                        // Hubject firewall problem!
+                        // Only HTML response!
+                        break;
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401 Unauthorized
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullEVSEPricingResponse>.Failed(Request,
+                                                                                        new PullEVSEPricingResponse(
+                                                                                            Request,
+                                                                                            HTTPResponse.Timestamp,
+                                                                                            HTTPResponse.EventTrackingId,
+                                                                                            HTTPResponse.Runtime,
+                                                                                            Array.Empty<OperatorEVSEPricing>(),
+                                                                                            null,
+                                                                                            null,
+                                                                                            null,
+                                                                                            null,
+                                                                                            null,
+                                                                                            null,
+                                                                                            null,
+                                                                                            statusCode,
+                                                                                            processId
+                                                                                        ),
+                                                                                        processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullEVSEPricingResponse>.Failed(
+                                             Request,
+                                             new PullEVSEPricingResponse(
+                                                 Request,
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<OperatorEVSEPricing>(),
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 null,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 processId
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<PullEVSEPricingResponse>.Failed(
+                             Request,
+                             new PullEVSEPricingResponse(
+                                 Request,
+                                 Timestamp.Now,
+                                 Request.EventTrackingId,
+                                 Timestamp.Now - Request.Timestamp,
+                                 Array.Empty<OperatorEVSEPricing>(),
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 null,
+                                 new StatusCode(
+                                     StatusCodes.SystemError,
+                                     e.Message,
+                                     e.StackTrace
+                                 )
+                             )
+                         );
+
+            }
+
+            result ??= OICPResult<PullEVSEPricingResponse>.Failed(
+                           Request,
+                           new PullEVSEPricingResponse(
+                               Request,
+                               Timestamp.Now,
+                               Request.EventTrackingId,
+                               Timestamp.Now - Request.Timestamp,
+                               Array.Empty<OperatorEVSEPricing>(),
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               null,
+                               new StatusCode(
+                                   StatusCodes.SystemError,
+                                   "HTTP request failed!"
+                               )
+                           )
+                       );
+
+
+            #region Send OnPullEVSEPricingResponse event
+
+            var Endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullEVSEPricingResponse != null)
+                    await Task.WhenAll(OnPullEVSEPricingResponse.GetInvocationList().
+                                       Cast<OnPullEVSEPricingResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEPricingResponse));
             }
 
             #endregion
@@ -2231,8 +3137,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(Request,
@@ -2240,7 +3146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                    HTTPResponse.Timestamp,
                                                                                                                    HTTPResponse.EventTrackingId,
                                                                                                                    HTTPResponse.Runtime,
-                                                                                                                   statusCode,
+                                                                                                                   statusCode!,
                                                                                                                    Request,
                                                                                                                    HTTPResponse,
                                                                                                                    false,
@@ -2624,8 +3530,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(Request,
@@ -3016,8 +3922,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(Request,
@@ -3408,8 +4314,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(Request,
@@ -3800,8 +4706,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(Request,
@@ -4207,8 +5113,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<GetChargeDetailRecordsResponse>.Failed(Request,

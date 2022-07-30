@@ -35,6 +35,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
+        /// The unique identification of the e-mobility provider.
+        /// </summary>
+        [Mandatory]
+        public Provider_Id               ProviderId     { get; }
+
+        /// <summary>
         /// The optional timestamp of the last call.
         /// </summary>
         public DateTime?                 LastCall       { get; }
@@ -52,6 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new PullPricingProductData request.
         /// </summary>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
         /// <param name="LastCall">An optional timestamp of the last call. Cannot be combined with 'SearchCenter'.</param>
         /// <param name="OperatorIds">An enumeration of EVSE operator identifications to download pricing data from.</param>
         /// 
@@ -64,7 +71,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public PullPricingProductDataRequest(IEnumerable<Operator_Id>  OperatorIds,
+        public PullPricingProductDataRequest(Provider_Id               ProviderId,
+                                             IEnumerable<Operator_Id>  OperatorIds,
                                              DateTime?                 LastCall            = null,
 
                                              UInt32?                   Page                = null,
@@ -89,6 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
+            this.ProviderId   = ProviderId;
             this.OperatorIds  = OperatorIds;
             this.LastCall     = LastCall;
 
@@ -110,14 +119,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, ..., CustomPullPricingProductDataRequestParser = null)
+        #region (static) Parse   (JSON, ProviderId, ..., CustomPullPricingProductDataRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a PullPricingProductData request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
         /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData JSON objects.</param>
         public static PullPricingProductDataRequest Parse(JObject                                                      JSON,
+                                                          Provider_Id                                                  ProviderId,
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
@@ -127,6 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
+                         ProviderId,
                          out PullPricingProductDataRequest?  pullEVSEDataResponse,
                          out String?                         errorResponse,
                          Page,
@@ -145,14 +157,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, ..., CustomPullPricingProductDataRequestParser = null)
+        #region (static) Parse   (Text, ProviderId, ..., CustomPullPricingProductDataRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a PullPricingProductData request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
         /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData request JSON objects.</param>
         public static PullPricingProductDataRequest Parse(String                                                       Text,
+                                                          Provider_Id                                                  ProviderId,
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
@@ -162,6 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
+                         ProviderId,
                          out PullPricingProductDataRequest?  pullEVSEDataResponse,
                          out String?                         errorResponse,
                          Page,
@@ -180,16 +195,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out PullPricingProductDataRequest, out ErrorResponse, ..., CustomPullPricingProductDataRequestParser = null)
+        #region (static) TryParse(JSON, ProviderId, out PullPricingProductDataRequest, out ErrorResponse, ..., CustomPullPricingProductDataRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a PullPricingProductData request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
         /// <param name="PullPricingProductDataRequest">The parsed PullPricingProductData request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData request JSON objects.</param>
         public static Boolean TryParse(JObject                                                      JSON,
+                                       Provider_Id                                                  ProviderId,
                                        out PullPricingProductDataRequest?                           PullPricingProductDataRequest,
                                        out String?                                                  ErrorResponse,
                                        UInt32?                                                      Page                                        = null,
@@ -248,7 +265,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullPricingProductDataRequest = new PullPricingProductDataRequest(OperatorIds,
+                PullPricingProductDataRequest = new PullPricingProductDataRequest(ProviderId,
+                                                                                  OperatorIds,
                                                                                   LastCall,
 
                                                                                   Page,
@@ -279,16 +297,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out PullPricingProductDataRequest, out ErrorResponse, ..., CustomPullPricingProductDataRequestParser = null)
+        #region (static) TryParse(Text, ProviderId, out PullPricingProductDataRequest, out ErrorResponse, ..., CustomPullPricingProductDataRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a PullPricingProductData request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
         /// <param name="PullPricingProductDataRequest">The parsed PullPricingProductData request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData request JSON objects.</param>
         public static Boolean TryParse(String                                                       Text,
+                                       Provider_Id                                                  ProviderId,
                                        out PullPricingProductDataRequest?                           PullPricingProductDataRequest,
                                        out String?                                                  ErrorResponse,
                                        UInt32?                                                      Page                                        = null,
@@ -303,6 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
+                                ProviderId,
                                 out PullPricingProductDataRequest,
                                 out ErrorResponse,
                                 Page,
@@ -426,6 +447,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => PullPricingProductData is not null &&
 
+               ProviderId.Equals(PullPricingProductData.ProviderId) &&
+
             ((!LastCall.HasValue && !PullPricingProductData.LastCall.HasValue) ||
               (LastCall.HasValue &&  PullPricingProductData.LastCall.HasValue && LastCall.Value.Equals(PullPricingProductData.LastCall.Value))) &&
 
@@ -447,7 +470,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return OperatorIds.GetHashCode() * 3 ^
+                return ProviderId. GetHashCode() * 5 ^
+                       OperatorIds.GetHashCode() * 3 ^
 
                        (!LastCall.HasValue
                             ? LastCall.GetHashCode() *  5
@@ -465,8 +489,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat("Operators: ",
-                             OperatorIds.AggregateWith(", "),
+            => String.Concat(ProviderId.ToString(), " => ",
+                             "Operators: ", OperatorIds.AggregateWith(", "),
                              LastCall.HasValue
                                  ? "; last call: " + LastCall.Value.ToIso8601()
                                  : "");

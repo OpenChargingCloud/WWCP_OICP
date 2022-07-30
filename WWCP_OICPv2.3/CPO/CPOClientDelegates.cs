@@ -80,6 +80,48 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
     #endregion
 
+    #region OnPushPricingProductDataRequest/-Response
+
+    /// <summary>
+    /// A delegate called whenever new PricingProductData will be send upstream.
+    /// </summary>
+    public delegate Task OnPushPricingProductDataRequestDelegate (DateTime                                                     Timestamp,
+                                                                  CPOClient                                                    Sender,
+                                                                  String                                                       SenderDescription,
+                                                                  PushPricingProductDataRequest                                Request);
+
+    /// <summary>
+    /// A delegate called whenever new PricingProductData had been send upstream.
+    /// </summary>
+    public delegate Task OnPushPricingProductDataResponseDelegate(DateTime                                                     Timestamp,
+                                                                  CPOClient                                                    Sender,
+                                                                  String                                                       SenderDescription,
+                                                                  PushPricingProductDataRequest                                Request,
+                                                                  OICPResult<Acknowledgement<PushPricingProductDataRequest>>   Result);
+
+    #endregion
+
+    #region OnPushEVSEPricingRequest/-Response
+
+    /// <summary>
+    /// A delegate called whenever new EVSEPricing will be send upstream.
+    /// </summary>
+    public delegate Task OnPushEVSEPricingRequestDelegate (DateTime                                              Timestamp,
+                                                           CPOClient                                             Sender,
+                                                           String                                                SenderDescription,
+                                                           PushEVSEPricingRequest                                Request);
+
+    /// <summary>
+    /// A delegate called whenever new EVSEPricing had been send upstream.
+    /// </summary>
+    public delegate Task OnPushEVSEPricingResponseDelegate(DateTime                                              Timestamp,
+                                                           CPOClient                                             Sender,
+                                                           String                                                SenderDescription,
+                                                           PushEVSEPricingRequest                                Request,
+                                                           OICPResult<Acknowledgement<PushEVSEPricingRequest>>   Result);
+
+    #endregion
+
 
     #region OnAuthorizeStartRequest/-Response
 

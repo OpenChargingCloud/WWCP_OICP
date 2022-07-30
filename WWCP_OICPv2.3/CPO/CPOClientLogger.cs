@@ -189,6 +189,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #endregion
 
+                #region PushPricingProductData/EVSEPricing
+
+                RegisterEvent("PushPricingProductDataHTTPRequest",
+                              handler => CPOClient.OnPushPricingProductDataHTTPRequest += handler,
+                              handler => CPOClient.OnPushPricingProductDataHTTPRequest -= handler,
+                              "PushPricingProductData", "PushPricing", "push", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("PushPricingProductDataHTTPResponse",
+                              handler => CPOClient.OnPushPricingProductDataHTTPResponse += handler,
+                              handler => CPOClient.OnPushPricingProductDataHTTPResponse -= handler,
+                              "PushPricingProductData", "PushPricing", "push", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("PushEVSEPricingHTTPRequest",
+                              handler => CPOClient.OnPushEVSEPricingHTTPRequest += handler,
+                              handler => CPOClient.OnPushEVSEPricingHTTPRequest -= handler,
+                              "PushEVSEPricing", "PushPricing", "push", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("PushEVSEPricingHTTPResponse",
+                              handler => CPOClient.OnPushEVSEPricingHTTPResponse += handler,
+                              handler => CPOClient.OnPushEVSEPricingHTTPResponse -= handler,
+                              "PushEVSEPricing", "PushPricing", "push", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
                 #region AuthorizeStart/Stop
 
                 RegisterEvent("AuthorizeStartHTTPRequest",

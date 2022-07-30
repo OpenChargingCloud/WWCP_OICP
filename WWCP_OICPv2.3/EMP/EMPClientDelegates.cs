@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
@@ -105,6 +99,49 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       String                                           SenderDescription,
                                                                       PullEVSEStatusByOperatorIdRequest                Request,
                                                                       OICPResult<PullEVSEStatusByOperatorIdResponse>   Response);
+
+    #endregion
+
+
+    #region OnPullPricingProductData                   (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullPricingProductData request will be send.
+    /// </summary>
+    public delegate Task OnPullPricingProductDataRequestDelegate   (DateTime                                     Timestamp,
+                                                                    IEMPClient                                   Sender,
+                                                                    String                                       SenderDescription,
+                                                                    PullPricingProductDataRequest                Request);
+
+    /// <summary>
+    /// A delegate called whenever a response for a PullPricingProductData request had been received.
+    /// </summary>
+    public delegate Task OnPullPricingProductDataResponseDelegate  (DateTime                                     Timestamp,
+                                                                    IEMPClient                                   Sender,
+                                                                    String                                       SenderDescription,
+                                                                    PullPricingProductDataRequest                Request,
+                                                                    OICPResult<PullPricingProductDataResponse>   Response);
+
+    #endregion
+
+    #region OnPullEVSEPricing                          (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEPricing request will be send.
+    /// </summary>
+    public delegate Task OnPullEVSEPricingRequestDelegate   (DateTime                              Timestamp,
+                                                             IEMPClient                            Sender,
+                                                             String                                SenderDescription,
+                                                             PullEVSEPricingRequest                Request);
+
+    /// <summary>
+    /// A delegate called whenever a response for a PullEVSEPricing request had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEPricingResponseDelegate  (DateTime                              Timestamp,
+                                                             IEMPClient                            Sender,
+                                                             String                                SenderDescription,
+                                                             PullEVSEPricingRequest                Request,
+                                                             OICPResult<PullEVSEPricingResponse>   Response);
 
     #endregion
 

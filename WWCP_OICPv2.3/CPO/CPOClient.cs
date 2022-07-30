@@ -17,10 +17,8 @@
 
 #region Usings
 
-using System;
-using System.Linq;
 using System.Net.Security;
-using System.Threading.Tasks;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
@@ -28,7 +26,6 @@ using Newtonsoft.Json.Linq;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System.Security.Authentication;
 
 #endregion
 
@@ -50,6 +47,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounterValues  PushEVSEData                        { get; }
             public APICounterValues  PushEVSEStatus                      { get; }
 
+            public APICounterValues  PushPricingProductData              { get; }
+            public APICounterValues  PushEVSEPricing                     { get; }
+
             public APICounterValues  AuthorizeStart                      { get; }
             public APICounterValues  AuthorizeStop                       { get; }
 
@@ -63,6 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             public Counters(APICounterValues? PushEVSEData                       = null,
                             APICounterValues? PushEVSEStatus                     = null,
+
+                            APICounterValues? PushPricingProductData             = null,
+                            APICounterValues? PushEVSEPricing                    = null,
 
                             APICounterValues? AuthorizeStart                     = null,
                             APICounterValues? AuthorizeStop                      = null,
@@ -78,6 +81,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 this.PushEVSEData                      = PushEVSEData                     ?? new APICounterValues();
                 this.PushEVSEStatus                    = PushEVSEStatus                   ?? new APICounterValues();
+
+                this.PushPricingProductData            = PushPricingProductData           ?? new APICounterValues();
+                this.PushEVSEPricing                   = PushEVSEPricing                  ?? new APICounterValues();
 
                 this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
                 this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
@@ -96,6 +102,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 => JSONObject.Create(
                        new JProperty("PushEVSEData",                     PushEVSEData.                    ToJSON()),
                        new JProperty("PushEVSEStatus",                   PushEVSEStatus.                  ToJSON()),
+
+                       new JProperty("PushPricingProductData",           PushPricingProductData.          ToJSON()),
+                       new JProperty("PushEVSEPricing",                  PushEVSEPricing.                 ToJSON()),
 
                        new JProperty("AuthorizeStart",                   AuthorizeStart.                  ToJSON()),
                        new JProperty("AuthorizeStop",                    AuthorizeStop.                   ToJSON()),
@@ -154,14 +163,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
         }
 
-        public Counters                                                                            Counter                                                       { get; }
+        public Counters                                                                           Counter                                                      { get; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>                   CustomPushEVSEDataAcknowledgementParser                       { get; set; }
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>                 CustomPushEVSEStatusAcknowledgementParser                     { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>                  CustomPushEVSEDataAcknowledgementParser                      { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>                CustomPushEVSEStatusAcknowledgementParser                    { get; set; }
 
+        public CustomJObjectParserDelegate<Acknowledgement<PushPricingProductDataRequest>>        CustomPushPricingProductDataAcknowledgementParser            { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEPricingRequest>>               CustomPushEVSEPricingAcknowledgementParser                   { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizationStartResponse>                             CustomAuthorizationStartResponseParser                        { get; set; }
-        public CustomJObjectParserDelegate<AuthorizationStopResponse>                              CustomAuthorizationStopResponseParser                         { get; set; }
+        public CustomJObjectParserDelegate<AuthorizationStartResponse>                            CustomAuthorizationStartResponseParser                       { get; set; }
+        public CustomJObjectParserDelegate<AuthorizationStopResponse>                             CustomAuthorizationStopResponseParser                        { get; set; }
 
 
         public CustomJObjectParserDelegate<Acknowledgement<ChargingStartNotificationRequest>>     CustomChargingStartNotificationAcknowledgementParser         { get; set; }
@@ -173,10 +184,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectParserDelegate<Acknowledgement<ChargingErrorNotificationRequest>>     CustomChargingErrorNotificationAcknowledgementParser         { get; set; }
 
 
-        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>>         CustomSendChargeDetailRecordAcknowledgementParser             { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>>            CustomSendChargeDetailRecordAcknowledgementParser            { get; set; }
 
 
-        public Newtonsoft.Json.Formatting                                                          JSONFormat                                                    { get; set; }
+        public Newtonsoft.Json.Formatting                                                         JSONFormat                                                   { get; set; }
 
         #endregion
 
@@ -227,6 +238,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// An event fired whenever a response to a PushEVSEStatus HTTP request had been received.
         /// </summary>
         public event OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
+
+        #endregion
+
+
+        #region OnPushPricingProductDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushPricingProductData will be send.
+        /// </summary>
+        public event OnPushPricingProductDataRequestDelegate   OnPushPricingProductDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PushPricingProductData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                   OnPushPricingProductDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                  OnPushPricingProductDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
+        /// </summary>
+        public event OnPushPricingProductDataResponseDelegate  OnPushPricingProductDataResponse;
+
+        #endregion
+
+        #region OnPushEVSEPricingRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEPricing will be send.
+        /// </summary>
+        public event OnPushEVSEPricingRequestDelegate   OnPushEVSEPricingRequest;
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEPricing HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnPushEVSEPricingHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnPushEVSEPricingHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event OnPushEVSEPricingResponseDelegate  OnPushEVSEPricingResponse;
 
         #endregion
 
@@ -621,9 +681,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEDataRequest>.TryParse(Request,
-                                                                                      JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                      out Acknowledgement<PushEVSEDataRequest>  acknowledgement,
-                                                                                      out String                                ErrorResponse,
+                                                                                      JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                      out Acknowledgement<PushEVSEDataRequest>?  acknowledgement,
+                                                                                      out String?                                ErrorResponse,
                                                                                       HTTPResponse,
                                                                                       HTTPResponse.Timestamp,
                                                                                       HTTPResponse.EventTrackingId,
@@ -633,7 +693,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(Request,
-                                                                                                          acknowledgement,
+                                                                                                          acknowledgement!,
                                                                                                           processId);
 
                                     }
@@ -706,7 +766,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
                                                                  out ValidationErrorList?  validationErrors,
                                                                  out String?               errorResponse))
                                 {
@@ -775,8 +835,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode  statusCode,
-                                                            out String      ErrorResponse))
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
@@ -784,7 +844,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                              HTTPResponse.Timestamp,
                                                                                                              HTTPResponse.EventTrackingId,
                                                                                                              HTTPResponse.Runtime,
-                                                                                                             statusCode,
+                                                                                                             statusCode!,
                                                                                                              Request,
                                                                                                              ProcessId: processId
                                                                                                          ),
@@ -848,8 +908,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode  statusCode,
-                                                            out String      ErrorResponse))
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
@@ -857,7 +917,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                              HTTPResponse.Timestamp,
                                                                                                              HTTPResponse.EventTrackingId,
                                                                                                              HTTPResponse.Runtime,
-                                                                                                             statusCode,
+                                                                                                             statusCode!,
                                                                                                              Request,
                                                                                                              ProcessId: processId
                                                                                                          ),
@@ -1116,9 +1176,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEStatusRequest>.TryParse(Request,
-                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                        out Acknowledgement<PushEVSEStatusRequest>  acknowledgement,
-                                                                                        out String                                  ErrorResponse,
+                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                        out Acknowledgement<PushEVSEStatusRequest>?  acknowledgement,
+                                                                                        out String?                                  ErrorResponse,
                                                                                         HTTPResponse,
                                                                                         HTTPResponse.Timestamp,
                                                                                         HTTPResponse.EventTrackingId,
@@ -1128,7 +1188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(Request,
-                                                                                                            acknowledgement,
+                                                                                                            acknowledgement!,
                                                                                                             processId);
 
                                     }
@@ -1200,7 +1260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
                                                                  out ValidationErrorList?  validationErrors,
                                                                  out String?               errorResponse))
                                 {
@@ -1267,8 +1327,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode  statusCode,
-                                                            out String      ErrorResponse))
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
@@ -1276,7 +1336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                HTTPResponse.Timestamp,
                                                                                                                HTTPResponse.EventTrackingId,
                                                                                                                HTTPResponse.Runtime,
-                                                                                                               statusCode,
+                                                                                                               statusCode!,
                                                                                                                Request,
                                                                                                                ProcessId: processId
                                                                                                            ),
@@ -1340,8 +1400,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode  statusCode,
-                                                            out String      ErrorResponse))
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
@@ -1349,7 +1409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                HTTPResponse.Timestamp,
                                                                                                                HTTPResponse.EventTrackingId,
                                                                                                                HTTPResponse.Runtime, 
-                                                                                                               statusCode,
+                                                                                                               statusCode!,
                                                                                                                Request,
                                                                                                                ProcessId: processId
                                                                                                            ),
@@ -1455,6 +1515,997 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             catch (Exception e)
             {
                 DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEStatusResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+
+        #region PushPricingProductData          (Request)
+
+        /// <summary>
+        /// Upload the given Pricing Product Data.
+        /// </summary>
+        /// <param name="Request">A PushPricingProductData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>> PushPricingProductData(PushPricingProductDataRequest Request)
+        {
+
+            #region Initial checks
+
+            //Request = _CustomPushPricingProductDataRequestMapper(Request);
+
+            Byte                                                         TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<PushPricingProductDataRequest>>?  result              = null;
+
+            #endregion
+
+            #region Send OnPushPricingProductDataRequest event
+
+            var StartTime = Timestamp.Now;
+
+            Counter.PushPricingProductData.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPushPricingProductDataRequest != null)
+                    await Task.WhenAll(OnPushPricingProductDataRequest.GetInvocationList().
+                                       Cast<OnPushPricingProductDataRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushPricingProductDataRequest));
+            }
+
+            #endregion
+
+
+            // Apply EVSE filter!
+
+            #region No EVSE data to push?
+
+            if (!Request.PricingProductDataRecords.Any())
+            {
+
+                result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(
+                             Request,
+                             Acknowledgement<PushPricingProductDataRequest>.Success(Request,
+                                                                                    StatusCodeDescription: "No EVSE data to push")
+                         );
+
+            }
+
+            #endregion
+
+            else
+            {
+
+                var statusDescription = "HTTP request failed!";
+
+                try
+                {
+
+                    do
+                    {
+
+                        #region Upstream HTTP request...
+
+                        var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                                                                          VirtualHostname,
+                                                                          Description,
+                                                                          RemoteCertificateValidator,
+                                                                          null,
+                                                                          ClientCert,
+                                                                          TLSProtocol,
+                                                                          PreferIPv4,
+                                                                          HTTPUserAgent,
+                                                                          RequestTimeout,
+                                                                          TransmissionRetryDelay,
+                                                                          MaxNumberOfRetries,
+                                                                          false,
+                                                                          null,
+                                                                          DNSClient).
+
+                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pricing-products"),
+                                                                                       requestbuilder => {
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Connection   = "close";
+                                                                                       }),
+
+                                                          RequestLogDelegate:   OnPushPricingProductDataHTTPRequest,
+                                                          ResponseLogDelegate:  OnPushPricingProductDataHTTPResponse,
+                                                          CancellationToken:    Request.CancellationToken,
+                                                          EventTrackingId:      Request.EventTrackingId,
+                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                                  ConfigureAwait(false);
+
+                        #endregion
+
+
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        {
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    // HTTP/1.1 200 OK
+                                    // Server:            nginx/1.18.0
+                                    // Date:              Sat, 09 Jan 2021 06:53:50 GMT
+                                    // Content-Type:      application/json;charset=utf-8
+                                    // Transfer-Encoding: chunked
+                                    // Connection:        keep-alive
+                                    // Process-ID:        d8d4583c-ff9b-44dd-bc92-b341f15f644e
+                                    // cd .
+                                    // {
+                                    //     "Result":               true,
+                                    //     "StatusCode": {
+                                    //         "Code":             "000",
+                                    //         "Description":      null,
+                                    //         "AdditionalInfo":   null
+                                    //     },
+                                    //     "SessionID":            null,
+                                    //     "CPOPartnerSessionID":  null,
+                                    //     "EMPPartnerSessionID":  null
+                                    // }
+
+                                    if (Acknowledgement<PushPricingProductDataRequest>.TryParse(Request,
+                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                                out Acknowledgement<PushPricingProductDataRequest>?  acknowledgement,
+                                                                                                out String?                                          ErrorResponse,
+                                                                                                HTTPResponse,
+                                                                                                HTTPResponse.Timestamp,
+                                                                                                HTTPResponse.EventTrackingId,
+                                                                                                HTTPResponse.Runtime,
+                                                                                                processId,
+                                                                                                CustomPushPricingProductDataAcknowledgementParser))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(Request,
+                                                                                                                    acknowledgement!,
+                                                                                                                    processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushPricingProductDataRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     Request,
+                                                     HTTPResponse,
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            TransmissionRetry = Byte.MaxValue - 1;
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        {
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                // HTTP/1.1 400
+                                // Server:             nginx/1.18.0
+                                // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                                // Content-Type:       application/json;charset=utf-8
+                                // Transfer-Encoding:  chunked
+                                // Connection:         keep-alive
+                                // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                                // 
+                                // {
+                                //     "extendedInfo":  null,
+                                //     "message":      "Error parsing/validating JSON.",
+                                //     "validationErrors": [
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                                //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                                //         },
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                                //             "errorMessage":   "may not be null"
+                                //         },
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                                //             "errorMessage":   "may not be empty"
+                                //         },
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                                //             "errorMessage":   "may not be empty"
+                                //         }
+                                //     ]
+                                // }
+
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                                                                 out ValidationErrorList?  validationErrors,
+                                                                 out String?               errorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.BadRequest(Request,
+                                                                                                                   validationErrors,
+                                                                                                                   processId);
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        {
+
+                            // HTTP/1.1 403 Forbidden
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Thu, 15 Apr 2021 22:47:22 GMT
+                            // Content-Type:    text/html
+                            // Content-Length:  162
+                            // Connection:      keep-alive
+                            // 
+                            // <html>
+                            // <head><title>403 Forbidden</title></head>
+                            // <body>
+                            // <center><h1>403 Forbidden</h1></center>
+                            // <hr><center>nginx/1.18.0 (Ubuntu)</center>
+                            // </body>
+                            // </html>
+
+                            statusDescription = "Hubject firewall problem!";
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        {
+
+                            // HTTP/1.1 401 Unauthorized
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                            // Content-Type:    application/json;charset=UTF-8
+                            // Content-Length:  87
+                            // Connection:      keep-alive
+                            // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                            // 
+                            // {
+                            //     "StatusCode": {
+                            //         "Code":            "017",
+                            //         "Description":     "Unauthorized Access",
+                            //         "AdditionalInfo":   null
+                            //     }
+                            // }
+
+                            statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime,
+                                                                                                                       statusCode!,
+                                                                                                                       Request,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushPricingProductDataRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     Request,
+                                                     HTTPResponse,
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        {
+
+                            // HTTP/1.1 404 NotFound
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Wed, 03 Mar 2021 01:00:15 GMT
+                            // Content-Type:    application/json;charset=UTF-8
+                            // Content-Length:  85
+                            // Connection:      keep-alive
+                            // Process-ID:      7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                            // 
+                            // {
+                            //     "StatusCode": {
+                            //         "Code":            "300",
+                            //         "Description":     "Partner not found",
+                            //         "AdditionalInfo":   null
+                            //     }
+                            // }
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(Request,
+                                                                                                                   new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                                                       HTTPResponse.Timestamp,
+                                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                                       HTTPResponse.Runtime,
+                                                                                                                       statusCode!,
+                                                                                                                       Request,
+                                                                                                                       ProcessId: processId
+                                                                                                                   ),
+                                                                                                                   processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushPricingProductDataRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     Request,
+                                                     HTTPResponse,
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        { }
+
+                    }
+                    while (TransmissionRetry++ < MaxNumberOfRetries);
+
+                }
+                catch (Exception e)
+                {
+
+                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                 Request,
+                                 new Acknowledgement<PushPricingProductDataRequest>(
+                                     Timestamp.Now,
+                                     Request.EventTrackingId,
+                                     Timestamp.Now - Request.Timestamp,
+                                     new StatusCode(
+                                         StatusCodes.SystemError,
+                                         e.Message,
+                                         e.StackTrace
+                                     ),
+                                     Request,
+                                     null,
+                                     false
+                                 )
+                             );
+
+                }
+
+                result ??= OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                               Request,
+                               new Acknowledgement<PushPricingProductDataRequest>(
+                                   Timestamp.Now,
+                                   Request.EventTrackingId,
+                                   Timestamp.Now - Request.Timestamp,
+                                   new StatusCode(
+                                       StatusCodes.SystemError,
+                                       statusDescription ?? "HTTP request failed!"
+                                   ),
+                                   Request,
+                                   null,
+                                   false
+                               )
+                           );
+
+            }
+
+
+            #region Send OnPushPricingProductDataResponse event
+
+            var Endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPushPricingProductDataResponse != null)
+                    await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
+                                       Cast<OnPushPricingProductDataResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushPricingProductDataResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+        #region PushEVSEPricing                 (Request)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="Request">A PushEVSEPricing request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>> PushEVSEPricing(PushEVSEPricingRequest Request)
+        {
+
+            #region Initial checks
+
+            //Request = _CustomPushEVSEPricingRequestMapper(Request);
+
+            Byte                                                  TransmissionRetry   = 0;
+            OICPResult<Acknowledgement<PushEVSEPricingRequest>>?  result              = null;
+
+            #endregion
+
+            #region Send OnPushEVSEPricingRequest event
+
+            var StartTime = Timestamp.Now;
+
+            Counter.PushEVSEPricing.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPushEVSEPricingRequest != null)
+                    await Task.WhenAll(OnPushEVSEPricingRequest.GetInvocationList().
+                                       Cast<OnPushEVSEPricingRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEPricingRequest));
+            }
+
+            #endregion
+
+
+            // Apply EVSE filter!
+
+            #region No EVSE data to push?
+
+            if (!Request.EVSEPricing.Any())
+            {
+
+                result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(
+                             Request,
+                             Acknowledgement<PushEVSEPricingRequest>.Success(Request,
+                                                                             StatusCodeDescription: "No EVSE data to push")
+                         );
+
+            }
+
+            #endregion
+
+            else
+            {
+
+                var statusDescription = "HTTP request failed!";
+
+                try
+                {
+
+                    do
+                    {
+
+                        #region Upstream HTTP request...
+
+                        var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                                                                          VirtualHostname,
+                                                                          Description,
+                                                                          RemoteCertificateValidator,
+                                                                          null,
+                                                                          ClientCert,
+                                                                          TLSProtocol,
+                                                                          PreferIPv4,
+                                                                          HTTPUserAgent,
+                                                                          RequestTimeout,
+                                                                          TransmissionRetryDelay,
+                                                                          MaxNumberOfRetries,
+                                                                          false,
+                                                                          null,
+                                                                          DNSClient).
+
+                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pricing-products"),
+                                                                                       requestbuilder => {
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Connection   = "close";
+                                                                                       }),
+
+                                                          RequestLogDelegate:   OnPushEVSEPricingHTTPRequest,
+                                                          ResponseLogDelegate:  OnPushEVSEPricingHTTPResponse,
+                                                          CancellationToken:    Request.CancellationToken,
+                                                          EventTrackingId:      Request.EventTrackingId,
+                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                                  ConfigureAwait(false);
+
+                        #endregion
+
+
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        {
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    // HTTP/1.1 200 OK
+                                    // Server:            nginx/1.18.0
+                                    // Date:              Sat, 09 Jan 2021 06:53:50 GMT
+                                    // Content-Type:      application/json;charset=utf-8
+                                    // Transfer-Encoding: chunked
+                                    // Connection:        keep-alive
+                                    // Process-ID:        d8d4583c-ff9b-44dd-bc92-b341f15f644e
+                                    // cd .
+                                    // {
+                                    //     "Result":               true,
+                                    //     "StatusCode": {
+                                    //         "Code":             "000",
+                                    //         "Description":      null,
+                                    //         "AdditionalInfo":   null
+                                    //     },
+                                    //     "SessionID":            null,
+                                    //     "CPOPartnerSessionID":  null,
+                                    //     "EMPPartnerSessionID":  null
+                                    // }
+
+                                    if (Acknowledgement<PushEVSEPricingRequest>.TryParse(Request,
+                                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                         out Acknowledgement<PushEVSEPricingRequest>?  acknowledgement,
+                                                                                         out String?                                   ErrorResponse,
+                                                                                         HTTPResponse,
+                                                                                         HTTPResponse.Timestamp,
+                                                                                         HTTPResponse.EventTrackingId,
+                                                                                         HTTPResponse.Runtime,
+                                                                                         processId,
+                                                                                         CustomPushEVSEPricingAcknowledgementParser))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(Request,
+                                                                                                             acknowledgement!,
+                                                                                                             processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushEVSEPricingRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     Request,
+                                                     HTTPResponse,
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            TransmissionRetry = Byte.MaxValue - 1;
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        {
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                // HTTP/1.1 400
+                                // Server:             nginx/1.18.0
+                                // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                                // Content-Type:       application/json;charset=utf-8
+                                // Transfer-Encoding:  chunked
+                                // Connection:         keep-alive
+                                // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                                // 
+                                // {
+                                //     "extendedInfo":  null,
+                                //     "message":      "Error parsing/validating JSON.",
+                                //     "validationErrors": [
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                                //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                                //         },
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                                //             "errorMessage":   "may not be null"
+                                //         },
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                                //             "errorMessage":   "may not be empty"
+                                //         },
+                                //         {
+                                //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                                //             "errorMessage":   "may not be empty"
+                                //         }
+                                //     ]
+                                // }
+
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                                                                 out ValidationErrorList?  validationErrors,
+                                                                 out String?               errorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.BadRequest(Request,
+                                                                                                            validationErrors,
+                                                                                                            processId);
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        {
+
+                            // HTTP/1.1 403 Forbidden
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Thu, 15 Apr 2021 22:47:22 GMT
+                            // Content-Type:    text/html
+                            // Content-Length:  162
+                            // Connection:      keep-alive
+                            // 
+                            // <html>
+                            // <head><title>403 Forbidden</title></head>
+                            // <body>
+                            // <center><h1>403 Forbidden</h1></center>
+                            // <hr><center>nginx/1.18.0 (Ubuntu)</center>
+                            // </body>
+                            // </html>
+
+                            statusDescription = "Hubject firewall problem!";
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        {
+
+                            // HTTP/1.1 401 Unauthorized
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                            // Content-Type:    application/json;charset=UTF-8
+                            // Content-Length:  87
+                            // Connection:      keep-alive
+                            // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                            // 
+                            // {
+                            //     "StatusCode": {
+                            //         "Code":            "017",
+                            //         "Description":     "Unauthorized Access",
+                            //         "AdditionalInfo":   null
+                            //     }
+                            // }
+
+                            statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(Request,
+                                                                                                         new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                                             HTTPResponse.Timestamp,
+                                                                                                             HTTPResponse.EventTrackingId,
+                                                                                                             HTTPResponse.Runtime,
+                                                                                                             statusCode!,
+                                                                                                             Request,
+                                                                                                             ProcessId: processId
+                                                                                                         ),
+                                                                                                         processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushEVSEPricingRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     Request,
+                                                     HTTPResponse,
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        {
+
+                            // HTTP/1.1 404 NotFound
+                            // Server:          nginx/1.18.0 (Ubuntu)
+                            // Date:            Wed, 03 Mar 2021 01:00:15 GMT
+                            // Content-Type:    application/json;charset=UTF-8
+                            // Content-Length:  85
+                            // Connection:      keep-alive
+                            // Process-ID:      7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                            // 
+                            // {
+                            //     "StatusCode": {
+                            //         "Code":            "300",
+                            //         "Description":     "Partner not found",
+                            //         "AdditionalInfo":   null
+                            //     }
+                            // }
+
+                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                                HTTPResponse.HTTPBody.Length > 0)
+                            {
+
+                                try
+                                {
+
+                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                            out StatusCode?  statusCode,
+                                                            out String?      ErrorResponse))
+                                    {
+
+                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(Request,
+                                                                                                         new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                                             HTTPResponse.Timestamp,
+                                                                                                             HTTPResponse.EventTrackingId,
+                                                                                                             HTTPResponse.Runtime,
+                                                                                                             statusCode!,
+                                                                                                             Request,
+                                                                                                             ProcessId: processId
+                                                                                                         ),
+                                                                                                         processId);
+
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<PushEVSEPricingRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     HTTPResponse.Runtime,
+                                                     new StatusCode(
+                                                         StatusCodes.SystemError,
+                                                         e.Message,
+                                                         e.StackTrace),
+                                                     Request,
+                                                     HTTPResponse,
+                                                     false,
+                                                     ProcessId: processId
+                                                 )
+                                             );
+
+                                }
+
+                            }
+
+                            break;
+
+                        }
+
+                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        { }
+
+                    }
+                    while (TransmissionRetry++ < MaxNumberOfRetries);
+
+                }
+                catch (Exception e)
+                {
+
+                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                 Request,
+                                 new Acknowledgement<PushEVSEPricingRequest>(
+                                     Timestamp.Now,
+                                     Request.EventTrackingId,
+                                     Timestamp.Now - Request.Timestamp,
+                                     new StatusCode(
+                                         StatusCodes.SystemError,
+                                         e.Message,
+                                         e.StackTrace
+                                     ),
+                                     Request,
+                                     null,
+                                     false
+                                 )
+                             );
+
+                }
+
+                result ??= OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                               Request,
+                               new Acknowledgement<PushEVSEPricingRequest>(
+                                   Timestamp.Now,
+                                   Request.EventTrackingId,
+                                   Timestamp.Now - Request.Timestamp,
+                                   new StatusCode(
+                                       StatusCodes.SystemError,
+                                       statusDescription ?? "HTTP request failed!"
+                                   ),
+                                   Request,
+                                   null,
+                                   false
+                               )
+                           );
+
+            }
+
+
+            #region Send OnPushEVSEPricingResponse event
+
+            var Endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPushEVSEPricingResponse != null)
+                    await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
+                                       Cast<OnPushEVSEPricingResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEPricingResponse));
             }
 
             #endregion
@@ -1747,8 +2798,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<AuthorizationStartResponse>.Failed(Request,
@@ -2521,8 +3572,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
@@ -2594,8 +3645,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
@@ -2976,8 +4027,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
@@ -3049,8 +4100,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
@@ -3431,8 +4482,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
@@ -3504,8 +4555,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
@@ -3959,8 +5010,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode  statusCode,
-                                                        out String      ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
