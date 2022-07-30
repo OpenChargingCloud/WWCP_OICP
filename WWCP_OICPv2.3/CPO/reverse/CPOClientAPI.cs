@@ -852,7 +852,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          CacheControl    = "public, max-age=300",
                                                          Connection      = "close"
                                                      }.AsImmutable);
-                                             });
+                                             },
+                                             AllowReplacement: URLReplacement.Allow);
 
             #endregion
 

@@ -578,31 +578,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region (private) RegisterURLTemplates()
+        #region (private) RegisterURLTemplates(RegisterRootService = true)
 
-        private void RegisterURLTemplates()
+        private void RegisterURLTemplates(Boolean RegisterRootService = true)
         {
 
             #region / (HTTPRoot)
 
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.GET,
-                                         new HTTPPath[] {
-                                             URLPathPrefix + "/",
-                                             URLPathPrefix + "/{FileName}"
-                                         },
-                                         HTTPDelegate: Request => {
-                                             return Task.FromResult(
-                                                 new HTTPResponse.Builder(Request) {
-                                                     HTTPStatusCode  = HTTPStatusCode.OK,
-                                                     Server          = HTTPServer.DefaultServerName,
-                                                     Date            = Timestamp.Now,
-                                                     ContentType     = HTTPContentType.TEXT_UTF8,
-                                                     Content         = "This is an OICP v2.3 HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                     CacheControl    = "public, max-age=300",
-                                                     Connection      = "close"
-                                                 }.AsImmutable);
-                                         });
+            if (RegisterRootService)
+                HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                             HTTPMethod.GET,
+                                             new HTTPPath[] {
+                                                 URLPathPrefix + "/",
+                                                 URLPathPrefix + "/{FileName}"
+                                             },
+                                             HTTPDelegate: Request => {
+                                                 return Task.FromResult(
+                                                     new HTTPResponse.Builder(Request) {
+                                                         HTTPStatusCode  = HTTPStatusCode.OK,
+                                                         Server          = HTTPServer.DefaultServerName,
+                                                         Date            = Timestamp.Now,
+                                                         ContentType     = HTTPContentType.TEXT_UTF8,
+                                                         Content         = "This is an OICP v2.3 EMP Server HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                         CacheControl    = "public, max-age=300",
+                                                         Connection      = "close"
+                                                     }.AsImmutable);
+                                             },
+                                             AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
