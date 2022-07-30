@@ -67,6 +67,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        //ToDo: Unclear data structure?!
+
         #region Documentation
 
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#ProductAvailabilityTimesType
@@ -78,6 +80,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //     },
         //     "on":      "Monday"
         // }
+
+        //ToDo: Unclear which one is correct?!
+
+        //         {
+        //             "Periods": [
+        //                 {
+        //                     "begin":  "09:00",
+        //                     "end":    "18:00"
+        //                 }
+        //             ],
+        //             "on": "Everyday"
+        //         }
 
         #endregion
 

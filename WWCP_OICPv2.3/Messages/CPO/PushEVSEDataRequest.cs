@@ -329,7 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomPushEVSEDataRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomPushEVSEDataRequestSerializer">A delegate to serialize custom PushEVSEData request.</param>
         /// <param name="CustomOperatorEVSEDataSerializer">A delegate to serialize custom operator EVSE data JSON objects.</param>
         /// <param name="CustomEVSEDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
         /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>

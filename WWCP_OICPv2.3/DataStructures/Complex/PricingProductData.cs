@@ -28,8 +28,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// An Electric Vehicle Supply Equipment (EVSE) data record.
-    /// This is meant to be one electrical circuit which can charge an electric vehicle.
+    /// Pricing product data.
     /// </summary>
     public class PricingProductData : AInternalData,
                                       IEquatable<PricingProductData>,
@@ -46,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Operator_Id                            OperatorId                        { get; }
 
         /// <summary>
-        /// The name of the operator whose data records are listed below.
+        /// The optional name of the operator whose data records are listed below.
         /// </summary>
         [Optional]
         public String?                                OperatorName                      { get; }
@@ -94,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new Electric Vehicle Supply Equipment (EVSE) data record.
+        /// Create a new pricing product data object.
         /// </summary>
         /// <param name="OperatorId">The unique identification of the operator whose data records are listed below.</param>
         /// <param name="ProviderId">The EMP for whom the pricing data is applicable. In case the data is to be made available for all EMPs (e.g. for Offer-to-All prices), the asterix character (*) can be set as the value in this field.</param>
@@ -144,7 +143,40 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#123-pricingproductdatatype
 
         // {
-        //   
+        //     "OperatorID":                    "DE*ABC",
+        //     "OperatorName":                  "ABC technologies",
+        //     "PricingDefaultPrice":            0,
+        //     "PricingDefaultPriceCurrency":   "EUR",
+        //     "PricingDefaultReferenceUnit":   "HOUR",
+        //     "PricingProductDataRecords": [
+        //         {
+        //             "AdditionalReferences": [
+        //                 {
+        //                     "AdditionalReference":               "PARKING FEE",
+        //                     "AdditionalReferenceUnit":           "HOUR",
+        //                     "PricePerAdditionalReferenceUnit":    2
+        //                 }
+        //             ],
+        //             "IsValid24hours":                false,
+        //             "MaximumProductChargingPower":   22,
+        //             "PricePerReferenceUnit":         1,
+        //             "ProductAvailabilityTimes": [
+        //                 {
+        //                     "Periods": [
+        //                         {
+        //                             "begin":  "09:00",
+        //                             "end":    "18:00"
+        //                         }
+        //                     ],
+        //                     "on": "Everyday"
+        //                 }
+        //             ],
+        //             "ProductID":             "AC 1",
+        //             "ProductPriceCurrency":  "EUR",
+        //             "ReferenceUnit":         "HOUR"
+        //         }
+        //     ],
+        //     "ProviderID": "*"
         // }
 
         #endregion
@@ -406,7 +438,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomPricingProductDataSerializer">A delegate to serialize custom pricing product data object JSON objects.</param>
+        /// <param name="CustomPricingProductDataSerializer">A delegate to serialize custom pricing product data JSON objects.</param>
+        /// <param name="CustomPricingProductDataRecordSerializer">A delegate to serialize custom pricing product data record JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<PricingProductData>?        CustomPricingProductDataSerializer         = null,
                               CustomJObjectSerializerDelegate<PricingProductDataRecord>?  CustomPricingProductDataRecordSerializer   = null)
         {

@@ -151,7 +151,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#124-pricingproductdatarecordtype
 
         // {
-        //   
+        //     "AdditionalReferences": [
+        //         {
+        //             "AdditionalReference":               "PARKING FEE",
+        //             "AdditionalReferenceUnit":           "HOUR",
+        //             "PricePerAdditionalReferenceUnit":    2
+        //         }
+        //     ],
+        //     "IsValid24hours":                false,
+        //     "MaximumProductChargingPower":   22,
+        //     "PricePerReferenceUnit":         1,
+        //     "ProductAvailabilityTimes": [
+        //         {
+        //             "Periods": [
+        //                 {
+        //                     "begin":  "09:00",
+        //                     "end":    "18:00"
+        //                 }
+        //             ],
+        //             "on": "Everyday"
+        //         }
+        //     ],
+        //     "ProductID":             "AC 1",
+        //     "ProductPriceCurrency":  "EUR",
+        //     "ReferenceUnit":         "HOUR"
         // }
 
         #endregion
