@@ -401,7 +401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomPricingProductDataSerializer = null, CustomAddressSerializer = null, ...)
+        #region ToJSON(CustomPricingProductDataSerializer = null, CustomPricingProductDataRecordSerializer = null, ...)
 
         /// <summary>
         /// Return a JSON representation of this object.
