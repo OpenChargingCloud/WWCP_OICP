@@ -558,21 +558,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(CalibrationLawVerification? CalibrationLawVerification)
         {
 
-            var result = String.Compare(PublicKey,                                    CalibrationLawVerification?.PublicKey);
+            var c = String.Compare(PublicKey,                                    CalibrationLawVerification?.PublicKey);
 
-            if (result == 0)
-                result = String.Compare(CalibrationLawCertificateId,                  CalibrationLawVerification?.CalibrationLawCertificateId);
+            if (c == 0)
+                c = String.Compare(CalibrationLawCertificateId,                  CalibrationLawVerification?.CalibrationLawCertificateId);
 
-            if (result == 0 && MeteringSignatureURL.HasValue && CalibrationLawVerification?.MeteringSignatureURL.HasValue == true)
-                result =                MeteringSignatureURL.Value.CompareTo(         CalibrationLawVerification.MeteringSignatureURL.Value);
+            if (c == 0 && MeteringSignatureURL.HasValue && CalibrationLawVerification?.MeteringSignatureURL.HasValue == true)
+                c =                MeteringSignatureURL.Value.CompareTo(         CalibrationLawVerification.MeteringSignatureURL.Value);
 
-            if (result == 0)
-                result = String.Compare(MeteringSignatureEncodingFormat,              CalibrationLawVerification?.MeteringSignatureEncodingFormat);
+            if (c == 0)
+                c = String.Compare(MeteringSignatureEncodingFormat,              CalibrationLawVerification?.MeteringSignatureEncodingFormat);
 
-            if (result == 0)
-                result = String.Compare(SignedMeteringValuesVerificationInstruction,  CalibrationLawVerification?.SignedMeteringValuesVerificationInstruction);
+            if (c == 0)
+                c = String.Compare(SignedMeteringValuesVerificationInstruction,  CalibrationLawVerification?.SignedMeteringValuesVerificationInstruction);
 
-            return result;
+            return c;
 
         }
 
@@ -606,6 +606,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Boolean Equals(CalibrationLawVerification? CalibrationLawVerification)
 
             => CalibrationLawVerification is not null &&
+
                String.Equals(PublicKey,                                    CalibrationLawVerification?.PublicKey)                                   &&
                String.Equals(CalibrationLawCertificateId,                  CalibrationLawVerification?.CalibrationLawCertificateId)                 &&
                String.Equals(MeteringSignatureEncodingFormat,              CalibrationLawVerification?.MeteringSignatureEncodingFormat)             &&
@@ -613,7 +614,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
              ((!MeteringSignatureURL.HasValue && !CalibrationLawVerification?.MeteringSignatureURL.HasValue == true) ||
                (MeteringSignatureURL.HasValue &&  CalibrationLawVerification?.MeteringSignatureURL.HasValue == true &&
-                             MeteringSignatureURL.Equals(                  CalibrationLawVerification.MeteringSignatureURL)));
+                             MeteringSignatureURL.Equals(CalibrationLawVerification.MeteringSignatureURL)));
 
         #endregion
 

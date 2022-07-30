@@ -745,17 +745,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Address? Address)
 
-            => !(Address is null) &&
-                 Country         == Address.Country         &&
-                 City            == Address.City            &&
-                 Street          == Address.Street          &&
-                 PostalCode      == Address.PostalCode      &&
-                 HouseNumber     == Address.HouseNumber     &&
-                 Floor           == Address.Floor           &&
-                 Region          == Address.Region          &&
-                 ParkingFacility == Address.ParkingFacility &&
-                 ParkingSpot     == Address.ParkingSpot     &&
-                 TimeZone        == Address.TimeZone;
+            => Address is not null &&
+
+               Country         == Address.Country         &&
+               City            == Address.City            &&
+               Street          == Address.Street          &&
+               PostalCode      == Address.PostalCode      &&
+               HouseNumber     == Address.HouseNumber     &&
+               Floor           == Address.Floor           &&
+               Region          == Address.Region          &&
+               ParkingFacility == Address.ParkingFacility &&
+               ParkingSpot     == Address.ParkingSpot     &&
+               TimeZone        == Address.TimeZone;
 
         #endregion
 

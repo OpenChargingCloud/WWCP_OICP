@@ -572,8 +572,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EVSEDataRecord? evseDataRecord,
-                         out String?         errorResponse,
+                         out EVSEDataRecord?  evseDataRecord,
+                         out String?          errorResponse,
                          CustomEVSEDataRecordParser))
             {
                 return evseDataRecord!;
@@ -597,8 +597,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out EVSEDataRecord? evseDataRecord,
-                         out String?         errorResponse,
+                         out EVSEDataRecord?  evseDataRecord,
+                         out String?          errorResponse,
                          CustomEVSEDataRecordParser))
             {
                 return evseDataRecord!;
@@ -714,7 +714,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSON2("Address",
                                               "address",
                                               OICPv2_3.Address.TryParse,
-                                              out Address Address,
+                                              out Address? Address,
                                               out ErrorResponse))
                 {
                     return false;
@@ -1197,7 +1197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                     OperatorId,
                                                     OperatorName,
                                                     ChargingStationName,
-                                                    Address,
+                                                    Address!,
                                                     GeoCoordinates,
                                                     PlugTypes,
                                                     ChargingFacilities,
@@ -1323,7 +1323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("PaymentOptions",                          new JArray(PaymentOptions.     SafeSelect(paymentOption      => paymentOption.     AsString()))),
                            new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. SafeSelect(valueAddedService  => valueAddedService. AsString()))),
                            new JProperty("Accessibility",                           Accessibility.                     AsString()),
-                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber.                ToString().Replace(" ", "")),
+                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber?.               ToString().Replace(" ", "")),
                            new JProperty("IsOpen24Hours",                           IsOpen24Hours),
                            new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
                            new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              ToString()),
@@ -1448,22 +1448,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                     ChargingStationId?.               Clone,
                     ChargingPoolId?.                  Clone,
-                    HardwareManufacturer is not null ? new String(HardwareManufacturer.ToCharArray()) : null,
+                    HardwareManufacturer is not null
+                        ? new String(HardwareManufacturer.ToCharArray())
+                        : null,
                     ChargingStationImageURL?.         Clone,
-                    SubOperatorName      is not null ? new String(SubOperatorName.     ToCharArray()) : null,
+                    SubOperatorName      is not null
+                        ? new String(SubOperatorName.     ToCharArray())
+                        : null,
                     DynamicPowerLevel,
-                    EnergySources        is not null ? EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray() : null,
+                    EnergySources        is not null
+                        ? EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray()
+                        : null,
                     EnvironmentalImpact?.             Clone,
                     MaxCapacity,
                     AccessibilityLocationType,
                     AdditionalInfo?.                  Clone,
                     ChargingStationLocationReference?.Clone,
                     GeoChargingPointEntrance?.        Clone,
-                    OpeningTimes         is not null ? OpeningTimes. SafeSelect(openingTime  => openingTime. Clone).ToArray() : null,
+                    OpeningTimes         is not null
+                        ? OpeningTimes. SafeSelect(openingTime  => openingTime. Clone).ToArray()
+                        : null,
                     HubOperatorId?.                   Clone,
                     ClearingHouseId?.                 Clone,
 
-                    CustomData           is not null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+                    CustomData           is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 

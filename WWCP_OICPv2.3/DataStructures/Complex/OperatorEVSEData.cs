@@ -538,8 +538,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 c = EVSEDataRecords.Count().CompareTo(OperatorEVSEData.EVSEDataRecords.Count());
 
             if (c == 0)
-                c = EVSEDataRecords.Select(evseDataRecord => evseDataRecord.Id.ToString()).AggregateWith("-").
-                             CompareTo(OperatorEVSEData.EVSEDataRecords.Select(evseDataRecord => evseDataRecord.Id.ToString()).AggregateWith("-"));
+                c = EVSEDataRecords.OrderBy      (evseDataRecord => evseDataRecord.Id).
+                                    Select       (evseDataRecord => evseDataRecord.Id.ToString()).
+                                    AggregateWith("-").
+                                    CompareTo    (OperatorEVSEData.EVSEDataRecords.OrderBy(evseDataRecord => evseDataRecord.Id).
+                                                                                   Select (evseDataRecord => evseDataRecord.Id.ToString()).
+                                                                                   AggregateWith("-"));
 
             return c;
 

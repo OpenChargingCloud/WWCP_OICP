@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -260,6 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 EnergySource = new EnergySource(EnergyType,
                                                 Percentage);
 
+
                 if (CustomEnergySourceParser is not null)
                     EnergySource = CustomEnergySourceParser(JSON,
                                                             EnergySource);
@@ -457,8 +456,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Object">An object to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
-            => Object is EnergySource EnergySource
-                   ? CompareTo(EnergySource)
+            => Object is EnergySource energySource
+                   ? CompareTo(energySource)
                    : throw new ArgumentException("The given object is not an energy source!",
                                                  nameof(Object));
 
@@ -476,7 +475,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var c = EnergyType.CompareTo(EnergySource.EnergyType);
 
             if (c == 0 && Percentage.HasValue && EnergySource.Percentage.HasValue)
-                return Percentage.Value.CompareTo(EnergySource.Percentage.Value);
+                c = Percentage.Value.CompareTo(EnergySource.Percentage.Value);
 
             return c;
 
@@ -497,8 +496,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object? Object)
 
-            => Object is EnergySource energySourceute &&
-                   Equals(energySourceute);
+            => Object is EnergySource energySource &&
+                   Equals(energySource);
 
         #endregion
 
