@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Net.Security;
 using System.Security.Authentication;
 
@@ -662,7 +661,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 LogfileCreator)
                                    : null;
 
-            RegisterURLTemplates();
+            RegisterURLTemplates(false);
 
         }
 
@@ -722,6 +721,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             HTTPPath?                             URLPathPrefix                      = null,
                             String                                HTTPServiceName                    = DefaultHTTPServiceName,
+                            Boolean                               RegisterRootService                = true,
                             JObject?                              APIVersionHashes                   = null,
 
                             ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
@@ -815,7 +815,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 LogfileCreator)
                                    : null;
 
-            RegisterURLTemplates();
+            RegisterURLTemplates(RegisterRootService);
 
             if (Autostart)
                 Start();
@@ -827,31 +827,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region (private) RegisterURLTemplates()
+        #region (private) RegisterURLTemplates(RegisterRootService = true)
 
-        private void RegisterURLTemplates()
+        private void RegisterURLTemplates(Boolean RegisterRootService = true)
         {
 
             #region / (HTTPRoot)
 
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.GET,
-                                         new HTTPPath[] {
-                                             URLPathPrefix + "/",
-                                             URLPathPrefix + "/{FileName}"
-                                         },
-                                         HTTPDelegate: Request => {
-                                             return Task.FromResult(
-                                                 new HTTPResponse.Builder(Request) {
-                                                     HTTPStatusCode  = HTTPStatusCode.OK,
-                                                     Server          = HTTPServer.DefaultServerName,
-                                                     Date            = Timestamp.Now,
-                                                     ContentType     = HTTPContentType.TEXT_UTF8,
-                                                     Content         = "This is an OICP v2.3 HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                     CacheControl    = "public, max-age=300",
-                                                     Connection      = "close"
-                                                 }.AsImmutable);
-                                         });
+            if (RegisterRootService)
+                HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                             HTTPMethod.GET,
+                                             new HTTPPath[] {
+                                                 URLPathPrefix + "/",
+                                                 URLPathPrefix + "/{FileName}"
+                                             },
+                                             HTTPDelegate: Request => {
+                                                 return Task.FromResult(
+                                                     new HTTPResponse.Builder(Request) {
+                                                         HTTPStatusCode  = HTTPStatusCode.OK,
+                                                         Server          = HTTPServer.DefaultServerName,
+                                                         Date            = Timestamp.Now,
+                                                         ContentType     = HTTPContentType.TEXT_UTF8,
+                                                         Content         = "This is an OICP v2.3 CPO Client HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                         CacheControl    = "public, max-age=300",
+                                                         Connection      = "close"
+                                                     }.AsImmutable);
+                                             });
 
             #endregion
 

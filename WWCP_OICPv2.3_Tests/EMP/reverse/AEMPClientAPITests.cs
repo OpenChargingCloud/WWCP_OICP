@@ -79,7 +79,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
                         new PullEVSEDataResponse(
                             pullEVSEDataRequest,
                             Timestamp.Now,
-                            pullEVSEDataRequest.EventTrackingId,
+                            pullEVSEDataRequest.EventTrackingId ?? EventTracking_Id.New,
                             Timestamp.Now - pullEVSEDataRequest.Timestamp,
                             Array.Empty<EVSEDataRecord>(),
                             StatusCode: new StatusCode(

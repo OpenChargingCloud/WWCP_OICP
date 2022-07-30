@@ -17,13 +17,7 @@
 
 #region Usings
 
-using System;
-
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-
-using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -69,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
@@ -112,7 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response.AuthorizationStatus);
+            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
@@ -156,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
@@ -199,7 +193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response.AuthorizationStatus);
+            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStart.Requests_Error);
@@ -244,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response.AuthorizationStatus);
+            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStop.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.AuthorizeStop.Requests_Error);

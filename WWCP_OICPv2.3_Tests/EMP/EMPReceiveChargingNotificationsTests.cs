@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -75,8 +73,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (true,                oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, empServerAPI.Counters.ChargingStartNotification.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.ChargingStartNotification.Requests_Error);
@@ -131,8 +129,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (true,                oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, empServerAPI.Counters.ChargingProgressNotification.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.ChargingProgressNotification.Requests_Error);
@@ -189,8 +187,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (true,                oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, empServerAPI.Counters.ChargingEndNotification.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.ChargingEndNotification.Requests_Error);
@@ -238,8 +236,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (true,                oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, empServerAPI.Counters.ChargingErrorNotification.Requests_OK);
             Assert.AreEqual(0, empServerAPI.Counters.ChargingErrorNotification.Requests_Error);

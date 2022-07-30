@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -72,8 +70,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (true,                oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK);
             Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error);
@@ -121,8 +119,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (false,                                 oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (false,                                 oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK);
             Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error);
@@ -169,8 +167,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (true,                oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_OK);
             Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_Error);
@@ -216,8 +214,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (false,                                 oicpResult.Response.Result);
-            Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response.StatusCode.Code);
+            Assert.AreEqual (false,                                 oicpResult.Response?.Result);
+            Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
 
             Assert.AreEqual(1, cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_OK);
             Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStop.Requests_Error);
