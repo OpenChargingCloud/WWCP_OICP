@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
@@ -169,6 +163,81 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         EMPClientAPI                                      Sender,
                                                         OICPResult<PullEVSEStatusByOperatorIdResponse>    Response,
                                                         TimeSpan                                          Runtime);
+
+    #endregion
+
+
+    #region OnPullPricingProductData           (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullPricingProductData request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPullPricingProductDataAPIRequestDelegate (DateTime                                      Timestamp,
+                                                    EMPClientAPI                                  Sender,
+                                                    PullPricingProductDataRequest                 Request);
+
+
+    /// <summary>
+    /// Send a PullPricingProductData.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<PullPricingProductDataResponse>>
+
+        OnPullPricingProductDataAPIDelegate        (DateTime                                      Timestamp,
+                                                    EMPClientAPI                                  Sender,
+                                                    PullPricingProductDataRequest                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PullPricingProductData response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPullPricingProductDataAPIResponseDelegate(DateTime                                      Timestamp,
+                                                    EMPClientAPI                                  Sender,
+                                                    OICPResult<PullPricingProductDataResponse>    Response,
+                                                    TimeSpan                                      Runtime);
+
+    #endregion
+
+    #region OnPullEVSEPricing                  (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEPricing request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEPricingAPIRequestDelegate (DateTime                               Timestamp,
+                                             EMPClientAPI                           Sender,
+                                             PullEVSEPricingRequest                 Request);
+
+
+    /// <summary>
+    /// Send a PullEVSEPricing.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<PullEVSEPricingResponse>>
+
+        OnPullEVSEPricingAPIDelegate        (DateTime                               Timestamp,
+                                             EMPClientAPI                           Sender,
+                                             PullEVSEPricingRequest                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEPricing response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPullEVSEPricingAPIResponseDelegate(DateTime                               Timestamp,
+                                             EMPClientAPI                           Sender,
+                                             OICPResult<PullEVSEPricingResponse>    Response,
+                                             TimeSpan                               Runtime);
 
     #endregion
 

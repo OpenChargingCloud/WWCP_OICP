@@ -129,18 +129,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushPricingProductDataRequestParser">A delegate to parse custom push pricing product data request JSON objects.</param>
         public static PushPricingProductDataRequest Parse(JObject                                                      JSON,
-                                                          TimeSpan                                                     RequestTimeout,
+
                                                           DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
                                                           CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         RequestTimeout,
                          out PushPricingProductDataRequest?  pushEVSEDataRequest,
                          out String?                         errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushPricingProductDataRequestParser))
             {
                 return pushEVSEDataRequest!;
@@ -163,18 +167,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushPricingProductDataRequestParser">A delegate to parse custom push pricing product data request JSON objects.</param>
         public static PushPricingProductDataRequest Parse(String                                                       Text,
-                                                          TimeSpan                                                     RequestTimeout,
+
                                                           DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
                                                           CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         RequestTimeout,
                          out PushPricingProductDataRequest?  pushEVSEDataRequest,
                          out String?                         errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushPricingProductDataRequestParser))
             {
                 return pushEVSEDataRequest!;
@@ -186,7 +194,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, ..., out PushPricingProductDataRequest, out ErrorResponse, ..., CustomPushPricingProductDataRequestParser = null)
+        #region (static) TryParse(JSON, out PushPricingProductDataRequest, out ErrorResponse, ..., CustomPushPricingProductDataRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a push pricing product data request.
@@ -199,11 +207,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushPricingProductDataRequestParser">A delegate to parse custom push pricing product data request JSON objects.</param>
         public static Boolean TryParse(JObject                                                      JSON,
-                                       TimeSpan                                                     RequestTimeout,
                                        out PushPricingProductDataRequest?                           PushPricingProductDataRequest,
                                        out String?                                                  ErrorResponse,
+
                                        DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
                                        CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
         {
 
@@ -257,7 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   ActionType,
                                                                                   CustomData,
                                                                                   Timestamp,
-                                                                                  null,
+                                                                                  CancellationToken,
                                                                                   EventTrackingId,
                                                                                   RequestTimeout);
 
@@ -279,7 +290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, ..., out PushPricingProductDataRequest, out ErrorResponse, ..., CustomPushPricingProductDataRequestParser = null)
+        #region (static) TryParse(Text, out PushPricingProductDataRequest, out ErrorResponse, ..., CustomPushPricingProductDataRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a push pricing product data request.
@@ -292,11 +303,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushPricingProductDataRequestParser">A delegate to parse custom push pricing product data request JSON objects.</param>
         public static Boolean TryParse(String                                                       Text,
-                                       TimeSpan                                                     RequestTimeout,
                                        out PushPricingProductDataRequest?                           PushPricingProductDataRequest,
                                        out String?                                                  ErrorResponse,
+
                                        DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
                                        CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
         {
 
@@ -304,11 +318,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
-                                RequestTimeout,
                                 out PushPricingProductDataRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomPushPricingProductDataRequestParser);
 
             }

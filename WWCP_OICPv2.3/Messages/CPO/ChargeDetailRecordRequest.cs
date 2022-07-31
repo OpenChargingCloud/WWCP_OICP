@@ -159,7 +159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomChargeDetailRecordRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a ChargeDetailRecord request.
@@ -172,19 +172,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord JSON objects.</param>
         public static ChargeDetailRecordRequest Parse(JObject                                                  JSON,
                                                       Operator_Id                                              OperatorIdURL,
-                                                      TimeSpan                                                 RequestTimeout,
+
                                                       DateTime?                                                Timestamp                               = null,
+                                                      CancellationToken?                                       CancellationToken                       = null,
                                                       EventTracking_Id?                                        EventTrackingId                         = null,
+                                                      TimeSpan?                                                RequestTimeout                          = null,
+
                                                       CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          OperatorIdURL,
-                         RequestTimeout,
                          out ChargeDetailRecordRequest?  authorizeRemoteStopRequest,
                          out String?                     errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomChargeDetailRecordRequestParser))
             {
                 return authorizeRemoteStopRequest!;
@@ -196,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomChargeDetailRecordRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a ChargeDetailRecord request.
@@ -209,19 +213,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static ChargeDetailRecordRequest Parse(String                                                   Text,
                                                       Operator_Id                                              OperatorIdURL,
-                                                      TimeSpan                                                 RequestTimeout,
+
                                                       DateTime?                                                Timestamp                               = null,
+                                                      CancellationToken?                                       CancellationToken                       = null,
                                                       EventTracking_Id?                                        EventTrackingId                         = null,
+                                                      TimeSpan?                                                RequestTimeout                          = null,
+
                                                       CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null)
         {
 
             if (TryParse(Text,
                          OperatorIdURL,
-                         RequestTimeout,
                          out ChargeDetailRecordRequest?  authorizeRemoteStopRequest,
                          out String?                     errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomChargeDetailRecordRequestParser))
             {
                 return authorizeRemoteStopRequest!;
@@ -233,7 +241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out ChargeDetailRecordRequest, out ErrorResponse, CustomChargeDetailRecordRequestParser = null)
+        #region (static) TryParse(JSON, OperatorIdURL, out ChargeDetailRecordRequest, out ErrorResponse, ..., CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a ChargeDetailRecord request.
@@ -248,11 +256,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static Boolean TryParse(JObject                                                  JSON,
                                        Operator_Id                                              OperatorIdURL,
-                                       TimeSpan                                                 RequestTimeout,
                                        out ChargeDetailRecordRequest?                           ChargeDetailRecordRequest,
                                        out String?                                              ErrorResponse,
+
                                        DateTime?                                                Timestamp                               = null,
+                                       CancellationToken?                                       CancellationToken                       = null,
                                        EventTracking_Id?                                        EventTrackingId                         = null,
+                                       TimeSpan?                                                RequestTimeout                          = null,
+
                                        CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null)
         {
 
@@ -290,7 +301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                           CustomData,
 
                                                                           Timestamp,
-                                                                          null,
+                                                                          CancellationToken,
                                                                           EventTrackingId,
                                                                           RequestTimeout);
 
@@ -312,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out ChargeDetailRecordRequest, out ErrorResponse, CustomChargeDetailRecordRequestParser = null)
+        #region (static) TryParse(Text, OperatorIdURL, out ChargeDetailRecordRequest, out ErrorResponse, ..., CustomChargeDetailRecordRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a ChargeDetailRecord request.
@@ -327,11 +338,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static Boolean TryParse(String                                                   Text,
                                        Operator_Id                                              OperatorIdURL,
-                                       TimeSpan                                                 RequestTimeout,
                                        out ChargeDetailRecordRequest?                           ChargeDetailRecordRequest,
                                        out String?                                              ErrorResponse,
+
                                        DateTime?                                                Timestamp                               = null,
+                                       CancellationToken?                                       CancellationToken                       = null,
                                        EventTracking_Id?                                        EventTrackingId                         = null,
+                                       TimeSpan?                                                RequestTimeout                          = null,
+
                                        CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null)
         {
 
@@ -340,11 +354,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(JObject.Parse(Text),
                                 OperatorIdURL,
-                                RequestTimeout,
                                 out ChargeDetailRecordRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomChargeDetailRecordRequestParser);
 
             }

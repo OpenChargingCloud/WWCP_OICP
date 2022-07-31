@@ -234,7 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomChargingNotificationsEndRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomChargingEndNotificationRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a charging notification end request.
@@ -243,21 +243,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
+        /// <param name="CustomChargingEndNotificationRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
         public static ChargingEndNotificationRequest Parse(JObject                                                       JSON,
-                                                           TimeSpan                                                      RequestTimeout,
-                                                           DateTime?                                                     Timestamp                                     = null,
-                                                           EventTracking_Id?                                             EventTrackingId                               = null,
-                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
+
+                                                           DateTime?                                                     Timestamp                                    = null,
+                                                           CancellationToken?                                            CancellationToken                            = null,
+                                                           EventTracking_Id?                                             EventTrackingId                              = null,
+                                                           TimeSpan?                                                     RequestTimeout                               = null,
+
+                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         RequestTimeout,
                          out ChargingEndNotificationRequest?  chargingNotificationsEndRequest,
                          out String?                          errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
-                         CustomChargingNotificationsEndRequestParser))
+                         RequestTimeout,
+                         CustomChargingEndNotificationRequestParser))
             {
                 return chargingNotificationsEndRequest!;
             }
@@ -268,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomChargingNotificationsEndRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomChargingEndNotificationRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a charging notification end request.
@@ -277,21 +281,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
+        /// <param name="CustomChargingEndNotificationRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
         public static ChargingEndNotificationRequest Parse(String                                                        Text,
-                                                           TimeSpan                                                      RequestTimeout,
-                                                           DateTime?                                                     Timestamp                                     = null,
-                                                           EventTracking_Id?                                             EventTrackingId                               = null,
-                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
+
+                                                           DateTime?                                                     Timestamp                                    = null,
+                                                           CancellationToken?                                            CancellationToken                            = null,
+                                                           EventTracking_Id?                                             EventTrackingId                              = null,
+                                                           TimeSpan?                                                     RequestTimeout                               = null,
+
+                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         RequestTimeout,
                          out ChargingEndNotificationRequest?  chargingNotificationsEndRequest,
                          out String?                          errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
-                         CustomChargingNotificationsEndRequestParser))
+                         RequestTimeout,
+                         CustomChargingEndNotificationRequestParser))
             {
                 return chargingNotificationsEndRequest!;
             }
@@ -302,31 +310,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out ChargingNotificationsEndRequest, out ErrorResponse, CustomChargingNotificationsEndRequestParser = null)
+        #region (static) TryParse(JSON, out ChargingEndNotificationRequest, out ErrorResponse, ..., CustomChargingEndNotificationRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a charging notification end request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="ChargingNotificationsEndRequest">The parsed charging notification end request.</param>
+        /// <param name="ChargingEndNotificationRequest">The parsed charging notification end request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
+        /// <param name="CustomChargingEndNotificationRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
         public static Boolean TryParse(JObject                                                       JSON,
-                                       TimeSpan                                                      RequestTimeout,
-                                       out ChargingEndNotificationRequest?                           ChargingNotificationsEndRequest,
+                                       out ChargingEndNotificationRequest?                           ChargingEndNotificationRequest,
                                        out String?                                                   ErrorResponse,
-                                       DateTime?                                                     Timestamp                                     = null,
-                                       EventTracking_Id?                                             EventTrackingId                               = null,
-                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
+
+                                       DateTime?                                                     Timestamp                                    = null,
+                                       CancellationToken?                                            CancellationToken                            = null,
+                                       EventTracking_Id?                                             EventTrackingId                              = null,
+                                       TimeSpan?                                                     RequestTimeout                               = null,
+
+                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null)
         {
 
             try
             {
 
-                ChargingNotificationsEndRequest = default;
+                ChargingEndNotificationRequest = default;
 
                 if (JSON?.HasValues != true)
                 {
@@ -577,7 +588,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingNotificationsEndRequest = new ChargingEndNotificationRequest(SessionId,
+                ChargingEndNotificationRequest = new ChargingEndNotificationRequest(SessionId,
                                                                                      Identification,
                                                                                      EVSEId,
                                                                                      ChargingStart,
@@ -597,20 +608,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                      CustomData,
 
                                                                                      Timestamp,
-                                                                                     null,
+                                                                                     CancellationToken,
                                                                                      EventTrackingId,
                                                                                      RequestTimeout);
 
-                if (CustomChargingNotificationsEndRequestParser is not null)
-                    ChargingNotificationsEndRequest = CustomChargingNotificationsEndRequestParser(JSON,
-                                                                                                  ChargingNotificationsEndRequest);
+                if (CustomChargingEndNotificationRequestParser is not null)
+                    ChargingEndNotificationRequest = CustomChargingEndNotificationRequestParser(JSON,
+                                                                                                  ChargingEndNotificationRequest);
 
                 return true;
 
             }
             catch (Exception e)
             {
-                ChargingNotificationsEndRequest  = default;
+                ChargingEndNotificationRequest  = default;
                 ErrorResponse                    = "The given JSON representation of a charging notification end request is invalid: " + e.Message;
                 return false;
             }
@@ -619,42 +630,46 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out ChargingNotificationsEndRequest, out ErrorResponse, CustomChargingNotificationsEndRequestParser = null)
+        #region (static) TryParse(Text, out ChargingEndNotificationRequest, out ErrorResponse, ..., CustomChargingEndNotificationRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a charging notification end request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
-        /// <param name="ChargingNotificationsEndRequest">The parsed charging notification end request.</param>
+        /// <param name="ChargingEndNotificationRequest">The parsed charging notification end request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingNotificationsEndRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
+        /// <param name="CustomChargingEndNotificationRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
         public static Boolean TryParse(String                                                        Text,
-                                       TimeSpan                                                      RequestTimeout,
-                                       out ChargingEndNotificationRequest?                           ChargingNotificationsEndRequest,
+                                       out ChargingEndNotificationRequest?                           ChargingEndNotificationRequest,
                                        out String?                                                   ErrorResponse,
-                                       DateTime?                                                     Timestamp                                     = null,
-                                       EventTracking_Id?                                             EventTrackingId                               = null,
-                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestParser   = null)
+
+                                       DateTime?                                                     Timestamp                                    = null,
+                                       CancellationToken?                                            CancellationToken                            = null,
+                                       EventTracking_Id?                                             EventTrackingId                              = null,
+                                       TimeSpan?                                                     RequestTimeout                               = null,
+
+                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
-                                RequestTimeout,
-                                out ChargingNotificationsEndRequest,
+                                out ChargingEndNotificationRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
-                                CustomChargingNotificationsEndRequestParser);
+                                RequestTimeout,
+                                CustomChargingEndNotificationRequestParser);
 
             }
             catch (Exception e)
             {
-                ChargingNotificationsEndRequest  = default;
+                ChargingEndNotificationRequest  = default;
                 ErrorResponse                    = "The given text representation of a charging notification end request is invalid: " + e.Message;
                 return false;
             }
@@ -663,14 +678,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomChargingNotificationsEndRequestSerializer = null, CustomIdentificationSerializer = null, ...)
+        #region ToJSON(CustomChargingEndNotificationRequestSerializer = null, CustomIdentificationSerializer = null, ...)
 
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomChargingNotificationsEndRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomChargingEndNotificationRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingEndNotificationRequest>?  CustomChargingNotificationsEndRequestSerializer   = null,
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestSerializer   = null,
                               CustomJObjectSerializerDelegate<Identification>?                  CustomIdentificationSerializer                    = null)
         {
 
@@ -738,8 +753,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomChargingNotificationsEndRequestSerializer is not null
-                       ? CustomChargingNotificationsEndRequestSerializer(this, JSON)
+            return CustomChargingEndNotificationRequestSerializer is not null
+                       ? CustomChargingEndNotificationRequestSerializer(this, JSON)
                        : JSON;
 
         }
@@ -825,7 +840,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region IEquatable<ChargingNotificationsEndRequest> Members
+        #region IEquatable<ChargingEndNotificationRequest> Members
 
         #region Equals(Object)
 
@@ -841,23 +856,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Equals(ChargingNotificationsEndRequest)
+        #region Equals(ChargingEndNotificationRequest)
 
         /// <summary>
         /// Compares two charging notification end requests for equality.
         /// </summary>
-        /// <param name="ChargingNotificationsEndRequest">A charging notification end request to compare with.</param>
+        /// <param name="ChargingEndNotificationRequest">A charging notification end request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(ChargingEndNotificationRequest? ChargingNotificationsEndRequest)
+        public override Boolean Equals(ChargingEndNotificationRequest? ChargingEndNotificationRequest)
 
-            => ChargingNotificationsEndRequest is not null &&
+            => ChargingEndNotificationRequest is not null &&
 
-               Type.          Equals(ChargingNotificationsEndRequest.Type)           &&
-               SessionId.     Equals(ChargingNotificationsEndRequest.SessionId)      &&
-               Identification.Equals(ChargingNotificationsEndRequest.Identification) &&
-               EVSEId.        Equals(ChargingNotificationsEndRequest.EVSEId)         &&
-               ChargingStart. Equals(ChargingNotificationsEndRequest.ChargingStart)  &&
-               ChargingEnd.   Equals(ChargingNotificationsEndRequest.ChargingEnd);
+               Type.          Equals(ChargingEndNotificationRequest.Type)           &&
+               SessionId.     Equals(ChargingEndNotificationRequest.SessionId)      &&
+               Identification.Equals(ChargingEndNotificationRequest.Identification) &&
+               EVSEId.        Equals(ChargingEndNotificationRequest.EVSEId)         &&
+               ChargingStart. Equals(ChargingEndNotificationRequest.ChargingStart)  &&
+               ChargingEnd.   Equals(ChargingEndNotificationRequest.ChargingEnd);
 
         #endregion
 

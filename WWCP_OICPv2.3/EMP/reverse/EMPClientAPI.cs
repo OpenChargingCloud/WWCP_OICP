@@ -50,6 +50,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             public APICounterValues  PullEVSEStatusById                 { get; }
             public APICounterValues  PullEVSEStatusByOperatorId         { get; }
 
+            public APICounterValues  PullPricingProductData             { get; }
+            public APICounterValues  PullEVSEPricing                    { get; }
 
             public APICounterValues  PushAuthenticationData             { get; }
 
@@ -66,6 +68,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                APICounterValues? PullEVSEStatusById                = null,
                                APICounterValues? PullEVSEStatusByOperatorId        = null,
 
+                               APICounterValues? PullPricingProductData            = null,
+                               APICounterValues? PullEVSEPricing                   = null,
+
                                APICounterValues? PushAuthenticationData            = null,
 
                                APICounterValues? AuthorizeRemoteReservationStart   = null,
@@ -80,6 +85,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 this.PullEVSEStatus                   = PullEVSEStatus                  ?? new APICounterValues();
                 this.PullEVSEStatusById               = PullEVSEStatusById              ?? new APICounterValues();
                 this.PullEVSEStatusByOperatorId       = PullEVSEStatusByOperatorId      ?? new APICounterValues();
+
+                this.PullPricingProductData           = PullPricingProductData          ?? new APICounterValues();
+                this.PullEVSEPricing                  = PullEVSEPricing                 ?? new APICounterValues();
 
                 this.PushAuthenticationData           = PushAuthenticationData          ?? new APICounterValues();
 
@@ -99,6 +107,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                        new JProperty("PullEVSEStatus",                   PullEVSEStatus.                 ToJSON()),
                        new JProperty("PullEVSEStatusById",               PullEVSEStatusById.             ToJSON()),
                        new JProperty("PullEVSEStatusByOperatorId",       PullEVSEStatusByOperatorId.     ToJSON()),
+
+                       new JProperty("PullPricingProductData",           PullPricingProductData.         ToJSON()),
+                       new JProperty("PullEVSEPricing",                  PullEVSEPricing.                ToJSON()),
 
                        new JProperty("PushAuthenticationData",           PushAuthenticationData.         ToJSON()),
 
@@ -146,6 +157,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public CustomJObjectParserDelegate<PullEVSEStatusByIdRequest>?               CustomPullEVSEStatusByIdRequestParser                 { get; set; }
         public CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>?       CustomPullEVSEStatusByOperatorIdRequestParser         { get; set; }
 
+        public CustomJObjectParserDelegate<PullPricingProductDataRequest>?           CustomPullPricingProductDataRequestParser             { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEPricingRequest>?                  CustomPullEVSEPricingRequestParser                    { get; set; }
+
         public CustomJObjectParserDelegate<PushAuthenticationDataRequest>?           CustomPushAuthenticationDataRequestParser             { get; set; }
 
         public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser    { get; set; }
@@ -176,6 +190,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public CustomJObjectSerializerDelegate<PullEVSEStatusByIdResponse>?          CustomPullEVSEStatusByIdResponseSerializer            { get; set; }
         public CustomJObjectSerializerDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseSerializer    { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<PullPricingProductDataResponse>?      CustomPullPricingProductDataResponseSerializer        { get; set; }
+        public CustomJObjectSerializerDelegate<PricingProductData>?                  CustomPricingProductDataSerializer                    { get; set; }
+        public CustomJObjectSerializerDelegate<PricingProductDataRecord>?            CustomPricingProductDataRecordSerializer              { get; set; }
+
+        public CustomJObjectSerializerDelegate<PullEVSEPricingResponse>?             CustomPullEVSEPricingResponseSerializer               { get; set; }
+        public CustomJObjectSerializerDelegate<OperatorEVSEPricing>?                 CustomOperatorEVSEPricingSerializer                   { get; set; }
+        public CustomJObjectSerializerDelegate<EVSEPricing>?                         CustomEVSEPricingSerializer                           { get; set; }
+
 
         public CustomJObjectSerializerDelegate<GetChargeDetailRecordsResponse>?      CustomGetChargeDetailRecordsResponseSerializer        { get; set; }
         public CustomJObjectSerializerDelegate<IPagedResponse>?                      CustomIPagedResponseSerializer                        { get; set; }
@@ -465,6 +489,145 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                 API ?? this,
                                                                 Request,
                                                                 Response);
+
+        #endregion
+
+
+
+        #region (protected internal) OnPullPricingProductDataHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PullPricingProductData HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPullPricingProductDataHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PullPricingProductData HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPullPricingProductDataHTTPRequest(DateTime     Timestamp,
+                                                                     HTTPAPI      API,
+                                                                     HTTPRequest  Request)
+
+            => OnPullPricingProductDataHTTPRequest.WhenAll(Timestamp,
+                                                           API ?? this,
+                                                           Request);
+
+        #endregion
+
+        #region (event)              OnPullPricingProductData(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PullPricingProductData request was received.
+        /// </summary>
+        public event OnPullPricingProductDataAPIRequestDelegate?   OnPullPricingProductDataRequest;
+
+        /// <summary>
+        /// An event send whenever a PullPricingProductData request was received.
+        /// </summary>
+        public event OnPullPricingProductDataAPIDelegate?          OnPullPricingProductData;
+
+        /// <summary>
+        /// An event send whenever a response to a PullPricingProductData request was sent.
+        /// </summary>
+        public event OnPullPricingProductDataAPIResponseDelegate?  OnPullPricingProductDataResponse;
+
+        #endregion
+
+        #region (protected internal) OnPullPricingProductDataHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PullPricingProductData HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPullPricingProductDataHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PullPricingProductData HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPullPricingProductDataHTTPResponse(DateTime      Timestamp,
+                                                                      HTTPAPI       API,
+                                                                      HTTPRequest   Request,
+                                                                      HTTPResponse  Response)
+
+            => OnPullPricingProductDataHTTPResponse.WhenAll(Timestamp,
+                                                            API ?? this,
+                                                            Request,
+                                                            Response);
+
+        #endregion
+
+
+        #region (protected internal) OnPullEVSEPricingHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEPricing HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPullEVSEPricingHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEPricing HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPullEVSEPricingHTTPRequest(DateTime     Timestamp,
+                                                              HTTPAPI      API,
+                                                              HTTPRequest  Request)
+
+            => OnPullEVSEPricingHTTPRequest.WhenAll(Timestamp,
+                                                    API ?? this,
+                                                    Request);
+
+        #endregion
+
+        #region (event)              OnPullEVSEPricing(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PullEVSEPricing request was received.
+        /// </summary>
+        public event OnPullEVSEPricingAPIRequestDelegate?   OnPullEVSEPricingRequest;
+
+        /// <summary>
+        /// An event send whenever a PullEVSEPricing request was received.
+        /// </summary>
+        public event OnPullEVSEPricingAPIDelegate?          OnPullEVSEPricing;
+
+        /// <summary>
+        /// An event send whenever a response to a PullEVSEPricing request was sent.
+        /// </summary>
+        public event OnPullEVSEPricingAPIResponseDelegate?  OnPullEVSEPricingResponse;
+
+        #endregion
+
+        #region (protected internal) OnPullEVSEPricingHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEPricing HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPullEVSEPricingHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PullEVSEPricing HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The EMP Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPullEVSEPricingHTTPResponse(DateTime      Timestamp,
+                                                               HTTPAPI       API,
+                                                               HTTPRequest   Request,
+                                                               HTTPResponse  Response)
+
+            => OnPullEVSEPricingHTTPResponse.WhenAll(Timestamp,
+                                                     API ?? this,
+                                                     Request,
+                                                     Response);
 
         #endregion
 
@@ -1119,7 +1282,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logPullEVSEDataHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var page       = Request.QueryString.GetUInt32 ("page");
+                                             var size       = Request.QueryString.GetUInt32 ("size");
+                                             var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+
                                              OICPResult<PullEVSEDataResponse>? pullEVSEDataResponse = null;
 
                                              try
@@ -1146,15 +1313,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (PullEVSEDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                       //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                        //     providerId ????
                                                                                        out PullEVSEDataRequest?          pullEVSEDataRequest,
                                                                                        out String?                       errorResponse,
-                                                                                       Page:                             0,
-                                                                                       Size:                             0,
-                                                                                       SortOrder:                        null,
+                                                                                       Page:                             page,
+                                                                                       Size:                             size,
+                                                                                       SortOrder:                        sortOrder,
+
                                                                                        Timestamp:                        Request.Timestamp,
+                                                                                       CancellationToken:                Request.CancellationToken,
                                                                                        EventTrackingId:                  Request.EventTrackingId,
+                                                                                       RequestTimeout:                   Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                        CustomPullEVSEDataRequestParser:  CustomPullEVSEDataRequestParser))
                                                  {
 
@@ -1304,17 +1474,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEDataResponse.Response.ToJSON(CustomPullEVSEDataResponseSerializer,
-                                                                                                                          CustomEVSEDataRecordSerializer,
-                                                                                                                          CustomAddressSerializer,
-                                                                                                                          CustomChargingFacilitySerializer,
-                                                                                                                          CustomGeoCoordinatesSerializer,
-                                                                                                                          CustomEnergySourceSerializer,
-                                                                                                                          CustomEnvironmentalImpactSerializer,
-                                                                                                                          CustomOpeningTimesSerializer,
-                                                                                                                          CustomStatusCodeSerializer).
-                                                                                                                   ToString(JSONFormatting).
-                                                                                                                   ToUTF8Bytes(),
+                                                        Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomPullEVSEDataResponseSerializer,
+                                                                                                                           CustomEVSEDataRecordSerializer,
+                                                                                                                           CustomAddressSerializer,
+                                                                                                                           CustomChargingFacilitySerializer,
+                                                                                                                           CustomGeoCoordinatesSerializer,
+                                                                                                                           CustomEnergySourceSerializer,
+                                                                                                                           CustomEnvironmentalImpactSerializer,
+                                                                                                                           CustomOpeningTimesSerializer,
+                                                                                                                           CustomStatusCodeSerializer).
+                                                                                                                    ToString(JSONFormatting).
+                                                                                                                    ToUTF8Bytes()
+                                                                                                          ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1362,12 +1533,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (PullEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                         //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                          //     providerId ????
                                                                                          out PullEVSEStatusRequest?          pullEVSEStatusRequest,
                                                                                          out String?                         errorResponse,
+
                                                                                          Timestamp:                          Request.Timestamp,
+                                                                                         CancellationToken:                  Request.CancellationToken,
                                                                                          EventTrackingId:                    Request.EventTrackingId,
+                                                                                         RequestTimeout:                     Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                          CustomPullEVSEStatusRequestParser:  CustomPullEVSEStatusRequestParser))
                                                  {
 
@@ -1517,12 +1691,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEStatusResponse.Response.ToJSON(CustomPullEVSEStatusResponseSerializer,
-                                                                                                                            CustomOperatorEVSEStatusSerializer,
-                                                                                                                            CustomEVSEStatusRecordSerializer,
-                                                                                                                            CustomStatusCodeSerializer).
-                                                                                                                     ToString(JSONFormatting).
-                                                                                                                     ToUTF8Bytes(),
+                                                        Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomPullEVSEStatusResponseSerializer,
+                                                                                                                             CustomOperatorEVSEStatusSerializer,
+                                                                                                                             CustomEVSEStatusRecordSerializer,
+                                                                                                                             CustomStatusCodeSerializer).
+                                                                                                                      ToString(JSONFormatting).
+                                                                                                                      ToUTF8Bytes()
+                                                                                                            ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1570,12 +1745,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (PullEVSEStatusByIdRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                             //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                              //     providerId ????
                                                                                              out PullEVSEStatusByIdRequest?          pullEVSEStatusByIdRequest,
                                                                                              out String?                             errorResponse,
+
                                                                                              Timestamp:                              Request.Timestamp,
+                                                                                             CancellationToken:                      Request.CancellationToken,
                                                                                              EventTrackingId:                        Request.EventTrackingId,
+                                                                                             RequestTimeout:                         Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                              CustomPullEVSEStatusByIdRequestParser:  CustomPullEVSEStatusByIdRequestParser))
                                                  {
 
@@ -1725,11 +1903,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEStatusByIdResponse.Response.ToJSON(CustomPullEVSEStatusByIdResponseSerializer,
-                                                                                                                                CustomEVSEStatusRecordSerializer,
-                                                                                                                                CustomStatusCodeSerializer).
-                                                                                                                         ToString(JSONFormatting).
-                                                                                                                         ToUTF8Bytes(),
+                                                        Content                    = pullEVSEStatusByIdResponse.Response?.ToJSON(CustomPullEVSEStatusByIdResponseSerializer,
+                                                                                                                                 CustomEVSEStatusRecordSerializer,
+                                                                                                                                 CustomStatusCodeSerializer).
+                                                                                                                          ToString(JSONFormatting).
+                                                                                                                          ToUTF8Bytes()
+                                                                                                                ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1777,12 +1956,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (PullEVSEStatusByOperatorIdRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                                     //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                                      //     providerId ????
                                                                                                      out PullEVSEStatusByOperatorIdRequest?          pullEVSEStatusByOperatorIdRequest,
                                                                                                      out String?                                     errorResponse,
+
                                                                                                      Timestamp:                                      Request.Timestamp,
+                                                                                                     CancellationToken:                              Request.CancellationToken,
                                                                                                      EventTrackingId:                                Request.EventTrackingId,
+                                                                                                     RequestTimeout:                                 Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                                      CustomPullEVSEStatusByOperatorIdRequestParser:  CustomPullEVSEStatusByOperatorIdRequestParser))
                                                  {
 
@@ -1932,12 +2114,452 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEStatusByOperatorIdResponse.Response.ToJSON(CustomPullEVSEStatusByOperatorIdResponseSerializer,
-                                                                                                                                        CustomOperatorEVSEStatusSerializer,
-                                                                                                                                        CustomEVSEStatusRecordSerializer,
-                                                                                                                                        CustomStatusCodeSerializer).
-                                                                                                                                 ToString(JSONFormatting).
-                                                                                                                                 ToUTF8Bytes(),
+                                                        Content                    = pullEVSEStatusByOperatorIdResponse.Response?.ToJSON(CustomPullEVSEStatusByOperatorIdResponseSerializer,
+                                                                                                                                         CustomOperatorEVSEStatusSerializer,
+                                                                                                                                         CustomEVSEStatusRecordSerializer,
+                                                                                                                                         CustomStatusCodeSerializer).
+                                                                                                                                  ToString(JSONFormatting).
+                                                                                                                                  ToUTF8Bytes()
+                                                                                                                        ?? Array.Empty<Byte>(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+
+            #region POST  ~/api/oicp/dynamicpricing/v10/providers/{providerId}/pricing-products
+
+            // ---------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/providers/DE-GDF/pricing-products
+            // ---------------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/dynamicpricing/v10/providers/{providerId}/pricing-products",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPullPricingProductDataHTTPRequest,
+                                         HTTPResponseLogger:  logPullPricingProductDataHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime  = Timestamp.Now;
+                                             var page       = Request.QueryString.GetUInt32 ("page");
+                                             var size       = Request.QueryString.GetUInt32 ("size");
+                                             var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+
+                                             OICPResult<PullPricingProductDataResponse>? pullPricingProductDataResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
+                                                                                          this,
+                                                                                          new PullPricingProductDataResponse(
+                                                                                              null,
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<PricingProductData>(),
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                                 #endregion
+
+                                                 else if (PullPricingProductDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                 providerId,
+                                                                                                 out PullPricingProductDataRequest?          pullEVSEDataRequest,
+                                                                                                 out String?                                 errorResponse,
+                                                                                                 Page:                                       page,
+                                                                                                 Size:                                       size,
+                                                                                                 SortOrder:                                  sortOrder,
+
+                                                                                                 Timestamp:                                  Request.Timestamp,
+                                                                                                 CancellationToken:                          Request.CancellationToken,
+                                                                                                 EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                 CustomPullPricingProductDataRequestParser:  CustomPullPricingProductDataRequestParser))
+                                                 {
+
+                                                     Counters.PullPricingProductData.IncRequests_OK();
+
+                                                     #region Send OnPullPricingProductDataRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullPricingProductDataRequest is not null)
+                                                             await Task.WhenAll(OnPullPricingProductDataRequest.GetInvocationList().
+                                                                                Cast<OnPullPricingProductDataAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullPricingProductDataRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPullPricingProductDataLocal = OnPullPricingProductData;
+                                                     if (OnPullPricingProductDataLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pullPricingProductDataResponse = (await Task.WhenAll(OnPullPricingProductDataLocal.GetInvocationList().
+                                                                                                                                                Cast<OnPullPricingProductDataAPIDelegate>().
+                                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                                              this,
+                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PullPricingProductData.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
+                                                                                                  this,
+                                                                                                  new PullPricingProductDataResponse(
+                                                                                                      pullEVSEDataRequest!,
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      Array.Empty<PricingProductData>(),
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.DataError,
+                                                                                                                      e.Message,
+                                                                                                                      e.StackTrace
+                                                                                                                  )
+                                                                                                  )
+                                                                                              );
+                                                         }
+                                                     }
+
+                                                     if (pullPricingProductDataResponse is null)
+                                                         pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
+                                                                                              this,
+                                                                                              new PullPricingProductDataResponse(
+                                                                                                  pullEVSEDataRequest!,
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  Array.Empty<PricingProductData>(),
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.SystemError,
+                                                                                                                  "Could not process the received PullPricingProductData request!"
+                                                                                                              )
+                                                                                              )
+                                                                                          );
+
+                                                     #endregion
+
+                                                     #region Send OnPullPricingProductDataResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullPricingProductDataResponse is not null)
+                                                             await Task.WhenAll(OnPullPricingProductDataResponse.GetInvocationList().
+                                                                                Cast<OnPullPricingProductDataAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullPricingProductDataResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullPricingProductDataResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
+                                                                                          this,
+                                                                                          new PullPricingProductDataResponse(
+                                                                                              pullEVSEDataRequest!,
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<PricingProductData>(),
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.DataError,
+                                                                                                              "We could not parse the given PullPricingProductData request!",
+                                                                                                              errorResponse
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
+                                                                                      this,
+                                                                                      new PullPricingProductDataResponse(
+                                                                                          null,
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          Array.Empty<PricingProductData>(),
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          e.Message,
+                                                                                                          e.StackTrace
+                                                                                                      )
+                                                                                      )
+                                                                                  );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pullPricingProductDataResponse.Response?.ToJSON(CustomPullPricingProductDataResponseSerializer,
+                                                                                                                                     CustomPricingProductDataSerializer,
+                                                                                                                                     CustomPricingProductDataRecordSerializer,
+                                                                                                                                     CustomStatusCodeSerializer).
+                                                                                                                              ToString(JSONFormatting).
+                                                                                                                              ToUTF8Bytes()
+                                                                                                                    ?? Array.Empty<Byte>(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/dynamicpricing/v10/providers/{providerId}/evse-pricing
+
+            // -----------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/providers/DE-GDF/evse-pricing
+            // -----------------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/dynamicpricing/v10/providers/{providerId}/evse-pricing",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPullEVSEPricingHTTPRequest,
+                                         HTTPResponseLogger:  logPullEVSEPricingHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime  = Timestamp.Now;
+                                             var page       = Request.QueryString.GetUInt32 ("page");
+                                             var size       = Request.QueryString.GetUInt32 ("size");
+                                             var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+
+                                             OICPResult<PullEVSEPricingResponse>? pullEVSEPricingResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                     pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
+                                                                                   this,
+                                                                                   new PullEVSEPricingResponse(
+                                                                                       null,
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       Array.Empty<OperatorEVSEPricing>(),
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.SystemError,
+                                                                                                       "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                   )
+                                                                                   )
+                                                                               );
+
+                                                 #endregion
+
+                                                 else if (PullEVSEPricingRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                          //     providerId ????
+                                                                                          out PullEVSEPricingRequest?          pullEVSEDataRequest,
+                                                                                          out String?                          errorResponse,
+                                                                                          Page:                                page,
+                                                                                          Size:                                size,
+                                                                                          SortOrder:                           sortOrder,
+
+                                                                                          Timestamp:                           Request.Timestamp,
+                                                                                          CancellationToken:                   Request.CancellationToken,
+                                                                                          EventTrackingId:                     Request.EventTrackingId,
+                                                                                          RequestTimeout:                      Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                          CustomPullEVSEPricingRequestParser:  CustomPullEVSEPricingRequestParser))
+                                                 {
+
+                                                     Counters.PullEVSEPricing.IncRequests_OK();
+
+                                                     #region Send OnPullEVSEPricingRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEPricingRequest is not null)
+                                                             await Task.WhenAll(OnPullEVSEPricingRequest.GetInvocationList().
+                                                                                Cast<OnPullEVSEPricingAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEPricingRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPullEVSEPricingLocal = OnPullEVSEPricing;
+                                                     if (OnPullEVSEPricingLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pullEVSEPricingResponse = (await Task.WhenAll(OnPullEVSEPricingLocal.GetInvocationList().
+                                                                                                                                  Cast<OnPullEVSEPricingAPIDelegate>().
+                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                this,
+                                                                                                                                                pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PullEVSEPricing.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
+                                                                                           this,
+                                                                                           new PullEVSEPricingResponse(
+                                                                                               pullEVSEDataRequest!,
+                                                                                               Timestamp.Now,
+                                                                                               Request.EventTrackingId,
+                                                                                               Timestamp.Now - Request.Timestamp,
+                                                                                               Array.Empty<OperatorEVSEPricing>(),
+                                                                                               StatusCode: new StatusCode(
+                                                                                                               StatusCodes.DataError,
+                                                                                                               e.Message,
+                                                                                                               e.StackTrace
+                                                                                                           )
+                                                                                           )
+                                                                                       );
+                                                         }
+                                                     }
+
+                                                     if (pullEVSEPricingResponse is null)
+                                                         pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
+                                                                                       this,
+                                                                                       new PullEVSEPricingResponse(
+                                                                                           pullEVSEDataRequest!,
+                                                                                           Timestamp.Now,
+                                                                                           Request.EventTrackingId,
+                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                           Array.Empty<OperatorEVSEPricing>(),
+                                                                                           StatusCode: new StatusCode(
+                                                                                                           StatusCodes.SystemError,
+                                                                                                           "Could not process the received PullEVSEPricing request!"
+                                                                                                       )
+                                                                                       )
+                                                                                   );
+
+                                                     #endregion
+
+                                                     #region Send OnPullEVSEPricingResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullEVSEPricingResponse is not null)
+                                                             await Task.WhenAll(OnPullEVSEPricingResponse.GetInvocationList().
+                                                                                Cast<OnPullEVSEPricingAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEPricingResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(EMPClientAPI) + "." + nameof(OnPullEVSEPricingResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
+                                                                                   this,
+                                                                                   new PullEVSEPricingResponse(
+                                                                                       pullEVSEDataRequest!,
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       Array.Empty<OperatorEVSEPricing>(),
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.DataError,
+                                                                                                       "We could not parse the given PullEVSEPricing request!",
+                                                                                                       errorResponse
+                                                                                                   )
+                                                                                   )
+                                                                               );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
+                                                                               this,
+                                                                               new PullEVSEPricingResponse(
+                                                                                   null,
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   Array.Empty<OperatorEVSEPricing>(),
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.SystemError,
+                                                                                                   e.Message,
+                                                                                                   e.StackTrace
+                                                                                               )
+                                                                               )
+                                                                           );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pullEVSEPricingResponse.Response?.ToJSON(CustomPullEVSEPricingResponseSerializer,
+                                                                                                                              CustomOperatorEVSEPricingSerializer,
+                                                                                                                              CustomEVSEPricingSerializer,
+                                                                                                                              CustomStatusCodeSerializer).
+                                                                                                                       ToString(JSONFormatting).
+                                                                                                                       ToUTF8Bytes()
+                                                                                                             ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1984,12 +2606,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (PushAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                                 //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                                  //     providerId ????
                                                                                                  out PushAuthenticationDataRequest?          pullEVSEDataRequest,
                                                                                                  out String?                                 errorResponse,
+
                                                                                                  Timestamp:                                  Request.Timestamp,
+                                                                                                 CancellationToken:                          Request.CancellationToken,
                                                                                                  EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                                  CustomPushAuthenticationDataRequestParser:  CustomPushAuthenticationDataRequestParser))
                                                  {
 
@@ -2131,10 +2756,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEDataResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                          CustomStatusCodeSerializer).
-                                                                                                                   ToString(JSONFormatting).
-                                                                                                                   ToUTF8Bytes(),
+                                                        Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                           CustomStatusCodeSerializer).
+                                                                                                                    ToString(JSONFormatting).
+                                                                                                                    ToUTF8Bytes()
+                                                                                                          ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2181,13 +2807,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                                          //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                                           providerId,
-                                                                                                          Request.Timeout ?? TimeSpan.FromSeconds(60),
                                                                                                           out AuthorizeRemoteReservationStartRequest?          pullEVSEDataRequest,
                                                                                                           out String?                                          errorResponse,
+
                                                                                                           Timestamp:                                           Request.Timestamp,
+                                                                                                          CancellationToken:                                   Request.CancellationToken,
                                                                                                           EventTrackingId:                                     Request.EventTrackingId,
+                                                                                                          RequestTimeout:                                      Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                                           CustomAuthorizeRemoteReservationStartRequestParser:  CustomAuthorizeRemoteReservationStartRequestParser))
                                                  {
 
@@ -2329,10 +2957,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizeRemoteReservationStartResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                             CustomStatusCodeSerializer).
-                                                                                                                                      ToString(JSONFormatting).
-                                                                                                                                      ToUTF8Bytes(),
+                                                        Content                    = authorizeRemoteReservationStartResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                              CustomStatusCodeSerializer).
+                                                                                                                                       ToString(JSONFormatting).
+                                                                                                                                       ToUTF8Bytes()
+                                                                                                                             ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2378,13 +3007,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                                         //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                                          providerId,
-                                                                                                         Request.Timeout ?? TimeSpan.FromSeconds(60),
                                                                                                          out AuthorizeRemoteReservationStopRequest?          pullEVSEDataRequest,
                                                                                                          out String?                                         errorResponse,
+
                                                                                                          Timestamp:                                          Request.Timestamp,
+                                                                                                         CancellationToken:                                  Request.CancellationToken,
                                                                                                          EventTrackingId:                                    Request.EventTrackingId,
+                                                                                                         RequestTimeout:                                     Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                                          CustomAuthorizeRemoteReservationStopRequestParser:  CustomAuthorizeRemoteReservationStopRequestParser))
                                                  {
 
@@ -2526,10 +3157,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizeRemoteReservationStopResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                            CustomStatusCodeSerializer).
-                                                                                                                                     ToString(JSONFormatting).
-                                                                                                                                     ToUTF8Bytes(),
+                                                        Content                    = authorizeRemoteReservationStopResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                             CustomStatusCodeSerializer).
+                                                                                                                                      ToString(JSONFormatting).
+                                                                                                                                      ToUTF8Bytes()
+                                                                                                                            ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2575,13 +3207,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (AuthorizeRemoteStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                               //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                                providerId,
-                                                                                               Request.Timeout ?? TimeSpan.FromSeconds(60),
                                                                                                out AuthorizeRemoteStartRequest?          pullEVSEDataRequest,
                                                                                                out String?                               errorResponse,
+
                                                                                                Timestamp:                                Request.Timestamp,
+                                                                                               CancellationToken:                        Request.CancellationToken,
                                                                                                EventTrackingId:                          Request.EventTrackingId,
+                                                                                               RequestTimeout:                           Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                                CustomAuthorizeRemoteStartRequestParser:  CustomAuthorizeRemoteStartRequestParser))
                                                  {
 
@@ -2723,11 +3357,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizeRemoteStartResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                  CustomStatusCodeSerializer).
-                                                                                                                           ToString(JSONFormatting).
-                                                                                                                           ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = authorizeRemoteStartResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                   CustomStatusCodeSerializer).
+                                                                                                                            ToString(JSONFormatting).
+                                                                                                                            ToUTF8Bytes()
+                                                                                                                  ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -2772,13 +3407,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (AuthorizeRemoteStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                              //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                               providerId,
-                                                                                              Request.Timeout ?? TimeSpan.FromSeconds(60),
                                                                                               out AuthorizeRemoteStopRequest?          pullEVSEDataRequest,
                                                                                               out String?                              errorResponse,
+
                                                                                               Timestamp:                               Request.Timestamp,
+                                                                                              CancellationToken:                       Request.CancellationToken,
                                                                                               EventTrackingId:                         Request.EventTrackingId,
+                                                                                              RequestTimeout:                          Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                               CustomAuthorizeRemoteStopRequestParser:  CustomAuthorizeRemoteStopRequestParser))
                                                  {
 
@@ -2920,10 +3557,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizeRemoteStopResponse.Response.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                 CustomStatusCodeSerializer).
-                                                                                                                          ToString(JSONFormatting).
-                                                                                                                          ToUTF8Bytes(),
+                                                        Content                    = authorizeRemoteStopResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                  CustomStatusCodeSerializer).
+                                                                                                                           ToString(JSONFormatting).
+                                                                                                                           ToUTF8Bytes()
+                                                                                                                 ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2945,7 +3583,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logGetChargeDetailRecordsHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var page       = Request.QueryString.GetUInt32 ("page");
+                                             var size       = Request.QueryString.GetUInt32 ("size");
+                                             var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+
                                              OICPResult<GetChargeDetailRecordsResponse>? getChargeDetailRecordsResponse = null;
 
                                              try
@@ -2972,15 +3614,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #endregion
 
                                                  else if (GetChargeDetailRecordsRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                                 //     Request.Timeout ?? DefaultRequestTimeout,
                                                                                                  //     providerId ????
                                                                                                  out GetChargeDetailRecordsRequest?          pullEVSEDataRequest,
                                                                                                  out String?                                 errorResponse,
-                                                                                                 Page:                                       0,
-                                                                                                 Size:                                       0,
-                                                                                                 SortOrder:                                  null,
-                                                                                               //  Timestamp:                                  Request.Timestamp,
-                                                                                               //  EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 Page:                                       page,
+                                                                                                 Size:                                       size,
+                                                                                                 SortOrder:                                  sortOrder,
+
+                                                                                                 Timestamp:                                  Request.Timestamp,
+                                                                                                 CancellationToken:                          Request.CancellationToken,
+                                                                                                 EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                                  CustomGetChargeDetailRecordsRequestParser:  CustomGetChargeDetailRecordsRequestParser))
                                                  {
 
@@ -3130,15 +3775,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = getChargeDetailRecordsResponse.Response.ToJSON(CustomGetChargeDetailRecordsResponseSerializer,
-                                                                                                                                    CustomIPagedResponseSerializer,
-                                                                                                                                    CustomChargeDetailRecordSerializer,
-                                                                                                                                    CustomIdentificationSerializer,
-                                                                                                                                    CustomSignedMeteringValueSerializer,
-                                                                                                                                    CustomCalibrationLawVerificationSerializer,
-                                                                                                                                    CustomStatusCodeSerializer).
-                                                                                                                   ToString(JSONFormatting).
-                                                                                                                   ToUTF8Bytes(),
+                                                        Content                    = getChargeDetailRecordsResponse.Response?.ToJSON(CustomGetChargeDetailRecordsResponseSerializer,
+                                                                                                                                     CustomIPagedResponseSerializer,
+                                                                                                                                     CustomChargeDetailRecordSerializer,
+                                                                                                                                     CustomIdentificationSerializer,
+                                                                                                                                     CustomSignedMeteringValueSerializer,
+                                                                                                                                     CustomCalibrationLawVerificationSerializer,
+                                                                                                                                     CustomStatusCodeSerializer).
+                                                                                                                              ToString(JSONFormatting).
+                                                                                                                              ToUTF8Bytes()
+                                                                                                                    ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 

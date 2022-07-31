@@ -152,7 +152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a GetChargeDetailRecords request.
@@ -166,6 +166,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                                          DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
+                                                          EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
@@ -175,6 +181,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Page,
                          Size,
                          SortOrder,
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout,
                          CustomGetChargeDetailRecordsRequestParser))
             {
                 return getChargeDetailRecordsRequest!;
@@ -186,7 +196,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a GetChargeDetailRecords request.
@@ -200,6 +210,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                                          DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
+                                                          EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
@@ -209,6 +225,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Page,
                          Size,
                          SortOrder,
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout,
                          CustomGetChargeDetailRecordsRequestParser))
             {
                 return getChargeDetailRecordsRequest!;
@@ -220,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out GetChargeDetailRecordsRequest, out ErrorResponse, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) TryParse(JSON, out GetChargeDetailRecordsRequest, out ErrorResponse, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a GetChargeDetailRecords request.
@@ -238,6 +258,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                       DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
+                                       EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
                                        CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
@@ -343,10 +369,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   SessionIds,
                                                                                   OperatorIds,
                                                                                   CDRForwarded,
+
                                                                                   Page,
                                                                                   Size,
                                                                                   SortOrder,
-                                                                                  CustomData);
+
+                                                                                  CustomData,
+                                                                                  Timestamp,
+                                                                                  CancellationToken,
+                                                                                  EventTrackingId,
+                                                                                  RequestTimeout);
 
                 if (CustomGetChargeDetailRecordsRequestParser is not null)
                     GetChargeDetailRecordsRequest = CustomGetChargeDetailRecordsRequestParser(JSON,
@@ -366,7 +398,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out GetChargeDetailRecordsRequest, out ErrorResponse, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) TryParse(Text, out GetChargeDetailRecordsRequest, out ErrorResponse, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a GetChargeDetailRecords request.
@@ -384,6 +416,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                       DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
+                                       EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
                                        CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
@@ -396,6 +434,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Page,
                                 Size,
                                 SortOrder,
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout,
                                 CustomGetChargeDetailRecordsRequestParser);
 
             }

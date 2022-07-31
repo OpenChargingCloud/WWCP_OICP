@@ -124,19 +124,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
         public static PushEVSEPricingRequest Parse(JObject                                               JSON,
                                                    Operator_Id                                           OperatorId,
-                                                   TimeSpan                                              RequestTimeout,
+
                                                    DateTime?                                             Timestamp                            = null,
+                                                   CancellationToken?                                    CancellationToken                    = null,
                                                    EventTracking_Id?                                     EventTrackingId                      = null,
+                                                   TimeSpan?                                             RequestTimeout                       = null,
+
                                                    CustomJObjectParserDelegate<PushEVSEPricingRequest>?  CustomPushEVSEPricingRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          OperatorId,
-                         RequestTimeout,
                          out PushEVSEPricingRequest?  pushEVSEDataRequest,
                          out String?                  errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushEVSEPricingRequestParser))
             {
                 return pushEVSEDataRequest!;
@@ -160,19 +164,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
         public static PushEVSEPricingRequest Parse(String                                                Text,
                                                    Operator_Id                                           OperatorId,
-                                                   TimeSpan                                              RequestTimeout,
+
                                                    DateTime?                                             Timestamp                            = null,
+                                                   CancellationToken?                                    CancellationToken                    = null,
                                                    EventTracking_Id?                                     EventTrackingId                      = null,
+                                                   TimeSpan?                                             RequestTimeout                       = null,
+
                                                    CustomJObjectParserDelegate<PushEVSEPricingRequest>?  CustomPushEVSEPricingRequestParser   = null)
         {
 
             if (TryParse(Text,
                          OperatorId,
-                         RequestTimeout,
                          out PushEVSEPricingRequest?  pushEVSEDataRequest,
                          out String?                  errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushEVSEPricingRequestParser))
             {
                 return pushEVSEDataRequest!;
@@ -184,7 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, OperatorId, ..., out PushEVSEPricingRequest, out ErrorResponse, ..., CustomPushEVSEPricingRequestParser = null)
+        #region (static) TryParse(JSON, OperatorId, out PushEVSEPricingRequest, out ErrorResponse, ..., CustomPushEVSEPricingRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a push EVSE pricing data request.
@@ -198,11 +206,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
         public static Boolean TryParse(JObject                                               JSON,
                                        Operator_Id                                           OperatorId,
-                                       TimeSpan                                              RequestTimeout,
                                        out PushEVSEPricingRequest?                           PushEVSEPricingRequest,
                                        out String?                                           ErrorResponse,
+
                                        DateTime?                                             Timestamp                            = null,
+                                       CancellationToken?                                    CancellationToken                    = null,
                                        EventTracking_Id?                                     EventTrackingId                      = null,
+                                       TimeSpan?                                             RequestTimeout                       = null,
+
                                        CustomJObjectParserDelegate<PushEVSEPricingRequest>?  CustomPushEVSEPricingRequestParser   = null)
         {
 
@@ -257,7 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                     ActionType,
                                                                     CustomData,
                                                                     Timestamp,
-                                                                    null,
+                                                                    CancellationToken,
                                                                     EventTrackingId,
                                                                     RequestTimeout);
 
@@ -279,7 +290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, OperatorId, ..., out PushEVSEPricingRequest, out ErrorResponse, ..., CustomPushEVSEPricingRequestParser = null)
+        #region (static) TryParse(Text, OperatorId, out PushEVSEPricingRequest, out ErrorResponse, ..., CustomPushEVSEPricingRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a push EVSE pricing data request.
@@ -293,11 +304,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
         public static Boolean TryParse(String                                                Text,
                                        Operator_Id                                           OperatorId,
-                                       TimeSpan                                              RequestTimeout,
                                        out PushEVSEPricingRequest?                           PushEVSEPricingRequest,
                                        out String?                                           ErrorResponse,
+
                                        DateTime?                                             Timestamp                            = null,
+                                       CancellationToken?                                    CancellationToken                    = null,
                                        EventTracking_Id?                                     EventTrackingId                      = null,
+                                       TimeSpan?                                             RequestTimeout                       = null,
+
                                        CustomJObjectParserDelegate<PushEVSEPricingRequest>?  CustomPushEVSEPricingRequestParser   = null)
         {
 
@@ -306,11 +320,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(JObject.Parse(Text),
                                 OperatorId,
-                                RequestTimeout,
                                 out PushEVSEPricingRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomPushEVSEPricingRequestParser);
 
             }

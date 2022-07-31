@@ -250,8 +250,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 UInt32?                                            Page                              = null,
                                                 UInt32?                                            Size                              = null,
                                                 IEnumerable<String>?                               SortOrder                         = null,
+
                                                 DateTime?                                          Timestamp                         = null,
+                                                CancellationToken?                                 CancellationToken                 = null,
                                                 EventTracking_Id?                                  EventTrackingId                   = null,
+                                                TimeSpan?                                          RequestTimeout                    = null,
+
                                                 CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
@@ -262,7 +266,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPullEVSEDataRequestParser))
             {
                 return pullEVSEDataRequest!;
@@ -285,8 +291,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 UInt32?                                            Page                              = null,
                                                 UInt32?                                            Size                              = null,
                                                 IEnumerable<String>?                               SortOrder                         = null,
+
                                                 DateTime?                                          Timestamp                         = null,
+                                                CancellationToken?                                 CancellationToken                 = null,
                                                 EventTracking_Id?                                  EventTrackingId                   = null,
+                                                TimeSpan?                                          RequestTimeout                    = null,
+
                                                 CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
@@ -297,7 +307,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPullEVSEDataRequestParser))
             {
                 return pullEVSEDataRequest!;
@@ -324,8 +336,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                            Page                              = null,
                                        UInt32?                                            Size                              = null,
                                        IEnumerable<String>?                               SortOrder                         = null,
+
                                        DateTime?                                          Timestamp                         = null,
+                                       CancellationToken?                                 CancellationToken                 = null,
                                        EventTracking_Id?                                  EventTrackingId                   = null,
+                                       TimeSpan?                                          RequestTimeout                    = null,
+
                                        CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
@@ -561,9 +577,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                               CustomData,
                                                               Timestamp,
-                                                              null,
+                                                              CancellationToken,
                                                               EventTrackingId,
-                                                              null);
+                                                              RequestTimeout);
 
                 if (CustomPullEVSEDataRequestParser is not null)
                     PullEVSEDataRequest = CustomPullEVSEDataRequestParser(JSON,
@@ -598,8 +614,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                            Page                              = null,
                                        UInt32?                                            Size                              = null,
                                        IEnumerable<String>?                               SortOrder                         = null,
+
                                        DateTime?                                          Timestamp                         = null,
+                                       CancellationToken?                                 CancellationToken                 = null,
                                        EventTracking_Id?                                  EventTrackingId                   = null,
+                                       TimeSpan?                                          RequestTimeout                    = null,
+
                                        CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
         {
 
@@ -613,7 +633,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Size,
                                 SortOrder,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomPullEVSEDataRequestParser);
 
             }

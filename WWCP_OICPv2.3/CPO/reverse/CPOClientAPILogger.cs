@@ -159,14 +159,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 RegisterEvent2("PushEVSEDataRequest",
                                handler => CPOClientAPI.OnPushEVSEDataHTTPRequest += handler,
                                handler => CPOClientAPI.OnPushEVSEDataHTTPRequest -= handler,
-                               "PushEVSEData", "requests", "all").
+                               "PushEVSEData", "push", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("PushEVSEDataResponse",
                                handler => CPOClientAPI.OnPushEVSEDataHTTPResponse += handler,
                                handler => CPOClientAPI.OnPushEVSEDataHTTPResponse -= handler,
-                               "PushEVSEData", "responses", "all").
+                               "PushEVSEData", "push", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -174,14 +174,47 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 RegisterEvent2("PushEVSEStatusRequest",
                                handler => CPOClientAPI.OnPushEVSEStatusHTTPRequest += handler,
                                handler => CPOClientAPI.OnPushEVSEStatusHTTPRequest -= handler,
-                               "PushEVSEStatus", "requests", "all").
+                               "PushEVSEStatus", "push", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 RegisterEvent2("PushEVSEStatusResponse",
                                handler => CPOClientAPI.OnPushEVSEStatusHTTPResponse += handler,
                                handler => CPOClientAPI.OnPushEVSEStatusHTTPResponse -= handler,
-                               "PushEVSEStatus", "responses", "all").
+                               "PushEVSEStatus", "push", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+                #region PushPricingProductData/-EVSEPricing
+
+                RegisterEvent2("PushPricingProductDataRequest",
+                               handler => CPOClientAPI.OnPushPricingProductDataHTTPRequest += handler,
+                               handler => CPOClientAPI.OnPushPricingProductDataHTTPRequest -= handler,
+                               "PushPricingProductData", "PushPricing", "push", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("PushPricingProductDataResponse",
+                               handler => CPOClientAPI.OnPushPricingProductDataHTTPResponse += handler,
+                               handler => CPOClientAPI.OnPushPricingProductDataHTTPResponse -= handler,
+                               "PushPricingProductData", "PushPricing", "push", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent2("PushEVSEPricingRequest",
+                               handler => CPOClientAPI.OnPushEVSEPricingHTTPRequest += handler,
+                               handler => CPOClientAPI.OnPushEVSEPricingHTTPRequest -= handler,
+                               "PushEVSEPricing", "PushPricing", "push", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent2("PushEVSEPricingResponse",
+                               handler => CPOClientAPI.OnPushEVSEPricingHTTPResponse += handler,
+                               handler => CPOClientAPI.OnPushEVSEPricingHTTPResponse -= handler,
+                               "PushEVSEPricing", "PushPricing", "push", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 

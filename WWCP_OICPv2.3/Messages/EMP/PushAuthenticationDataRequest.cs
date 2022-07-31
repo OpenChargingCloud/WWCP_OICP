@@ -126,8 +126,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData JSON objects.</param>
         public static PushAuthenticationDataRequest Parse(JObject                                                      JSON,
+
                                                           DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
                                                           CustomJObjectParserDelegate<PushAuthenticationDataRequest>?  CustomPushAuthenticationDataRequestParser   = null)
         {
 
@@ -135,7 +139,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out PushAuthenticationDataRequest?  pullEVSEStatusResponse,
                          out String?                         errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushAuthenticationDataRequestParser))
             {
                 return pullEVSEStatusResponse!;
@@ -155,8 +161,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData request JSON objects.</param>
         public static PushAuthenticationDataRequest Parse(String                                                       Text,
+
                                                           DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
                                                           CustomJObjectParserDelegate<PushAuthenticationDataRequest>?  CustomPushAuthenticationDataRequestParser   = null)
         {
 
@@ -164,7 +174,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out PushAuthenticationDataRequest?  pullEVSEStatusResponse,
                          out String?                         errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushAuthenticationDataRequestParser))
             {
                 return pullEVSEStatusResponse!;
@@ -188,8 +200,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(JObject                                                      JSON,
                                        out PushAuthenticationDataRequest?                           PushAuthenticationDataRequest,
                                        out String?                                                  ErrorResponse,
+
                                        DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
                                        CustomJObjectParserDelegate<PushAuthenticationDataRequest>?  CustomPushAuthenticationDataRequestParser   = null)
         {
 
@@ -240,8 +256,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   ActionType,
                                                                                   CustomData,
                                                                                   Timestamp,
-                                                                                  null,
-                                                                                  EventTrackingId);
+                                                                                  CancellationToken,
+                                                                                  EventTrackingId,
+                                                                                  RequestTimeout);
 
                 if (CustomPushAuthenticationDataRequestParser is not null)
                     PushAuthenticationDataRequest = CustomPushAuthenticationDataRequestParser(JSON,
@@ -273,8 +290,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                                       Text,
                                        out PushAuthenticationDataRequest?                           PushAuthenticationDataRequest,
                                        out String?                                                  ErrorResponse,
+
                                        DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
                                        CustomJObjectParserDelegate<PushAuthenticationDataRequest>?  CustomPushAuthenticationDataRequestParser   = null)
         {
 
@@ -285,7 +306,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 out PushAuthenticationDataRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomPushAuthenticationDataRequestParser);
 
             }

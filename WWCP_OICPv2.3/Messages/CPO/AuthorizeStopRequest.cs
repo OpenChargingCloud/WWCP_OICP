@@ -168,7 +168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomAuthorizeStopRequestParser = null)
+        #region (static) Parse   (JSON, OperatorIdURL, ..., CustomAuthorizeStopRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of an AuthorizeStop request.
@@ -181,19 +181,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
         public static AuthorizeStopRequest Parse(JObject                                             JSON,
                                                  Operator_Id                                         OperatorIdURL,
-                                                 TimeSpan                                            RequestTimeout,
+
                                                  DateTime?                                           Timestamp                          = null,
+                                                 CancellationToken?                                  CancellationToken                  = null,
                                                  EventTracking_Id?                                   EventTrackingId                    = null,
+                                                 TimeSpan?                                           RequestTimeout                     = null,
+
                                                  CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          OperatorIdURL,
-                         RequestTimeout,
                          out AuthorizeStopRequest?  auhorizeStopRequest,
                          out String?                errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeStopRequestParser))
             {
                 return auhorizeStopRequest!;
@@ -205,7 +209,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomAuthorizeStopRequestParser = null)
+        #region (static) Parse   (Text, OperatorIdURL, ..., CustomAuthorizeStopRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of an AuthorizeStop request.
@@ -218,19 +222,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
         public static AuthorizeStopRequest Parse(String                                              Text,
                                                  Operator_Id                                         OperatorIdURL,
-                                                 TimeSpan                                            RequestTimeout,
+
                                                  DateTime?                                           Timestamp                          = null,
+                                                 CancellationToken?                                  CancellationToken                  = null,
                                                  EventTracking_Id?                                   EventTrackingId                    = null,
+                                                 TimeSpan?                                           RequestTimeout                     = null,
+
                                                  CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
             if (TryParse(Text,
                          OperatorIdURL,
-                         RequestTimeout,
                          out AuthorizeStopRequest?  auhorizeStopRequest,
                          out String?                errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeStopRequestParser))
             {
                 return auhorizeStopRequest!;
@@ -242,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out AuthorizeStopRequest, out ErrorResponse, CustomAuthorizeStopRequestParser = null)
+        #region (static) TryParse(JSON, OperatorIdURL, out AuthorizeStopRequest, out ErrorResponse, ..., CustomAuthorizeStopRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of an AuthorizeStop request.
@@ -257,11 +265,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
                                        Operator_Id                                         OperatorIdURL,
-                                       TimeSpan                                            RequestTimeout,
                                        out AuthorizeStopRequest?                           AuthorizeStopRequest,
                                        out String?                                         ErrorResponse,
+
                                        DateTime?                                           Timestamp                          = null,
+                                       CancellationToken?                                  CancellationToken                  = null,
                                        EventTracking_Id?                                   EventTrackingId                    = null,
+                                       TimeSpan?                                           RequestTimeout                     = null,
+
                                        CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
@@ -378,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 EMPPartnerSessionId,
                                                                 CustomData,
                                                                 Timestamp,
-                                                                null,
+                                                                CancellationToken,
                                                                 EventTrackingId,
                                                                 RequestTimeout);
 
@@ -400,7 +411,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out AuthorizeStopRequest, out ErrorResponse, CustomAuthorizeStopRequestParser = null)
+        #region (static) TryParse(Text, OperatorIdURL, out AuthorizeStopRequest, out ErrorResponse, ..., CustomAuthorizeStopRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of an AuthorizeStop request.
@@ -415,11 +426,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
         public static Boolean TryParse(String                                              Text,
                                        Operator_Id                                         OperatorIdURL,
-                                       TimeSpan                                            RequestTimeout,
                                        out AuthorizeStopRequest?                           AuthorizeStopRequest,
                                        out String?                                         ErrorResponse,
+
                                        DateTime?                                           Timestamp                          = null,
+                                       CancellationToken?                                  CancellationToken                  = null,
                                        EventTracking_Id?                                   EventTrackingId                    = null,
+                                       TimeSpan?                                           RequestTimeout                     = null,
+
                                        CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
         {
 
@@ -428,11 +442,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(JObject.Parse(Text),
                                 OperatorIdURL,
-                                RequestTimeout,
                                 out AuthorizeStopRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomAuthorizeStopRequestParser);
 
             }

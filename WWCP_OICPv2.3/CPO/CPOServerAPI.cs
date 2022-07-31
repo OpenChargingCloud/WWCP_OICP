@@ -600,11 +600,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                                           providerId,
-                                                                                                          Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                          out AuthorizeRemoteReservationStartRequest  authorizeRemoteReservationStartRequest,
-                                                                                                          out String                                  errorResponse,
+                                                                                                          out AuthorizeRemoteReservationStartRequest?  authorizeRemoteReservationStartRequest,
+                                                                                                          out String?                                  errorResponse,
                                                                                                           Request.Timestamp,
+                                                                                                          Request.CancellationToken,
                                                                                                           Request.EventTrackingId,
+                                                                                                          Request.Timeout ?? DefaultRequestTimeout,
                                                                                                           CustomAuthorizeRemoteReservationStartRequestParser))
                                                  {
 
@@ -784,11 +785,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                                          providerId,
-                                                                                                         Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                         out AuthorizeRemoteReservationStopRequest  authorizeRemoteReservationStopRequest,
-                                                                                                         out String                                 errorResponse,
+                                                                                                         out AuthorizeRemoteReservationStopRequest?  authorizeRemoteReservationStopRequest,
+                                                                                                         out String?                                 errorResponse,
                                                                                                          Request.Timestamp,
+                                                                                                         Request.CancellationToken,
                                                                                                          Request.EventTrackingId,
+                                                                                                         Request.Timeout ?? DefaultRequestTimeout,
                                                                                                          CustomAuthorizeRemoteReservationStopRequestParser))
                                                  {
 
@@ -969,11 +971,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeRemoteStartRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                                providerId,
-                                                                                               Request.Timeout ?? DefaultRequestTimeout,
-                                                                                               out AuthorizeRemoteStartRequest  authorizeRemoteStartRequest,
-                                                                                               out String                       errorResponse,
+                                                                                               out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
+                                                                                               out String?                       errorResponse,
                                                                                                Request.Timestamp,
+                                                                                               Request.CancellationToken,
                                                                                                Request.EventTrackingId,
+                                                                                               Request.Timeout ?? DefaultRequestTimeout,
                                                                                                CustomAuthorizeRemoteStartRequestParser))
                                                  {
 
@@ -1153,11 +1156,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeRemoteStopRequest.TryParse(Request.HTTPBody?.ToUTF8String(),
                                                                                               providerId,
-                                                                                              Request.Timeout ?? DefaultRequestTimeout,
-                                                                                              out AuthorizeRemoteStopRequest  authorizeRemoteStopRequest,
-                                                                                              out String                      errorResponse,
+                                                                                              out AuthorizeRemoteStopRequest?  authorizeRemoteStopRequest,
+                                                                                              out String?                      errorResponse,
                                                                                               Request.Timestamp,
+                                                                                              Request.CancellationToken,
                                                                                               Request.EventTrackingId,
+                                                                                              Request.Timeout ?? DefaultRequestTimeout,
                                                                                               CustomAuthorizeRemoteStopRequestParser))
                                                  {
 

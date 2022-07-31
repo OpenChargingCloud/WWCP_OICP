@@ -133,8 +133,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    UInt32?                                               Page                                 = null,
                                                    UInt32?                                               Size                                 = null,
                                                    IEnumerable<String>?                                  SortOrder                            = null,
+
                                                    DateTime?                                             Timestamp                            = null,
+                                                   CancellationToken?                                    CancellationToken                    = null,
                                                    EventTracking_Id?                                     EventTrackingId                      = null,
+                                                   TimeSpan?                                             RequestTimeout                       = null,
+
                                                    CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
         {
 
@@ -145,7 +149,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPullEVSEPricingRequestParser))
             {
                 return pullEVSEPricingRequest!;
@@ -168,8 +174,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    UInt32?                                               Page                                 = null,
                                                    UInt32?                                               Size                                 = null,
                                                    IEnumerable<String>?                                  SortOrder                            = null,
+
                                                    DateTime?                                             Timestamp                            = null,
+                                                   CancellationToken?                                    CancellationToken                    = null,
                                                    EventTracking_Id?                                     EventTrackingId                      = null,
+                                                   TimeSpan?                                             RequestTimeout                       = null,
+
                                                    CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
         {
 
@@ -180,7 +190,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPullEVSEPricingRequestParser))
             {
                 return pullEVSEPricingRequest!;
@@ -207,8 +219,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                               Page                                 = null,
                                        UInt32?                                               Size                                 = null,
                                        IEnumerable<String>?                                  SortOrder                            = null,
+
                                        DateTime?                                             Timestamp                            = null,
+                                       CancellationToken?                                    CancellationToken                    = null,
                                        EventTracking_Id?                                     EventTrackingId                      = null,
+                                       TimeSpan?                                             RequestTimeout                       = null,
+
                                        CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
         {
 
@@ -283,9 +299,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                                     CustomData,
                                                                     Timestamp,
-                                                                    null,
+                                                                    CancellationToken,
                                                                     EventTrackingId,
-                                                                    null);
+                                                                    RequestTimeout);
 
                 if (CustomPullEVSEPricingRequestParser is not null)
                     PullEVSEPricingRequest = CustomPullEVSEPricingRequestParser(JSON,
@@ -320,8 +336,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                               Page                                 = null,
                                        UInt32?                                               Size                                 = null,
                                        IEnumerable<String>?                                  SortOrder                            = null,
+
                                        DateTime?                                             Timestamp                            = null,
+                                       CancellationToken?                                    CancellationToken                    = null,
                                        EventTracking_Id?                                     EventTrackingId                      = null,
+                                       TimeSpan?                                             RequestTimeout                       = null,
+
                                        CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
         {
 
@@ -335,7 +355,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Size,
                                 SortOrder,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomPullEVSEPricingRequestParser);
 
             }

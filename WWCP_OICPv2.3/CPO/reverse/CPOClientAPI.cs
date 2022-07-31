@@ -48,6 +48,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounterValues  PushEVSEData                    { get; }
             public APICounterValues  PushEVSEStatus                  { get; }
 
+            public APICounterValues  PushPricingProductData          { get; }
+            public APICounterValues  PushEVSEPricing                 { get; }
+
             public APICounterValues  AuthorizeStart                  { get; }
             public APICounterValues  AuthorizeStop                   { get; }
 
@@ -62,6 +65,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounters(APICounterValues? PushEVSEData                   = null,
                                APICounterValues? PushEVSEStatus                 = null,
 
+                               APICounterValues? PushPricingProductData         = null,
+                               APICounterValues? PushEVSEPricing                = null,
+
                                APICounterValues? AuthorizeStart                 = null,
                                APICounterValues? AuthorizeStop                  = null,
 
@@ -75,6 +81,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 this.PushEVSEData                  = PushEVSEData                 ?? new APICounterValues();
                 this.PushEVSEStatus                = PushEVSEStatus               ?? new APICounterValues();
+
+                this.PushPricingProductData        = PushPricingProductData       ?? new APICounterValues();
+                this.PushEVSEPricing               = PushEVSEPricing              ?? new APICounterValues();
 
                 this.AuthorizeStart                = AuthorizeStart               ?? new APICounterValues();
                 this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
@@ -93,6 +102,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 => JSONObject.Create(
                        new JProperty("PushEVSEData",                  PushEVSEData.                ToJSON()),
                        new JProperty("PushEVSEStatus",                PushEVSEStatus.              ToJSON()),
+
+                       new JProperty("PushPricingProductData",        PushPricingProductData.      ToJSON()),
+                       new JProperty("PushEVSEPricing",               PushEVSEPricing.             ToJSON()),
 
                        new JProperty("AuthorizeStart",                AuthorizeStart.              ToJSON()),
                        new JProperty("AuthorizeStop",                 AuthorizeStop.               ToJSON()),
@@ -137,6 +149,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         // Custom JSON parsers
         public CustomJObjectParserDelegate<PushEVSEDataRequest>?                     CustomPushEVSEDataRequestParser                    { get; set; }
         public CustomJObjectParserDelegate<PushEVSEStatusRequest>?                   CustomPushEVSEStatusRequestParser                  { get; set; }
+
+
+        public CustomJObjectParserDelegate<PushPricingProductDataRequest>?           CustomPushPricingProductDataRequestParser          { get; set; }
+        public CustomJObjectParserDelegate<PushEVSEPricingRequest>?                  CustomPushEVSEPricingRequestParser                 { get; set; }
+
 
         public CustomJObjectParserDelegate<AuthorizeStartRequest>?                   CustomAuthorizeStartRequestParser                  { get; set; }
         public CustomJObjectParserDelegate<AuthorizeStopRequest>?                    CustomAuthorizeStopRequestParser                   { get; set; }
@@ -298,6 +315,145 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                     API ?? this,
                                                     Request,
                                                     Response);
+
+        #endregion
+
+
+
+        #region (protected internal) OnPushPricingProductDataHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PushPricingProductData HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPushPricingProductDataHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PushPricingProductData HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPushPricingProductDataHTTPRequest(DateTime     Timestamp,
+                                                                     HTTPAPI      API,
+                                                                     HTTPRequest  Request)
+
+            => OnPushPricingProductDataHTTPRequest.WhenAll(Timestamp,
+                                                           API ?? this,
+                                                           Request);
+
+        #endregion
+
+        #region (event)              OnPushPricingProductData(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PushPricingProductData request was received.
+        /// </summary>
+        public event OnPushPricingProductDataAPIRequestDelegate?   OnPushPricingProductDataRequest;
+
+        /// <summary>
+        /// An event send whenever a PushPricingProductData request was received.
+        /// </summary>
+        public event OnPushPricingProductDataAPIDelegate?          OnPushPricingProductData;
+
+        /// <summary>
+        /// An event send whenever a response to a PushPricingProductData request was sent.
+        /// </summary>
+        public event OnPushPricingProductDataAPIResponseDelegate?  OnPushPricingProductDataResponse;
+
+        #endregion
+
+        #region (protected internal) OnPushPricingProductDataHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PushPricingProductData HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPushPricingProductDataHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PushPricingProductData HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPushPricingProductDataHTTPResponse(DateTime      Timestamp,
+                                                                      HTTPAPI       API,
+                                                                      HTTPRequest   Request,
+                                                                      HTTPResponse  Response)
+
+            => OnPushPricingProductDataHTTPResponse.WhenAll(Timestamp,
+                                                            API ?? this,
+                                                            Request,
+                                                            Response);
+
+        #endregion
+
+
+        #region (protected internal) OnPushEVSEPricingHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PushEVSEPricing HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPushEVSEPricingHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PushEVSEPricing HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPushEVSEPricingHTTPRequest(DateTime     Timestamp,
+                                                              HTTPAPI      API,
+                                                              HTTPRequest  Request)
+
+            => OnPushEVSEPricingHTTPRequest.WhenAll(Timestamp,
+                                                    API ?? this,
+                                                    Request);
+
+        #endregion
+
+        #region (event)              OnPushEVSEPricing(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PushEVSEPricing request was received.
+        /// </summary>
+        public event OnPushEVSEPricingAPIRequestDelegate?   OnPushEVSEPricingRequest;
+
+        /// <summary>
+        /// An event send whenever a PushEVSEPricing request was received.
+        /// </summary>
+        public event OnPushEVSEPricingAPIDelegate?          OnPushEVSEPricing;
+
+        /// <summary>
+        /// An event send whenever a response to a PushEVSEPricing request was sent.
+        /// </summary>
+        public event OnPushEVSEPricingAPIResponseDelegate?  OnPushEVSEPricingResponse;
+
+        #endregion
+
+        #region (protected internal) OnPushEVSEPricingHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PushEVSEPricing HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPushEVSEPricingHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PushEVSEPricing HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPushEVSEPricingHTTPResponse(DateTime      Timestamp,
+                                                               HTTPAPI       API,
+                                                               HTTPRequest   Request,
+                                                               HTTPResponse  Response)
+
+            => OnPushEVSEPricingHTTPResponse.WhenAll(Timestamp,
+                                                     API ?? this,
+                                                     Request,
+                                                     Response);
 
         #endregion
 
@@ -899,11 +1055,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (PushEVSEDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                        //     operatorId ????
-                                                                                       Request.Timeout ?? DefaultRequestTimeout,
                                                                                        out PushEVSEDataRequest?          pullEVSEDataRequest,
                                                                                        out String?                       errorResponse,
+
                                                                                        Timestamp:                        Request.Timestamp,
+                                                                                       CancellationToken:                Request.CancellationToken,
                                                                                        EventTrackingId:                  Request.EventTrackingId,
+                                                                                       RequestTimeout:                   Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                        CustomPushEVSEDataRequestParser:  CustomPushEVSEDataRequestParser))
                                                  {
 
@@ -1053,7 +1212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                     ToString(JSONFormatting).
                                                                                                                     ToUTF8Bytes()
                                                                                                           ?? Array.Empty<Byte>(),
-                                                 Connection                 = "close"
+                                                        Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1083,28 +1242,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
                                                      pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                this,
-                                                                                new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                    Timestamp.Now,
-                                                                                    Request.EventTrackingId,
-                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                    StatusCode: new StatusCode(
-                                                                                                    StatusCodes.SystemError,
-                                                                                                    "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                                )
-                                                                                )
-                                                                            );
+                                                                                  this,
+                                                                                  new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.SystemError,
+                                                                                                      "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                                  )
+                                                                                  )
+                                                                              );
 
                                                  #endregion
 
                                                  else if (PushEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                       //     operatorId ????
-                                                                                       Request.Timeout ?? DefaultRequestTimeout,
-                                                                                       out PushEVSEStatusRequest?          pullEVSEStatusRequest,
-                                                                                       out String?                         errorResponse,
-                                                                                       Timestamp:                          Request.Timestamp,
-                                                                                       EventTrackingId:                    Request.EventTrackingId,
-                                                                                       CustomPushEVSEStatusRequestParser:  CustomPushEVSEStatusRequestParser))
+                                                                                         //     operatorId ????
+                                                                                         out PushEVSEStatusRequest?          pullEVSEStatusRequest,
+                                                                                         out String?                         errorResponse,
+
+                                                                                         Timestamp:                          Request.Timestamp,
+                                                                                         CancellationToken:                  Request.CancellationToken,
+                                                                                         EventTrackingId:                    Request.EventTrackingId,
+                                                                                         RequestTimeout:                     Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                         CustomPushEVSEStatusRequestParser:  CustomPushEVSEStatusRequestParser))
                                                  {
 
                                                      Counters.PushEVSEStatus.IncRequests_OK();
@@ -1150,36 +1312,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          catch (Exception e)
                                                          {
                                                              pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                        this,
-                                                                                        new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                            Timestamp.Now,
-                                                                                            Request.EventTrackingId,
-                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                            StatusCode: new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            e.Message,
-                                                                                                            e.StackTrace
-                                                                                                        ),
-                                                                                            pullEVSEStatusRequest!
-                                                                                        )
-                                                                                    );
+                                                                                          this,
+                                                                                          new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.DataError,
+                                                                                                              e.Message,
+                                                                                                              e.StackTrace
+                                                                                                          ),
+                                                                                              pullEVSEStatusRequest!
+                                                                                          )
+                                                                                      );
                                                          }
                                                      }
 
                                                      if (pullEVSEStatusResponse is null)
                                                          pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                    this,
-                                                                                    new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                        Timestamp.Now,
-                                                                                        Request.EventTrackingId,
-                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                        StatusCode: new StatusCode(
-                                                                                                        StatusCodes.SystemError,
-                                                                                                        "Could not process the received PushEVSEStatus request!"
-                                                                                                    ),
-                                                                                        pullEVSEStatusRequest!
-                                                                                    )
-                                                                                );
+                                                                                      this,
+                                                                                      new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          "Could not process the received PushEVSEStatus request!"
+                                                                                                      ),
+                                                                                          pullEVSEStatusRequest!
+                                                                                      )
+                                                                                  );
 
                                                      #endregion
 
@@ -1208,36 +1370,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  }
                                                  else
                                                      pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                this,
-                                                                                new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                    Timestamp.Now,
-                                                                                    Request.EventTrackingId,
-                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                    StatusCode: new StatusCode(
-                                                                                                    StatusCodes.DataError,
-                                                                                                    "We could not parse the given PushEVSEStatus request!",
-                                                                                                    errorResponse
-                                                                                                ),
-                                                                                    pullEVSEStatusRequest!
-                                                                                )
-                                                                            );
+                                                                                  this,
+                                                                                  new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.DataError,
+                                                                                                      "We could not parse the given PushEVSEStatus request!",
+                                                                                                      errorResponse
+                                                                                                  ),
+                                                                                      pullEVSEStatusRequest!
+                                                                                  )
+                                                                              );
 
                                              }
                                              catch (Exception e)
                                              {
                                                  pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                            this,
-                                                                            new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                Timestamp.Now,
-                                                                                Request.EventTrackingId,
-                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                StatusCode: new StatusCode(
-                                                                                                StatusCodes.SystemError,
-                                                                                                e.Message,
-                                                                                                e.StackTrace
-                                                                                            )
-                                                                            )
-                                                                        );
+                                                                              this,
+                                                                              new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                  Timestamp.Now,
+                                                                                  Request.EventTrackingId,
+                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                  StatusCode: new StatusCode(
+                                                                                                  StatusCodes.SystemError,
+                                                                                                  e.Message,
+                                                                                                  e.StackTrace
+                                                                                              )
+                                                                              )
+                                                                          );
                                              }
 
                                              return new HTTPResponse.Builder(Request) {
@@ -1253,7 +1415,414 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                       ToString(JSONFormatting).
                                                                                                                       ToUTF8Bytes()
                                                                                                             ?? Array.Empty<Byte>(),
-                                                 Connection                 = "close"
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+
+            #region POST  ~/api/oicp/dynamicpricing/v10/operators/{operatorId}/pricing-products
+
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/operators/DE*GEF/pricing-products
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/pricing-products",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPushPricingProductDataHTTPRequest,
+                                         HTTPResponseLogger:  logPushPricingProductDataHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<Acknowledgement<PushPricingProductDataRequest>>? pushPricingProductDataResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                     pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                          this,
+                                                                                          new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                                 #endregion
+
+                                                 else if (PushPricingProductDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                 //     operatorId ????
+                                                                                                 out PushPricingProductDataRequest?          pullEVSEDataRequest,
+                                                                                                 out String?                                 errorResponse,
+
+                                                                                                 Timestamp:                                  Request.Timestamp,
+                                                                                                 CancellationToken:                          Request.CancellationToken,
+                                                                                                 EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                 CustomPushPricingProductDataRequestParser:  CustomPushPricingProductDataRequestParser))
+                                                 {
+
+                                                     Counters.PushPricingProductData.IncRequests_OK();
+
+                                                     #region Send OnPushPricingProductDataRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPushPricingProductDataRequest is not null)
+                                                             await Task.WhenAll(OnPushPricingProductDataRequest.GetInvocationList().
+                                                                                Cast<OnPushPricingProductDataAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushPricingProductDataRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPushPricingProductDataLocal = OnPushPricingProductData;
+                                                     if (OnPushPricingProductDataLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pushPricingProductDataResponse = (await Task.WhenAll(OnPushPricingProductDataLocal.GetInvocationList().
+                                                                                                                                                Cast<OnPushPricingProductDataAPIDelegate>().
+                                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                                              this,
+                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PushPricingProductData.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                                  this,
+                                                                                                  new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.DataError,
+                                                                                                                      e.Message,
+                                                                                                                      e.StackTrace
+                                                                                                                  ),
+                                                                                                      pullEVSEDataRequest!
+                                                                                                  )
+                                                                                              );
+                                                         }
+                                                     }
+
+                                                     if (pushPricingProductDataResponse is null)
+                                                         pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                              this,
+                                                                                              new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.SystemError,
+                                                                                                                  "Could not process the received PushPricingProductData request!"
+                                                                                                              ),
+                                                                                                  pullEVSEDataRequest!
+                                                                                              )
+                                                                                          );
+
+                                                     #endregion
+
+                                                     #region Send OnPushPricingProductDataResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPushPricingProductDataResponse is not null)
+                                                             await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
+                                                                                Cast<OnPushPricingProductDataAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pushPricingProductDataResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushPricingProductDataResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                          this,
+                                                                                          new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.DataError,
+                                                                                                              "We could not parse the given PushPricingProductData request!",
+                                                                                                              errorResponse
+                                                                                                          ),
+                                                                                              pullEVSEDataRequest!
+                                                                                          )
+                                                                                      );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                      this,
+                                                                                      new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          e.Message,
+                                                                                                          e.StackTrace
+                                                                                                      )
+                                                                                      )
+                                                                                  );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pushPricingProductDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                     CustomStatusCodeSerializer).
+                                                                                                                              ToString(JSONFormatting).
+                                                                                                                              ToUTF8Bytes()
+                                                                                                                    ?? Array.Empty<Byte>(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/dynamicpricing/v10/operators/{operatorId}/evse-pricing
+
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/operators/DE-GEF/evse-pricing
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/evse-pricing",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPushEVSEPricingHTTPRequest,
+                                         HTTPResponseLogger:  logPushEVSEPricingHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime = Timestamp.Now;
+                                             OICPResult<Acknowledgement<PushEVSEPricingRequest>>? pushEVSEPricingResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                     pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                                   this,
+                                                                                   new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.SystemError,
+                                                                                                       "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                                   )
+                                                                                   )
+                                                                               );
+
+                                                 #endregion
+
+                                                 else if (PushEVSEPricingRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                          operatorId,
+                                                                                          out PushEVSEPricingRequest?          pullEVSEDataRequest,
+                                                                                          out String?                          errorResponse,
+
+                                                                                          Timestamp:                           Request.Timestamp,
+                                                                                          CancellationToken:                   Request.CancellationToken,
+                                                                                          EventTrackingId:                     Request.EventTrackingId,
+                                                                                          RequestTimeout:                      Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                          CustomPushEVSEPricingRequestParser:  CustomPushEVSEPricingRequestParser))
+                                                 {
+
+                                                     Counters.PushEVSEPricing.IncRequests_OK();
+
+                                                     #region Send OnPushEVSEPricingRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPushEVSEPricingRequest is not null)
+                                                             await Task.WhenAll(OnPushEVSEPricingRequest.GetInvocationList().
+                                                                                Cast<OnPushEVSEPricingAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullEVSEDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEPricingRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPushEVSEPricingLocal = OnPushEVSEPricing;
+                                                     if (OnPushEVSEPricingLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pushEVSEPricingResponse = (await Task.WhenAll(OnPushEVSEPricingLocal.GetInvocationList().
+                                                                                                                                  Cast<OnPushEVSEPricingAPIDelegate>().
+                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                this,
+                                                                                                                                                pullEVSEDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PushEVSEPricing.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                                           this,
+                                                                                           new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                               Timestamp.Now,
+                                                                                               Request.EventTrackingId,
+                                                                                               Timestamp.Now - Request.Timestamp,
+                                                                                               StatusCode: new StatusCode(
+                                                                                                               StatusCodes.DataError,
+                                                                                                               e.Message,
+                                                                                                               e.StackTrace
+                                                                                                           ),
+                                                                                               pullEVSEDataRequest!
+                                                                                           )
+                                                                                       );
+                                                         }
+                                                     }
+
+                                                     if (pushEVSEPricingResponse is null)
+                                                         pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                                       this,
+                                                                                       new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                           Timestamp.Now,
+                                                                                           Request.EventTrackingId,
+                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                           StatusCode: new StatusCode(
+                                                                                                           StatusCodes.SystemError,
+                                                                                                           "Could not process the received PushEVSEPricing request!"
+                                                                                                       ),
+                                                                                           pullEVSEDataRequest!
+                                                                                       )
+                                                                                   );
+
+                                                     #endregion
+
+                                                     #region Send OnPushEVSEPricingResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPushEVSEPricingResponse is not null)
+                                                             await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
+                                                                                Cast<OnPushEVSEPricingAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pushEVSEPricingResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEPricingResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                                   this,
+                                                                                   new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.DataError,
+                                                                                                       "We could not parse the given PushEVSEPricing request!",
+                                                                                                       errorResponse
+                                                                                                   ),
+                                                                                       pullEVSEDataRequest!
+                                                                                   )
+                                                                               );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                               this,
+                                                                               new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.SystemError,
+                                                                                                   e.Message,
+                                                                                                   e.StackTrace
+                                                                                               )
+                                                                               )
+                                                                           );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pushEVSEPricingResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                              CustomStatusCodeSerializer).
+                                                                                                                       ToString(JSONFormatting).
+                                                                                                                       ToUTF8Bytes()
+                                                                                                             ?? Array.Empty<Byte>(),
+                                                        Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1298,11 +1867,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                          operatorId,
-                                                                                         Request.Timeout ?? DefaultRequestTimeout,
                                                                                          out AuthorizeStartRequest?          pullEVSEDataRequest,
                                                                                          out String?                         errorResponse,
+
                                                                                          Timestamp:                          Request.Timestamp,
+                                                                                         CancellationToken:                  Request.CancellationToken,
                                                                                          EventTrackingId:                    Request.EventTrackingId,
+                                                                                         RequestTimeout:                     Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                          CustomAuthorizeStartRequestParser:  CustomAuthorizeStartRequestParser))
                                                  {
 
@@ -1442,7 +2014,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                           ToString(JSONFormatting).
                                                                                                                           ToUTF8Bytes()
                                                                                                                 ?? Array.Empty<Byte>(),
-                                                 Connection                 = "close"
+                                                        Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1486,11 +2058,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                         operatorId,
-                                                                                        Request.Timeout ?? DefaultRequestTimeout,
                                                                                         out AuthorizeStopRequest?          pullEVSEDataRequest,
                                                                                         out String?                        errorResponse,
+
                                                                                         Timestamp:                         Request.Timestamp,
+                                                                                        CancellationToken:                 Request.CancellationToken,
                                                                                         EventTrackingId:                   Request.EventTrackingId,
+                                                                                        RequestTimeout:                    Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                         CustomAuthorizeStopRequestParser:  CustomAuthorizeStopRequestParser))
                                                  {
 
@@ -1629,7 +2204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                          ToString(JSONFormatting).
                                                                                                                          ToUTF8Bytes()
                                                                                                                ?? Array.Empty<Byte>(),
-                                                 Connection                 = "close"
+                                                        Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1651,7 +2226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime = Timestamp.Now;
-                                             OICPResult<Acknowledgement>? acknowledgement = null;
+                                             OICPResult<Acknowledgement>? chargingNotificationResponse = null;
 
                                              try
                                              {
@@ -1672,12 +2247,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          case ChargingNotificationTypes.Start:
 
                                                              if (ChargingStartNotificationRequest.TryParse(JSONRequest,
-                                                                                                           Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                           out ChargingStartNotificationRequest?  chargingStartNotificationRequest,
-                                                                                                           out String?                            errorResponse,
-                                                                                                           Request.Timestamp,
-                                                                                                           Request.EventTrackingId,
-                                                                                                           CustomChargingStartNotificationRequestParser))
+                                                                                                           out ChargingStartNotificationRequest?          chargingStartNotificationRequest,
+                                                                                                           out String?                                    errorResponse,
+
+                                                                                                           Timestamp:                                     Request.Timestamp,
+                                                                                                           CancellationToken:                             Request.CancellationToken,
+                                                                                                           EventTrackingId:                               Request.EventTrackingId,
+                                                                                                           RequestTimeout:                                Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                           CustomChargingStartNotificationRequestParser:  CustomChargingStartNotificationRequestParser))
                                                              {
 
                                                                  Counters.ChargingStartNotification.IncRequests_OK();
@@ -1781,11 +2359,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 acknowledgement = OICPResult<Acknowledgement>.From(startAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
 
                                                              }
                                                              else
-                                                                 acknowledgement = OICPResult<Acknowledgement>.Failed(
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                       this,
                                                                                       new Acknowledgement<ChargingStartNotificationRequest>(
                                                                                           Timestamp.Now,
@@ -1809,12 +2387,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          case ChargingNotificationTypes.Progress:
 
                                                              if (ChargingProgressNotificationRequest.TryParse(JSONRequest,
-                                                                                                              Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                              out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
-                                                                                                              out                                       errorResponse,
-                                                                                                              Request.Timestamp,
-                                                                                                              Request.EventTrackingId,
-                                                                                                              CustomChargingProgressNotificationRequestParser))
+                                                                                                              out ChargingProgressNotificationRequest?          chargingProgressNotificationRequest,
+                                                                                                              out                                               errorResponse,
+
+                                                                                                              Timestamp:                                        Request.Timestamp,
+                                                                                                              CancellationToken:                                Request.CancellationToken,
+                                                                                                              EventTrackingId:                                  Request.EventTrackingId,
+                                                                                                              RequestTimeout:                                   Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                              CustomChargingProgressNotificationRequestParser:  CustomChargingProgressNotificationRequestParser))
                                                              {
 
                                                                  Counters.ChargingProgressNotification.IncRequests_OK();
@@ -1918,11 +2499,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 acknowledgement = OICPResult<Acknowledgement>.From(startAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
 
                                                              }
                                                              else
-                                                                 acknowledgement = OICPResult<Acknowledgement>.Failed(
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                       this,
                                                                                       new Acknowledgement<ChargingProgressNotificationRequest>(
                                                                                           Timestamp.Now,
@@ -1946,12 +2527,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          case ChargingNotificationTypes.End:
 
                                                              if (ChargingEndNotificationRequest.TryParse(JSONRequest,
-                                                                                                              Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                              out ChargingEndNotificationRequest?  chargingEndNotificationRequest,
-                                                                                                              out                                       errorResponse,
-                                                                                                              Request.Timestamp,
-                                                                                                              Request.EventTrackingId,
-                                                                                                              CustomChargingEndNotificationRequestParser))
+                                                                                                         out ChargingEndNotificationRequest?          chargingEndNotificationRequest,
+                                                                                                         out                                          errorResponse,
+
+                                                                                                         Timestamp:                                   Request.Timestamp,
+                                                                                                         CancellationToken:                           Request.CancellationToken,
+                                                                                                         EventTrackingId:                             Request.EventTrackingId,
+                                                                                                         RequestTimeout:                              Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                         CustomChargingEndNotificationRequestParser:  CustomChargingEndNotificationRequestParser))
                                                              {
 
                                                                  Counters.ChargingEndNotification.IncRequests_OK();
@@ -2055,11 +2639,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 acknowledgement = OICPResult<Acknowledgement>.From(startAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
 
                                                              }
                                                              else
-                                                                 acknowledgement = OICPResult<Acknowledgement>.Failed(
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                       this,
                                                                                       new Acknowledgement<ChargingEndNotificationRequest>(
                                                                                           Timestamp.Now,
@@ -2083,12 +2667,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          case ChargingNotificationTypes.Error:
 
                                                              if (ChargingErrorNotificationRequest.TryParse(JSONRequest,
-                                                                                                           Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                           out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
-                                                                                                           out                                    errorResponse,
-                                                                                                           Request.Timestamp,
-                                                                                                           Request.EventTrackingId,
-                                                                                                           CustomChargingErrorNotificationRequestParser))
+                                                                                                           out ChargingErrorNotificationRequest?          chargingErrorNotificationRequest,
+                                                                                                           out                                            errorResponse,
+
+                                                                                                           Timestamp:                                     Request.Timestamp,
+                                                                                                           CancellationToken:                             Request.CancellationToken,
+                                                                                                           EventTrackingId:                               Request.EventTrackingId,
+                                                                                                           RequestTimeout:                                Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                           CustomChargingErrorNotificationRequestParser:  CustomChargingErrorNotificationRequestParser))
                                                              {
 
                                                                  Counters.ChargingErrorNotification.IncRequests_OK();
@@ -2192,24 +2779,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 acknowledgement = OICPResult<Acknowledgement>.From(startAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
 
                                                              }
                                                              else
-                                                                 acknowledgement = OICPResult<Acknowledgement>.Failed(
-                                                                                      this,
-                                                                                      new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                          Timestamp.Now,
-                                                                                          Request.EventTrackingId,
-                                                                                          Timestamp.Now - Request.Timestamp,
-                                                                                          StatusCode: new StatusCode(
-                                                                                                          StatusCodes.DataError,
-                                                                                                          "We could not parse the given ChargingErrorNotification request!",
-                                                                                                          errorResponse
-                                                                                                      ),
-                                                                                          chargingErrorNotificationRequest
-                                                                                      )
-                                                                                  );
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                                    this,
+                                                                                                    new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                                        Timestamp.Now,
+                                                                                                        Request.EventTrackingId,
+                                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                                        StatusCode: new StatusCode(
+                                                                                                                        StatusCodes.DataError,
+                                                                                                                        "We could not parse the given ChargingErrorNotification request!",
+                                                                                                                        errorResponse
+                                                                                                                    ),
+                                                                                                        chargingErrorNotificationRequest
+                                                                                                    )
+                                                                                                );
 
                                                              break;
 
@@ -2219,21 +2806,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                          default:
 
-                                                             acknowledgement = OICPResult<Acknowledgement>.Failed(
-                                                                                   this,
-                                                                                   new Acknowledgement(
-                                                                                       Request.Timestamp,
-                                                                                       Timestamp.Now,
-                                                                                       Request.EventTrackingId,
-                                                                                       Timestamp.Now - Request.Timestamp,
-                                                                                       StatusCode: new StatusCode(
-                                                                                                       StatusCodes.DataError,
-                                                                                                       "Unknown or invalid charging notification type `" + chargingNotificationType.ToString() + "`!"
-                                                                                                       //errorResponse
-                                                                                                   )
-                                                                                       //chargeDetailRecordRequest!
-                                                                                   )
-                                                                               );
+                                                             chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                                this,
+                                                                                                new Acknowledgement(
+                                                                                                    Request.Timestamp,
+                                                                                                    Timestamp.Now,
+                                                                                                    Request.EventTrackingId,
+                                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                                    StatusCode: new StatusCode(
+                                                                                                                    StatusCodes.DataError,
+                                                                                                                    "Unknown or invalid charging notification type `" + chargingNotificationType.ToString() + "`!"
+                                                                                                                    //errorResponse
+                                                                                                                )
+                                                                                                    //chargeDetailRecordRequest!
+                                                                                                )
+                                                                                            );
 
                                                              break;
 
@@ -2243,39 +2830,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
-                                                     acknowledgement = OICPResult<Acknowledgement>.Failed(
-                                                                           this,
-                                                                           new Acknowledgement(
-                                                                               Request.Timestamp,
-                                                                               Timestamp.Now,
-                                                                               Request.EventTrackingId,
-                                                                               Timestamp.Now - Request.Timestamp,
-                                                                               StatusCode: new StatusCode(
-                                                                                               StatusCodes.DataError,
-                                                                                               "We could not parse the given ChargingNotification request!"
-                                                                                               //errorResponse
-                                                                                           )
-                                                                               //chargeDetailRecordRequest!
-                                                                           )
-                                                                       );
+                                                     chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                        this,
+                                                                                        new Acknowledgement(
+                                                                                            Request.Timestamp,
+                                                                                            Timestamp.Now,
+                                                                                            Request.EventTrackingId,
+                                                                                            Timestamp.Now - Request.Timestamp,
+                                                                                            StatusCode: new StatusCode(
+                                                                                                            StatusCodes.DataError,
+                                                                                                            "We could not parse the given ChargingNotification request!"
+                                                                                                            //errorResponse
+                                                                                                        )
+                                                                                            //chargeDetailRecordRequest!
+                                                                                        )
+                                                                                    );
 
                                              }
                                              catch (Exception e)
                                              {
-                                                 acknowledgement = OICPResult<Acknowledgement>.Failed(
-                                                                       this,
-                                                                       new Acknowledgement(
-                                                                           Request.Timestamp,
-                                                                           Timestamp.Now,
-                                                                           Request.EventTrackingId,
-                                                                           Timestamp.Now - Request.Timestamp,
-                                                                           StatusCode: new StatusCode(
-                                                                                           StatusCodes.SystemError,
-                                                                                           e.Message,
-                                                                                           e.StackTrace
-                                                                                       )
-                                                                       )
-                                                                   );
+                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                    this,
+                                                                                    new Acknowledgement(
+                                                                                        Request.Timestamp,
+                                                                                        Timestamp.Now,
+                                                                                        Request.EventTrackingId,
+                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                        StatusCode: new StatusCode(
+                                                                                                        StatusCodes.SystemError,
+                                                                                                        e.Message,
+                                                                                                        e.StackTrace
+                                                                                                    )
+                                                                                    )
+                                                                                );
                                              }
 
                                              return new HTTPResponse.Builder(Request) {
@@ -2286,12 +2873,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = acknowledgement.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                      CustomStatusCodeSerializer).
-                                                                                                               ToString(JSONFormatting).
-                                                                                                               ToUTF8Bytes()
-                                                                                                     ?? Array.Empty<Byte>(),
-                                                 Connection                 = "close"
+                                                        Content                    = chargingNotificationResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                   CustomStatusCodeSerializer).
+                                                                                                                            ToString(JSONFormatting).
+                                                                                                                            ToUTF8Bytes()
+                                                                                                                  ?? Array.Empty<Byte>(),
+                                                        Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -2338,11 +2925,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (ChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                              operatorId,
-                                                                                             Request.Timeout ?? DefaultRequestTimeout,
                                                                                              out ChargeDetailRecordRequest?          chargeDetailRecordRequest,
                                                                                              out String?                             errorResponse,
+
                                                                                              Timestamp:                              Request.Timestamp,
+                                                                                             CancellationToken:                      Request.CancellationToken,
                                                                                              EventTrackingId:                        Request.EventTrackingId,
+                                                                                             RequestTimeout:                         Request.Timeout ?? DefaultRequestTimeout,
+
                                                                                              CustomChargeDetailRecordRequestParser:  CustomChargeDetailRecordRequestParser))
                                                  {
 

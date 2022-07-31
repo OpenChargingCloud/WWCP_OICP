@@ -133,18 +133,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushEVSEStatusRequestParser">A delegate to parse custom push EVSE status request JSON objects.</param>
         public static PushEVSEStatusRequest Parse(JObject                                              JSON,
-                                                  TimeSpan                                             RequestTimeout,
+
                                                   DateTime?                                            Timestamp                           = null,
+                                                  CancellationToken?                                   CancellationToken                   = null,
                                                   EventTracking_Id?                                    EventTrackingId                     = null,
+                                                  TimeSpan?                                            RequestTimeout                      = null,
+
                                                   CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         RequestTimeout,
                          out PushEVSEStatusRequest?  pushEVSEStatusRequest,
                          out String?                 errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushEVSEStatusRequestParser))
             {
                 return pushEVSEStatusRequest!;
@@ -167,18 +171,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushEVSEStatusRequestParser">A delegate to parse custom push EVSE status request JSON objects.</param>
         public static PushEVSEStatusRequest Parse(String                                               Text,
-                                                  TimeSpan                                             RequestTimeout,
+
                                                   DateTime?                                            Timestamp                           = null,
+                                                  CancellationToken?                                   CancellationToken                   = null,
                                                   EventTracking_Id?                                    EventTrackingId                     = null,
+                                                  TimeSpan?                                            RequestTimeout                      = null,
+
                                                   CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         RequestTimeout,
                          out PushEVSEStatusRequest?  pushEVSEStatusRequest,
                          out String?                 errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomPushEVSEStatusRequestParser))
             {
                 return pushEVSEStatusRequest!;
@@ -190,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, ..., out PushEVSEStatusRequest, out ErrorResponse, ..., CustomPushEVSEStatusRequestParser = null)
+        #region (static) TryParse(JSON, out PushEVSEStatusRequest, out ErrorResponse, ..., CustomPushEVSEStatusRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a push EVSE status request.
@@ -203,11 +211,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushEVSEStatusRequestParser">A delegate to parse custom push EVSE status request JSON objects.</param>
         public static Boolean TryParse(JObject                                              JSON,
-                                       TimeSpan                                             RequestTimeout,
                                        out PushEVSEStatusRequest?                           PushEVSEStatusRequest,
                                        out String?                                          ErrorResponse,
+
                                        DateTime?                                            Timestamp                           = null,
+                                       CancellationToken?                                   CancellationToken                   = null,
                                        EventTracking_Id?                                    EventTrackingId                     = null,
+                                       TimeSpan?                                            RequestTimeout                      = null,
+
                                        CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
         {
 
@@ -247,6 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+
                 #region Parse CustomData            [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
@@ -258,7 +270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   ActionType,
                                                                   CustomData,
                                                                   Timestamp,
-                                                                  null,
+                                                                  CancellationToken,
                                                                   EventTrackingId,
                                                                   RequestTimeout);
 
@@ -280,7 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, ..., out PushEVSEStatusRequest, out ErrorResponse, ..., CustomPushEVSEStatusRequestParser = null)
+        #region (static) TryParse(Text, out PushEVSEStatusRequest, out ErrorResponse, ..., CustomPushEVSEStatusRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a push EVSE status request.
@@ -293,11 +305,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushEVSEStatusRequestParser">A delegate to parse custom push EVSE status request JSON objects.</param>
         public static Boolean TryParse(String                                               Text,
-                                       TimeSpan                                             RequestTimeout,
                                        out PushEVSEStatusRequest?                           PushEVSEStatusRequest,
                                        out String?                                          ErrorResponse,
+
                                        DateTime?                                            Timestamp                           = null,
+                                       CancellationToken?                                   CancellationToken                   = null,
                                        EventTracking_Id?                                    EventTrackingId                     = null,
+                                       TimeSpan?                                            RequestTimeout                      = null,
+
                                        CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
         {
 
@@ -305,11 +320,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return TryParse(JObject.Parse(Text),
-                                RequestTimeout,
                                 out PushEVSEStatusRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomPushEVSEStatusRequestParser);
 
             }

@@ -173,19 +173,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop JSON objects.</param>
         public static AuthorizeRemoteReservationStopRequest Parse(JObject                                                              JSON,
                                                                   Provider_Id                                                          ProviderIdURL,
-                                                                  TimeSpan                                                             RequestTimeout,
+
                                                                   DateTime?                                                            Timestamp                                           = null,
+                                                                  CancellationToken?                                                   CancellationToken                                   = null,
                                                                   EventTracking_Id?                                                    EventTrackingId                                     = null,
+                                                                  TimeSpan?                                                            RequestTimeout                                      = null,
+
                                                                   CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?  CustomAuthorizeRemoteReservationStopRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          ProviderIdURL,
-                         RequestTimeout,
                          out AuthorizeRemoteReservationStopRequest?  authorizeRemoteReservationStopRequest,
                          out String?                                 errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeRemoteReservationStopRequestParser))
             {
                 return authorizeRemoteReservationStopRequest!;
@@ -210,19 +214,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop request JSON objects.</param>
         public static AuthorizeRemoteReservationStopRequest Parse(String                                                               Text,
                                                                   Provider_Id                                                          ProviderIdURL,
-                                                                  TimeSpan                                                             RequestTimeout,
+
                                                                   DateTime?                                                            Timestamp                                           = null,
+                                                                  CancellationToken?                                                   CancellationToken                                   = null,
                                                                   EventTracking_Id?                                                    EventTrackingId                                     = null,
+                                                                  TimeSpan?                                                            RequestTimeout                                      = null,
+
                                                                   CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?  CustomAuthorizeRemoteReservationStopRequestParser   = null)
         {
 
             if (TryParse(Text,
                          ProviderIdURL,
-                         RequestTimeout,
                          out AuthorizeRemoteReservationStopRequest?  authorizeRemoteReservationStopRequest,
                          out String?                                 errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeRemoteReservationStopRequestParser))
             {
                 return authorizeRemoteReservationStopRequest!;
@@ -234,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out AuthorizeRemoteReservationStopRequest, out ErrorResponse, CustomAuthorizeRemoteReservationStopRequestParser = null)
+        #region (static) TryParse(JSON, out AuthorizeRemoteReservationStopRequest, out ErrorResponse, ..., CustomAuthorizeRemoteReservationStopRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a AuthorizeRemoteReservationStop request.
@@ -249,11 +257,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                                              JSON,
                                        Provider_Id                                                          ProviderIdURL,
-                                       TimeSpan                                                             RequestTimeout,
                                        out AuthorizeRemoteReservationStopRequest?                           AuthorizeRemoteReservationStopRequest,
                                        out String?                                                          ErrorResponse,
+
                                        DateTime?                                                            Timestamp                                           = null,
+                                       CancellationToken?                                                   CancellationToken                                   = null,
                                        EventTracking_Id?                                                    EventTrackingId                                     = null,
+                                       TimeSpan?                                                            RequestTimeout                                      = null,
+
                                        CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?  CustomAuthorizeRemoteReservationStopRequestParser   = null)
         {
 
@@ -356,7 +367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                   CustomData,
 
                                                                                                   Timestamp,
-                                                                                                  null,
+                                                                                                  CancellationToken,
                                                                                                   EventTrackingId,
                                                                                                   RequestTimeout);
 
@@ -378,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out AuthorizeRemoteReservationStopRequest, out ErrorResponse, CustomAuthorizeRemoteReservationStopRequestParser = null)
+        #region (static) TryParse(Text, out AuthorizeRemoteReservationStopRequest, out ErrorResponse, ..., CustomAuthorizeRemoteReservationStopRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a AuthorizeRemoteReservationStop request.
@@ -393,11 +404,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop request JSON objects.</param>
         public static Boolean TryParse(String                                                               Text,
                                        Provider_Id                                                          ProviderIdURL,
-                                       TimeSpan                                                             RequestTimeout,
                                        out AuthorizeRemoteReservationStopRequest?                           AuthorizeRemoteReservationStopRequest,
                                        out String?                                                          ErrorResponse,
+
                                        DateTime?                                                            Timestamp                                           = null,
+                                       CancellationToken?                                                   CancellationToken                                   = null,
                                        EventTracking_Id?                                                    EventTrackingId                                     = null,
+                                       TimeSpan?                                                            RequestTimeout                                      = null,
+
                                        CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?  CustomAuthorizeRemoteReservationStopRequestParser   = null)
         {
 
@@ -406,11 +420,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(JObject.Parse(Text),
                                 ProviderIdURL,
-                                RequestTimeout,
                                 out AuthorizeRemoteReservationStopRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomAuthorizeRemoteReservationStopRequestParser);
 
             }

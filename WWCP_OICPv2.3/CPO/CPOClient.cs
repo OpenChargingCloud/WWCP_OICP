@@ -2112,7 +2112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                           null,
                                                                           DNSClient).
 
-                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pricing-products"),
+                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/evse-pricing"),
                                                                                        requestbuilder => {
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;

@@ -177,7 +177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of an AuthorizeRemoteStart request.
@@ -190,19 +190,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart JSON objects.</param>
         public static AuthorizeRemoteStartRequest Parse(JObject                                                    JSON,
                                                         Provider_Id                                                ProviderIdURL,
-                                                        TimeSpan                                                   RequestTimeout,
+
                                                         DateTime?                                                  Timestamp                                 = null,
+                                                        CancellationToken?                                         CancellationToken                         = null,
                                                         EventTracking_Id?                                          EventTrackingId                           = null,
+                                                        TimeSpan?                                                  RequestTimeout                            = null,
+
                                                         CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          ProviderIdURL,
-                         RequestTimeout,
                          out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
                          out String?                       errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeRemoteStartRequestParser))
             {
                 return authorizeRemoteStartRequest!;
@@ -214,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of an AuthorizeRemoteStart request.
@@ -227,19 +231,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
         public static AuthorizeRemoteStartRequest Parse(String                                                     Text,
                                                         Provider_Id                                                ProviderIdURL,
-                                                        TimeSpan                                                   RequestTimeout,
+
                                                         DateTime?                                                  Timestamp                                 = null,
+                                                        CancellationToken?                                         CancellationToken                         = null,
                                                         EventTracking_Id?                                          EventTrackingId                           = null,
+                                                        TimeSpan?                                                  RequestTimeout                            = null,
+
                                                         CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
             if (TryParse(Text,
                          ProviderIdURL,
-                         RequestTimeout,
                          out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
                          out String?                       errorResponse,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeRemoteStartRequestParser))
             {
                 return authorizeRemoteStartRequest!;
@@ -251,7 +259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, out AuthorizeRemoteStartRequest, out ErrorResponse, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) TryParse(JSON, out AuthorizeRemoteStartRequest, out ErrorResponse, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of an AuthorizeRemoteStart request.
@@ -266,11 +274,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                                    JSON,
                                        Provider_Id                                                ProviderIdURL,
-                                       TimeSpan                                                   RequestTimeout,
                                        out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
                                        out String?                                                ErrorResponse,
+
                                        DateTime?                                                  Timestamp                                 = null,
+                                       CancellationToken?                                         CancellationToken                         = null,
                                        EventTracking_Id?                                          EventTrackingId                           = null,
+                                       TimeSpan?                                                  RequestTimeout                            = null,
+
                                        CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
@@ -403,7 +414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                               CustomData,
 
                                                                               Timestamp,
-                                                                              null,
+                                                                              CancellationToken,
                                                                               EventTrackingId,
                                                                               RequestTimeout);
 
@@ -425,7 +436,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out AuthorizeRemoteStartRequest, out ErrorResponse, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) TryParse(Text, out AuthorizeRemoteStartRequest, out ErrorResponse, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of an AuthorizeRemoteStart request.
@@ -440,11 +451,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
         public static Boolean TryParse(String                                                     Text,
                                        Provider_Id                                                ProviderIdURL,
-                                       TimeSpan                                                   RequestTimeout,
                                        out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
                                        out String?                                                ErrorResponse,
+
                                        DateTime?                                                  Timestamp                                 = null,
+                                       CancellationToken?                                         CancellationToken                         = null,
                                        EventTracking_Id?                                          EventTrackingId                           = null,
+                                       TimeSpan?                                                  RequestTimeout                            = null,
+
                                        CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
@@ -453,11 +467,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(JObject.Parse(Text),
                                 ProviderIdURL,
-                                RequestTimeout,
                                 out AuthorizeRemoteStartRequest,
                                 out ErrorResponse,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomAuthorizeRemoteStartRequestParser);
 
             }

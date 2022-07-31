@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
@@ -95,6 +89,81 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                             CPOClientAPI                                          Sender,
                                             OICPResult<Acknowledgement<PushEVSEStatusRequest>>    Response,
                                             TimeSpan                                              Runtime);
+
+    #endregion
+
+
+    #region OnPushPricingProductDataAPI          (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PushPricingProductData request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPushPricingProductDataAPIRequestDelegate (DateTime                                                      Timestamp,
+                                                    CPOClientAPI                                                  Sender,
+                                                    PushPricingProductDataRequest                                 Request);
+
+
+    /// <summary>
+    /// Receive a PushPricingProductData request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
+
+        OnPushPricingProductDataAPIDelegate        (DateTime                                                      Timestamp,
+                                                    CPOClientAPI                                                  Sender,
+                                                    PushPricingProductDataRequest                                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PushPricingProductData response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPushPricingProductDataAPIResponseDelegate(DateTime                                                      Timestamp,
+                                                    CPOClientAPI                                                  Sender,
+                                                    OICPResult<Acknowledgement<PushPricingProductDataRequest>>    Response,
+                                                    TimeSpan                                                      Runtime);
+
+    #endregion
+
+    #region OnPushEVSEPricingAPI                 (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PushEVSEPricing request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPushEVSEPricingAPIRequestDelegate (DateTime                                               Timestamp,
+                                             CPOClientAPI                                           Sender,
+                                             PushEVSEPricingRequest                                 Request);
+
+
+    /// <summary>
+    /// Receive a PushEVSEPricing request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
+
+        OnPushEVSEPricingAPIDelegate        (DateTime                                               Timestamp,
+                                             CPOClientAPI                                           Sender,
+                                             PushEVSEPricingRequest                                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PushEVSEPricing response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPushEVSEPricingAPIResponseDelegate(DateTime                                               Timestamp,
+                                             CPOClientAPI                                           Sender,
+                                             OICPResult<Acknowledgement<PushEVSEPricingRequest>>    Response,
+                                             TimeSpan                                               Runtime);
 
     #endregion
 
