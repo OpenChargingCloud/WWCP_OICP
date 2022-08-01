@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode XML elements.</param>
+        /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<StatusCode>?  CustomStatusCodeSerializer   = null)
 
         {

@@ -57,6 +57,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
         /// <summary>
+        /// Download provider authentication data.
+        /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        Task<OICPResult<PullAuthenticationDataResponse>>                        PullAuthenticationData          (PullAuthenticationDataRequest        Request);
+
+
+        /// <summary>
         /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>

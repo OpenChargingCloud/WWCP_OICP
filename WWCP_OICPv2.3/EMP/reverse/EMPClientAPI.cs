@@ -149,8 +149,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public APICounters                                                           Counters                                              { get; }
 
+        public Newtonsoft.Json.Formatting                                            JSONFormatting                                        { get; set; }
 
-        // Custom JSON parsers
+        #endregion
+
+        #region Custom JSON parsers
 
         public CustomJObjectParserDelegate<PullEVSEDataRequest>?                     CustomPullEVSEDataRequestParser                       { get; set; }
         public CustomJObjectParserDelegate<PullEVSEStatusRequest>?                   CustomPullEVSEStatusRequestParser                     { get; set; }
@@ -169,9 +172,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?           CustomGetChargeDetailRecordsRequestParser             { get; set; }
 
+        #endregion
 
-
-        // Custom JSON serializers
+        #region Custom JSON serializers
 
         public CustomJObjectSerializerDelegate<PullEVSEDataResponse>?                CustomPullEVSEDataResponseSerializer                  { get; set; }
         public CustomJObjectSerializerDelegate<EVSEDataRecord>?                      CustomEVSEDataRecordSerializer                        { get; set; }
@@ -211,7 +214,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public CustomJObjectSerializerDelegate<Acknowledgement>?                     CustomAcknowledgementSerializer                       { get; set; }
 
 
-        public Newtonsoft.Json.Formatting                                            JSONFormatting                                        { get; set; }
 
         #endregion
 

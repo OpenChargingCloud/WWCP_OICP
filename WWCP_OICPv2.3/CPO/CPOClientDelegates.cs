@@ -15,13 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-using System.Threading.Tasks;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
@@ -80,6 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
     #endregion
 
+
     #region OnPushPricingProductDataRequest/-Response
 
     /// <summary>
@@ -119,6 +113,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                            String                                                SenderDescription,
                                                            PushEVSEPricingRequest                                Request,
                                                            OICPResult<Acknowledgement<PushEVSEPricingRequest>>   Result);
+
+    #endregion
+
+
+    #region OnPullAuthenticationDataRequest/-Response
+
+    /// <summary>
+    /// A delegate called whenever a PullAuthenticationData request will be send.
+    /// </summary>
+    public delegate Task OnPullAuthenticationDataRequestDelegate (DateTime                                     Timestamp,
+                                                                  CPOClient                                    Sender,
+                                                                  String                                       SenderDescription,
+                                                                  PullAuthenticationDataRequest                Request);
+
+    /// <summary>
+    /// A delegate called whenever a response for a PullAuthenticationData request had been received.
+    /// </summary>
+    public delegate Task OnPullAuthenticationDataResponseDelegate(DateTime                                     Timestamp,
+                                                                  CPOClient                                    Sender,
+                                                                  String                                       SenderDescription,
+                                                                  PullAuthenticationDataRequest                Request,
+                                                                  OICPResult<PullAuthenticationDataResponse>   Result);
 
     #endregion
 

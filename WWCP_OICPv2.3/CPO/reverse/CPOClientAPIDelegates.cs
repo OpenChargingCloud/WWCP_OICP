@@ -168,6 +168,44 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     #endregion
 
 
+    #region OnPullAuthenticationDataAPI          (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullAuthenticationData request was received.
+    /// </summary>
+    public delegate Task
+
+        OnPullAuthenticationDataAPIRequestDelegate (DateTime                                      Timestamp,
+                                                    CPOClientAPI                                  Sender,
+                                                    PullAuthenticationDataRequest                 Request);
+
+
+    /// <summary>
+    /// Receive a PullAuthenticationData request.
+    /// </summary>
+    /// <param name="Timestamp">The timestamp of the request.</param>
+    /// <param name="Sender">The sender of the request.</param>
+    /// <param name="Request">The request.</param>
+    public delegate Task<OICPResult<PullAuthenticationDataResponse>>
+
+        OnPullAuthenticationDataAPIDelegate        (DateTime                                      Timestamp,
+                                                    CPOClientAPI                                  Sender,
+                                                    PullAuthenticationDataRequest                 Request);
+
+
+    /// <summary>
+    /// A delegate called whenever a PullAuthenticationData response was sent.
+    /// </summary>
+    public delegate Task
+
+        OnPullAuthenticationDataAPIResponseDelegate(DateTime                                      Timestamp,
+                                                    CPOClientAPI                                  Sender,
+                                                    OICPResult<PullAuthenticationDataResponse>    Response,
+                                                    TimeSpan                                      Runtime);
+
+    #endregion
+
+
     #region OnAuthorizeStartAPI                  (Request|Response)Delegate
 
     /// <summary>

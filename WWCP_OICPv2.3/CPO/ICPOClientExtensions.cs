@@ -463,6 +463,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+        #region PullAuthenticationData          (Request)
+
+        /// <summary>
+        /// Download provider authentication data.
+        /// </summary>
+        /// <param name="OperatorId">The unique identification of the charge point operator.</param>
+        /// <param name="ProcessId">The optional unique OICP process identification.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        public static Task<OICPResult<PullAuthenticationDataResponse>>
+
+            PullAuthenticationData(this ICPOClient      CPOClient,
+                                   Operator_Id          OperatorId,
+                                   Process_Id?          ProcessId           = null,
+                                   JObject?             CustomData          = null,
+
+                                   DateTime?            Timestamp           = null,
+                                   CancellationToken?   CancellationToken   = null,
+                                   EventTracking_Id?    EventTrackingId     = null,
+                                   TimeSpan?            RequestTimeout      = null)
+
+                => CPOClient.PullAuthenticationData(
+                       new PullAuthenticationDataRequest(
+                           OperatorId,
+                           ProcessId,
+                           CustomData,
+
+                           Timestamp,
+                           CancellationToken,
+                           EventTrackingId,
+                           RequestTimeout ?? CPOClient.RequestTimeout));
+
+        #endregion
+
+
         #region AuthorizeStart                   (OperatorId, Identification, EVSEId = null, ...)
 
         /// <summary>

@@ -21,7 +21,6 @@ using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
@@ -1220,6 +1219,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+        #region PullAuthenticationData          (Request)
+
+        /// <summary>
+        /// Download provider authentication data.
+        /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        public Task<OICPResult<PullAuthenticationDataResponse>>
+
+            PullAuthenticationData(PullAuthenticationDataRequest Request)
+
+                => CPOClient.PullAuthenticationData(Request);
+
+        #endregion
+
+
         #region AuthorizeStart                  (Request)
 
         /// <summary>
@@ -1319,25 +1333,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 => CPOClient.SendChargeDetailRecord(Request);
 
         #endregion
-
-
-
-
-
-        #region PullAuthenticationData          (Request)
-
-        ///// <summary>
-        ///// Pull authentication data from the OICP server.
-        ///// </summary>
-        ///// <param name="Request">A PullAuthenticationData request.</param>
-        //public Task<OICPResult<AuthenticationData>>
-
-        //    PullAuthenticationData(PullAuthenticationDataRequest Request)
-
-        //        => CPOClient.PullAuthenticationData(Request);
-
-        #endregion
-
 
 
         #region Start()

@@ -50,6 +50,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounterValues  PushPricingProductData              { get; }
             public APICounterValues  PushEVSEPricing                     { get; }
 
+
+            public APICounterValues  PullAuthenticationData              { get; }
+
             public APICounterValues  AuthorizeStart                      { get; }
             public APICounterValues  AuthorizeStop                       { get; }
 
@@ -66,6 +69,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             APICounterValues? PushPricingProductData             = null,
                             APICounterValues? PushEVSEPricing                    = null,
+
+                            APICounterValues? PullAuthenticationData             = null,
 
                             APICounterValues? AuthorizeStart                     = null,
                             APICounterValues? AuthorizeStop                      = null,
@@ -84,6 +89,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 this.PushPricingProductData            = PushPricingProductData           ?? new APICounterValues();
                 this.PushEVSEPricing                   = PushEVSEPricing                  ?? new APICounterValues();
+
+                this.PullAuthenticationData            = PullAuthenticationData           ?? new APICounterValues();
 
                 this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
                 this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
@@ -105,6 +112,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                        new JProperty("PushPricingProductData",           PushPricingProductData.          ToJSON()),
                        new JProperty("PushEVSEPricing",                  PushEVSEPricing.                 ToJSON()),
+
+                       new JProperty("PullAuthenticationData",           PullAuthenticationData.          ToJSON()),
 
                        new JProperty("AuthorizeStart",                   AuthorizeStart.                  ToJSON()),
                        new JProperty("AuthorizeStop",                    AuthorizeStop.                   ToJSON()),
@@ -170,6 +179,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public CustomJObjectParserDelegate<Acknowledgement<PushPricingProductDataRequest>>        CustomPushPricingProductDataAcknowledgementParser            { get; set; }
         public CustomJObjectParserDelegate<Acknowledgement<PushEVSEPricingRequest>>               CustomPushEVSEPricingAcknowledgementParser                   { get; set; }
+
+        public CustomJObjectParserDelegate<PullAuthenticationDataResponse>                        CustomPullAuthenticationDataResponseParser                   { get; set; }
 
         public CustomJObjectParserDelegate<AuthorizationStartResponse>                            CustomAuthorizationStartResponseParser                       { get; set; }
         public CustomJObjectParserDelegate<AuthorizationStopResponse>                             CustomAuthorizationStopResponseParser                        { get; set; }
@@ -287,6 +298,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
         /// </summary>
         public event OnPushEVSEPricingResponseDelegate  OnPushEVSEPricingResponse;
+
+        #endregion
+
+
+        #region OnPullAuthenticationDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullAuthenticationData will be send.
+        /// </summary>
+        public event OnPullAuthenticationDataRequestDelegate   OnPullAuthenticationDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullAuthenticationData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                   OnPullAuthenticationDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PullAuthenticationData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                  OnPullAuthenticationDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PullAuthenticationData HTTP request had been received.
+        /// </summary>
+        public event OnPullAuthenticationDataResponseDelegate  OnPullAuthenticationDataResponse;
 
         #endregion
 
@@ -2514,6 +2550,481 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             catch (Exception e)
             {
                 DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEPricingResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
+
+        #region PullAuthenticationData          (Request)
+
+        /// <summary>
+        /// Download provider authentication data.
+        /// </summary>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        public async Task<OICPResult<PullAuthenticationDataResponse>> PullAuthenticationData(PullAuthenticationDataRequest Request)
+        {
+
+            #region Initial checks
+
+            //Request = _CustomPullAuthenticationDataRequestMapper(Request);
+
+            Byte                                         TransmissionRetry   = 0;
+            OICPResult<PullAuthenticationDataResponse>?  result              = null;
+
+            #endregion
+
+            #region Send OnPullAuthenticationDataRequest event
+
+            var StartTime = Timestamp.Now;
+
+            Counter.PullAuthenticationData.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullAuthenticationDataRequest != null)
+                    await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
+                                       Cast<OnPullAuthenticationDataRequestDelegate>().
+                                       Select(e => e(StartTime,
+                                                     this,
+                                                     Description,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataRequest));
+            }
+
+            #endregion
+
+
+
+            var statusDescription = "HTTP request failed!";
+
+            try
+            {
+
+                do
+                {
+
+                    #region Upstream HTTP request...
+
+                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                                                                      VirtualHostname,
+                                                                      Description,
+                                                                      RemoteCertificateValidator,
+                                                                      null,
+                                                                      ClientCert,
+                                                                      TLSProtocol,
+                                                                      PreferIPv4,
+                                                                      HTTPUserAgent,
+                                                                      RequestTimeout,
+                                                                      TransmissionRetryDelay,
+                                                                      MaxNumberOfRetries,
+                                                                      false,
+                                                                      null,
+                                                                      DNSClient).
+
+                                                Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/authdata/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pull-request"),
+                                                                                    requestbuilder => {
+                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                        requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                        requestbuilder.Connection   = "close";
+                                                                                    }),
+
+                                                        RequestLogDelegate:   OnPullAuthenticationDataHTTPRequest,
+                                                        ResponseLogDelegate:  OnPullAuthenticationDataHTTPResponse,
+                                                        CancellationToken:    Request.CancellationToken,
+                                                        EventTrackingId:      Request.EventTrackingId,
+                                                        RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
+
+                                                ConfigureAwait(false);
+
+                    #endregion
+
+
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                // HTTP/1.1 200 OK
+                                // Server:            nginx/1.18.0
+                                // Date:              Sat, 09 Jan 2021 06:53:50 GMT
+                                // Content-Type:      application/json;charset=utf-8
+                                // Transfer-Encoding: chunked
+                                // Connection:        keep-alive
+                                // Process-ID:        d8d4583c-ff9b-44dd-bc92-b341f15f644e
+                                // cd .
+                                // {
+                                //     "Result":               true,
+                                //     "StatusCode": {
+                                //         "Code":             "000",
+                                //         "Description":      null,
+                                //         "AdditionalInfo":   null
+                                //     },
+                                //     "SessionID":            null,
+                                //     "CPOPartnerSessionID":  null,
+                                //     "EMPPartnerSessionID":  null
+                                // }
+
+                                if (PullAuthenticationDataResponse.TryParse(Request,
+                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                            HTTPResponse.Timestamp,
+                                                                            HTTPResponse.EventTrackingId,
+                                                                            HTTPResponse.Runtime,
+                                                                            out PullAuthenticationDataResponse?  pullAuthenticationDataResponse,
+                                                                            out String?                          ErrorResponse,
+                                                                            processId,
+                                                                            HTTPResponse,
+                                                                            CustomPullAuthenticationDataResponseParser))
+                                {
+
+                                    result = OICPResult<PullAuthenticationDataResponse>.Success(Request,
+                                                                                                pullAuthenticationDataResponse!,
+                                                                                                processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                             Request,
+                                             new PullAuthenticationDataResponse(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace)
+                                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        TransmissionRetry = Byte.MaxValue - 1;
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    {
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            // HTTP/1.1 400
+                            // Server:             nginx/1.18.0
+                            // Date:               Fri, 08 Jan 2021 14:19:25 GMT
+                            // Content-Type:       application/json;charset=utf-8
+                            // Transfer-Encoding:  chunked
+                            // Connection:         keep-alive
+                            // Process-ID:         b87fd67b-2d74-4318-86cf-0d2c2c50cabb
+                            // 
+                            // {
+                            //     "extendedInfo":  null,
+                            //     "message":      "Error parsing/validating JSON.",
+                            //     "validationErrors": [
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].hotlinePhoneNumber",
+                            //             "errorMessage":   "must match \"^\\+[0-9]{5,15}$\""
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].geoCoordinates",
+                            //             "errorMessage":   "may not be null"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].chargingStationNames",
+                            //             "errorMessage":   "may not be empty"
+                            //         },
+                            //         {
+                            //             "fieldReference": "operatorEvseData.evseDataRecord[0].plugs",
+                            //             "errorMessage":   "may not be empty"
+                            //         }
+                            //     ]
+                            // }
+
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                                                             out ValidationErrorList?  validationErrors,
+                                                             out String?               errorResponse))
+                            {
+
+                                result = OICPResult<PullAuthenticationDataResponse>.BadRequest(Request,
+                                                                                               validationErrors,
+                                                                                               processId);
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    {
+
+                        // HTTP/1.1 403 Forbidden
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Thu, 15 Apr 2021 22:47:22 GMT
+                        // Content-Type:    text/html
+                        // Content-Length:  162
+                        // Connection:      keep-alive
+                        // 
+                        // <html>
+                        // <head><title>403 Forbidden</title></head>
+                        // <body>
+                        // <center><h1>403 Forbidden</h1></center>
+                        // <hr><center>nginx/1.18.0 (Ubuntu)</center>
+                        // </body>
+                        // </html>
+
+                        statusDescription = "Hubject firewall problem!";
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    {
+
+                        // HTTP/1.1 401 Unauthorized
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Mar 2021 23:09:35 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  87
+                        // Connection:      keep-alive
+                        // Process-ID:      cefd3dfc-8807-4160-8913-d3153dfea8ab
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "017",
+                        //         "Description":     "Unauthorized Access",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
+                                                                                               new PullAuthenticationDataResponse(
+                                                                                                   HTTPResponse.Timestamp,
+                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                   processId,
+                                                                                                   HTTPResponse.Runtime,
+                                                                                                   Array.Empty<ProviderAuthenticationData>(),
+                                                                                                   Request,
+                                                                                                   StatusCode: statusCode
+                                                                                               ),
+                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                             Request,
+                                             new PullAuthenticationDataResponse(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    {
+
+                        // HTTP/1.1 404 NotFound
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Wed, 03 Mar 2021 01:00:15 GMT
+                        // Content-Type:    application/json;charset=UTF-8
+                        // Content-Length:  85
+                        // Connection:      keep-alive
+                        // Process-ID:      7bb86bc9-659f-4e57-8136-a7eb9ebc9c1d
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "300",
+                        //         "Description":     "Partner not found",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
+                                                                                               new PullAuthenticationDataResponse(
+                                                                                                   HTTPResponse.Timestamp,
+                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                   processId,
+                                                                                                   HTTPResponse.Runtime,
+                                                                                                   Array.Empty<ProviderAuthenticationData>(),
+                                                                                                   Request,
+                                                                                                   StatusCode: statusCode
+                                                                                               ),
+                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                             Request,
+                                             new PullAuthenticationDataResponse(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace)
+                                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    { }
+
+                }
+                while (TransmissionRetry++ < MaxNumberOfRetries);
+
+            }
+            catch (Exception e)
+            {
+
+                result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                             Request,
+                             new PullAuthenticationDataResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
+                                 Timestamp.Now - Request.Timestamp,
+                                 Array.Empty<ProviderAuthenticationData>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.SystemError,
+                                                 e.Message,
+                                                 e.StackTrace
+                                             )
+                             )
+                         );
+
+            }
+
+            result ??= OICPResult<PullAuthenticationDataResponse>.Failed(
+                            Request,
+                            new PullAuthenticationDataResponse(
+                                Timestamp.Now,
+                                Request.EventTrackingId ?? EventTracking_Id.New,
+                                Process_Id.NewRandom,
+                                Timestamp.Now - Request.Timestamp,
+                                Array.Empty<ProviderAuthenticationData>(),
+                                Request,
+                                StatusCode: new StatusCode(
+                                                StatusCodes.SystemError,
+                                                statusDescription ?? "HTTP request failed!"
+                                            )
+                            )
+                        );
+
+
+            #region Send OnPullAuthenticationDataResponse event
+
+            var Endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullAuthenticationDataResponse != null)
+                    await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
+                                       Cast<OnPullAuthenticationDataResponseDelegate>().
+                                       Select(e => e(Endtime,
+                                                     this,
+                                                     Description,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataResponse));
             }
 
             #endregion

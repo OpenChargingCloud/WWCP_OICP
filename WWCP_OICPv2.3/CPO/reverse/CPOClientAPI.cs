@@ -51,6 +51,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounterValues  PushPricingProductData          { get; }
             public APICounterValues  PushEVSEPricing                 { get; }
 
+            public APICounterValues  PullAuthenticationData          { get; }
+
             public APICounterValues  AuthorizeStart                  { get; }
             public APICounterValues  AuthorizeStop                   { get; }
 
@@ -68,6 +70,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                APICounterValues? PushPricingProductData         = null,
                                APICounterValues? PushEVSEPricing                = null,
 
+                               APICounterValues? PullAuthenticationData         = null,
+
                                APICounterValues? AuthorizeStart                 = null,
                                APICounterValues? AuthorizeStop                  = null,
 
@@ -84,6 +88,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 this.PushPricingProductData        = PushPricingProductData       ?? new APICounterValues();
                 this.PushEVSEPricing               = PushEVSEPricing              ?? new APICounterValues();
+
+                this.PullAuthenticationData        = PullAuthenticationData       ?? new APICounterValues();
 
                 this.AuthorizeStart                = AuthorizeStart               ?? new APICounterValues();
                 this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
@@ -105,6 +111,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                        new JProperty("PushPricingProductData",        PushPricingProductData.      ToJSON()),
                        new JProperty("PushEVSEPricing",               PushEVSEPricing.             ToJSON()),
+
+                       new JProperty("PullAuthenticationData",        PullAuthenticationData.      ToJSON()),
 
                        new JProperty("AuthorizeStart",                AuthorizeStart.              ToJSON()),
                        new JProperty("AuthorizeStop",                 AuthorizeStop.               ToJSON()),
@@ -146,7 +154,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public APICounters                                                           Counters                                           { get; }
 
-        // Custom JSON parsers
+        public Newtonsoft.Json.Formatting                                            JSONFormatting                                     { get; set; }
+
+        #endregion
+
+        #region Custom JSON parsers
         public CustomJObjectParserDelegate<PushEVSEDataRequest>?                     CustomPushEVSEDataRequestParser                    { get; set; }
         public CustomJObjectParserDelegate<PushEVSEStatusRequest>?                   CustomPushEVSEStatusRequestParser                  { get; set; }
 
@@ -154,6 +166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectParserDelegate<PushPricingProductDataRequest>?           CustomPushPricingProductDataRequestParser          { get; set; }
         public CustomJObjectParserDelegate<PushEVSEPricingRequest>?                  CustomPushEVSEPricingRequestParser                 { get; set; }
 
+        public CustomJObjectParserDelegate<PullAuthenticationDataRequest>?           CustomPullAuthenticationDataRequestParser          { get; set; }
 
         public CustomJObjectParserDelegate<AuthorizeStartRequest>?                   CustomAuthorizeStartRequestParser                  { get; set; }
         public CustomJObjectParserDelegate<AuthorizeStopRequest>?                    CustomAuthorizeStopRequestParser                   { get; set; }
@@ -166,16 +179,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public CustomJObjectParserDelegate<ChargeDetailRecordRequest>?               CustomChargeDetailRecordRequestParser              { get; set; }
 
+        #endregion
 
-        // Custom JSON serializers
+        #region Custom JSON serializers
         public CustomJObjectSerializerDelegate<Acknowledgement>?                     CustomAcknowledgementSerializer                    { get; set; }
         public CustomJObjectSerializerDelegate<StatusCode>?                          CustomStatusCodeSerializer                         { get; set; }
+
+        public CustomJObjectSerializerDelegate<PullAuthenticationDataResponse>?      CustomPullAuthenticationDataResponseSerializer     { get; set; }
+        public CustomJObjectSerializerDelegate<ProviderAuthenticationData>?          CustomProviderAuthenticationDataSerializer         { get; set; }
 
         public CustomJObjectSerializerDelegate<AuthorizationStartResponse>?          CustomAuthorizationStartSerializer                 { get; set; }
         public CustomJObjectSerializerDelegate<Identification>?                      CustomIdentificationSerializer                     { get; set; }
         public CustomJObjectSerializerDelegate<AuthorizationStopResponse>?           CustomAuthorizationStopSerializer                  { get; set; }
-
-        public Newtonsoft.Json.Formatting                                            JSONFormatting                                     { get; set; }
 
         #endregion
 
@@ -454,6 +469,76 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      API ?? this,
                                                      Request,
                                                      Response);
+
+        #endregion
+
+
+
+        #region (protected internal) OnPullAuthenticationDataHTTPRequest
+
+        /// <summary>
+        /// An event sent whenever an PullAuthenticationData HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnPullAuthenticationDataHTTPRequest = new();
+
+        /// <summary>
+        /// An event sent whenever an PullAuthenticationData HTTP request was received.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        protected internal Task logPullAuthenticationDataHTTPRequest(DateTime     Timestamp,
+                                                                     HTTPAPI      API,
+                                                                     HTTPRequest  Request)
+
+            => OnPullAuthenticationDataHTTPRequest.WhenAll(Timestamp,
+                                                           API ?? this,
+                                                           Request);
+
+        #endregion
+
+        #region (event)              OnPullAuthenticationData(Request-/Response)
+
+        /// <summary>
+        /// An event send whenever a PullAuthenticationData request was received.
+        /// </summary>
+        public event OnPullAuthenticationDataAPIRequestDelegate?   OnPullAuthenticationDataRequest;
+
+        /// <summary>
+        /// An event send whenever a PullAuthenticationData request was received.
+        /// </summary>
+        public event OnPullAuthenticationDataAPIDelegate?          OnPullAuthenticationData;
+
+        /// <summary>
+        /// An event send whenever a response to a PullAuthenticationData request was sent.
+        /// </summary>
+        public event OnPullAuthenticationDataAPIResponseDelegate?  OnPullAuthenticationDataResponse;
+
+        #endregion
+
+        #region (protected internal) OnPullAuthenticationDataHTTPResponse
+
+        /// <summary>
+        /// An event sent whenever an PullAuthenticationData HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnPullAuthenticationDataHTTPResponse = new();
+
+        /// <summary>
+        /// An event sent whenever an PullAuthenticationData HTTP response was sent.
+        /// </summary>
+        /// <param name="Timestamp">The timestamp of the request.</param>
+        /// <param name="API">The CPO Client HTTP API.</param>
+        /// <param name="Request">The HTTP request.</param>
+        /// <param name="Response">The HTTP response.</param>
+        protected internal Task logPullAuthenticationDataHTTPResponse(DateTime      Timestamp,
+                                                                      HTTPAPI       API,
+                                                                      HTTPRequest   Request,
+                                                                      HTTPResponse  Response)
+
+            => OnPullAuthenticationDataHTTPResponse.WhenAll(Timestamp,
+                                                            API ?? this,
+                                                            Request,
+                                                            Response);
 
         #endregion
 
@@ -1853,6 +1938,225 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                        ToString(JSONFormatting).
                                                                                                                        ToUTF8Bytes()
                                                                                                              ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
+
+                                          }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+
+            #region POST  ~/api/oicp/authdata/v21/operators/{operatorId}/pull-request
+
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/authdata/v21/operators/DE*GEF/pull-request
+            // -----------------------------------------------------------------------------------------------------------------------------------
+            HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                         HTTPMethod.POST,
+                                         URLPathPrefix + "/api/oicp/authdata/v21/operators/{operatorId}/pull-request",
+                                         HTTPContentType.JSON_UTF8,
+                                         HTTPRequestLogger:   logPullAuthenticationDataHTTPRequest,
+                                         HTTPResponseLogger:  logPullAuthenticationDataHTTPResponse,
+                                         HTTPDelegate:        async Request => {
+
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
+                                             OICPResult<PullAuthenticationDataResponse>? pullAuthenticationDataResponse = null;
+
+                                             try
+                                             {
+
+                                                 #region Try to parse ProviderId URL parameter
+
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                     pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                          this,
+                                                                                          new PullAuthenticationDataResponse(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              processId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<ProviderAuthenticationData>(),
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                                 #endregion
+
+                                                 else if (PullAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                                 //operatorId,
+                                                                                                 out PullAuthenticationDataRequest?          pullAuthenticationDataRequest,
+                                                                                                 out String?                                 errorResponse,
+                                                                                                 ProcessId:                                  processId,
+
+                                                                                                 Timestamp:                                  Request.Timestamp,
+                                                                                                 CancellationToken:                          Request.CancellationToken,
+                                                                                                 EventTrackingId:                            Request.EventTrackingId,
+                                                                                                 RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                 CustomPullAuthenticationDataRequestParser:  CustomPullAuthenticationDataRequestParser))
+                                                 {
+
+                                                     Counters.PullAuthenticationData.IncRequests_OK();
+
+                                                     #region Send OnPullAuthenticationDataRequest event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullAuthenticationDataRequest is not null)
+                                                             await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
+                                                                                Cast<OnPullAuthenticationDataAPIRequestDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullAuthenticationDataRequest!))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPullAuthenticationDataRequest));
+                                                     }
+
+                                                     #endregion
+
+                                                     #region Call async subscribers
+
+                                                     var OnPullAuthenticationDataLocal = OnPullAuthenticationData;
+                                                     if (OnPullAuthenticationDataLocal is not null)
+                                                     {
+                                                         try
+                                                         {
+
+                                                             pullAuthenticationDataResponse = (await Task.WhenAll(OnPullAuthenticationDataLocal.GetInvocationList().
+                                                                                                                                                Cast<OnPullAuthenticationDataAPIDelegate>().
+                                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                                              this,
+                                                                                                                                                              pullAuthenticationDataRequest!))))?.FirstOrDefault();
+
+                                                             Counters.PullAuthenticationData.IncResponses_OK();
+
+                                                         }
+                                                         catch (Exception e)
+                                                         {
+                                                             pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                                  this,
+                                                                                                  new PullAuthenticationDataResponse(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      processId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      Array.Empty<ProviderAuthenticationData>(),
+                                                                                                      pullAuthenticationDataRequest,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.DataError,
+                                                                                                                      e.Message,
+                                                                                                                      e.StackTrace
+                                                                                                                  )
+                                                                                                  )
+                                                                                              );
+                                                         }
+                                                     }
+
+                                                     pullAuthenticationDataResponse ??= OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                            this,
+                                                                                            new PullAuthenticationDataResponse(
+                                                                                                Timestamp.Now,
+                                                                                                Request.EventTrackingId,
+                                                                                                processId,
+                                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                                Array.Empty<ProviderAuthenticationData>(),
+                                                                                                pullAuthenticationDataRequest,
+                                                                                                StatusCode: new StatusCode(
+                                                                                                                StatusCodes.SystemError,
+                                                                                                                "Could not process the received PullAuthenticationData request!"
+                                                                                                            )
+                                                                                            )
+                                                                                        );
+
+                                                     #endregion
+
+                                                     #region Send OnPullAuthenticationDataResponse event
+
+                                                     try
+                                                     {
+
+                                                         if (OnPullAuthenticationDataResponse is not null)
+                                                             await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
+                                                                                Cast<OnPullAuthenticationDataAPIResponseDelegate>().
+                                                                                Select(e => e(Timestamp.Now,
+                                                                                              this,
+                                                                                              pullAuthenticationDataResponse,
+                                                                                              Timestamp.Now - startTime))).
+                                                                                ConfigureAwait(false);
+
+                                                     }
+                                                     catch (Exception e)
+                                                     {
+                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPullAuthenticationDataResponse));
+                                                     }
+
+                                                     #endregion
+
+                                                 }
+                                                 else
+                                                     pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                          this,
+                                                                                          new PullAuthenticationDataResponse(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              processId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              Array.Empty<ProviderAuthenticationData>(),
+                                                                                              pullAuthenticationDataRequest,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.DataError,
+                                                                                                              "We could not parse the given PullAuthenticationData request!",
+                                                                                                              errorResponse
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                             }
+                                             catch (Exception e)
+                                             {
+                                                 pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                      this,
+                                                                                      new PullAuthenticationDataResponse(
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          processId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          Array.Empty<ProviderAuthenticationData>(),
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          e.Message,
+                                                                                                          e.StackTrace
+                                                                                                      )
+                                                                                      )
+                                                                                  );
+                                             }
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = pullAuthenticationDataResponse.Response?.ToJSON(CustomPullAuthenticationDataResponseSerializer,
+                                                                                                                                     CustomProviderAuthenticationDataSerializer,
+                                                                                                                                     CustomIdentificationSerializer,
+                                                                                                                                     CustomStatusCodeSerializer).
+                                                                                                                              ToString(JSONFormatting).
+                                                                                                                              ToUTF8Bytes()
+                                                                                                                    ?? Array.Empty<Byte>(),
                                                         ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
