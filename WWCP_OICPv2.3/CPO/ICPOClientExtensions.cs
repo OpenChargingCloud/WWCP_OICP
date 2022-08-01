@@ -127,7 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region PushEVSEData(EVSEDataRecord,  OperatorId, OperatorName = null, Action = insert, ...)
 
         /// <summary>
-        /// Create a new task pushing a single EVSE data record onto the OICP server.
+        /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// 
@@ -174,7 +174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region PushEVSEData(OperatorId, Action, params EVSEDataRecords)
 
         /// <summary>
-        /// Create a new task pushing EVSE data records onto the OICP server.
+        /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// 
@@ -301,7 +301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region PushEVSEStatus(EVSEStatusRecord,  OperatorId, OperatorName = null, Action = insert, ...)
 
         /// <summary>
-        /// Create a new task pushing a single EVSE status record onto the OICP server.
+        /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// 
@@ -350,7 +350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region PushEVSEStatus(OperatorId, Action, params EVSEStatusRecords)
 
         /// <summary>
-        /// Create a new task pushing EVSE status records onto the OICP server.
+        /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// 
@@ -380,10 +380,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+        #region PushPricingProductData           (PricingProductData, Action = fullLoad, ...)
+
+        /// <summary>
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="PricingProductData">The pricing product data record.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
+
+            PushPricingProductData(this ICPOClient     CPOClient,
+                                   PricingProductData  PricingProductData,
+                                   ActionTypes         Action              = ActionTypes.FullLoad,
+                                   Process_Id?         ProcessId           = null,
+                                   JObject?            CustomData          = null,
+
+                                   DateTime?           Timestamp           = null,
+                                   CancellationToken?  CancellationToken   = null,
+                                   EventTracking_Id?   EventTrackingId     = null,
+                                   TimeSpan?           RequestTimeout      = null)
+
+                => CPOClient.PushPricingProductData(
+                       new PushPricingProductDataRequest(
+                           PricingProductData,
+                           Action,
+                           ProcessId,
+                           CustomData,
+
+                           Timestamp,
+                           CancellationToken,
+                           EventTrackingId,
+                           RequestTimeout ?? CPOClient.RequestTimeout));
+
+
+        #endregion
+
+        #region PushEVSEPricing                  (OperatorId, EVSEPricing, Action = fullLoad, ...)
+
+        /// <summary>
+        /// Upload the given EVSE pricing data.
+        /// </summary>
+        /// <param name="EVSEPricing">The EVSE pricing data.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
+
+            PushEVSEPricing(this ICPOClient           CPOClient,
+                            Operator_Id               OperatorId,
+                            IEnumerable<EVSEPricing>  EVSEPricing,
+                            ActionTypes               Action              = ActionTypes.FullLoad,
+                            Process_Id?               ProcessId           = null,
+                            JObject?                  CustomData          = null,
+
+                            DateTime?                 Timestamp           = null,
+                            CancellationToken?        CancellationToken   = null,
+                            EventTracking_Id?         EventTrackingId     = null,
+                            TimeSpan?                 RequestTimeout      = null)
+
+                => CPOClient.PushEVSEPricing(
+                       new PushEVSEPricingRequest(
+                           OperatorId,
+                           EVSEPricing,
+                           Action,
+                           ProcessId,
+                           CustomData,
+
+                           Timestamp,
+                           CancellationToken,
+                           EventTrackingId,
+                           RequestTimeout ?? CPOClient.RequestTimeout));
+
+
+        #endregion
+
+
         #region AuthorizeStart                   (OperatorId, Identification, EVSEId = null, ...)
 
         /// <summary>
-        /// Create a new AuthorizeStart request.
+        /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
@@ -434,7 +517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region AuthorizeStop                    (OperatorId, SessionId, Identification, EVSEId = null, ...)
 
         /// <summary>
-        /// Create a new AuthorizeStop request.
+        /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
         /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
@@ -823,6 +906,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            RequestTimeout ?? CPOClient.RequestTimeout));
 
         #endregion
+
 
     }
 

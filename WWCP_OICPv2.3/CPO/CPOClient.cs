@@ -1533,7 +1533,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region PushPricingProductData          (Request)
 
         /// <summary>
-        /// Upload the given Pricing Product Data.
+        /// Upload the given pricing product data.
         /// </summary>
         /// <param name="Request">A PushPricingProductData request.</param>
         public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>> PushPricingProductData(PushPricingProductDataRequest Request)
@@ -2030,7 +2030,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region PushEVSEPricing                 (Request)
 
         /// <summary>
-        /// Upload the given EVSE data records.
+        /// Upload the given EVSE pricing data.
         /// </summary>
         /// <param name="Request">A PushEVSEPricing request.</param>
         public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>> PushEVSEPricing(PushEVSEPricingRequest Request)

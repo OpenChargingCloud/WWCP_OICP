@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -178,9 +177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region Events
-
-        // CPOClient logging methods
+        #region CPOClient events
 
         #region OnPushEVSEDataRequest/-Response
 
@@ -328,6 +325,159 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             remove
             {
                 CPOClient.OnPushEVSEStatusResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region OnPushPricingProductDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushPricingProductData will be send.
+        /// </summary>
+        public event OnPushPricingProductDataRequestDelegate   OnPushPricingProductDataRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushPricingProductDataRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushPricingProductDataRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a PushPricingProductData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                   OnPushPricingProductDataHTTPRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushPricingProductDataHTTPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushPricingProductDataHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                  OnPushPricingProductDataHTTPResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushPricingProductDataHTTPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushPricingProductDataHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
+        /// </summary>
+        public event OnPushPricingProductDataResponseDelegate  OnPushPricingProductDataResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushPricingProductDataResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushPricingProductDataResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnPushEVSEPricingRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEPricing will be send.
+        /// </summary>
+        public event OnPushEVSEPricingRequestDelegate   OnPushEVSEPricingRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEPricingRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEPricingRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEPricing HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnPushEVSEPricingHTTPRequest
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEPricingHTTPRequest += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEPricingHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnPushEVSEPricingHTTPResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEPricingHTTPResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEPricingHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event OnPushEVSEPricingResponseDelegate  OnPushEVSEPricingResponse
+        {
+
+            add
+            {
+                CPOClient.OnPushEVSEPricingResponse += value;
+            }
+
+            remove
+            {
+                CPOClient.OnPushEVSEPricingResponse -= value;
             }
 
         }
@@ -869,9 +1019,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #endregion
 
-
-        // CPOServer methods
+        #region CPOServer events
 
         #region OnAuthorizeRemoteReservationStart
 
@@ -964,105 +1114,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #endregion
 
-        #region Generic HTTP/HTTP server logging
+        #region HTTP server logging
 
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public HTTPRequestLogEvent   RequestLog    = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent   RequestLog
+            => CPOServer.RequestLog;
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public HTTPResponseLogEvent  ResponseLog   = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent  ResponseLog
+            => CPOServer.ResponseLog;
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public HTTPErrorLogEvent     ErrorLog      = new HTTPErrorLogEvent();
-
-        #endregion
-
-        #endregion
-
-        #region Custom request mappers
-
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>> CustomPushEVSEDataAcknowledgementParser
-        {
-
-            get
-            {
-                return CPOClient.CustomPushEVSEDataAcknowledgementParser;
-            }
-
-            set
-            {
-                CPOClient.CustomPushEVSEDataAcknowledgementParser = value;
-            }
-
-        }
-
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>> CustomPushEVSEStatusAcknowledgementParser
-        {
-
-            get
-            {
-                return CPOClient.CustomPushEVSEStatusAcknowledgementParser;
-            }
-
-            set
-            {
-                CPOClient.CustomPushEVSEStatusAcknowledgementParser = value;
-            }
-
-        }
-
-
-        public CustomJObjectParserDelegate<AuthorizationStartResponse> CustomAuthorizationStartResponseParser
-        {
-
-            get
-            {
-                return CPOClient.CustomAuthorizationStartResponseParser;
-            }
-
-            set
-            {
-                CPOClient.CustomAuthorizationStartResponseParser = value;
-            }
-
-        }
-
-        public CustomJObjectParserDelegate<AuthorizationStopResponse> CustomAuthorizationStopResponseParser
-        {
-
-            get
-            {
-                return CPOClient.CustomAuthorizationStopResponseParser;
-            }
-
-            set
-            {
-                CPOClient.CustomAuthorizationStopResponseParser = value;
-            }
-
-        }
-
-        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>> CustomSendChargeDetailRecordAcknowledgementParser
-        {
-
-            get
-            {
-                return CPOClient.CustomSendChargeDetailRecordAcknowledgementParser;
-            }
-
-            set
-            {
-                CPOClient.CustomSendChargeDetailRecordAcknowledgementParser = value;
-            }
-
-        }
+        public HTTPErrorLogEvent     ErrorLog
+            => CPOServer.ErrorLog;
 
         #endregion
 
@@ -1088,7 +1160,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         }
 
         #endregion
-
 
 
         #region PushEVSEData                    (Request)
@@ -1120,10 +1191,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+        #region PushPricingProductData          (Request)
+
+        /// <summary>
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="Request">A PushPricingProductDataRequest request.</param>
+        public Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
+
+            PushPricingProductData(PushPricingProductDataRequest Request)
+
+                => CPOClient.PushPricingProductData(Request);
+
+        #endregion
+
+        #region PushEVSEPricing                 (Request)
+
+        /// <summary>
+        /// Upload the given EVSE pricing data.
+        /// </summary>
+        /// <param name="Request">A PushEVSEPricingRequest request.</param>
+        public Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
+
+            PushEVSEPricing(PushEVSEPricingRequest Request)
+
+                => CPOClient.PushEVSEPricing(Request);
+
+        #endregion
+
+
         #region AuthorizeStart                  (Request)
 
         /// <summary>
-        /// Create an OICP authorize start request.
+        /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
         public Task<OICPResult<AuthorizationStartResponse>>
@@ -1137,7 +1237,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region AuthorizeStop                   (Request)
 
         /// <summary>
-        /// Create an OICP authorize stop request.
+        /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStop request.</param>
         public Task<OICPResult<AuthorizationStopResponse>>
@@ -1221,6 +1321,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+
+
+
         #region PullAuthenticationData          (Request)
 
         ///// <summary>
@@ -1255,8 +1358,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region Dispose()
+
+        /// <summary>
+        /// Dispose this object.
+        /// </summary>
         public void Dispose()
-        { }
+        {
+            CPOServer?.Dispose();
+        }
+
+        #endregion
+
 
     }
 

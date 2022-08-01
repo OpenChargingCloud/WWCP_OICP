@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -547,7 +546,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEData              (Request)
 
         /// <summary>
-        /// Upload the given EVSE data records.
+        /// Download EVSE data records.
+        /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
+        /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
         /// <param name="Request">A PullEVSEData request.</param>
         public async Task<OICPResult<PullEVSEDataResponse>>
@@ -930,7 +931,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatus            (Request)
 
         /// <summary>
-        /// Upload the given EVSE status records.
+        /// Download EVSE status records.
+        /// The request might have an optional search radius and/or status filter.
         /// </summary>
         /// <param name="Request">A PullEVSEStatus request.</param>
         public async Task<OICPResult<PullEVSEStatusResponse>>
@@ -1297,7 +1299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusById        (Request)
 
         /// <summary>
-        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// Download the current status of up to 100 EVSEs.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusById request.</param>
         public async Task<OICPResult<PullEVSEStatusByIdResponse>>
@@ -1664,7 +1666,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusByOperatorId(Request)
 
         /// <summary>
-        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE Ids.
+        /// Download the current EVSE status of the given charge point operators.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusByOperatorId request.</param>
         public async Task<OICPResult<PullEVSEStatusByOperatorIdResponse>>
@@ -2032,7 +2034,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullPricingProductData    (Request)
 
         /// <summary>
-        /// Upload the given PullPricingProductData.
+        /// Download pricing product data.
         /// </summary>
         /// <param name="Request">A PullPricingProductData request.</param>
         public async Task<OICPResult<PullPricingProductDataResponse>>
@@ -2415,7 +2417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEPricing           (Request)
 
         /// <summary>
-        /// Upload the given PullEVSEPricing.
+        /// Download EVSE pricing data.
         /// </summary>
         /// <param name="Request">A PullEVSEPricing request.</param>
         public async Task<OICPResult<PullEVSEPricingResponse>>
@@ -2799,7 +2801,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PushAuthenticationData    (Request)
 
         /// <summary>
-        /// Create a new task pushing provider authentication data records onto the server.
+        /// Upload provider authentication data records.
         /// </summary>
         /// <param name="Request">An PushAuthenticationData request.</param>
         public async Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
@@ -3192,7 +3194,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region RemoteReservationStart    (Request)
 
         /// <summary>
-        /// Start a charging session at the given EVSE.
+        /// Create a charging reservation at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
         public async Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
@@ -3584,7 +3586,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region RemoteReservationStop     (Request)
 
         /// <summary>
-        /// Stop the given charging session at the given EVSE.
+        /// Stop the given charging reservation.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
         public async Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
@@ -4368,7 +4370,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region RemoteStop                (Request)
 
         /// <summary>
-        /// Stop the given charging session at the given EVSE.
+        /// Stop the given charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteStop request.</param>
         public async Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
@@ -4761,9 +4763,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region GetChargeDetailRecords    (Request)
 
         /// <summary>
-        /// Create a new task querying charge detail records from the OICP server.
+        /// Download charge detail records.
         /// </summary>
-        /// <param name="Request">An GetChargeDetailRecords request.</param>
+        /// <param name="Request">A GetChargeDetailRecords request.</param>
         public async Task<OICPResult<GetChargeDetailRecordsResponse>>
 
             GetChargeDetailRecords(GetChargeDetailRecordsRequest Request)

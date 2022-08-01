@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Net.Security;
 using System.Security.Authentication;
 
@@ -99,9 +98,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Properties
 
-        public APICounters                                                              Counters                                               { get; }
+        public APICounters                                                           Counters                                              { get; }
 
-        // Custom JSON parsers
+        public Newtonsoft.Json.Formatting                                            JSONFormatting                                        { get; set; }
+
+        #endregion
+
+        #region Custom JSON parsers
 
         public CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser    { get; set; }
 
@@ -112,14 +115,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>?              CustomAuthorizeRemoteStopRequestParser                { get; set; }
 
+        #endregion
 
-        // Custom JSON serializers
+        #region Custom JSON serializers
+
         public CustomJObjectSerializerDelegate<Acknowledgement>?                     CustomAcknowledgementSerializer                       { get; set; }
 
         public CustomJObjectSerializerDelegate<StatusCode>?                          CustomStatusCodeSerializer                            { get; set; }
-
-
-        public Newtonsoft.Json.Formatting                                            JSONFormatting                                        { get; set; }
 
         #endregion
 
@@ -150,8 +152,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region (event)              OnAuthorizeRemoteReservationStart(Request-/Response)
 
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteReservationStart request was received.
+        /// </summary>
         public event OnAuthorizeRemoteReservationStartRequestDelegate?   OnAuthorizeRemoteReservationStartRequest;
+
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteReservationStart request was received.
+        /// </summary>
         public event OnAuthorizeRemoteReservationStartDelegate?          OnAuthorizeRemoteReservationStart;
+
+        /// <summary>
+        /// An event send whenever a response to an AuthorizeRemoteReservationStart request was sent.
+        /// </summary>
         public event OnAuthorizeRemoteReservationStartResponseDelegate?  OnAuthorizeRemoteReservationStartResponse;
 
         #endregion
@@ -208,8 +221,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region (event)              OnAuthorizeRemoteReservationStop(Request-/Response)
 
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteReservationStop request was received.
+        /// </summary>
         public event OnAuthorizeRemoteReservationStopRequestDelegate?   OnAuthorizeRemoteReservationStopRequest;
+
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteReservationStop request was received.
+        /// </summary>
         public event OnAuthorizeRemoteReservationStopDelegate?          OnAuthorizeRemoteReservationStop;
+
+        /// <summary>
+        /// An event send whenever a response to an AuthorizeRemoteReservationStop request was sent.
+        /// </summary>
         public event OnAuthorizeRemoteReservationStopResponseDelegate?  OnAuthorizeRemoteReservationStopResponse;
 
         #endregion
@@ -267,8 +291,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region (event)              OnAuthorizeRemoteStart(Request-/Response)
 
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteStart request was received.
+        /// </summary>
         public event OnAuthorizeRemoteStartRequestDelegate?   OnAuthorizeRemoteStartRequest;
+
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteStart request was received.
+        /// </summary>
         public event OnAuthorizeRemoteStartDelegate?          OnAuthorizeRemoteStart;
+
+        /// <summary>
+        /// An event send whenever a response to an AuthorizeRemoteStart request was sent.
+        /// </summary>
         public event OnAuthorizeRemoteStartResponseDelegate?  OnAuthorizeRemoteStartResponse;
 
         #endregion
@@ -325,8 +360,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region (event)              OnAuthorizeRemoteStop(Request-/Response)
 
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteStop request was received.
+        /// </summary>
         public event OnAuthorizeRemoteStopRequestDelegate?   OnAuthorizeRemoteStopRequest;
+
+        /// <summary>
+        /// An event send whenever an AuthorizeRemoteStop request was received.
+        /// </summary>
         public event OnAuthorizeRemoteStopDelegate?          OnAuthorizeRemoteStop;
+
+        /// <summary>
+        /// An event send whenever a response to an AuthorizeRemoteStop request was sent.
+        /// </summary>
         public event OnAuthorizeRemoteStopResponseDelegate?  OnAuthorizeRemoteStopResponse;
 
         #endregion

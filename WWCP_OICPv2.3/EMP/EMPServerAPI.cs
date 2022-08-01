@@ -111,9 +111,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public APICounters                                                           Counters                                            { get; }
+        public APICounters                                                        Counters                                           { get; }
 
-        // Custom JSON parsers
+        public Newtonsoft.Json.Formatting                                         JSONFormatting                                     { get; set; }
+
+        #endregion
+
+        #region Custom JSON parsers
 
         public CustomJObjectParserDelegate<AuthorizeStartRequest>?                CustomAuthorizeStartRequestParser                  { get; set; }
         public CustomJObjectSerializerDelegate<AuthorizationStartResponse>?       CustomAuthorizationStartSerializer                 { get; set; }
@@ -130,14 +134,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public CustomJObjectParserDelegate<ChargeDetailRecordRequest>?            CustomChargeDetailRecordRequestParser              { get; set; }
 
+        #endregion
 
-        // Custom JSON serializers
+        #region Custom JSON serializers
         public CustomJObjectSerializerDelegate<Acknowledgement>?                  CustomAcknowledgementSerializer                    { get; set; }
 
         public CustomJObjectSerializerDelegate<StatusCode>?                       CustomStatusCodeSerializer                         { get; set; }
-
-
-        public Newtonsoft.Json.Formatting                                         JSONFormatting                                     { get; set; }
 
         #endregion
 
@@ -284,12 +286,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region (protected internal) OnChargingNotificationsHTTPRequest
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP request was received.
+        /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
         public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest = new();
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP request was received.
+        /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the notification.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
@@ -327,12 +329,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region (protected internal) OnChargingNotificationsHTTPResponse
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP response was sent.
+        /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
         public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse = new();
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP response was sent.
+        /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the notification.</param>
         /// <param name="API">The EMP Server HTTP API.</param>

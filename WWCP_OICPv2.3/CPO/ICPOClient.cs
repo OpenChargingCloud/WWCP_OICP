@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System.Threading.Tasks;
-
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -46,13 +44,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
         /// <summary>
-        /// Create an AuthorizeStart request.
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="Request">A PushPricingProductData request.</param>
+        Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>        PushPricingProductData          (PushPricingProductDataRequest        Request);
+
+        /// <summary>
+        /// Upload the given EVSE pricing data.
+        /// </summary>
+        /// <param name="Request">A PushEVSEPricing request.</param>
+        Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>               PushEVSEPricing                 (PushEVSEPricingRequest               Request);
+
+
+        /// <summary>
+        /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
         Task<OICPResult<AuthorizationStartResponse>>                            AuthorizeStart                  (AuthorizeStartRequest                Request);
 
         /// <summary>
-        /// Create an AuthorizeStop request.
+        /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStop request.</param>
         Task<OICPResult<AuthorizationStopResponse>>                             AuthorizeStop                   (AuthorizeStopRequest                 Request);
@@ -87,7 +98,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>        SendChargeDetailRecord          (ChargeDetailRecordRequest        Request);
+        Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>            SendChargeDetailRecord          (ChargeDetailRecordRequest            Request);
 
     }
 
