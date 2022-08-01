@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -65,6 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        new PushEVSEDataRequest(
                            OperatorEVSEData,
                            Action,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -115,6 +114,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 OperatorId,
                                                 OperatorName),
                            Action,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -161,6 +161,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 OperatorId,
                                                 OperatorName),
                            Action,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -234,6 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        new PushEVSEStatusRequest(
                            OperatorEVSEStatus,
                            Action,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -286,6 +288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                OperatorName
                            ),
                            Action,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -334,6 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                OperatorName
                            ),
                            Action,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -401,11 +405,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            EVSE_Id?               EVSEId                = null,
                            PartnerProduct_Id?     PartnerProductId      = null,
                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
-                           JObject                CustomData            = null,
+                           JObject?               CustomData            = null,
 
                            DateTime?              Timestamp             = null,
                            CancellationToken?     CancellationToken     = null,
-                           EventTracking_Id       EventTrackingId       = null,
+                           EventTracking_Id?      EventTrackingId       = null,
                            TimeSpan?              RequestTimeout        = null)
 
             => CPOClient.AuthorizeStart(
@@ -417,6 +421,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        null,             // SessionId will be ignored by Hubject!
                        CPOPartnerSessionId,
                        null,             // EMPPartnerSessionId does not make much sense here!
+                       null,
                        CustomData,
 
                        Timestamp,
@@ -453,11 +458,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           EVSE_Id?               EVSEId                = null,
                           CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                           EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                          JObject                CustomData            = null,
+                          JObject?               CustomData            = null,
 
                           DateTime?              Timestamp             = null,
                           CancellationToken?     CancellationToken     = null,
-                          EventTracking_Id       EventTrackingId       = null,
+                          EventTracking_Id?      EventTrackingId       = null,
                           TimeSpan?              RequestTimeout        = null)
 
             => CPOClient.AuthorizeStop(
@@ -468,6 +473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        EVSEId,
                        CPOPartnerSessionId,
                        EMPPartnerSessionId,
+                       null,
                        CustomData,
 
                        Timestamp,
@@ -516,11 +522,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            Decimal?               MeterValueStart       = null,
                                            Operator_Id?           OperatorId            = null,
                                            PartnerProduct_Id?     PartnerProductId      = null,
-                                           JObject                CustomData            = null,
+                                           JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
                                            CancellationToken?     CancellationToken     = null,
-                                           EventTracking_Id       EventTrackingId       = null,
+                                           EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null)
 
 
@@ -537,6 +543,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            MeterValueStart,
                            OperatorId,
                            PartnerProductId,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -589,14 +596,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               DateTime?              SessionStart             = null,
                                               Decimal?               ConsumedEnergyProgress   = null,
                                               Decimal?               MeterValueStart          = null,
-                                              IEnumerable<Decimal>   MeterValuesInBetween     = null,
+                                              IEnumerable<Decimal>?  MeterValuesInBetween     = null,
                                               Operator_Id?           OperatorId               = null,
                                               PartnerProduct_Id?     PartnerProductId         = null,
-                                              JObject                CustomData               = null,
+                                              JObject?               CustomData               = null,
 
                                               DateTime?              Timestamp                = null,
                                               CancellationToken?     CancellationToken        = null,
-                                              EventTracking_Id       EventTrackingId          = null,
+                                              EventTracking_Id?      EventTrackingId          = null,
                                               TimeSpan?              RequestTimeout           = null)
 
 
@@ -617,6 +624,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            MeterValuesInBetween,
                            OperatorId,
                            PartnerProductId,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -658,30 +666,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public static Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
-            SendChargingNotificationsEnd(this ICPOClient        CPOClient,
-                                         Session_Id             SessionId,
-                                         Identification         Identification,
-                                         EVSE_Id                EVSEId,
-                                         DateTime               ChargingStart,
-                                         DateTime               ChargingEnd,
+            SendChargingNotificationsEnd(this ICPOClient         CPOClient,
+                                         Session_Id              SessionId,
+                                         Identification          Identification,
+                                         EVSE_Id                 EVSEId,
+                                         DateTime                ChargingStart,
+                                         DateTime                ChargingEnd,
 
-                                         CPOPartnerSession_Id?  CPOPartnerSessionId      = null,
-                                         EMPPartnerSession_Id?  EMPPartnerSessionId      = null,
-                                         DateTime?              SessionStart             = null,
-                                         DateTime?              SessionEnd               = null,
-                                         Decimal?               ConsumedEnergy           = null,
-                                         Decimal?               MeterValueStart          = null,
-                                         Decimal?               MeterValueEnd            = null,
-                                         IEnumerable<Decimal>   MeterValuesInBetween     = null,
-                                         Operator_Id?           OperatorId               = null,
-                                         PartnerProduct_Id?     PartnerProductId         = null,
-                                         DateTime?              PenaltyTimeStart         = null,
-                                         JObject                CustomData               = null,
+                                         CPOPartnerSession_Id?   CPOPartnerSessionId      = null,
+                                         EMPPartnerSession_Id?   EMPPartnerSessionId      = null,
+                                         DateTime?               SessionStart             = null,
+                                         DateTime?               SessionEnd               = null,
+                                         Decimal?                ConsumedEnergy           = null,
+                                         Decimal?                MeterValueStart          = null,
+                                         Decimal?                MeterValueEnd            = null,
+                                         IEnumerable<Decimal>?   MeterValuesInBetween     = null,
+                                         Operator_Id?            OperatorId               = null,
+                                         PartnerProduct_Id?      PartnerProductId         = null,
+                                         DateTime?               PenaltyTimeStart         = null,
+                                         JObject?                CustomData               = null,
 
-                                         DateTime?              Timestamp                = null,
-                                         CancellationToken?     CancellationToken        = null,
-                                         EventTracking_Id       EventTrackingId          = null,
-                                         TimeSpan?              RequestTimeout           = null)
+                                         DateTime?               Timestamp                = null,
+                                         CancellationToken?      CancellationToken        = null,
+                                         EventTracking_Id?       EventTrackingId          = null,
+                                         TimeSpan?               RequestTimeout           = null)
 
 
                 => CPOClient.SendChargingEndNotification(
@@ -703,6 +711,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            OperatorId,
                            PartnerProductId,
                            PenaltyTimeStart,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -712,7 +721,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargeDetailRecord           (SessionId, Identification, EVSEId, ErrorType, ...)
+        #region SendChargingNotificationsError   (SessionId, Identification, EVSEId, ErrorType, ...)
 
         /// <summary>
         /// Send a charging error notification.
@@ -743,12 +752,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                           String                 ErrorAdditionalInfo   = null,
-                                           JObject                CustomData            = null,
+                                           String?                ErrorAdditionalInfo   = null,
+                                           JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
                                            CancellationToken?     CancellationToken     = null,
-                                           EventTracking_Id       EventTrackingId       = null,
+                                           EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null)
 
 
@@ -762,6 +771,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
                            ErrorAdditionalInfo,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -792,11 +802,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             SendChargeDetailRecord(this ICPOClient     CPOClient,
                                    ChargeDetailRecord  ChargeDetailRecord,
                                    Operator_Id         OperatorId,
-                                   JObject             CustomData         = null,
+                                   JObject?            CustomData         = null,
 
                                    DateTime?           Timestamp          = null,
                                    CancellationToken?  CancellationToken  = null,
-                                   EventTracking_Id    EventTrackingId    = null,
+                                   EventTracking_Id?   EventTrackingId    = null,
                                    TimeSpan?           RequestTimeout     = null)
 
 
@@ -804,6 +814,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        new ChargeDetailRecordRequest(
                            ChargeDetailRecord,
                            OperatorId,
+                           null,
                            CustomData,
 
                            Timestamp,

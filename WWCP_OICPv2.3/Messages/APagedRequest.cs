@@ -60,6 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new generic request message.
         /// </summary>
+        /// <param name="ProcessId">The optional unique OICP process identification.</param>
         /// <param name="Page">An optional page number of the request page.</param>
         /// <param name="Size">An optional size of a request page.</param>
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
@@ -69,7 +70,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public APagedRequest(UInt32?               Page                = null,
+        public APagedRequest(Process_Id?           ProcessId           = null,
+                             UInt32?               Page                = null,
                              UInt32?               Size                = null,
                              IEnumerable<String>?  SortOrder           = null,
                              JObject?              CustomData          = null,
@@ -79,7 +81,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              EventTracking_Id?     EventTrackingId     = null,
                              TimeSpan?             RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,

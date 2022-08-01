@@ -77,6 +77,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       IEnumerable<Operator_Id>  OperatorIds,
                                       DateTime?                 LastCall            = null,
 
+                                      Process_Id?               ProcessId           = null,
                                       UInt32?                   Page                = null,
                                       UInt32?                   Size                = null,
                                       IEnumerable<String>?      SortOrder           = null,
@@ -87,7 +88,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       EventTracking_Id?         EventTrackingId     = null,
                                       TimeSpan?                 RequestTimeout      = null)
 
-            : base(Page,
+            : base(ProcessId,
+                   Page,
                    Size,
                    SortOrder,
                    CustomData,
@@ -130,6 +132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPullEVSEPricingRequestParser">A delegate to parse custom PullEVSEPricing JSON objects.</param>
         public static PullEVSEPricingRequest Parse(JObject                                               JSON,
+                                                   Process_Id?                                           ProcessId                            = null,
                                                    UInt32?                                               Page                                 = null,
                                                    UInt32?                                               Size                                 = null,
                                                    IEnumerable<String>?                                  SortOrder                            = null,
@@ -145,6 +148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(JSON,
                          out PullEVSEPricingRequest?  pullEVSEPricingRequest,
                          out String?                  errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
@@ -171,6 +175,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPullEVSEPricingRequestParser">A delegate to parse custom PullEVSEPricing request JSON objects.</param>
         public static PullEVSEPricingRequest Parse(String                                                Text,
+                                                   Process_Id?                                           ProcessId                            = null,
                                                    UInt32?                                               Page                                 = null,
                                                    UInt32?                                               Size                                 = null,
                                                    IEnumerable<String>?                                  SortOrder                            = null,
@@ -186,6 +191,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text,
                          out PullEVSEPricingRequest?  pullEVSEPricingRequest,
                          out String?                  errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
@@ -216,6 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(JObject                                               JSON,
                                        out PullEVSEPricingRequest?                           PullEVSEPricingRequest,
                                        out String?                                           ErrorResponse,
+                                       Process_Id?                                           ProcessId                            = null,
                                        UInt32?                                               Page                                 = null,
                                        UInt32?                                               Size                                 = null,
                                        IEnumerable<String>?                                  SortOrder                            = null,
@@ -293,6 +300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                     OperatorIds,
                                                                     LastCall,
 
+                                                                    ProcessId,
                                                                     Page,
                                                                     Size,
                                                                     SortOrder,
@@ -333,6 +341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                                Text,
                                        out PullEVSEPricingRequest?                           PullEVSEPricingRequest,
                                        out String?                                           ErrorResponse,
+                                       Process_Id?                                           ProcessId                            = null,
                                        UInt32?                                               Page                                 = null,
                                        UInt32?                                               Size                                 = null,
                                        IEnumerable<String>?                                  SortOrder                            = null,
@@ -351,6 +360,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out PullEVSEPricingRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Page,
                                 Size,
                                 SortOrder,

@@ -75,6 +75,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              IEnumerable<Operator_Id>  OperatorIds,
                                              DateTime?                 LastCall            = null,
 
+                                             Process_Id?               ProcessId           = null,
                                              UInt32?                   Page                = null,
                                              UInt32?                   Size                = null,
                                              IEnumerable<String>?      SortOrder           = null,
@@ -85,7 +86,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              EventTracking_Id?         EventTrackingId     = null,
                                              TimeSpan?                 RequestTimeout      = null)
 
-            : base(Page,
+            : base(ProcessId,
+                   Page,
                    Size,
                    SortOrder,
                    CustomData,
@@ -129,6 +131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData JSON objects.</param>
         public static PullPricingProductDataRequest Parse(JObject                                                      JSON,
                                                           Provider_Id                                                  ProviderId,
+                                                          Process_Id?                                                  ProcessId                                   = null,
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
@@ -145,6 +148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ProviderId,
                          out PullPricingProductDataRequest?  pullEVSEDataResponse,
                          out String?                         errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
@@ -173,6 +177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData request JSON objects.</param>
         public static PullPricingProductDataRequest Parse(String                                                       Text,
                                                           Provider_Id                                                  ProviderId,
+                                                          Process_Id?                                                  ProcessId                                   = null,
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
@@ -189,6 +194,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ProviderId,
                          out PullPricingProductDataRequest?  pullEVSEDataResponse,
                          out String?                         errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
@@ -221,6 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Provider_Id                                                  ProviderId,
                                        out PullPricingProductDataRequest?                           PullPricingProductDataRequest,
                                        out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
@@ -285,6 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   OperatorIds,
                                                                                   LastCall,
 
+                                                                                  ProcessId,
                                                                                   Page,
                                                                                   Size,
                                                                                   SortOrder,
@@ -327,6 +335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Provider_Id                                                  ProviderId,
                                        out PullPricingProductDataRequest?                           PullPricingProductDataRequest,
                                        out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
@@ -346,6 +355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 ProviderId,
                                 out PullPricingProductDataRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Page,
                                 Size,
                                 SortOrder,

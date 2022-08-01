@@ -52,51 +52,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Request">A GetChargeDetailRecords request.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="ProcessId">The server side process identification of the request.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
-        /// 
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
         /// 
-        /// <param name="StatusCode">An optional status code of this response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
+        /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
         /// 
+        /// <param name="StatusCode">An optional status code of this response.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest    Request,
-                                              DateTime                         ResponseTimestamp,
+        public GetChargeDetailRecordsResponse(DateTime                         ResponseTimestamp,
                                               EventTracking_Id                 EventTrackingId,
+                                              Process_Id                       ProcessId,
                                               TimeSpan                         Runtime,
-
                                               IEnumerable<ChargeDetailRecord>  ChargeDetailRecords,
 
-                                              HTTPResponse?                    HTTPResponse       = null,
-                                              Process_Id?                      ProcessId          = null,
-                                              StatusCode?                      StatusCode         = null,
-                                              Boolean?                         First              = null,
-                                              Boolean?                         Last               = null,
-                                              UInt32?                          Number             = null,
-                                              UInt32?                          NumberOfElements   = null,
-                                              UInt32?                          Size               = null,
-                                              UInt32?                          TotalElements      = null,
-                                              UInt32?                          TotalPages         = null,
+                                              GetChargeDetailRecordsRequest?   Request            = null,
+                                              Boolean?                         FirstPage          = null,
+                                              Boolean?                         LastPage           = null,
+                                              UInt64?                          Number             = null,
+                                              UInt64?                          NumberOfElements   = null,
+                                              UInt64?                          Size               = null,
+                                              UInt64?                          TotalElements      = null,
+                                              UInt64?                          TotalPages         = null,
 
+                                              StatusCode?                      StatusCode         = null,
+                                              HTTPResponse?                    HTTPResponse       = null,
                                               JObject?                         CustomData         = null)
 
-            : base(Request,
-                   ResponseTimestamp,
+            : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
 
-                   HTTPResponse,
-                   ProcessId,
-                   StatusCode,
-                   First,
-                   Last,
+                   Request,
+                   FirstPage,
+                   LastPage,
                    Number,
                    NumberOfElements,
                    Size,
                    TotalElements,
                    TotalPages,
+                   StatusCode,
 
+                   HTTPResponse,
                    CustomData)
 
         {
@@ -384,15 +383,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                GetChargeDetailRecordsResponse = new GetChargeDetailRecordsResponse(Request,
-                                                                                    ResponseTimestamp,
+                GetChargeDetailRecordsResponse = new GetChargeDetailRecordsResponse(ResponseTimestamp,
                                                                                     EventTrackingId,
+                                                                                    ProcessId           ?? Process_Id.NewRandom,
                                                                                     Runtime,
                                                                                     ChargeDetailRecords ?? Array.Empty<ChargeDetailRecord>(),
 
-                                                                                    HTTPResponse,
-                                                                                    ProcessId,
-                                                                                    StatusCode,
+                                                                                    Request,
                                                                                     First,
                                                                                     Last,
                                                                                     Number,
@@ -400,7 +397,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                     Size,
                                                                                     TotalElements,
                                                                                     TotalPages,
+                                                                                    StatusCode,
 
+                                                                                    HTTPResponse,
                                                                                     CustomData);
 
                 if (CustomGetChargeDetailRecordsResponseParser is not null)
@@ -638,18 +637,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => new (Request,
                     ResponseTimestamp,
                     EventTrackingId,
+                    ProcessId,
                     Runtime,
                     ChargeDetailRecords,
-                    HTTPResponse,
-                    ProcessId,
-                    StatusCode,
-                    First,
-                    Last,
+                    FirstPage,
+                    LastPage,
                     Number,
                     NumberOfElements,
                     Size,
                     TotalElements,
                     TotalPages,
+                    StatusCode,
+                    HTTPResponse,
                     CustomData);
 
         #endregion
@@ -689,21 +688,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public Builder(GetChargeDetailRecordsRequest?    Request               = null,
                            DateTime?                         ResponseTimestamp     = null,
                            EventTracking_Id?                 EventTrackingId       = null,
+                           Process_Id?                       ProcessId             = null,
                            TimeSpan?                         Runtime               = null,
 
                            IEnumerable<ChargeDetailRecord>?  ChargeDetailRecords   = null,
+                           Boolean?                          FirstPage             = null,
+                           Boolean?                          LastPage              = null,
+                           UInt64?                           Number                = null,
+                           UInt64?                           NumberOfElements      = null,
+                           UInt64?                           Size                  = null,
+                           UInt64?                           TotalElements         = null,
+                           UInt64?                           TotalPages            = null,
+                           StatusCode?                       StatusCode            = null,
 
                            HTTPResponse?                     HTTPResponse          = null,
-                           Process_Id?                       ProcessId             = null,
-                           StatusCode?                       StatusCode            = null,
-                           Boolean?                          First                 = null,
-                           Boolean?                          Last                  = null,
-                           UInt32?                           Number                = null,
-                           UInt32?                           NumberOfElements      = null,
-                           UInt32?                           Size                  = null,
-                           UInt32?                           TotalElements         = null,
-                           UInt32?                           TotalPages            = null,
-
                            JObject?                          CustomData            = null)
 
                 : base(Request,
@@ -714,8 +712,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        HTTPResponse,
                        ProcessId,
                        StatusCode,
-                       First,
-                       Last,
+                       FirstPage,
+                       LastPage,
                        Number,
                        NumberOfElements,
                        Size,
@@ -750,21 +748,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             public override GetChargeDetailRecordsResponse ToImmutable()
 
-                => new (Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        ProcessId         ?? Process_Id.NewRandom,
+                        Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                         ChargeDetailRecords,
-                        HTTPResponse,
-                        ProcessId,
-                        StatusCode,
-                        First,
-                        Last,
+
+                        Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
+                        FirstPage,
+                        LastPage,
                         Number,
                         NumberOfElements,
                         Size,
                         TotalElements,
                         TotalPages,
+                        StatusCode,
+
+                        HTTPResponse,
                         CustomData);
 
             #endregion

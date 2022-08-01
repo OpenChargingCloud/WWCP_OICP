@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -27,7 +25,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extension methods for process identifications.
+    /// Extension methods for OICP process identifications.
     /// </summary>
     public static class ProcessIdExtensions
     {
@@ -50,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
     /// <summary>
-    /// The unique identification of a process.
+    /// The unique identification of an OICP process.
     /// </summary>
     public readonly struct Process_Id : IId<Process_Id>
     {
@@ -89,7 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new process identification based on the given string.
+        /// Create a new OICP process identification based on the given string.
         /// </summary>
         private Process_Id(String Text)
         {

@@ -72,10 +72,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public HTTPResponse?     HTTPResponse         { get; }
 
         /// <summary>
-        /// The optional Hubject process identification of the request.
+        /// The server side process identification of the request.
         /// </summary>
-        [Optional]
-        public Process_Id?       ProcessId            { get; }
+        [Mandatory]
+        public Process_Id        ProcessId            { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
@@ -92,26 +92,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="ProcessId">The server side process identification of the request.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="Request">The request leading to this result. Might be null, when the request was not parsable!</param>
+        /// 
+        /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         protected AResponse(DateTime          ResponseTimestamp,
                             EventTracking_Id  EventTrackingId,
+                            Process_Id        ProcessId,
                             TimeSpan          Runtime,
+
                             TRequest?         Request        = null,
                             HTTPResponse?     HTTPResponse   = null,
-                            Process_Id?       ProcessId      = null,
                             JObject?          CustomData     = null)
         {
 
             this.ResponseTimestamp  = ResponseTimestamp;
             this.EventTrackingId    = EventTrackingId;
+            this.ProcessId          = ProcessId;
             this.Runtime            = Runtime;
+
             this.Request            = Request;
             this.HTTPResponse       = HTTPResponse;
-            this.ProcessId          = ProcessId;
             this.CustomData         = CustomData;
 
         }

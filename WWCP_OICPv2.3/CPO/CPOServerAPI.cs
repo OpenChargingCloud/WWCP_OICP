@@ -582,7 +582,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              Acknowledgement<AuthorizeRemoteReservationStartRequest>? acknowledgement = null;
 
                                              try
@@ -602,6 +604,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                           providerId,
                                                                                                           out AuthorizeRemoteReservationStartRequest?  authorizeRemoteReservationStartRequest,
                                                                                                           out String?                                  errorResponse,
+                                                                                                          processId,
                                                                                                           Request.Timestamp,
                                                                                                           Request.CancellationToken,
                                                                                                           Request.EventTrackingId,
@@ -721,10 +724,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                            CustomStatusCodeSerializer).
-                                                                                                     ToString(JSONFormatting).
-                                                                                                     ToUTF8Bytes(),
+                                                        Content                    = acknowledgement?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                             CustomStatusCodeSerializer).
+                                                                                                      ToString(JSONFormatting).
+                                                                                                      ToUTF8Bytes()
+                                                                                                      ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId?.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -767,7 +772,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              Acknowledgement<AuthorizeRemoteReservationStopRequest>? acknowledgement = null;
 
                                              try
@@ -787,6 +794,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          providerId,
                                                                                                          out AuthorizeRemoteReservationStopRequest?  authorizeRemoteReservationStopRequest,
                                                                                                          out String?                                 errorResponse,
+                                                                                                         processId,
                                                                                                          Request.Timestamp,
                                                                                                          Request.CancellationToken,
                                                                                                          Request.EventTrackingId,
@@ -906,11 +914,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                            CustomStatusCodeSerializer).
-                                                                                                     ToString(JSONFormatting).
-                                                                                                     ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = acknowledgement?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                             CustomStatusCodeSerializer).
+                                                                                                      ToString(JSONFormatting).
+                                                                                                      ToUTF8Bytes()
+                                                                                                      ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -953,7 +962,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              Acknowledgement<AuthorizeRemoteStartRequest>? acknowledgement = null;
 
                                              try
@@ -973,6 +984,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                providerId,
                                                                                                out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
                                                                                                out String?                       errorResponse,
+                                                                                               processId,
                                                                                                Request.Timestamp,
                                                                                                Request.CancellationToken,
                                                                                                Request.EventTrackingId,
@@ -1092,11 +1104,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                            CustomStatusCodeSerializer).
-                                                                                                     ToString(JSONFormatting).
-                                                                                                     ToUTF8Bytes(),
-                                                        Connection                 = "close"
+                                                        Content                    = acknowledgement?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                             CustomStatusCodeSerializer).
+                                                                                                      ToString(JSONFormatting).
+                                                                                                      ToUTF8Bytes()
+                                                                                                      ?? Array.Empty<Byte>(),
+                                                 Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -1138,7 +1151,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              Acknowledgement<AuthorizeRemoteStopRequest>? acknowledgement = null;
 
                                              try
@@ -1158,6 +1173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               providerId,
                                                                                               out AuthorizeRemoteStopRequest?  authorizeRemoteStopRequest,
                                                                                               out String?                      errorResponse,
+                                                                                              processId,
                                                                                               Request.Timestamp,
                                                                                               Request.CancellationToken,
                                                                                               Request.EventTrackingId,
@@ -1277,10 +1293,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                            CustomStatusCodeSerializer).
-                                                                                                     ToString(JSONFormatting).
-                                                                                                     ToUTF8Bytes(),
+                                                        Content                    = acknowledgement?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                             CustomStatusCodeSerializer).
+                                                                                                      ToString(JSONFormatting).
+                                                                                                      ToUTF8Bytes()
+                                                                                                      ?? Array.Empty<Byte>(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 

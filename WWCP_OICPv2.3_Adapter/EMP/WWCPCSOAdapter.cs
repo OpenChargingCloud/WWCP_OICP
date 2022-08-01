@@ -1090,6 +1090,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                      null, // DistanceKM
                                      null, // GeoCoordinatesResponseFormat
 
+                                     null, // ProcessId
                                      null, // Page
                                      null, // Size
                                      null, // SortOrder

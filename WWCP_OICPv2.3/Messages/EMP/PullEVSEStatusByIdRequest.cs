@@ -61,6 +61,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public PullEVSEStatusByIdRequest(Provider_Id           ProviderId,
                                          IEnumerable<EVSE_Id>  EVSEIds,
+                                         Process_Id?           ProcessId           = null,
                                          JObject?              CustomData          = null,
 
                                          DateTime?             Timestamp           = null,
@@ -68,7 +69,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          EventTracking_Id?     EventTrackingId     = null,
                                          TimeSpan?             RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -105,6 +107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById JSON objects.</param>
         public static PullEVSEStatusByIdRequest Parse(JObject                                                  JSON,
+                                                      Process_Id?                                              ProcessId                               = null,
 
                                                       DateTime?                                                Timestamp                               = null,
                                                       CancellationToken?                                       CancellationToken                       = null,
@@ -117,6 +120,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(JSON,
                          out PullEVSEStatusByIdRequest?  pullEVSEStatusResponse,
                          out String?                     errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -140,6 +144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
         public static PullEVSEStatusByIdRequest Parse(String                                                   Text,
+                                                      Process_Id?                                              ProcessId                               = null,
 
                                                       DateTime?                                                Timestamp                               = null,
                                                       CancellationToken?                                       CancellationToken                       = null,
@@ -152,6 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text,
                          out PullEVSEStatusByIdRequest?  pullEVSEStatusResponse,
                          out String?                     errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -179,6 +185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(JObject                                                  JSON,
                                        out PullEVSEStatusByIdRequest?                           PullEVSEStatusByIdRequest,
                                        out String?                                              ErrorResponse,
+                                       Process_Id?                                              ProcessId                               = null,
 
                                        DateTime?                                                Timestamp                               = null,
                                        CancellationToken?                                       CancellationToken                       = null,
@@ -234,7 +241,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PullEVSEStatusByIdRequest = new PullEVSEStatusByIdRequest(ProviderId,
-                                                                          EVSEIds?.ToArray() ?? new EVSE_Id[0],
+                                                                          EVSEIds?.ToArray() ?? Array.Empty<EVSE_Id>(),
+                                                                          ProcessId,
                                                                           CustomData,
                                                                           Timestamp,
                                                                           CancellationToken,
@@ -271,6 +279,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                                   Text,
                                        out PullEVSEStatusByIdRequest?                           PullEVSEStatusByIdRequest,
                                        out String?                                              ErrorResponse,
+                                       Process_Id?                                              ProcessId                               = null,
 
                                        DateTime?                                                Timestamp                               = null,
                                        CancellationToken?                                       CancellationToken                       = null,
@@ -286,6 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out PullEVSEStatusByIdRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,

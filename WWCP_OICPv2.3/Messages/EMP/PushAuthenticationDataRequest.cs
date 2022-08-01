@@ -75,6 +75,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public PushAuthenticationDataRequest(ProviderAuthenticationData  ProviderAuthenticationData,
                                              ActionTypes                 Action              = ActionTypes.FullLoad,
+                                             Process_Id?                 ProcessId           = null,
                                              JObject?                    CustomData          = null,
 
                                              DateTime?                   Timestamp           = null,
@@ -82,7 +83,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              EventTracking_Id?           EventTrackingId     = null,
                                              TimeSpan?                   RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -126,6 +128,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData JSON objects.</param>
         public static PushAuthenticationDataRequest Parse(JObject                                                      JSON,
+                                                          Process_Id?                                                  ProcessId                                   = null,
 
                                                           DateTime?                                                    Timestamp                                   = null,
                                                           CancellationToken?                                           CancellationToken                           = null,
@@ -138,6 +141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(JSON,
                          out PushAuthenticationDataRequest?  pullEVSEStatusResponse,
                          out String?                         errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -161,6 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData request JSON objects.</param>
         public static PushAuthenticationDataRequest Parse(String                                                       Text,
+                                                          Process_Id?                                                  ProcessId                                   = null,
 
                                                           DateTime?                                                    Timestamp                                   = null,
                                                           CancellationToken?                                           CancellationToken                           = null,
@@ -173,6 +178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text,
                          out PushAuthenticationDataRequest?  pullEVSEStatusResponse,
                          out String?                         errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -200,6 +206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(JObject                                                      JSON,
                                        out PushAuthenticationDataRequest?                           PushAuthenticationDataRequest,
                                        out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
                                        CancellationToken?                                           CancellationToken                           = null,
@@ -254,6 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 PushAuthenticationDataRequest = new PushAuthenticationDataRequest(ProviderAuthenticationData,
                                                                                   ActionType,
+                                                                                  ProcessId,
                                                                                   CustomData,
                                                                                   Timestamp,
                                                                                   CancellationToken,
@@ -290,6 +298,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                                       Text,
                                        out PushAuthenticationDataRequest?                           PushAuthenticationDataRequest,
                                        out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
                                        CancellationToken?                                           CancellationToken                           = null,
@@ -305,6 +314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out PushAuthenticationDataRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,

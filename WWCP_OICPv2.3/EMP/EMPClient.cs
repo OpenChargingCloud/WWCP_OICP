@@ -653,7 +653,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -670,14 +670,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   HTTPResponse.Timestamp,
                                                                   HTTPResponse.EventTrackingId,
                                                                   HTTPResponse.Runtime,
-                                                                  out PullEVSEDataResponse  pullEVSEDataResponse,
-                                                                  out String                ErrorResponse,
+                                                                  out PullEVSEDataResponse?  pullEVSEDataResponse,
+                                                                  out String?                ErrorResponse,
                                                                   processId,
                                                                   HTTPResponse))
                                 {
 
                                     result = OICPResult<PullEVSEDataResponse>.Success(Request,
-                                                                                      pullEVSEDataResponse,
+                                                                                      pullEVSEDataResponse!,
                                                                                       processId);
 
                                 }
@@ -689,24 +689,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEDataResponse>.Failed(
                                              Request,
                                              new PullEVSEDataResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  Array.Empty<EVSEDataRecord>(),
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 new StatusCode(
-                                                     StatusCodes.SystemError,
-                                                     e.Message,
-                                                     e.StackTrace
-                                                 ),
-                                                 processId
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
                                              )
                                          );
 
@@ -816,20 +809,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     result = OICPResult<PullEVSEDataResponse>.Failed(Request,
                                                                                      new PullEVSEDataResponse(
-                                                                                         Request,
                                                                                          HTTPResponse.Timestamp,
                                                                                          HTTPResponse.EventTrackingId,
+                                                                                         processId,
                                                                                          HTTPResponse.Runtime,
-                                                                                         new EVSEDataRecord[0],
-                                                                                         null,
-                                                                                         null,
-                                                                                         null,
-                                                                                         null,
-                                                                                         null,
-                                                                                         null,
-                                                                                         null,
-                                                                                         statusCode,
-                                                                                         processId
+                                                                                         Array.Empty<EVSEDataRecord>(),
+                                                                                         Request,
+                                                                                         StatusCode: statusCode
                                                                                      ),
                                                                                      processId);
 
@@ -842,24 +828,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEDataResponse>.Failed(
                                              Request,
                                              new PullEVSEDataResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
-                                                 new EVSEDataRecord[0],
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 new StatusCode(
-                                                     StatusCodes.SystemError,
-                                                     e.Message,
-                                                     e.StackTrace
-                                                 ),
-                                                 processId
+                                                 Array.Empty<EVSEDataRecord>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
                                              )
                                          );
 
@@ -884,23 +863,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 result = OICPResult<PullEVSEDataResponse>.Failed(
                              Request,
                              new PullEVSEDataResponse(
-                                 Request,
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<EVSEDataRecord>(),
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     e.Message,
-                                     e.StackTrace
-                                 )
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.SystemError,
+                                                 e.Message,
+                                                 e.StackTrace
+                                             )
                              )
                          );
 
@@ -909,22 +882,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             result ??= OICPResult<PullEVSEDataResponse>.Failed(
                            Request,
                            new PullEVSEDataResponse(
-                               Request,
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                Array.Empty<EVSEDataRecord>(),
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               new StatusCode(
-                                   StatusCodes.SystemError,
-                                   "HTTP request failed!"
-                               )
+                               Request,
+                               StatusCode: new StatusCode(
+                                               StatusCodes.SystemError,
+                                               "HTTP request failed!"
+                                           )
                            )
                        );
 
@@ -1051,7 +1018,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -1068,14 +1035,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     HTTPResponse.Timestamp,
                                                                     HTTPResponse.EventTrackingId,
                                                                     HTTPResponse.Runtime,
-                                                                    out PullEVSEStatusResponse  pullEVSEStatusResponse,
-                                                                    out String                  ErrorResponse,
+                                                                    out PullEVSEStatusResponse?  pullEVSEStatusResponse,
+                                                                    out String?                  ErrorResponse,
                                                                     processId,
                                                                     HTTPResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusResponse>.Success(Request,
-                                                                                        pullEVSEStatusResponse,
+                                                                                        pullEVSEStatusResponse!,
                                                                                         processId);
 
                                 }
@@ -1087,17 +1054,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEStatusResponse>.Failed(
                                              Request,
                                              new PullEVSEStatusResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEStatus[0],
+                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace
-                                                 ),
-                                                 processId
+                                                 )
                                              )
                                          );
 
@@ -1209,13 +1176,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     result = OICPResult<PullEVSEStatusResponse>.Failed(Request,
                                                                                        new PullEVSEStatusResponse(
-                                                                                           Request,
                                                                                            HTTPResponse.Timestamp,
                                                                                            HTTPResponse.EventTrackingId,
+                                                                                           processId,
                                                                                            HTTPResponse.Runtime,
-                                                                                           new OperatorEVSEStatus[0],
-                                                                                           statusCode,
-                                                                                           processId
+                                                                                           Array.Empty<OperatorEVSEStatus>(),
+                                                                                           Request,
+                                                                                           statusCode
                                                                                        ),
                                                                                        processId);
 
@@ -1228,17 +1195,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEStatusResponse>.Failed(
                                              Request,
                                              new PullEVSEStatusResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEStatus[0],
+                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace
-                                                 ),
-                                                 processId
+                                                 )
                                              )
                                          );
 
@@ -1263,11 +1230,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 result = OICPResult<PullEVSEStatusResponse>.Failed(
                              Request,
                              new PullEVSEStatusResponse(
-                                 Request,
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<OperatorEVSEStatus>(),
+                                 Request,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -1281,11 +1249,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             result ??= OICPResult<PullEVSEStatusResponse>.Failed(
                            Request,
                            new PullEVSEStatusResponse(
-                               Request,
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                Array.Empty<OperatorEVSEStatus>(),
+                               Request,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -1416,7 +1385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -1433,14 +1402,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     HTTPResponse.Timestamp,
                                                                     HTTPResponse.EventTrackingId,
                                                                     HTTPResponse.Runtime,
-                                                                    out PullEVSEStatusByIdResponse  pullEVSEStatusByIdResponse,
-                                                                    out String                      ErrorResponse,
+                                                                    out PullEVSEStatusByIdResponse?  pullEVSEStatusByIdResponse,
+                                                                    out String?                      ErrorResponse,
                                                                     processId,
                                                                     HTTPResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusByIdResponse>.Success(Request,
-                                                                                            pullEVSEStatusByIdResponse,
+                                                                                            pullEVSEStatusByIdResponse!,
                                                                                             processId);
 
                                 }
@@ -1452,17 +1421,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                              Request,
                                              new PullEVSEStatusByIdResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
-                                                 new EVSEStatusRecord[0],
+                                                 Array.Empty<EVSEStatusRecord>(),
+                                                 Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace
-                                                 ),
-                                                 processId
+                                                 )
                                              )
                                          );
 
@@ -1574,13 +1543,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     result = OICPResult<PullEVSEStatusByIdResponse>.Failed(Request,
                                                                                        new PullEVSEStatusByIdResponse(
-                                                                                           Request,
                                                                                            HTTPResponse.Timestamp,
                                                                                            HTTPResponse.EventTrackingId,
+                                                                                           processId,
                                                                                            HTTPResponse.Runtime,
-                                                                                           new EVSEStatusRecord[0],
-                                                                                           statusCode,
-                                                                                           processId
+                                                                                           Array.Empty<EVSEStatusRecord>(),
+                                                                                           Request,
+                                                                                           statusCode
                                                                                        ),
                                                                                        processId);
 
@@ -1593,17 +1562,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                              Request,
                                              new PullEVSEStatusByIdResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
-                                                 new EVSEStatusRecord[0],
+                                                 Array.Empty<EVSEStatusRecord>(),
+                                                 Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace
-                                                 ),
-                                                 processId
+                                                 )
                                              )
                                          );
 
@@ -1628,11 +1597,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 result = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                              Request,
                              new PullEVSEStatusByIdResponse(
-                                 Request,
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<EVSEStatusRecord>(),
+                                 Request,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -1646,11 +1616,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             result ??= OICPResult<PullEVSEStatusByIdResponse>.Failed(
                            Request,
                            new PullEVSEStatusByIdResponse(
-                               Request,
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                Array.Empty<EVSEStatusRecord>(),
+                               Request,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -1781,7 +1752,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -1798,14 +1769,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 HTTPResponse.Timestamp,
                                                                                 HTTPResponse.EventTrackingId,
                                                                                 HTTPResponse.Runtime,
-                                                                                out PullEVSEStatusByOperatorIdResponse  pullEVSEStatusResponse,
-                                                                                out String                              ErrorResponse,
+                                                                                out PullEVSEStatusByOperatorIdResponse?  pullEVSEStatusResponse,
+                                                                                out String?                              ErrorResponse,
                                                                                 processId,
                                                                                 HTTPResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(Request,
-                                                                                                    pullEVSEStatusResponse,
+                                                                                                    pullEVSEStatusResponse!,
                                                                                                     processId);
 
                                 }
@@ -1817,17 +1788,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                              Request,
                                              new PullEVSEStatusByOperatorIdResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEStatus[0],
+                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace
-                                                 ),
-                                                 processId
+                                                 )
                                              )
                                          );
 
@@ -1938,16 +1909,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     result = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(Request,
-                                                                                       new PullEVSEStatusByOperatorIdResponse(
-                                                                                           Request,
-                                                                                           HTTPResponse.Timestamp,
-                                                                                           HTTPResponse.EventTrackingId,
-                                                                                           HTTPResponse.Runtime,
-                                                                                           new OperatorEVSEStatus[0],
-                                                                                           statusCode,
-                                                                                           processId
-                                                                                       ),
-                                                                                       processId);
+                                                                                                   new PullEVSEStatusByOperatorIdResponse(
+                                                                                                       HTTPResponse.Timestamp,
+                                                                                                       HTTPResponse.EventTrackingId,
+                                                                                                       processId,
+                                                                                                       HTTPResponse.Runtime,
+                                                                                                       Array.Empty<OperatorEVSEStatus>(),
+                                                                                                       Request,
+                                                                                                       statusCode
+                                                                                                   ),
+                                                                                                   processId);
 
                                 }
 
@@ -1958,17 +1929,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                              Request,
                                              new PullEVSEStatusByOperatorIdResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
-                                                 new OperatorEVSEStatus[0],
+                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace
-                                                 ),
-                                                 processId
+                                                 )
                                              )
                                          );
 
@@ -1993,11 +1964,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 result = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                              Request,
                              new PullEVSEStatusByOperatorIdResponse(
-                                 Request,
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<OperatorEVSEStatus>(),
+                                 Request,
                                  new StatusCode(
                                      StatusCodes.SystemError,
                                      e.Message,
@@ -2011,11 +1983,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             result ??= OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                            Request,
                            new PullEVSEStatusByOperatorIdResponse(
-                               Request,
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                Array.Empty<OperatorEVSEStatus>(),
+                               Request,
                                new StatusCode(
                                    StatusCodes.SystemError,
                                    "HTTP request failed!"
@@ -2165,7 +2138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -2182,14 +2155,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             HTTPResponse.Timestamp,
                                                                             HTTPResponse.EventTrackingId,
                                                                             HTTPResponse.Runtime,
-                                                                            out PullPricingProductDataResponse  pullEVSEDataResponse,
-                                                                            out String                          ErrorResponse,
+                                                                            out PullPricingProductDataResponse?  pullEVSEDataResponse,
+                                                                            out String?                          ErrorResponse,
                                                                             processId,
                                                                             HTTPResponse))
                                 {
 
                                     result = OICPResult<PullPricingProductDataResponse>.Success(Request,
-                                                                                                pullEVSEDataResponse,
+                                                                                                pullEVSEDataResponse!,
                                                                                                 processId);
 
                                 }
@@ -2201,24 +2174,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullPricingProductDataResponse>.Failed(
                                              Request,
                                              new PullPricingProductDataResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  Array.Empty<PricingProductData>(),
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 new StatusCode(
-                                                     StatusCodes.SystemError,
-                                                     e.Message,
-                                                     e.StackTrace
-                                                 ),
-                                                 processId
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
                                              )
                                          );
 
@@ -2328,20 +2294,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     result = OICPResult<PullPricingProductDataResponse>.Failed(Request,
                                                                                                new PullPricingProductDataResponse(
-                                                                                                   Request,
                                                                                                    HTTPResponse.Timestamp,
                                                                                                    HTTPResponse.EventTrackingId,
+                                                                                                   processId,
                                                                                                    HTTPResponse.Runtime,
                                                                                                    Array.Empty<PricingProductData>(),
-                                                                                                   null,
-                                                                                                   null,
-                                                                                                   null,
-                                                                                                   null,
-                                                                                                   null,
-                                                                                                   null,
-                                                                                                   null,
-                                                                                                   statusCode,
-                                                                                                   processId
+                                                                                                   Request,
+                                                                                                   StatusCode: statusCode
                                                                                                ),
                                                                                                processId);
 
@@ -2354,24 +2313,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullPricingProductDataResponse>.Failed(
                                              Request,
                                              new PullPricingProductDataResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  Array.Empty<PricingProductData>(),
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 new StatusCode(
-                                                     StatusCodes.SystemError,
-                                                     e.Message,
-                                                     e.StackTrace
-                                                 ),
-                                                 processId
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
                                              )
                                          );
 
@@ -2396,23 +2348,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 result = OICPResult<PullPricingProductDataResponse>.Failed(
                              Request,
                              new PullPricingProductDataResponse(
-                                 Request,
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<PricingProductData>(),
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     e.Message,
-                                     e.StackTrace
-                                 )
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.SystemError,
+                                                 e.Message,
+                                                 e.StackTrace
+                                             )
                              )
                          );
 
@@ -2421,22 +2367,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             result ??= OICPResult<PullPricingProductDataResponse>.Failed(
                            Request,
                            new PullPricingProductDataResponse(
-                               Request,
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                Array.Empty<PricingProductData>(),
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               new StatusCode(
-                                   StatusCodes.SystemError,
-                                   "HTTP request failed!"
-                               )
+                               Request,
+                               StatusCode: new StatusCode(
+                                               StatusCodes.SystemError,
+                                               "HTTP request failed!"
+                                           )
                            )
                        );
 
@@ -2581,7 +2521,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -2617,24 +2557,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEPricingResponse>.Failed(
                                              Request,
                                              new PullEVSEPricingResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  Array.Empty<OperatorEVSEPricing>(),
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 new StatusCode(
-                                                     StatusCodes.SystemError,
-                                                     e.Message,
-                                                     e.StackTrace
-                                                 ),
-                                                 processId
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
                                              )
                                          );
 
@@ -2744,20 +2677,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     result = OICPResult<PullEVSEPricingResponse>.Failed(Request,
                                                                                         new PullEVSEPricingResponse(
-                                                                                            Request,
                                                                                             HTTPResponse.Timestamp,
                                                                                             HTTPResponse.EventTrackingId,
+                                                                                            processId,
                                                                                             HTTPResponse.Runtime,
                                                                                             Array.Empty<OperatorEVSEPricing>(),
-                                                                                            null,
-                                                                                            null,
-                                                                                            null,
-                                                                                            null,
-                                                                                            null,
-                                                                                            null,
-                                                                                            null,
-                                                                                            statusCode,
-                                                                                            processId
+                                                                                            Request,
+                                                                                            StatusCode: statusCode
                                                                                         ),
                                                                                         processId);
 
@@ -2770,24 +2696,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<PullEVSEPricingResponse>.Failed(
                                              Request,
                                              new PullEVSEPricingResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  Array.Empty<OperatorEVSEPricing>(),
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 new StatusCode(
-                                                     StatusCodes.SystemError,
-                                                     e.Message,
-                                                     e.StackTrace
-                                                 ),
-                                                 processId
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
                                              )
                                          );
 
@@ -2812,23 +2731,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 result = OICPResult<PullEVSEPricingResponse>.Failed(
                              Request,
                              new PullEVSEPricingResponse(
-                                 Request,
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<OperatorEVSEPricing>(),
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     e.Message,
-                                     e.StackTrace
-                                 )
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.SystemError,
+                                                 e.Message,
+                                                 e.StackTrace
+                                             )
                              )
                          );
 
@@ -2837,22 +2750,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             result ??= OICPResult<PullEVSEPricingResponse>.Failed(
                            Request,
                            new PullEVSEPricingResponse(
-                               Request,
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                Array.Empty<OperatorEVSEPricing>(),
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               null,
-                               new StatusCode(
-                                   StatusCodes.SystemError,
-                                   "HTTP request failed!"
-                               )
+                               Request,
+                               StatusCode: new StatusCode(
+                                               StatusCodes.SystemError,
+                                               "HTTP request failed!"
+                                           )
                            )
                        );
 
@@ -2980,7 +2887,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3004,7 +2911,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Success(Request,
-                                                                                                                pushAuthenticationDataResponse,
+                                                                                                                pushAuthenticationDataResponse!,
                                                                                                                 processId);
 
                                 }
@@ -3018,6 +2925,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<PushAuthenticationDataRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3030,7 +2938,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  null, //Request.SessionId,
                                                  null, //Request.CPOPartnerSessionId,
                                                  null, //Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -3145,6 +3052,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                new Acknowledgement<PushAuthenticationDataRequest>(
                                                                                                                    HTTPResponse.Timestamp,
                                                                                                                    HTTPResponse.EventTrackingId,
+                                                                                                                   processId,
                                                                                                                    HTTPResponse.Runtime,
                                                                                                                    statusCode!,
                                                                                                                    Request,
@@ -3153,7 +3061,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                    null, //Request.SessionId,
                                                                                                                    null, //Request.CPOPartnerSessionId,
                                                                                                                    null, //Request.EMPPartnerSessionId,
-                                                                                                                   processId,
                                                                                                                    Request.CustomData
                                                                                                                ),
                                                                                                                processId);
@@ -3169,6 +3076,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<PushAuthenticationDataRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3181,7 +3089,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  null, //Request.SessionId,
                                                  null, //Request.CPOPartnerSessionId,
                                                  null, //Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -3208,7 +3115,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<PushAuthenticationDataRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -3221,7 +3129,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  null, //Request.SessionId,
                                  null, //Request.CPOPartnerSessionId,
                                  null, //Request.EMPPartnerSessionId,
-                                 null,
                                  Request.CustomData
                              )
                          );
@@ -3232,7 +3139,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<PushAuthenticationDataRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -3244,7 +3152,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                null, //Request.SessionId,
                                null, //Request.CPOPartnerSessionId,
                                null, //Request.EMPPartnerSessionId,
-                               null,
                                Request.CustomData
                            )
                        );
@@ -3373,7 +3280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3397,7 +3304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Success(Request,
-                                                                                                                         authorizeRemoteReservationStartResponse,
+                                                                                                                         authorizeRemoteReservationStartResponse!,
                                                                                                                          processId);
 
                                 }
@@ -3411,6 +3318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3423,7 +3331,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -3538,6 +3445,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                         new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                                                                                                             HTTPResponse.Timestamp,
                                                                                                                             HTTPResponse.EventTrackingId,
+                                                                                                                            processId,
                                                                                                                             HTTPResponse.Runtime,
                                                                                                                             statusCode,
                                                                                                                             Request,
@@ -3546,7 +3454,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                             Request.SessionId,
                                                                                                                             Request.CPOPartnerSessionId,
                                                                                                                             Request.EMPPartnerSessionId,
-                                                                                                                            processId,
                                                                                                                             Request.CustomData
                                                                                                                         ),
                                                                                                                         processId);
@@ -3562,6 +3469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3574,7 +3482,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -3601,7 +3508,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -3614,7 +3522,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.SessionId,
                                  Request.CPOPartnerSessionId,
                                  Request.EMPPartnerSessionId,
-                                 null,
                                  Request.CustomData
                              )
                          );
@@ -3625,7 +3532,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -3637,7 +3545,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.SessionId,
                                Request.CPOPartnerSessionId,
                                Request.EMPPartnerSessionId,
-                               null,
                                Request.CustomData
                            )
                        );
@@ -3765,7 +3672,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3779,8 +3686,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStopRequest>.TryParse(Request,
                                                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                    out Acknowledgement<AuthorizeRemoteReservationStopRequest>  authorizeRemoteReservationStopResponse,
-                                                                                                    out String                                                  ErrorResponse,
+                                                                                                    out Acknowledgement<AuthorizeRemoteReservationStopRequest>?  authorizeRemoteReservationStopResponse,
+                                                                                                    out String?                                                  ErrorResponse,
                                                                                                     HTTPResponse,
                                                                                                     HTTPResponse.Timestamp,
                                                                                                     HTTPResponse.EventTrackingId,
@@ -3789,7 +3696,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Success(Request,
-                                                                                                                        authorizeRemoteReservationStopResponse,
+                                                                                                                        authorizeRemoteReservationStopResponse!,
                                                                                                                         processId);
 
                                 }
@@ -3803,6 +3710,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3815,7 +3723,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -3930,6 +3837,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                        new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                                                                                                            HTTPResponse.Timestamp,
                                                                                                                            HTTPResponse.EventTrackingId,
+                                                                                                                           processId,
                                                                                                                            HTTPResponse.Runtime,
                                                                                                                            statusCode,
                                                                                                                            Request,
@@ -3938,7 +3846,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                            Request.SessionId,
                                                                                                                            Request.CPOPartnerSessionId,
                                                                                                                            Request.EMPPartnerSessionId,
-                                                                                                                           processId,
                                                                                                                            Request.CustomData
                                                                                                                        ),
                                                                                                                        processId);
@@ -3954,6 +3861,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3966,7 +3874,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -3993,7 +3900,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -4006,7 +3914,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.SessionId,
                                  Request.CPOPartnerSessionId,
                                  Request.EMPPartnerSessionId,
-                                 null,
                                  Request.CustomData
                              )
                          );
@@ -4017,7 +3924,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -4029,7 +3937,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.SessionId,
                                Request.CPOPartnerSessionId,
                                Request.EMPPartnerSessionId,
-                               null,
                                Request.CustomData
                            )
                        );
@@ -4157,7 +4064,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4171,8 +4078,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<AuthorizeRemoteStartRequest>.TryParse(Request,
                                                                                           JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                          out Acknowledgement<AuthorizeRemoteStartRequest>  authorizeRemoteStartResponse,
-                                                                                          out String                                        ErrorResponse,
+                                                                                          out Acknowledgement<AuthorizeRemoteStartRequest>?  authorizeRemoteStartResponse,
+                                                                                          out String?                                        ErrorResponse,
                                                                                           HTTPResponse,
                                                                                           HTTPResponse.Timestamp,
                                                                                           HTTPResponse.EventTrackingId,
@@ -4181,7 +4088,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Success(Request,
-                                                                                                              authorizeRemoteStartResponse,
+                                                                                                              authorizeRemoteStartResponse!,
                                                                                                               processId);
 
                                 }
@@ -4195,6 +4102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -4207,7 +4115,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -4322,6 +4229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                              new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                                                                                  HTTPResponse.Timestamp,
                                                                                                                  HTTPResponse.EventTrackingId,
+                                                                                                                 processId,
                                                                                                                  HTTPResponse.Runtime,
                                                                                                                  statusCode,
                                                                                                                  Request,
@@ -4330,7 +4238,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                  Request.SessionId,
                                                                                                                  Request.CPOPartnerSessionId,
                                                                                                                  Request.EMPPartnerSessionId,
-                                                                                                                 processId,
                                                                                                                  Request.CustomData
                                                                                                              ),
                                                                                                              processId);
@@ -4346,6 +4253,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -4358,7 +4266,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -4385,7 +4292,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteStartRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -4398,7 +4306,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.SessionId,
                                  Request.CPOPartnerSessionId,
                                  Request.EMPPartnerSessionId,
-                                 null,
                                  Request.CustomData
                              )
                          );
@@ -4409,7 +4316,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteStartRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -4421,7 +4329,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.SessionId,
                                Request.CPOPartnerSessionId,
                                Request.EMPPartnerSessionId,
-                               null,
                                Request.CustomData
                            )
                        );
@@ -4549,7 +4456,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4563,8 +4470,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<AuthorizeRemoteStopRequest>.TryParse(Request,
                                                                                           JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                          out Acknowledgement<AuthorizeRemoteStopRequest>  authorizeRemoteStopResponse,
-                                                                                          out String                                       ErrorResponse,
+                                                                                          out Acknowledgement<AuthorizeRemoteStopRequest>?  authorizeRemoteStopResponse,
+                                                                                          out String?                                       ErrorResponse,
                                                                                           HTTPResponse,
                                                                                           HTTPResponse.Timestamp,
                                                                                           HTTPResponse.EventTrackingId,
@@ -4573,7 +4480,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Success(Request,
-                                                                                                             authorizeRemoteStopResponse,
+                                                                                                             authorizeRemoteStopResponse!,
                                                                                                              processId);
 
                                 }
@@ -4587,6 +4494,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -4599,7 +4507,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -4714,6 +4621,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                              new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                                                                                  HTTPResponse.Timestamp,
                                                                                                                  HTTPResponse.EventTrackingId,
+                                                                                                                 processId,
                                                                                                                  HTTPResponse.Runtime,
                                                                                                                  statusCode,
                                                                                                                  Request,
@@ -4722,7 +4630,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                  Request.SessionId,
                                                                                                                  Request.CPOPartnerSessionId,
                                                                                                                  Request.EMPPartnerSessionId,
-                                                                                                                 processId,
                                                                                                                  Request.CustomData
                                                                                                              ),
                                                                                                              processId);
@@ -4738,6 +4645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -4750,7 +4658,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 processId,
                                                  Request.CustomData
                                              )
                                          );
@@ -4777,7 +4684,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              Request,
                              new Acknowledgement<AuthorizeRemoteStopRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -4790,7 +4698,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.SessionId,
                                  Request.CPOPartnerSessionId,
                                  Request.EMPPartnerSessionId,
-                                 null,
                                  Request.CustomData
                              )
                          );
@@ -4801,7 +4708,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Request,
                            new Acknowledgement<AuthorizeRemoteStopRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -4813,7 +4721,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.SessionId,
                                Request.CPOPartnerSessionId,
                                Request.EMPPartnerSessionId,
-                               null,
                                Request.CustomData
                            )
                        );
@@ -4960,7 +4867,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4977,14 +4884,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             HTTPResponse.Timestamp,
                                                                             HTTPResponse.EventTrackingId,
                                                                             HTTPResponse.Runtime,
-                                                                            out GetChargeDetailRecordsResponse  getChargeDetailRecordsResponse,
-                                                                            out String                          ErrorResponse,
+                                                                            out GetChargeDetailRecordsResponse?  getChargeDetailRecordsResponse,
+                                                                            out String?                          ErrorResponse,
                                                                             HTTPResponse,
                                                                             processId))
                                 {
 
                                     result = OICPResult<GetChargeDetailRecordsResponse>.Success(Request,
-                                                                                                getChargeDetailRecordsResponse,
+                                                                                                getChargeDetailRecordsResponse!,
                                                                                                 processId);
 
                                 }
@@ -4996,18 +4903,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                                              Request,
                                              new GetChargeDetailRecordsResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
-                                                 new ChargeDetailRecord[0],
-                                                 HTTPResponse,
                                                  processId,
-                                                 new StatusCode(
-                                                     StatusCodes.SystemError,
-                                                     e.Message,
-                                                     e.StackTrace
-                                                 )
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<ChargeDetailRecord>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
                                              )
                                          );
 
@@ -5119,14 +5025,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     result = OICPResult<GetChargeDetailRecordsResponse>.Failed(Request,
                                                                                                new GetChargeDetailRecordsResponse(
-                                                                                                   Request,
                                                                                                    HTTPResponse.Timestamp,
                                                                                                    HTTPResponse.EventTrackingId,
+                                                                                                   processId,
                                                                                                    HTTPResponse.Runtime,
                                                                                                    Array.Empty<ChargeDetailRecord>(),
-                                                                                                   HTTPResponse,
-                                                                                                   processId,
-                                                                                                   statusCode
+                                                                                                   Request,
+                                                                                                   StatusCode: statusCode
                                                                                                ),
                                                                                                processId);
 
@@ -5139,14 +5044,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 result = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                                              Request,
                                              new GetChargeDetailRecordsResponse(
-                                                 Request,
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  Array.Empty<ChargeDetailRecord>(),
-                                                 HTTPResponse,
-                                                 processId,
-                                                 new StatusCode(
+                                                 Request,
+                                                 StatusCode: new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace
@@ -5175,18 +5079,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 result = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                              Request,
                              new GetChargeDetailRecordsResponse(
-                                 Request,
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<ChargeDetailRecord>(),
-                                 null,
-                                 null,
-                                 new StatusCode(
-                                     StatusCodes.SystemError,
-                                     e.Message,
-                                     e.StackTrace
-                                 )
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.SystemError,
+                                                 e.Message,
+                                                 e.StackTrace
+                                             )
                              )
                          );
 
@@ -5195,17 +5098,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             result ??= OICPResult<GetChargeDetailRecordsResponse>.Failed(
                            Request,
                            new GetChargeDetailRecordsResponse(
-                               Request,
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                Array.Empty<ChargeDetailRecord>(),
-                               null,
-                               null,
-                               new StatusCode(
-                                   StatusCodes.SystemError,
-                                   "HTTP request failed!"
-                               )
+                               Request,
+                               StatusCode: new StatusCode(
+                                               StatusCodes.SystemError,
+                                               "HTTP request failed!"
+                                           )
                            )
                        );
 

@@ -70,22 +70,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new PullPricingProductData response.
         /// </summary>
-        /// <param name="Request">A PullPricingProductData request.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="PricingProductData">An enumeration of pricing product data.</param>
+        /// 
+        /// <param name="Request">An optional PullPricingProductData request.</param>
+        /// 
         /// <param name="StatusCode">An optional status code of this response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Warnings">Optional warnings.</param>
-        public PullPricingProductDataResponse(PullPricingProductDataRequest    Request,
-                                              DateTime                         ResponseTimestamp,
+        public PullPricingProductDataResponse(DateTime                         ResponseTimestamp,
                                               EventTracking_Id                 EventTrackingId,
+                                              Process_Id                       ProcessId,
                                               TimeSpan                         Runtime,
                                               IEnumerable<PricingProductData>  PricingProductData,
 
+                                              PullPricingProductDataRequest?   Request            = null,
                                               UInt64?                          Number             = null,
                                               UInt64?                          Size               = null,
                                               UInt64?                          TotalElements      = null,
@@ -95,17 +98,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               UInt64?                          NumberOfElements   = null,
 
                                               StatusCode?                      StatusCode         = null,
-                                              Process_Id?                      ProcessId          = null,
                                               HTTPResponse?                    HTTPResponse       = null,
                                               JObject?                         CustomData         = null,
                                               IEnumerable<Warning>?            Warnings           = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
                    Request,
                    HTTPResponse,
-                   ProcessId,
                    CustomData)
 
         {
@@ -442,11 +444,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullPricingProductDataResponse = new PullPricingProductDataResponse(Request,
-                                                                                    ResponseTimestamp,
+                PullPricingProductDataResponse = new PullPricingProductDataResponse(ResponseTimestamp,
                                                                                     EventTrackingId,
+                                                                                    ProcessId ?? Process_Id.NewRandom,
                                                                                     Runtime,
                                                                                     PricingProductData,
+
+                                                                                    Request,
                                                                                     Number,
                                                                                     Size,
                                                                                     TotalElements,
@@ -454,8 +458,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                     FirstPage,
                                                                                     TotalPages,
                                                                                     NumberOfElements,
+
                                                                                     StatusCode,
-                                                                                    ProcessId,
                                                                                     HTTPResponse,
                                                                                     CustomData,
                                                                                     Warnings);
@@ -822,11 +826,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             public override PullPricingProductDataResponse ToImmutable()
 
-                => new (Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        ProcessId         ?? Process_Id.NewRandom,
+                        Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                         PricingProductData,
+
+                        Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
                         Number,
                         Size,
                         TotalElements,
@@ -835,7 +841,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         TotalPages,
                         NumberOfElements,
                         StatusCode,
-                        ProcessId,
+                        
                         HTTPResponse,
                         CustomData);
 

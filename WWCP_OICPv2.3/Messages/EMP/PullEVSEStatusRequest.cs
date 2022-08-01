@@ -69,6 +69,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
+        /// <param name="ProcessId">The optional unique OICP process identification.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -79,6 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      GeoCoordinates?      SearchCenter        = null,
                                      Single?              DistanceKM          = null,
                                      EVSEStatusTypes?     EVSEStatusFilter    = null,
+                                     Process_Id?          ProcessId           = null,
                                      JObject?             CustomData          = null,
 
                                      DateTime?            Timestamp           = null,
@@ -86,7 +88,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      EventTracking_Id?    EventTrackingId     = null,
                                      TimeSpan?            RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -139,6 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus JSON objects.</param>
         public static PullEVSEStatusRequest Parse(JObject                                              JSON,
+                                                  Process_Id?                                          ProcessId                           = null,
 
                                                   DateTime?                                            Timestamp                           = null,
                                                   CancellationToken?                                   CancellationToken                   = null,
@@ -151,6 +155,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(JSON,
                          out PullEVSEStatusRequest?  pullEVSEStatusResponse,
                          out String?                 errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -174,6 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus request JSON objects.</param>
         public static PullEVSEStatusRequest Parse(String                                               Text,
+                                                  Process_Id?                                          ProcessId                           = null,
 
                                                   DateTime?                                            Timestamp                           = null,
                                                   CancellationToken?                                   CancellationToken                   = null,
@@ -186,6 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text,
                          out PullEVSEStatusRequest?  pullEVSEStatusResponse,
                          out String?                 errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -213,6 +220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(JObject                                              JSON,
                                        out PullEVSEStatusRequest?                           PullEVSEStatusRequest,
                                        out String?                                          ErrorResponse,
+                                       Process_Id?                                          ProcessId                           = null,
 
                                        DateTime?                                            Timestamp                           = null,
                                        CancellationToken?                                   CancellationToken                   = null,
@@ -309,6 +317,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   SearchCenter,
                                                                   DistanceKM,
                                                                   EVSEStatusFilter,
+                                                                  ProcessId,
+
                                                                   CustomData,
                                                                   Timestamp,
                                                                   CancellationToken,
@@ -345,6 +355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                               Text,
                                        out PullEVSEStatusRequest?                           PullEVSEStatusRequest,
                                        out String?                                          ErrorResponse,
+                                       Process_Id?                                          ProcessId                           = null,
 
                                        DateTime?                                            Timestamp                           = null,
                                        CancellationToken?                                   CancellationToken                   = null,
@@ -360,6 +371,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out PullEVSEStatusRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,

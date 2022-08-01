@@ -1035,6 +1035,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 DefaultOperatorName
                                             ),
                                             ServerAction,
+                                            null, // ProcessId
                                             CustomData,
 
                                             Timestamp,
@@ -1124,6 +1125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null
                                                              ),
                                                              ActionTypes.FullLoad,
+                                                             null, // ProcessId
                                                              CustomData,
 
                                                              Timestamp,
@@ -1400,6 +1402,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 DefaultOperatorName
                                             ),
                                             ServerAction,
+                                            null, // ProcessId
                                             CustomData,
 
                                             Timestamp,
@@ -4539,6 +4542,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            SessionId.              ToOICP(),
                                            null,
                                            null,
+                                           null, // ProcessId
                                            null,
 
                                            Timestamp,
@@ -4747,12 +4751,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                       new AuthorizeStopRequest(
                                           operatorId.Value,
                                           sessionId. Value,
-                                          LocalAuthentication.              ToOICP(),
-                                          ChargingLocation.EVSEId.Value.    ToOICP(),
+                                          LocalAuthentication.          ToOICP(),
+                                          ChargingLocation.EVSEId.Value.ToOICP(),
                                           null,
                                           null,
+                                          null, // ProcessId
                                           null,
-                                        
+
                                           Timestamp,
                                           CancellationToken,
                                           EventTrackingId,

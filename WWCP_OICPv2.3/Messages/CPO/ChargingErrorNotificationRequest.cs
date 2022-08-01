@@ -111,6 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                                 EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                                 String?                ErrorAdditionalInfo   = null,
+                                                Process_Id?            ProcessId             = null,
                                                 JObject?               CustomData            = null,
 
                                                 DateTime?              Timestamp             = null,
@@ -118,7 +119,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 EventTracking_Id?      EventTrackingId       = null,
                                                 TimeSpan?              RequestTimeout        = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -162,6 +164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingErrorNotificationRequestParser">A delegate to parse custom charging notification error request JSON objects.</param>
         public static ChargingErrorNotificationRequest Parse(JObject                                                         JSON,
+                                                             Process_Id?                                                     ProcessId                                      = null,
 
                                                              DateTime?                                                       Timestamp                                      = null,
                                                              CancellationToken?                                              CancellationToken                              = null,
@@ -174,6 +177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(JSON,
                          out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
                          out String?                            errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -200,6 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingErrorNotificationRequestParser">A delegate to parse custom charging notification error request JSON objects.</param>
         public static ChargingErrorNotificationRequest Parse(String                                                          Text,
+                                                             Process_Id?                                                     ProcessId                                      = null,
 
                                                              DateTime?                                                       Timestamp                                      = null,
                                                              CancellationToken?                                              CancellationToken                              = null,
@@ -212,6 +217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text,
                          out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
                          out String?                            errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -242,6 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(JObject                                                         JSON,
                                        out ChargingErrorNotificationRequest?                           ChargingErrorNotificationRequest,
                                        out String?                                                     ErrorResponse,
+                                       Process_Id?                                                     ProcessId                                      = null,
 
                                        DateTime?                                                       Timestamp                                      = null,
                                        CancellationToken?                                              CancellationToken                              = null,
@@ -375,6 +382,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                         CPOPartnerSessionId,
                                                                                         EMPPartnerSessionId,
                                                                                         ErrorAdditionalInfo,
+                                                                                        ProcessId,
                                                                                         CustomData,
 
                                                                                         Timestamp,
@@ -415,6 +423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                                          Text,
                                        out ChargingErrorNotificationRequest?                           ChargingErrorNotificationRequest,
                                        out String?                                                     ErrorResponse,
+                                       Process_Id?                                                     ProcessId                                      = null,
 
                                        DateTime?                                                       Timestamp                                      = null,
                                        CancellationToken?                                              CancellationToken                              = null,
@@ -430,6 +439,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out ChargingErrorNotificationRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,
@@ -507,6 +517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ErrorAdditionalInfo,
+                    ProcessId,
                     CustomData,
 
                     Timestamp,

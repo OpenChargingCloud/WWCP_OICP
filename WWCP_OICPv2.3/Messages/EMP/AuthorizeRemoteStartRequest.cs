@@ -103,6 +103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                            PartnerProduct_Id?     PartnerProductId      = null,
+                                           Process_Id?            ProcessId             = null,
                                            JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
@@ -110,7 +111,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -190,6 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart JSON objects.</param>
         public static AuthorizeRemoteStartRequest Parse(JObject                                                    JSON,
                                                         Provider_Id                                                ProviderIdURL,
+                                                        Process_Id?                                                ProcessId                                 = null,
 
                                                         DateTime?                                                  Timestamp                                 = null,
                                                         CancellationToken?                                         CancellationToken                         = null,
@@ -203,6 +206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ProviderIdURL,
                          out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
                          out String?                       errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -231,6 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
         public static AuthorizeRemoteStartRequest Parse(String                                                     Text,
                                                         Provider_Id                                                ProviderIdURL,
+                                                        Process_Id?                                                ProcessId                                 = null,
 
                                                         DateTime?                                                  Timestamp                                 = null,
                                                         CancellationToken?                                         CancellationToken                         = null,
@@ -244,6 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ProviderIdURL,
                          out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
                          out String?                       errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -276,6 +282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Provider_Id                                                ProviderIdURL,
                                        out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
                                        out String?                                                ErrorResponse,
+                                       Process_Id?                                                ProcessId                                 = null,
 
                                        DateTime?                                                  Timestamp                                 = null,
                                        CancellationToken?                                         CancellationToken                         = null,
@@ -411,6 +418,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                               CPOPartnerSessionId,
                                                                               EMPPartnerSessionId,
                                                                               PartnerProductId,
+                                                                              ProcessId,
                                                                               CustomData,
 
                                                                               Timestamp,
@@ -453,6 +461,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Provider_Id                                                ProviderIdURL,
                                        out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
                                        out String?                                                ErrorResponse,
+                                       Process_Id?                                                ProcessId                                 = null,
 
                                        DateTime?                                                  Timestamp                                 = null,
                                        CancellationToken?                                         CancellationToken                         = null,
@@ -469,6 +478,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 ProviderIdURL,
                                 out AuthorizeRemoteStartRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,

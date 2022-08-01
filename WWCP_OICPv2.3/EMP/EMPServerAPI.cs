@@ -624,7 +624,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              AuthorizationStartResponse? authorizationStartResponse = null;
 
                                              try
@@ -643,6 +645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          operatorId,
                                                                                          out AuthorizeStartRequest?  authorizeStartRequest,
                                                                                          out String?                 errorResponse,
+                                                                                         processId,
                                                                                          Request.Timestamp,
                                                                                          Request.CancellationToken,
                                                                                          Request.EventTrackingId,
@@ -702,11 +705,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (authorizationStartResponse is null)
-                                                         authorizationStartResponse = AuthorizationStartResponse.SystemError(
-                                                                                          authorizeStartRequest!,
-                                                                                          "Could not process the received AuthorizeStart request!"
-                                                                                      );
+                                                     authorizationStartResponse ??= AuthorizationStartResponse.SystemError(
+                                                                                        authorizeStartRequest!,
+                                                                                        "Could not process the received AuthorizeStart request!"
+                                                                                    );
 
                                                      #endregion
 
@@ -784,7 +786,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              AuthorizationStopResponse? authorizationStopResponse = null;
 
                                              try
@@ -803,6 +807,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         operatorId,
                                                                                         out AuthorizeStopRequest?  authorizeStopRequest,
                                                                                         out String?                errorResponse,
+                                                                                        processId,
                                                                                         Request.Timestamp,
                                                                                         Request.CancellationToken,
                                                                                         Request.EventTrackingId,
@@ -862,11 +867,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (authorizationStopResponse is null)
-                                                         authorizationStopResponse = AuthorizationStopResponse.SystemError(
-                                                                                         authorizeStopRequest,
-                                                                                         "Could not process the received AuthorizeStop request!"
-                                                                                     );
+                                                     authorizationStopResponse ??= AuthorizationStopResponse.SystemError(
+                                                                                       authorizeStopRequest,
+                                                                                       "Could not process the received AuthorizeStop request!"
+                                                                                   );
 
                                                      #endregion
 
@@ -945,7 +949,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logChargingNotificationsHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              Acknowledgement? acknowledgement = null;
 
                                              try
@@ -969,6 +975,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              if (ChargingStartNotificationRequest.TryParse(JSONRequest,
                                                                                                            out ChargingStartNotificationRequest?  chargingStartNotificationRequest,
                                                                                                            out String?                            errorResponse,
+                                                                                                           processId,
                                                                                                            Request.Timestamp,
                                                                                                            Request.CancellationToken,
                                                                                                            Request.EventTrackingId,
@@ -1013,7 +1020,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                     Cast<OnChargingStartNotificationDelegate>().
                                                                                                                     Select(e => e(Timestamp.Now,
                                                                                                                                   this,
-                                                                                                                                  chargingStartNotificationRequest))).
+                                                                                                                                  chargingStartNotificationRequest!))).
                                                                                                                     ConfigureAwait(false))?.FirstOrDefault();
 
                                                                          Counters.ChargingStartNotification.IncResponses_OK();
@@ -1031,11 +1038,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      }
                                                                  }
 
-                                                                 if (startAcknowledgement is null)
-                                                                     startAcknowledgement = Acknowledgement<ChargingStartNotificationRequest>.SystemError(
-                                                                                                chargingStartNotificationRequest,
-                                                                                                "Could not process the received ChargingStartNotification request!"
-                                                                                            );
+                                                                 startAcknowledgement ??= Acknowledgement<ChargingStartNotificationRequest>.SystemError(
+                                                                                              chargingStartNotificationRequest,
+                                                                                              "Could not process the received ChargingStartNotification request!"
+                                                                                          );
 
                                                                  #endregion
 
@@ -1083,6 +1089,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              if (ChargingProgressNotificationRequest.TryParse(JSONRequest,
                                                                                                               out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
                                                                                                               out                                       errorResponse,
+                                                                                                              processId,
                                                                                                               Request.Timestamp,
                                                                                                               Request.CancellationToken,
                                                                                                               Request.EventTrackingId,
@@ -1145,11 +1152,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      }
                                                                  }
 
-                                                                 if (progressAcknowledgement is null)
-                                                                     progressAcknowledgement = Acknowledgement<ChargingProgressNotificationRequest>.SystemError(
-                                                                                                   chargingProgressNotificationRequest,
-                                                                                                   "Could not process the received ChargingProgressNotification request!"
-                                                                                               );
+                                                                 progressAcknowledgement ??= Acknowledgement<ChargingProgressNotificationRequest>.SystemError(
+                                                                                                 chargingProgressNotificationRequest,
+                                                                                                 "Could not process the received ChargingProgressNotification request!"
+                                                                                             );
 
                                                                  #endregion
 
@@ -1197,6 +1203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              if (ChargingEndNotificationRequest.TryParse(JSONRequest,
                                                                                                          out ChargingEndNotificationRequest?  chargingEndNotificationRequest,
                                                                                                          out                                  errorResponse,
+                                                                                                         processId,
                                                                                                          Request.Timestamp,
                                                                                                          Request.CancellationToken,
                                                                                                          Request.EventTrackingId,
@@ -1241,7 +1248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                   Cast<OnChargingEndNotificationDelegate>().
                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                 this,
-                                                                                                                                chargingEndNotificationRequest))).
+                                                                                                                                chargingEndNotificationRequest!))).
                                                                                                                   ConfigureAwait(false))?.FirstOrDefault();
 
                                                                          Counters.ChargingEndNotification.IncResponses_OK();
@@ -1259,11 +1266,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      }
                                                                  }
 
-                                                                 if (endAcknowledgement is null)
-                                                                     endAcknowledgement = Acknowledgement<ChargingEndNotificationRequest>.SystemError(
-                                                                                              chargingEndNotificationRequest,
-                                                                                              "Could not process the received ChargingEndNotification request!"
-                                                                                          );
+                                                                 endAcknowledgement ??= Acknowledgement<ChargingEndNotificationRequest>.SystemError(
+                                                                                            chargingEndNotificationRequest,
+                                                                                            "Could not process the received ChargingEndNotification request!"
+                                                                                        );
 
                                                                  #endregion
 
@@ -1311,6 +1317,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              if (ChargingErrorNotificationRequest.TryParse(JSONRequest,
                                                                                                            out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
                                                                                                            out                                    errorResponse,
+                                                                                                           processId,
                                                                                                            Request.Timestamp,
                                                                                                            Request.CancellationToken,
                                                                                                            Request.EventTrackingId,
@@ -1355,7 +1362,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                     Cast<OnChargingErrorNotificationDelegate>().
                                                                                                                     Select(e => e(Timestamp.Now,
                                                                                                                                   this,
-                                                                                                                                  chargingErrorNotificationRequest))).
+                                                                                                                                  chargingErrorNotificationRequest!))).
                                                                                                                     ConfigureAwait(false))?.FirstOrDefault();
 
                                                                          Counters.ChargingErrorNotification.IncResponses_OK();
@@ -1373,11 +1380,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      }
                                                                  }
 
-                                                                 if (errorAcknowledgement is null)
-                                                                     errorAcknowledgement = Acknowledgement<ChargingErrorNotificationRequest>.SystemError(
-                                                                                                chargingErrorNotificationRequest,
-                                                                                                "Could not process the received ChargingErrorNotification request!"
-                                                                                            );
+                                                                 errorAcknowledgement ??= Acknowledgement<ChargingErrorNotificationRequest>.SystemError(
+                                                                                              chargingErrorNotificationRequest,
+                                                                                              "Could not process the received ChargingErrorNotification request!"
+                                                                                          );
 
                                                                  #endregion
 
@@ -1423,7 +1429,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          default:
 
                                                              acknowledgement = Acknowledgement.DataError(
-                                                                                   StatusCodeDescription: "Unknown or invalid charging notification type `" + chargingNotificationType.ToString() + "`!",
+                                                                                   StatusCodeDescription: "Unknown or invalid charging notification type '" + chargingNotificationType.ToString() + "'!",
                                                                                    RequestTimestamp:       Request.Timestamp,
                                                                                    EventTrackingId:        Request.EventTrackingId
                                                                                );
@@ -1493,7 +1499,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logChargeDetailRecordHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
                                              Acknowledgement<ChargeDetailRecordRequest>? chargeDetailRecordResponse = null;
 
                                              try
@@ -1512,6 +1520,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                              operatorId,
                                                                                              out ChargeDetailRecordRequest?  chargeDetailRecordRequest,
                                                                                              out String?                     errorResponse,
+                                                                                             processId,
                                                                                              Request.Timestamp,
                                                                                              Request.CancellationToken,
                                                                                              Request.EventTrackingId,
@@ -1571,11 +1580,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (chargeDetailRecordResponse is null)
-                                                         chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
-                                                                                          chargeDetailRecordRequest,
-                                                                                          "Could not process the received charge detail record!"
-                                                                                      );
+                                                     chargeDetailRecordResponse ??= Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                                                                        chargeDetailRecordRequest,
+                                                                                        "Could not process the received charge detail record!"
+                                                                                    );
 
                                                      #endregion
 

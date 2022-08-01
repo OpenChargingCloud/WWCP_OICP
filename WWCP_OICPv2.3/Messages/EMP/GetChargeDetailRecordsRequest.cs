@@ -102,6 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              IEnumerable<Operator_Id>?  OperatorIds         = null,
                                              Boolean?                   CDRForwarded        = null,
 
+                                             Process_Id?                ProcessId           = null,
                                              UInt32?                    Page                = null,
                                              UInt32?                    Size                = null,
                                              IEnumerable<String>?       SortOrder           = null,
@@ -112,7 +113,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              EventTracking_Id?          EventTrackingId     = null,
                                              TimeSpan?                  RequestTimeout      = null)
 
-            : base(Page,
+            : base(ProcessId,
+                   Page,
                    Size,
                    SortOrder,
                    CustomData,
@@ -163,6 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
         public static GetChargeDetailRecordsRequest Parse(JObject                                                      JSON,
+                                                          Process_Id?                                                  ProcessId                                   = null,
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
@@ -178,6 +181,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(JSON,
                          out GetChargeDetailRecordsRequest?  getChargeDetailRecordsRequest,
                          out String?                         errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
@@ -207,6 +211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
         public static GetChargeDetailRecordsRequest Parse(String                                                       Text,
+                                                          Process_Id?                                                  ProcessId                                   = null,
                                                           UInt32?                                                      Page                                        = null,
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
@@ -222,6 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text,
                          out GetChargeDetailRecordsRequest?  getChargeDetailRecordsRequest,
                          out String?                         errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
@@ -255,6 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(JObject                                                      JSON,
                                        out GetChargeDetailRecordsRequest?                           GetChargeDetailRecordsRequest,
                                        out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
@@ -370,6 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   OperatorIds,
                                                                                   CDRForwarded,
 
+                                                                                  ProcessId,
                                                                                   Page,
                                                                                   Size,
                                                                                   SortOrder,
@@ -413,6 +421,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String                                                       Text,
                                        out GetChargeDetailRecordsRequest?                           GetChargeDetailRecordsRequest,
                                        out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
@@ -431,6 +440,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out GetChargeDetailRecordsRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Page,
                                 Size,
                                 SortOrder,

@@ -648,7 +648,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -707,6 +707,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEDataRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -714,8 +715,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -843,10 +843,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          new Acknowledgement<PushEVSEDataRequest>(
                                                                                                              HTTPResponse.Timestamp,
                                                                                                              HTTPResponse.EventTrackingId,
+                                                                                                             processId,
                                                                                                              HTTPResponse.Runtime,
                                                                                                              statusCode!,
-                                                                                                             Request,
-                                                                                                             ProcessId: processId
+                                                                                                             Request
                                                                                                          ),
                                                                                                          processId);
 
@@ -861,6 +861,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEDataRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -868,8 +869,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -916,10 +916,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          new Acknowledgement<PushEVSEDataRequest>(
                                                                                                              HTTPResponse.Timestamp,
                                                                                                              HTTPResponse.EventTrackingId,
+                                                                                                             processId,
                                                                                                              HTTPResponse.Runtime,
                                                                                                              statusCode!,
-                                                                                                             Request,
-                                                                                                             ProcessId: processId
+                                                                                                             Request
                                                                                                          ),
                                                                                                          processId);
 
@@ -934,6 +934,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEDataRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -941,8 +942,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -968,7 +968,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Request,
                                  new Acknowledgement<PushEVSEDataRequest>(
                                      Timestamp.Now,
-                                     Request.EventTrackingId,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom,
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -987,7 +988,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Request,
                                new Acknowledgement<PushEVSEDataRequest>(
                                    Timestamp.Now,
-                                   Request.EventTrackingId,
+                                   Request.EventTrackingId ?? EventTracking_Id.New,
+                                   Process_Id.NewRandom,
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -1143,7 +1145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -1202,6 +1204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEStatusRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -1209,8 +1212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -1335,10 +1337,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                            new Acknowledgement<PushEVSEStatusRequest>(
                                                                                                                HTTPResponse.Timestamp,
                                                                                                                HTTPResponse.EventTrackingId,
+                                                                                                               processId,
                                                                                                                HTTPResponse.Runtime,
                                                                                                                statusCode!,
-                                                                                                               Request,
-                                                                                                               ProcessId: processId
+                                                                                                               Request
                                                                                                            ),
                                                                                                            processId);
 
@@ -1353,6 +1355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEStatusRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -1360,8 +1363,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -1408,10 +1410,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                            new Acknowledgement<PushEVSEStatusRequest>(
                                                                                                                HTTPResponse.Timestamp,
                                                                                                                HTTPResponse.EventTrackingId,
-                                                                                                               HTTPResponse.Runtime, 
+                                                                                                               processId,
+                                                                                                               HTTPResponse.Runtime,
                                                                                                                statusCode!,
-                                                                                                               Request,
-                                                                                                               ProcessId: processId
+                                                                                                               Request
                                                                                                            ),
                                                                                                            processId);
 
@@ -1426,6 +1428,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEStatusRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -1433,8 +1436,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -1460,7 +1462,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Request,
                                  new Acknowledgement<PushEVSEStatusRequest>(
                                      Timestamp.Now,
-                                     Request.EventTrackingId,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom,
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -1479,7 +1482,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Request,
                                new Acknowledgement<PushEVSEStatusRequest>(
                                    Timestamp.Now,
-                                   Request.EventTrackingId,
+                                   Request.EventTrackingId ?? EventTracking_Id.New,
+                                   Process_Id.NewRandom,
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -1636,7 +1640,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -1695,6 +1699,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushPricingProductDataRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -1702,8 +1707,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -1831,10 +1835,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                    new Acknowledgement<PushPricingProductDataRequest>(
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
+                                                                                                                       processId,
                                                                                                                        HTTPResponse.Runtime,
                                                                                                                        statusCode!,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
+                                                                                                                       Request
                                                                                                                    ),
                                                                                                                    processId);
 
@@ -1849,6 +1853,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushPricingProductDataRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -1856,8 +1861,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -1904,10 +1908,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                    new Acknowledgement<PushPricingProductDataRequest>(
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
+                                                                                                                       processId,
                                                                                                                        HTTPResponse.Runtime,
                                                                                                                        statusCode!,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
+                                                                                                                       Request
                                                                                                                    ),
                                                                                                                    processId);
 
@@ -1922,6 +1926,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushPricingProductDataRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -1929,8 +1934,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -1956,7 +1960,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Request,
                                  new Acknowledgement<PushPricingProductDataRequest>(
                                      Timestamp.Now,
-                                     Request.EventTrackingId,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom,
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -1975,7 +1980,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Request,
                                new Acknowledgement<PushPricingProductDataRequest>(
                                    Timestamp.Now,
-                                   Request.EventTrackingId,
+                                   Request.EventTrackingId ?? EventTracking_Id.New,
+                                   Process_Id.NewRandom,
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -2131,7 +2137,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -2190,6 +2196,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEPricingRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -2197,8 +2204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -2326,10 +2332,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          new Acknowledgement<PushEVSEPricingRequest>(
                                                                                                              HTTPResponse.Timestamp,
                                                                                                              HTTPResponse.EventTrackingId,
+                                                                                                             processId,
                                                                                                              HTTPResponse.Runtime,
                                                                                                              statusCode!,
-                                                                                                             Request,
-                                                                                                             ProcessId: processId
+                                                                                                             Request
                                                                                                          ),
                                                                                                          processId);
 
@@ -2344,6 +2350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEPricingRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -2351,8 +2358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -2399,10 +2405,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          new Acknowledgement<PushEVSEPricingRequest>(
                                                                                                              HTTPResponse.Timestamp,
                                                                                                              HTTPResponse.EventTrackingId,
+                                                                                                             processId,
                                                                                                              HTTPResponse.Runtime,
                                                                                                              statusCode!,
-                                                                                                             Request,
-                                                                                                             ProcessId: processId
+                                                                                                             Request
                                                                                                          ),
                                                                                                          processId);
 
@@ -2417,6 +2423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  new Acknowledgement<PushEVSEPricingRequest>(
                                                      HTTPResponse.Timestamp,
                                                      HTTPResponse.EventTrackingId,
+                                                     processId,
                                                      HTTPResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
@@ -2424,8 +2431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          e.StackTrace),
                                                      Request,
                                                      HTTPResponse,
-                                                     false,
-                                                     ProcessId: processId
+                                                     false
                                                  )
                                              );
 
@@ -2451,7 +2457,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Request,
                                  new Acknowledgement<PushEVSEPricingRequest>(
                                      Timestamp.Now,
-                                     Request.EventTrackingId,
+                                     Request.EventTrackingId ?? EventTracking_Id.New,
+                                     Process_Id.NewRandom,
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -2470,7 +2477,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Request,
                                new Acknowledgement<PushEVSEPricingRequest>(
                                    Timestamp.Now,
-                                   Request.EventTrackingId,
+                                   Request.EventTrackingId ?? EventTracking_Id.New,
+                                   Process_Id.NewRandom,
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -2605,7 +2613,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -2992,7 +3000,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3402,7 +3410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3436,8 +3444,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
                                                                                                 JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingStartNotificationRequest>  acknowledgement,
-                                                                                                out String                                              ErrorResponse,
+                                                                                                out Acknowledgement<ChargingStartNotificationRequest>?  acknowledgement,
+                                                                                                out String?                                             ErrorResponse,
                                                                                                 HTTPResponse,
                                                                                                 HTTPResponse.Timestamp,
                                                                                                 HTTPResponse.EventTrackingId,
@@ -3447,8 +3455,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(Request,
-                                                                                                                    acknowledgement,
-                                                                                                                    processId);
+                                                                                                                   acknowledgement!,
+                                                                                                                   processId);
 
                                 }
 
@@ -3461,6 +3469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              new Acknowledgement<ChargingStartNotificationRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3468,8 +3477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      e.StackTrace),
                                                  Request,
                                                  HTTPResponse,
-                                                 false,
-                                                 ProcessId: processId
+                                                 false
                                              )
                                          );
 
@@ -3577,15 +3585,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                       statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                  new Acknowledgement<ChargingStartNotificationRequest>(
+                                                                                                                      HTTPResponse.Timestamp,
+                                                                                                                      HTTPResponse.EventTrackingId,
+                                                                                                                      processId,
+                                                                                                                      HTTPResponse.Runtime,
+                                                                                                                      statusCode,
+                                                                                                                      Request
+                                                                                                                  ),
+                                                                                                                  processId);
 
                                 }
 
@@ -3594,21 +3602,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                                Request,
-                                                new Acknowledgement<ChargingStartNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
-                                                    HTTPResponse.Runtime,
-                                                    new StatusCode(
-                                                        StatusCodes.SystemError,
-                                                        e.Message,
-                                                        e.StackTrace),
-                                                    Request,
-                                                    HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
-                                                )
-                                            );
+                                             Request,
+                                             new Acknowledgement<ChargingStartNotificationRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false
+                                             )
+                                         );
 
                             }
 
@@ -3650,15 +3658,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       HTTPResponse.Runtime, 
-                                                                                                                       statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                  new Acknowledgement<ChargingStartNotificationRequest>(
+                                                                                                                      HTTPResponse.Timestamp,
+                                                                                                                      HTTPResponse.EventTrackingId,
+                                                                                                                      processId,
+                                                                                                                      HTTPResponse.Runtime,
+                                                                                                                      statusCode,
+                                                                                                                      Request
+                                                                                                                  ),
+                                                                                                                  processId);
 
                                 }
 
@@ -3671,6 +3679,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 new Acknowledgement<ChargingStartNotificationRequest>(
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
+                                                    processId,
                                                     HTTPResponse.Runtime,
                                                     new StatusCode(
                                                         StatusCodes.SystemError,
@@ -3678,8 +3687,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         e.StackTrace),
                                                     Request,
                                                     HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
+                                                    false
                                                 )
                                             );
 
@@ -3705,7 +3713,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              Request,
                              new Acknowledgement<ChargingStartNotificationRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -3724,7 +3733,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            Request,
                            new Acknowledgement<ChargingStartNotificationRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -3857,7 +3867,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3890,20 +3900,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingProgressNotificationRequest>.TryParse(Request,
-                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingProgressNotificationRequest>  acknowledgement,
-                                                                                                out String                                              ErrorResponse,
-                                                                                                HTTPResponse,
-                                                                                                HTTPResponse.Timestamp,
-                                                                                                HTTPResponse.EventTrackingId,
-                                                                                                HTTPResponse.Runtime,
-                                                                                                processId,
-                                                                                                CustomChargingProgressNotificationAcknowledgementParser))
+                                                                                                  JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                  out Acknowledgement<ChargingProgressNotificationRequest>?  acknowledgement,
+                                                                                                  out String?                                                ErrorResponse,
+                                                                                                  HTTPResponse,
+                                                                                                  HTTPResponse.Timestamp,
+                                                                                                  HTTPResponse.EventTrackingId,
+                                                                                                  HTTPResponse.Runtime,
+                                                                                                  processId,
+                                                                                                  CustomChargingProgressNotificationAcknowledgementParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(Request,
-                                                                                                                    acknowledgement,
-                                                                                                                    processId);
+                                                                                                                      acknowledgement!,
+                                                                                                                      processId);
 
                                 }
 
@@ -3916,6 +3926,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              new Acknowledgement<ChargingProgressNotificationRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -3923,8 +3934,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      e.StackTrace),
                                                  Request,
                                                  HTTPResponse,
-                                                 false,
-                                                 ProcessId: processId
+                                                 false
                                              )
                                          );
 
@@ -4032,15 +4042,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                       statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                                                                                         HTTPResponse.Timestamp,
+                                                                                                                         HTTPResponse.EventTrackingId,
+                                                                                                                         processId,
+                                                                                                                         HTTPResponse.Runtime,
+                                                                                                                         statusCode,
+                                                                                                                         Request
+                                                                                                                     ),
+                                                                                                                     processId);
 
                                 }
 
@@ -4049,21 +4059,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                                Request,
-                                                new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
-                                                    HTTPResponse.Runtime,
-                                                    new StatusCode(
-                                                        StatusCodes.SystemError,
-                                                        e.Message,
-                                                        e.StackTrace),
-                                                    Request,
-                                                    HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
-                                                )
-                                            );
+                                             Request,
+                                             new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false
+                                             )
+                                         );
 
                             }
 
@@ -4105,15 +4115,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       HTTPResponse.Runtime, 
-                                                                                                                       statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                                                                                         HTTPResponse.Timestamp,
+                                                                                                                         HTTPResponse.EventTrackingId,
+                                                                                                                         processId,
+                                                                                                                         HTTPResponse.Runtime,
+                                                                                                                         statusCode,
+                                                                                                                         Request
+                                                                                                                     ),
+                                                                                                                     processId);
 
                                 }
 
@@ -4122,21 +4132,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                                Request,
-                                                new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
-                                                    HTTPResponse.Runtime,
-                                                    new StatusCode(
-                                                        StatusCodes.SystemError,
-                                                        e.Message,
-                                                        e.StackTrace),
-                                                    Request,
-                                                    HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
-                                                )
-                                            );
+                                             Request,
+                                             new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false
+                                             )
+                                         );
 
                             }
 
@@ -4160,7 +4170,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              Request,
                              new Acknowledgement<ChargingProgressNotificationRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -4179,7 +4190,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            Request,
                            new Acknowledgement<ChargingProgressNotificationRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -4312,7 +4324,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4346,8 +4358,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                              out Acknowledgement<ChargingEndNotificationRequest>  acknowledgement,
-                                                                                              out String                                              ErrorResponse,
+                                                                                              out Acknowledgement<ChargingEndNotificationRequest>?  acknowledgement,
+                                                                                              out String?                                           ErrorResponse,
                                                                                               HTTPResponse,
                                                                                               HTTPResponse.Timestamp,
                                                                                               HTTPResponse.EventTrackingId,
@@ -4357,8 +4369,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(Request,
-                                                                                                                    acknowledgement,
-                                                                                                                    processId);
+                                                                                                                 acknowledgement!,
+                                                                                                                 processId);
 
                                 }
 
@@ -4371,6 +4383,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              new Acknowledgement<ChargingEndNotificationRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -4378,8 +4391,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      e.StackTrace),
                                                  Request,
                                                  HTTPResponse,
-                                                 false,
-                                                 ProcessId: processId
+                                                 false
                                              )
                                          );
 
@@ -4487,15 +4499,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                       statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                new Acknowledgement<ChargingEndNotificationRequest>(
+                                                                                                                    HTTPResponse.Timestamp,
+                                                                                                                    HTTPResponse.EventTrackingId,
+                                                                                                                    processId,
+                                                                                                                    HTTPResponse.Runtime,
+                                                                                                                    statusCode,
+                                                                                                                    Request
+                                                                                                                ),
+                                                                                                                processId);
 
                                 }
 
@@ -4504,21 +4516,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                                Request,
-                                                new Acknowledgement<ChargingEndNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
-                                                    HTTPResponse.Runtime,
-                                                    new StatusCode(
-                                                        StatusCodes.SystemError,
-                                                        e.Message,
-                                                        e.StackTrace),
-                                                    Request,
-                                                    HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
-                                                )
-                                            );
+                                             Request,
+                                             new Acknowledgement<ChargingEndNotificationRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false
+                                             )
+                                         );
 
                             }
 
@@ -4560,15 +4572,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       HTTPResponse.Runtime, 
-                                                                                                                       statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                new Acknowledgement<ChargingEndNotificationRequest>(
+                                                                                                                    HTTPResponse.Timestamp,
+                                                                                                                    HTTPResponse.EventTrackingId,
+                                                                                                                    processId,
+                                                                                                                    HTTPResponse.Runtime,
+                                                                                                                    statusCode,
+                                                                                                                    Request
+                                                                                                                ),
+                                                                                                                processId);
 
                                 }
 
@@ -4577,21 +4589,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                                Request,
-                                                new Acknowledgement<ChargingEndNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
-                                                    HTTPResponse.Runtime,
-                                                    new StatusCode(
-                                                        StatusCodes.SystemError,
-                                                        e.Message,
-                                                        e.StackTrace),
-                                                    Request,
-                                                    HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
-                                                )
-                                            );
+                                             Request,
+                                             new Acknowledgement<ChargingEndNotificationRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false
+                                             )
+                                         );
 
                             }
 
@@ -4615,7 +4627,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              Request,
                              new Acknowledgement<ChargingEndNotificationRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -4634,7 +4647,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            Request,
                            new Acknowledgement<ChargingEndNotificationRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -4767,7 +4781,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4801,8 +4815,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
                                                                                                 JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingErrorNotificationRequest>  acknowledgement,
-                                                                                                out String                                              ErrorResponse,
+                                                                                                out Acknowledgement<ChargingErrorNotificationRequest>?  acknowledgement,
+                                                                                                out String?                                             ErrorResponse,
                                                                                                 HTTPResponse,
                                                                                                 HTTPResponse.Timestamp,
                                                                                                 HTTPResponse.EventTrackingId,
@@ -4812,8 +4826,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(Request,
-                                                                                                                    acknowledgement,
-                                                                                                                    processId);
+                                                                                                                   acknowledgement!,
+                                                                                                                   processId);
 
                                 }
 
@@ -4826,6 +4840,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              new Acknowledgement<ChargingErrorNotificationRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -4833,8 +4848,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      e.StackTrace),
                                                  Request,
                                                  HTTPResponse,
-                                                 false,
-                                                 ProcessId: processId
+                                                 false
                                              )
                                          );
 
@@ -4945,10 +4959,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                    new Acknowledgement<ChargingErrorNotificationRequest>(
                                                                                                                        HTTPResponse.Timestamp,
                                                                                                                        HTTPResponse.EventTrackingId,
+                                                                                                                       processId,
                                                                                                                        HTTPResponse.Runtime,
                                                                                                                        statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
+                                                                                                                       Request
                                                                                                                    ),
                                                                                                                    processId);
 
@@ -4959,21 +4973,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
-                                                Request,
-                                                new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
-                                                    HTTPResponse.Runtime,
-                                                    new StatusCode(
-                                                        StatusCodes.SystemError,
-                                                        e.Message,
-                                                        e.StackTrace),
-                                                    Request,
-                                                    HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
-                                                )
-                                            );
+                                             Request,
+                                             new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false
+                                             )
+                                         );
 
                             }
 
@@ -5015,15 +5029,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       HTTPResponse.Runtime, 
-                                                                                                                       statusCode,
-                                                                                                                       Request,
-                                                                                                                       ProcessId: processId
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                                                      HTTPResponse.Timestamp,
+                                                                                                                      HTTPResponse.EventTrackingId,
+                                                                                                                      processId,
+                                                                                                                      HTTPResponse.Runtime, 
+                                                                                                                      statusCode,
+                                                                                                                      Request
+                                                                                                                  ),
+                                                                                                                  processId);
 
                                 }
 
@@ -5036,6 +5050,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 new Acknowledgement<ChargingErrorNotificationRequest>(
                                                     HTTPResponse.Timestamp,
                                                     HTTPResponse.EventTrackingId,
+                                                    processId,
                                                     HTTPResponse.Runtime,
                                                     new StatusCode(
                                                         StatusCodes.SystemError,
@@ -5043,8 +5058,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         e.StackTrace),
                                                     Request,
                                                     HTTPResponse,
-                                                    false,
-                                                    ProcessId: processId
+                                                    false
                                                 )
                                             );
 
@@ -5070,7 +5084,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              Request,
                              new Acknowledgement<ChargingErrorNotificationRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -5089,7 +5104,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            Request,
                            new Acknowledgement<ChargingErrorNotificationRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -5223,7 +5239,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -5236,20 +5252,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
-                                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                            out Acknowledgement<ChargeDetailRecordRequest> acknowledgement,
-                                                                                            out String ErrorResponse,
-                                                                                            HTTPResponse,
-                                                                                            HTTPResponse.Timestamp,
-                                                                                            HTTPResponse.EventTrackingId,
-                                                                                            HTTPResponse.Runtime,
-                                                                                            processId,
-                                                                                            CustomSendChargeDetailRecordAcknowledgementParser))
+                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                        out Acknowledgement<ChargeDetailRecordRequest>?  acknowledgement,
+                                                                                        out String?                                      ErrorResponse,
+                                                                                        HTTPResponse,
+                                                                                        HTTPResponse.Timestamp,
+                                                                                        HTTPResponse.EventTrackingId,
+                                                                                        HTTPResponse.Runtime,
+                                                                                        processId,
+                                                                                        CustomSendChargeDetailRecordAcknowledgementParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(Request,
-                                                                                                                acknowledgement,
-                                                                                                                processId);
+                                                                                                            acknowledgement!,
+                                                                                                            processId);
 
                                 }
 
@@ -5262,6 +5278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              new Acknowledgement<ChargeDetailRecordRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -5269,8 +5286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      e.StackTrace),
                                                  Request,
                                                  HTTPResponse,
-                                                 false,
-                                                 ProcessId: processId
+                                                 false
                                              ),
                                              processId
                                          );
@@ -5392,20 +5408,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode statusCode,
-                                                        out String ErrorResponse))
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(Request,
-                                                                                                               new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                                                   HTTPResponse.Timestamp,
-                                                                                                                   HTTPResponse.EventTrackingId,
-                                                                                                                   HTTPResponse.Runtime,
-                                                                                                                   statusCode,
-                                                                                                                   Request,
-                                                                                                                   ProcessId: processId
-                                                                                                               ),
-                                                                                                               processId);
+                                                                                                           new Acknowledgement<ChargeDetailRecordRequest>(
+                                                                                                               HTTPResponse.Timestamp,
+                                                                                                               HTTPResponse.EventTrackingId,
+                                                                                                               processId,
+                                                                                                               HTTPResponse.Runtime,
+                                                                                                               statusCode,
+                                                                                                               Request
+                                                                                                           ),
+                                                                                                           processId);
 
                                 }
 
@@ -5418,6 +5434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              new Acknowledgement<ChargeDetailRecordRequest>(
                                                  HTTPResponse.Timestamp,
                                                  HTTPResponse.EventTrackingId,
+                                                 processId,
                                                  HTTPResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -5425,8 +5442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      e.StackTrace),
                                                  Request,
                                                  HTTPResponse,
-                                                 false,
-                                                 ProcessId: processId
+                                                 false
                                              )
                                          );
 
@@ -5452,7 +5468,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              Request,
                              new Acknowledgement<ChargeDetailRecordRequest>(
                                  Timestamp.Now,
-                                 Request.EventTrackingId,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -5471,7 +5488,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            Request,
                            new Acknowledgement<ChargeDetailRecordRequest>(
                                Timestamp.Now,
-                               Request.EventTrackingId,
+                               Request.EventTrackingId ?? EventTracking_Id.New,
+                               Process_Id.NewRandom,
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,

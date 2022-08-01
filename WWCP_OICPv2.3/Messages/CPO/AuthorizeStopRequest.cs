@@ -95,6 +95,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                     EVSE_Id?               EVSEId                = null,
                                     CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                     EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                                    Process_Id?            ProcessId             = null,
                                     JObject?               CustomData            = null,
 
                                     DateTime?              Timestamp             = null,
@@ -102,7 +103,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                     EventTracking_Id?      EventTrackingId       = null,
                                     TimeSpan?              RequestTimeout        = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -181,6 +183,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
         public static AuthorizeStopRequest Parse(JObject                                             JSON,
                                                  Operator_Id                                         OperatorIdURL,
+                                                 Process_Id?                                         ProcessId                          = null,
 
                                                  DateTime?                                           Timestamp                          = null,
                                                  CancellationToken?                                  CancellationToken                  = null,
@@ -194,6 +197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          OperatorIdURL,
                          out AuthorizeStopRequest?  auhorizeStopRequest,
                          out String?                errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -222,6 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
         public static AuthorizeStopRequest Parse(String                                              Text,
                                                  Operator_Id                                         OperatorIdURL,
+                                                 Process_Id?                                         ProcessId                          = null,
 
                                                  DateTime?                                           Timestamp                          = null,
                                                  CancellationToken?                                  CancellationToken                  = null,
@@ -235,6 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          OperatorIdURL,
                          out AuthorizeStopRequest?  auhorizeStopRequest,
                          out String?                errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -267,6 +273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Operator_Id                                         OperatorIdURL,
                                        out AuthorizeStopRequest?                           AuthorizeStopRequest,
                                        out String?                                         ErrorResponse,
+                                       Process_Id?                                         ProcessId                          = null,
 
                                        DateTime?                                           Timestamp                          = null,
                                        CancellationToken?                                  CancellationToken                  = null,
@@ -387,6 +394,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                 EVSEId,
                                                                 CPOPartnerSessionId,
                                                                 EMPPartnerSessionId,
+                                                                ProcessId,
                                                                 CustomData,
                                                                 Timestamp,
                                                                 CancellationToken,
@@ -428,6 +436,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Operator_Id                                         OperatorIdURL,
                                        out AuthorizeStopRequest?                           AuthorizeStopRequest,
                                        out String?                                         ErrorResponse,
+                                       Process_Id?                                         ProcessId                          = null,
 
                                        DateTime?                                           Timestamp                          = null,
                                        CancellationToken?                                  CancellationToken                  = null,
@@ -444,6 +453,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 OperatorIdURL,
                                 out AuthorizeStopRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,

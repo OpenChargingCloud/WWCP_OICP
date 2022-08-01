@@ -64,6 +64,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public ChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
                                          Operator_Id         OperatorId,
+                                         Process_Id?         ProcessId           = null,
                                          JObject?            CustomData          = null,
 
                                          DateTime?           Timestamp           = null,
@@ -71,7 +72,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          EventTracking_Id?   EventTrackingId     = null,
                                          TimeSpan?           RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -172,6 +174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord JSON objects.</param>
         public static ChargeDetailRecordRequest Parse(JObject                                                  JSON,
                                                       Operator_Id                                              OperatorIdURL,
+                                                      Process_Id?                                              ProcessId                               = null,
 
                                                       DateTime?                                                Timestamp                               = null,
                                                       CancellationToken?                                       CancellationToken                       = null,
@@ -185,6 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          OperatorIdURL,
                          out ChargeDetailRecordRequest?  authorizeRemoteStopRequest,
                          out String?                     errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -213,6 +217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static ChargeDetailRecordRequest Parse(String                                                   Text,
                                                       Operator_Id                                              OperatorIdURL,
+                                                      Process_Id?                                              ProcessId                               = null,
 
                                                       DateTime?                                                Timestamp                               = null,
                                                       CancellationToken?                                       CancellationToken                       = null,
@@ -226,6 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          OperatorIdURL,
                          out ChargeDetailRecordRequest?  authorizeRemoteStopRequest,
                          out String?                     errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -258,6 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Operator_Id                                              OperatorIdURL,
                                        out ChargeDetailRecordRequest?                           ChargeDetailRecordRequest,
                                        out String?                                              ErrorResponse,
+                                       Process_Id?                                              ProcessId                               = null,
 
                                        DateTime?                                                Timestamp                               = null,
                                        CancellationToken?                                       CancellationToken                       = null,
@@ -298,6 +305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 ChargeDetailRecordRequest = new ChargeDetailRecordRequest(ChargeDetailRecord!,
                                                                           OperatorIdURL,
+                                                                          ProcessId,
                                                                           CustomData,
 
                                                                           Timestamp,
@@ -340,6 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Operator_Id                                              OperatorIdURL,
                                        out ChargeDetailRecordRequest?                           ChargeDetailRecordRequest,
                                        out String?                                              ErrorResponse,
+                                       Process_Id?                                              ProcessId                               = null,
 
                                        DateTime?                                                Timestamp                               = null,
                                        CancellationToken?                                       CancellationToken                       = null,
@@ -356,6 +365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 OperatorIdURL,
                                 out ChargeDetailRecordRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,

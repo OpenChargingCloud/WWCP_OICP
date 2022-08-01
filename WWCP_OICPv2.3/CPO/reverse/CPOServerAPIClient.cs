@@ -402,8 +402,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStartRequest>.TryParse(Request,
                                                                                                      JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                     out Acknowledgement<AuthorizeRemoteReservationStartRequest>?  AuthorizeRemoteReservationStartResponse,
-                                                                                                     out String?                                                  ErrorResponse,
+                                                                                                     out Acknowledgement<AuthorizeRemoteReservationStartRequest>?  authorizeRemoteReservationStartResponse,
+                                                                                                     out String?                                                   ErrorResponse,
                                                                                                      HTTPResponse,
                                                                                                      HTTPResponse.Timestamp,
                                                                                                      HTTPResponse.EventTrackingId,
@@ -412,7 +412,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Success(Request,
-                                                                                                                         AuthorizeRemoteReservationStartResponse,
+                                                                                                                         authorizeRemoteReservationStartResponse!,
                                                                                                                          processId);
 
                                 }
@@ -779,7 +779,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStopRequest>.TryParse(Request,
                                                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                    out Acknowledgement<AuthorizeRemoteReservationStopRequest>?  AuthorizeRemoteReservationStopResponse,
+                                                                                                    out Acknowledgement<AuthorizeRemoteReservationStopRequest>?  authorizeRemoteReservationStopResponse,
                                                                                                     out String?                                                  ErrorResponse,
                                                                                                     HTTPResponse,
                                                                                                     HTTPResponse.Timestamp,
@@ -789,7 +789,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Success(Request,
-                                                                                                                        AuthorizeRemoteReservationStopResponse,
+                                                                                                                        authorizeRemoteReservationStopResponse!,
                                                                                                                         processId);
 
                                 }
@@ -1156,19 +1156,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStartRequest>.TryParse(Request,
-                                                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                     out Acknowledgement<AuthorizeRemoteStartRequest>?  AuthorizeRemoteStartResponse,
-                                                                                                     out String?                                                  ErrorResponse,
-                                                                                                     HTTPResponse,
-                                                                                                     HTTPResponse.Timestamp,
-                                                                                                     HTTPResponse.EventTrackingId,
-                                                                                                     HTTPResponse.Runtime,
-                                                                                                     processId))
+                                                                                          JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                          out Acknowledgement<AuthorizeRemoteStartRequest>?  authorizeRemoteStartResponse,
+                                                                                          out String?                                        ErrorResponse,
+                                                                                          HTTPResponse,
+                                                                                          HTTPResponse.Timestamp,
+                                                                                          HTTPResponse.EventTrackingId,
+                                                                                          HTTPResponse.Runtime,
+                                                                                          processId))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Success(Request,
-                                                                                                                         AuthorizeRemoteStartResponse,
-                                                                                                                         processId);
+                                                                                                              authorizeRemoteStartResponse!,
+                                                                                                              processId);
 
                                 }
 
@@ -1533,19 +1533,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStopRequest>.TryParse(Request,
-                                                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                    out Acknowledgement<AuthorizeRemoteStopRequest>?  AuthorizeRemoteStopResponse,
-                                                                                                    out String?                                                  ErrorResponse,
-                                                                                                    HTTPResponse,
-                                                                                                    HTTPResponse.Timestamp,
-                                                                                                    HTTPResponse.EventTrackingId,
-                                                                                                    HTTPResponse.Runtime,
-                                                                                                    processId))
+                                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                         out Acknowledgement<AuthorizeRemoteStopRequest>?  authorizeRemoteStopResponse,
+                                                                                         out String?                                       ErrorResponse,
+                                                                                         HTTPResponse,
+                                                                                         HTTPResponse.Timestamp,
+                                                                                         HTTPResponse.EventTrackingId,
+                                                                                         HTTPResponse.Runtime,
+                                                                                         processId))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Success(Request,
-                                                                                                                        AuthorizeRemoteStopResponse,
-                                                                                                                        processId);
+                                                                                                             authorizeRemoteStopResponse!,
+                                                                                                             processId);
 
                                 }
 

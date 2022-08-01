@@ -69,6 +69,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public PushEVSEPricingRequest(Operator_Id               OperatorId,
                                       IEnumerable<EVSEPricing>  EVSEPricing,
                                       ActionTypes               Action              = ActionTypes.FullLoad,
+                                      Process_Id?               ProcessId           = null,
                                       JObject?                  CustomData          = null,
 
                                       DateTime?                 Timestamp           = null,
@@ -76,7 +77,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       EventTracking_Id?         EventTrackingId     = null,
                                       TimeSpan?                 RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -124,6 +126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
         public static PushEVSEPricingRequest Parse(JObject                                               JSON,
                                                    Operator_Id                                           OperatorId,
+                                                   Process_Id?                                           ProcessId                            = null,
 
                                                    DateTime?                                             Timestamp                            = null,
                                                    CancellationToken?                                    CancellationToken                    = null,
@@ -137,6 +140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          OperatorId,
                          out PushEVSEPricingRequest?  pushEVSEDataRequest,
                          out String?                  errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -164,6 +168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
         public static PushEVSEPricingRequest Parse(String                                                Text,
                                                    Operator_Id                                           OperatorId,
+                                                   Process_Id?                                           ProcessId                            = null,
 
                                                    DateTime?                                             Timestamp                            = null,
                                                    CancellationToken?                                    CancellationToken                    = null,
@@ -177,6 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          OperatorId,
                          out PushEVSEPricingRequest?  pushEVSEDataRequest,
                          out String?                  errorResponse,
+                         ProcessId,
                          Timestamp,
                          CancellationToken,
                          EventTrackingId,
@@ -208,6 +214,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Operator_Id                                           OperatorId,
                                        out PushEVSEPricingRequest?                           PushEVSEPricingRequest,
                                        out String?                                           ErrorResponse,
+                                       Process_Id?                                           ProcessId                            = null,
 
                                        DateTime?                                             Timestamp                            = null,
                                        CancellationToken?                                    CancellationToken                    = null,
@@ -266,6 +273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 PushEVSEPricingRequest = new PushEVSEPricingRequest(OperatorId,
                                                                     EVSEPricing,
                                                                     ActionType,
+                                                                    ProcessId,
                                                                     CustomData,
                                                                     Timestamp,
                                                                     CancellationToken,
@@ -306,6 +314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Operator_Id                                           OperatorId,
                                        out PushEVSEPricingRequest?                           PushEVSEPricingRequest,
                                        out String?                                           ErrorResponse,
+                                       Process_Id?                                           ProcessId                            = null,
 
                                        DateTime?                                             Timestamp                            = null,
                                        CancellationToken?                                    CancellationToken                    = null,
@@ -322,6 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 OperatorId,
                                 out PushEVSEPricingRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
                                 CancellationToken,
                                 EventTrackingId,

@@ -1286,6 +1286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+                                             var processId  = Process_Id.NewRandom;
 
                                              OICPResult<PullEVSEDataResponse>? pullEVSEDataResponse = null;
 
@@ -1298,9 +1299,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEDataResponse = OICPResult<PullEVSEDataResponse>.Failed(
                                                                                 this,
                                                                                 new PullEVSEDataResponse(
-                                                                                    null,
                                                                                     Timestamp.Now,
                                                                                     Request.EventTrackingId,
+                                                                                    processId,
                                                                                     Timestamp.Now - Request.Timestamp,
                                                                                     Array.Empty<EVSEDataRecord>(),
                                                                                     StatusCode: new StatusCode(
@@ -1316,6 +1317,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        //     providerId ????
                                                                                        out PullEVSEDataRequest?          pullEVSEDataRequest,
                                                                                        out String?                       errorResponse,
+                                                                                       ProcessId:                        processId,
                                                                                        Page:                             page,
                                                                                        Size:                             size,
                                                                                        SortOrder:                        sortOrder,
@@ -1360,10 +1362,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          {
 
                                                              pullEVSEDataResponse = (await Task.WhenAll(OnPullEVSEDataLocal.GetInvocationList().
-                                                                                                                                Cast<OnPullEVSEDataAPIDelegate>().
-                                                                                                                                Select(e => e(Timestamp.Now,
-                                                                                                                                              this,
-                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                            Cast<OnPullEVSEDataAPIDelegate>().
+                                                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                                                          this,
+                                                                                                                                          pullEVSEDataRequest!))))?.FirstOrDefault();
 
                                                              Counters.PullEVSEData.IncResponses_OK();
 
@@ -1373,11 +1375,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              pullEVSEDataResponse = OICPResult<PullEVSEDataResponse>.Failed(
                                                                                         this,
                                                                                         new PullEVSEDataResponse(
-                                                                                            pullEVSEDataRequest!,
                                                                                             Timestamp.Now,
                                                                                             Request.EventTrackingId,
+                                                                                            processId,
                                                                                             Timestamp.Now - Request.Timestamp,
                                                                                             Array.Empty<EVSEDataRecord>(),
+                                                                                            pullEVSEDataRequest,
                                                                                             StatusCode: new StatusCode(
                                                                                                             StatusCodes.DataError,
                                                                                                             e.Message,
@@ -1388,21 +1391,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (pullEVSEDataResponse is null)
-                                                         pullEVSEDataResponse = OICPResult<PullEVSEDataResponse>.Failed(
-                                                                                    this,
-                                                                                    new PullEVSEDataResponse(
-                                                                                        pullEVSEDataRequest!,
-                                                                                        Timestamp.Now,
-                                                                                        Request.EventTrackingId,
-                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                        Array.Empty<EVSEDataRecord>(),
-                                                                                        StatusCode: new StatusCode(
-                                                                                                        StatusCodes.SystemError,
-                                                                                                        "Could not process the received PullEVSEData request!"
-                                                                                                    )
-                                                                                    )
-                                                                                );
+                                                     pullEVSEDataResponse ??= OICPResult<PullEVSEDataResponse>.Failed(
+                                                                                  this,
+                                                                                  new PullEVSEDataResponse(
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      processId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      Array.Empty<EVSEDataRecord>(),
+                                                                                      pullEVSEDataRequest,
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.SystemError,
+                                                                                                      "Could not process the received PullEVSEData request!"
+                                                                                                  )
+                                                                                  )
+                                                                              );
 
                                                      #endregion
 
@@ -1433,11 +1436,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEDataResponse = OICPResult<PullEVSEDataResponse>.Failed(
                                                                                 this,
                                                                                 new PullEVSEDataResponse(
-                                                                                    pullEVSEDataRequest!,
                                                                                     Timestamp.Now,
                                                                                     Request.EventTrackingId,
+                                                                                    processId,
                                                                                     Timestamp.Now - Request.Timestamp,
                                                                                     Array.Empty<EVSEDataRecord>(),
+                                                                                    pullEVSEDataRequest,
                                                                                     StatusCode: new StatusCode(
                                                                                                     StatusCodes.DataError,
                                                                                                     "We could not parse the given PullEVSEData request!",
@@ -1452,9 +1456,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  pullEVSEDataResponse = OICPResult<PullEVSEDataResponse>.Failed(
                                                                             this,
                                                                             new PullEVSEDataResponse(
-                                                                                null,
                                                                                 Timestamp.Now,
                                                                                 Request.EventTrackingId,
+                                                                                processId,
                                                                                 Timestamp.Now - Request.Timestamp,
                                                                                 Array.Empty<EVSEDataRecord>(),
                                                                                 StatusCode: new StatusCode(
@@ -1486,6 +1490,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                     ToString(JSONFormatting).
                                                                                                                     ToUTF8Bytes()
                                                                                                           ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1506,7 +1511,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logPullEVSEStatusHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<PullEVSEStatusResponse>? pullEVSEStatusResponse = null;
 
                                              try
@@ -1518,9 +1525,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
                                                                                   this,
                                                                                   new PullEVSEStatusResponse(
-                                                                                      null,
                                                                                       Timestamp.Now,
                                                                                       Request.EventTrackingId,
+                                                                                      processId,
                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                       Array.Empty<OperatorEVSEStatus>(),
                                                                                       StatusCode: new StatusCode(
@@ -1536,6 +1543,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          //     providerId ????
                                                                                          out PullEVSEStatusRequest?          pullEVSEStatusRequest,
                                                                                          out String?                         errorResponse,
+                                                                                         ProcessId:                          processId,
 
                                                                                          Timestamp:                          Request.Timestamp,
                                                                                          CancellationToken:                  Request.CancellationToken,
@@ -1590,11 +1598,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
                                                                                         this,
                                                                                         new PullEVSEStatusResponse(
-                                                                                            pullEVSEStatusRequest!,
                                                                                             Timestamp.Now,
                                                                                             Request.EventTrackingId,
+                                                                                            processId,
                                                                                             Timestamp.Now - Request.Timestamp,
                                                                                             Array.Empty<OperatorEVSEStatus>(),
+                                                                                            pullEVSEStatusRequest,
                                                                                             StatusCode: new StatusCode(
                                                                                                             StatusCodes.DataError,
                                                                                                             e.Message,
@@ -1605,15 +1614,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (pullEVSEStatusResponse is null)
-                                                         pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
+                                                     pullEVSEStatusResponse ??= OICPResult<PullEVSEStatusResponse>.Failed(
                                                                                     this,
                                                                                     new PullEVSEStatusResponse(
-                                                                                        pullEVSEStatusRequest!,
                                                                                         Timestamp.Now,
                                                                                         Request.EventTrackingId,
+                                                                                        processId,
                                                                                         Timestamp.Now - Request.Timestamp,
                                                                                         Array.Empty<OperatorEVSEStatus>(),
+                                                                                        pullEVSEStatusRequest,
                                                                                         StatusCode: new StatusCode(
                                                                                                         StatusCodes.SystemError,
                                                                                                         "Could not process the received PullEVSEStatus request!"
@@ -1650,11 +1659,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
                                                                                 this,
                                                                                 new PullEVSEStatusResponse(
-                                                                                    pullEVSEStatusRequest!,
                                                                                     Timestamp.Now,
                                                                                     Request.EventTrackingId,
+                                                                                    processId,
                                                                                     Timestamp.Now - Request.Timestamp,
                                                                                     Array.Empty<OperatorEVSEStatus>(),
+                                                                                    pullEVSEStatusRequest,
                                                                                     StatusCode: new StatusCode(
                                                                                                     StatusCodes.DataError,
                                                                                                     "We could not parse the given PullEVSEStatus request!",
@@ -1669,9 +1679,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
                                                                             this,
                                                                             new PullEVSEStatusResponse(
-                                                                                null,
                                                                                 Timestamp.Now,
                                                                                 Request.EventTrackingId,
+                                                                                processId,
                                                                                 Timestamp.Now - Request.Timestamp,
                                                                                 Array.Empty<OperatorEVSEStatus>(),
                                                                                 StatusCode: new StatusCode(
@@ -1698,6 +1708,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                       ToString(JSONFormatting).
                                                                                                                       ToUTF8Bytes()
                                                                                                             ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1718,7 +1729,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logPullEVSEStatusByIdHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<PullEVSEStatusByIdResponse>? pullEVSEStatusByIdResponse = null;
 
                                              try
@@ -1730,9 +1743,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                                                                   this,
                                                                                   new PullEVSEStatusByIdResponse(
-                                                                                      null,
                                                                                       Timestamp.Now,
                                                                                       Request.EventTrackingId,
+                                                                                      processId,
                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                       Array.Empty<EVSEStatusRecord>(),
                                                                                       StatusCode: new StatusCode(
@@ -1748,6 +1761,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                              //     providerId ????
                                                                                              out PullEVSEStatusByIdRequest?          pullEVSEStatusByIdRequest,
                                                                                              out String?                             errorResponse,
+                                                                                             ProcessId:                              processId,
 
                                                                                              Timestamp:                              Request.Timestamp,
                                                                                              CancellationToken:                      Request.CancellationToken,
@@ -1802,11 +1816,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                                                                               this,
                                                                                               new PullEVSEStatusByIdResponse(
-                                                                                                  pullEVSEStatusByIdRequest!,
                                                                                                   Timestamp.Now,
                                                                                                   Request.EventTrackingId,
+                                                                                                  processId,
                                                                                                   Timestamp.Now - Request.Timestamp,
                                                                                                   Array.Empty<EVSEStatusRecord>(),
+                                                                                                  pullEVSEStatusByIdRequest,
                                                                                                   StatusCode: new StatusCode(
                                                                                                                   StatusCodes.DataError,
                                                                                                                   e.Message,
@@ -1817,21 +1832,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (pullEVSEStatusByIdResponse is null)
-                                                         pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
-                                                                                          this,
-                                                                                          new PullEVSEStatusByIdResponse(
-                                                                                              pullEVSEStatusByIdRequest!,
-                                                                                              Timestamp.Now,
-                                                                                              Request.EventTrackingId,
-                                                                                              Timestamp.Now - Request.Timestamp,
-                                                                                              Array.Empty<EVSEStatusRecord>(),
-                                                                                              StatusCode: new StatusCode(
-                                                                                                              StatusCodes.SystemError,
-                                                                                                              "Could not process the received PullEVSEStatusById request!"
-                                                                                                          )
-                                                                                          )
-                                                                                      );
+                                                     pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                                                                                      this,
+                                                                                      new PullEVSEStatusByIdResponse(
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          processId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          Array.Empty<EVSEStatusRecord>(),
+                                                                                          pullEVSEStatusByIdRequest,
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          "Could not process the received PullEVSEStatusById request!"
+                                                                                                      )
+                                                                                      )
+                                                                                  );
 
                                                      #endregion
 
@@ -1862,11 +1877,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                                                                       this,
                                                                                       new PullEVSEStatusByIdResponse(
-                                                                                          pullEVSEStatusByIdRequest!,
                                                                                           Timestamp.Now,
                                                                                           Request.EventTrackingId,
+                                                                                          processId,
                                                                                           Timestamp.Now - Request.Timestamp,
                                                                                           Array.Empty<EVSEStatusRecord>(),
+                                                                                          pullEVSEStatusByIdRequest,
                                                                                           StatusCode: new StatusCode(
                                                                                                           StatusCodes.DataError,
                                                                                                           "We could not parse the given PullEVSEStatusById request!",
@@ -1881,9 +1897,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                                                                   this,
                                                                                   new PullEVSEStatusByIdResponse(
-                                                                                      null,
                                                                                       Timestamp.Now,
                                                                                       Request.EventTrackingId,
+                                                                                      processId,
                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                       Array.Empty<EVSEStatusRecord>(),
                                                                                       StatusCode: new StatusCode(
@@ -1909,6 +1925,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                           ToString(JSONFormatting).
                                                                                                                           ToUTF8Bytes()
                                                                                                                 ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1929,7 +1946,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logPullEVSEStatusByOperatorIdHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<PullEVSEStatusByOperatorIdResponse>? pullEVSEStatusByOperatorIdResponse = null;
 
                                              try
@@ -1941,9 +1960,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                                                                               this,
                                                                                               new PullEVSEStatusByOperatorIdResponse(
-                                                                                                  null,
                                                                                                   Timestamp.Now,
                                                                                                   Request.EventTrackingId,
+                                                                                                  Process_Id.NewRandom,
                                                                                                   Timestamp.Now - Request.Timestamp,
                                                                                                   Array.Empty<OperatorEVSEStatus>(),
                                                                                                   StatusCode: new StatusCode(
@@ -1959,6 +1978,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                      //     providerId ????
                                                                                                      out PullEVSEStatusByOperatorIdRequest?          pullEVSEStatusByOperatorIdRequest,
                                                                                                      out String?                                     errorResponse,
+                                                                                                     ProcessId:                                      processId,
 
                                                                                                      Timestamp:                                      Request.Timestamp,
                                                                                                      CancellationToken:                              Request.CancellationToken,
@@ -2013,11 +2033,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                                                                                       this,
                                                                                                       new PullEVSEStatusByOperatorIdResponse(
-                                                                                                          pullEVSEStatusByOperatorIdRequest!,
                                                                                                           Timestamp.Now,
                                                                                                           Request.EventTrackingId,
+                                                                                                          processId,
                                                                                                           Timestamp.Now - Request.Timestamp,
                                                                                                           Array.Empty<OperatorEVSEStatus>(),
+                                                                                                          pullEVSEStatusByOperatorIdRequest,
                                                                                                           StatusCode: new StatusCode(
                                                                                                                           StatusCodes.DataError,
                                                                                                                           e.Message,
@@ -2028,21 +2049,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (pullEVSEStatusByOperatorIdResponse is null)
-                                                         pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
-                                                                                                  this,
-                                                                                                  new PullEVSEStatusByOperatorIdResponse(
-                                                                                                      pullEVSEStatusByOperatorIdRequest!,
-                                                                                                      Timestamp.Now,
-                                                                                                      Request.EventTrackingId,
-                                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                                      Array.Empty<OperatorEVSEStatus>(),
-                                                                                                      StatusCode: new StatusCode(
-                                                                                                                      StatusCodes.SystemError,
-                                                                                                                      "Could not process the received PullEVSEStatusByOperatorId request!"
-                                                                                                                  )
-                                                                                                  )
-                                                                                              );
+                                                     pullEVSEStatusByOperatorIdResponse ??= OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
+                                                                                                this,
+                                                                                                new PullEVSEStatusByOperatorIdResponse(
+                                                                                                    Timestamp.Now,
+                                                                                                    Request.EventTrackingId,
+                                                                                                    processId,
+                                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                                    Array.Empty<OperatorEVSEStatus>(),
+                                                                                                    pullEVSEStatusByOperatorIdRequest,
+                                                                                                    StatusCode: new StatusCode(
+                                                                                                                    StatusCodes.SystemError,
+                                                                                                                    "Could not process the received PullEVSEStatusByOperatorId request!"
+                                                                                                                )
+                                                                                                )
+                                                                                            );
 
                                                      #endregion
 
@@ -2073,11 +2094,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                                                                               this,
                                                                                               new PullEVSEStatusByOperatorIdResponse(
-                                                                                                  pullEVSEStatusByOperatorIdRequest!,
                                                                                                   Timestamp.Now,
                                                                                                   Request.EventTrackingId,
+                                                                                                  processId,
                                                                                                   Timestamp.Now - Request.Timestamp,
                                                                                                   Array.Empty<OperatorEVSEStatus>(),
+                                                                                                  pullEVSEStatusByOperatorIdRequest,
                                                                                                   StatusCode: new StatusCode(
                                                                                                                   StatusCodes.DataError,
                                                                                                                   "We could not parse the given PullEVSEStatusByOperatorId request!",
@@ -2092,9 +2114,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                                                                           this,
                                                                                           new PullEVSEStatusByOperatorIdResponse(
-                                                                                              null,
                                                                                               Timestamp.Now,
                                                                                               Request.EventTrackingId,
+                                                                                              processId,
                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                               Array.Empty<OperatorEVSEStatus>(),
                                                                                               StatusCode: new StatusCode(
@@ -2121,6 +2143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                   ToString(JSONFormatting).
                                                                                                                                   ToUTF8Bytes()
                                                                                                                         ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2146,6 +2169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+                                             var processId  = Process_Id.NewRandom;
 
                                              OICPResult<PullPricingProductDataResponse>? pullPricingProductDataResponse = null;
 
@@ -2158,9 +2182,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
                                                                                           this,
                                                                                           new PullPricingProductDataResponse(
-                                                                                              null,
                                                                                               Timestamp.Now,
                                                                                               Request.EventTrackingId,
+                                                                                              processId,
                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                               Array.Empty<PricingProductData>(),
                                                                                               StatusCode: new StatusCode(
@@ -2176,6 +2200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                  providerId,
                                                                                                  out PullPricingProductDataRequest?          pullEVSEDataRequest,
                                                                                                  out String?                                 errorResponse,
+                                                                                                 ProcessId:                                  processId,
                                                                                                  Page:                                       page,
                                                                                                  Size:                                       size,
                                                                                                  SortOrder:                                  sortOrder,
@@ -2233,11 +2258,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
                                                                                                   this,
                                                                                                   new PullPricingProductDataResponse(
-                                                                                                      pullEVSEDataRequest!,
                                                                                                       Timestamp.Now,
                                                                                                       Request.EventTrackingId,
+                                                                                                      processId,
                                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                                       Array.Empty<PricingProductData>(),
+                                                                                                      pullEVSEDataRequest,
                                                                                                       StatusCode: new StatusCode(
                                                                                                                       StatusCodes.DataError,
                                                                                                                       e.Message,
@@ -2248,21 +2274,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (pullPricingProductDataResponse is null)
-                                                         pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
-                                                                                              this,
-                                                                                              new PullPricingProductDataResponse(
-                                                                                                  pullEVSEDataRequest!,
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  Array.Empty<PricingProductData>(),
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.SystemError,
-                                                                                                                  "Could not process the received PullPricingProductData request!"
-                                                                                                              )
-                                                                                              )
-                                                                                          );
+                                                     pullPricingProductDataResponse ??= OICPResult<PullPricingProductDataResponse>.Failed(
+                                                                                            this,
+                                                                                            new PullPricingProductDataResponse(
+                                                                                                Timestamp.Now,
+                                                                                                Request.EventTrackingId,
+                                                                                                processId,
+                                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                                Array.Empty<PricingProductData>(),
+                                                                                                pullEVSEDataRequest,
+                                                                                                StatusCode: new StatusCode(
+                                                                                                                StatusCodes.SystemError,
+                                                                                                                "Could not process the received PullPricingProductData request!"
+                                                                                                            )
+                                                                                            )
+                                                                                        );
 
                                                      #endregion
 
@@ -2293,11 +2319,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
                                                                                           this,
                                                                                           new PullPricingProductDataResponse(
-                                                                                              pullEVSEDataRequest!,
                                                                                               Timestamp.Now,
                                                                                               Request.EventTrackingId,
+                                                                                              processId,
                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                               Array.Empty<PricingProductData>(),
+                                                                                              pullEVSEDataRequest,
                                                                                               StatusCode: new StatusCode(
                                                                                                               StatusCodes.DataError,
                                                                                                               "We could not parse the given PullPricingProductData request!",
@@ -2312,9 +2339,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
                                                                                       this,
                                                                                       new PullPricingProductDataResponse(
-                                                                                          null,
                                                                                           Timestamp.Now,
                                                                                           Request.EventTrackingId,
+                                                                                          processId,
                                                                                           Timestamp.Now - Request.Timestamp,
                                                                                           Array.Empty<PricingProductData>(),
                                                                                           StatusCode: new StatusCode(
@@ -2341,6 +2368,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                               ToString(JSONFormatting).
                                                                                                                               ToUTF8Bytes()
                                                                                                                     ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2365,6 +2393,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+                                             var processId  = Process_Id.NewRandom;
 
                                              OICPResult<PullEVSEPricingResponse>? pullEVSEPricingResponse = null;
 
@@ -2377,9 +2406,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
                                                                                    this,
                                                                                    new PullEVSEPricingResponse(
-                                                                                       null,
                                                                                        Timestamp.Now,
                                                                                        Request.EventTrackingId,
+                                                                                       processId,
                                                                                        Timestamp.Now - Request.Timestamp,
                                                                                        Array.Empty<OperatorEVSEPricing>(),
                                                                                        StatusCode: new StatusCode(
@@ -2395,6 +2424,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                           //     providerId ????
                                                                                           out PullEVSEPricingRequest?          pullEVSEDataRequest,
                                                                                           out String?                          errorResponse,
+                                                                                          ProcessId:                           processId,
                                                                                           Page:                                page,
                                                                                           Size:                                size,
                                                                                           SortOrder:                           sortOrder,
@@ -2452,11 +2482,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
                                                                                            this,
                                                                                            new PullEVSEPricingResponse(
-                                                                                               pullEVSEDataRequest!,
                                                                                                Timestamp.Now,
                                                                                                Request.EventTrackingId,
+                                                                                               processId,
                                                                                                Timestamp.Now - Request.Timestamp,
                                                                                                Array.Empty<OperatorEVSEPricing>(),
+                                                                                               pullEVSEDataRequest,
                                                                                                StatusCode: new StatusCode(
                                                                                                                StatusCodes.DataError,
                                                                                                                e.Message,
@@ -2467,21 +2498,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (pullEVSEPricingResponse is null)
-                                                         pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
-                                                                                       this,
-                                                                                       new PullEVSEPricingResponse(
-                                                                                           pullEVSEDataRequest!,
-                                                                                           Timestamp.Now,
-                                                                                           Request.EventTrackingId,
-                                                                                           Timestamp.Now - Request.Timestamp,
-                                                                                           Array.Empty<OperatorEVSEPricing>(),
-                                                                                           StatusCode: new StatusCode(
-                                                                                                           StatusCodes.SystemError,
-                                                                                                           "Could not process the received PullEVSEPricing request!"
-                                                                                                       )
-                                                                                       )
-                                                                                   );
+                                                     pullEVSEPricingResponse ??= OICPResult<PullEVSEPricingResponse>.Failed(
+                                                                                     this,
+                                                                                     new PullEVSEPricingResponse(
+                                                                                         Timestamp.Now,
+                                                                                         Request.EventTrackingId,
+                                                                                         processId,
+                                                                                         Timestamp.Now - Request.Timestamp,
+                                                                                         Array.Empty<OperatorEVSEPricing>(),
+                                                                                         pullEVSEDataRequest,
+                                                                                         StatusCode: new StatusCode(
+                                                                                                         StatusCodes.SystemError,
+                                                                                                         "Could not process the received PullEVSEPricing request!"
+                                                                                                     )
+                                                                                     )
+                                                                                 );
 
                                                      #endregion
 
@@ -2512,11 +2543,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
                                                                                    this,
                                                                                    new PullEVSEPricingResponse(
-                                                                                       pullEVSEDataRequest!,
                                                                                        Timestamp.Now,
                                                                                        Request.EventTrackingId,
+                                                                                       processId,
                                                                                        Timestamp.Now - Request.Timestamp,
                                                                                        Array.Empty<OperatorEVSEPricing>(),
+                                                                                       pullEVSEDataRequest,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.DataError,
                                                                                                        "We could not parse the given PullEVSEPricing request!",
@@ -2531,9 +2563,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
                                                                                this,
                                                                                new PullEVSEPricingResponse(
-                                                                                   null,
                                                                                    Timestamp.Now,
                                                                                    Request.EventTrackingId,
+                                                                                   processId,
                                                                                    Timestamp.Now - Request.Timestamp,
                                                                                    Array.Empty<OperatorEVSEPricing>(),
                                                                                    StatusCode: new StatusCode(
@@ -2560,6 +2592,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                        ToString(JSONFormatting).
                                                                                                                        ToUTF8Bytes()
                                                                                                              ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2581,7 +2614,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logPushAuthenticationDataHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<Acknowledgement<PushAuthenticationDataRequest>>? pullEVSEDataResponse = null;
 
                                              try
@@ -2595,6 +2630,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 new Acknowledgement<PushAuthenticationDataRequest>(
                                                                                     Timestamp.Now,
                                                                                     Request.EventTrackingId,
+                                                                                    processId,
                                                                                     Timestamp.Now - Request.Timestamp,
                                                                                     StatusCode: new StatusCode(
                                                                                                     StatusCodes.SystemError,
@@ -2665,6 +2701,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         new Acknowledgement<PushAuthenticationDataRequest>(
                                                                                             Timestamp.Now,
                                                                                             Request.EventTrackingId,
+                                                                                            processId,
                                                                                             Timestamp.Now - Request.Timestamp,
                                                                                             StatusCode: new StatusCode(
                                                                                                             StatusCodes.DataError,
@@ -2676,19 +2713,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (pullEVSEDataResponse is null)
-                                                         pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
-                                                                                    this,
-                                                                                    new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                                        Timestamp.Now,
-                                                                                        Request.EventTrackingId,
-                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                        StatusCode: new StatusCode(
-                                                                                                        StatusCodes.SystemError,
-                                                                                                        "Could not process the received PushAuthenticationData request!"
-                                                                                                    )
-                                                                                    )
-                                                                                );
+                                                     pullEVSEDataResponse ??= OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                  this,
+                                                                                  new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      processId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.SystemError,
+                                                                                                      "Could not process the received PushAuthenticationData request!"
+                                                                                                  )
+                                                                                  )
+                                                                              );
 
                                                      #endregion
 
@@ -2721,6 +2758,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 new Acknowledgement<PushAuthenticationDataRequest>(
                                                                                     Timestamp.Now,
                                                                                     Request.EventTrackingId,
+                                                                                    processId,
                                                                                     Timestamp.Now - Request.Timestamp,
                                                                                     StatusCode: new StatusCode(
                                                                                                     StatusCodes.DataError,
@@ -2738,6 +2776,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             new Acknowledgement<PushAuthenticationDataRequest>(
                                                                                 Timestamp.Now,
                                                                                 Request.EventTrackingId,
+                                                                                processId,
                                                                                 Timestamp.Now - Request.Timestamp,
                                                                                 StatusCode: new StatusCode(
                                                                                                 StatusCodes.SystemError,
@@ -2761,6 +2800,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                     ToString(JSONFormatting).
                                                                                                                     ToUTF8Bytes()
                                                                                                           ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2782,7 +2822,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>? authorizeRemoteReservationStartResponse = null;
 
                                              try
@@ -2796,6 +2838,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                                                                                        Timestamp.Now,
                                                                                                        Request.EventTrackingId,
+                                                                                                       processId,
                                                                                                        Timestamp.Now - Request.Timestamp,
                                                                                                        StatusCode: new StatusCode(
                                                                                                                        StatusCodes.SystemError,
@@ -2810,6 +2853,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           providerId,
                                                                                                           out AuthorizeRemoteReservationStartRequest?          pullEVSEDataRequest,
                                                                                                           out String?                                          errorResponse,
+                                                                                                          ProcessId:                                           processId,
 
                                                                                                           Timestamp:                                           Request.Timestamp,
                                                                                                           CancellationToken:                                   Request.CancellationToken,
@@ -2866,6 +2910,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                            new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                                                                                                Timestamp.Now,
                                                                                                                Request.EventTrackingId,
+                                                                                                               processId,
                                                                                                                Timestamp.Now - Request.Timestamp,
                                                                                                                StatusCode: new StatusCode(
                                                                                                                                StatusCodes.DataError,
@@ -2877,19 +2922,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (authorizeRemoteReservationStartResponse is null)
-                                                         authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
-                                                                                                       this,
-                                                                                                       new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
-                                                                                                           Timestamp.Now,
-                                                                                                           Request.EventTrackingId,
-                                                                                                           Timestamp.Now - Request.Timestamp,
-                                                                                                           StatusCode: new StatusCode(
-                                                                                                                           StatusCodes.SystemError,
-                                                                                                                           "Could not process the received AuthorizeRemoteReservationStart request!"
-                                                                                                                       )
-                                                                                                       )
-                                                                                                   );
+                                                     authorizeRemoteReservationStartResponse ??= OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                                                                                                     this,
+                                                                                                     new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                                                                                                         Timestamp.Now,
+                                                                                                         Request.EventTrackingId,
+                                                                                                         processId,
+                                                                                                         Timestamp.Now - Request.Timestamp,
+                                                                                                         StatusCode: new StatusCode(
+                                                                                                                         StatusCodes.SystemError,
+                                                                                                                         "Could not process the received AuthorizeRemoteReservationStart request!"
+                                                                                                                     )
+                                                                                                     )
+                                                                                                 );
 
                                                      #endregion
 
@@ -2922,6 +2967,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                                                                                        Timestamp.Now,
                                                                                                        Request.EventTrackingId,
+                                                                                                       processId,
                                                                                                        Timestamp.Now - Request.Timestamp,
                                                                                                        StatusCode: new StatusCode(
                                                                                                                        StatusCodes.DataError,
@@ -2939,6 +2985,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                                                                                                    Timestamp.Now,
                                                                                                    Request.EventTrackingId,
+                                                                                                   processId,
                                                                                                    Timestamp.Now - Request.Timestamp,
                                                                                                    StatusCode: new StatusCode(
                                                                                                                    StatusCodes.SystemError,
@@ -2962,6 +3009,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                        ToString(JSONFormatting).
                                                                                                                                        ToUTF8Bytes()
                                                                                                                              ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -2982,7 +3030,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>? authorizeRemoteReservationStopResponse = null;
 
                                              try
@@ -2996,6 +3046,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                   new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                                                                                       Timestamp.Now,
                                                                                                       Request.EventTrackingId,
+                                                                                                      processId,
                                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                                       StatusCode: new StatusCode(
                                                                                                                       StatusCodes.SystemError,
@@ -3010,6 +3061,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                          providerId,
                                                                                                          out AuthorizeRemoteReservationStopRequest?          pullEVSEDataRequest,
                                                                                                          out String?                                         errorResponse,
+                                                                                                         ProcessId:                                          processId,
 
                                                                                                          Timestamp:                                          Request.Timestamp,
                                                                                                          CancellationToken:                                  Request.CancellationToken,
@@ -3066,6 +3118,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                                                                                               Timestamp.Now,
                                                                                                               Request.EventTrackingId,
+                                                                                                              processId,
                                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                                               StatusCode: new StatusCode(
                                                                                                                               StatusCodes.DataError,
@@ -3077,19 +3130,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (authorizeRemoteReservationStopResponse is null)
-                                                         authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
-                                                                                                      this,
-                                                                                                      new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
-                                                                                                          Timestamp.Now,
-                                                                                                          Request.EventTrackingId,
-                                                                                                          Timestamp.Now - Request.Timestamp,
-                                                                                                          StatusCode: new StatusCode(
-                                                                                                                          StatusCodes.SystemError,
-                                                                                                                          "Could not process the received AuthorizeRemoteReservationStop request!"
-                                                                                                                      )
-                                                                                                      )
-                                                                                                  );
+                                                     authorizeRemoteReservationStopResponse ??= OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                                                                                                    this,
+                                                                                                    new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                                                                                                        Timestamp.Now,
+                                                                                                        Request.EventTrackingId,
+                                                                                                        processId,
+                                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                                        StatusCode: new StatusCode(
+                                                                                                                        StatusCodes.SystemError,
+                                                                                                                        "Could not process the received AuthorizeRemoteReservationStop request!"
+                                                                                                                    )
+                                                                                                    )
+                                                                                                );
 
                                                      #endregion
 
@@ -3122,6 +3175,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                   new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                                                                                       Timestamp.Now,
                                                                                                       Request.EventTrackingId,
+                                                                                                      processId,
                                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                                       StatusCode: new StatusCode(
                                                                                                                       StatusCodes.DataError,
@@ -3139,6 +3193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                               new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                                                                                                   Timestamp.Now,
                                                                                                   Request.EventTrackingId,
+                                                                                                  processId,
                                                                                                   Timestamp.Now - Request.Timestamp,
                                                                                                   StatusCode: new StatusCode(
                                                                                                                   StatusCodes.SystemError,
@@ -3162,6 +3217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                       ToString(JSONFormatting).
                                                                                                                                       ToUTF8Bytes()
                                                                                                                             ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -3182,7 +3238,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>? authorizeRemoteStartResponse = null;
 
                                              try
@@ -3196,6 +3254,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                                                             Timestamp.Now,
                                                                                             Request.EventTrackingId,
+                                                                                            processId,
                                                                                             Timestamp.Now - Request.Timestamp,
                                                                                             StatusCode: new StatusCode(
                                                                                                             StatusCodes.SystemError,
@@ -3210,6 +3269,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                providerId,
                                                                                                out AuthorizeRemoteStartRequest?          pullEVSEDataRequest,
                                                                                                out String?                               errorResponse,
+                                                                                               ProcessId:                                processId,
 
                                                                                                Timestamp:                                Request.Timestamp,
                                                                                                CancellationToken:                        Request.CancellationToken,
@@ -3266,6 +3326,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                 new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                                                                     Timestamp.Now,
                                                                                                     Request.EventTrackingId,
+                                                                                                    processId,
                                                                                                     Timestamp.Now - Request.Timestamp,
                                                                                                     StatusCode: new StatusCode(
                                                                                                                     StatusCodes.DataError,
@@ -3277,19 +3338,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (authorizeRemoteStartResponse is null)
-                                                         authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
-                                                                                            this,
-                                                                                            new Acknowledgement<AuthorizeRemoteStartRequest>(
-                                                                                                Timestamp.Now,
-                                                                                                Request.EventTrackingId,
-                                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                                StatusCode: new StatusCode(
-                                                                                                                StatusCodes.SystemError,
-                                                                                                                "Could not process the received AuthorizeRemoteStart request!"
-                                                                                                            )
-                                                                                            )
-                                                                                        );
+                                                     authorizeRemoteStartResponse ??= OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
+                                                                                          this,
+                                                                                          new Acknowledgement<AuthorizeRemoteStartRequest>(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              processId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "Could not process the received AuthorizeRemoteStart request!"
+                                                                                                          )
+                                                                                          )
+                                                                                      );
 
                                                      #endregion
 
@@ -3322,6 +3383,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                                                             Timestamp.Now,
                                                                                             Request.EventTrackingId,
+                                                                                            processId,
                                                                                             Timestamp.Now - Request.Timestamp,
                                                                                             StatusCode: new StatusCode(
                                                                                                             StatusCodes.DataError,
@@ -3339,6 +3401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                     new Acknowledgement<AuthorizeRemoteStartRequest>(
                                                                                         Timestamp.Now,
                                                                                         Request.EventTrackingId,
+                                                                                        processId,
                                                                                         Timestamp.Now - Request.Timestamp,
                                                                                         StatusCode: new StatusCode(
                                                                                                         StatusCodes.SystemError,
@@ -3362,7 +3425,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                             ToString(JSONFormatting).
                                                                                                                             ToUTF8Bytes()
                                                                                                                   ?? Array.Empty<Byte>(),
-                                                 Connection                 = "close"
+                                                        ProcessID                  = processId.ToString(),
+                                                        Connection                 = "close"
                                                     }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
@@ -3382,7 +3446,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Process_Id.NewRandom;
+
                                              OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>? authorizeRemoteStopResponse = null;
 
                                              try
@@ -3396,6 +3462,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                                                            Timestamp.Now,
                                                                                            Request.EventTrackingId,
+                                                                                           processId,
                                                                                            Timestamp.Now - Request.Timestamp,
                                                                                            StatusCode: new StatusCode(
                                                                                                            StatusCodes.SystemError,
@@ -3410,6 +3477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                               providerId,
                                                                                               out AuthorizeRemoteStopRequest?          pullEVSEDataRequest,
                                                                                               out String?                              errorResponse,
+                                                                                              ProcessId:                               processId,
 
                                                                                               Timestamp:                               Request.Timestamp,
                                                                                               CancellationToken:                       Request.CancellationToken,
@@ -3466,6 +3534,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                                                                    Timestamp.Now,
                                                                                                    Request.EventTrackingId,
+                                                                                                   processId,
                                                                                                    Timestamp.Now - Request.Timestamp,
                                                                                                    StatusCode: new StatusCode(
                                                                                                                    StatusCodes.DataError,
@@ -3477,19 +3546,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          }
                                                      }
 
-                                                     if (authorizeRemoteStopResponse is null)
-                                                         authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
-                                                                                           this,
-                                                                                           new Acknowledgement<AuthorizeRemoteStopRequest>(
-                                                                                               Timestamp.Now,
-                                                                                               Request.EventTrackingId,
-                                                                                               Timestamp.Now - Request.Timestamp,
-                                                                                               StatusCode: new StatusCode(
-                                                                                                               StatusCodes.SystemError,
-                                                                                                               "Could not process the received AuthorizeRemoteStop request!"
-                                                                                                           )
-                                                                                           )
-                                                                                       );
+                                                     authorizeRemoteStopResponse ??= OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
+                                                                                         this,
+                                                                                         new Acknowledgement<AuthorizeRemoteStopRequest>(
+                                                                                             Timestamp.Now,
+                                                                                             Request.EventTrackingId,
+                                                                                             processId,
+                                                                                             Timestamp.Now - Request.Timestamp,
+                                                                                             StatusCode: new StatusCode(
+                                                                                                             StatusCodes.SystemError,
+                                                                                                             "Could not process the received AuthorizeRemoteStop request!"
+                                                                                                         )
+                                                                                         )
+                                                                                     );
 
                                                      #endregion
 
@@ -3522,6 +3591,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                                                            Timestamp.Now,
                                                                                            Request.EventTrackingId,
+                                                                                           processId,
                                                                                            Timestamp.Now - Request.Timestamp,
                                                                                            StatusCode: new StatusCode(
                                                                                                            StatusCodes.DataError,
@@ -3539,6 +3609,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    new Acknowledgement<AuthorizeRemoteStopRequest>(
                                                                                        Timestamp.Now,
                                                                                        Request.EventTrackingId,
+                                                                                       processId,
                                                                                        Timestamp.Now - Request.Timestamp,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.SystemError,
@@ -3562,6 +3633,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                            ToString(JSONFormatting).
                                                                                                                            ToUTF8Bytes()
                                                                                                                  ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -3587,6 +3659,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
+                                             var processId  = Process_Id.NewRandom;
 
                                              OICPResult<GetChargeDetailRecordsResponse>? getChargeDetailRecordsResponse = null;
 
@@ -3599,9 +3672,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                                                                                           this,
                                                                                           new GetChargeDetailRecordsResponse(
-                                                                                              null,
                                                                                               Timestamp.Now,
                                                                                               Request.EventTrackingId,
+                                                                                              processId,
                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                               Array.Empty<ChargeDetailRecord>(),
                                                                                               StatusCode: new StatusCode(
@@ -3617,6 +3690,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                  //     providerId ????
                                                                                                  out GetChargeDetailRecordsRequest?          pullEVSEDataRequest,
                                                                                                  out String?                                 errorResponse,
+                                                                                                 ProcessId:                                  processId,
                                                                                                  Page:                                       page,
                                                                                                  Size:                                       size,
                                                                                                  SortOrder:                                  sortOrder,
@@ -3661,10 +3735,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          {
 
                                                              getChargeDetailRecordsResponse = (await Task.WhenAll(OnGetChargeDetailRecordsLocal.GetInvocationList().
-                                                                                                                                Cast<OnGetChargeDetailRecordsAPIDelegate>().
-                                                                                                                                Select(e => e(Timestamp.Now,
-                                                                                                                                              this,
-                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                Cast<OnGetChargeDetailRecordsAPIDelegate>().
+                                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                                              this,
+                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
 
                                                              Counters.GetChargeDetailRecords.IncResponses_OK();
 
@@ -3672,38 +3746,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          catch (Exception e)
                                                          {
                                                              getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
-                                                                                        this,
-                                                                                        new GetChargeDetailRecordsResponse(
-                                                                                            pullEVSEDataRequest!,
-                                                                                            Timestamp.Now,
-                                                                                            Request.EventTrackingId,
-                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                            Array.Empty<ChargeDetailRecord>(),
-                                                                                            StatusCode: new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            e.Message,
-                                                                                                            e.StackTrace
-                                                                                                        )
-                                                                                        )
-                                                                                    );
+                                                                                                  this,
+                                                                                                  new GetChargeDetailRecordsResponse(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      processId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      Array.Empty<ChargeDetailRecord>(),
+                                                                                                      pullEVSEDataRequest,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.DataError,
+                                                                                                                      e.Message,
+                                                                                                                      e.StackTrace
+                                                                                                                  )
+                                                                                                  )
+                                                                                              );
                                                          }
                                                      }
 
-                                                     if (getChargeDetailRecordsResponse is null)
-                                                         getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
-                                                                                    this,
-                                                                                    new GetChargeDetailRecordsResponse(
-                                                                                        pullEVSEDataRequest!,
-                                                                                        Timestamp.Now,
-                                                                                        Request.EventTrackingId,
-                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                        Array.Empty<ChargeDetailRecord>(),
-                                                                                        StatusCode: new StatusCode(
-                                                                                                        StatusCodes.SystemError,
-                                                                                                        "Could not process the received GetChargeDetailRecords request!"
-                                                                                                    )
-                                                                                    )
-                                                                                );
+                                                     getChargeDetailRecordsResponse ??= OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                                                                                            this,
+                                                                                            new GetChargeDetailRecordsResponse(
+                                                                                                Timestamp.Now,
+                                                                                                Request.EventTrackingId,
+                                                                                                processId,
+                                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                                Array.Empty<ChargeDetailRecord>(),
+                                                                                                pullEVSEDataRequest,
+                                                                                                StatusCode: new StatusCode(
+                                                                                                                StatusCodes.SystemError,
+                                                                                                                "Could not process the received GetChargeDetailRecords request!"
+                                                                                                            )
+                                                                                            )
+                                                                                        );
 
                                                      #endregion
 
@@ -3734,11 +3809,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                                                                                           this,
                                                                                           new GetChargeDetailRecordsResponse(
-                                                                                              pullEVSEDataRequest!,
                                                                                               Timestamp.Now,
                                                                                               Request.EventTrackingId,
+                                                                                              processId,
                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                               Array.Empty<ChargeDetailRecord>(),
+                                                                                              pullEVSEDataRequest,
                                                                                               StatusCode: new StatusCode(
                                                                                                               StatusCodes.DataError,
                                                                                                               "We could not parse the given GetChargeDetailRecords request!",
@@ -3753,9 +3829,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                                                                                       this,
                                                                                       new GetChargeDetailRecordsResponse(
-                                                                                          null,
                                                                                           Timestamp.Now,
                                                                                           Request.EventTrackingId,
+                                                                                          processId,
                                                                                           Timestamp.Now - Request.Timestamp,
                                                                                           Array.Empty<ChargeDetailRecord>(),
                                                                                           StatusCode: new StatusCode(
@@ -3785,6 +3861,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                               ToString(JSONFormatting).
                                                                                                                               ToUTF8Bytes()
                                                                                                                     ?? Array.Empty<Byte>(),
+                                                        ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 

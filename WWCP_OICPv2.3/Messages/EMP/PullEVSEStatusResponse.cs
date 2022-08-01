@@ -55,31 +55,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new PullEVSEStatus response.
         /// </summary>
-        /// <param name="Request">A PullEVSEStatus request.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="OperatorEVSEStatus">An enumeration of EVSE status records grouped by their operators.</param>
+        /// 
+        /// <param name="Request">An optional PullEVSEStatus request.</param>
         /// <param name="StatusCode">An optional status code of this response.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public PullEVSEStatusResponse(PullEVSEStatusRequest             Request,
-                                      DateTime                          ResponseTimestamp,
+        public PullEVSEStatusResponse(DateTime                          ResponseTimestamp,
                                       EventTracking_Id                  EventTrackingId,
+                                      Process_Id                        ProcessId,
                                       TimeSpan                          Runtime,
                                       IEnumerable<OperatorEVSEStatus>   OperatorEVSEStatus,
+
+                                      PullEVSEStatusRequest?            Request        = null,
                                       StatusCode?                       StatusCode     = null,
-                                      Process_Id?                       ProcessId      = null,
                                       HTTPResponse?                     HTTPResponse   = null,
                                       JObject?                          CustomData     = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
                    Request,
                    HTTPResponse,
-                   ProcessId,
                    CustomData)
 
         {
@@ -286,13 +288,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEStatusResponse = new PullEVSEStatusResponse(Request,
-                                                                    ResponseTimestamp,
+                PullEVSEStatusResponse = new PullEVSEStatusResponse(ResponseTimestamp,
                                                                     EventTrackingId,
+                                                                    ProcessId ?? Process_Id.NewRandom,
                                                                     Runtime,
                                                                     OperatorEVSEStatus,
+
+                                                                    Request,
                                                                     StatusCode,
-                                                                    ProcessId,
                                                                     HTTPResponse,
                                                                     CustomData);
 
@@ -540,7 +543,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (class) Builder
 
         /// <summary>
-        /// An EVSEStatus response builder.
+        /// The PullEVSEStatus response builder.
         /// </summary>
         public new class Builder : AResponse<PullEVSEStatusRequest,
                                              PullEVSEStatusResponse>.Builder
@@ -622,13 +625,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             public override PullEVSEStatusResponse ToImmutable()
 
-                => new (Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                        ResponseTimestamp ?? Timestamp.Now,
+                => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                        ProcessId         ?? Process_Id.NewRandom,
+                        Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                         OperatorEVSEStatus,
+
+                        Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
                         StatusCode,
-                        ProcessId,
                         HTTPResponse,
                         CustomData);
 

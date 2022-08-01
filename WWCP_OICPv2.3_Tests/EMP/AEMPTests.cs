@@ -306,6 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                     new Acknowledgement<ChargingStartNotificationRequest>(
                         Timestamp.Now,
                         chargingStartNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        Process_Id.NewRandom,
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingStartNotificationRequest,
@@ -314,7 +315,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                         chargingStartNotificationRequest.SessionId,
                         chargingStartNotificationRequest.CPOPartnerSessionId,
                         chargingStartNotificationRequest.EMPPartnerSessionId,
-                        null, // processId
                         null  // customData
                     )
                 );
@@ -327,6 +327,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                     new Acknowledgement<ChargingProgressNotificationRequest>(
                         Timestamp.Now,
                         chargingProgressNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        Process_Id.NewRandom,
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingProgressNotificationRequest,
@@ -335,7 +336,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                         chargingProgressNotificationRequest.SessionId,
                         chargingProgressNotificationRequest.CPOPartnerSessionId,
                         chargingProgressNotificationRequest.EMPPartnerSessionId,
-                        null, // processId
                         null  // customData
                     )
                 );
@@ -348,6 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                     new Acknowledgement<ChargingEndNotificationRequest>(
                         Timestamp.Now,
                         chargingEndNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        Process_Id.NewRandom,
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingEndNotificationRequest,
@@ -356,7 +357,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                         chargingEndNotificationRequest.SessionId,
                         chargingEndNotificationRequest.CPOPartnerSessionId,
                         chargingEndNotificationRequest.EMPPartnerSessionId,
-                        null, // processId
                         null  // customData
                     )
                 );
@@ -369,6 +369,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                     new Acknowledgement<ChargingErrorNotificationRequest>(
                         Timestamp.Now,
                         chargingErrorNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                        Process_Id.NewRandom,
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingErrorNotificationRequest,
@@ -377,7 +378,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                         chargingErrorNotificationRequest.SessionId,
                         chargingErrorNotificationRequest.CPOPartnerSessionId,
                         chargingErrorNotificationRequest.EMPPartnerSessionId,
-                        null, // processId
                         null  // customData
                     )
                 );
@@ -391,6 +391,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                     new Acknowledgement<ChargeDetailRecordRequest>(
                         Timestamp.Now,
                         chargeDetailRecordRequest.EventTrackingId ?? EventTracking_Id.New,
+                        Process_Id.NewRandom,
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargeDetailRecordRequest,
@@ -399,7 +400,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
                         chargeDetailRecordRequest.ChargeDetailRecord.SessionId,
                         chargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
                         chargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId,
-                        null, // processId
                         null  // customData
                     )
                 );

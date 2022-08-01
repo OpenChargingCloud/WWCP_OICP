@@ -81,6 +81,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="ProcessId">The server side process identification of the request.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="AuthorizationStatus">The authorization status.</param>
         /// <param name="StatusCode">A status code.</param>
@@ -89,11 +90,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         private AuthorizationStopResponse(DateTime                  ResponseTimestamp,
                                           EventTracking_Id          EventTrackingId,
+                                          Process_Id                ProcessId,
                                           TimeSpan                  Runtime,
                                           AuthorizationStatusTypes  AuthorizationStatus,
                                           StatusCode                StatusCode,
@@ -102,16 +103,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           CPOPartnerSession_Id?     CPOPartnerSessionId   = null,
                                           EMPPartnerSession_Id?     EMPPartnerSessionId   = null,
                                           Provider_Id?              ProviderId            = null,
-                                          Process_Id?               ProcessId             = null,
                                           HTTPResponse?             HTTPResponse          = null,
                                           JObject?                  CustomData            = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
                    Request,
                    HTTPResponse,
-                   ProcessId,
                    CustomData)
 
         {
@@ -163,6 +163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.Authorized,
                     new StatusCode(
@@ -175,7 +176,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -213,6 +213,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     StatusCode,
@@ -221,7 +222,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -261,6 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -273,7 +274,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -313,6 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -325,7 +326,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -365,6 +365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -377,7 +378,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -417,6 +417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -429,7 +430,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -469,6 +469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -481,7 +482,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -521,6 +521,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -533,7 +534,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -573,6 +573,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -585,7 +586,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -625,6 +625,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -637,7 +638,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -677,6 +677,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -689,7 +690,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
                     ProviderId,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -963,6 +963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 AuthorizationStopResponse  = new AuthorizationStopResponse(ResponseTimestamp ?? Timestamp.Now,
                                                                            EventTrackingId   ?? Request.EventTrackingId,
+                                                                           ProcessId         ?? Process_Id.NewRandom,
                                                                            Runtime           ?? Timestamp.Now - Request.Timestamp,
                                                                            AuthorizationStatus,
                                                                            StatusCode,
@@ -971,7 +972,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                            CPOPartnerSessionId,
                                                                            EMPPartnerSessionId,
                                                                            ProviderId,
-                                                                           ProcessId,
                                                                            HTTPResponse,
                                                                            CustomData);
 
@@ -1379,6 +1379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return new AuthorizationStopResponse(ResponseTimestamp ?? Timestamp.Now,
                                                      EventTrackingId   ?? EventTracking_Id.New,
+                                                     ProcessId         ?? Process_Id.NewRandom,
                                                      Runtime           ?? (Request is not null
                                                                                ? Timestamp.Now - Request.Timestamp
                                                                                : TimeSpan.Zero),
@@ -1389,7 +1390,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      CPOPartnerSessionId,
                                                      EMPPartnerSessionId,
                                                      ProviderId,
-                                                     ProcessId,
                                                      HTTPResponse,
                                                      CustomData);
 
