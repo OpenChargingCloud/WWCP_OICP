@@ -293,8 +293,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("Identification",  new JArray(Identifications.Select(evseDataRecord => evseDataRecord.ToJSON(CustomIdentificationSerializer)))),
-                           new JProperty("ProviderID",      ProviderId.ToString()),
+                           new JProperty("AuthenticationDataRecord",  new JArray(
+                               Identifications.Select(identification => JSONObject.Create(
+                                   new JProperty("Identification", identification.ToJSON(CustomIdentificationSerializer))
+                               ))
+                           )),
+
+                           new JProperty("ProviderID",        ProviderId.ToString()),
 
                            CustomData?.HasValues == true
                                ? new JProperty("CustomData",  CustomData)

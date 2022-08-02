@@ -816,7 +816,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          HTTPResponse.Runtime,
                                                                                          Array.Empty<EVSEDataRecord>(),
                                                                                          Request,
-                                                                                         StatusCode: statusCode
+                                                                                         StatusCode:   statusCode,
+                                                                                         HTTPResponse: HTTPResponse
                                                                                      ),
                                                                                      processId);
 
@@ -1184,7 +1185,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            HTTPResponse.Runtime,
                                                                                            Array.Empty<OperatorEVSEStatus>(),
                                                                                            Request,
-                                                                                           statusCode
+                                                                                           statusCode,
+                                                                                           HTTPResponse
                                                                                        ),
                                                                                        processId);
 
@@ -1400,14 +1402,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (PullEVSEStatusByIdResponse.TryParse(Request,
-                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                    HTTPResponse.Timestamp,
-                                                                    HTTPResponse.EventTrackingId,
-                                                                    HTTPResponse.Runtime,
-                                                                    out PullEVSEStatusByIdResponse?  pullEVSEStatusByIdResponse,
-                                                                    out String?                      ErrorResponse,
-                                                                    processId,
-                                                                    HTTPResponse))
+                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                        HTTPResponse.Timestamp,
+                                                                        HTTPResponse.EventTrackingId,
+                                                                        HTTPResponse.Runtime,
+                                                                        out PullEVSEStatusByIdResponse?  pullEVSEStatusByIdResponse,
+                                                                        out String?                      ErrorResponse,
+                                                                        processId,
+                                                                        HTTPResponse))
                                 {
 
                                     result = OICPResult<PullEVSEStatusByIdResponse>.Success(Request,
@@ -1551,7 +1553,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            HTTPResponse.Runtime,
                                                                                            Array.Empty<EVSEStatusRecord>(),
                                                                                            Request,
-                                                                                           statusCode
+                                                                                           statusCode,
+                                                                                           HTTPResponse
                                                                                        ),
                                                                                        processId);
 
@@ -1918,7 +1921,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                        HTTPResponse.Runtime,
                                                                                                        Array.Empty<OperatorEVSEStatus>(),
                                                                                                        Request,
-                                                                                                       statusCode
+                                                                                                       statusCode,
+                                                                                                       HTTPResponse
                                                                                                    ),
                                                                                                    processId);
 
@@ -2256,9 +2260,83 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
+
+                        // Until now...
                         // Hubject firewall problem!
                         // Only HTML response!
+
+                        // Now also...
+
+                        // HTTP/1.1 403
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Aug 2022 17:41:47 GMT
+                        // Content-Type:    application/json;charset=ISO-8859-1
+                        // Content-Length:  96
+                        // Connection:      close
+                        // Process-ID:      b3ca0072-d207-4038-8ecf-e50162737f24
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "210",
+                        //         "Description":     "No active subscription found",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullPricingProductDataResponse>.Failed(Request,
+                                                                                               new PullPricingProductDataResponse(
+                                                                                                   HTTPResponse.Timestamp,
+                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                   processId,
+                                                                                                   HTTPResponse.Runtime,
+                                                                                                   Array.Empty<PricingProductData>(),
+                                                                                                   Request,
+                                                                                                   StatusCode:   statusCode,
+                                                                                                   HTTPResponse: HTTPResponse
+                                                                                               ),
+                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullPricingProductDataResponse>.Failed(
+                                             Request,
+                                             new PullPricingProductDataResponse(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<PricingProductData>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
+                                             )
+                                         );
+
+                            }
+
+                        }
+
                         break;
+
                     }
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
@@ -2302,7 +2380,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    HTTPResponse.Runtime,
                                                                                                    Array.Empty<PricingProductData>(),
                                                                                                    Request,
-                                                                                                   StatusCode: statusCode
+                                                                                                   StatusCode:   statusCode,
+                                                                                                   HTTPResponse: HTTPResponse
                                                                                                ),
                                                                                                processId);
 
@@ -2639,9 +2718,83 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
+
+                        // Until now...
                         // Hubject firewall problem!
                         // Only HTML response!
+
+                        // Now also...
+
+                        // HTTP/1.1 403
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Aug 2022 17:53:14 GMT
+                        // Content-Type:    application/json;charset=ISO-8859-1
+                        // Content-Length:  96
+                        // Connection:      close
+                        // Process-ID:      3078ed02-54d3-4c3e-90c7-4e08731ac17a
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":            "210",
+                        //         "Description":     "No active subscription found",
+                        //         "AdditionalInfo":   null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<PullEVSEPricingResponse>.Failed(Request,
+                                                                                        new PullEVSEPricingResponse(
+                                                                                            HTTPResponse.Timestamp,
+                                                                                            HTTPResponse.EventTrackingId,
+                                                                                            processId,
+                                                                                            HTTPResponse.Runtime,
+                                                                                            Array.Empty<OperatorEVSEPricing>(),
+                                                                                            Request,
+                                                                                            StatusCode:   statusCode,
+                                                                                            HTTPResponse: HTTPResponse
+                                                                                        ),
+                                                                                        processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullEVSEPricingResponse>.Failed(
+                                             Request,
+                                             new PullEVSEPricingResponse(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<OperatorEVSEPricing>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
+                                             )
+                                         );
+
+                            }
+
+                        }
+
                         break;
+
                     }
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
@@ -2685,7 +2838,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             HTTPResponse.Runtime,
                                                                                             Array.Empty<OperatorEVSEPricing>(),
                                                                                             Request,
-                                                                                            StatusCode: statusCode
+                                                                                            StatusCode:   statusCode,
+                                                                                            HTTPResponse: HTTPResponse
                                                                                         ),
                                                                                         processId);
 
@@ -3011,6 +3165,86 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
+                        // You must create an offer for this service wihtin the Hubject portal
+                        // and Hubject must be subscribed to it!
+
+                        // HTTP/1.1 403
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Aug 2022 21:23:37 GMT
+                        // Content-Type:    application/json;charset=ISO-8859-1
+                        // Content-Length:  96
+                        // Connection:      close
+                        // Process-ID:      c6c78551-00d0-4c77-a48c-1ba2d1947b07
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":           "210",
+                        //         "Description":    "No active subscription found",
+                        //         "AdditionalInfo":  null
+                        //     }
+                        // }
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(Request,
+                                                                                                               new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                                                   HTTPResponse.Timestamp,
+                                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                                   processId,
+                                                                                                                   HTTPResponse.Runtime,
+                                                                                                                   statusCode!,
+                                                                                                                   Request,
+                                                                                                                   HTTPResponse,
+                                                                                                                   false,
+                                                                                                                   null, //Request.SessionId,
+                                                                                                                   null, //Request.CPOPartnerSessionId,
+                                                                                                                   null, //Request.EMPPartnerSessionId,
+                                                                                                                   Request.CustomData
+                                                                                                               ),
+                                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<PushAuthenticationDataRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false,
+                                                 null, //Request.SessionId,
+                                                 null, //Request.CPOPartnerSessionId,
+                                                 null, //Request.EMPPartnerSessionId,
+                                                 Request.CustomData
+                                             )
+                                         );
+
+                            }
+
+                        }
+
                         // Hubject firewall problem!
                         // Only HTML response!
                         break;
@@ -3037,6 +3271,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // }
 
                         // Operator/provider identification is not linked to the TLS client certificate!
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      ErrorResponse))
+                                {
+
+                                    result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(Request,
+                                                                                                               new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                                                   HTTPResponse.Timestamp,
+                                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                                   processId,
+                                                                                                                   HTTPResponse.Runtime,
+                                                                                                                   statusCode!,
+                                                                                                                   Request,
+                                                                                                                   HTTPResponse,
+                                                                                                                   false,
+                                                                                                                   null, //Request.SessionId,
+                                                                                                                   null, //Request.CPOPartnerSessionId,
+                                                                                                                   null, //Request.EMPPartnerSessionId,
+                                                                                                                   Request.CustomData
+                                                                                                               ),
+                                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<PushAuthenticationDataRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace
+                                                 ),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false,
+                                                 null, //Request.SessionId,
+                                                 null, //Request.CPOPartnerSessionId,
+                                                 null, //Request.EMPPartnerSessionId,
+                                                 Request.CustomData
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    {
+
+                        // e.g. DE*GDF instead of DE-GDF, because they interpret ids as strings
+                        //      not as complex data type having optional elements!
+
+                        // HTTP/1.1 404
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Tue, 02 Aug 2022 21:04:53 GMT
+                        // Content-Type:    application/json;charset=ISO-8859-1
+                        // Content-Length:  85
+                        // Connection:      close
+                        // Process-ID:      d52f2fc8-382b-4f74-9104-faf1902d8788
+                        // 
+                        // {
+                        //     "StatusCode": {
+                        //         "Code":           "300",
+                        //         "Description":    "Partner not found",
+                        //         "AdditionalInfo":  null
+                        //     }
+                        // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
