@@ -174,6 +174,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public Counters                                                                           Counter                                                      { get; }
 
+        public Newtonsoft.Json.Formatting                                                         JSONFormat                                                   { get; set; }
+
+        #endregion
+
+        #region Custom JSON parsers
+
         public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>                  CustomPushEVSEDataAcknowledgementParser                      { get; set; }
         public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>                CustomPushEVSEStatusAcknowledgementParser                    { get; set; }
 
@@ -198,7 +204,74 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>>            CustomSendChargeDetailRecordAcknowledgementParser            { get; set; }
 
 
-        public Newtonsoft.Json.Formatting                                                         JSONFormat                                                   { get; set; }
+        public CustomJObjectParserDelegate<StatusCode>?                                           CustomStatusCodeParser                                       { get; set; }
+
+        #endregion
+
+        #region Custom JSON serializers
+
+        public CustomJObjectSerializerDelegate<PushEVSEDataRequest>?                  CustomPushEVSEDataRequestSerializer                    { get; set; }
+
+        public CustomJObjectSerializerDelegate<OperatorEVSEData>?                     CustomOperatorEVSEDataSerializer                       { get; set; }
+
+        public CustomJObjectSerializerDelegate<EVSEDataRecord>?                       CustomEVSEDataRecordSerializer                         { get; set; }
+
+        public CustomJObjectSerializerDelegate<Address>?                              CustomAddressSerializer                                { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargingFacility>?                     CustomChargingFacilitySerializer                       { get; set; }
+
+        public CustomJObjectSerializerDelegate<GeoCoordinates>?                       CustomGeoCoordinatesSerializer                         { get; set; }
+
+        public CustomJObjectSerializerDelegate<EnergySource>?                         CustomEnergySourceSerializer                           { get; set; }
+
+        public CustomJObjectSerializerDelegate<EnvironmentalImpact>?                  CustomEnvironmentalImpactSerializer                    { get; set; }
+
+        public CustomJObjectSerializerDelegate<OpeningTime>?                          CustomOpeningTimesSerializer                           { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<PushEVSEStatusRequest>?                CustomPushEVSEStatusRequestSerializer                  { get; set; }
+
+        public CustomJObjectSerializerDelegate<OperatorEVSEStatus>?                   CustomOperatorEVSEStatusSerializer                     { get; set; }
+
+        public CustomJObjectSerializerDelegate<EVSEStatusRecord>?                     CustomEVSEStatusRecordSerializer                       { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<PushPricingProductDataRequest>?        CustomPushPricingProductDataRequestSerializer          { get; set; }
+
+        public CustomJObjectSerializerDelegate<PricingProductData>?                   CustomPricingProductDataSerializer                     { get; set; }
+
+        public CustomJObjectSerializerDelegate<PricingProductDataRecord>?             CustomPricingProductDataRecordSerializer               { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<PushEVSEPricingRequest>?               CustomPushEVSEPricingRequestSerializer                 { get; set; }
+
+        public CustomJObjectSerializerDelegate<EVSEPricing>?                          CustomEVSEPricingSerializer                            { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<AuthorizeStartRequest>?                CustomAuthorizeStartRequestSerializer                  { get; set; }
+
+        public CustomJObjectSerializerDelegate<Identification>?                       CustomIdentificationSerializer                         { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<AuthorizeStopRequest>?                 CustomAuthorizeStopRequestSerializer                   { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<ChargingStartNotificationRequest>?     CustomChargingStartNotificationRequestSerializer       { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestSerializer    { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargingEndNotificationRequest>?       CustomChargingEndNotificationRequestSerializer         { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargingErrorNotificationRequest>?     CustomChargingErrorNotificationRequestSerializer       { get; set; }
+
+
+        public CustomJObjectSerializerDelegate<ChargeDetailRecordRequest>?            CustomChargeDetailRecordRequestSerializer              { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargeDetailRecord>?                   CustomChargeDetailRecordSerializer                     { get; set; }
+
+        public CustomJObjectSerializerDelegate<SignedMeteringValue>?                  CustomSignedMeteringValueSerializer                    { get; set; }
+
+        public CustomJObjectSerializerDelegate<CalibrationLawVerification>?           CustomCalibrationLawVerificationSerializer             { get; set; }
 
         #endregion
 
@@ -669,7 +742,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder => {
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushEVSEDataRequestSerializer,
+                                                                                                                                        CustomOperatorEVSEDataSerializer,
+                                                                                                                                        CustomEVSEDataRecordSerializer,
+                                                                                                                                        CustomAddressSerializer,
+                                                                                                                                        CustomChargingFacilitySerializer,
+                                                                                                                                        CustomGeoCoordinatesSerializer,
+                                                                                                                                        CustomEnergySourceSerializer,
+                                                                                                                                        CustomEnvironmentalImpactSerializer,
+                                                                                                                                        CustomOpeningTimesSerializer).
+                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
 
@@ -872,7 +955,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
@@ -945,7 +1029,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
@@ -1166,7 +1251,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder => {
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushEVSEStatusRequestSerializer,
+                                                                                                                                        CustomOperatorEVSEStatusSerializer,
+                                                                                                                                        CustomEVSEStatusRecordSerializer).
+                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
 
@@ -1366,7 +1455,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
@@ -1439,7 +1529,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
@@ -1661,7 +1752,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder => {
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushPricingProductDataRequestSerializer,
+                                                                                                                                        CustomPricingProductDataSerializer,
+                                                                                                                                        CustomPricingProductDataRecordSerializer).
+                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
 
@@ -1864,7 +1959,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(Request,
@@ -1937,7 +2033,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(Request,
@@ -2158,7 +2255,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder => {
                                                                                            requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushEVSEPricingRequestSerializer,
+                                                                                                                                        CustomEVSEPricingSerializer).
+                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
 
@@ -2361,7 +2461,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(Request,
@@ -2434,7 +2535,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                             out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse))
+                                                            out String?      ErrorResponse,
+                                                            CustomStatusCodeParser))
                                     {
 
                                         result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(Request,
@@ -2839,7 +2941,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
@@ -2913,7 +3016,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
@@ -3109,7 +3213,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStartRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
 
@@ -3318,7 +3425,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<AuthorizationStartResponse>.Failed(Request,
@@ -3496,7 +3604,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStopRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
 
@@ -3659,7 +3770,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode statusCode,
-                                                        out String     ErrorResponse))
+                                                        out String     ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<AuthorizationStopResponse>.Failed(Request,
@@ -3727,7 +3839,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode statusCode,
-                                                        out String     ErrorResponse))
+                                                        out String     ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<AuthorizationStopResponse>.Failed(Request,
@@ -3906,7 +4019,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
+                                                                                                                                       CustomIdentificationSerializer).
+                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
@@ -4092,7 +4208,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
@@ -4165,7 +4282,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
@@ -4363,7 +4481,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
+                                                                                                                                       CustomIdentificationSerializer).
+                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
@@ -4549,7 +4670,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
@@ -4622,7 +4744,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
@@ -4820,7 +4943,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
+                                                                                                                                       CustomIdentificationSerializer).
+                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
@@ -5006,7 +5132,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
@@ -5079,7 +5206,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                                        out String?      ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
@@ -5277,7 +5405,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       requestbuilder => {
                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
+                                                                                                                                       CustomIdentificationSerializer).
+                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
 
@@ -5463,7 +5594,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
-                                                        out String?      errorResponse))
+                                                        out String?      errorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
@@ -5735,7 +5867,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
+                                                                                                                                    CustomChargeDetailRecordSerializer,
+                                                                                                                                    CustomIdentificationSerializer,
+                                                                                                                                    CustomSignedMeteringValueSerializer,
+                                                                                                                                    CustomCalibrationLawVerificationSerializer).
+                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
 
