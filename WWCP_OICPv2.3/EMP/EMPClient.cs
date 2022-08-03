@@ -1214,6 +1214,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
+                        // HTTP/1.1 403 Forbidden
+                        // Server: nginx/1.18.0 (Ubuntu)
+                        // Date: Wed, 03 Aug 2022 18:20:47 GMT
+                        // Content-Type: text/html
+                        // Content-Length: 162
+                        // Connection: close
+                        // 
+                        // <html>
+                        // <head><title>403 Forbidden</title></head>
+                        // <body>
+                        // <center><h1>403 Forbidden</h1></center>
+                        // <hr><center>nginx/1.18.0 (Ubuntu)</center>
+                        // </body>
+                        // </html>
+
                         // Hubject firewall problem!
                         // Only HTML response!
                         break;
