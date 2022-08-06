@@ -814,6 +814,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       CustomPushEVSEDataAcknowledgementParser))
                                     {
 
+                                        Counter.PushEVSEData.IncResponses_OK();
+
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(Request,
                                                                                                           acknowledgement!,
                                                                                                           processId);
@@ -1317,6 +1319,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                         CustomPushEVSEStatusAcknowledgementParser))
                                     {
 
+                                        Counter.PushEVSEStatus.IncResponses_OK();
+
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(Request,
                                                                                                             acknowledgement!,
                                                                                                             processId);
@@ -1817,6 +1821,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                 processId,
                                                                                                 CustomPushPricingProductDataAcknowledgementParser))
                                     {
+
+                                        Counter.PushPricingProductData.IncResponses_OK();
 
                                         result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(Request,
                                                                                                                     acknowledgement!,
@@ -2320,6 +2326,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                          CustomPushEVSEPricingAcknowledgementParser))
                                     {
 
+                                        Counter.PushEVSEPricing.IncResponses_OK();
+
                                         result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(Request,
                                                                                                              acknowledgement!,
                                                                                                              processId);
@@ -2802,6 +2810,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                             HTTPResponse,
                                                                             CustomPullAuthenticationDataResponseParser))
                                 {
+
+                                    Counter.PullAuthenticationData.IncResponses_OK();
 
                                     result = OICPResult<PullAuthenticationDataResponse>.Success(Request,
                                                                                                 pullAuthenticationDataResponse!,
@@ -3297,8 +3307,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (AuthorizationStartResponse.TryParse(Request,
                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                        out AuthorizationStartResponse  authorizationStartResponse,
-                                                                        out String                      ErrorResponse,
+                                                                        out AuthorizationStartResponse?  authorizationStartResponse,
+                                                                        out String?                      ErrorResponse,
                                                                         HTTPResponse.Timestamp,
                                                                         HTTPResponse.EventTrackingId,
                                                                         HTTPResponse.Runtime,
@@ -3307,8 +3317,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                         CustomAuthorizationStartResponseParser))
                                 {
 
+                                    Counter.AuthorizeStart.IncResponses_OK();
+
                                     result = OICPResult<AuthorizationStartResponse>.Success(Request,
-                                                                                            authorizationStartResponse,
+                                                                                            authorizationStartResponse!,
                                                                                             processId);
 
                                 }
@@ -3641,8 +3653,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                 if (AuthorizationStopResponse.TryParse(Request,
                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                       out AuthorizationStopResponse  authorizationStopResponse,
-                                                                       out String                     ErrorResponse,
+                                                                       out AuthorizationStopResponse?  authorizationStopResponse,
+                                                                       out String?                     ErrorResponse,
                                                                        HTTPResponse.Timestamp,
                                                                        HTTPResponse.EventTrackingId,
                                                                        HTTPResponse.Runtime,
@@ -3651,8 +3663,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                        CustomAuthorizationStopResponseParser))
                                 {
 
+                                    Counter.AuthorizeStop.IncResponses_OK();
+
                                     result = OICPResult<AuthorizationStopResponse>.Success(Request,
-                                                                                           authorizationStopResponse,
+                                                                                           authorizationStopResponse!,
                                                                                            processId);
 
                                 }
@@ -4085,6 +4099,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                processId,
                                                                                                CustomChargingStartNotificationAcknowledgementParser))
                                 {
+
+                                    Counter.SendChargingStartNotification.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(Request,
                                                                                                                    acknowledgement!,
@@ -4548,6 +4564,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                   CustomChargingProgressNotificationAcknowledgementParser))
                                 {
 
+                                    Counter.SendChargingProgressNotification.IncResponses_OK();
+
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(Request,
                                                                                                                       acknowledgement!,
                                                                                                                       processId);
@@ -5010,6 +5028,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                              CustomChargingEndNotificationAcknowledgementParser))
                                 {
 
+                                    Counter.SendChargingEndNotification.IncResponses_OK();
+
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(Request,
                                                                                                                  acknowledgement!,
                                                                                                                  processId);
@@ -5471,6 +5491,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                processId,
                                                                                                CustomChargingErrorNotificationAcknowledgementParser))
                                 {
+
+                                    Counter.SendChargingErrorNotification.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(Request,
                                                                                                                    acknowledgement!,
@@ -5985,6 +6007,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                         processId,
                                                                                         CustomSendChargeDetailRecordAcknowledgementParser))
                                 {
+
+                                    Counter.SendChargeDetailRecord.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(Request,
                                                                                                             acknowledgement!,
