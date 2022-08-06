@@ -248,6 +248,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectSerializerDelegate<EVSEPricing>?                          CustomEVSEPricingSerializer                            { get; set; }
 
 
+        public CustomJObjectSerializerDelegate<PullAuthenticationDataRequest>?        CustomPullAuthenticationDataRequestSerializer          { get; set; }
+
+
         public CustomJObjectSerializerDelegate<AuthorizeStartRequest>?                CustomAuthorizeStartRequestSerializer                  { get; set; }
 
         public CustomJObjectSerializerDelegate<Identification>?                       CustomIdentificationSerializer                         { get; set; }
@@ -556,12 +559,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargeDetailRecord HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                  OnSendChargeDetailRecordHTTPRequest;
+        public event ClientRequestLogHandler                   OnSendChargeDetailRecordHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a ChargeDetailRecord HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                 OnSendChargeDetailRecordHTTPResponse;
+        public event ClientResponseLogHandler                  OnSendChargeDetailRecordHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a ChargeDetailRecord had been received.
@@ -2736,12 +2739,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                       DNSClient).
 
                                                 Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/authdata/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pull-request"),
-                                                                                    requestbuilder => {
-                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                        requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
-                                                                                        requestbuilder.Connection   = "close";
-                                                                                    }),
+                                                                                     requestbuilder => {
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Content      = Request.ToJSON(CustomPullAuthenticationDataRequestSerializer).
+                                                                                                                               ToString(JSONFormat).
+                                                                                                                               ToUTF8Bytes();
+                                                                                         requestbuilder.Connection   = "close";
+                                                                                     }),
 
                                                         RequestLogDelegate:   OnPullAuthenticationDataHTTPRequest,
                                                         ResponseLogDelegate:  OnPullAuthenticationDataHTTPResponse,

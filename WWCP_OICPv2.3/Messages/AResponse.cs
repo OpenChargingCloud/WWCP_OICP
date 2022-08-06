@@ -132,6 +132,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region ToJSON()
+
+        ///// <summary>
+        ///// Compare two abstract responses for equality.
+        ///// </summary>
+        //public abstract JObject ToJSON();
+
+        #endregion
+
 
         #region (class) Builder
 

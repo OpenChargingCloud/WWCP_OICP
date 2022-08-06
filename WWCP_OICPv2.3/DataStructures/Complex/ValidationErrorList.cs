@@ -208,6 +208,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        public JObject ToJSON()
+
+            => JSONObject.Create(
+                   new JProperty("message",           Message),
+                   new JProperty("validationErrors",  new JArray(ValidationErrors.Select(validationError => validationError.ToJSON())))
+               );
+
         #region Clone
 
         /// <summary>

@@ -141,6 +141,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public CustomJObjectSerializerDelegate<StatusCode>?                       CustomStatusCodeSerializer                         { get; set; }
 
+
+        public CustomJObjectSerializerDelegate<Identification>?                   CustomIdentificationSerializer                     { get; set; }
+
         #endregion
 
         #region Events
@@ -283,6 +286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+
         #region (protected internal) OnChargingNotificationsHTTPRequest
 
         /// <summary>
@@ -351,6 +355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                            Response);
 
         #endregion
+
 
 
         #region (protected internal) OnChargeDetailRecordHTTPRequest

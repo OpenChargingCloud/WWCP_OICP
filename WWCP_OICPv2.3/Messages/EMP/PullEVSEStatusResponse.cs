@@ -387,10 +387,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("EvseStatuses",
+                           new JProperty("EvseStatuses", new JObject(
                                new JProperty("OperatorEvseStatus",  new JArray(OperatorEVSEStatus.Select(operatorEVSEStatus => operatorEVSEStatus.ToJSON(CustomOperatorEVSEStatusSerializer,
                                                                                                                                                          CustomEVSEStatusRecordSerializer))))
-                           ),
+                           )),
 
                            StatusCode is not null
                                ? new JProperty("StatusCode",  StatusCode.ToJSON(CustomStatusCodeSerializer))

@@ -15,6 +15,14 @@
  * limitations under the License.
  */
 
+#region Usings
+
+using Newtonsoft.Json.Linq;
+
+using org.GraphDefined.Vanaheimr.Illias;
+
+#endregion
+
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
@@ -197,6 +205,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     OICPResult.ProcessId);
 
         #endregion
+
+
+        public JObject ToJSON(JObject? RequestJSON,
+                              JObject? ResponseJSON)
+
+            => JSONObject.Create(
+
+                   RequestJSON is not null
+                       ? new JProperty("request",           RequestJSON)
+                       : null,
+
+                   ResponseJSON is not null
+                       ? new JProperty("response",          ResponseJSON)
+                       : null,
+
+                   new JProperty("wasSuccessful",           WasSuccessful),
+
+                   ValidationErrors is not null
+                       ? new JProperty("validationErrors",  ValidationErrors.ToJSON())
+                       : null,
+
+                   new JProperty("processId",               ProcessId.       ToString())
+
+               );
 
 
         #region (override) ToString()

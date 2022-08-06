@@ -234,6 +234,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        public JObject ToJSON()
+
+            => JSONObject.Create(
+                   new JProperty("fieldReference", FieldReference),
+                   new JProperty("errorMessage",   ErrorMessage)
+               );
+
         #region Clone
 
         /// <summary>
