@@ -130,8 +130,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
             Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);    //!!!
+            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error); //!!!
 
         }
 

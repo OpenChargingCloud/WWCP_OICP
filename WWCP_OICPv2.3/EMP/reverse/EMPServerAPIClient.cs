@@ -758,7 +758,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             try
             {
 
-                if (OnAuthorizeStartResponse != null)
+                if (OnAuthorizeStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeStartClientResponseDelegate>().
                                        Select(e => e(endtime,
@@ -1145,7 +1145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             try
             {
 
-                if (OnAuthorizeStopResponse != null)
+                if (OnAuthorizeStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeStopClientResponseDelegate>().
                                        Select(e => e(endtime,
@@ -3057,7 +3057,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             try
             {
 
-                if (OnChargeDetailRecordResponse != null)
+                if (OnChargeDetailRecordResponse is not null)
                     await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
                                        Cast<OnChargeDetailRecordClientResponseDelegate>().
                                        Select(e => e(endtime,
