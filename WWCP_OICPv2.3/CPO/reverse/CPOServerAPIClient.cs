@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -40,9 +39,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                       //        ICPOServerAPIClient
     {
 
-        #region (class) Counters
+        #region (class) APICounters
 
-        public class Counters
+        public class APICounters
         {
 
             public APICounterValues  AuthorizeRemoteReservationStart    { get; }
@@ -50,10 +49,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounterValues  AuthorizeRemoteStart               { get; }
             public APICounterValues  AuthorizeRemoteStop                { get; }
 
-            public Counters(APICounterValues? AuthorizeRemoteReservationStart   = null,
-                            APICounterValues? AuthorizeRemoteReservationStop    = null,
-                            APICounterValues? AuthorizeRemoteStart              = null,
-                            APICounterValues? AuthorizeRemoteStop               = null)
+            public APICounters(APICounterValues? AuthorizeRemoteReservationStart   = null,
+                               APICounterValues? AuthorizeRemoteReservationStop    = null,
+                               APICounterValues? AuthorizeRemoteStart              = null,
+                               APICounterValues? AuthorizeRemoteStop               = null)
             {
 
                 this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
@@ -103,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Properties
 
-        public Counters  Counter    { get; }
+        public APICounters  Counters    { get; }
 
         /// <summary>
         /// The attached HTTP client logger.
@@ -281,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.Counter     = new Counters();
+            this.Counters    = new APICounters();
 
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
@@ -320,7 +319,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteReservationStart.IncRequests_OK();
+            Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
             try
             {
@@ -410,6 +409,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                      HTTPResponse.Runtime,
                                                                                                      processId))
                                 {
+
+                                    Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Success(Request,
                                                                                                                          authorizeRemoteReservationStartResponse!,
@@ -643,6 +644,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
+
 
             #region Send OnAuthorizeRemoteReservationStartClientResponse event
 
@@ -697,7 +701,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteReservationStop.IncRequests_OK();
+            Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
             try
             {
@@ -787,6 +791,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                     HTTPResponse.Runtime,
                                                                                                     processId))
                                 {
+
+                                    Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Success(Request,
                                                                                                                         authorizeRemoteReservationStopResponse!,
@@ -1020,6 +1026,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
+
 
             #region Send OnAuthorizeRemoteReservationStopClientResponse event
 
@@ -1075,7 +1084,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteStart.IncRequests_OK();
+            Counters.AuthorizeRemoteStart.IncRequests_OK();
 
             try
             {
@@ -1165,6 +1174,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           HTTPResponse.Runtime,
                                                                                           processId))
                                 {
+
+                                    Counters.AuthorizeRemoteStart.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Success(Request,
                                                                                                               authorizeRemoteStartResponse!,
@@ -1398,6 +1409,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteStart.IncResponses_Error();
+
 
             #region Send OnAuthorizeRemoteStartClientResponse event
 
@@ -1452,7 +1466,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteStop.IncRequests_OK();
+            Counters.AuthorizeRemoteStop.IncRequests_OK();
 
             try
             {
@@ -1542,6 +1556,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                          HTTPResponse.Runtime,
                                                                                          processId))
                                 {
+
+                                    Counters.AuthorizeRemoteStop.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Success(Request,
                                                                                                              authorizeRemoteStopResponse!,
@@ -1774,6 +1790,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                Request.CustomData
                            )
                        );
+
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteStop.IncResponses_Error();
 
 
             #region Send OnAuthorizeRemoteStopClientResponse event

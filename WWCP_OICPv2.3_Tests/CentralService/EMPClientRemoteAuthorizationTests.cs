@@ -61,10 +61,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService.tests
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK);
-            //Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error);
-            //Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_OK);
-            //Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_Error);
+            Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
+
+            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_Error);
 
             var oicpResult = await empClient.AuthorizeRemoteStart(request);
 
@@ -73,10 +78,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService.tests
             Assert.AreEqual (true,                oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
-            //Assert.AreEqual(1, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_OK);
-            //Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Requests_Error);
-            //Assert.AreEqual(1, cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_OK);
-            //Assert.AreEqual(0, cpoServerAPI.Counters.AuthorizeRemoteStart.Responses_Error);
+            Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
+
+            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_Error);
 
         }
 

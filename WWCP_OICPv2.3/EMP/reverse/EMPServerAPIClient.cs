@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -40,32 +39,61 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                       //        IEMPServerAPIClient
     {
 
-        #region (class) Counters
+        #region (class) APICounters
 
-        public class Counters
+        public class APICounters
         {
 
-            public APICounterValues  AuthorizeStart                   { get; }
-            public APICounterValues  AuthorizeStop                    { get; }
-            public APICounterValues  SendChargeDetailRecord           { get; }
+            public APICounterValues  AuthorizeStart                       { get; }
+            public APICounterValues  AuthorizeStop                        { get; }
 
-            public Counters(APICounterValues? AuthorizeStart           = null,
-                            APICounterValues? AuthorizeStop            = null,
-                            APICounterValues? SendChargeDetailRecord   = null)
+
+            public APICounterValues  SendChargingStartNotification        { get; }
+
+            public APICounterValues  SendChargingProgressNotification     { get; }
+
+            public APICounterValues  SendChargingEndNotification          { get; }
+
+            public APICounterValues  SendChargingErrorNotification        { get; }
+
+
+            public APICounterValues  SendChargeDetailRecord               { get; }
+
+            public APICounters(APICounterValues? AuthorizeStart                     = null,
+                               APICounterValues? AuthorizeStop                      = null,
+
+                               APICounterValues? SendChargingStartNotification      = null,
+                               APICounterValues? SendChargingProgressNotification   = null,
+                               APICounterValues? SendChargingEndNotification        = null,
+                               APICounterValues? SendChargingErrorNotification      = null,
+
+                               APICounterValues? SendChargeDetailRecord             = null)
             {
 
-                this.AuthorizeStart          = AuthorizeStart         ?? new APICounterValues();
-                this.AuthorizeStop           = AuthorizeStop          ?? new APICounterValues();
-                this.SendChargeDetailRecord  = SendChargeDetailRecord ?? new APICounterValues();
+                this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
+                this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
+
+                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new APICounterValues();
+                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new APICounterValues();
+                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new APICounterValues();
+                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new APICounterValues();
+
+                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new APICounterValues();
 
             }
 
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("RemoteStart",            AuthorizeStart.        ToJSON()),
-                       new JProperty("RemoteStop",             AuthorizeStop.         ToJSON()),
-                       new JProperty("SendChargeDetailRecord", SendChargeDetailRecord.ToJSON())
+                       new JProperty("AuthorizeStart",                   AuthorizeStart.                  ToJSON()),
+                       new JProperty("AuthorizeStop",                    AuthorizeStop.                   ToJSON()),
+
+                       new JProperty("SendChargingStartNotification",    SendChargingStartNotification.   ToJSON()),
+                       new JProperty("SendChargingProgressNotification", SendChargingProgressNotification.ToJSON()),
+                       new JProperty("SendChargingEndNotification",      SendChargingEndNotification.     ToJSON()),
+                       new JProperty("SendChargingErrorNotification",    SendChargingErrorNotification.   ToJSON()),
+
+                       new JProperty("SendChargeDetailRecord",           SendChargeDetailRecord.          ToJSON())
                    );
 
         }
@@ -99,7 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public Counters  Counter    { get; }
+        public APICounters  Counters    { get; }
 
         /// <summary>
         /// The attached HTTP client logger.
@@ -350,7 +378,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.Counter     = new Counters();
+            this.Counters    = new APICounters();
 
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
@@ -389,7 +417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStart.IncRequests_OK();
+            Counters.AuthorizeStart.IncRequests_OK();
 
             try
             {
@@ -471,7 +499,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (AuthorizationStartResponse.TryParse(Request,
                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                        out AuthorizationStartResponse?  AuthorizeStartResponse,
+                                                                        out AuthorizationStartResponse?  authorizeStartResponse,
                                                                         out String?                      ErrorResponse,
                                                                         HTTPResponse.Timestamp,
                                                                         HTTPResponse.EventTrackingId,
@@ -480,8 +508,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                         HTTPResponse))
                                 {
 
+                                    Counters.AuthorizeStart.IncResponses_OK();
+
                                     result = OICPResult<AuthorizationStartResponse>.Success(Request,
-                                                                                            AuthorizeStartResponse,
+                                                                                            authorizeStartResponse!,
                                                                                             processId);
 
                                 }
@@ -717,6 +747,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeStart.IncResponses_Error();
+
 
             #region Send OnAuthorizeStartClientResponse event
 
@@ -771,7 +804,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests_OK();
+            Counters.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -852,19 +885,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (AuthorizationStopResponse.TryParse(Request,
-                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                        out AuthorizationStopResponse?  AuthorizeStopResponse,
-                                                                        out String?                      ErrorResponse,
-                                                                        HTTPResponse.Timestamp,
-                                                                        HTTPResponse.EventTrackingId,
-                                                                        HTTPResponse.Runtime,
-                                                                        processId,
-                                                                        HTTPResponse))
+                                                                       JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                       out AuthorizationStopResponse?  authorizeStopResponse,
+                                                                       out String?                     ErrorResponse,
+                                                                       HTTPResponse.Timestamp,
+                                                                       HTTPResponse.EventTrackingId,
+                                                                       HTTPResponse.Runtime,
+                                                                       processId,
+                                                                       HTTPResponse))
                                 {
 
+                                    Counters.AuthorizeStop.IncResponses_OK();
+
                                     result = OICPResult<AuthorizationStopResponse>.Success(Request,
-                                                                                            AuthorizeStopResponse,
-                                                                                            processId);
+                                                                                           authorizeStopResponse!,
+                                                                                           processId);
 
                                 }
 
@@ -1099,6 +1134,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeStop.IncResponses_Error();
+
 
             #region Send OnAuthorizeStopClientResponse event
 
@@ -1154,7 +1192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests_OK();
+            Counters.SendChargingStartNotification.IncRequests_OK();
 
             try
             {
@@ -1236,8 +1274,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                               out Acknowledgement<ChargingStartNotificationRequest>?  ChargeDetailRecordResponse,
-                                                                                               out String?                                      ErrorResponse,
+                                                                                               out Acknowledgement<ChargingStartNotificationRequest>?  chargingStartNotificationResponse,
+                                                                                               out String?                                             ErrorResponse,
                                                                                                HTTPResponse,
                                                                                                HTTPResponse.Timestamp,
                                                                                                HTTPResponse.EventTrackingId,
@@ -1245,8 +1283,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                processId))
                                 {
 
+                                    Counters.SendChargingStartNotification.IncResponses_OK();
+
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(Request,
-                                                                                                                   ChargeDetailRecordResponse,
+                                                                                                                   chargingStartNotificationResponse!,
                                                                                                                    processId);
 
                                 }
@@ -1477,6 +1517,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingStartNotification.IncResponses_Error();
+
 
             #region Send OnChargingStartNotificationResponse event
 
@@ -1531,7 +1574,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var progressTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests_OK();
+            Counters.SendChargingProgressNotification.IncRequests_OK();
 
             try
             {
@@ -1613,7 +1656,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<ChargingProgressNotificationRequest>.TryParse(Request,
                                                                                                   JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                  out Acknowledgement<ChargingProgressNotificationRequest>?  ChargeDetailRecordResponse,
+                                                                                                  out Acknowledgement<ChargingProgressNotificationRequest>?  chargingProgressNotificationResponse,
                                                                                                   out String?                                                ErrorResponse,
                                                                                                   HTTPResponse,
                                                                                                   HTTPResponse.Timestamp,
@@ -1622,8 +1665,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                   processId))
                                 {
 
+                                    Counters.SendChargingProgressNotification.IncResponses_OK();
+
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(Request,
-                                                                                                                      ChargeDetailRecordResponse,
+                                                                                                                      chargingProgressNotificationResponse!,
                                                                                                                       processId);
 
                                 }
@@ -1854,6 +1899,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingProgressNotification.IncResponses_Error();
+
 
             #region Send OnChargingProgressNotificationResponse event
 
@@ -1908,7 +1956,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests_OK();
+            Counters.SendChargingEndNotification.IncRequests_OK();
 
             try
             {
@@ -1990,8 +2038,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
                                                                                              JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                             out Acknowledgement<ChargingEndNotificationRequest>?  ChargeDetailRecordResponse,
-                                                                                             out String?                                      ErrorResponse,
+                                                                                             out Acknowledgement<ChargingEndNotificationRequest>?  chargingEndNotificationResponse,
+                                                                                             out String?                                           ErrorResponse,
                                                                                              HTTPResponse,
                                                                                              HTTPResponse.Timestamp,
                                                                                              HTTPResponse.EventTrackingId,
@@ -1999,8 +2047,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                              processId))
                                 {
 
+                                    Counters.SendChargingEndNotification.IncResponses_OK();
+
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(Request,
-                                                                                                                 ChargeDetailRecordResponse,
+                                                                                                                 chargingEndNotificationResponse!,
                                                                                                                  processId);
 
                                 }
@@ -2231,6 +2281,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingEndNotification.IncResponses_Error();
+
 
             #region Send OnChargingEndNotificationResponse event
 
@@ -2285,7 +2338,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var errorTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests_OK();
+            Counters.SendChargingErrorNotification.IncRequests_OK();
 
             try
             {
@@ -2367,8 +2420,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                               out Acknowledgement<ChargingErrorNotificationRequest>?  ChargeDetailRecordResponse,
-                                                                                               out String?                                      ErrorResponse,
+                                                                                               out Acknowledgement<ChargingErrorNotificationRequest>?  chargingErrorNotificationResponse,
+                                                                                               out String?                                             ErrorResponse,
                                                                                                HTTPResponse,
                                                                                                HTTPResponse.Timestamp,
                                                                                                HTTPResponse.EventTrackingId,
@@ -2376,8 +2429,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                processId))
                                 {
 
+                                    Counters.SendChargingErrorNotification.IncResponses_OK();
+
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(Request,
-                                                                                                                   ChargeDetailRecordResponse,
+                                                                                                                   chargingErrorNotificationResponse!,
                                                                                                                    processId);
 
                                 }
@@ -2608,6 +2663,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingErrorNotification.IncResponses_Error();
+
 
             #region Send OnChargingErrorNotificationResponse event
 
@@ -2663,7 +2721,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var startTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests_OK();
+            Counters.SendChargeDetailRecord.IncRequests_OK();
 
             try
             {
@@ -2745,7 +2803,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
                                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                        out Acknowledgement<ChargeDetailRecordRequest>?  ChargeDetailRecordResponse,
+                                                                                        out Acknowledgement<ChargeDetailRecordRequest>?  chargeDetailRecordResponse,
                                                                                         out String?                                      ErrorResponse,
                                                                                         HTTPResponse,
                                                                                         HTTPResponse.Timestamp,
@@ -2754,8 +2812,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         processId))
                                 {
 
+                                    Counters.SendChargeDetailRecord.IncResponses_OK();
+
                                     result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(Request,
-                                                                                                            ChargeDetailRecordResponse,
+                                                                                                            chargeDetailRecordResponse!,
                                                                                                             processId);
 
                                 }
@@ -2985,6 +3045,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.CustomData
                            )
                        );
+
+            if (result.IsNotSuccessful)
+                Counters.SendChargeDetailRecord.IncResponses_Error();
 
 
             #region Send OnChargeDetailRecordClientResponse event
