@@ -5604,15 +5604,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       processId,
-                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                       statusCode,
-                                                                                                                       Request
-                                                                                                                   ),
-                                                                                                                   processId);
+                                                                                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                                                      HTTPResponse.Timestamp,
+                                                                                                                      HTTPResponse.EventTrackingId,
+                                                                                                                      processId,
+                                                                                                                      HTTPResponse.Runtime,
+                                                                                                                      statusCode,
+                                                                                                                      Request
+                                                                                                                  ),
+                                                                                                                  processId);
 
                                 }
 
@@ -5720,6 +5720,75 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
+
+                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.InternalServerError)
+                    {
+
+                        // HTTP/1.1 500
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Sat, 06 Aug 2022 06:33:53 GMT
+                        // Content-Type:    application/json;charset=ISO-8859-1
+                        // Content-Length:  108
+                        // Connection:      close
+                        // Process-ID:      90163b8e-3301-4538-a7d9-82d7734879b4
+                        // 
+                        // {"StatusCode":{"Code":"001","Description":"Unexpected error checking partners: null","AdditionalInfo":null}}
+
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode?  statusCode,
+                                                        out String?      errorResponse,
+                                                        CustomStatusCodeParser))
+                                {
+
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
+                                                                                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                                                      HTTPResponse.Timestamp,
+                                                                                                                      HTTPResponse.EventTrackingId,
+                                                                                                                      processId,
+                                                                                                                      HTTPResponse.Runtime,
+                                                                                                                      statusCode,
+                                                                                                                      Request
+                                                                                                                  ),
+                                                                                                                  processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                             Request,
+                                             new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 new StatusCode(
+                                                     StatusCodes.SystemError,
+                                                     e.Message,
+                                                     e.StackTrace),
+                                                 Request,
+                                                 HTTPResponse,
+                                                 false
+                                             )
+                                         );
+
+                            }
+
+                        }
+
+                        break;
+
+                    }
 
                 }
                 while (TransmissionRetry++ < MaxNumberOfRetries);

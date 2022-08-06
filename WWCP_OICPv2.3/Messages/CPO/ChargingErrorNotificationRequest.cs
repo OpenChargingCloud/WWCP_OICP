@@ -65,6 +65,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Identification             Identification            { get; }
 
         /// <summary>
+        /// The charge point operator identification.
+        /// </summary>
+        [Mandatory]
+        public Operator_Id                OperatorId                { get; }
+
+        /// <summary>
         /// The EVSE identification, that identifies the location of the charging process.
         /// </summary>
         [Mandatory]
@@ -91,6 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId">The Hubject session identification, that identifies the charging process.</param>
         /// <param name="Identification">The authentication data used to authorize the user or the car.</param>
+        /// <param name="OperatorId">The charge point operator identification.</param>
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ErrorType">The error class.</param>
         /// 
@@ -105,6 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public ChargingErrorNotificationRequest(Session_Id             SessionId,
                                                 Identification         Identification,
+                                                Operator_Id            OperatorId,
                                                 EVSE_Id                EVSEId,
                                                 ErrorClassTypes        ErrorType,
 
@@ -131,6 +139,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Type                 = ChargingNotificationTypes.Error;
             this.SessionId            = SessionId;
             this.Identification       = Identification;
+            this.OperatorId           = OperatorId;
             this.EVSEId               = EVSEId;
             this.ErrorType            = ErrorType;
 
@@ -148,7 +157,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#64-eroamingchargingnotifications-error
 
         // {
-        //     Swagger file is missing!
+        //     "CPOPartnerSessionID":       "1234XYZ",
+        //     "EMPPartnerSessionID":       "2345ABC",
+        //     "EvseID":                    "DE*XYZ*ETEST1",
+        //     "ErrorType":                 "Connector Error",
+        //     "ErrorAdditionalInfo":       "Plug was not connected, EVSEID timed out reached",
+        //     "Identification": {
+        //         "RFIDMifareFamilyIdentification": {
+        //             "UID":               "1234ABCD"
+        //         }
+        //     },
+        //     "OperatorID":                "DE*ABC",
+        //     "SessionID":                 "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+        //     "Type":                      "Error"
         // }
 
         #endregion
@@ -335,6 +356,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+                #region Parse OperatorId                [mandatory]
+
+                if (!JSON.ParseMandatory("OperatorID",
+                                         "EVSE identification",
+                                         Operator_Id.TryParse,
+                                         out Operator_Id OperatorId,
+                                         out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
                 #region Parse EVSEId                    [mandatory]
 
                 if (!JSON.ParseMandatory("EvseID",
@@ -376,6 +410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 ChargingErrorNotificationRequest = new ChargingErrorNotificationRequest(SessionId,
                                                                                         Identification,
+                                                                                        OperatorId,
                                                                                         EVSEId,
                                                                                         ErrorType,
 
@@ -475,6 +510,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("EvseID",                      EVSEId.                   ToString()),
                            new JProperty("Identification",              Identification.           ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
                            new JProperty("ErrorType",                   ErrorType.                AsString()),
+                           new JProperty("OperatorID",                  OperatorId.               ToString()),
 
                            CPOPartnerSessionId.   HasValue
                                ? new JProperty("CPOPartnerSessionID",   CPOPartnerSessionId.Value.ToString())
@@ -511,6 +547,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (SessionId,
                     Identification,
+                    OperatorId,
                     EVSEId,
                     ErrorType,
 
@@ -603,6 +640,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                Type.          Equals(ChargingErrorNotificationRequest.Type)           &&
                SessionId.     Equals(ChargingErrorNotificationRequest.SessionId)      &&
                Identification.Equals(ChargingErrorNotificationRequest.Identification) &&
+               OperatorId.    Equals(ChargingErrorNotificationRequest.OperatorId)     &&
                EVSEId.        Equals(ChargingErrorNotificationRequest.EVSEId)         &&
                ErrorType.     Equals(ChargingErrorNotificationRequest.ErrorType);
 
@@ -621,9 +659,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return Type.                   GetHashCode()       * 19 ^
-                       SessionId.              GetHashCode()       * 17 ^
-                       Identification.         GetHashCode()       * 13 ^
+                return Type.                   GetHashCode()       * 27 ^
+                       SessionId.              GetHashCode()       * 23 ^
+                       Identification.         GetHashCode()       * 17 ^
+                       OperatorId.             GetHashCode()       * 13 ^
                        EVSEId.                 GetHashCode()       * 11 ^
                        ErrorType.              GetHashCode()       *  7 ^
 
@@ -644,7 +683,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat(Type,
-                             " at ",  EVSEId,
+                             " at ",  EVSEId, " (", OperatorId, ")",
                              " for ", Identification,
 
                              " (", SessionId, ") => ",

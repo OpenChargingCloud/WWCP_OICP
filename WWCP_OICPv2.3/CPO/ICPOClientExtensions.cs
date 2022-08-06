@@ -843,7 +843,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargingNotificationsError   (SessionId, Identification, EVSEId, ErrorType, ...)
+        #region SendChargingNotificationsError   (SessionId, Identification, OperatorId, EVSEId, ErrorType, ...)
 
         /// <summary>
         /// Send a charging error notification.
@@ -852,6 +852,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// 
         /// <param name="SessionId">The Hubject session identification, that identifies the charging process.</param>
         /// <param name="Identification">The authentication data used to authorize the user or the car.</param>
+        /// <param name="OperatorId">The charge point operator identification.</param>
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ErrorType">The error class.</param>
         /// 
@@ -869,6 +870,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             SendChargingNotificationsError(this ICPOClient        CPOClient,
                                            Session_Id             SessionId,
                                            Identification         Identification,
+                                           Operator_Id            OperatorId,
                                            EVSE_Id                EVSEId,
                                            ErrorClassTypes        ErrorType,
 
@@ -887,6 +889,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        new ChargingErrorNotificationRequest(
                            SessionId,
                            Identification,
+                           OperatorId,
                            EVSEId,
                            ErrorType,
 

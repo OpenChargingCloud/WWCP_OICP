@@ -231,7 +231,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#63-eroamingchargingnotifications-end
 
         // {
-        //     Swagger file is missing!
+        //     "CPOPartnerSessionID":   "1234XYZ",
+        //     "ChargingEnd":           "2020-09-23T14:17:53.038Z",
+        //     "ChargingStart":         "2020-09-23T14:50:53.038Z",
+        //     "ConsumedEnergy":         10,
+        //     "EMPPartnerSessionID":   "2345ABC",
+        //     "EvseID":                "DE*XYZ*ETEST1",
+        //     "Identification": {
+        //         "RFIDMifareFamilyIdentification": {
+        //             "UID":           "1234ABCD"
+        //         }
+        //     },
+        //     "MeterValueStart":        0,
+        //     "MeterValueEnd":          10,
+        //     "MeterValueInBetween": {
+        //         "meterValues": [
+        //             0
+        //         ]
+        //     },
+        //     "PartnerProductID":      "AC 1",
+        //     "PenaltyTimeStart":      "2020-09-23T14:17:53.038Z",
+        //     "OperatorID":            "DE*ABC",
+        //     "SessionID":             "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+        //     "SessionStart":          "2020-09-23T14:17:53.038Z",
+        //     "SessionEnd":            "2020-09-23T14:50:53.038Z",
+        //     "Type":                  "End"
         // }
 
         #endregion

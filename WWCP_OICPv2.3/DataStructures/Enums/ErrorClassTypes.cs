@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
@@ -78,11 +72,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
             switch (Text?.Trim())
             {
 
-                case "Connector Error":
+                case "ConnectorError":
                     ErrorClassType = ErrorClassTypes.ConnectorError;
                     return true;
 
-                case "Critical Error":
+                case "CriticalError":
                     ErrorClassType = ErrorClassTypes.CriticalError;
                     return true;
 
@@ -104,8 +98,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static String AsString(this ErrorClassTypes EVSEStatusType)
 
             => EVSEStatusType switch {
-                   ErrorClassTypes.ConnectorError => "Connector Error",
-                   ErrorClassTypes.CriticalError  => "Critical Error",
+                   ErrorClassTypes.ConnectorError => "ConnectorError",
+                   ErrorClassTypes.CriticalError  => "CriticalError",
                    _                              => "Unknown"
                };
 

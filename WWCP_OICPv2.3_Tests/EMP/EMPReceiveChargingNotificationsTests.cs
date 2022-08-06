@@ -214,6 +214,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
 
             var request     = new ChargingErrorNotificationRequest(SessionId:            Session_Id.NewRandom,
                                                                    Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
+                                                                   OperatorId:           Operator_Id.Parse("DE*GEF"),
                                                                    EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
                                                                    ErrorType:            ErrorClassTypes.CriticalError,
                                                                    CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
