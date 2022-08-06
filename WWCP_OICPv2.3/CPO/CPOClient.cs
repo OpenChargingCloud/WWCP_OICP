@@ -4075,15 +4075,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
-                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingStartNotificationRequest>?  acknowledgement,
-                                                                                                out String?                                             ErrorResponse,
-                                                                                                HTTPResponse,
-                                                                                                HTTPResponse.Timestamp,
-                                                                                                HTTPResponse.EventTrackingId,
-                                                                                                HTTPResponse.Runtime,
-                                                                                                processId,
-                                                                                                CustomChargingStartNotificationAcknowledgementParser))
+                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                               out Acknowledgement<ChargingStartNotificationRequest>?  acknowledgement,
+                                                                                               out String?                                             ErrorResponse,
+                                                                                               HTTPResponse,
+                                                                                               HTTPResponse.Timestamp,
+                                                                                               HTTPResponse.EventTrackingId,
+                                                                                               HTTPResponse.Runtime,
+                                                                                               processId,
+                                                                                               CustomChargingStartNotificationAcknowledgementParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(Request,
@@ -4999,15 +4999,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
-                                                                                              JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                              out Acknowledgement<ChargingEndNotificationRequest>?  acknowledgement,
-                                                                                              out String?                                           ErrorResponse,
-                                                                                              HTTPResponse,
-                                                                                              HTTPResponse.Timestamp,
-                                                                                              HTTPResponse.EventTrackingId,
-                                                                                              HTTPResponse.Runtime,
-                                                                                              processId,
-                                                                                              CustomChargingEndNotificationAcknowledgementParser))
+                                                                                             JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                             out Acknowledgement<ChargingEndNotificationRequest>?  acknowledgement,
+                                                                                             out String?                                           ErrorResponse,
+                                                                                             HTTPResponse,
+                                                                                             HTTPResponse.Timestamp,
+                                                                                             HTTPResponse.EventTrackingId,
+                                                                                             HTTPResponse.Runtime,
+                                                                                             processId,
+                                                                                             CustomChargingEndNotificationAcknowledgementParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(Request,
@@ -5461,15 +5461,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
-                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
-                                                                                                out Acknowledgement<ChargingErrorNotificationRequest>?  acknowledgement,
-                                                                                                out String?                                             ErrorResponse,
-                                                                                                HTTPResponse,
-                                                                                                HTTPResponse.Timestamp,
-                                                                                                HTTPResponse.EventTrackingId,
-                                                                                                HTTPResponse.Runtime,
-                                                                                                processId,
-                                                                                                CustomChargingErrorNotificationAcknowledgementParser))
+                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                               out Acknowledgement<ChargingErrorNotificationRequest>?  acknowledgement,
+                                                                                               out String?                                             ErrorResponse,
+                                                                                               HTTPResponse,
+                                                                                               HTTPResponse.Timestamp,
+                                                                                               HTTPResponse.EventTrackingId,
+                                                                                               HTTPResponse.Runtime,
+                                                                                               processId,
+                                                                                               CustomChargingErrorNotificationAcknowledgementParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(Request,

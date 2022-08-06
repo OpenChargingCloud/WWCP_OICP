@@ -82,7 +82,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp when the charging progress parameters had been captured.
         /// </summary>
         [Mandatory]
-        public DateTime                          EventOcurred                       { get; }
+        public DateTime                          EventOccurred                      { get; }
 
         /// <summary>
         /// Charging Duration = EventOccurred - Charging Start.
@@ -137,7 +137,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification">The authentication data used to authorize the user or the car.</param>
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ChargingStart">The timestamp when the charging process started.</param>
-        /// <param name="EventOcurred">The timestamp when the charging progress parameters had been captured.</param>
+        /// <param name="EventOccurred">The timestamp when the charging progress parameters had been captured.</param>
         /// 
         /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
         /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
@@ -158,7 +158,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    Identification         Identification,
                                                    EVSE_Id                EVSEId,
                                                    DateTime               ChargingStart,
-                                                   DateTime               EventOcurred,
+                                                   DateTime               EventOccurred,
 
                                                    CPOPartnerSession_Id?  CPOPartnerSessionId      = null,
                                                    EMPPartnerSession_Id?  EMPPartnerSessionId      = null,
@@ -191,7 +191,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Identification          = Identification;
             this.EVSEId                  = EVSEId;
             this.ChargingStart           = ChargingStart;
-            this.EventOcurred            = EventOcurred;
+            this.EventOccurred           = EventOccurred;
 
             this.CPOPartnerSessionId     = CPOPartnerSessionId;
             this.EMPPartnerSessionId     = EMPPartnerSessionId;
@@ -213,7 +213,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#62-eroamingchargingnotifications-progress
 
         // {
-        //     Swagger file is missing!
+        //     "CPOPartnerSessionID":    "1234XYZ",
+        //     "ChargingStart":          "2020-09-23T14:17:53.038Z",
+        //     "EventOccurred":          "2020-09-23T14:25:53.038Z",
+        //     "ChargingDuration":        48000,
+        //     "ConsumedEnergyProgress":  9,
+        //     "EMPPartnerSessionID":    "2345ABC",
+        //     "EvseID":                 "DE*XYZ*ETEST1",
+        //     "Identification": {
+        //         "RFIDMifareFamilyIdentification": {
+        //             "UID":            "1234ABCD"
+        //         }
+        //     },
+        //     "MeterValueStart":         0,
+        //     "MeterValueInBetween": {
+        //         "meterValues": [
+        //             9
+        //         ]
+        //     },
+        //     "PartnerProductID":       "AC 1",
+        //     "OperatorID":             "DE*ABC",
+        //     "SessionID":              "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+        //     "SessionStart":           "2020-09-23T14:17:53.038Z",
+        //     "Type":                   "Progress"
         // }
 
         #endregion
@@ -425,11 +447,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse EventOcurred              [mandatory]
+                #region Parse EventOccurred             [mandatory]
 
-                if (!JSON.ParseMandatory("EventOcurred",
-                                         "event ocurred",
-                                         out DateTime EventOcurred,
+                if (!JSON.ParseMandatory("EventOccurred",
+                                         "event occurred",
+                                         out DateTime EventOccurred,
                                          out ErrorResponse))
                 {
                     return false;
@@ -562,7 +584,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                               Identification,
                                                                                               EVSEId,
                                                                                               ChargingStart,
-                                                                                              EventOcurred,
+                                                                                              EventOccurred,
 
                                                                                               CPOPartnerSessionId,
                                                                                               EMPPartnerSessionId,
@@ -666,7 +688,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("EvseID",                        EVSEId.                   ToString()),
                            new JProperty("Identification",                Identification.           ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
                            new JProperty("ChargingStart",                 ChargingStart.            ToIso8601()),
-                           new JProperty("EventOcurred",                  EventOcurred.             ToIso8601()),
+                           new JProperty("EventOccurred",                 EventOccurred.            ToIso8601()),
 
                            CPOPartnerSessionId.   HasValue
                                ? new JProperty("CPOPartnerSessionID",     CPOPartnerSessionId.Value.ToString())
@@ -735,7 +757,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     Identification,
                     EVSEId,
                     ChargingStart,
-                    EventOcurred,
+                    EventOccurred,
 
                     CPOPartnerSessionId,
                     EMPPartnerSessionId,
@@ -834,7 +856,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                Identification.Equals(ChargingProgressNotificationRequest.Identification) &&
                EVSEId.        Equals(ChargingProgressNotificationRequest.EVSEId)         &&
                ChargingStart. Equals(ChargingProgressNotificationRequest.ChargingStart)  &&
-               EventOcurred.  Equals(ChargingProgressNotificationRequest.EventOcurred);
+               EventOccurred. Equals(ChargingProgressNotificationRequest.EventOccurred);
 
         #endregion
 
@@ -856,7 +878,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        Identification.         GetHashCode()       * 41 ^
                        EVSEId.                 GetHashCode()       * 37 ^
                        ChargingStart.          GetHashCode()       * 31 ^
-                       EventOcurred.           GetHashCode()       * 29 ^
+                       EventOccurred.           GetHashCode()       * 29 ^
 
                       (CPOPartnerSessionId?.   GetHashCode() ?? 0) * 23 ^
                       (EMPPartnerSessionId?.   GetHashCode() ?? 0) * 19 ^
@@ -884,13 +906,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              " at ",  EVSEId,
                              " for ", Identification,
 
-                             " (" + SessionId + ") ",
+                             " (" + SessionId + ")",
 
                              PartnerProductId.HasValue
                                  ? " of " + PartnerProductId.Value
                                  : null,
 
-                             " at " + EventOcurred.ToIso8601());
+                             " at " + EventOccurred.ToIso8601());
 
         #endregion
 

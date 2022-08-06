@@ -742,7 +742,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              " at ",  EVSEId,
                              " for ", Identification,
 
-                             " (" + SessionId + ") ",
+                             " (" + SessionId + ")",
 
                              PartnerProductId.HasValue
                                  ? " of " + PartnerProductId.Value
