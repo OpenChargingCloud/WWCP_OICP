@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -75,6 +73,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_Error);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_Error);
+
             Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_OK);
             Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_Error);
             Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Responses_OK);
@@ -83,10 +86,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
             var oicpResult  = await empClient.PullEVSEData(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response.StatusCode.Code);
-            Assert.IsNotNull(oicpResult.Response.EVSEDataRecords);
-            Assert.IsFalse  (oicpResult.Response.EVSEDataRecords.Any());
+            Assert.IsNotNull(oicpResult.Response);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            Assert.IsNotNull(oicpResult.Response?.EVSEDataRecords);
+            Assert.IsFalse  (oicpResult.Response?.EVSEDataRecords.Any());
+
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEData.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_Error);
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEData.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_Error);
 
             Assert.AreEqual(1, empClientAPI.Counters.PullEVSEData.Requests_OK);
             Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_Error);

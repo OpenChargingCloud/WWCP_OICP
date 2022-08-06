@@ -2548,7 +2548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         #region Everything is ok!
 
-                        if (pullEVSEDataResponse.WasSuccessful)
+                        if (pullEVSEDataResponse.IsSuccessful)
                         {
 
                             DebugX.Log(String.Concat("Imported ", pullEVSEDataResponse.Response.NumberOfElements, " OICP EVSE data records (page " + (requestPage + 1) + " of " + pullEVSEDataResponse.Response.TotalPages + ")"));
@@ -3017,7 +3017,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         #region Everything is ok!
 
-                        if (pullEVSEStatusResult.WasSuccessful &&
+                        if (pullEVSEStatusResult.IsSuccessful &&
                             pullEVSEStatusResult.Response?.OperatorEVSEStatus.SafeAny() == true)
                         {
 
@@ -3259,7 +3259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Everything is ok!
 
-                    if (getChargeDetailRecordsResult.WasSuccessful)
+                    if (getChargeDetailRecordsResult.IsSuccessful)
                     {
 
                         var chargeDetailRecords = getChargeDetailRecordsResult.Response.ChargeDetailRecords;

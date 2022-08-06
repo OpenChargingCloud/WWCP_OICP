@@ -62,7 +62,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
@@ -105,7 +105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
@@ -149,7 +149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
@@ -192,7 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStart.Requests_OK);
@@ -237,7 +237,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             var oicpResult  = await empServerAPIClient.AuthorizeStop(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
             Assert.AreEqual(1, empServerAPI.Counters.AuthorizeStop.Requests_OK);

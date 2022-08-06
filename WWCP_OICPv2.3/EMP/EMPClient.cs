@@ -39,9 +39,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                      IEMPClient
     {
 
-        #region (class) Counters
+        #region (class) APICounters
 
-        public class Counters
+        public class APICounters
         {
 
             public APICounterValues  PullEVSEData                       { get; }
@@ -61,22 +61,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             public APICounterValues  GetChargeDetailRecords             { get; }
 
-            public Counters(APICounterValues? PullEVSEData                       = null,
-                            APICounterValues? PullEVSEStatus                     = null,
-                            APICounterValues? PullEVSEStatusById                 = null,
-                            APICounterValues? PullEVSEStatusByOperatorId         = null,
+            public APICounters(APICounterValues? PullEVSEData                       = null,
+                               APICounterValues? PullEVSEStatus                     = null,
+                               APICounterValues? PullEVSEStatusById                 = null,
+                               APICounterValues? PullEVSEStatusByOperatorId         = null,
 
-                            APICounterValues? PullPricingProductData             = null,
-                            APICounterValues? PullEVSEPricing                    = null,
+                               APICounterValues? PullPricingProductData             = null,
+                               APICounterValues? PullEVSEPricing                    = null,
 
-                            APICounterValues? PushAuthenticationData             = null,
+                               APICounterValues? PushAuthenticationData             = null,
 
-                            APICounterValues? AuthorizeRemoteReservationStart    = null,
-                            APICounterValues? AuthorizeRemoteReservationStop     = null,
-                            APICounterValues? AuthorizeRemoteStart               = null,
-                            APICounterValues? AuthorizeRemoteStop                = null,
+                               APICounterValues? AuthorizeRemoteReservationStart    = null,
+                               APICounterValues? AuthorizeRemoteReservationStop     = null,
+                               APICounterValues? AuthorizeRemoteStart               = null,
+                               APICounterValues? AuthorizeRemoteStop                = null,
 
-                            APICounterValues? GetChargeDetailRecords             = null)
+                               APICounterValues? GetChargeDetailRecords             = null)
             {
 
                 this.PullEVSEData                     = PullEVSEData                    ?? new APICounterValues();
@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public Counters  Counter    { get; }
+        public APICounters Counters    { get; }
 
         /// <summary>
         /// The attached HTTP client logger.
@@ -173,36 +173,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Custom JSON parsers
 
-        public CustomJObjectParserDelegate<PullEVSEDataResponse>?                                    CustomPullEVSEDataResponseParser                              { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEDataResponse>?                                     CustomPullEVSEDataResponseParser                              { get; set; }
 
-        public CustomJObjectParserDelegate<PullEVSEStatusResponse>?                                  CustomPullEVSEStatusResponseParser                            { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEStatusResponse>?                                   CustomPullEVSEStatusResponseParser                            { get; set; }
 
-        public CustomJObjectParserDelegate<PullEVSEStatusByIdResponse>?                              CustomPullEVSEStatusByIdResponseParser                        { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEStatusByIdResponse>?                               CustomPullEVSEStatusByIdResponseParser                        { get; set; }
 
-        public CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?                      CustomPullEVSEStatusByOperatorIdResponseParser                { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?                       CustomPullEVSEStatusByOperatorIdResponseParser                { get; set; }
 
 
-        public CustomJObjectParserDelegate<PullPricingProductDataResponse>?                          CustomPullPricingProductDataResponseParser                    { get; set; }
+        public CustomJObjectParserDelegate<PullPricingProductDataResponse>?                           CustomPullPricingProductDataResponseParser                    { get; set; }
 
-        public CustomJObjectParserDelegate<PullEVSEPricingResponse>?                                 CustomPullEVSEPricingResponseParser                           { get; set; }
+        public CustomJObjectParserDelegate<PullEVSEPricingResponse>?                                  CustomPullEVSEPricingResponseParser                           { get; set; }
 
         
-        public CustomJObjectParserDelegate<Acknowledgement<PushAuthenticationDataRequest>>           CustomPushAuthenticationDataAcknowledgementParser             { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushAuthenticationDataRequest>>?           CustomPushAuthenticationDataAcknowledgementParser             { get; set; }
 
 
-        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>>  CustomAuthorizeRemoteReservationStartAcknowledgementParser    { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>>?  CustomAuthorizeRemoteReservationStartAcknowledgementParser    { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>>   CustomAuthorizeRemoteReservationStopAcknowledgementParser     { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>>?   CustomAuthorizeRemoteReservationStopAcknowledgementParser     { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>>             CustomAuthorizeRemoteStartAcknowledgementParser               { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>>?             CustomAuthorizeRemoteStartAcknowledgementParser               { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>>              CustomAuthorizeRemoteStopAcknowledgementParser                { get; set; }
-
-
-        public CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?                          CustomGetChargeDetailRecordsResponseParser                    { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>>?              CustomAuthorizeRemoteStopAcknowledgementParser                { get; set; }
 
 
-        public CustomJObjectParserDelegate<StatusCode>?                                              CustomStatusCodeParser                                        { get; set; }
+        public CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?                           CustomGetChargeDetailRecordsResponseParser                    { get; set; }
+
+
+        public CustomJObjectParserDelegate<StatusCode>?                                               CustomStatusCodeParser                                        { get; set; }
 
         #endregion
 
@@ -245,22 +245,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever a PullEVSEData request will be send.
         /// </summary>
-        public event OnPullEVSEDataRequestDelegate   OnPullEVSEDataRequest;
+        public event OnPullEVSEDataRequestDelegate?   OnPullEVSEDataRequest;
 
         /// <summary>
         /// An event fired whenever a PullEVSEData HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler         OnPullEVSEDataHTTPRequest;
+        public event ClientRequestLogHandler?         OnPullEVSEDataHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEData HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler        OnPullEVSEDataHTTPResponse;
+        public event ClientResponseLogHandler?        OnPullEVSEDataHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEData request had been received.
         /// </summary>
-        public event OnPullEVSEDataResponseDelegate  OnPullEVSEDataResponse;
+        public event OnPullEVSEDataResponseDelegate?  OnPullEVSEDataResponse;
 
         #endregion
 
@@ -269,22 +269,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever a PullEVSEStatus request will be send.
         /// </summary>
-        public event OnPullEVSEStatusRequestDelegate   OnPullEVSEStatusRequest;
+        public event OnPullEVSEStatusRequestDelegate?   OnPullEVSEStatusRequest;
 
         /// <summary>
         /// An event fired whenever a PullEVSEStatus HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler           OnPullEVSEStatusHTTPRequest;
+        public event ClientRequestLogHandler?           OnPullEVSEStatusHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEStatus HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler          OnPullEVSEStatusHTTPResponse;
+        public event ClientResponseLogHandler?          OnPullEVSEStatusHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEStatus request had been received.
         /// </summary>
-        public event OnPullEVSEStatusResponseDelegate  OnPullEVSEStatusResponse;
+        public event OnPullEVSEStatusResponseDelegate?  OnPullEVSEStatusResponse;
 
         #endregion
 
@@ -293,22 +293,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever a PullEVSEStatusById request will be send.
         /// </summary>
-        public event OnPullEVSEStatusByIdRequestDelegate   OnPullEVSEStatusByIdRequest;
+        public event OnPullEVSEStatusByIdRequestDelegate?   OnPullEVSEStatusByIdRequest;
 
         /// <summary>
         /// An event fired whenever a PullEVSEStatusById HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler               OnPullEVSEStatusByIdHTTPRequest;
+        public event ClientRequestLogHandler?               OnPullEVSEStatusByIdHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEStatusById HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler              OnPullEVSEStatusByIdHTTPResponse;
+        public event ClientResponseLogHandler?              OnPullEVSEStatusByIdHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEStatusById request had been received.
         /// </summary>
-        public event OnPullEVSEStatusByIdResponseDelegate  OnPullEVSEStatusByIdResponse;
+        public event OnPullEVSEStatusByIdResponseDelegate?  OnPullEVSEStatusByIdResponse;
 
         #endregion
 
@@ -317,22 +317,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever a PullEVSEStatusByOperatorId request will be send.
         /// </summary>
-        public event OnPullEVSEStatusByOperatorIdRequestDelegate   OnPullEVSEStatusByOperatorIdRequest;
+        public event OnPullEVSEStatusByOperatorIdRequestDelegate?   OnPullEVSEStatusByOperatorIdRequest;
 
         /// <summary>
         /// An event fired whenever a PullEVSEStatusByOperatorId HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                       OnPullEVSEStatusByOperatorIdHTTPRequest;
+        public event ClientRequestLogHandler?                       OnPullEVSEStatusByOperatorIdHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEStatusByOperatorId HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                      OnPullEVSEStatusByOperatorIdHTTPResponse;
+        public event ClientResponseLogHandler?                      OnPullEVSEStatusByOperatorIdHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEStatusByOperatorId request had been received.
         /// </summary>
-        public event OnPullEVSEStatusByOperatorIdResponseDelegate  OnPullEVSEStatusByOperatorIdResponse;
+        public event OnPullEVSEStatusByOperatorIdResponseDelegate?  OnPullEVSEStatusByOperatorIdResponse;
 
         #endregion
 
@@ -342,22 +342,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever a PullPricingProductData request will be send.
         /// </summary>
-        public event OnPullPricingProductDataRequestDelegate   OnPullPricingProductDataRequest;
+        public event OnPullPricingProductDataRequestDelegate?   OnPullPricingProductDataRequest;
 
         /// <summary>
         /// An event fired whenever a PullPricingProductData HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                   OnPullPricingProductDataHTTPRequest;
+        public event ClientRequestLogHandler?                   OnPullPricingProductDataHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for a PullPricingProductData HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                  OnPullPricingProductDataHTTPResponse;
+        public event ClientResponseLogHandler?                  OnPullPricingProductDataHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for a PullPricingProductData request had been received.
         /// </summary>
-        public event OnPullPricingProductDataResponseDelegate  OnPullPricingProductDataResponse;
+        public event OnPullPricingProductDataResponseDelegate?  OnPullPricingProductDataResponse;
 
         #endregion
 
@@ -366,22 +366,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever a PullEVSEPricing request will be send.
         /// </summary>
-        public event OnPullEVSEPricingRequestDelegate   OnPullEVSEPricingRequest;
+        public event OnPullEVSEPricingRequestDelegate?   OnPullEVSEPricingRequest;
 
         /// <summary>
         /// An event fired whenever a PullEVSEPricing HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler            OnPullEVSEPricingHTTPRequest;
+        public event ClientRequestLogHandler?            OnPullEVSEPricingHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEPricing HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler           OnPullEVSEPricingHTTPResponse;
+        public event ClientResponseLogHandler?           OnPullEVSEPricingHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for a PullEVSEPricing request had been received.
         /// </summary>
-        public event OnPullEVSEPricingResponseDelegate  OnPullEVSEPricingResponse;
+        public event OnPullEVSEPricingResponseDelegate?  OnPullEVSEPricingResponse;
 
         #endregion
 
@@ -391,22 +391,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever an PushAuthenticationData request will be send.
         /// </summary>
-        public event OnPushAuthenticationDataRequestDelegate   OnPushAuthenticationDataRequest;
+        public event OnPushAuthenticationDataRequestDelegate?   OnPushAuthenticationDataRequest;
 
         /// <summary>
         /// An event fired whenever an PushAuthenticationData HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                   OnPushAuthenticationDataHTTPRequest;
+        public event ClientRequestLogHandler?                   OnPushAuthenticationDataHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for an PushAuthenticationData HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                  OnPushAuthenticationDataHTTPResponse;
+        public event ClientResponseLogHandler?                  OnPushAuthenticationDataHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for an PushAuthenticationData request had been received.
         /// </summary>
-        public event OnPushAuthenticationDataResponseDelegate  OnPushAuthenticationDataResponse;
+        public event OnPushAuthenticationDataResponseDelegate?  OnPushAuthenticationDataResponse;
 
         #endregion
 
@@ -416,22 +416,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationReservationStart request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteReservationStartRequestDelegate   OnAuthorizeRemoteReservationStartRequest;
+        public event OnAuthorizeRemoteReservationStartRequestDelegate?   OnAuthorizeRemoteReservationStartRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationReservationStart HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                            OnAuthorizeRemoteReservationStartHTTPRequest;
+        public event ClientRequestLogHandler?                            OnAuthorizeRemoteReservationStartHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStart HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                           OnAuthorizeRemoteReservationStartHTTPResponse;
+        public event ClientResponseLogHandler?                           OnAuthorizeRemoteReservationStartHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStart request had been received.
         /// </summary>
-        public event OnAuthorizeRemoteReservationStartResponseDelegate  OnAuthorizeRemoteReservationStartResponse;
+        public event OnAuthorizeRemoteReservationStartResponseDelegate?  OnAuthorizeRemoteReservationStartResponse;
 
         #endregion
 
@@ -440,22 +440,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationReservationStop request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteReservationStopRequestDelegate   OnAuthorizeRemoteReservationStopRequest;
+        public event OnAuthorizeRemoteReservationStopRequestDelegate?   OnAuthorizeRemoteReservationStopRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationReservationStop HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                           OnAuthorizeRemoteReservationStopHTTPRequest;
+        public event ClientRequestLogHandler?                           OnAuthorizeRemoteReservationStopHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStop HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                          OnAuthorizeRemoteReservationStopHTTPResponse;
+        public event ClientResponseLogHandler?                          OnAuthorizeRemoteReservationStopHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStop request had been received.
         /// </summary>
-        public event OnAuthorizeRemoteReservationStopResponseDelegate  OnAuthorizeRemoteReservationStopResponse;
+        public event OnAuthorizeRemoteReservationStopResponseDelegate?  OnAuthorizeRemoteReservationStopResponse;
 
         #endregion
 
@@ -464,22 +464,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStart request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStartRequestDelegate   OnAuthorizeRemoteStartRequest;
+        public event OnAuthorizeRemoteStartRequestDelegate?   OnAuthorizeRemoteStartRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStart HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                 OnAuthorizeRemoteStartHTTPRequest;
+        public event ClientRequestLogHandler?                 OnAuthorizeRemoteStartHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteStart HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                OnAuthorizeRemoteStartHTTPResponse;
+        public event ClientResponseLogHandler?                OnAuthorizeRemoteStartHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteStart request had been received.
         /// </summary>
-        public event OnAuthorizeRemoteStartResponseDelegate  OnAuthorizeRemoteStartResponse;
+        public event OnAuthorizeRemoteStartResponseDelegate?  OnAuthorizeRemoteStartResponse;
 
         #endregion
 
@@ -488,22 +488,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStop request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStopRequestDelegate   OnAuthorizeRemoteStopRequest;
+        public event OnAuthorizeRemoteStopRequestDelegate?   OnAuthorizeRemoteStopRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStop HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                OnAuthorizeRemoteStopHTTPRequest;
+        public event ClientRequestLogHandler?                OnAuthorizeRemoteStopHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteStop HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler               OnAuthorizeRemoteStopHTTPResponse;
+        public event ClientResponseLogHandler?               OnAuthorizeRemoteStopHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for an AuthorizeRemoteStop request had been received.
         /// </summary>
-        public event OnAuthorizeRemoteStopResponseDelegate  OnAuthorizeRemoteStopResponse;
+        public event OnAuthorizeRemoteStopResponseDelegate?  OnAuthorizeRemoteStopResponse;
 
         #endregion
 
@@ -513,22 +513,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event fired whenever a GetChargeDetailRecords request will be send.
         /// </summary>
-        public event OnGetChargeDetailRecordsRequestDelegate   OnGetChargeDetailRecordsRequest;
+        public event OnGetChargeDetailRecordsRequestDelegate?   OnGetChargeDetailRecordsRequest;
 
         /// <summary>
         /// An event fired whenever a GetChargeDetailRecords HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                   OnGetChargeDetailRecordsHTTPRequest;
+        public event ClientRequestLogHandler?                   OnGetChargeDetailRecordsHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response for a GetChargeDetailRecords HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                  OnGetChargeDetailRecordsHTTPResponse;
+        public event ClientResponseLogHandler?                  OnGetChargeDetailRecordsHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response for a GetChargeDetailRecords request had been received.
         /// </summary>
-        public event OnGetChargeDetailRecordsResponseDelegate  OnGetChargeDetailRecordsResponse;
+        public event OnGetChargeDetailRecordsResponseDelegate?  OnGetChargeDetailRecordsResponse;
 
         #endregion
 
@@ -590,7 +590,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.Counter     = new Counters();
+            this.Counters    = new APICounters();
 
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
@@ -637,7 +637,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEData.IncRequests_OK();
+            Counters.PullEVSEData.IncRequests_OK();
 
             try
             {
@@ -748,7 +748,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   CustomPullEVSEDataResponseParser))
                                 {
 
-                                    Counter.PullEVSEData.IncResponses_OK();
+                                    Counters.PullEVSEData.IncResponses_OK();
 
                                     result = OICPResult<PullEVSEDataResponse>.Success(Request,
                                                                                       pullEVSEDataResponse!,
@@ -971,6 +971,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.PullEVSEData.IncResponses_Error();
+
 
             #region Send OnPullEVSEDataResponse event
 
@@ -1029,7 +1032,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEStatus.IncRequests_OK();
+            Counters.PullEVSEStatus.IncRequests_OK();
 
             try
             {
@@ -1122,7 +1125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     CustomPullEVSEStatusResponseParser))
                                 {
 
-                                    Counter.PullEVSEStatus.IncResponses_OK();
+                                    Counters.PullEVSEStatus.IncResponses_OK();
 
                                     result = OICPResult<PullEVSEStatusResponse>.Success(Request,
                                                                                         pullEVSEStatusResponse!,
@@ -1362,6 +1365,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.PullEVSEStatus.IncResponses_Error();
+
 
             #region Send OnPullEVSEStatusResponse event
 
@@ -1419,7 +1425,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEStatusById.IncRequests_OK();
+            Counters.PullEVSEStatusById.IncRequests_OK();
 
             try
             {
@@ -1511,7 +1517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                         CustomPullEVSEStatusByIdResponseParser))
                                 {
 
-                                    Counter.PullEVSEStatusById.IncResponses_OK();
+                                    Counters.PullEVSEStatusById.IncResponses_OK();
 
                                     result = OICPResult<PullEVSEStatusByIdResponse>.Success(Request,
                                                                                             pullEVSEStatusByIdResponse!,
@@ -1736,6 +1742,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.PullEVSEStatusById.IncResponses_Error();
+
 
             #region Send OnPullEVSEStatusByIdResponse event
 
@@ -1793,7 +1802,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEStatusByOperatorId.IncRequests_OK();
+            Counters.PullEVSEStatusByOperatorId.IncRequests_OK();
 
             try
             {
@@ -1885,7 +1894,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 CustomPullEVSEStatusByOperatorIdResponseParser))
                                 {
 
-                                    Counter.PullEVSEStatusByOperatorId.IncResponses_OK();
+                                    Counters.PullEVSEStatusByOperatorId.IncResponses_OK();
 
                                     result = OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(Request,
                                                                                                     pullEVSEStatusResponse!,
@@ -2110,6 +2119,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.PullEVSEStatusByOperatorId.IncResponses_Error();
+
 
             #region Send OnPullEVSEStatusByOperatorIdResponse event
 
@@ -2168,7 +2180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullPricingProductData.IncRequests_OK();
+            Counters.PullPricingProductData.IncRequests_OK();
 
             try
             {
@@ -2278,7 +2290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             CustomPullPricingProductDataResponseParser))
                                 {
 
-                                    Counter.PullPricingProductData.IncResponses_OK();
+                                    Counters.PullPricingProductData.IncResponses_OK();
 
                                     result = OICPResult<PullPricingProductDataResponse>.Success(Request,
                                                                                                 pullEVSEDataResponse!,
@@ -2576,6 +2588,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.PullPricingProductData.IncResponses_Error();
+
 
             #region Send OnPullPricingProductDataResponse event
 
@@ -2633,7 +2648,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullEVSEPricing.IncRequests_OK();
+            Counters.PullEVSEPricing.IncRequests_OK();
 
             try
             {
@@ -2743,7 +2758,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      CustomPullEVSEPricingResponseParser))
                                 {
 
-                                    Counter.PullEVSEPricing.IncResponses_OK();
+                                    Counters.PullEVSEPricing.IncResponses_OK();
 
                                     result = OICPResult<PullEVSEPricingResponse>.Success(Request,
                                                                                          pullEVSEDataResponse!,
@@ -3041,6 +3056,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.PullEVSEPricing.IncResponses_Error();
+
 
             #region Send OnPullEVSEPricingResponse event
 
@@ -3099,7 +3117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.PushAuthenticationData.IncRequests_OK();
+            Counters.PushAuthenticationData.IncRequests_OK();
 
             try
             {
@@ -3193,7 +3211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             CustomPushAuthenticationDataAcknowledgementParser))
                                 {
 
-                                    Counter.PushAuthenticationData.IncResponses_OK();
+                                    Counters.PushAuthenticationData.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Success(Request,
                                                                                                                 pushAuthenticationDataResponse!,
@@ -3611,6 +3629,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.PushAuthenticationData.IncResponses_Error();
+
 
             #region Send OnPushAuthenticationDataResponse event
 
@@ -3669,7 +3690,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteReservationStart.IncRequests_OK();
+            Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
             try
             {
@@ -3762,7 +3783,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                      CustomAuthorizeRemoteReservationStartAcknowledgementParser))
                                 {
 
-                                    Counter.AuthorizeRemoteReservationStart.IncResponses_OK();
+                                    Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Success(Request,
                                                                                                                          authorizeRemoteReservationStartResponse!,
@@ -4011,6 +4032,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
+
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
@@ -4068,7 +4092,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteReservationStop.IncRequests_OK();
+            Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
             try
             {
@@ -4160,7 +4184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                     CustomAuthorizeRemoteReservationStopAcknowledgementParser))
                                 {
 
-                                    Counter.AuthorizeRemoteReservationStop.IncResponses_OK();
+                                    Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Success(Request,
                                                                                                                         authorizeRemoteReservationStopResponse!,
@@ -4409,6 +4433,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
+
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
@@ -4466,7 +4493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteStart.IncRequests_OK();
+            Counters.AuthorizeRemoteStart.IncRequests_OK();
 
             try
             {
@@ -4558,7 +4585,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                           CustomAuthorizeRemoteStartAcknowledgementParser))
                                 {
 
-                                    Counter.AuthorizeRemoteStart.IncResponses_OK();
+                                    Counters.AuthorizeRemoteStart.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Success(Request,
                                                                                                               authorizeRemoteStartResponse!,
@@ -4807,6 +4834,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteStart.IncResponses_Error();
+
 
             #region Send OnAuthorizeRemoteStartResponse event
 
@@ -4864,7 +4894,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.AuthorizeRemoteStop.IncRequests_OK();
+            Counters.AuthorizeRemoteStop.IncRequests_OK();
 
             try
             {
@@ -4956,7 +4986,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          CustomAuthorizeRemoteStopAcknowledgementParser))
                                 {
 
-                                    Counter.AuthorizeRemoteStop.IncResponses_OK();
+                                    Counters.AuthorizeRemoteStop.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Success(Request,
                                                                                                              authorizeRemoteStopResponse!,
@@ -5205,6 +5235,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteStop.IncResponses_Error();
+
 
             #region Send OnAuthorizeRemoteStopResponse event
 
@@ -5263,7 +5296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var StartTime = Timestamp.Now;
 
-            Counter.GetChargeDetailRecords.IncRequests_OK();
+            Counters.GetChargeDetailRecords.IncRequests_OK();
 
             try
             {
@@ -5373,7 +5406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             CustomGetChargeDetailRecordsResponseParser))
                                 {
 
-                                    Counter.GetChargeDetailRecords.IncResponses_OK();
+                                    Counters.GetChargeDetailRecords.IncResponses_OK();
 
                                     result = OICPResult<GetChargeDetailRecordsResponse>.Success(Request,
                                                                                                 getChargeDetailRecordsResponse!,
@@ -5596,6 +5629,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                            )
                            )
                        );
+
+            if (result.IsNotSuccessful)
+                Counters.GetChargeDetailRecords.IncResponses_Error();
 
 
             #region Send OnGetChargeDetailRecordsResponse event

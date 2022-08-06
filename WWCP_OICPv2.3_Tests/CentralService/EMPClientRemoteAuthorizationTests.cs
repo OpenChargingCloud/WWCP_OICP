@@ -69,7 +69,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService.tests
             var oicpResult = await empClient.AuthorizeRemoteStart(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (true,                oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 

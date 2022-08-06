@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     {
 
         /// <summary>
-        /// The given OICP result was successful.
+        /// The given OICP result is/was successful.
         /// </summary>
         /// <typeparam name="T">The type of the result.</typeparam>
         /// <param name="OICPResult">The OICP result.</param>
@@ -41,7 +41,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             where T : IResponse
 
             => OICPResult is not null &&
-                   OICPResult.WasSuccessful;
+                   OICPResult.IsSuccessful;
 
     }
 
@@ -67,9 +67,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public T?                    Response            { get; }
 
         /// <summary>
-        /// The request was successful.
+        /// The request is/was successful.
         /// </summary>
-        public Boolean               WasSuccessful       { get; }
+        public Boolean               IsSuccessful        { get; }
+
+        /// <summary>
+        /// The request is/was not successful.
+        /// </summary>
+        public Boolean               IsNotSuccessful
+            => !IsSuccessful;
 
         /// <summary>
         /// Possible request data validation errors.
@@ -115,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Request           = Request;
             this.Response          = Response;
-            this.WasSuccessful     = WasSuccessful;
+            this.IsSuccessful     = WasSuccessful;
             this.ValidationErrors  = ValidationErrors;
             this.ProcessId         = ProcessId;
 
@@ -200,13 +206,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     OICPResult.Response is not null
                         ? (T) (Object) OICPResult.Response
                         : default,
-                    OICPResult.WasSuccessful,
+                    OICPResult.IsSuccessful,
                     OICPResult.ValidationErrors,
                     OICPResult.ProcessId);
 
         #endregion
 
 
+        #region ToJSON(RequestJSON, ResponseJSON)
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
+        /// <param name="RequestJSON">A JSON representation of the request.</param>
+        /// <param name="ResponseJSON">A JSON representation of the response.</param>
         public JObject ToJSON(JObject? RequestJSON,
                               JObject? ResponseJSON)
 
@@ -220,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        ? new JProperty("response",          ResponseJSON)
                        : null,
 
-                   new JProperty("wasSuccessful",           WasSuccessful),
+                   new JProperty("wasSuccessful",           IsSuccessful),
 
                    ValidationErrors is not null
                        ? new JProperty("validationErrors",  ValidationErrors.ToJSON())
@@ -230,6 +243,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                );
 
+        #endregion
+
 
         #region (override) ToString()
 
@@ -238,7 +253,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(WasSuccessful      ? "Successful" : "Failed",
+            => String.Concat(IsSuccessful      ? "Successful" : "Failed",
                              ProcessId.HasValue ? ", ProcessId: " + ProcessId : "");
 
         #endregion

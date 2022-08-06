@@ -147,9 +147,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public APICounters                                                           Counters                                              { get; }
+        public APICounters                 Counters          { get; }
 
-        public Newtonsoft.Json.Formatting                                            JSONFormatting                                        { get; set; }
+        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
 
         #endregion
 

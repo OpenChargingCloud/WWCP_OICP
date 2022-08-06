@@ -90,7 +90,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             var oicpResult  = await empServerAPIClient.SendChargeDetailRecord(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (true,                oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 

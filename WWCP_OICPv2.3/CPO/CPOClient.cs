@@ -39,9 +39,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                      ICPOClient
     {
 
-        #region (class) Counters
+        #region (class) APICounters
 
-        public class Counters
+        public class APICounters
         {
 
             public APICounterValues  PushEVSEData                        { get; }
@@ -64,23 +64,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounterValues  SendChargeDetailRecord              { get; }
 
 
-            public Counters(APICounterValues? PushEVSEData                       = null,
-                            APICounterValues? PushEVSEStatus                     = null,
+            public APICounters(APICounterValues? PushEVSEData                       = null,
+                               APICounterValues? PushEVSEStatus                     = null,
 
-                            APICounterValues? PushPricingProductData             = null,
-                            APICounterValues? PushEVSEPricing                    = null,
+                               APICounterValues? PushPricingProductData             = null,
+                               APICounterValues? PushEVSEPricing                    = null,
 
-                            APICounterValues? PullAuthenticationData             = null,
+                               APICounterValues? PullAuthenticationData             = null,
 
-                            APICounterValues? AuthorizeStart                     = null,
-                            APICounterValues? AuthorizeStop                      = null,
+                               APICounterValues? AuthorizeStart                     = null,
+                               APICounterValues? AuthorizeStop                      = null,
 
-                            APICounterValues? SendChargingStartNotification      = null,
-                            APICounterValues? SendChargingProgressNotification   = null,
-                            APICounterValues? SendChargingEndNotification        = null,
-                            APICounterValues? SendChargingErrorNotification      = null,
+                               APICounterValues? SendChargingStartNotification      = null,
+                               APICounterValues? SendChargingProgressNotification   = null,
+                               APICounterValues? SendChargingEndNotification        = null,
+                               APICounterValues? SendChargingErrorNotification      = null,
 
-                            APICounterValues? SendChargeDetailRecord             = null)
+                               APICounterValues? SendChargeDetailRecord             = null)
 
             {
 
@@ -107,23 +107,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("PushEVSEData",                     PushEVSEData.                    ToJSON()),
-                       new JProperty("PushEVSEStatus",                   PushEVSEStatus.                  ToJSON()),
+                       new JProperty("PushEVSEData",                 PushEVSEData.                ToJSON()),
+                       new JProperty("PushEVSEStatus",               PushEVSEStatus.              ToJSON()),
 
-                       new JProperty("PushPricingProductData",           PushPricingProductData.          ToJSON()),
-                       new JProperty("PushEVSEPricing",                  PushEVSEPricing.                 ToJSON()),
+                       new JProperty("PushPricingProductData",       PushPricingProductData.      ToJSON()),
+                       new JProperty("PushEVSEPricing",              PushEVSEPricing.             ToJSON()),
 
-                       new JProperty("PullAuthenticationData",           PullAuthenticationData.          ToJSON()),
+                       new JProperty("PullAuthenticationData",       PullAuthenticationData.      ToJSON()),
 
-                       new JProperty("AuthorizeStart",                   AuthorizeStart.                  ToJSON()),
-                       new JProperty("AuthorizeStop",                    AuthorizeStop.                   ToJSON()),
+                       new JProperty("AuthorizeStart",               AuthorizeStart.              ToJSON()),
+                       new JProperty("AuthorizeStop",                AuthorizeStop.               ToJSON()),
 
-                       new JProperty("SendChargingStartNotification",    SendChargingStartNotification.   ToJSON()),
-                       new JProperty("SendChargingProgressNotification", SendChargingProgressNotification.ToJSON()),
-                       new JProperty("SendChargingEndNotification",      SendChargingEndNotification.     ToJSON()),
-                       new JProperty("SendChargingErrorNotification",    SendChargingErrorNotification.   ToJSON()),
+                       new JProperty("ChargingStartNotification",    SendChargingStartNotification.   ToJSON()),
+                       new JProperty("ChargingProgressNotification", SendChargingProgressNotification.ToJSON()),
+                       new JProperty("ChargingEndNotification",      SendChargingEndNotification.     ToJSON()),
+                       new JProperty("ChargingErrorNotification",    SendChargingErrorNotification.   ToJSON()),
 
-                       new JProperty("SendChargeDetailRecord",           SendChargeDetailRecord.          ToJSON())
+                       new JProperty("SendChargeDetailRecord",       SendChargeDetailRecord.          ToJSON())
                    );
 
         }
@@ -172,39 +172,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
         }
 
-        public Counters                                                                           Counter                                                      { get; }
+        public APICounters                 Counters      { get; }
 
-        public Newtonsoft.Json.Formatting                                                         JSONFormat                                                   { get; set; }
+        public Newtonsoft.Json.Formatting  JSONFormat    { get; set; }
 
         #endregion
 
         #region Custom JSON parsers
 
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>                  CustomPushEVSEDataAcknowledgementParser                      { get; set; }
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>                CustomPushEVSEStatusAcknowledgementParser                    { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEDataRequest>>?                  CustomPushEVSEDataAcknowledgementParser                      { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEStatusRequest>>?                CustomPushEVSEStatusAcknowledgementParser                    { get; set; }
 
-        public CustomJObjectParserDelegate<Acknowledgement<PushPricingProductDataRequest>>        CustomPushPricingProductDataAcknowledgementParser            { get; set; }
-        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEPricingRequest>>               CustomPushEVSEPricingAcknowledgementParser                   { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushPricingProductDataRequest>>?        CustomPushPricingProductDataAcknowledgementParser            { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<PushEVSEPricingRequest>>?               CustomPushEVSEPricingAcknowledgementParser                   { get; set; }
 
-        public CustomJObjectParserDelegate<PullAuthenticationDataResponse>                        CustomPullAuthenticationDataResponseParser                   { get; set; }
+        public CustomJObjectParserDelegate<PullAuthenticationDataResponse>?                        CustomPullAuthenticationDataResponseParser                   { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizationStartResponse>                            CustomAuthorizationStartResponseParser                       { get; set; }
-        public CustomJObjectParserDelegate<AuthorizationStopResponse>                             CustomAuthorizationStopResponseParser                        { get; set; }
-
-
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingStartNotificationRequest>>     CustomChargingStartNotificationAcknowledgementParser         { get; set; }
-
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingProgressNotificationRequest>>  CustomChargingProgressNotificationAcknowledgementParser      { get; set; }
-
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingEndNotificationRequest>>       CustomChargingEndNotificationAcknowledgementParser           { get; set; }
-
-        public CustomJObjectParserDelegate<Acknowledgement<ChargingErrorNotificationRequest>>     CustomChargingErrorNotificationAcknowledgementParser         { get; set; }
+        public CustomJObjectParserDelegate<AuthorizationStartResponse>?                            CustomAuthorizationStartResponseParser                       { get; set; }
+        public CustomJObjectParserDelegate<AuthorizationStopResponse>?                             CustomAuthorizationStopResponseParser                        { get; set; }
 
 
-        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>>            CustomSendChargeDetailRecordAcknowledgementParser            { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingStartNotificationRequest>>?     CustomChargingStartNotificationAcknowledgementParser         { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingProgressNotificationRequest>>?  CustomChargingProgressNotificationAcknowledgementParser      { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingEndNotificationRequest>>?       CustomChargingEndNotificationAcknowledgementParser           { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingErrorNotificationRequest>>?     CustomChargingErrorNotificationAcknowledgementParser         { get; set; }
 
 
-        public CustomJObjectParserDelegate<StatusCode>?                                           CustomStatusCodeParser                                       { get; set; }
+        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>>?            CustomSendChargeDetailRecordAcknowledgementParser            { get; set; }
+
+
+        public CustomJObjectParserDelegate<StatusCode>?                                            CustomStatusCodeParser                                       { get; set; }
 
         #endregion
 
@@ -285,22 +285,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a PushEVSEData will be send.
         /// </summary>
-        public event OnPushEVSEDataRequestDelegate   OnPushEVSEDataRequest;
+        public event OnPushEVSEDataRequestDelegate?   OnPushEVSEDataRequest;
 
         /// <summary>
         /// An event fired whenever a PushEVSEData HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler         OnPushEVSEDataHTTPRequest;
+        public event ClientRequestLogHandler?         OnPushEVSEDataHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a PushEVSEData HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler        OnPushEVSEDataHTTPResponse;
+        public event ClientResponseLogHandler?        OnPushEVSEDataHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a PushEVSEData HTTP request had been received.
         /// </summary>
-        public event OnPushEVSEDataResponseDelegate  OnPushEVSEDataResponse;
+        public event OnPushEVSEDataResponseDelegate?  OnPushEVSEDataResponse;
 
         #endregion
 
@@ -309,22 +309,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a PushEVSEStatus will be send.
         /// </summary>
-        public event OnPushEVSEStatusRequestDelegate   OnPushEVSEStatusRequest;
+        public event OnPushEVSEStatusRequestDelegate?   OnPushEVSEStatusRequest;
 
         /// <summary>
         /// An event fired whenever a PushEVSEStatus HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler           OnPushEVSEStatusHTTPRequest;
+        public event ClientRequestLogHandler?           OnPushEVSEStatusHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a PushEVSEStatus HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler          OnPushEVSEStatusHTTPResponse;
+        public event ClientResponseLogHandler?          OnPushEVSEStatusHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a PushEVSEStatus HTTP request had been received.
         /// </summary>
-        public event OnPushEVSEStatusResponseDelegate  OnPushEVSEStatusResponse;
+        public event OnPushEVSEStatusResponseDelegate?  OnPushEVSEStatusResponse;
 
         #endregion
 
@@ -334,22 +334,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a PushPricingProductData will be send.
         /// </summary>
-        public event OnPushPricingProductDataRequestDelegate   OnPushPricingProductDataRequest;
+        public event OnPushPricingProductDataRequestDelegate?   OnPushPricingProductDataRequest;
 
         /// <summary>
         /// An event fired whenever a PushPricingProductData HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                   OnPushPricingProductDataHTTPRequest;
+        public event ClientRequestLogHandler?                   OnPushPricingProductDataHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                  OnPushPricingProductDataHTTPResponse;
+        public event ClientResponseLogHandler?                  OnPushPricingProductDataHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
         /// </summary>
-        public event OnPushPricingProductDataResponseDelegate  OnPushPricingProductDataResponse;
+        public event OnPushPricingProductDataResponseDelegate?  OnPushPricingProductDataResponse;
 
         #endregion
 
@@ -358,22 +358,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a PushEVSEPricing will be send.
         /// </summary>
-        public event OnPushEVSEPricingRequestDelegate   OnPushEVSEPricingRequest;
+        public event OnPushEVSEPricingRequestDelegate?   OnPushEVSEPricingRequest;
 
         /// <summary>
         /// An event fired whenever a PushEVSEPricing HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler            OnPushEVSEPricingHTTPRequest;
+        public event ClientRequestLogHandler?            OnPushEVSEPricingHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler           OnPushEVSEPricingHTTPResponse;
+        public event ClientResponseLogHandler?           OnPushEVSEPricingHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
         /// </summary>
-        public event OnPushEVSEPricingResponseDelegate  OnPushEVSEPricingResponse;
+        public event OnPushEVSEPricingResponseDelegate?  OnPushEVSEPricingResponse;
 
         #endregion
 
@@ -383,22 +383,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a PullAuthenticationData will be send.
         /// </summary>
-        public event OnPullAuthenticationDataRequestDelegate   OnPullAuthenticationDataRequest;
+        public event OnPullAuthenticationDataRequestDelegate?   OnPullAuthenticationDataRequest;
 
         /// <summary>
         /// An event fired whenever a PullAuthenticationData HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                   OnPullAuthenticationDataHTTPRequest;
+        public event ClientRequestLogHandler?                   OnPullAuthenticationDataHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a PullAuthenticationData HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                  OnPullAuthenticationDataHTTPResponse;
+        public event ClientResponseLogHandler?                  OnPullAuthenticationDataHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a PullAuthenticationData HTTP request had been received.
         /// </summary>
-        public event OnPullAuthenticationDataResponseDelegate  OnPullAuthenticationDataResponse;
+        public event OnPullAuthenticationDataResponseDelegate?  OnPullAuthenticationDataResponse;
 
         #endregion
 
@@ -408,22 +408,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeStart request will be send.
         /// </summary>
-        public event OnAuthorizeStartRequestDelegate     OnAuthorizeStartRequest;
+        public event OnAuthorizeStartRequestDelegate?     OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeStart HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler            OnAuthorizeStartHTTPRequest;
+        public event ClientRequestLogHandler?            OnAuthorizeStartHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStart HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler           OnAuthorizeStartHTTPResponse;
+        public event ClientResponseLogHandler?           OnAuthorizeStartHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStart request had been received.
         /// </summary>
-        public event OnAuthorizeStartResponseDelegate    OnAuthorizeStartResponse;
+        public event OnAuthorizeStartResponseDelegate?    OnAuthorizeStartResponse;
 
         #endregion
 
@@ -432,22 +432,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeStop request will be send.
         /// </summary>
-        public event OnAuthorizeStopRequestDelegate   OnAuthorizeStopRequest;
+        public event OnAuthorizeStopRequestDelegate?   OnAuthorizeStopRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeStop HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler         OnAuthorizeStopHTTPRequest;
+        public event ClientRequestLogHandler?         OnAuthorizeStopHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStop HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler        OnAuthorizeStopHTTPResponse;
+        public event ClientResponseLogHandler?        OnAuthorizeStopHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStop request had been received.
         /// </summary>
-        public event OnAuthorizeStopResponseDelegate  OnAuthorizeStopResponse;
+        public event OnAuthorizeStopResponseDelegate?  OnAuthorizeStopResponse;
 
         #endregion
 
@@ -457,22 +457,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingStartNotification will be send.
         /// </summary>
-        public event OnChargingStartNotificationRequestDelegate   OnChargingStartNotificationRequest;
+        public event OnChargingStartNotificationRequestDelegate?   OnChargingStartNotificationRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingStartNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                      OnChargingStartNotificationHTTPRequest;
+        public event ClientRequestLogHandler?                      OnChargingStartNotificationHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingStartNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                     OnChargingStartNotificationHTTPResponse;
+        public event ClientResponseLogHandler?                     OnChargingStartNotificationHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingStartNotification had been received.
         /// </summary>
-        public event OnChargingStartNotificationResponseDelegate  OnChargingStartNotificationResponse;
+        public event OnChargingStartNotificationResponseDelegate?  OnChargingStartNotificationResponse;
 
         #endregion
 
@@ -481,22 +481,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingProgressNotification will be send.
         /// </summary>
-        public event OnChargingProgressNotificationRequestDelegate   OnChargingProgressNotificationRequest;
+        public event OnChargingProgressNotificationRequestDelegate?   OnChargingProgressNotificationRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingProgressNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                         OnChargingProgressNotificationHTTPRequest;
+        public event ClientRequestLogHandler?                         OnChargingProgressNotificationHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingProgressNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                        OnChargingProgressNotificationHTTPResponse;
+        public event ClientResponseLogHandler?                        OnChargingProgressNotificationHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingProgressNotification had been received.
         /// </summary>
-        public event OnChargingProgressNotificationResponseDelegate  OnChargingProgressNotificationResponse;
+        public event OnChargingProgressNotificationResponseDelegate?  OnChargingProgressNotificationResponse;
 
         #endregion
 
@@ -505,22 +505,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingEndNotification will be send.
         /// </summary>
-        public event OnChargingEndNotificationRequestDelegate   OnChargingEndNotificationRequest;
+        public event OnChargingEndNotificationRequestDelegate?   OnChargingEndNotificationRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingEndNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                    OnChargingEndNotificationHTTPRequest;
+        public event ClientRequestLogHandler?                    OnChargingEndNotificationHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingEndNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                   OnChargingEndNotificationHTTPResponse;
+        public event ClientResponseLogHandler?                   OnChargingEndNotificationHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingEndNotification had been received.
         /// </summary>
-        public event OnChargingEndNotificationResponseDelegate  OnChargingEndNotificationResponse;
+        public event OnChargingEndNotificationResponseDelegate?  OnChargingEndNotificationResponse;
 
         #endregion
 
@@ -529,22 +529,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargingErrorNotification will be send.
         /// </summary>
-        public event OnChargingErrorNotificationRequestDelegate   OnChargingErrorNotificationRequest;
+        public event OnChargingErrorNotificationRequestDelegate?   OnChargingErrorNotificationRequest;
 
         /// <summary>
         /// An event fired whenever a ChargingErrorNotification HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                      OnChargingErrorNotificationHTTPRequest;
+        public event ClientRequestLogHandler?                      OnChargingErrorNotificationHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingErrorNotification HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                     OnChargingErrorNotificationHTTPResponse;
+        public event ClientResponseLogHandler?                     OnChargingErrorNotificationHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a ChargingErrorNotification had been received.
         /// </summary>
-        public event OnChargingErrorNotificationResponseDelegate  OnChargingErrorNotificationResponse;
+        public event OnChargingErrorNotificationResponseDelegate?  OnChargingErrorNotificationResponse;
 
         #endregion
 
@@ -554,22 +554,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a ChargeDetailRecord will be send.
         /// </summary>
-        public event OnSendChargeDetailRecordRequestDelegate   OnSendChargeDetailRecordRequest;
+        public event OnSendChargeDetailRecordRequestDelegate?   OnSendChargeDetailRecordRequest;
 
         /// <summary>
         /// An event fired whenever a ChargeDetailRecord HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler                   OnSendChargeDetailRecordHTTPRequest;
+        public event ClientRequestLogHandler?                   OnSendChargeDetailRecordHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to a ChargeDetailRecord HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler                  OnSendChargeDetailRecordHTTPResponse;
+        public event ClientResponseLogHandler?                  OnSendChargeDetailRecordHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to a ChargeDetailRecord had been received.
         /// </summary>
-        public event OnSendChargeDetailRecordResponseDelegate  OnSendChargeDetailRecordResponse;
+        public event OnSendChargeDetailRecordResponseDelegate?  OnSendChargeDetailRecordResponse;
 
         #endregion
 
@@ -630,7 +630,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.Counter     = new Counters();
+            this.Counters    = new APICounters();
 
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
@@ -672,7 +672,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.PushEVSEData.IncRequests_OK();
+            Counters.PushEVSEData.IncRequests_OK();
 
             try
             {
@@ -814,7 +814,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       CustomPushEVSEDataAcknowledgementParser))
                                     {
 
-                                        Counter.PushEVSEData.IncResponses_OK();
+                                        Counters.PushEVSEData.IncResponses_OK();
 
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(Request,
                                                                                                           acknowledgement!,
@@ -1127,6 +1127,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                )
                            );
 
+                if (result.IsNotSuccessful)
+                    Counters.PushEVSEData.IncResponses_Error();
+
             }
 
 
@@ -1183,7 +1186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.PushEVSEStatus.IncRequests_OK();
+            Counters.PushEVSEStatus.IncRequests_OK();
 
             try
             {
@@ -1319,7 +1322,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                         CustomPushEVSEStatusAcknowledgementParser))
                                     {
 
-                                        Counter.PushEVSEStatus.IncResponses_OK();
+                                        Counters.PushEVSEStatus.IncResponses_OK();
 
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(Request,
                                                                                                             acknowledgement!,
@@ -1629,6 +1632,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                )
                            );
 
+                if (result.IsNotSuccessful)
+                    Counters.PushEVSEStatus.IncResponses_Error();
+
             }
 
 
@@ -1686,7 +1692,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.PushPricingProductData.IncRequests_OK();
+            Counters.PushPricingProductData.IncRequests_OK();
 
             try
             {
@@ -1822,7 +1828,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                 CustomPushPricingProductDataAcknowledgementParser))
                                     {
 
-                                        Counter.PushPricingProductData.IncResponses_OK();
+                                        Counters.PushPricingProductData.IncResponses_OK();
 
                                         result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(Request,
                                                                                                                     acknowledgement!,
@@ -2135,6 +2141,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                )
                            );
 
+                if (result.IsNotSuccessful)
+                    Counters.PushPricingProductData.IncResponses_Error();
+
             }
 
 
@@ -2191,7 +2200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.PushEVSEPricing.IncRequests_OK();
+            Counters.PushEVSEPricing.IncRequests_OK();
 
             try
             {
@@ -2326,7 +2335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                          CustomPushEVSEPricingAcknowledgementParser))
                                     {
 
-                                        Counter.PushEVSEPricing.IncResponses_OK();
+                                        Counters.PushEVSEPricing.IncResponses_OK();
 
                                         result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(Request,
                                                                                                              acknowledgement!,
@@ -2639,6 +2648,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                )
                            );
 
+                if (result.IsNotSuccessful)
+                    Counters.PushEVSEPricing.IncResponses_Error();
+
             }
 
 
@@ -2696,7 +2708,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.PullAuthenticationData.IncRequests_OK();
+            Counters.PullAuthenticationData.IncRequests_OK();
 
             try
             {
@@ -2811,7 +2823,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                             CustomPullAuthenticationDataResponseParser))
                                 {
 
-                                    Counter.PullAuthenticationData.IncResponses_OK();
+                                    Counters.PullAuthenticationData.IncResponses_OK();
 
                                     result = OICPResult<PullAuthenticationDataResponse>.Success(Request,
                                                                                                 pullAuthenticationDataResponse!,
@@ -3191,6 +3203,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             )
                         );
 
+            if (result.IsNotSuccessful)
+                Counters.PullAuthenticationData.IncResponses_Error();
+
 
             #region Send OnPullAuthenticationDataResponse event
 
@@ -3246,7 +3261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.AuthorizeStart.IncRequests_OK();
+            Counters.AuthorizeStart.IncRequests_OK();
 
             try
             {
@@ -3386,7 +3401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                         CustomAuthorizationStartResponseParser))
                                 {
 
-                                    Counter.AuthorizeStart.IncResponses_OK();
+                                    Counters.AuthorizeStart.IncResponses_OK();
 
                                     result = OICPResult<AuthorizationStartResponse>.Success(Request,
                                                                                             authorizationStartResponse!,
@@ -3585,6 +3600,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeStart.IncResponses_Error();
+
 
             #region Send OnAuthorizeStartResponse event
 
@@ -3639,7 +3657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.AuthorizeStop.IncRequests_OK();
+            Counters.AuthorizeStop.IncRequests_OK();
 
             try
             {
@@ -3732,7 +3750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                        CustomAuthorizationStopResponseParser))
                                 {
 
-                                    Counter.AuthorizeStop.IncResponses_OK();
+                                    Counters.AuthorizeStop.IncResponses_OK();
 
                                     result = OICPResult<AuthorizationStopResponse>.Success(Request,
                                                                                            authorizationStopResponse!,
@@ -4001,6 +4019,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeStop.IncResponses_Error();
+
 
             #region Send OnAuthorizeStopResponse event
 
@@ -4056,7 +4077,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.SendChargingStartNotification.IncRequests_OK();
+            Counters.SendChargingStartNotification.IncRequests_OK();
 
             try
             {
@@ -4169,7 +4190,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                CustomChargingStartNotificationAcknowledgementParser))
                                 {
 
-                                    Counter.SendChargingStartNotification.IncResponses_OK();
+                                    Counters.SendChargingStartNotification.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(Request,
                                                                                                                    acknowledgement!,
@@ -4466,6 +4487,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingStartNotification.IncResponses_Error();
+
 
             #region  OnChargingStartNotificationResponse event
 
@@ -4520,7 +4544,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.SendChargingProgressNotification.IncRequests_OK();
+            Counters.SendChargingProgressNotification.IncRequests_OK();
 
             try
             {
@@ -4633,7 +4657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                   CustomChargingProgressNotificationAcknowledgementParser))
                                 {
 
-                                    Counter.SendChargingProgressNotification.IncResponses_OK();
+                                    Counters.SendChargingProgressNotification.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(Request,
                                                                                                                       acknowledgement!,
@@ -4930,6 +4954,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingProgressNotification.IncResponses_Error();
+
 
             #region  OnChargingProgressNotificationResponse event
 
@@ -4984,7 +5011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.SendChargingEndNotification.IncRequests_OK();
+            Counters.SendChargingEndNotification.IncRequests_OK();
 
             try
             {
@@ -5097,7 +5124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                              CustomChargingEndNotificationAcknowledgementParser))
                                 {
 
-                                    Counter.SendChargingEndNotification.IncResponses_OK();
+                                    Counters.SendChargingEndNotification.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(Request,
                                                                                                                  acknowledgement!,
@@ -5394,6 +5421,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingEndNotification.IncResponses_Error();
+
 
             #region  OnChargingEndNotificationResponse event
 
@@ -5448,7 +5478,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.SendChargingErrorNotification.IncRequests_OK();
+            Counters.SendChargingErrorNotification.IncRequests_OK();
 
             try
             {
@@ -5561,7 +5591,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                CustomChargingErrorNotificationAcknowledgementParser))
                                 {
 
-                                    Counter.SendChargingErrorNotification.IncResponses_OK();
+                                    Counters.SendChargingErrorNotification.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(Request,
                                                                                                                    acknowledgement!,
@@ -5926,6 +5956,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            )
                        );
 
+            if (result.IsNotSuccessful)
+                Counters.SendChargingErrorNotification.IncResponses_Error();
+
 
             #region  OnChargingErrorNotificationResponse event
 
@@ -5981,7 +6014,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var StartTime = Timestamp.Now;
 
-            Counter.SendChargeDetailRecord.IncRequests_OK();
+            Counters.SendChargeDetailRecord.IncRequests_OK();
 
             try
             {
@@ -6077,7 +6110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                         CustomSendChargeDetailRecordAcknowledgementParser))
                                 {
 
-                                    Counter.SendChargeDetailRecord.IncResponses_OK();
+                                    Counters.SendChargeDetailRecord.IncResponses_OK();
 
                                     result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(Request,
                                                                                                             acknowledgement!,
@@ -6317,6 +6350,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                false
                            )
                        );
+
+            if (result.IsNotSuccessful)
+                Counters.SendChargeDetailRecord.IncResponses_Error();
 
 
             #region Send OnChargeDetailRecordSent event

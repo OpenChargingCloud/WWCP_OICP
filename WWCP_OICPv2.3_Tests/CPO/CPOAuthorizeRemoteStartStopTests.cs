@@ -69,7 +69,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteStart(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (true,                oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
@@ -118,7 +118,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteStart(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (false,                                 oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
 
@@ -166,7 +166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteStop(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (true,                oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
@@ -213,7 +213,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteStop(request);
 
             Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.WasSuccessful);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (false,                                 oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
 
