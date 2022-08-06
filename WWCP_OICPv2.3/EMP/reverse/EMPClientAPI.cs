@@ -1298,6 +1298,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.PullEVSEData.IncRequests_Error();
+
                                                      pullEVSEDataResponse = OICPResult<PullEVSEDataResponse>.Failed(
                                                                                 this,
                                                                                 new PullEVSEDataResponse(
@@ -1312,6 +1316,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                 )
                                                                                 )
                                                                             );
+
+                                                 }
 
                                                  #endregion
 
@@ -1368,8 +1374,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                             Select(e => e(Timestamp.Now,
                                                                                                                                           this,
                                                                                                                                           pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PullEVSEData.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -1435,6 +1439,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PullEVSEData.IncRequests_Error();
+
                                                      pullEVSEDataResponse = OICPResult<PullEVSEDataResponse>.Failed(
                                                                                 this,
                                                                                 new PullEVSEDataResponse(
@@ -1451,6 +1459,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                 )
                                                                                 )
                                                                             );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -1471,6 +1481,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             )
                                                                         );
                                              }
+
+
+                                             if (pullEVSEDataResponse.IsSuccessful)
+                                                 Counters.PullEVSEData.IncResponses_OK();
+                                             else
+                                                 Counters.PullEVSEData.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1524,6 +1541,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.PullEVSEStatus.IncRequests_Error();
+
                                                      pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
                                                                                   this,
                                                                                   new PullEVSEStatusResponse(
@@ -1538,6 +1559,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                   )
                                                                                   )
                                                                               );
+
+                                                 }
 
                                                  #endregion
 
@@ -1591,8 +1614,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                               this,
                                                                                                                                               pullEVSEStatusRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PullEVSEStatus.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -1658,42 +1679,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PullEVSEStatus.IncRequests_Error();
+
                                                      pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
-                                                                                this,
-                                                                                new PullEVSEStatusResponse(
-                                                                                    Timestamp.Now,
-                                                                                    Request.EventTrackingId,
-                                                                                    processId,
-                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                    Array.Empty<OperatorEVSEStatus>(),
-                                                                                    pullEVSEStatusRequest,
-                                                                                    StatusCode: new StatusCode(
-                                                                                                    StatusCodes.DataError,
-                                                                                                    "We could not parse the given PullEVSEStatus request!",
-                                                                                                    errorResponse
-                                                                                                )
-                                                                                )
-                                                                            );
+                                                                                  this,
+                                                                                  new PullEVSEStatusResponse(
+                                                                                      Timestamp.Now,
+                                                                                      Request.EventTrackingId,
+                                                                                      processId,
+                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                      Array.Empty<OperatorEVSEStatus>(),
+                                                                                      pullEVSEStatusRequest,
+                                                                                      StatusCode: new StatusCode(
+                                                                                                      StatusCodes.DataError,
+                                                                                                      "We could not parse the given PullEVSEStatus request!",
+                                                                                                      errorResponse
+                                                                                                  )
+                                                                                  )
+                                                                              );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
                                              {
                                                  pullEVSEStatusResponse = OICPResult<PullEVSEStatusResponse>.Failed(
-                                                                            this,
-                                                                            new PullEVSEStatusResponse(
-                                                                                Timestamp.Now,
-                                                                                Request.EventTrackingId,
-                                                                                processId,
-                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                Array.Empty<OperatorEVSEStatus>(),
-                                                                                StatusCode: new StatusCode(
-                                                                                                StatusCodes.SystemError,
-                                                                                                e.Message,
-                                                                                                e.StackTrace
-                                                                                            )
-                                                                            )
-                                                                        );
+                                                                              this,
+                                                                              new PullEVSEStatusResponse(
+                                                                                  Timestamp.Now,
+                                                                                  Request.EventTrackingId,
+                                                                                  processId,
+                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                  Array.Empty<OperatorEVSEStatus>(),
+                                                                                  StatusCode: new StatusCode(
+                                                                                                  StatusCodes.SystemError,
+                                                                                                  e.Message,
+                                                                                                  e.StackTrace
+                                                                                              )
+                                                                              )
+                                                                          );
                                              }
+
+
+                                             if (pullEVSEStatusResponse.IsSuccessful)
+                                                 Counters.PullEVSEStatus.IncResponses_OK();
+                                             else
+                                                 Counters.PullEVSEStatus.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1742,6 +1776,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.PullEVSEStatusById.IncRequests_Error();
+
                                                      pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                                                                   this,
                                                                                   new PullEVSEStatusByIdResponse(
@@ -1756,6 +1794,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                   )
                                                                                   )
                                                                               );
+
+                                                 }
 
                                                  #endregion
 
@@ -1809,8 +1849,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                         Select(e => e(Timestamp.Now,
                                                                                                                                                       this,
                                                                                                                                                       pullEVSEStatusByIdRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PullEVSEStatusById.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -1876,6 +1914,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PullEVSEStatusById.IncRequests_Error();
+
                                                      pullEVSEStatusByIdResponse = OICPResult<PullEVSEStatusByIdResponse>.Failed(
                                                                                       this,
                                                                                       new PullEVSEStatusByIdResponse(
@@ -1892,6 +1934,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                       )
                                                                                       )
                                                                                   );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -1912,6 +1956,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                   )
                                                                               );
                                              }
+
+
+                                             if (pullEVSEStatusByIdResponse.IsSuccessful)
+                                                 Counters.PullEVSEStatusById.IncResponses_OK();
+                                             else
+                                                 Counters.PullEVSEStatusById.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1959,6 +2010,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.PullEVSEStatusByOperatorId.IncRequests_Error();
+
                                                      pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                                                                               this,
                                                                                               new PullEVSEStatusByOperatorIdResponse(
@@ -1973,6 +2028,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                               )
                                                                                               )
                                                                                           );
+
+                                                 }
 
                                                  #endregion
 
@@ -2026,8 +2083,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                         Select(e => e(Timestamp.Now,
                                                                                                                                                                       this,
                                                                                                                                                                       pullEVSEStatusByOperatorIdRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PullEVSEStatusByOperatorId.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -2093,6 +2148,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PullEVSEStatusByOperatorId.IncRequests_Error();
+
                                                      pullEVSEStatusByOperatorIdResponse = OICPResult<PullEVSEStatusByOperatorIdResponse>.Failed(
                                                                                               this,
                                                                                               new PullEVSEStatusByOperatorIdResponse(
@@ -2109,6 +2168,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                               )
                                                                                               )
                                                                                           );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -2129,6 +2190,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                           )
                                                                                       );
                                              }
+
+
+                                             if (pullEVSEStatusByOperatorIdResponse.IsSuccessful)
+                                                 Counters.PullEVSEStatusByOperatorId.IncResponses_OK();
+                                             else
+                                                 Counters.PullEVSEStatusByOperatorId.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -2181,6 +2249,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.PullPricingProductData.IncRequests_Error();
+
                                                      pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
                                                                                           this,
                                                                                           new PullPricingProductDataResponse(
@@ -2195,6 +2267,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           )
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                                  #endregion
 
@@ -2251,8 +2325,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                               this,
                                                                                                                                                               pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PullPricingProductData.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -2318,6 +2390,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PullPricingProductData.IncRequests_Error();
+
                                                      pullPricingProductDataResponse = OICPResult<PullPricingProductDataResponse>.Failed(
                                                                                           this,
                                                                                           new PullPricingProductDataResponse(
@@ -2334,6 +2410,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           )
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -2354,6 +2432,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                       )
                                                                                   );
                                              }
+
+
+                                             if (pullPricingProductDataResponse.IsSuccessful)
+                                                 Counters.PullPricingProductData.IncResponses_OK();
+                                             else
+                                                 Counters.PullPricingProductData.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -2405,6 +2490,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.PullEVSEPricing.IncRequests_Error();
+
                                                      pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
                                                                                    this,
                                                                                    new PullEVSEPricingResponse(
@@ -2419,6 +2508,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    )
                                                                                    )
                                                                                );
+
+                                                 }
 
                                                  #endregion
 
@@ -2475,8 +2566,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                 this,
                                                                                                                                                 pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PullEVSEPricing.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -2542,6 +2631,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PullEVSEPricing.IncRequests_Error();
+
                                                      pullEVSEPricingResponse = OICPResult<PullEVSEPricingResponse>.Failed(
                                                                                    this,
                                                                                    new PullEVSEPricingResponse(
@@ -2558,6 +2651,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    )
                                                                                    )
                                                                                );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -2578,6 +2673,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                )
                                                                            );
                                              }
+
+
+                                             if (pullEVSEPricingResponse.IsSuccessful)
+                                                 Counters.PullEVSEPricing.IncResponses_OK();
+                                             else
+                                                 Counters.PullEVSEPricing.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -2619,7 +2721,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var startTime  = Timestamp.Now;
                                              var processId  = Process_Id.NewRandom;
 
-                                             OICPResult<Acknowledgement<PushAuthenticationDataRequest>>? pullEVSEDataResponse = null;
+                                             OICPResult<Acknowledgement<PushAuthenticationDataRequest>>? pushAuthenticationDataResponse = null;
 
                                              try
                                              {
@@ -2627,19 +2729,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
-                                                     pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
-                                                                                this,
-                                                                                new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                                    Timestamp.Now,
-                                                                                    Request.EventTrackingId,
-                                                                                    processId,
-                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                    StatusCode: new StatusCode(
-                                                                                                    StatusCodes.SystemError,
-                                                                                                    "The expected 'providerId' URL parameter could not be parsed!"
-                                                                                                )
-                                                                                )
-                                                                            );
+                                                 {
+
+                                                     Counters.PushAuthenticationData.IncRequests_Error();
+
+                                                     pushAuthenticationDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                          this,
+                                                                                          new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              processId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "The expected 'providerId' URL parameter could not be parsed!"
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                                 }
 
                                                  #endregion
 
@@ -2687,47 +2795,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          try
                                                          {
 
-                                                             pullEVSEDataResponse = (await Task.WhenAll(OnPushAuthenticationDataLocal.GetInvocationList().
-                                                                                                                                      Cast<OnPushAuthenticationDataAPIDelegate>().
-                                                                                                                                      Select(e => e(Timestamp.Now,
-                                                                                                                                                    this,
-                                                                                                                                                    pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PushAuthenticationData.IncResponses_OK();
+                                                             pushAuthenticationDataResponse = (await Task.WhenAll(OnPushAuthenticationDataLocal.GetInvocationList().
+                                                                                                                                                Cast<OnPushAuthenticationDataAPIDelegate>().
+                                                                                                                                                Select(e => e(Timestamp.Now,
+                                                                                                                                                              this,
+                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
 
                                                          }
                                                          catch (Exception e)
                                                          {
-                                                             pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
-                                                                                        this,
-                                                                                        new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                                            Timestamp.Now,
-                                                                                            Request.EventTrackingId,
-                                                                                            processId,
-                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                            StatusCode: new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            e.Message,
-                                                                                                            e.StackTrace
-                                                                                                        )
-                                                                                        )
-                                                                                    );
+                                                             pushAuthenticationDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                                  this,
+                                                                                                  new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      processId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.DataError,
+                                                                                                                      e.Message,
+                                                                                                                      e.StackTrace
+                                                                                                                  )
+                                                                                                  )
+                                                                                              );
                                                          }
                                                      }
 
-                                                     pullEVSEDataResponse ??= OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
-                                                                                  this,
-                                                                                  new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                                      Timestamp.Now,
-                                                                                      Request.EventTrackingId,
-                                                                                      processId,
-                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                      StatusCode: new StatusCode(
-                                                                                                      StatusCodes.SystemError,
-                                                                                                      "Could not process the received PushAuthenticationData request!"
-                                                                                                  )
-                                                                                  )
-                                                                              );
+                                                     pushAuthenticationDataResponse ??= OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                            this,
+                                                                                            new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                                Timestamp.Now,
+                                                                                                Request.EventTrackingId,
+                                                                                                processId,
+                                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                                StatusCode: new StatusCode(
+                                                                                                                StatusCodes.SystemError,
+                                                                                                                "Could not process the received PushAuthenticationData request!"
+                                                                                                            )
+                                                                                            )
+                                                                                        );
 
                                                      #endregion
 
@@ -2741,7 +2847,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPushAuthenticationDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataResponse,
+                                                                                              pushAuthenticationDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
 
@@ -2755,39 +2861,52 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
-                                                     pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
-                                                                                this,
-                                                                                new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                                    Timestamp.Now,
-                                                                                    Request.EventTrackingId,
-                                                                                    processId,
-                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                    StatusCode: new StatusCode(
-                                                                                                    StatusCodes.DataError,
-                                                                                                    "We could not parse the given PushAuthenticationData request!",
-                                                                                                    errorResponse
-                                                                                                )
-                                                                                )
-                                                                            );
+                                                 {
+
+                                                     Counters.PushAuthenticationData.IncRequests_Error();
+
+                                                     pushAuthenticationDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                          this,
+                                                                                          new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              processId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.DataError,
+                                                                                                              "We could not parse the given PushAuthenticationData request!",
+                                                                                                              errorResponse
+                                                                                                          )
+                                                                                          )
+                                                                                      );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
                                              {
-                                                 pullEVSEDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
-                                                                            this,
-                                                                            new Acknowledgement<PushAuthenticationDataRequest>(
-                                                                                Timestamp.Now,
-                                                                                Request.EventTrackingId,
-                                                                                processId,
-                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                StatusCode: new StatusCode(
-                                                                                                StatusCodes.SystemError,
-                                                                                                e.Message,
-                                                                                                e.StackTrace
-                                                                                            )
-                                                                            )
-                                                                        );
+                                                 pushAuthenticationDataResponse = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                                                                                      this,
+                                                                                      new Acknowledgement<PushAuthenticationDataRequest>(
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          processId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          e.Message,
+                                                                                                          e.StackTrace
+                                                                                                      )
+                                                                                      )
+                                                                                  );
                                              }
+
+
+                                             if (pushAuthenticationDataResponse.IsSuccessful)
+                                                 Counters.PushAuthenticationData.IncResponses_OK();
+                                             else
+                                                 Counters.PushAuthenticationData.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -2797,11 +2916,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                           CustomStatusCodeSerializer).
-                                                                                                                    ToString(JSONFormatting).
-                                                                                                                    ToUTF8Bytes()
-                                                                                                          ?? Array.Empty<Byte>(),
+                                                        Content                    = pushAuthenticationDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                                     CustomStatusCodeSerializer).
+                                                                                                                              ToString(JSONFormatting).
+                                                                                                                              ToUTF8Bytes()
+                                                                                                                    ?? Array.Empty<Byte>(),
                                                         ProcessID                  = processId.ToString(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
@@ -2835,6 +2954,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteReservationStart.IncRequests_Error();
+
                                                      authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
                                                                                                    this,
                                                                                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
@@ -2848,6 +2971,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                    )
                                                                                                    )
                                                                                                );
+
+                                                 }
 
                                                  #endregion
 
@@ -2901,8 +3026,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                                                 this,
                                                                                                                                                                                 pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -2964,6 +3087,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeRemoteReservationStart.IncRequests_Error();
+
                                                      authorizeRemoteReservationStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
                                                                                                    this,
                                                                                                    new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
@@ -2978,6 +3105,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                    )
                                                                                                    )
                                                                                                );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -2997,6 +3126,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                )
                                                                                            );
                                              }
+
+
+                                             if (authorizeRemoteReservationStartResponse.IsSuccessful)
+                                                 Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -3043,6 +3179,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteReservationStop.IncRequests_Error();
+
                                                      authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
                                                                                                   this,
                                                                                                   new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
@@ -3056,6 +3196,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                   )
                                                                                                   )
                                                                                               );
+
+                                                 }
 
                                                  #endregion
 
@@ -3109,8 +3251,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                                               this,
                                                                                                                                                                               pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -3172,6 +3312,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeRemoteReservationStop.IncRequests_Error();
+
                                                      authorizeRemoteReservationStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
                                                                                                   this,
                                                                                                   new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
@@ -3186,6 +3330,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                   )
                                                                                                   )
                                                                                               );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -3205,6 +3351,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                               )
                                                                                           );
                                              }
+
+
+                                             if (authorizeRemoteReservationStopResponse.IsSuccessful)
+                                                 Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -3251,6 +3404,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteStart.IncRequests_Error();
+
                                                      authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
                                                                                         this,
                                                                                         new Acknowledgement<AuthorizeRemoteStartRequest>(
@@ -3264,6 +3421,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                         )
                                                                                         )
                                                                                     );
+
+                                                 }
 
                                                  #endregion
 
@@ -3317,8 +3476,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                             Select(e => e(Timestamp.Now,
                                                                                                                                                           this,
                                                                                                                                                           pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.AuthorizeRemoteStart.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -3380,6 +3537,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeRemoteStart.IncRequests_Error();
+
                                                      authorizeRemoteStartResponse = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
                                                                                         this,
                                                                                         new Acknowledgement<AuthorizeRemoteStartRequest>(
@@ -3394,6 +3555,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                         )
                                                                                         )
                                                                                     );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -3413,6 +3576,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                     )
                                                                                 );
                                              }
+
+
+                                             if (authorizeRemoteStartResponse.IsSuccessful)
+                                                 Counters.AuthorizeRemoteStart.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeRemoteStart.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -3459,6 +3629,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.AuthorizeRemoteStop.IncRequests_Error();
+
                                                      authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
                                                                                        this,
                                                                                        new Acknowledgement<AuthorizeRemoteStopRequest>(
@@ -3472,6 +3646,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                        )
                                                                                        )
                                                                                    );
+
+                                                 }
 
                                                  #endregion
 
@@ -3525,8 +3701,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                           Select(e => e(Timestamp.Now,
                                                                                                                                                         this,
                                                                                                                                                         pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.AuthorizeRemoteStop.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -3588,6 +3762,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeRemoteStop.IncRequests_Error();
+
                                                      authorizeRemoteStopResponse = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
                                                                                        this,
                                                                                        new Acknowledgement<AuthorizeRemoteStopRequest>(
@@ -3602,6 +3780,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                        )
                                                                                        )
                                                                                    );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -3621,6 +3801,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    )
                                                                                );
                                              }
+
+
+                                             if (authorizeRemoteStopResponse.IsSuccessful)
+                                                 Counters.AuthorizeRemoteStop.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeRemoteStop.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -3671,6 +3858,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
+                                                 {
+
+                                                     Counters.GetChargeDetailRecords.IncRequests_Error();
+
                                                      getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                                                                                           this,
                                                                                           new GetChargeDetailRecordsResponse(
@@ -3685,6 +3876,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           )
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                                  #endregion
 
@@ -3741,8 +3934,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                               this,
                                                                                                                                                               pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.GetChargeDetailRecords.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -3808,6 +3999,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.GetChargeDetailRecords.IncRequests_Error();
+
                                                      getChargeDetailRecordsResponse = OICPResult<GetChargeDetailRecordsResponse>.Failed(
                                                                                           this,
                                                                                           new GetChargeDetailRecordsResponse(
@@ -3824,6 +4019,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                           )
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -3844,6 +4041,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                       )
                                                                                   );
                                              }
+
+
+                                             if (getChargeDetailRecordsResponse.IsSuccessful)
+                                                 Counters.GetChargeDetailRecords.IncResponses_OK();
+                                             else
+                                                 Counters.GetChargeDetailRecords.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,

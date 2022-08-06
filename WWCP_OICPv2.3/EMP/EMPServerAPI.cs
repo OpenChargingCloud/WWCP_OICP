@@ -47,6 +47,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             public APICounterValues  AuthorizeStart                  { get; }
             public APICounterValues  AuthorizeStop                   { get; }
+            public APICounterValues  ChargingNotifications           { get; }
             public APICounterValues  ChargingStartNotification       { get; }
             public APICounterValues  ChargingProgressNotification    { get; }
             public APICounterValues  ChargingEndNotification         { get; }
@@ -56,6 +57,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             public APICounters(APICounterValues? AuthorizeStart                 = null,
                                APICounterValues? AuthorizeStop                  = null,
+                               APICounterValues? ChargingNotifications          = null,
                                APICounterValues? ChargingStartNotification      = null,
                                APICounterValues? ChargingProgressNotification   = null,
                                APICounterValues? ChargingEndNotification        = null,
@@ -65,6 +67,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 this.AuthorizeStart                = AuthorizeStart               ?? new APICounterValues();
                 this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
+                this.ChargingNotifications         = ChargingNotifications        ?? new APICounterValues();
                 this.ChargingStartNotification     = ChargingStartNotification    ?? new APICounterValues();
                 this.ChargingProgressNotification  = ChargingProgressNotification ?? new APICounterValues();
                 this.ChargingEndNotification       = ChargingEndNotification      ?? new APICounterValues();
@@ -78,6 +81,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 => JSONObject.Create(
                        new JProperty("AuthorizeStart",                AuthorizeStart.              ToJSON()),
                        new JProperty("AuthorizeStop",                 AuthorizeStop.               ToJSON()),
+                       new JProperty("ChargingNotifications",         ChargingNotifications.       ToJSON()),
                        new JProperty("ChargingStartNotification",     ChargingStartNotification.   ToJSON()),
                        new JProperty("ChargingProgressNotification",  ChargingProgressNotification.ToJSON()),
                        new JProperty("ChargingEndNotification",       ChargingEndNotification.     ToJSON()),
@@ -642,9 +646,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse OperatorId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.AuthorizeStart.IncRequests_Error();
+
                                                      authorizationStartResponse = AuthorizationStartResponse.SystemError(
                                                                                       StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
                                                                                   );
+
+                                                 }
 
                                                  #endregion
 
@@ -697,8 +707,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                   this,
                                                                                                                                                   authorizeStartRequest!))))?.FirstOrDefault();
 
-                                                             Counters.AuthorizeStart.IncResponses_OK();
-
                                                          }
                                                          catch (Exception e)
                                                          {
@@ -743,6 +751,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeStart.IncRequests_Error();
+
                                                      authorizationStartResponse = AuthorizationStartResponse.DataError(
                                                                                       Request:                   authorizeStartRequest,
                                                                                       StatusCodeDescription:     "We could not parse the given AuthorizeStart request!",
@@ -750,6 +762,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                       SessionId:                 authorizeStartRequest?.SessionId,
                                                                                       CPOPartnerSessionId:       authorizeStartRequest?.CPOPartnerSessionId
                                                                                   );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -760,6 +774,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                   StatusCodeAdditionalInfo:  e.StackTrace
                                                                               );
                                              }
+
+
+                                             if (authorizationStartResponse.StatusCode.Code == StatusCodes.Success)
+                                                 Counters.AuthorizeStart.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeStart.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -804,9 +825,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse OperatorId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.AuthorizeStop.IncRequests_Error();
+
                                                      authorizationStopResponse = AuthorizationStopResponse.SystemError(
                                                                                      StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
                                                                                  );
+
+                                                 }
 
                                                  #endregion
 
@@ -859,8 +886,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                 this,
                                                                                                                                                 authorizeStopRequest!))))?.FirstOrDefault();
 
-                                                             Counters.AuthorizeStop.IncResponses_OK();
-
                                                          }
                                                          catch (Exception e)
                                                          {
@@ -905,6 +930,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeStop.IncRequests_Error();
+
                                                      authorizationStopResponse = AuthorizationStopResponse.DataError(
                                                                                      Request:                   authorizeStopRequest,
                                                                                      StatusCodeDescription:     "We could not handle the given AuthorizeStop request!",
@@ -912,6 +941,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                      SessionId:                 authorizeStopRequest?.SessionId,
                                                                                      CPOPartnerSessionId:       authorizeStopRequest?.CPOPartnerSessionId
                                                                                  );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -922,6 +953,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                  StatusCodeAdditionalInfo:  e.StackTrace
                                                                              );
                                              }
+
+
+                                             if (authorizationStopResponse.StatusCode.Code == StatusCodes.Success)
+                                                 Counters.AuthorizeStop.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeStop.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -959,7 +997,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var startTime  = Timestamp.Now;
                                              var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                                             Acknowledgement? acknowledgement = null;
+                                             Acknowledgement? chargingNotificationsResponse = null;
 
                                              try
                                              {
@@ -1002,7 +1040,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingStartNotificationRequestDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingStartNotificationRequest))).
+                                                                                                          chargingStartNotificationRequest!))).
                                                                                             ConfigureAwait(false);
 
                                                                  }
@@ -1015,7 +1053,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #region Call async subscribers
 
-                                                                 Acknowledgement<ChargingStartNotificationRequest>? startAcknowledgement = null;
+                                                                 Acknowledgement<ChargingStartNotificationRequest>? chargingStartNotificationResponse = null;
 
                                                                  var OnChargingStartNotificationLocal = OnChargingStartNotification;
                                                                  if (OnChargingStartNotificationLocal is not null)
@@ -1023,32 +1061,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      try
                                                                      {
 
-                                                                         startAcknowledgement = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
-                                                                                                                    Cast<OnChargingStartNotificationDelegate>().
-                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                  this,
-                                                                                                                                  chargingStartNotificationRequest!))).
-                                                                                                                    ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingStartNotification.IncResponses_OK();
+                                                                         chargingStartNotificationResponse = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
+                                                                                                                                                                  Cast<OnChargingStartNotificationDelegate>().
+                                                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                                                this,
+                                                                                                                                                                                chargingStartNotificationRequest!))).
+                                                                                                                                                                  ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         startAcknowledgement = Acknowledgement<ChargingStartNotificationRequest>.DataError(
-                                                                                                    Request:                   chargingStartNotificationRequest,
-                                                                                                    StatusCodeDescription:     e.Message,
-                                                                                                    StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                                    SessionId:                 chargingStartNotificationRequest?.SessionId,
-                                                                                                    CPOPartnerSessionId:       chargingStartNotificationRequest?.CPOPartnerSessionId
-                                                                                                );
+                                                                         chargingStartNotificationResponse = Acknowledgement<ChargingStartNotificationRequest>.DataError(
+                                                                                                                 Request:                   chargingStartNotificationRequest,
+                                                                                                                 StatusCodeDescription:     e.Message,
+                                                                                                                 StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                                 SessionId:                 chargingStartNotificationRequest?.SessionId,
+                                                                                                                 CPOPartnerSessionId:       chargingStartNotificationRequest?.CPOPartnerSessionId
+                                                                                                             );
                                                                      }
                                                                  }
 
-                                                                 startAcknowledgement ??= Acknowledgement<ChargingStartNotificationRequest>.SystemError(
-                                                                                              chargingStartNotificationRequest,
-                                                                                              "Could not process the received ChargingStartNotification request!"
-                                                                                          );
+
+                                                                 chargingStartNotificationResponse ??= Acknowledgement<ChargingStartNotificationRequest>.SystemError(
+                                                                                                           chargingStartNotificationRequest,
+                                                                                                           "Could not process the received ChargingStartNotification request!"
+                                                                                                       );
+
+
+                                                                 if (chargingStartNotificationResponse.StatusCode.Code == StatusCodes.Success)
+                                                                     Counters.ChargingStartNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingStartNotification.IncResponses_Error();
 
                                                                  #endregion
 
@@ -1062,7 +1105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingStartNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          startAcknowledgement,
+                                                                                                          chargingStartNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -1074,16 +1117,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #endregion
 
-                                                                 acknowledgement = startAcknowledgement;
+                                                                 chargingNotificationsResponse = chargingStartNotificationResponse;
 
                                                              }
                                                              else
-                                                                 acknowledgement = Acknowledgement.DataError(
-                                                                                       StatusCodeDescription:    "Could not parse the received ChargingStartNotification request!",
-                                                                                       StatusCodeAdditionalInfo:  errorResponse,
-                                                                                       RequestTimestamp:          Request.Timestamp,
-                                                                                       EventTrackingId:           Request.EventTrackingId
-                                                                                   );
+                                                             {
+
+                                                                 Counters.ChargingStartNotification.IncRequests_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingStartNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -1129,7 +1178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #region Call async subscribers
 
-                                                                 Acknowledgement<ChargingProgressNotificationRequest>? progressAcknowledgement = null;
+                                                                 Acknowledgement<ChargingProgressNotificationRequest>? chargingProgressNotificationResponse = null;
 
                                                                  var OnChargingProgressNotificationLocal = OnChargingProgressNotification;
                                                                  if (OnChargingProgressNotificationLocal is not null)
@@ -1137,19 +1186,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      try
                                                                      {
 
-                                                                         progressAcknowledgement = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
-                                                                                                                       Cast<OnChargingProgressNotificationDelegate>().
-                                                                                                                       Select(e => e(Timestamp.Now,
-                                                                                                                                     this,
-                                                                                                                                     chargingProgressNotificationRequest))).
-                                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingProgressNotification.IncResponses_OK();
+                                                                         chargingProgressNotificationResponse = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
+                                                                                                                                                                        Cast<OnChargingProgressNotificationDelegate>().
+                                                                                                                                                                        Select(e => e(Timestamp.Now,
+                                                                                                                                                                                      this,
+                                                                                                                                                                                      chargingProgressNotificationRequest!))).
+                                                                                                                                                                        ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         progressAcknowledgement = Acknowledgement<ChargingProgressNotificationRequest>.DataError(
+                                                                         chargingProgressNotificationResponse = Acknowledgement<ChargingProgressNotificationRequest>.DataError(
                                                                                                        Request:                   chargingProgressNotificationRequest,
                                                                                                        StatusCodeDescription:     e.Message,
                                                                                                        StatusCodeAdditionalInfo:  e.StackTrace,
@@ -1159,10 +1206,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      }
                                                                  }
 
-                                                                 progressAcknowledgement ??= Acknowledgement<ChargingProgressNotificationRequest>.SystemError(
-                                                                                                 chargingProgressNotificationRequest,
-                                                                                                 "Could not process the received ChargingProgressNotification request!"
-                                                                                             );
+
+                                                                 chargingProgressNotificationResponse ??= Acknowledgement<ChargingProgressNotificationRequest>.SystemError(
+                                                                                                              chargingProgressNotificationRequest,
+                                                                                                              "Could not process the received ChargingProgressNotification request!"
+                                                                                                          );
+
+
+                                                                 if (chargingProgressNotificationResponse.StatusCode.Code == StatusCodes.Success)
+                                                                     Counters.ChargingProgressNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingProgressNotification.IncResponses_Error();
+
 
                                                                  #endregion
 
@@ -1176,7 +1231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingProgressNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          progressAcknowledgement,
+                                                                                                          chargingProgressNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -1188,16 +1243,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #endregion
 
-                                                                 acknowledgement = progressAcknowledgement;
+                                                                 chargingNotificationsResponse = chargingProgressNotificationResponse;
 
                                                              }
                                                              else
-                                                                 acknowledgement = Acknowledgement.DataError(
-                                                                                       StatusCodeDescription:    "Could not parse the received ChargingProgressNotification request!",
-                                                                                       StatusCodeAdditionalInfo:  errorResponse,
-                                                                                       RequestTimestamp:          Request.Timestamp,
-                                                                                       EventTrackingId:           Request.EventTrackingId
-                                                                                   );
+                                                             {
+
+                                                                 Counters.ChargingProgressNotification.IncRequests_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingProgressNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -1243,7 +1304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #region Call async subscribers
 
-                                                                 Acknowledgement<ChargingEndNotificationRequest>? endAcknowledgement = null;
+                                                                 Acknowledgement<ChargingEndNotificationRequest>? chargingEndNotificationResponse = null;
 
                                                                  var OnChargingEndNotificationLocal = OnChargingEndNotification;
                                                                  if (OnChargingEndNotificationLocal is not null)
@@ -1251,32 +1312,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      try
                                                                      {
 
-                                                                         endAcknowledgement = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
-                                                                                                                  Cast<OnChargingEndNotificationDelegate>().
-                                                                                                                  Select(e => e(Timestamp.Now,
-                                                                                                                                this,
-                                                                                                                                chargingEndNotificationRequest!))).
-                                                                                                                  ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingEndNotification.IncResponses_OK();
+                                                                         chargingEndNotificationResponse = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
+                                                                                                                                                              Cast<OnChargingEndNotificationDelegate>().
+                                                                                                                                                              Select(e => e(Timestamp.Now,
+                                                                                                                                                                            this,
+                                                                                                                                                                            chargingEndNotificationRequest!))).
+                                                                                                                                                              ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         endAcknowledgement = Acknowledgement<ChargingEndNotificationRequest>.DataError(
-                                                                                                  Request:                   chargingEndNotificationRequest,
-                                                                                                  StatusCodeDescription:     e.Message,
-                                                                                                  StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                                  SessionId:                 chargingEndNotificationRequest?.SessionId,
-                                                                                                  CPOPartnerSessionId:       chargingEndNotificationRequest?.CPOPartnerSessionId
-                                                                                              );
+                                                                         chargingEndNotificationResponse = Acknowledgement<ChargingEndNotificationRequest>.DataError(
+                                                                                                               Request:                   chargingEndNotificationRequest,
+                                                                                                               StatusCodeDescription:     e.Message,
+                                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                               SessionId:                 chargingEndNotificationRequest?.SessionId,
+                                                                                                               CPOPartnerSessionId:       chargingEndNotificationRequest?.CPOPartnerSessionId
+                                                                                                           );
                                                                      }
                                                                  }
 
-                                                                 endAcknowledgement ??= Acknowledgement<ChargingEndNotificationRequest>.SystemError(
-                                                                                            chargingEndNotificationRequest,
-                                                                                            "Could not process the received ChargingEndNotification request!"
-                                                                                        );
+
+                                                                 chargingEndNotificationResponse ??= Acknowledgement<ChargingEndNotificationRequest>.SystemError(
+                                                                                                         chargingEndNotificationRequest,
+                                                                                                         "Could not process the received ChargingEndNotification request!"
+                                                                                                     );
+
+
+                                                                 if (chargingEndNotificationResponse.StatusCode.Code == StatusCodes.Success)
+                                                                     Counters.ChargingEndNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingEndNotification.IncResponses_Error();
 
                                                                  #endregion
 
@@ -1290,7 +1356,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingEndNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          endAcknowledgement,
+                                                                                                          chargingEndNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -1302,16 +1368,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #endregion
 
-                                                                 acknowledgement = endAcknowledgement;
+                                                                 chargingNotificationsResponse = chargingEndNotificationResponse;
 
                                                              }
                                                              else
-                                                                 acknowledgement = Acknowledgement.DataError(
-                                                                                       StatusCodeDescription:    "Could not parse the received ChargingEndNotification request!",
-                                                                                       StatusCodeAdditionalInfo:  errorResponse,
-                                                                                       RequestTimestamp:          Request.Timestamp,
-                                                                                       EventTrackingId:           Request.EventTrackingId
-                                                                                   );
+                                                             {
+
+                                                                 Counters.ChargingEndNotification.IncRequests_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingEndNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -1357,7 +1429,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #region Call async subscribers
 
-                                                                 Acknowledgement<ChargingErrorNotificationRequest>? errorAcknowledgement = null;
+                                                                 Acknowledgement<ChargingErrorNotificationRequest>? chargingErrorNotificationResponse = null;
 
                                                                  var OnChargingErrorNotificationLocal = OnChargingErrorNotification;
                                                                  if (OnChargingErrorNotificationLocal is not null)
@@ -1365,19 +1437,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      try
                                                                      {
 
-                                                                         errorAcknowledgement = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
-                                                                                                                    Cast<OnChargingErrorNotificationDelegate>().
-                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                  this,
-                                                                                                                                  chargingErrorNotificationRequest!))).
-                                                                                                                    ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingErrorNotification.IncResponses_OK();
+                                                                         chargingErrorNotificationResponse = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
+                                                                                                                                                                  Cast<OnChargingErrorNotificationDelegate>().
+                                                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                                                this,
+                                                                                                                                                                                chargingErrorNotificationRequest!))).
+                                                                                                                                                                  ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         errorAcknowledgement = Acknowledgement<ChargingErrorNotificationRequest>.DataError(
+                                                                         chargingErrorNotificationResponse = Acknowledgement<ChargingErrorNotificationRequest>.DataError(
                                                                                                     Request:                   chargingErrorNotificationRequest,
                                                                                                     StatusCodeDescription:     e.Message,
                                                                                                     StatusCodeAdditionalInfo:  e.StackTrace,
@@ -1387,10 +1457,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      }
                                                                  }
 
-                                                                 errorAcknowledgement ??= Acknowledgement<ChargingErrorNotificationRequest>.SystemError(
-                                                                                              chargingErrorNotificationRequest,
-                                                                                              "Could not process the received ChargingErrorNotification request!"
-                                                                                          );
+
+                                                                 chargingErrorNotificationResponse ??= Acknowledgement<ChargingErrorNotificationRequest>.SystemError(
+                                                                                                           chargingErrorNotificationRequest,
+                                                                                                           "Could not process the received ChargingErrorNotification request!"
+                                                                                                       );
+
+
+                                                                 if (chargingErrorNotificationResponse.StatusCode.Code == StatusCodes.Success)
+                                                                     Counters.ChargingErrorNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingErrorNotification.IncResponses_Error();
 
                                                                  #endregion
 
@@ -1404,7 +1481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingErrorNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          errorAcknowledgement,
+                                                                                                          chargingErrorNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -1416,16 +1493,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                                  #endregion
 
-                                                                 acknowledgement = errorAcknowledgement;
+                                                                 chargingNotificationsResponse = chargingErrorNotificationResponse;
 
                                                              }
                                                              else
-                                                                 acknowledgement = Acknowledgement.DataError(
-                                                                                       StatusCodeDescription:    "Could not parse the received ChargingErrorNotification request!",
-                                                                                       StatusCodeAdditionalInfo:  errorResponse,
-                                                                                       RequestTimestamp:          Request.Timestamp,
-                                                                                       EventTrackingId:           Request.EventTrackingId
-                                                                                   );
+                                                             {
+
+                                                                 Counters.ChargingErrorNotification.IncRequests_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingErrorNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -1435,11 +1518,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                          default:
 
-                                                             acknowledgement = Acknowledgement.DataError(
-                                                                                   StatusCodeDescription: "Unknown or invalid charging notification type '" + chargingNotificationType.ToString() + "'!",
-                                                                                   RequestTimestamp:       Request.Timestamp,
-                                                                                   EventTrackingId:        Request.EventTrackingId
-                                                                               );
+                                                             Counters.ChargingNotifications.IncRequests_Error();
+
+                                                             chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                 StatusCodeDescription: "Unknown or invalid charging notification type '" + chargingNotificationType.ToString() + "'!",
+                                                                                                 RequestTimestamp:       Request.Timestamp,
+                                                                                                 EventTrackingId:        Request.EventTrackingId
+                                                                                             );
 
                                                              break;
 
@@ -1449,29 +1534,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
-                                                     acknowledgement = Acknowledgement.DataError(
-                                                                           StatusCodeDescription: "Could not parse the received ChargingErrorNotification request!",
-                                                                           RequestTimestamp:       Request.Timestamp,
-                                                                           EventTrackingId:        Request.EventTrackingId
-                                                                       );
+                                                 {
+
+                                                     Counters.ChargingNotifications.IncRequests_Error();
+
+                                                     chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                         StatusCodeDescription: "Could not parse the received ChargingNotifications request!",
+                                                                                         RequestTimestamp:       Request.Timestamp,
+                                                                                         EventTrackingId:        Request.EventTrackingId
+                                                                                     );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
                                              {
-                                                 acknowledgement = Acknowledgement.SystemError(
-                                                                       StatusCodeDescription:     e.Message,
-                                                                       StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                       RequestTimestamp:          Request.Timestamp,
-                                                                       EventTrackingId:           Request.EventTrackingId
-                                                                   );
+                                                 chargingNotificationsResponse = Acknowledgement.SystemError(
+                                                                                     StatusCodeDescription:     e.Message,
+                                                                                     StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                 );
                                              }
 
-                                             if (acknowledgement is null)
-                                                 acknowledgement = Acknowledgement.SystemError(
-                                                                       StatusCodeDescription: "Could not process the received ChargingErrorNotification request!",
-                                                                       RequestTimestamp:       Request.Timestamp,
-                                                                       EventTrackingId:        Request.EventTrackingId
-                                                                   );
+                                             if (chargingNotificationsResponse is null)
+                                                 chargingNotificationsResponse = Acknowledgement.SystemError(
+                                                                                     StatusCodeDescription: "Could not process the received ChargingNotifications request!",
+                                                                                     RequestTimestamp:       Request.Timestamp,
+                                                                                     EventTrackingId:        Request.EventTrackingId
+                                                                                 );
+
+
+                                             if (chargingNotificationsResponse.StatusCode.Code == StatusCodes.Success)
+                                                 Counters.ChargingNotifications.IncResponses_OK();
+                                             else
+                                                 Counters.ChargingNotifications.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1481,10 +1579,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                            CustomStatusCodeSerializer).
-                                                                                                     ToString(JSONFormatting).
-                                                                                                     ToUTF8Bytes(),
+                                                        Content                    = chargingNotificationsResponse.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                          CustomStatusCodeSerializer).
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes(),
                                                         Connection                 = "close"
                                                     }.AsImmutable;
 
@@ -1517,9 +1615,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  #region Try to parse OperatorId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.ChargeDetailRecord.IncRequests_OK();
+
                                                      chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
                                                                                       StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
                                                                                   );
+
+                                                 }
 
                                                  #endregion
 
@@ -1570,9 +1674,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                             Cast<OnChargeDetailRecordDelegate>().
                                                                                                                                             Select(e => e(Timestamp.Now,
                                                                                                                                                           this,
-                                                                                                                                                          chargeDetailRecordRequest))))?.FirstOrDefault();
-
-                                                             Counters.ChargeDetailRecord.IncResponses_OK();
+                                                                                                                                                          chargeDetailRecordRequest!))))?.FirstOrDefault();
 
                                                          }
                                                          catch (Exception e)
@@ -1618,6 +1720,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.ChargeDetailRecord.IncRequests_OK();
+
                                                      chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.DataError(
                                                                                       Request:                   chargeDetailRecordRequest,
                                                                                       StatusCodeDescription:     "We could not handle the given charge detail record!",
@@ -1625,6 +1731,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                       SessionId:                 chargeDetailRecordRequest?.ChargeDetailRecord?.SessionId,
                                                                                       CPOPartnerSessionId:       chargeDetailRecordRequest?.ChargeDetailRecord?.CPOPartnerSessionId
                                                                                   );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -1635,6 +1743,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                   StatusCodeAdditionalInfo:  e.StackTrace
                                                                               );
                                              }
+
+
+                                             if (chargeDetailRecordResponse.StatusCode.Code == StatusCodes.Success)
+                                                 Counters.ChargeDetailRecord.IncResponses_OK();
+                                             else
+                                                 Counters.ChargeDetailRecord.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,

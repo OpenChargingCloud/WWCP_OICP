@@ -56,6 +56,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public APICounterValues  AuthorizeStart                  { get; }
             public APICounterValues  AuthorizeStop                   { get; }
 
+
+            public APICounterValues  ChargingNotifications           { get; }
             public APICounterValues  ChargingStartNotification       { get; }
             public APICounterValues  ChargingProgressNotification    { get; }
             public APICounterValues  ChargingEndNotification         { get; }
@@ -75,6 +77,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                APICounterValues? AuthorizeStart                 = null,
                                APICounterValues? AuthorizeStop                  = null,
 
+                               APICounterValues? ChargingNotifications          = null,
                                APICounterValues? ChargingStartNotification      = null,
                                APICounterValues? ChargingProgressNotification   = null,
                                APICounterValues? ChargingEndNotification        = null,
@@ -94,6 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 this.AuthorizeStart                = AuthorizeStart               ?? new APICounterValues();
                 this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
 
+                this.ChargingNotifications         = ChargingNotifications        ?? new APICounterValues();
                 this.ChargingStartNotification     = ChargingStartNotification    ?? new APICounterValues();
                 this.ChargingProgressNotification  = ChargingProgressNotification ?? new APICounterValues();
                 this.ChargingEndNotification       = ChargingEndNotification      ?? new APICounterValues();
@@ -1125,6 +1129,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.PushEVSEData.IncRequests_Error();
+
                                                      pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                                                 this,
                                                                                 new Acknowledgement<PushEVSEDataRequest>(
@@ -1138,6 +1146,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                 )
                                                                                 )
                                                                             );
+
+                                                 }
 
                                                  #endregion
 
@@ -1187,12 +1197,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          {
 
                                                              pullEVSEDataResponse = (await Task.WhenAll(OnPushEVSEDataLocal.GetInvocationList().
-                                                                                                                                Cast<OnPushEVSEDataAPIDelegate>().
-                                                                                                                                Select(e => e(Timestamp.Now,
-                                                                                                                                              this,
-                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PushEVSEData.IncResponses_OK();
+                                                                                                                            Cast<OnPushEVSEDataAPIDelegate>().
+                                                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                                                          this,
+                                                                                                                                          pullEVSEDataRequest!))))?.FirstOrDefault();
 
                                                          }
                                                          catch (Exception e)
@@ -1256,6 +1264,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PushEVSEData.IncRequests_Error();
+
                                                      pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                                                 this,
                                                                                 new Acknowledgement<PushEVSEDataRequest>(
@@ -1271,6 +1283,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                     pullEVSEDataRequest
                                                                                 )
                                                                             );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -1290,6 +1304,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                             )
                                                                         );
                                              }
+
+
+                                             if (pullEVSEDataResponse.IsSuccessful)
+                                                 Counters.PushEVSEData.IncResponses_OK();
+                                             else
+                                                 Counters.PushEVSEData.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1336,6 +1357,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.PushEVSEStatus.IncRequests_Error();
+
                                                      pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                                                   this,
                                                                                   new Acknowledgement<PushEVSEStatusRequest>(
@@ -1349,6 +1374,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                   )
                                                                                   )
                                                                               );
+
+                                                 }
 
                                                  #endregion
 
@@ -1402,8 +1429,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                               this,
                                                                                                                                               pullEVSEStatusRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PushEVSEStatus.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -1467,6 +1492,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PushEVSEStatus.IncRequests_Error();
+
                                                      pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                                                   this,
                                                                                   new Acknowledgement<PushEVSEStatusRequest>(
@@ -1482,6 +1511,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       pullEVSEStatusRequest
                                                                                   )
                                                                               );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -1501,6 +1532,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                               )
                                                                           );
                                              }
+
+
+                                             if (pullEVSEStatusResponse.IsSuccessful)
+                                                 Counters.PushEVSEStatus.IncResponses_OK();
+                                             else
+                                                 Counters.PushEVSEStatus.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1548,6 +1586,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.PushPricingProductData.IncRequests_Error();
+
                                                      pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                                                           this,
                                                                                           new Acknowledgement<PushPricingProductDataRequest>(
@@ -1561,6 +1603,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                           )
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                                  #endregion
 
@@ -1614,8 +1658,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                               this,
                                                                                                                                                               pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PushPricingProductData.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -1679,6 +1721,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PushPricingProductData.IncRequests_Error();
+
                                                      pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                                                           this,
                                                                                           new Acknowledgement<PushPricingProductDataRequest>(
@@ -1694,6 +1740,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               pullEVSEDataRequest
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -1713,6 +1761,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       )
                                                                                   );
                                              }
+
+
+                                             if (pushPricingProductDataResponse.IsSuccessful)
+                                                 Counters.PushPricingProductData.IncResponses_OK();
+                                             else
+                                                 Counters.PushPricingProductData.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1759,6 +1814,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.PushEVSEPricing.IncRequests_Error();
+
                                                      pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                                                    this,
                                                                                    new Acknowledgement<PushEVSEPricingRequest>(
@@ -1772,6 +1831,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                    )
                                                                                    )
                                                                                );
+
+                                                 }
 
                                                  #endregion
 
@@ -1826,7 +1887,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                 this,
                                                                                                                                                 pullEVSEDataRequest!))))?.FirstOrDefault();
 
-                                                             Counters.PushEVSEPricing.IncResponses_OK();
+                                                             
 
                                                          }
                                                          catch (Exception e)
@@ -1890,6 +1951,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PushEVSEPricing.IncRequests_Error();
+
                                                      pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                                                    this,
                                                                                    new Acknowledgement<PushEVSEPricingRequest>(
@@ -1905,6 +1970,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        pullEVSEDataRequest!
                                                                                    )
                                                                                );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -1924,6 +1991,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                )
                                                                            );
                                              }
+
+
+                                             if (pushEVSEPricingResponse.IsSuccessful)
+                                                 Counters.PushEVSEPricing.IncResponses_OK();
+                                             else
+                                                 Counters.PushEVSEPricing.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1971,6 +2045,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.PullAuthenticationData.IncRequests_Error();
+
                                                      pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
                                                                                           this,
                                                                                           new PullAuthenticationDataResponse(
@@ -1985,6 +2063,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                           )
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                                  #endregion
 
@@ -2038,8 +2118,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                               this,
                                                                                                                                                               pullAuthenticationDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.PullAuthenticationData.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -2105,6 +2183,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.PullAuthenticationData.IncRequests_Error();
+
                                                      pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
                                                                                           this,
                                                                                           new PullAuthenticationDataResponse(
@@ -2121,6 +2203,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                           )
                                                                                           )
                                                                                       );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -2141,6 +2225,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       )
                                                                                   );
                                              }
+
+
+                                             if (pullAuthenticationDataResponse.IsSuccessful)
+                                                 Counters.PullAuthenticationData.IncResponses_OK();
+                                             else
+                                                 Counters.PullAuthenticationData.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -2190,6 +2281,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.AuthorizeStart.IncRequests_Error();
+
                                                      authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
                                                                                       this,
                                                                                       AuthorizationStartResponse.SystemError(
@@ -2200,6 +2295,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           Runtime:            Timestamp.Now - Request.Timestamp
                                                                                       )
                                                                                   );
+
+                                                 }
 
                                                  #endregion
 
@@ -2253,8 +2350,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                     Select(e => e(Timestamp.Now,
                                                                                                                                                   this,
                                                                                                                                                   pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.AuthorizeStart.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -2312,6 +2407,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeStart.IncRequests_Error();
+
                                                      authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
                                                                                       this,
                                                                                       AuthorizationStartResponse.DataError(
@@ -2324,6 +2423,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           Runtime:            Timestamp.Now - Request.Timestamp
                                                                                       )
                                                                                   );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -2341,6 +2442,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                   )
                                                                               );
                                              }
+
+
+                                             if (authorizationStartResponse.IsSuccessful)
+                                                 Counters.AuthorizeStart.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeStart.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -2388,6 +2496,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.AuthorizeStop.IncRequests_Error();
+
                                                      authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                      this,
                                                                                      AuthorizationStopResponse.SystemError(
@@ -2398,6 +2510,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                          Runtime:            Timestamp.Now - Request.Timestamp
                                                                                      )
                                                                                  );
+
+                                                 }
 
                                                  #endregion
 
@@ -2451,8 +2565,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                 this,
                                                                                                                                                 pullEVSEDataRequest!))))?.FirstOrDefault();
-
-                                                             Counters.AuthorizeStop.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -2510,6 +2622,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeStop.IncRequests_Error();
+
                                                      authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                      this,
                                                                                      AuthorizationStopResponse.DataError(
@@ -2522,6 +2638,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                          Runtime:            Timestamp.Now - Request.Timestamp
                                                                                      )
                                                                                  );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -2539,6 +2657,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                  )
                                                                              );
                                              }
+
+
+                                             if (authorizationStopResponse.IsSuccessful)
+                                                 Counters.AuthorizeStop.IncResponses_OK();
+                                             else
+                                                 Counters.AuthorizeStop.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -2611,6 +2736,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                            CustomChargingStartNotificationRequestParser:  CustomChargingStartNotificationRequestParser))
                                                              {
 
+                                                                 Counters.ChargingNotifications.    IncRequests_OK();
                                                                  Counters.ChargingStartNotification.IncRequests_OK();
 
                                                                  #region Send OnChargingStartNotificationRequest event
@@ -2645,13 +2771,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      {
 
                                                                          startAcknowledgement = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
-                                                                                                                    Cast<OnChargingStartNotificationAPIDelegate>().
-                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                  this,
-                                                                                                                                  chargingStartNotificationRequest!))).
-                                                                                                                    ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingStartNotification.IncResponses_OK();
+                                                                                                                                                     Cast<OnChargingStartNotificationAPIDelegate>().
+                                                                                                                                                     Select(e => e(Timestamp.Now,
+                                                                                                                                                                   this,
+                                                                                                                                                                   chargingStartNotificationRequest!))).
+                                                                                                                                                     ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
@@ -2688,6 +2812,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                   chargingStartNotificationRequest
                                                                                               )
                                                                                           );
+
+                                                                 if (startAcknowledgement.IsSuccessful == true)
+                                                                     Counters.ChargingStartNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingStartNotification.IncResponses_Error();
 
                                                                  #endregion
 
@@ -2754,6 +2883,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                               CustomChargingProgressNotificationRequestParser:  CustomChargingProgressNotificationRequestParser))
                                                              {
 
+                                                                 Counters.ChargingNotifications.       IncRequests_OK();
                                                                  Counters.ChargingProgressNotification.IncRequests_OK();
 
                                                                  #region Send OnChargingProgressNotificationRequest event
@@ -2779,7 +2909,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>? startAcknowledgement = null;
+                                                                 OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>? progressAcknowledgement = null;
 
                                                                  var OnChargingProgressNotificationLocal = OnChargingProgressNotification;
                                                                  if (OnChargingProgressNotificationLocal is not null)
@@ -2787,19 +2917,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      try
                                                                      {
 
-                                                                         startAcknowledgement = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
-                                                                                                                    Cast<OnChargingProgressNotificationAPIDelegate>().
-                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                  this,
-                                                                                                                                  chargingProgressNotificationRequest!))).
-                                                                                                                    ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingProgressNotification.IncResponses_OK();
+                                                                         progressAcknowledgement = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
+                                                                                                                                                           Cast<OnChargingProgressNotificationAPIDelegate>().
+                                                                                                                                                           Select(e => e(Timestamp.Now,
+                                                                                                                                                                         this,
+                                                                                                                                                                         chargingProgressNotificationRequest!))).
+                                                                                                                                                           ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         startAcknowledgement = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                                         progressAcknowledgement = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
                                                                                                         Timestamp.Now,
@@ -2817,7 +2945,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      }
                                                                  }
 
-                                                                 startAcknowledgement ??= OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                                 progressAcknowledgement ??= OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                                                                               this,
                                                                                               new Acknowledgement<ChargingProgressNotificationRequest>(
                                                                                                   Timestamp.Now,
@@ -2832,6 +2960,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               )
                                                                                           );
 
+                                                                 if (progressAcknowledgement.IsSuccessful == true)
+                                                                     Counters.ChargingProgressNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingProgressNotification.IncResponses_Error();
+
                                                                  #endregion
 
                                                                  #region Send OnChargingProgressNotificationResponse event
@@ -2844,7 +2977,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingProgressNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          startAcknowledgement,
+                                                                                                          progressAcknowledgement,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -2856,7 +2989,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(progressAcknowledgement);
 
                                                              }
                                                              else
@@ -2897,6 +3030,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          CustomChargingEndNotificationRequestParser:  CustomChargingEndNotificationRequestParser))
                                                              {
 
+                                                                 Counters.ChargingNotifications.  IncRequests_OK();
                                                                  Counters.ChargingEndNotification.IncRequests_OK();
 
                                                                  #region Send OnChargingEndNotificationRequest event
@@ -2922,7 +3056,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingEndNotificationRequest>>? startAcknowledgement = null;
+                                                                 OICPResult<Acknowledgement<ChargingEndNotificationRequest>>? endAcknowledgement = null;
 
                                                                  var OnChargingEndNotificationLocal = OnChargingEndNotification;
                                                                  if (OnChargingEndNotificationLocal is not null)
@@ -2930,19 +3064,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      try
                                                                      {
 
-                                                                         startAcknowledgement = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
-                                                                                                                    Cast<OnChargingEndNotificationAPIDelegate>().
-                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                  this,
-                                                                                                                                  chargingEndNotificationRequest!))).
-                                                                                                                    ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingEndNotification.IncResponses_OK();
+                                                                         endAcknowledgement = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
+                                                                                                                                                 Cast<OnChargingEndNotificationAPIDelegate>().
+                                                                                                                                                 Select(e => e(Timestamp.Now,
+                                                                                                                                                               this,
+                                                                                                                                                               chargingEndNotificationRequest!))).
+                                                                                                                                                 ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         startAcknowledgement = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                                                                         endAcknowledgement = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingEndNotificationRequest>(
                                                                                                         Timestamp.Now,
@@ -2960,7 +3092,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      }
                                                                  }
 
-                                                                 startAcknowledgement ??= OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                                                                 endAcknowledgement ??= OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                                                               this,
                                                                                               new Acknowledgement<ChargingEndNotificationRequest>(
                                                                                                   Timestamp.Now,
@@ -2975,6 +3107,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               )
                                                                                           );
 
+                                                                 if (endAcknowledgement.IsSuccessful == true)
+                                                                     Counters.ChargingEndNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingEndNotification.IncResponses_Error();
+
                                                                  #endregion
 
                                                                  #region Send OnChargingEndNotificationResponse event
@@ -2987,7 +3124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingEndNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          startAcknowledgement,
+                                                                                                          endAcknowledgement,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -2999,7 +3136,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(endAcknowledgement);
 
                                                              }
                                                              else
@@ -3040,6 +3177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                            CustomChargingErrorNotificationRequestParser:  CustomChargingErrorNotificationRequestParser))
                                                              {
 
+                                                                 Counters.ChargingNotifications.    IncRequests_OK();
                                                                  Counters.ChargingErrorNotification.IncRequests_OK();
 
                                                                  #region Send OnChargingErrorNotificationRequest event
@@ -3065,7 +3203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>? startAcknowledgement = null;
+                                                                 OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>? errorAcknowledgement = null;
 
                                                                  var OnChargingErrorNotificationLocal = OnChargingErrorNotification;
                                                                  if (OnChargingErrorNotificationLocal is not null)
@@ -3073,19 +3211,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      try
                                                                      {
 
-                                                                         startAcknowledgement = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
-                                                                                                                    Cast<OnChargingErrorNotificationAPIDelegate>().
-                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                  this,
-                                                                                                                                  chargingErrorNotificationRequest!))).
-                                                                                                                    ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingErrorNotification.IncResponses_OK();
+                                                                         errorAcknowledgement = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
+                                                                                                                                                     Cast<OnChargingErrorNotificationAPIDelegate>().
+                                                                                                                                                     Select(e => e(Timestamp.Now,
+                                                                                                                                                                   this,
+                                                                                                                                                                   chargingErrorNotificationRequest!))).
+                                                                                                                                                     ConfigureAwait(false))?.FirstOrDefault();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         startAcknowledgement = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                                         errorAcknowledgement = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingErrorNotificationRequest>(
                                                                                                         Timestamp.Now,
@@ -3103,7 +3239,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      }
                                                                  }
 
-                                                                 startAcknowledgement ??= OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                                 errorAcknowledgement ??= OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                                                               this,
                                                                                               new Acknowledgement<ChargingErrorNotificationRequest>(
                                                                                                   Timestamp.Now,
@@ -3118,6 +3254,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               )
                                                                                           );
 
+                                                                 if (errorAcknowledgement.IsSuccessful == true)
+                                                                     Counters.ChargingErrorNotification.IncResponses_OK();
+                                                                 else
+                                                                     Counters.ChargingErrorNotification.IncResponses_Error();
+
                                                                  #endregion
 
                                                                  #region Send OnChargingErrorNotificationResponse event
@@ -3130,7 +3271,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingErrorNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          startAcknowledgement,
+                                                                                                          errorAcknowledgement,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -3142,7 +3283,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(errorAcknowledgement);
 
                                                              }
                                                              else
@@ -3170,6 +3311,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                          default:
 
+                                                             Counters.ChargingNotifications.IncRequests_Error();
+
                                                              chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                                 this,
                                                                                                 new Acknowledgement(
@@ -3193,6 +3336,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.ChargingNotifications.IncRequests_Error();
+
                                                      chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                         this,
                                                                                         new Acknowledgement(
@@ -3207,6 +3354,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         )
                                                                                         )
                                                                                     );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -3226,6 +3375,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                     )
                                                                                 );
                                              }
+
+
+                                             if (chargingNotificationResponse.IsSuccessful)
+                                                 Counters.ChargingNotifications.IncResponses_OK();
+                                             else
+                                                 Counters.ChargingNotifications.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -3273,6 +3429,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  #region Try to parse ProviderId URL parameter
 
                                                  if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.ChargeDetailRecord.IncRequests_Error();
+
                                                      chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                                                                       this,
                                                                                       new Acknowledgement<ChargeDetailRecordRequest>(
@@ -3286,6 +3446,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                       )
                                                                                       )
                                                                                   );
+
+                                                 }
 
                                                  #endregion
 
@@ -3339,8 +3501,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                         Select(e => e(Timestamp.Now,
                                                                                                                                                       this,
                                                                                                                                                       chargeDetailRecordRequest!))))?.FirstOrDefault();
-
-                                                             Counters.ChargeDetailRecord.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
@@ -3404,6 +3564,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.ChargeDetailRecord.IncRequests_Error();
+
                                                      chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                                                                       this,
                                                                                       new Acknowledgement<ChargeDetailRecordRequest>(
@@ -3419,6 +3583,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           chargeDetailRecordRequest
                                                                                       )
                                                                                   );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
@@ -3438,6 +3604,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                   )
                                                                               );
                                              }
+
+
+                                             if (chargeDetailRecordResponse.IsSuccessful)
+                                                 Counters.ChargeDetailRecord.IncResponses_OK();
+                                             else
+                                                 Counters.ChargeDetailRecord.IncResponses_Error();
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
