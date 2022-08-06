@@ -2906,6 +2906,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
+                        // HTTP/1.1 403
+                        // Server:          nginx/1.18.0 (Ubuntu)
+                        // Date:            Sat, 06 Aug 2022 07:30:58 GMT
+                        // Content-Type:    application/json;charset=ISO-8859-1
+                        // Content-Length:  96
+                        // Connection:      close
+                        // Process-ID:      14673a14-b4fd-4ecc-93b2-422a9b9745de
+                        // 
+                        // {
+                        //   "StatusCode": {
+                        //     "Code":           "210",
+                        //     "Description":    "No active subscription found",
+                        //     "AdditionalInfo":  null
+                        //   }
+                        // }
+
                         // HTTP/1.1 403 Forbidden
                         // Server:          nginx/1.18.0 (Ubuntu)
                         // Date:            Thu, 15 Apr 2021 22:47:22 GMT
@@ -2922,6 +2938,59 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // </html>
 
                         statusDescription = "Hubject firewall problem!";
+
+                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            HTTPResponse.HTTPBody.Length > 0)
+                        {
+
+                            try
+                            {
+
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
+                                                        CustomStatusCodeParser))
+                                {
+
+                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
+                                                                                               new PullAuthenticationDataResponse(
+                                                                                                   HTTPResponse.Timestamp,
+                                                                                                   HTTPResponse.EventTrackingId,
+                                                                                                   processId,
+                                                                                                   HTTPResponse.Runtime,
+                                                                                                   Array.Empty<ProviderAuthenticationData>(),
+                                                                                                   Request,
+                                                                                                   StatusCode: statusCode
+                                                                                               ),
+                                                                                               processId);
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                             Request,
+                                             new PullAuthenticationDataResponse(
+                                                 HTTPResponse.Timestamp,
+                                                 HTTPResponse.EventTrackingId,
+                                                 processId,
+                                                 HTTPResponse.Runtime,
+                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 Request,
+                                                 StatusCode: new StatusCode(
+                                                                 StatusCodes.SystemError,
+                                                                 e.Message,
+                                                                 e.StackTrace
+                                                             )
+                                             )
+                                         );
+
+                            }
+
+                        }
+
                         break;
 
                     }
