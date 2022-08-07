@@ -158,47 +158,280 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 
             empClientAPI.OnPullPricingProductData          += (timestamp, empClientAPI, pullPricingProductDataRequest) =>
             {
-                throw new NotImplementedException();
+
+                if (pullPricingProductDataRequest.OperatorIds.Contains(Operator_Id.Parse("DE*GEF")))
+                    return Task.FromResult(
+                        OICPResult<PullPricingProductDataResponse>.Success(
+                            pullPricingProductDataRequest,
+                            new PullPricingProductDataResponse(
+                                Timestamp.Now,
+                                pullPricingProductDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                                Process_Id.NewRandom,
+                                Timestamp.Now - pullPricingProductDataRequest.Timestamp,
+                                new PricingProductData[] {
+                                    new PricingProductData(
+                                        OperatorId:                   Operator_Id.Parse("DE*GEF"),
+                                        ProviderId:                   pullPricingProductDataRequest.ProviderId,
+                                        PricingDefaultPrice:          1.23M,
+                                        PricingDefaultPriceCurrency:  Currency_Id.EUR,
+                                        PricingDefaultReferenceUnit:  Reference_Unit.HOUR,
+                                        PricingProductDataRecords:    new PricingProductDataRecord[] {
+                                                                          new PricingProductDataRecord(
+                                                                              ProductId:                    PartnerProduct_Id.Parse("AC1"),
+                                                                              ReferenceUnit:                Reference_Unit.HOUR,
+                                                                              ProductPriceCurrency:         Currency_Id.EUR,
+                                                                              PricePerReferenceUnit:        1,
+                                                                              MaximumProductChargingPower:  22,
+                                                                              IsValid24hours:               false,
+                                                                              ProductAvailabilityTimes:     new ProductAvailabilityTimes[] {
+                                                                                                                new ProductAvailabilityTimes(
+                                                                                                                    new Period(
+                                                                                                                        Begin: HourMinute.Parse("09:00"),
+                                                                                                                        End:   HourMinute.Parse("18:00")
+                                                                                                                    ),
+                                                                                                                    On: WeekDay.Everyday)
+                                                                                                            },
+                                                                              AdditionalReferences:         new AdditionalReferences[] {
+                                                                                                                new AdditionalReferences(
+                                                                                                                    AdditionalReference:              Additional_Reference.ParkingFee,
+                                                                                                                    AdditionalReferenceUnit:          Reference_Unit.HOUR,
+                                                                                                                    PricePerAdditionalReferenceUnit:  2
+                                                                                                                )
+                                                                                                            }
+                                                                          )
+                                                                      },
+                                        OperatorName:                 "GraphDefined"
+                                    )
+                                },
+                                pullPricingProductDataRequest,
+                                StatusCode: new StatusCode(
+                                                StatusCodes.Success
+                                            )
+                            )
+                        )
+                    );
+
+                else
+                    return Task.FromResult(
+                        OICPResult<PullPricingProductDataResponse>.Success(
+                            pullPricingProductDataRequest,
+                            new PullPricingProductDataResponse(
+                                Timestamp.Now,
+                                pullPricingProductDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                                Process_Id.NewRandom,
+                                Timestamp.Now - pullPricingProductDataRequest.Timestamp,
+                                Array.Empty<PricingProductData>(),
+                                pullPricingProductDataRequest,
+                                StatusCode: new StatusCode(
+                                                StatusCodes.Success
+                                            )
+                            )
+                        )
+                    );
+
             };
 
             empClientAPI.OnPullEVSEPricing                 += (timestamp, empClientAPI, pullEVSEPricingRequest) =>
             {
-                throw new NotImplementedException();
+
+                if (pullEVSEPricingRequest.OperatorIds.Contains(Operator_Id.Parse("DE*GEF")))
+                    return Task.FromResult(
+                        OICPResult<PullEVSEPricingResponse>.Success(
+                            pullEVSEPricingRequest,
+                            new PullEVSEPricingResponse(
+                                Timestamp.Now,
+                                pullEVSEPricingRequest.EventTrackingId ?? EventTracking_Id.New,
+                                Process_Id.NewRandom,
+                                Timestamp.Now - pullEVSEPricingRequest.Timestamp,
+                                new OperatorEVSEPricing[] {
+                                    new OperatorEVSEPricing(
+                                        new EVSEPricing[] {
+                                            new EVSEPricing(
+                                                EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                EVSEIdProductList:  new PartnerProduct_Id[] {
+                                                                        PartnerProduct_Id.Parse("AC1")
+                                                                    },
+                                                ProviderId:         Provider_Id.Parse("DE-GDF")
+                                            ),
+                                            new EVSEPricing(
+                                                EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*2"),
+                                                EVSEIdProductList:  new PartnerProduct_Id[] {
+                                                                        PartnerProduct_Id.Parse("AC3")
+                                                                    },
+                                                ProviderId:         null // == '*' meaning for all providers!
+                                            )
+                                        },
+                                        OperatorId:     Operator_Id.Parse("DE*GEF"),
+                                        OperatorName:  "GraphDefined"
+                                    )
+                                },
+                                pullEVSEPricingRequest,
+                                StatusCode: new StatusCode(
+                                                StatusCodes.Success
+                                            )
+                            )
+                        )
+                    );
+
+                else
+                    return Task.FromResult(
+                        OICPResult<PullEVSEPricingResponse>.Success(
+                            pullEVSEPricingRequest,
+                            new PullEVSEPricingResponse(
+                                Timestamp.Now,
+                                pullEVSEPricingRequest.EventTrackingId ?? EventTracking_Id.New,
+                                Process_Id.NewRandom,
+                                Timestamp.Now - pullEVSEPricingRequest.Timestamp,
+                                Array.Empty<OperatorEVSEPricing>(),
+                                pullEVSEPricingRequest,
+                                StatusCode: new StatusCode(
+                                                StatusCodes.Success
+                                            )
+                            )
+                        )
+                    );
+
             };
 
 
             empClientAPI.OnPushAuthenticationData          += (timestamp, empClientAPI, pushPushAuthenticationDataRequest) =>
             {
-                throw new NotImplementedException();
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Success(
+                        pushPushAuthenticationDataRequest,
+                        new Acknowledgement<PushAuthenticationDataRequest>(
+                            Timestamp.Now,
+                            pushPushAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pushPushAuthenticationDataRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            pushPushAuthenticationDataRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
             };
 
 
             empClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) =>
             {
-                throw new NotImplementedException();
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Success(
+                        authorizeRemoteReservationStartRequest,
+                        new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
+                            Timestamp.Now,
+                            authorizeRemoteReservationStartRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - authorizeRemoteReservationStartRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            authorizeRemoteReservationStartRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
             };
 
             empClientAPI.OnAuthorizeRemoteReservationStop  += (timestamp, empClientAPI, authorizeRemoteReservationStopRequest) =>
             {
-                throw new NotImplementedException();
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Success(
+                        authorizeRemoteReservationStopRequest,
+                        new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
+                            Timestamp.Now,
+                            authorizeRemoteReservationStopRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - authorizeRemoteReservationStopRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            authorizeRemoteReservationStopRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
             };
 
             empClientAPI.OnAuthorizeRemoteStart            += (timestamp, empClientAPI, authorizeRemoteStartRequest) =>
             {
-                throw new NotImplementedException();
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Success(
+                        authorizeRemoteStartRequest,
+                        new Acknowledgement<AuthorizeRemoteStartRequest>(
+                            Timestamp.Now,
+                            authorizeRemoteStartRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - authorizeRemoteStartRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            authorizeRemoteStartRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
             };
 
             empClientAPI.OnAuthorizeRemoteStop             += (timestamp, empClientAPI, authorizeRemoteStopRequest) =>
             {
-                throw new NotImplementedException();
+
+                return Task.FromResult(
+                   OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Success(
+                       authorizeRemoteStopRequest,
+                       new Acknowledgement<AuthorizeRemoteStopRequest>(
+                           Timestamp.Now,
+                           authorizeRemoteStopRequest.EventTrackingId ?? EventTracking_Id.New,
+                           Process_Id.NewRandom,
+                           Timestamp.Now - authorizeRemoteStopRequest.Timestamp,
+                           new StatusCode(
+                               StatusCodes.Success
+                           ),
+                           authorizeRemoteStopRequest,
+                           null,
+                           true
+                       )
+                   )
+               );
+
             };
 
 
             empClientAPI.OnGetChargeDetailRecords          += (timestamp, empClientAPI, getChargeDetailRecordsRequest) =>
             {
-                throw new NotImplementedException();
-            };
 
+                return Task.FromResult(
+                    OICPResult<GetChargeDetailRecordsResponse>.Success(
+                        getChargeDetailRecordsRequest,
+                        new GetChargeDetailRecordsResponse(
+                            Timestamp.Now,
+                            getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - getChargeDetailRecordsRequest.Timestamp,
+                            Array.Empty<ChargeDetailRecord>(),
+                            getChargeDetailRecordsRequest,
+                            StatusCode: new StatusCode(
+                                            StatusCodes.Success
+                                        )
+                        )
+                    )
+                );
+
+            };
 
 
 

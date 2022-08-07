@@ -277,7 +277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var PricingProductData  = new List<PricingProductData>();
                 var Warnings            = new List<Warning>();
 
-                foreach (var evseDataRecordJSON in PricingProductDataJSON)
+                foreach (var pricingProductDataJSON in PricingProductDataJSON)
                 {
 
                     try
@@ -285,8 +285,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                         var ErrorResponse2 = String.Empty;
 
-                        if (evseDataRecordJSON is JObject evseDataRecordJObject &&
-                            OICPv2_3.PricingProductData.TryParse(evseDataRecordJObject,
+                        if (pricingProductDataJSON is JObject pricingProductDataJObject &&
+                            OICPv2_3.PricingProductData.TryParse(pricingProductDataJObject,
                                                                  out PricingProductData?  pricingProductData,
                                                                  out                      ErrorResponse2))
                         {
@@ -296,8 +296,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         else
                         {
 
-                            if (evseDataRecordJSON is JObject evseDataRecordJObject2)
-                                ErrorResponse2 = "EVSE " + evseDataRecordJObject2["EvseID"]?.Value<String>() + ": " + ErrorResponse2;
+                            if (pricingProductDataJSON is JObject pricingProductDataJObject2)
+                                ErrorResponse2 = "EVSE " + pricingProductDataJObject2["EvseID"]?.Value<String>() + ": " + ErrorResponse2;
 
                             if (ErrorResponse2 is not null)
                                 Warnings.Add(Warning.Create(I18NString.Create(Languages.en, ErrorResponse2)));
@@ -310,8 +310,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                         var message = e.Message;
 
-                        if (evseDataRecordJSON is JObject evseDataRecordJObject2)
-                            message = "EVSE " + evseDataRecordJObject2["EvseID"]?.Value<String>() + ": " + message;
+                        if (pricingProductDataJSON is JObject pricingProductDataJObject2)
+                            message = "EVSE " + pricingProductDataJObject2["EvseID"]?.Value<String>() + ": " + message;
 
                         Warnings.Add(Warning.Create(I18NString.Create(Languages.en, message)));
 

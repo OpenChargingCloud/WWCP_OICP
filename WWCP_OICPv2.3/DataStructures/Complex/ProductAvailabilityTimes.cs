@@ -243,11 +243,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Period    [mandatory]
 
-                if (!JSON.ParseMandatory("Period",
-                                         "period of time",
-                                         OICPv2_3.Period.TryParse,
-                                         out Period Period,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("Period",
+                                             "period of time",
+                                             OICPv2_3.Period.TryParse,
+                                             out Period Period,
+                                             out ErrorResponse))
                 {
                     return false;
                 }

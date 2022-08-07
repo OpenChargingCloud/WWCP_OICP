@@ -212,18 +212,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ProviderId           [mandatory]
 
-                if (!JSON.ParseMandatory("ProviderID",
-                                         "provider identification",
-                                         Provider_Id.TryParse,
-                                         out Provider_Id providerId,
-                                         out ErrorResponse))
-                {
-                    return false;
-                }
+                Provider_Id? ProviderId = default;
+                var providerIDString = JSON["ProviderID"]?.Value<String>();
 
-                Provider_Id? ProviderId = providerId.ToString() != "*"
-                                              ? providerId
-                                              : null;
+                if (providerIDString is not null && providerIDString != "*")
+                {
+
+                    if (!JSON.ParseMandatory("ProviderID",
+                                             "e-mobility provider identification",
+                                             Provider_Id.TryParse,
+                                             out Provider_Id providerId,
+                                             out ErrorResponse))
+                    {
+                        return false;
+                    }
+
+                    ProviderId = providerId;
+
+                }
 
                 #endregion
 

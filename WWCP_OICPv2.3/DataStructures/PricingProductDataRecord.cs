@@ -40,58 +40,58 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// A pricing product name (for identifying a tariff) that MUST be unique.
         /// </summary>
         [Mandatory]
-        public PartnerProduct_Id                    ProductId                              { get; }
+        public PartnerProduct_Id                      ProductId                              { get; }
 
 
         /// <summary>
         /// Reference unit in time or kWh.
         /// </summary>
         [Mandatory]
-        public Reference_Unit                       ReferenceUnit                          { get; }
+        public Reference_Unit                         ReferenceUnit                          { get; }
 
         /// <summary>
         /// Currency for default prices.
         /// </summary>
         [Mandatory]
-        public Currency_Id                          ProductPriceCurrency                   { get; }
+        public Currency_Id                            ProductPriceCurrency                   { get; }
 
         /// <summary>
         /// A price per reference unit.
         /// </summary>
         [Mandatory]
-        public Decimal                              PricePerReferenceUnit                  { get; }
+        public Decimal                                PricePerReferenceUnit                  { get; }
 
         /// <summary>
         /// A value in kWh.
         /// </summary>
         [Mandatory]
-        public Decimal                              MaximumProductChargingPower            { get; }
+        public Decimal                                MaximumProductChargingPower            { get; }
 
         /// <summary>
         /// Set to TRUE if the respective pricing product is applicable 24 hours a day.
         /// If FALSE, the respective applicability times SHOULD be provided in the field "ProductAvailabilityTimes".
         /// </summary>
         [Mandatory]
-        public Boolean                              IsValid24hours                         { get; }
+        public Boolean                                IsValid24hours                         { get; }
 
         /// <summary>
-        /// A list indicating when the pricing product is applicable.
+        /// An enumeration indicating when the pricing product is applicable.
         /// </summary>
         [Mandatory]
-        public ProductAvailabilityTimes             ProductAvailabilityTimes               { get; }
+        public IEnumerable<ProductAvailabilityTimes>  ProductAvailabilityTimes               { get; }
 
         /// <summary>
         /// An optional enumeration of additional reference units and their respective prices.
         /// </summary>
         [Optional]
-        public IEnumerable<AdditionalReferences>?   AdditionalReferences                   { get; }
+        public IEnumerable<AdditionalReferences>?     AdditionalReferences                   { get; }
 
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?                             CustomData                             { get; }
+        public JObject?                               CustomData                             { get; }
 
         #endregion
 
@@ -106,24 +106,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PricePerReferenceUnit">A price per reference unit.</param>
         /// <param name="MaximumProductChargingPower">A value in kWh.</param>
         /// <param name="IsValid24hours">Set to TRUE if the respective pricing product is applicable 24 hours a day. If FALSE, the respective applicability times SHOULD be provided in the field "ProductAvailabilityTimes".</param>
-        /// <param name="ProductAvailabilityTimes">A list indicating when the pricing product is applicable.</param>
+        /// <param name="ProductAvailabilityTimes">An enumeration indicating when the pricing product is applicable.</param>
         /// 
         /// <param name="AdditionalReferences">An optional enumeration of additional reference units and their respective prices.</param>
         /// 
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public PricingProductDataRecord(PartnerProduct_Id                   ProductId,
-                                        Reference_Unit                      ReferenceUnit,
-                                        Currency_Id                         ProductPriceCurrency,
-                                        Decimal                             PricePerReferenceUnit,
-                                        Decimal                             MaximumProductChargingPower,
-                                        Boolean                             IsValid24hours,
-                                        ProductAvailabilityTimes            ProductAvailabilityTimes,
+        public PricingProductDataRecord(PartnerProduct_Id                      ProductId,
+                                        Reference_Unit                         ReferenceUnit,
+                                        Currency_Id                            ProductPriceCurrency,
+                                        Decimal                                PricePerReferenceUnit,
+                                        Decimal                                MaximumProductChargingPower,
+                                        Boolean                                IsValid24hours,
+                                        IEnumerable<ProductAvailabilityTimes>  ProductAvailabilityTimes,
 
-                                        IEnumerable<AdditionalReferences>?  AdditionalReferences   = null,
+                                        IEnumerable<AdditionalReferences>?     AdditionalReferences   = null,
 
-                                        JObject?                            CustomData             = null,
-                                        Dictionary<String, Object>?         InternalData           = null)
+                                        JObject?                               CustomData             = null,
+                                        Dictionary<String, Object>?            InternalData           = null)
 
             : base(InternalData)
 
@@ -350,11 +350,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ProductAvailabilityTimes       [mandatory]
 
-                if (!JSON.ParseMandatory("ProductAvailabilityTimes",
-                                         "product availability times",
-                                         OICPv2_3.ProductAvailabilityTimes.TryParse,
-                                         out ProductAvailabilityTimes ProductAvailabilityTimes,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("ProductAvailabilityTimes",
+                                             "product availability times",
+                                             OICPv2_3.ProductAvailabilityTimes.TryParse,
+                                             out IEnumerable<ProductAvailabilityTimes> ProductAvailabilityTimes,
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -475,7 +475,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("PricePerReferenceUnit",        PricePerReferenceUnit),
                            new JProperty("MaximumProductChargingPower",  MaximumProductChargingPower),
                            new JProperty("IsValid24hours",               IsValid24hours),
-                           new JProperty("ProductAvailabilityTimes",     ProductAvailabilityTimes.ToJSON()),
+                           new JProperty("ProductAvailabilityTimes",     new JArray(ProductAvailabilityTimes.Select(productAvailabilityTime => productAvailabilityTime.ToJSON()))),
 
                            AdditionalReferences is not null && AdditionalReferences.Any()
                                ? new JProperty("AdditionalReferences",   new JArray(AdditionalReferences.Select(additionalReference => additionalReference.ToJSON(CustomAdditionalReferencesSerializer))))
@@ -508,10 +508,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     PricePerReferenceUnit,
                     MaximumProductChargingPower,
                     IsValid24hours,
-                    ProductAvailabilityTimes.Clone,
+                    ProductAvailabilityTimes.Select(productAvailabilityTime => productAvailabilityTime.Clone).ToArray(),
 
                     AdditionalReferences is not null
-                        ? AdditionalReferences.SafeSelect(additionalReference => additionalReference.Clone).ToArray()
+                        ? AdditionalReferences.Select(additionalReference => additionalReference.Clone).ToArray()
                         : null,
 
                     CustomData is not null

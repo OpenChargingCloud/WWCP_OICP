@@ -288,7 +288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse OperatorId                     [optional]
+                #region Parse OperatorName                   [optional]
 
                 var OperatorName = JSON.GetString("OperatorName");
 
@@ -345,9 +345,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse PricingProductDataRecords       [mandatory]
+                #region Parse PricingProductDataRecords      [mandatory]
 
-                if (!JSON.ParseMandatoryJSON("PricingProductDataRecord",
+                if (!JSON.ParseMandatoryJSON("PricingProductDataRecords",
                                              "pricing product data records",
                                              PricingProductDataRecord.TryParse,
                                              out IEnumerable<PricingProductDataRecord> PricingProductDataRecords,
@@ -359,7 +359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                #region Parse CustomData                        [optional]
+                #region Parse CustomData                     [optional]
 
 #pragma warning disable CA1507 // Use nameof to express symbol names
                 var CustomData = JSON["CustomData"] as JObject;

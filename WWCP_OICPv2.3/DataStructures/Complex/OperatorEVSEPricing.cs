@@ -200,12 +200,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse EvseDataRecords       [mandatory]
+                #region Parse EVSEPricings    [mandatory]
 
-                if (!JSON.ParseMandatoryJSON("EvseDataRecord",
-                                             "EVSE pricing records",
+                if (!JSON.ParseMandatoryJSON("EVSEPricing",
+                                             "EVSE pricings",
                                              EVSEPricing.TryParse,
-                                             out IEnumerable<EVSEPricing> EvseDataRecords,
+                                             out IEnumerable<EVSEPricing> EVSEPricings,
                                              out ErrorResponse))
                 {
                     return false;
@@ -213,32 +213,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse OperatorId            [mandatory]
+                #region Parse OperatorId      [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("OperatorID",
-                                             "operator identification",
-                                             out Operator_Id OperatorId,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("OperatorID",
+                                         "operator identification",
+                                         Operator_Id.TryParse,
+                                         out Operator_Id OperatorId,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
 
-                #region Parse OperatorName          [mandatory]
+                #region Parse OperatorName    [optional]
 
-                if (!JSON.ParseMandatoryText("OperatorName",
-                                             "operator name",
-                                             out String OperatorName,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
+                var OperatorName = JSON.GetString("OperatorName");
 
                 #endregion
 
 
-                #region Parse CustomData            [optional]
+                #region Parse CustomData      [optional]
 
 #pragma warning disable CA1507 // Use nameof to express symbol names
                 var CustomData = JSON["CustomData"] as JObject;
@@ -247,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                OperatorEVSEPricing = new OperatorEVSEPricing(EvseDataRecords,
+                OperatorEVSEPricing = new OperatorEVSEPricing(EVSEPricings,
                                                               OperatorId,
                                                               OperatorName,
 
@@ -313,22 +308,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomOperatorEVSEPricingSerializer">A delegate to serialize custom operator EVSE pricing JSON objects.</param>
-        /// <param name="CustomEVSEPricingSerializer">A delegate to serialize custom EVSE pricing record JSON objects.</param>
-        /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
-        /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
-        /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
-        /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
-        /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
-        /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
+        /// <param name="CustomEVSEPricingSerializer">A delegate to serialize custom EVSE pricing JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<OperatorEVSEPricing>?  CustomOperatorEVSEPricingSerializer   = null,
                               CustomJObjectSerializerDelegate<EVSEPricing>?          CustomEVSEPricingSerializer           = null)
         {
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("EvseDataRecord",  new JArray(EVSEPricings.Select(evsePricing => evsePricing.ToJSON(CustomEVSEPricingSerializer)))),
-                           new JProperty("OperatorID",      OperatorId.ToString()),
-                           new JProperty("OperatorName",    OperatorName),
+                           new JProperty("EVSEPricing",   new JArray(EVSEPricings.Select(evsePricing => evsePricing.ToJSON(CustomEVSEPricingSerializer)))),
+                           new JProperty("OperatorID",    OperatorId.ToString()),
+                           new JProperty("OperatorName",  OperatorName),
 
                            CustomData?.HasValues == true
                                ? new JProperty("CustomData",  CustomData)
