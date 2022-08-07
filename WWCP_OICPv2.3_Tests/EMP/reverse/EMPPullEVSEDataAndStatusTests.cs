@@ -27,10 +27,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 {
 
     /// <summary>
-    /// EMP sending EVSE data tests.
+    /// EMP sending EVSE data and status tests.
     /// </summary>
     [TestFixture]
-    public class EMPPullEVSEDataTests : AEMPClientAPITests
+    public class EMPPullEVSEDataAndStatusTests : AEMPClientAPITests
     {
 
         #region EMPPullEVSEData_Test1()
@@ -222,6 +222,64 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
             Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_Error);
             Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusById.Responses_OK);
             Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+
+        }
+
+        #endregion
+
+        #region EMPPullEVSEStatusByOperatorId_Test1()
+
+        [Test]
+        public async Task EMPPullEVSEStatusByOperatorId_Test1()
+        {
+
+            if (empClientAPI is null ||
+                empClient    is null)
+            {
+                Assert.Fail("empClientAPI or empClient is null!");
+                return;
+            }
+
+            var request = new PullEVSEStatusByOperatorIdRequest(ProviderId:             Provider_Id.Parse("DE-GDF"),
+                                                                OperatorIds:            new Operator_Id[] {
+                                                                                            Operator_Id.Parse("DE*GEF")
+                                                                                        },
+
+                                                                Timestamp:              Timestamp.Now,
+                                                                CancellationToken:      null,
+                                                                EventTrackingId:        EventTracking_Id.New,
+                                                                RequestTimeout:         TimeSpan.FromSeconds(10));
+
+            Assert.IsNotNull(request);
+
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_Error);
+
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_Error);
+
+            var oicpResult  = await empClient.PullEVSEStatusByOperatorId(request);
+
+            Assert.IsNotNull(oicpResult);
+            Assert.IsNotNull(oicpResult.Response);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            Assert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
+            Assert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
+
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_Error);
+
+            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_Error);
 
         }
 
