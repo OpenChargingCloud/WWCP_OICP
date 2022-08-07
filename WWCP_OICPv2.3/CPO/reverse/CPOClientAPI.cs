@@ -1202,9 +1202,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                           this,
                                                                                                                                           pullEVSEDataRequest!))))?.FirstOrDefault();
 
+                                                             Counters.PushEVSEData.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.PushEVSEData.IncResponses_Error();
+
                                                              pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                                                         this,
                                                                                         new Acknowledgement<PushEVSEDataRequest>(
@@ -1220,23 +1225,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             pullEVSEDataRequest
                                                                                         )
                                                                                     );
+
                                                          }
                                                      }
 
-                                                     pullEVSEDataResponse ??= OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                                                                                  this,
-                                                                                  new Acknowledgement<PushEVSEDataRequest>(
-                                                                                      Timestamp.Now,
-                                                                                      Request.EventTrackingId,
-                                                                                      processId,
-                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                      StatusCode: new StatusCode(
-                                                                                                      StatusCodes.SystemError,
-                                                                                                      "Could not process the received PushEVSEData request!"
-                                                                                                  ),
-                                                                                      pullEVSEDataRequest
-                                                                                  )
-                                                                              );
+                                                     if (pullEVSEDataResponse is null)
+                                                     {
+
+                                                         Counters.PushEVSEData.IncResponses_Error();
+
+                                                         pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                                                    this,
+                                                                                    new Acknowledgement<PushEVSEDataRequest>(
+                                                                                        Timestamp.Now,
+                                                                                        Request.EventTrackingId,
+                                                                                        processId,
+                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                        StatusCode: new StatusCode(
+                                                                                                        StatusCodes.SystemError,
+                                                                                                        "Could not process the received PushEVSEData request!"
+                                                                                                    ),
+                                                                                        pullEVSEDataRequest
+                                                                                    )
+                                                                                );
+
+                                                     }
 
                                                      #endregion
 
@@ -1289,6 +1302,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.PushEVSEData.IncResponses_Error();
+
                                                  pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                                             this,
                                                                             new Acknowledgement<PushEVSEDataRequest>(
@@ -1303,13 +1319,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             )
                                                                             )
                                                                         );
+
                                              }
-
-
-                                             if (pullEVSEDataResponse.IsSuccessful)
-                                                 Counters.PushEVSEData.IncResponses_OK();
-                                             else
-                                                 Counters.PushEVSEData.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -1430,9 +1441,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                               this,
                                                                                                                                               pullEVSEStatusRequest!))))?.FirstOrDefault();
 
+                                                             Counters.PushEVSEStatus.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.PushEVSEStatus.IncResponses_Error();
+
                                                              pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                                                           this,
                                                                                           new Acknowledgement<PushEVSEStatusRequest>(
@@ -1448,23 +1464,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               pullEVSEStatusRequest
                                                                                           )
                                                                                       );
+
                                                          }
                                                      }
 
-                                                     pullEVSEStatusResponse ??= OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                    this,
-                                                                                    new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                        Timestamp.Now,
-                                                                                        Request.EventTrackingId,
-                                                                                        processId,
-                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                        StatusCode: new StatusCode(
-                                                                                                        StatusCodes.SystemError,
-                                                                                                        "Could not process the received PushEVSEStatus request!"
-                                                                                                    ),
-                                                                                        pullEVSEStatusRequest
-                                                                                    )
-                                                                                );
+                                                     if (pullEVSEStatusResponse is null)
+                                                     {
+
+                                                         Counters.PushEVSEStatus.IncResponses_Error();
+
+                                                         pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                                                      this,
+                                                                                      new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                          Timestamp.Now,
+                                                                                          Request.EventTrackingId,
+                                                                                          processId,
+                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                          StatusCode: new StatusCode(
+                                                                                                          StatusCodes.SystemError,
+                                                                                                          "Could not process the received PushEVSEStatus request!"
+                                                                                                      ),
+                                                                                          pullEVSEStatusRequest
+                                                                                      )
+                                                                                  );
+
+                                                     }
 
                                                      #endregion
 
@@ -1517,6 +1541,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.PushEVSEStatus.IncResponses_Error();
+
                                                  pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                                               this,
                                                                               new Acknowledgement<PushEVSEStatusRequest>(
@@ -1531,13 +1558,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                               )
                                                                               )
                                                                           );
+
                                              }
-
-
-                                             if (pullEVSEStatusResponse.IsSuccessful)
-                                                 Counters.PushEVSEStatus.IncResponses_OK();
-                                             else
-                                                 Counters.PushEVSEStatus.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -1659,9 +1681,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                               this,
                                                                                                                                                               pullEVSEDataRequest!))))?.FirstOrDefault();
 
+                                                             Counters.PushPricingProductData.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.PushPricingProductData.IncResponses_Error();
+
                                                              pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                                                                   this,
                                                                                                   new Acknowledgement<PushPricingProductDataRequest>(
@@ -1677,23 +1704,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                       pullEVSEDataRequest
                                                                                                   )
                                                                                               );
+
                                                          }
                                                      }
 
-                                                     pushPricingProductDataResponse ??= OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
-                                                                                            this,
-                                                                                            new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                                Timestamp.Now,
-                                                                                                Request.EventTrackingId,
-                                                                                                processId,
-                                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                                StatusCode: new StatusCode(
-                                                                                                                StatusCodes.SystemError,
-                                                                                                                "Could not process the received PushPricingProductData request!"
-                                                                                                            ),
-                                                                                                pullEVSEDataRequest
-                                                                                            )
-                                                                                        );
+                                                     if (pushPricingProductDataResponse is null)
+                                                     {
+
+                                                         Counters.PushPricingProductData.IncResponses_Error();
+
+                                                         pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                              this,
+                                                                                              new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  processId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.SystemError,
+                                                                                                                  "Could not process the received PushPricingProductData request!"
+                                                                                                              ),
+                                                                                                  pullEVSEDataRequest
+                                                                                              )
+                                                                                          );
+
+                                                     }
 
                                                      #endregion
 
@@ -1746,6 +1781,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.PushPricingProductData.IncResponses_Error();
+
                                                  pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                                                       this,
                                                                                       new Acknowledgement<PushPricingProductDataRequest>(
@@ -1760,13 +1798,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                       )
                                                                                       )
                                                                                   );
+
                                              }
-
-
-                                             if (pushPricingProductDataResponse.IsSuccessful)
-                                                 Counters.PushPricingProductData.IncResponses_OK();
-                                             else
-                                                 Counters.PushPricingProductData.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -1887,11 +1920,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                 this,
                                                                                                                                                 pullEVSEDataRequest!))))?.FirstOrDefault();
 
-                                                             
+                                                             Counters.PushEVSEPricing.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.PushEVSEPricing.IncResponses_Error();
+
                                                              pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                                                            this,
                                                                                            new Acknowledgement<PushEVSEPricingRequest>(
@@ -1907,23 +1943,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                pullEVSEDataRequest!
                                                                                            )
                                                                                        );
+
                                                          }
                                                      }
 
-                                                     pushEVSEPricingResponse ??= OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
-                                                                                     this,
-                                                                                     new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                         Timestamp.Now,
-                                                                                         Request.EventTrackingId,
-                                                                                         processId,
-                                                                                         Timestamp.Now - Request.Timestamp,
-                                                                                         StatusCode: new StatusCode(
-                                                                                                         StatusCodes.SystemError,
-                                                                                                         "Could not process the received PushEVSEPricing request!"
-                                                                                                     ),
-                                                                                         pullEVSEDataRequest!
-                                                                                     )
-                                                                                 );
+                                                     if (pushEVSEPricingResponse is null)
+                                                     {
+
+                                                         Counters.PushEVSEPricing.IncResponses_Error();
+
+                                                         pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                                       this,
+                                                                                       new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                           Timestamp.Now,
+                                                                                           Request.EventTrackingId,
+                                                                                           processId,
+                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                           StatusCode: new StatusCode(
+                                                                                                           StatusCodes.SystemError,
+                                                                                                           "Could not process the received PushEVSEPricing request!"
+                                                                                                       ),
+                                                                                           pullEVSEDataRequest!
+                                                                                       )
+                                                                                   );
+
+                                                     }
 
                                                      #endregion
 
@@ -1976,6 +2020,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.PushEVSEPricing.IncResponses_Error();
+
                                                  pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                                                this,
                                                                                new Acknowledgement<PushEVSEPricingRequest>(
@@ -1990,13 +2037,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                )
                                                                                )
                                                                            );
+
                                              }
-
-
-                                             if (pushEVSEPricingResponse.IsSuccessful)
-                                                 Counters.PushEVSEPricing.IncResponses_OK();
-                                             else
-                                                 Counters.PushEVSEPricing.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -2119,9 +2161,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                               this,
                                                                                                                                                               pullAuthenticationDataRequest!))))?.FirstOrDefault();
 
+                                                             Counters.PullAuthenticationData.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.PullAuthenticationData.IncResponses_Error();
+
                                                              pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
                                                                                                   this,
                                                                                                   new PullAuthenticationDataResponse(
@@ -2138,24 +2185,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                   )
                                                                                                   )
                                                                                               );
+
                                                          }
                                                      }
 
-                                                     pullAuthenticationDataResponse ??= OICPResult<PullAuthenticationDataResponse>.Failed(
-                                                                                            this,
-                                                                                            new PullAuthenticationDataResponse(
-                                                                                                Timestamp.Now,
-                                                                                                Request.EventTrackingId,
-                                                                                                processId,
-                                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                                Array.Empty<ProviderAuthenticationData>(),
-                                                                                                pullAuthenticationDataRequest,
-                                                                                                StatusCode: new StatusCode(
-                                                                                                                StatusCodes.SystemError,
-                                                                                                                "Could not process the received PullAuthenticationData request!"
-                                                                                                            )
-                                                                                            )
-                                                                                        );
+                                                     if (pullAuthenticationDataResponse is null)
+                                                     {
+
+                                                         Counters.PullAuthenticationData.IncResponses_Error();
+
+                                                         pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                              this,
+                                                                                              new PullAuthenticationDataResponse(
+                                                                                                  Timestamp.Now,
+                                                                                                  Request.EventTrackingId,
+                                                                                                  processId,
+                                                                                                  Timestamp.Now - Request.Timestamp,
+                                                                                                  Array.Empty<ProviderAuthenticationData>(),
+                                                                                                  pullAuthenticationDataRequest,
+                                                                                                  StatusCode: new StatusCode(
+                                                                                                                  StatusCodes.SystemError,
+                                                                                                                  "Could not process the received PullAuthenticationData request!"
+                                                                                                              )
+                                                                                              )
+                                                                                          );
+
+                                                     }
 
                                                      #endregion
 
@@ -2209,6 +2264,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.PullAuthenticationData.IncResponses_Error();
+
                                                  pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
                                                                                       this,
                                                                                       new PullAuthenticationDataResponse(
@@ -2224,13 +2282,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                       )
                                                                                       )
                                                                                   );
+
                                              }
-
-
-                                             if (pullAuthenticationDataResponse.IsSuccessful)
-                                                 Counters.PullAuthenticationData.IncResponses_OK();
-                                             else
-                                                 Counters.PullAuthenticationData.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -2351,9 +2404,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                   this,
                                                                                                                                                   pullEVSEDataRequest!))))?.FirstOrDefault();
 
+                                                             Counters.AuthorizeStart.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.AuthorizeStart.IncResponses_Error();
+
                                                              authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
                                                                                               this,
                                                                                               AuthorizationStartResponse.DataError(
@@ -2366,20 +2424,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                   Runtime:            Timestamp.Now - Request.Timestamp
                                                                                               )
                                                                                           );
+
                                                          }
                                                      }
 
-                                                     authorizationStartResponse ??= OICPResult<AuthorizationStartResponse>.Failed(
-                                                                                        this,
-                                                                                        AuthorizationStartResponse.SystemError(
-                                                                                            pullEVSEDataRequest,
-                                                                                            "Could not process the received AuthorizeStart request!",
-                                                                                            ResponseTimestamp:  Timestamp.Now,
-                                                                                            EventTrackingId:    Request.EventTrackingId,
-                                                                                            ProcessId:          processId,
-                                                                                            Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                        )
-                                                                                    );
+                                                     if (authorizationStartResponse is null)
+                                                     {
+
+                                                         Counters.AuthorizeStart.IncResponses_Error();
+
+                                                         authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
+                                                                                          this,
+                                                                                          AuthorizationStartResponse.SystemError(
+                                                                                              pullEVSEDataRequest,
+                                                                                              "Could not process the received AuthorizeStart request!",
+                                                                                              ResponseTimestamp:  Timestamp.Now,
+                                                                                              EventTrackingId:    Request.EventTrackingId,
+                                                                                              ProcessId:          processId,
+                                                                                              Runtime:            Timestamp.Now - Request.Timestamp
+                                                                                          )
+                                                                                      );
+
+                                                     }
 
                                                      #endregion
 
@@ -2429,6 +2495,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.AuthorizeStart.IncResponses_Error();
+
                                                  authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
                                                                                   this,
                                                                                   AuthorizationStartResponse.SystemError(
@@ -2441,13 +2510,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                       Runtime:            Timestamp.Now - Request.Timestamp
                                                                                   )
                                                                               );
+
                                              }
-
-
-                                             if (authorizationStartResponse.IsSuccessful)
-                                                 Counters.AuthorizeStart.IncResponses_OK();
-                                             else
-                                                 Counters.AuthorizeStart.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -2566,9 +2630,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                 this,
                                                                                                                                                 pullEVSEDataRequest!))))?.FirstOrDefault();
 
+                                                             Counters.AuthorizeStop.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.AuthorizeStop.IncResponses_Error();
+
                                                              authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                              this,
                                                                                              AuthorizationStopResponse.DataError(
@@ -2581,20 +2650,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                  Runtime:            Timestamp.Now - Request.Timestamp
                                                                                              )
                                                                                          );
+
                                                          }
                                                      }
 
-                                                     authorizationStopResponse ??= OICPResult<AuthorizationStopResponse>.Failed(
-                                                                                       this,
-                                                                                       AuthorizationStopResponse.SystemError(
-                                                                                           pullEVSEDataRequest,
-                                                                                           "Could not process the received AuthorizeStop request!",
-                                                                                           ResponseTimestamp:  Timestamp.Now,
-                                                                                           EventTrackingId:    Request.EventTrackingId,
-                                                                                           ProcessId:          processId,
-                                                                                           Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                       )
-                                                                                   );
+                                                     if (authorizationStopResponse is null)
+                                                     {
+
+                                                         Counters.AuthorizeStop.IncResponses_Error();
+
+                                                         authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
+                                                                                         this,
+                                                                                         AuthorizationStopResponse.SystemError(
+                                                                                             pullEVSEDataRequest,
+                                                                                             "Could not process the received AuthorizeStop request!",
+                                                                                             ResponseTimestamp: Timestamp.Now,
+                                                                                             EventTrackingId: Request.EventTrackingId,
+                                                                                             ProcessId: processId,
+                                                                                             Runtime: Timestamp.Now - Request.Timestamp
+                                                                                         )
+                                                                                     );
+
+                                                     }
 
                                                      #endregion
 
@@ -2644,6 +2721,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.AuthorizeStop.IncResponses_Error();
+
                                                  authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                  this,
                                                                                  AuthorizationStopResponse.SystemError(
@@ -2656,13 +2736,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                      Runtime:            Timestamp.Now - Request.Timestamp
                                                                                  )
                                                                              );
+
                                              }
-
-
-                                             if (authorizationStopResponse.IsSuccessful)
-                                                 Counters.AuthorizeStop.IncResponses_OK();
-                                             else
-                                                 Counters.AuthorizeStop.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -2777,9 +2852,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                                    chargingStartNotificationRequest!))).
                                                                                                                                                      ConfigureAwait(false))?.FirstOrDefault();
 
+                                                                         Counters.ChargingNotifications.    IncResponses_OK();
+                                                                         Counters.ChargingStartNotification.IncResponses_OK();
+
                                                                      }
                                                                      catch (Exception e)
                                                                      {
+
+                                                                         Counters.ChargingNotifications.    IncResponses_Error();
+                                                                         Counters.ChargingStartNotification.IncResponses_Error();
+
                                                                          startAcknowledgement = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingStartNotificationRequest>(
@@ -2795,28 +2877,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         chargingStartNotificationRequest
                                                                                                     )
                                                                                                 );
+
                                                                      }
                                                                  }
 
-                                                                 startAcknowledgement ??= OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                                                                              this,
-                                                                                              new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  processId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.SystemError,
-                                                                                                                  "Could not process the received ChargingStartNotification request!"
-                                                                                                              ),
-                                                                                                  chargingStartNotificationRequest
-                                                                                              )
-                                                                                          );
+                                                                 if (startAcknowledgement is null)
+                                                                 {
 
-                                                                 if (startAcknowledgement.IsSuccessful == true)
-                                                                     Counters.ChargingStartNotification.IncResponses_OK();
-                                                                 else
+                                                                     Counters.ChargingNotifications.    IncResponses_Error();
                                                                      Counters.ChargingStartNotification.IncResponses_Error();
+
+                                                                     startAcknowledgement = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                                                                                                this,
+                                                                                                new Acknowledgement<ChargingStartNotificationRequest>(
+                                                                                                    Timestamp.Now,
+                                                                                                    Request.EventTrackingId,
+                                                                                                    processId,
+                                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                                    StatusCode: new StatusCode(
+                                                                                                                    StatusCodes.SystemError,
+                                                                                                                    "Could not process the received ChargingStartNotification request!"
+                                                                                                                ),
+                                                                                                    chargingStartNotificationRequest
+                                                                                                )
+                                                                                            );
+
+                                                                 }
 
                                                                  #endregion
 
@@ -2846,6 +2932,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                              }
                                                              else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.    IncRequests_Error();
+                                                                 Counters.ChargingStartNotification.IncRequests_Error();
+
                                                                  chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingStartNotificationRequest>(
@@ -2861,6 +2952,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         chargingStartNotificationRequest
                                                                                                     )
                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -2924,9 +3017,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                                          chargingProgressNotificationRequest!))).
                                                                                                                                                            ConfigureAwait(false))?.FirstOrDefault();
 
+                                                                         Counters.ChargingNotifications.       IncResponses_OK();
+                                                                         Counters.ChargingProgressNotification.IncResponses_OK();
+
                                                                      }
                                                                      catch (Exception e)
                                                                      {
+
+                                                                         Counters.ChargingNotifications.       IncResponses_Error();
+                                                                         Counters.ChargingProgressNotification.IncResponses_Error();
+
                                                                          progressAcknowledgement = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
@@ -2942,28 +3042,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         chargingProgressNotificationRequest
                                                                                                     )
                                                                                                 );
+
                                                                      }
                                                                  }
 
-                                                                 progressAcknowledgement ??= OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                                                                              this,
-                                                                                              new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  processId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.SystemError,
-                                                                                                                  "Could not process the received ChargingProgressNotification request!"
-                                                                                                              ),
-                                                                                                  chargingProgressNotificationRequest
-                                                                                              )
-                                                                                          );
+                                                                 if (progressAcknowledgement is null)
+                                                                 {
 
-                                                                 if (progressAcknowledgement.IsSuccessful == true)
-                                                                     Counters.ChargingProgressNotification.IncResponses_OK();
-                                                                 else
+                                                                     Counters.ChargingNotifications.       IncResponses_Error();
                                                                      Counters.ChargingProgressNotification.IncResponses_Error();
+
+                                                                     progressAcknowledgement = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                                                                   this,
+                                                                                                   new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                                                                       Timestamp.Now,
+                                                                                                       Request.EventTrackingId,
+                                                                                                       processId,
+                                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                                       StatusCode: new StatusCode(
+                                                                                                                       StatusCodes.SystemError,
+                                                                                                                       "Could not process the received ChargingProgressNotification request!"
+                                                                                                                   ),
+                                                                                                       chargingProgressNotificationRequest
+                                                                                                   )
+                                                                                               );
+
+                                                                 }
 
                                                                  #endregion
 
@@ -2993,6 +3097,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                              }
                                                              else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.       IncRequests_Error();
+                                                                 Counters.ChargingProgressNotification.IncRequests_Error();
+
                                                                  chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
@@ -3008,6 +3117,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         chargingProgressNotificationRequest
                                                                                                     )
                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -3056,7 +3167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingEndNotificationRequest>>? endAcknowledgement = null;
+                                                                 OICPResult<Acknowledgement<ChargingEndNotificationRequest>>? chargingEndNotificationResponse = null;
 
                                                                  var OnChargingEndNotificationLocal = OnChargingEndNotification;
                                                                  if (OnChargingEndNotificationLocal is not null)
@@ -3064,53 +3175,64 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      try
                                                                      {
 
-                                                                         endAcknowledgement = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
-                                                                                                                                                 Cast<OnChargingEndNotificationAPIDelegate>().
-                                                                                                                                                 Select(e => e(Timestamp.Now,
-                                                                                                                                                               this,
-                                                                                                                                                               chargingEndNotificationRequest!))).
-                                                                                                                                                 ConfigureAwait(false))?.FirstOrDefault();
+                                                                         chargingEndNotificationResponse = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
+                                                                                                                                                              Cast<OnChargingEndNotificationAPIDelegate>().
+                                                                                                                                                              Select(e => e(Timestamp.Now,
+                                                                                                                                                                            this,
+                                                                                                                                                                            chargingEndNotificationRequest!))).
+                                                                                                                                                              ConfigureAwait(false))?.FirstOrDefault();
+
+                                                                         Counters.ChargingNotifications.  IncResponses_OK();
+                                                                         Counters.ChargingEndNotification.IncResponses_OK();
 
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         endAcknowledgement = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                                                                                    this,
-                                                                                                    new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                        Timestamp.Now,
-                                                                                                        Request.EventTrackingId,
-                                                                                                        processId,
-                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                        StatusCode: new StatusCode(
-                                                                                                                        StatusCodes.DataError,
-                                                                                                                        e.Message,
-                                                                                                                        e.StackTrace
-                                                                                                                    ),
-                                                                                                        chargingEndNotificationRequest
-                                                                                                    )
-                                                                                                );
+
+                                                                         Counters.ChargingNotifications.  IncResponses_Error();
+                                                                         Counters.ChargingEndNotification.IncResponses_Error();
+
+                                                                         chargingEndNotificationResponse = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                                                                                                               this,
+                                                                                                               new Acknowledgement<ChargingEndNotificationRequest>(
+                                                                                                                   Timestamp.Now,
+                                                                                                                   Request.EventTrackingId,
+                                                                                                                   processId,
+                                                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                                                   StatusCode: new StatusCode(
+                                                                                                                                   StatusCodes.DataError,
+                                                                                                                                   e.Message,
+                                                                                                                                   e.StackTrace
+                                                                                                                               ),
+                                                                                                                   chargingEndNotificationRequest
+                                                                                                               )
+                                                                                                           );
+
                                                                      }
                                                                  }
 
-                                                                 endAcknowledgement ??= OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                                                                              this,
-                                                                                              new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  processId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.SystemError,
-                                                                                                                  "Could not process the received ChargingEndNotification request!"
-                                                                                                              ),
-                                                                                                  chargingEndNotificationRequest
-                                                                                              )
-                                                                                          );
+                                                                 if (chargingEndNotificationResponse is null)
+                                                                 {
 
-                                                                 if (endAcknowledgement.IsSuccessful == true)
-                                                                     Counters.ChargingEndNotification.IncResponses_OK();
-                                                                 else
+                                                                     Counters.ChargingNotifications.  IncResponses_Error();
                                                                      Counters.ChargingEndNotification.IncResponses_Error();
+
+                                                                     chargingEndNotificationResponse = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                                                                                                           this,
+                                                                                                           new Acknowledgement<ChargingEndNotificationRequest>(
+                                                                                                               Timestamp.Now,
+                                                                                                               Request.EventTrackingId,
+                                                                                                               processId,
+                                                                                                               Timestamp.Now - Request.Timestamp,
+                                                                                                               StatusCode: new StatusCode(
+                                                                                                                               StatusCodes.SystemError,
+                                                                                                                               "Could not process the received ChargingEndNotification request!"
+                                                                                                                           ),
+                                                                                                               chargingEndNotificationRequest
+                                                                                                           )
+                                                                                                       );
+
+                                                                 }
 
                                                                  #endregion
 
@@ -3124,7 +3246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingEndNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          endAcknowledgement,
+                                                                                                          chargingEndNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -3136,10 +3258,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(endAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(chargingEndNotificationResponse);
 
                                                              }
                                                              else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.  IncRequests_Error();
+                                                                 Counters.ChargingEndNotification.IncRequests_Error();
+
                                                                  chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingEndNotificationRequest>(
@@ -3155,6 +3282,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         chargingEndNotificationRequest
                                                                                                     )
                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -3203,7 +3332,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>? errorAcknowledgement = null;
+                                                                 OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>? chargingErrorNotificationResponse = null;
 
                                                                  var OnChargingErrorNotificationLocal = OnChargingErrorNotification;
                                                                  if (OnChargingErrorNotificationLocal is not null)
@@ -3211,17 +3340,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      try
                                                                      {
 
-                                                                         errorAcknowledgement = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
+                                                                         chargingErrorNotificationResponse = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
                                                                                                                                                      Cast<OnChargingErrorNotificationAPIDelegate>().
                                                                                                                                                      Select(e => e(Timestamp.Now,
                                                                                                                                                                    this,
                                                                                                                                                                    chargingErrorNotificationRequest!))).
                                                                                                                                                      ConfigureAwait(false))?.FirstOrDefault();
 
+                                                                         Counters.ChargingNotifications.    IncResponses_OK();
+                                                                         Counters.ChargingErrorNotification.IncResponses_OK();
+
                                                                      }
                                                                      catch (Exception e)
                                                                      {
-                                                                         errorAcknowledgement = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+
+                                                                         Counters.ChargingNotifications.    IncResponses_Error();
+                                                                         Counters.ChargingErrorNotification.IncResponses_Error();
+
+                                                                         chargingErrorNotificationResponse = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingErrorNotificationRequest>(
                                                                                                         Timestamp.Now,
@@ -3236,28 +3372,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         chargingErrorNotificationRequest
                                                                                                     )
                                                                                                 );
+
                                                                      }
                                                                  }
 
-                                                                 errorAcknowledgement ??= OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
-                                                                                              this,
-                                                                                              new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  processId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.SystemError,
-                                                                                                                  "Could not process the received ChargingErrorNotification request!"
-                                                                                                              ),
-                                                                                                  chargingErrorNotificationRequest
-                                                                                              )
-                                                                                          );
+                                                                 if (chargingErrorNotificationResponse is null)
+                                                                 {
 
-                                                                 if (errorAcknowledgement.IsSuccessful == true)
-                                                                     Counters.ChargingErrorNotification.IncResponses_OK();
-                                                                 else
+                                                                     Counters.ChargingNotifications.    IncResponses_Error();
                                                                      Counters.ChargingErrorNotification.IncResponses_Error();
+
+                                                                     chargingErrorNotificationResponse = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                                                                             this,
+                                                                                                             new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                                                 Timestamp.Now,
+                                                                                                                 Request.EventTrackingId,
+                                                                                                                 processId,
+                                                                                                                 Timestamp.Now - Request.Timestamp,
+                                                                                                                 StatusCode: new StatusCode(
+                                                                                                                                 StatusCodes.SystemError,
+                                                                                                                                 "Could not process the received ChargingErrorNotification request!"
+                                                                                                                             ),
+                                                                                                                 chargingErrorNotificationRequest
+                                                                                                             )
+                                                                                                         );
+
+                                                                 }
 
                                                                  #endregion
 
@@ -3271,7 +3411,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingErrorNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          errorAcknowledgement,
+                                                                                                          chargingErrorNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -3283,10 +3423,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(errorAcknowledgement);
+                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(chargingErrorNotificationResponse);
 
                                                              }
                                                              else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.IncRequests_Error();
+                                                                 Counters.ChargingEndNotification.IncRequests_Error();
+
                                                                  chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                                     this,
                                                                                                     new Acknowledgement<ChargingErrorNotificationRequest>(
@@ -3302,6 +3447,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                         chargingErrorNotificationRequest
                                                                                                     )
                                                                                                 );
+
+                                                             }
 
                                                              break;
 
@@ -3360,6 +3507,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.ChargingNotifications.IncResponses_Error();
+
                                                  chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
                                                                                     this,
                                                                                     new Acknowledgement(
@@ -3374,13 +3524,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                     )
                                                                                     )
                                                                                 );
+
                                              }
-
-
-                                             if (chargingNotificationResponse.IsSuccessful)
-                                                 Counters.ChargingNotifications.IncResponses_OK();
-                                             else
-                                                 Counters.ChargingNotifications.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {
@@ -3502,9 +3647,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                                       this,
                                                                                                                                                       chargeDetailRecordRequest!))))?.FirstOrDefault();
 
+                                                             Counters.ChargeDetailRecord.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.ChargeDetailRecord.IncResponses_Error();
+
                                                              chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                                                                               this,
                                                                                               new Acknowledgement<ChargeDetailRecordRequest>(
@@ -3520,23 +3670,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                   chargeDetailRecordRequest
                                                                                               )
                                                                                           );
+
                                                          }
                                                      }
 
-                                                     chargeDetailRecordResponse ??= OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
-                                                                                        this,
-                                                                                        new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                            Timestamp.Now,
-                                                                                            Request.EventTrackingId,
-                                                                                            processId,
-                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                            StatusCode: new StatusCode(
-                                                                                                            StatusCodes.SystemError,
-                                                                                                            "Could not process the received ChargeDetailRecord request!"
-                                                                                                        ),
-                                                                                            chargeDetailRecordRequest
-                                                                                        )
-                                                                                    );
+                                                     if (chargeDetailRecordResponse is null)
+                                                     {
+
+                                                         Counters.ChargeDetailRecord.IncResponses_Error();
+
+                                                         chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                                                                          this,
+                                                                                          new Acknowledgement<ChargeDetailRecordRequest>(
+                                                                                              Timestamp.Now,
+                                                                                              Request.EventTrackingId,
+                                                                                              processId,
+                                                                                              Timestamp.Now - Request.Timestamp,
+                                                                                              StatusCode: new StatusCode(
+                                                                                                              StatusCodes.SystemError,
+                                                                                                              "Could not process the received ChargeDetailRecord request!"
+                                                                                                          ),
+                                                                                              chargeDetailRecordRequest
+                                                                                          )
+                                                                                      );
+
+                                                     }
 
                                                      #endregion
 
@@ -3589,6 +3747,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.ChargeDetailRecord.IncResponses_Error();
+
                                                  chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                                                                   this,
                                                                                   new Acknowledgement<ChargeDetailRecordRequest>(
@@ -3603,13 +3764,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                   )
                                                                                   )
                                                                               );
+
                                              }
-
-
-                                             if (chargeDetailRecordResponse.IsSuccessful)
-                                                 Counters.ChargeDetailRecord.IncResponses_OK();
-                                             else
-                                                 Counters.ChargeDetailRecord.IncResponses_Error();
 
 
                                              return new HTTPResponse.Builder(Request) {

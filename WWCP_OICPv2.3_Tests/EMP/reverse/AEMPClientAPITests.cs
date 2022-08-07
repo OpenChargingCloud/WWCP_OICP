@@ -71,7 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 
             Assert.IsNotNull(empClientAPI);
 
-            empClientAPI.OnPullEVSEData += (timestamp, sender, pullEVSEDataRequest) => {
+            empClientAPI.OnPullEVSEData                    += (timestamp, empClientAPI, pullEVSEDataRequest) => {
 
                 return Task.FromResult(
                     OICPResult<PullEVSEDataResponse>.Success(
@@ -92,6 +92,114 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 
             };
 
+            empClientAPI.OnPullEVSEStatus                  += (timestamp, empClientAPI, pullEVSEStatusRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<PullEVSEStatusResponse>.Success(
+                        pullEVSEStatusRequest,
+                        new PullEVSEStatusResponse(
+                            Timestamp.Now,
+                            pullEVSEStatusRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pullEVSEStatusRequest.Timestamp,
+                            Array.Empty<OperatorEVSEStatus>(),
+                            pullEVSEStatusRequest,
+                            StatusCode: new StatusCode(
+                                            StatusCodes.Success
+                                        )
+                        )
+                    )
+                );
+
+            };
+
+            empClientAPI.OnPullEVSEStatusById              += (timestamp, empClientAPI, pullEVSEStatusByIdRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<PullEVSEStatusByIdResponse>.Success(
+                        pullEVSEStatusByIdRequest,
+                        new PullEVSEStatusByIdResponse(
+                            Timestamp.Now,
+                            pullEVSEStatusByIdRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pullEVSEStatusByIdRequest.Timestamp,
+                            Array.Empty<EVSEStatusRecord>(),
+                            pullEVSEStatusByIdRequest,
+                            StatusCode: new StatusCode(
+                                            StatusCodes.Success
+                                        )
+                        )
+                    )
+                );
+
+            };
+
+            empClientAPI.OnPullEVSEStatusByOperatorId      += (timestamp, empClientAPI, pullEVSEStatusByOperatorIdRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(
+                        pullEVSEStatusByOperatorIdRequest,
+                        new PullEVSEStatusByOperatorIdResponse(
+                            Timestamp.Now,
+                            pullEVSEStatusByOperatorIdRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pullEVSEStatusByOperatorIdRequest.Timestamp,
+                            Array.Empty<OperatorEVSEStatus>(),
+                            pullEVSEStatusByOperatorIdRequest,
+                            StatusCode: new StatusCode(
+                                            StatusCodes.Success
+                                        )
+                        )
+                    )
+                );
+
+            };
+
+
+            empClientAPI.OnPullPricingProductData          += (timestamp, empClientAPI, pullPricingProductDataRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+            empClientAPI.OnPullEVSEPricing                 += (timestamp, empClientAPI, pullEVSEPricingRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+
+            empClientAPI.OnPushAuthenticationData          += (timestamp, empClientAPI, pushPushAuthenticationDataRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+
+            empClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+            empClientAPI.OnAuthorizeRemoteReservationStop  += (timestamp, empClientAPI, authorizeRemoteReservationStopRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+            empClientAPI.OnAuthorizeRemoteStart            += (timestamp, empClientAPI, authorizeRemoteStartRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+            empClientAPI.OnAuthorizeRemoteStop             += (timestamp, empClientAPI, authorizeRemoteStopRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+
+            empClientAPI.OnGetChargeDetailRecords          += (timestamp, empClientAPI, getChargeDetailRecordsRequest) =>
+            {
+                throw new NotImplementedException();
+            };
+
+
 
 
             empClient = new EMPClient(URL.Parse("http://127.0.0.1:8500"),
@@ -100,7 +208,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
             Assert.IsNotNull(empClient);
 
         }
-
 
         #endregion
 

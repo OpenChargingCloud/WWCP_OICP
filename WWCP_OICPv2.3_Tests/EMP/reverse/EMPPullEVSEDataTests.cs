@@ -106,6 +106,127 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 
         #endregion
 
+        #region EMPPullEVSEStatus_Test1()
+
+        [Test]
+        public async Task EMPPullEVSEStatus_Test1()
+        {
+
+            if (empClientAPI is null ||
+                empClient    is null)
+            {
+                Assert.Fail("empClientAPI or empClient is null!");
+                return;
+            }
+
+            var request = new PullEVSEStatusRequest(ProviderId:           Provider_Id.Parse("DE-GDF"),
+                                                    SearchCenter:         null,
+                                                    DistanceKM:           null,
+                                                    EVSEStatusFilter:     null,
+
+                                                    //Page:                 null,
+                                                    //Size:                 null,
+                                                    //SortOrder:            null,
+                                                    //CustomStatus:         null,
+
+                                                    Timestamp:            Timestamp.Now,
+                                                    CancellationToken:    null,
+                                                    EventTrackingId:      EventTracking_Id.New,
+                                                    RequestTimeout:       TimeSpan.FromSeconds(10));
+
+            Assert.IsNotNull(request);
+
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_Error);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_Error);
+
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_Error);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_Error);
+
+            var oicpResult  = await empClient.PullEVSEStatus(request);
+
+            Assert.IsNotNull(oicpResult);
+            Assert.IsNotNull(oicpResult.Response);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            Assert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
+            Assert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
+
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatus.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_Error);
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatus.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_Error);
+
+            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatus.Requests_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_Error);
+            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatus.Responses_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_Error);
+
+        }
+
+        #endregion
+
+        #region EMPPullEVSEStatusById_Test1()
+
+        [Test]
+        public async Task EMPPullEVSEStatusById_Test1()
+        {
+
+            if (empClientAPI is null ||
+                empClient    is null)
+            {
+                Assert.Fail("empClientAPI or empClient is null!");
+                return;
+            }
+
+            var request = new PullEVSEStatusByIdRequest(ProviderId:             Provider_Id.Parse("DE-GDF"),
+                                                        EVSEIds:                new EVSE_Id[] {
+                                                                                    EVSE_Id.Parse("DE*GEF*E1234567*1")
+                                                                                },
+
+                                                        Timestamp:              Timestamp.Now,
+                                                        CancellationToken:      null,
+                                                        EventTrackingId:        EventTracking_Id.New,
+                                                        RequestTimeout:         TimeSpan.FromSeconds(10));
+
+            Assert.IsNotNull(request);
+
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_Error);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_Error);
+
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+
+            var oicpResult  = await empClient.PullEVSEStatusById(request);
+
+            Assert.IsNotNull(oicpResult);
+            Assert.IsNotNull(oicpResult.Response);
+            Assert.IsTrue   (oicpResult.IsSuccessful);
+            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            Assert.IsNotNull(oicpResult.Response?.EVSEStatusRecords);
+            Assert.IsFalse  (oicpResult.Response?.EVSEStatusRecords.Any());
+
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusById.Requests_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_Error);
+            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusById.Responses_OK);
+            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_Error);
+
+            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+
+        }
+
+        #endregion
+
     }
 
 }
