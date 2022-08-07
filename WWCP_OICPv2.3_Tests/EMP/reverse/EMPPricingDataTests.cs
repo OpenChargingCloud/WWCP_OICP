@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 {
 
     /// <summary>
-    /// EMP sending pricing product data and EVSE pricing tests.
+    /// EMP requesting pricing product data and EVSE pricing tests.
     /// </summary>
     [TestFixture]
     public class EMPPricingDataTests : AEMPClientAPITests

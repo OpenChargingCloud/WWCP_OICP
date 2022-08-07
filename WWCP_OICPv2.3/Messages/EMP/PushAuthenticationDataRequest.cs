@@ -239,13 +239,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ProviderAuthenticationData    [mandatory => optional, because of Hubject data quality issues!]
+                #region Parse ProviderAuthenticationData    [mandatory]
 
-                if (!JSON.ParseMandatory("ProviderAuthenticationData",
-                                         "provider authentication data",
-                                         OICPv2_3.ProviderAuthenticationData.TryParse,
-                                         out ProviderAuthenticationData ProviderAuthenticationData,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON2("ProviderAuthenticationData",
+                                              "provider authentication data",
+                                              OICPv2_3.ProviderAuthenticationData.TryParse,
+                                              out ProviderAuthenticationData ProviderAuthenticationData,
+                                              out ErrorResponse))
                 {
                     return false;
                 }

@@ -71,6 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 
             Assert.IsNotNull(empClientAPI);
 
+
             empClientAPI.OnPullEVSEData                    += (timestamp, empClientAPI, pullEVSEDataRequest) => {
 
                 return Task.FromResult(

@@ -86,11 +86,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/03_EMP_Data_Types.asciidoc#18-providerauthenticationdatatype
 
         // {
-        //   "AuthenticationDataRecord": [{
-        //     "Identification": {
-        //   
+        //   "AuthenticationDataRecord": [
+        //     {
+        //       "Identification": {
+        //         ...
+        //       }
         //     }
-        //   }],
+        //   ],
         //   "ProviderID": "DE-GDF"
         // }
 
@@ -190,32 +192,48 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse Identifications    [mandatory]
+                #region Parse AuthenticationDataRecord    [mandatory]
 
-                if (!JSON.ParseMandatoryJSON("Identification",
-                                             "user identification data records",
-                                             Identification.TryParse,
-                                             out IEnumerable<Identification> Identifications,
-                                             out ErrorResponse))
+                var Identifications = new List<Identification>();
+
+                if (JSON["AuthenticationDataRecord"] is JArray authenticationDataRecordsJSON)
+                {
+                    foreach (var authenticationDataRecordJSON in authenticationDataRecordsJSON)
+                    {
+                        if (authenticationDataRecordJSON is JObject authenticationDataRecordJObject)
+                        {
+                            if (authenticationDataRecordJObject.ParseMandatoryJSON2("Identification",
+                                                                                    "user identification data record",
+                                                                                    Identification.TryParse,
+                                                                                    out Identification identification,
+                                                                                    out ErrorResponse))
+                            {
+                                Identifications.Add(identification);
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region Parse ProviderId                  [mandatory]
+
+                if (!JSON.ParseMandatory("ProviderID",
+                                         "provider identification",
+                                         Provider_Id.TryParse,
+                                         out Provider_Id ProviderId,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
 
-                #region Parse ProviderId         [mandatory]
-
-                if (!JSON.ParseMandatoryEnum("ProviderID",
-                                             "provider identification",
-                                             out Provider_Id ProviderId,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
-
-                #endregion
-
-                #region Parse CustomData         [optional]
+                #region Parse CustomData                  [optional]
 
                 var CustomData = JSON["CustomData"] as JObject;
 

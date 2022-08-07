@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
 {
 
     /// <summary>
-    /// EMP sending EVSE data and status tests.
+    /// EMP requesting EVSE data and status tests.
     /// </summary>
     [TestFixture]
     public class EMPPullEVSEDataAndStatusTests : AEMPClientAPITests
