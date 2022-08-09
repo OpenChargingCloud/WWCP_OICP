@@ -252,13 +252,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse OperatorEVSEData    [mandatory => optional, because of Hubject data quality issues!]
+                #region Parse OperatorEVSEData    [mandatory]
 
-                if (!JSON.ParseMandatory("OperatorEvseData",
-                                         "operator EVSE data",
-                                         OICPv2_3.OperatorEVSEData.TryParse,
-                                         out OperatorEVSEData OperatorEVSEData,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON2("OperatorEvseData",
+                                              "operator EVSE data",
+                                              OICPv2_3.OperatorEVSEData.TryParse,
+                                              out OperatorEVSEData? OperatorEVSEData,
+                                              out ErrorResponse))
                 {
                     return false;
                 }
@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PushEVSEDataRequest = new PushEVSEDataRequest(OperatorEVSEData,
+                PushEVSEDataRequest = new PushEVSEDataRequest(OperatorEVSEData!,
                                                               ActionType,
                                                               ProcessId,
                                                               customData,

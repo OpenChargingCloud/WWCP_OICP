@@ -21,7 +21,7 @@ using NUnit.Framework;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
+namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 {
 
     /// <summary>

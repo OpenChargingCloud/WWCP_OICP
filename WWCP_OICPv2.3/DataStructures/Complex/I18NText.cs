@@ -17,10 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -40,19 +36,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The multi-language string is empty.
         /// </summary>
         public static Boolean IsNullOrEmpty(this I18NText Text)
-            => Text == null || !Text.Any();
+            => Text is null || !Text.Any();
 
         /// <summary>
         /// The multi-language string is neither null nor empty.
         /// </summary>
         public static Boolean IsNeitherNullNorEmpty(this I18NText Text)
-            => Text != null && Text.Any();
+            => Text is not null && Text.Any();
 
         /// <summary>
         /// Return the first string of a multi-language string.
         /// </summary>
-        public static String FirstText(this I18NText Text)
-            => Text != null && Text.Any()
+        public static String? FirstText(this I18NText Text)
+            => Text is not null && Text.Any()
                    ? Text.First().Value
                    : null;
 
@@ -64,10 +60,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="I18NText">A text.</param>
         /// <param name="Length">The maximum length of the substring.</param>
-        public static I18NText SubstringMax(this I18NText I18NText, Int32 Length)
+        public static I18NText? SubstringMax(this I18NText I18NText, Int32 Length)
         {
 
-            if (I18NText == null)
+            if (I18NText is null)
                 return null;
 
             return new I18NText(I18NText.Select(text => new KeyValuePair<LanguageCode, String>(
@@ -85,15 +81,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Trim all texts.
         /// </summary>
         /// <param name="I18NText">A text.</param>
-        public static I18NText TrimAll(this I18NText I18NText)
+        public static I18NText? TrimAll(this I18NText I18NText)
         {
 
-            if (I18NText == null)
+            if (I18NText is null)
                 return null;
 
             return new I18NText(I18NText.Select(text => new KeyValuePair<LanguageCode, String>(
                                                             text.Key,
-                                                            text.Value?.Trim()
+                                                            text.Value.Trim()
                                                         )));
 
         }
@@ -108,8 +104,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A string.</param>
         /// <param name="Language">A language.</param>
-        public static I18NText ToI18NText(this String    Text,
-                                          LanguageCode?  Language = null)
+        public static I18NText? ToI18NText(this String    Text,
+                                           LanguageCode?  Language = null)
 
             => Text.IsNotNullOrEmpty()
                    ? I18NText.Create(Language ?? LanguageCode.en, Text)
@@ -288,6 +284,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region (static) Add(Language, Text)
+
+        /// <summary>
+        /// Add an internationalized (I18N) multi-language string
+        /// based on the given language and string.
+        /// </summary>
+        /// <param name="Language">The internationalized (I18N) language.</param>
+        /// <param name="Text">The internationalized (I18N) text.</param>
+        public I18NText Add(LanguageCode  Language,
+                            String        Text)
+
+        {
+
+            if (!I18NTexts.ContainsKey(Language))
+                I18NTexts.Add(Language, Text);
+
+            else
+                I18NTexts[Language] = Text;
+
+            return this;
+
+        }
+
+        #endregion
+
+
         #region (static) Parse   (Text)
 
         public static I18NText Parse(String Text)
@@ -327,14 +349,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(String        Text,
                                        out I18NText  I18NText,
-                                       out String    ErrorResponse)
+                                       out String?   ErrorResponse)
         {
 
             #region Initial checks
 
             I18NText       = default;
             ErrorResponse  = "Could not parse the given internationalized(I18N) multi-language text!";
-            Text           = Text?.Trim();
+            Text           = Text.Trim();
 
             if (Text.IsNullOrEmpty())
                 return false;
@@ -344,7 +366,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             try
             {
 
-                return TryParse(JArray.Parse(Text), out I18NText, out ErrorResponse);
+                return TryParse(JArray.Parse(Text),
+                                out I18NText,
+                                out ErrorResponse);
 
             }
             catch (Exception e)
@@ -376,7 +400,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             I18NText       = default;
             ErrorResponse  = "Could not parse the given internationalized(I18N) multi-language text!";
 
-            if (JSON?.HasValues == false)
+            if (JSON is null || JSON.HasValues == false)
                 return false;
 
             #endregion
@@ -386,21 +410,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 var i18NText = new Dictionary<LanguageCode, String>();
 
-                foreach (JObject jsonObject in JSON)
+                foreach (var jsonToken in JSON)
                 {
-
-                    if (!jsonObject.ParseMandatory("lang", "language", LanguageCode.TryParse, out LanguageCode Language, out ErrorResponse))
+                    if (jsonToken is JObject jsonObject)
                     {
-                        return false;
+
+                        if (!jsonObject.ParseMandatory("lang",
+                                                       "language",
+                                                       LanguageCode.TryParse,
+                                                       out LanguageCode Language,
+                                                       out ErrorResponse))
+                        {
+                            return false;
+                        }
+
+                        if (!jsonObject.ParseMandatoryText("value",
+                                                           "text",
+                                                           out String Value,
+                                                           out ErrorResponse))
+                        {
+                            return false;
+                        }
+
+                        i18NText.Add(Language, Value);
+
                     }
-
-                    if (!jsonObject.ParseMandatoryText("value", "text", out String Value, out ErrorResponse))
-                    {
-                        return false;
-                    }
-
-                    i18NText.Add(Language, Value);
-
                 }
 
                 I18NText = new I18NText(i18NText);
@@ -423,9 +457,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON representation of the given internationalized string.
         /// </summary>
-        public JArray ToJSON()
+        public JArray? ToJSON()
 
-            => I18NTexts.SafeAny()
+            => I18NTexts is not null && I18NTexts.Any()
                    ? new JArray(I18NTexts.SafeSelect(i18n => new JObject(
                                                                  new JProperty("lang",  i18n.Key.ToString()),
                                                                  new JProperty("value", i18n.Value)
@@ -476,8 +510,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Boolean Matches(String Match, Boolean IgnoreCase = false)
 
             => I18NTexts.Any(kvp => IgnoreCase
-                                          ? kvp.Value.IndexOf(Match, StringComparison.OrdinalIgnoreCase) >= 0
-                                          : kvp.Value.IndexOf(Match) >= 0);
+                                        ? kvp.Value.IndexOf(Match, StringComparison.OrdinalIgnoreCase) >= 0
+                                        : kvp.Value.IndexOf(Match) >= 0);
 
 
         #region GetEnumerator()

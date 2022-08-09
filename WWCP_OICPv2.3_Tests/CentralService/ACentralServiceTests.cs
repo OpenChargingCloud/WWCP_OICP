@@ -17,19 +17,19 @@
 
 #region Usings
 
-using System;
-
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.CPO;
+using cloud.charging.open.protocols.OICPv2_3.CentralService;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.CentralService.tests
+namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 {
 
     /// <summary>

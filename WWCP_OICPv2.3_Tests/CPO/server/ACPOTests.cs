@@ -17,17 +17,17 @@
 
 #region Usings
 
-using System;
-
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
+using cloud.charging.open.protocols.OICPv2_3.CPO;
+
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.CPO.server.tests
+namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 {
 
     /// <summary>
@@ -71,7 +71,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.server.tests
 
             Assert.IsNotNull(cpoServerAPI);
 
-            cpoServerAPI.OnAuthorizeRemoteReservationStart += (timestamp, sender, authorizeRemoteReservationStartRequest) => {
+
+            cpoServerAPI.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
 
                 if (authorizeRemoteReservationStartRequest.Identification is not null)
                 {
@@ -135,7 +136,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.server.tests
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteReservationStop  += (timestamp, sender, authorizeRemoteReservationStopRequest)  => {
+            cpoServerAPI.OnAuthorizeRemoteReservationStop  += (timestamp, cpoServerAPI, authorizeRemoteReservationStopRequest)  => {
 
                 return authorizeRemoteReservationStopRequest.SessionId.ToString() switch {
 
@@ -175,7 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.server.tests
             };
 
 
-            cpoServerAPI.OnAuthorizeRemoteStart            += (timestamp, sender, authorizeRemoteStartRequest)            => {
+            cpoServerAPI.OnAuthorizeRemoteStart            += (timestamp, cpoServerAPI, authorizeRemoteStartRequest) => {
 
                 if (authorizeRemoteStartRequest.Identification is not null)
                 {
@@ -239,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.server.tests
 
             };
 
-            cpoServerAPI.OnAuthorizeRemoteStop             += (timestamp, sender, authorizeRemoteStopRequest)             => {
+            cpoServerAPI.OnAuthorizeRemoteStop             += (timestamp, cpoServerAPI, authorizeRemoteStopRequest)  => {
 
                 return authorizeRemoteStopRequest.SessionId.ToString() switch {
 

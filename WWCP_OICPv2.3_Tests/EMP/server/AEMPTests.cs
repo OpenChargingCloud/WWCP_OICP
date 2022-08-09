@@ -17,17 +17,17 @@
 
 #region Usings
 
-using System;
-
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
+using cloud.charging.open.protocols.OICPv2_3.EMP;
+
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
+namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 {
 
     /// <summary>
@@ -71,7 +71,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 
             Assert.IsNotNull(empServerAPI);
 
-            empServerAPI.OnAuthorizeStart               += (timestamp, sender, authorizeStartRequest) => {
+
+            empServerAPI.OnAuthorizeStart               += (timestamp, empServerAPI, authorizeStartRequest) => {
 
                 if (authorizeStartRequest.Identification is not null)
                 {
@@ -189,7 +190,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 
             };
 
-            empServerAPI.OnAuthorizeStop                += (timestamp, sender, authorizeStopRequest)  => {
+            empServerAPI.OnAuthorizeStop                += (timestamp, empServerAPI, authorizeStopRequest)  => {
 
                 if (authorizeStopRequest.Identification is not null)
                 {
@@ -300,7 +301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
             };
 
 
-            empServerAPI.OnChargingStartNotification    += (timestamp, sender, chargingStartNotificationRequest)    => {
+            empServerAPI.OnChargingStartNotification    += (timestamp, empServerAPI, chargingStartNotificationRequest)    => {
 
                 return Task.FromResult(
                     new Acknowledgement<ChargingStartNotificationRequest>(
@@ -321,7 +322,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 
             };
 
-            empServerAPI.OnChargingProgressNotification += (timestamp, sender, chargingProgressNotificationRequest) => {
+            empServerAPI.OnChargingProgressNotification += (timestamp, empServerAPI, chargingProgressNotificationRequest) => {
 
                 return Task.FromResult(
                     new Acknowledgement<ChargingProgressNotificationRequest>(
@@ -342,7 +343,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 
             };
 
-            empServerAPI.OnChargingEndNotification      += (timestamp, sender, chargingEndNotificationRequest)      => {
+            empServerAPI.OnChargingEndNotification      += (timestamp, empServerAPI, chargingEndNotificationRequest)      => {
 
                 return Task.FromResult(
                     new Acknowledgement<ChargingEndNotificationRequest>(
@@ -363,7 +364,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 
             };
 
-            empServerAPI.OnChargingErrorNotification    += (timestamp, sender, chargingErrorNotificationRequest)    => {
+            empServerAPI.OnChargingErrorNotification    += (timestamp, empServerAPI, chargingErrorNotificationRequest)    => {
 
                 return Task.FromResult(
                     new Acknowledgement<ChargingErrorNotificationRequest>(
@@ -385,7 +386,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
             };
 
 
-            empServerAPI.OnChargeDetailRecord           += (timestamp, sender, chargeDetailRecordRequest) => {
+            empServerAPI.OnChargeDetailRecord           += (timestamp, empServerAPI, chargeDetailRecordRequest) => {
 
                 return Task.FromResult(
                     new Acknowledgement<ChargeDetailRecordRequest>(

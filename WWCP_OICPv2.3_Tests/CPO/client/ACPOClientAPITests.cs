@@ -17,17 +17,17 @@
 
 #region Usings
 
-using System;
-
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
+using cloud.charging.open.protocols.OICPv2_3.CPO;
+
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.CPO.client.tests
+namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
@@ -64,32 +64,278 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO.client.tests
 
             cpoClientAPI = new CPOClientAPI(
                                ExternalDNSName:  "open.charging.cloud",
-                               HTTPServerPort:   IPPort.Parse(8500),
+                               HTTPServerPort:   IPPort.Parse(9500),
                                LoggingPath:      "tests",
                                Autostart:        true
                            );
 
             Assert.IsNotNull(cpoClientAPI);
 
-            //cpoClientAPI.OnPullEVSEData += (timestamp, sender, pullEVSEDataRequest) => {
 
-            //    return Task.FromResult(
-            //        OICPResult<PullEVSEDataResponse>.Success(
-            //            pullEVSEDataRequest,
-            //            new PullEVSEDataResponse(
-            //                pullEVSEDataRequest,
-            //                Timestamp.Now,
-            //                pullEVSEDataRequest.EventTrackingId,
-            //                Timestamp.Now - pullEVSEDataRequest.Timestamp,
-            //                Array.Empty<EVSEDataRecord>(),
-            //                StatusCode: new StatusCode(
-            //                                StatusCodes.Success
-            //                            )
-            //            )
-            //        )
-            //    );
+            cpoClientAPI.OnPushEVSEData                 += (timestamp, cpoClientAPI, pushEVSEDataRequest)   => {
 
-            //};
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(
+                        pushEVSEDataRequest,
+                        new Acknowledgement<PushEVSEDataRequest>(
+                            Timestamp.Now,
+                            pushEVSEDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pushEVSEDataRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            pushEVSEDataRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+            cpoClientAPI.OnPushEVSEStatus               += (timestamp, cpoClientAPI, pushEVSEStatusRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(
+                        pushEVSEStatusRequest,
+                        new Acknowledgement<PushEVSEStatusRequest>(
+                            Timestamp.Now,
+                            pushEVSEStatusRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pushEVSEStatusRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            pushEVSEStatusRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+
+            cpoClientAPI.OnPushPricingProductData       += (timestamp, cpoClientAPI, pushPricingProductDataRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(
+                        pushPricingProductDataRequest,
+                        new Acknowledgement<PushPricingProductDataRequest>(
+                            Timestamp.Now,
+                            pushPricingProductDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pushPricingProductDataRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            pushPricingProductDataRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+            cpoClientAPI.OnPushEVSEPricing              += (timestamp, cpoClientAPI, pushEVSEPricingRequest)        => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(
+                        pushEVSEPricingRequest,
+                        new Acknowledgement<PushEVSEPricingRequest>(
+                            Timestamp.Now,
+                            pushEVSEPricingRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pushEVSEPricingRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            pushEVSEPricingRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+
+            cpoClientAPI.OnPullAuthenticationData       += (timestamp, cpoClientAPI, pullAuthenticationDataRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<PullAuthenticationDataResponse>.Success(
+                        pullAuthenticationDataRequest,
+                        new PullAuthenticationDataResponse(
+                            Timestamp.Now,
+                            pullAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - pullAuthenticationDataRequest.Timestamp,
+                            Array.Empty<ProviderAuthenticationData>(),
+                            pullAuthenticationDataRequest,
+                            StatusCode: new StatusCode(
+                                            StatusCodes.Success
+                                        )
+                        )
+                    )
+                );
+
+            };
+
+
+            cpoClientAPI.OnAuthorizeStart               += (timestamp, empClientAPI, authorizeStartRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<AuthorizationStartResponse>.Success(
+                        authorizeStartRequest,
+                        AuthorizationStartResponse.Authorized(
+                            authorizeStartRequest,
+                            Session_Id.NewRandom,
+                            CPOPartnerSession_Id.NewRandom,
+                            EMPPartnerSession_Id.NewRandom,
+                            Provider_Id.Parse("DE-GDF"),
+                            "Nice to see you!",
+                            "Hello world!",
+                            new Identification[] {
+                                Identification.FromUID(UID.Parse("11223344"))
+                            }
+                        )
+                    )
+                );
+
+            };
+
+            cpoClientAPI.OnAuthorizeStop                += (timestamp, empClientAPI, authorizeStopRequest)  => {
+
+                return Task.FromResult(
+                    OICPResult<AuthorizationStopResponse>.Success(
+                        authorizeStopRequest,
+                        AuthorizationStopResponse.Authorized(
+                            authorizeStopRequest,
+                            Session_Id.NewRandom,
+                            CPOPartnerSession_Id.NewRandom,
+                            EMPPartnerSession_Id.NewRandom,
+                            Provider_Id.Parse("DE-GDF"),
+                            "Nice to see you!",
+                            "Hello world!"
+                        )
+                    )
+                );
+
+            };
+
+
+            cpoClientAPI.OnChargingStartNotification    += (timestamp, cpoClientAPI, chargingStartNotificationRequest)    => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(
+                        chargingStartNotificationRequest,
+                        new Acknowledgement<ChargingStartNotificationRequest>(
+                            Timestamp.Now,
+                            chargingStartNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - chargingStartNotificationRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            chargingStartNotificationRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+            cpoClientAPI.OnChargingProgressNotification += (timestamp, cpoClientAPI, chargingProgressNotificationRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(
+                        chargingProgressNotificationRequest,
+                        new Acknowledgement<ChargingProgressNotificationRequest>(
+                            Timestamp.Now,
+                            chargingProgressNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - chargingProgressNotificationRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            chargingProgressNotificationRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+            cpoClientAPI.OnChargingEndNotification      += (timestamp, cpoClientAPI, chargingEndNotificationRequest)      => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(
+                        chargingEndNotificationRequest,
+                        new Acknowledgement<ChargingEndNotificationRequest>(
+                            Timestamp.Now,
+                            chargingEndNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - chargingEndNotificationRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            chargingEndNotificationRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+            cpoClientAPI.OnChargingErrorNotification    += (timestamp, cpoClientAPI, chargingErrorNotificationRequest)    => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(
+                        chargingErrorNotificationRequest,
+                        new Acknowledgement<ChargingErrorNotificationRequest>(
+                            Timestamp.Now,
+                            chargingErrorNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - chargingErrorNotificationRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            chargingErrorNotificationRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
+
+
+            cpoClientAPI.OnChargeDetailRecord           += (timestamp, cpoClientAPI, chargeDetailRecordRequest) => {
+
+                return Task.FromResult(
+                    OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(
+                        chargeDetailRecordRequest,
+                        new Acknowledgement<ChargeDetailRecordRequest>(
+                            Timestamp.Now,
+                            chargeDetailRecordRequest.EventTrackingId ?? EventTracking_Id.New,
+                            Process_Id.NewRandom,
+                            Timestamp.Now - chargeDetailRecordRequest.Timestamp,
+                            new StatusCode(
+                                StatusCodes.Success
+                            ),
+                            chargeDetailRecordRequest,
+                            null,
+                            true
+                        )
+                    )
+                );
+
+            };
 
 
 

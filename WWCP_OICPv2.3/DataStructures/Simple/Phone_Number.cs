@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -62,8 +61,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The regular expression for parsing a phone number.
         /// </summary>
         /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#PhoneNumberType</remarks>
-        public static readonly Regex Phone_Number_RegEx = new Regex(@"^\+[0-9]{5,15}$",
-                                                                    RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex Phone_Number_RegEx = new (@"^\+[0-9]{5,15}$",
+                                                               RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// The internal identification.

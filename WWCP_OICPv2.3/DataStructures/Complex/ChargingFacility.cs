@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -412,7 +410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingFacility> CustomChargingFacilitySerializer = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingFacility>?  CustomChargingFacilitySerializer   = null)
         {
 
             var JSON = JSONObject.Create(

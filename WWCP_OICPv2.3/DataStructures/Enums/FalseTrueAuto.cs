@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
@@ -75,7 +69,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="FalseTrueAuto">The parsed FalseTrueAuto.</param>
         public static Boolean TryParse(String Text, out FalseTrueAuto FalseTrueAuto)
         {
-            switch (Text?.Trim())
+            switch (Text.Trim().ToLower())
             {
 
                 case "false":

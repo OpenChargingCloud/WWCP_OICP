@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -63,8 +62,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Official regular expression: ^[U][T][C][+,-][0-9][0-9][:][0-9][0-9]$
         /// </summary>
         /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#TimeZoneType</remarks>
-        public static readonly Regex TimeZone_RegEx = new Regex(@"^[U][T][C][+,-][0-9][0-9][:][0-9][0-9]$",
-                                                                RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex TimeZone_RegEx = new (@"^[U][T][C][+,-][0-9][0-9][:][0-9][0-9]$",
+                                                           RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// The internal identification.
@@ -155,8 +154,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Time_Zone TimeZone)
         {
 
-            Text = Text?.Trim();
-
             if (!Text.IsNullOrEmpty() &&
                 TimeZone_RegEx.IsMatch(Text))
             {
@@ -183,7 +180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Time_Zone Clone
 
-            => new Time_Zone(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 
@@ -200,7 +197,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Time_Zone TimeZone1, Time_Zone TimeZone2)
+        public static Boolean operator == (Time_Zone TimeZone1,
+                                           Time_Zone TimeZone2)
+
             => TimeZone1.Equals(TimeZone2);
 
         #endregion
@@ -213,7 +212,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Time_Zone TimeZone1, Time_Zone TimeZone2)
+        public static Boolean operator != (Time_Zone TimeZone1,
+                                           Time_Zone TimeZone2)
+
             => !TimeZone1.Equals(TimeZone2);
 
         #endregion
@@ -226,7 +227,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Time_Zone TimeZone1, Time_Zone TimeZone2)
+        public static Boolean operator < (Time_Zone TimeZone1,
+                                          Time_Zone TimeZone2)
+
             => TimeZone1.CompareTo(TimeZone2) < 0;
 
         #endregion
@@ -239,7 +242,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Time_Zone TimeZone1, Time_Zone TimeZone2)
+        public static Boolean operator <= (Time_Zone TimeZone1,
+                                           Time_Zone TimeZone2)
+
             => TimeZone1.CompareTo(TimeZone2) <= 0;
 
         #endregion
@@ -252,7 +257,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Time_Zone TimeZone1, Time_Zone TimeZone2)
+        public static Boolean operator > (Time_Zone TimeZone1,
+                                          Time_Zone TimeZone2)
+
             => TimeZone1.CompareTo(TimeZone2) > 0;
 
         #endregion
@@ -265,7 +272,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Time_Zone TimeZone1, Time_Zone TimeZone2)
+        public static Boolean operator >= (Time_Zone TimeZone1,
+                                           Time_Zone TimeZone2)
+
             => TimeZone1.CompareTo(TimeZone2) >= 0;
 
         #endregion

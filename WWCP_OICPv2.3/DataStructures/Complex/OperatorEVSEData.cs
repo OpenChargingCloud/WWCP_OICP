@@ -227,10 +227,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse OperatorId            [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("OperatorID",
-                                             "operator identification",
-                                             out Operator_Id OperatorId,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("OperatorID",
+                                         "operator identification",
+                                         Operator_Id.TryParse,
+                                         out Operator_Id OperatorId,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

@@ -23,7 +23,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.CentralService.tests
+namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 {
 
     /// <summary>

@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -36,7 +35,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public readonly struct GeoCoordinates: IEquatable<GeoCoordinates>
     {
 
-        #region (static) Regular expressions
+        #region Data
 
         /// <summary>
         /// A regular expression for matching sexagesimal geo coordinates.

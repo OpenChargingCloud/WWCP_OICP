@@ -1317,10 +1317,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("PaymentOptions",                          new JArray(PaymentOptions.     SafeSelect(paymentOption      => paymentOption.     AsString()))),
                            new JProperty("ValueAddedServices",                      new JArray(ValueAddedServices. SafeSelect(valueAddedService  => valueAddedService. AsString()))),
                            new JProperty("Accessibility",                           Accessibility.                     AsString()),
-                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber?.               ToString().Replace(" ", "")),
+                           new JProperty("HotlinePhoneNumber",                      HotlinePhoneNumber?.               ToString()),
                            new JProperty("IsOpen24Hours",                           IsOpen24Hours),
                            new JProperty("IsHubjectCompatible",                     IsHubjectCompatible),
-                           new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              ToString()),
+                           new JProperty("DynamicInfoAvailable",                    DynamicInfoAvailable.              AsString()),
                            new JProperty("OperatorID",                              OperatorId.                        ToString()),
                            new JProperty("OperatorName",                            OperatorName),
 

@@ -254,17 +254,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse OperatorEVSEStatus    [mandatory]
 
-                if (!JSON.ParseMandatory("OperatorEvseStatus",
-                                         "operator EVSE status",
-                                         OICPv2_3.OperatorEVSEStatus.TryParse,
-                                         out OperatorEVSEStatus OperatorEVSEStatus,
-                                         out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON2("OperatorEvseStatus",
+                                              "operator EVSE status",
+                                              OICPv2_3.OperatorEVSEStatus.TryParse,
+                                              out OperatorEVSEStatus? OperatorEVSEStatus,
+                                              out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
-
 
                 #region Parse CustomData            [optional]
 
@@ -273,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PushEVSEStatusRequest = new PushEVSEStatusRequest(OperatorEVSEStatus,
+                PushEVSEStatusRequest = new PushEVSEStatusRequest(OperatorEVSEStatus!,
                                                                   ActionType,
                                                                   ProcessId,
                                                                   customData,
