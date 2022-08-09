@@ -260,7 +260,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-
                 #region Parse CustomData     [optional]
 
                 var customData = JSON[nameof(CustomData)] as JObject;

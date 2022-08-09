@@ -171,37 +171,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                 Timestamp.Now - pullPricingProductDataRequest.Timestamp,
                                 new PricingProductData[] {
                                     new PricingProductData(
-                                        OperatorId:                   Operator_Id.Parse("DE*GEF"),
-                                        ProviderId:                   pullPricingProductDataRequest.ProviderId,
-                                        PricingDefaultPrice:          1.23M,
-                                        PricingDefaultPriceCurrency:  Currency_Id.EUR,
-                                        PricingDefaultReferenceUnit:  Reference_Unit.HOUR,
-                                        PricingProductDataRecords:    new PricingProductDataRecord[] {
-                                                                          new PricingProductDataRecord(
-                                                                              ProductId:                    PartnerProduct_Id.Parse("AC1"),
-                                                                              ReferenceUnit:                Reference_Unit.HOUR,
-                                                                              ProductPriceCurrency:         Currency_Id.EUR,
-                                                                              PricePerReferenceUnit:        1,
-                                                                              MaximumProductChargingPower:  22,
-                                                                              IsValid24hours:               false,
-                                                                              ProductAvailabilityTimes:     new ProductAvailabilityTimes[] {
-                                                                                                                new ProductAvailabilityTimes(
-                                                                                                                    new Period(
-                                                                                                                        Begin: HourMinute.Parse("09:00"),
-                                                                                                                        End:   HourMinute.Parse("18:00")
-                                                                                                                    ),
-                                                                                                                    On: WeekDay.Everyday)
-                                                                                                            },
-                                                                              AdditionalReferences:         new AdditionalReferences[] {
-                                                                                                                new AdditionalReferences(
-                                                                                                                    AdditionalReference:              Additional_Reference.ParkingFee,
-                                                                                                                    AdditionalReferenceUnit:          Reference_Unit.HOUR,
-                                                                                                                    PricePerAdditionalReferenceUnit:  2
-                                                                                                                )
-                                                                                                            }
-                                                                          )
-                                                                      },
-                                        OperatorName:                 "GraphDefined"
+                                        OperatorId:                    Operator_Id.Parse("DE*GEF"),
+                                        ProviderId:                    pullPricingProductDataRequest.ProviderId,
+                                        PricingDefaultPrice:           1.23M,
+                                        PricingDefaultPriceCurrency:   Currency_Id.EUR,
+                                        PricingDefaultReferenceUnit:   Reference_Unit.HOUR,
+                                        PricingProductDataRecords:     new PricingProductDataRecord[] {
+                                                                           new PricingProductDataRecord(
+                                                                               ProductId:                    PartnerProduct_Id.Parse("AC1"),
+                                                                               ReferenceUnit:                Reference_Unit.HOUR,
+                                                                               ProductPriceCurrency:         Currency_Id.EUR,
+                                                                               PricePerReferenceUnit:        1,
+                                                                               MaximumProductChargingPower:  22,
+                                                                               IsValid24hours:               false,
+                                                                               ProductAvailabilityTimes:     new ProductAvailabilityTimes[] {
+                                                                                                                 new ProductAvailabilityTimes(
+                                                                                                                     new Period(
+                                                                                                                         Begin: HourMinute.Parse("09:00"),
+                                                                                                                         End:   HourMinute.Parse("18:00")
+                                                                                                                     ),
+                                                                                                                     On: WeekDay.Everyday)
+                                                                                                             },
+                                                                               AdditionalReferences:         new AdditionalReferences[] {
+                                                                                                                 new AdditionalReferences(
+                                                                                                                     AdditionalReference:              Additional_Reference.ParkingFee,
+                                                                                                                     AdditionalReferenceUnit:          Reference_Unit.HOUR,
+                                                                                                                     PricePerAdditionalReferenceUnit:  2
+                                                                                                                 )
+                                                                                                             }
+                                                                           )
+                                                                       },
+                                        OperatorName:                  "GraphDefined"
                                     )
                                 },
                                 pullPricingProductDataRequest,
