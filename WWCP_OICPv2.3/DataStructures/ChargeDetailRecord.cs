@@ -653,14 +653,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                        [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
                 ChargeDetailRecord = new ChargeDetailRecord(SessionId,
                                                             EVSEId,
-                                                            Identification,
+                                                            Identification!,
                                                             SessionStart,
                                                             SessionEnd,
                                                             ChargingStart ?? SessionStart,
@@ -678,7 +678,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                             HubOperatorId,
                                                             HubProviderId,
 
-                                                            CustomData);
+                                                            customData);
 
                 if (CustomChargeDetailRecordParser is not null)
                     ChargeDetailRecord = CustomChargeDetailRecordParser(JSON,

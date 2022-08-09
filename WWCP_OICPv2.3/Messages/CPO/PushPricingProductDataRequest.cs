@@ -264,9 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData            [optional]
 
-#pragma warning disable CA1507 // Use nameof to express symbol names
-                var CustomData = JSON["CustomData"] as JObject;
-#pragma warning restore CA1507 // Use nameof to express symbol names
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -274,7 +272,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 PushPricingProductDataRequest = new PushPricingProductDataRequest(PricingProductData,
                                                                                   ActionType,
                                                                                   ProcessId,
-                                                                                  CustomData,
+                                                                                  customData,
+
                                                                                   Timestamp,
                                                                                   CancellationToken,
                                                                                   EventTrackingId,

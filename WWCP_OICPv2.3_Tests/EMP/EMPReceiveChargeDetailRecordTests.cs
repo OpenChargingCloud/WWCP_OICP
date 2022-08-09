@@ -20,6 +20,7 @@
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -49,23 +50,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
             var request  = new ChargeDetailRecordRequest(
 
                                new ChargeDetailRecord(
-                                   SessionId:                       Session_Id.NewRandom,
+                                   SessionId:                       Session_Id.Parse("4cfe3192-87ec-4757-9560-a6ce896bb88b"),
                                    EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*1"),
                                    Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
-                                   SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
-                                   SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
-                                   ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
-                                   ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
+                                   SessionStart:                    DateTime.Parse("2022-08-09T10:18:25.229Z"),
+                                   SessionEnd:                      DateTime.Parse("2022-08-09T11:18:25.229Z"),
+                                   ChargingStart:                   DateTime.Parse("2022-08-09T10:20:25.229Z"),
+                                   ChargingEnd:                     DateTime.Parse("2022-08-09T11:13:25.229Z"),
                                    ConsumedEnergy:                  35,
 
                                    PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
-                                   CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
-                                   EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
+                                   CPOPartnerSessionId:             CPOPartnerSession_Id.Parse("e9c6faad-75c8-4f5b-9b5c-164ae7459804"),
+                                   EMPPartnerSessionId:             EMPPartnerSession_Id.Parse("290b96b3-57df-4021-b8f8-50d9c211c767"),
                                    MeterValueStart:                 3,
                                    MeterValueEnd:                   38,
-                                   MeterValuesInBetween:            Array.Empty<Decimal>(),
-                                   SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
-                                   CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
+                                   MeterValuesInBetween:            new Decimal[] {
+                                                                        4, 5 ,6
+                                                                    },
+                                   SignedMeteringValues:            new SignedMeteringValue[] {
+                                                                        new SignedMeteringValue(
+                                                                            "loooong start...",
+                                                                            MeteringStatusTypes.Start
+                                                                        ),
+                                                                        new SignedMeteringValue(
+                                                                            "loooong progress...",
+                                                                            MeteringStatusTypes.Progress
+                                                                        ),
+                                                                        new SignedMeteringValue(
+                                                                            "loooong end...",
+                                                                            MeteringStatusTypes.End
+                                                                        )
+                                                                    },
+                                   CalibrationLawVerificationInfo:  new CalibrationLawVerification(
+                                                                        CalibrationLawCertificateId:                  "4c6da173-6427-49ed-9b7d-ab0c674d4bc2",
+                                                                        PublicKey:                                    "0x046eb5c26727e9477f916eb5c26727e9477f91f872d3d79b2bd9f872d3d79b2bd9",
+                                                                        MeteringSignatureURL:                         URL.Parse("https://open.charging.cloud"),
+                                                                        MeteringSignatureEncodingFormat:              "plain",
+                                                                        SignedMeteringValuesVerificationInstruction:  "Just use the Chargy Transparency Software!",
+                                                                        CustomData:                                   null
+                                                                    ),
                                    HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
                                    HubProviderId:                   Provider_Id.Parse("DE*GDF"),
 

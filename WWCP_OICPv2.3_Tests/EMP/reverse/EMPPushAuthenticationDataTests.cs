@@ -19,8 +19,6 @@
 
 using NUnit.Framework;
 
-using org.GraphDefined.Vanaheimr.Illias;
-
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests

@@ -284,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                                      [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -294,7 +294,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                              MeteringSignatureURL,
                                                                              MeteringSignatureEncodingFormat,
                                                                              SignedMeteringValuesVerificationInstruction,
-                                                                             CustomData);
+                                                                             customData);
 
                 if (CustomCalibrationLawVerificationParser is not null)
                     CalibrationLawVerification = CustomCalibrationLawVerificationParser(JSON,
@@ -361,27 +361,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var JSON = JSONObject.Create(
 
                            CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.IsNotNullOrEmpty()
-                               ? new JProperty(nameof(CalibrationLawCertificateId),                  CalibrationLawCertificateId)
+                               ? new JProperty("CalibrationLawCertificateID",                  CalibrationLawCertificateId)
                                : null,
 
                            PublicKey                                   is not null && PublicKey.IsNotNullOrEmpty()
-                               ? new JProperty(nameof(PublicKey),                                    PublicKey)
+                               ? new JProperty("PublicKey",                                    PublicKey)
                                : null,
 
                            MeteringSignatureURL.HasValue
-                               ? new JProperty(nameof(MeteringSignatureURL),                         MeteringSignatureURL.Value.ToString())
+                               ? new JProperty("MeteringSignatureUrl",                         MeteringSignatureURL.Value.ToString())
                                : null,
 
                            MeteringSignatureEncodingFormat             is not null && MeteringSignatureEncodingFormat.IsNotNullOrEmpty()
-                               ? new JProperty(nameof(MeteringSignatureEncodingFormat),              MeteringSignatureEncodingFormat)
+                               ? new JProperty("MeteringSignatureEncodingFormat",              MeteringSignatureEncodingFormat)
                                : null,
 
                            SignedMeteringValuesVerificationInstruction is not null && SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty()
-                               ? new JProperty(nameof(SignedMeteringValuesVerificationInstruction),  SignedMeteringValuesVerificationInstruction)
+                               ? new JProperty("SignedMeteringValuesVerificationInstruction",  SignedMeteringValuesVerificationInstruction)
                                : null,
 
                            CustomData?.HasValues == true
-                               ? new JProperty(nameof(CustomData),                                   CustomData)
+                               ? new JProperty(nameof(CustomData),                             CustomData)
                                : null
 
                        );

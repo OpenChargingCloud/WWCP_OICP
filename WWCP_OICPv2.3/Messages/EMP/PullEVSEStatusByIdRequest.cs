@@ -235,7 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData     [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -243,7 +243,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 PullEVSEStatusByIdRequest = new PullEVSEStatusByIdRequest(ProviderId,
                                                                           EVSEIds?.ToArray() ?? Array.Empty<EVSE_Id>(),
                                                                           ProcessId,
-                                                                          CustomData,
+                                                                          customData,
+
                                                                           Timestamp,
                                                                           CancellationToken,
                                                                           EventTrackingId,

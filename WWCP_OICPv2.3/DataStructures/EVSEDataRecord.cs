@@ -997,9 +997,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region HardwareManufacturer                    [optional]
 
-#pragma warning disable CA1507 // Use nameof to express symbol names
-                var HardwareManufacturer = JSON["HardwareManufacturer"]?.Value<String>();
-#pragma warning restore CA1507 // Use nameof to express symbol names
+                var hardwareManufacturer = JSON[nameof(HardwareManufacturer)]?.Value<String>();
 
                 #endregion
 
@@ -1019,9 +1017,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region SubOperatorName                         [optional]
 
-#pragma warning disable CA1507 // Use nameof to express symbol names
-                var SubOperatorName = JSON["SubOperatorName"]?.Value<String>();
-#pragma warning restore CA1507 // Use nameof to express symbol names
+                var subOperatorName = JSON[nameof(SubOperatorName)]?.Value<String>();
 
                 #endregion
 
@@ -1186,9 +1182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                        [optional]
 
-#pragma warning disable CA1507 // Use nameof to express symbol names
-                var CustomData = JSON["CustomData"] as JObject;
-#pragma warning restore CA1507 // Use nameof to express symbol names
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -1217,9 +1211,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                     ChargingStationId,
                                                     ChargingPoolId,
-                                                    HardwareManufacturer,
+                                                    hardwareManufacturer,
                                                     ChargingStationImageURL,
-                                                    SubOperatorName,
+                                                    subOperatorName,
                                                     DynamicPowerLevel,
                                                     EnergySources,
                                                     EnvironmentalImpact,
@@ -1232,7 +1226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                     HubOperatorId,
                                                     ClearingHouseId,
 
-                                                    CustomData);
+                                                    customData);
 
 
                 if (CustomEVSEDataRecordParser is not null)

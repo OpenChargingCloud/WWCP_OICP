@@ -303,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatory("From",
                                          "from timestamp",
                                          out DateTime From,
-                                         out          ErrorResponse))
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -315,7 +315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatory("To",
                                          "to timestamp",
                                          out DateTime To,
-                                         out          ErrorResponse))
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -365,7 +365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData      [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -382,7 +382,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   Size,
                                                                                   SortOrder,
 
-                                                                                  CustomData,
+                                                                                  customData,
+
                                                                                   Timestamp,
                                                                                   CancellationToken,
                                                                                   EventTrackingId,

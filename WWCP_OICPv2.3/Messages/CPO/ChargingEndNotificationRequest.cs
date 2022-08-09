@@ -614,39 +614,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
                 ChargingEndNotificationRequest = new ChargingEndNotificationRequest(SessionId,
-                                                                                     Identification,
-                                                                                     EVSEId,
-                                                                                     ChargingStart,
-                                                                                     ChargingEnd,
+                                                                                    Identification!,
+                                                                                    EVSEId,
+                                                                                    ChargingStart,
+                                                                                    ChargingEnd,
 
-                                                                                     CPOPartnerSessionId,
-                                                                                     EMPPartnerSessionId,
-                                                                                     SessionStart,
-                                                                                     SessionEnd,
-                                                                                     ConsumedEnergy,
-                                                                                     MeterValueStart,
-                                                                                     MeterValueEnd,
-                                                                                     MeterValuesInBetween,
-                                                                                     OperatorId,
-                                                                                     PartnerProductId,
-                                                                                     PenaltyTimeStart,
-                                                                                     ProcessId,
-                                                                                     CustomData,
+                                                                                    CPOPartnerSessionId,
+                                                                                    EMPPartnerSessionId,
+                                                                                    SessionStart,
+                                                                                    SessionEnd,
+                                                                                    ConsumedEnergy,
+                                                                                    MeterValueStart,
+                                                                                    MeterValueEnd,
+                                                                                    MeterValuesInBetween,
+                                                                                    OperatorId,
+                                                                                    PartnerProductId,
+                                                                                    PenaltyTimeStart,
+                                                                                    ProcessId,
+                                                                                    customData,
 
-                                                                                     Timestamp,
-                                                                                     CancellationToken,
-                                                                                     EventTrackingId,
-                                                                                     RequestTimeout);
+                                                                                    Timestamp,
+                                                                                    CancellationToken,
+                                                                                    EventTrackingId,
+                                                                                    RequestTimeout);
 
                 if (CustomChargingEndNotificationRequestParser is not null)
                     ChargingEndNotificationRequest = CustomChargingEndNotificationRequestParser(JSON,
-                                                                                                  ChargingEndNotificationRequest);
+                                                                                                ChargingEndNotificationRequest);
 
                 return true;
 
@@ -654,7 +654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch (Exception e)
             {
                 ChargingEndNotificationRequest  = default;
-                ErrorResponse                    = "The given JSON representation of a charging notification end request is invalid: " + e.Message;
+                ErrorResponse                   = "The given JSON representation of a charging notification end request is invalid: " + e.Message;
                 return false;
             }
 

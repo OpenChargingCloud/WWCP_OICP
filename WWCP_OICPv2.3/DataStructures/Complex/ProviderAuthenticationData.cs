@@ -235,14 +235,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                  [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
                 ProviderAuthenticationData = new ProviderAuthenticationData(Identifications,
                                                                             ProviderId,
-                                                                            CustomData);
+                                                                            customData);
 
 
                 if (CustomProviderAuthenticationDataParser is not null)

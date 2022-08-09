@@ -437,7 +437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -451,7 +451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                     PartnerProductId,
                                                                                                     Duration,
                                                                                                     ProcessId,
-                                                                                                    CustomData,
+                                                                                                    customData,
 
                                                                                                     Timestamp,
                                                                                                     CancellationToken,
