@@ -27,7 +27,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
+namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 {
 
     /// <summary>

@@ -24,14 +24,14 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
+namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 {
 
     /// <summary>
     /// EMP receive charge detail records tests.
     /// </summary>
     [TestFixture]
-    public class EMPReceiveChargeDetailRecordTests : AEMPTests
+    public class ReceiveChargeDetailRecordTests : AEMPTests
     {
 
         #region EMPReceiveChargeDetailRecord_Test1()

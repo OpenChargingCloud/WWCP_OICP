@@ -23,14 +23,14 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
+namespace cloud.charging.open.protocols.OICPv2_3.EMP.client.tests
 {
 
     /// <summary>
     /// EMP sending reservation start/stop tests.
     /// </summary>
     [TestFixture]
-    public class EMPReservationStartStopTests : AEMPClientAPITests
+    public class ReservationStartStopTests : AEMPClientAPITests
     {
 
         #region EMPAuthorizeRemoteReservationStart_Test1()

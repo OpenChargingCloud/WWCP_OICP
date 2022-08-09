@@ -23,14 +23,14 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
+namespace cloud.charging.open.protocols.OICPv2_3.EMP.client.tests
 {
 
     /// <summary>
     /// EMP requesting pricing product data and EVSE pricing tests.
     /// </summary>
     [TestFixture]
-    public class EMPPricingDataTests : AEMPClientAPITests
+    public class PullPricingDataTests : AEMPClientAPITests
     {
 
         #region EMPPullPricingProductData_Test_Empty()

@@ -21,14 +21,14 @@ using NUnit.Framework;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.tests
+namespace cloud.charging.open.protocols.OICPv2_3.EMP.server.tests
 {
 
     /// <summary>
     /// EMP authorization tests.
     /// </summary>
     [TestFixture]
-    public class EMPAuthorizationTests : AEMPTests
+    public class AuthorizationTests : AEMPTests
     {
 
         #region AuthorizeStart_UID_Test1()

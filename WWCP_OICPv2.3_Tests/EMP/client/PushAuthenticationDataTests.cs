@@ -21,14 +21,14 @@ using NUnit.Framework;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP.reverse.tests
+namespace cloud.charging.open.protocols.OICPv2_3.EMP.client.tests
 {
 
     /// <summary>
     /// EMP sending authentication data tests.
     /// </summary>
     [TestFixture]
-    public class EMPPushAuthenticationDataTests : AEMPClientAPITests
+    public class PushAuthenticationDataTests : AEMPClientAPITests
     {
 
         #region EMPPushAuthenticationData_Test1()

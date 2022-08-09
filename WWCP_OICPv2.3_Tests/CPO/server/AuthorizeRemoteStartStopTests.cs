@@ -23,14 +23,14 @@ using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.CPO.tests
+namespace cloud.charging.open.protocols.OICPv2_3.CPO.server.tests
 {
 
     /// <summary>
     /// CPO authorize remote start/stop tests.
     /// </summary>
     [TestFixture]
-    public class CPOAuthorizeRemoteStartStopTests : ACPOTests
+    public class AuthorizeRemoteStartStopTests : ACPOTests
     {
 
         #region AuthorizeRemoteStart_Test1()
