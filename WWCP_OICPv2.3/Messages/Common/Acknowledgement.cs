@@ -1694,21 +1694,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region (implicit) Acknowledgement<TRequest>? => Acknowledgement?
 
-        public static implicit operator Acknowledgement(Acknowledgement<TRequest> acknowledgement)
+        /// <summary>
+        /// Convert the given Acknowledgement&lt;TRequest&gt; into an Acknowledgement.
+        /// </summary>
+        /// <param name="AcknowledgementT">An acknowledgement of type TRequest.</param>
+        public static implicit operator Acknowledgement?(Acknowledgement<TRequest>? AcknowledgementT)
 
-                => new (acknowledgement.Request?.Timestamp       ?? Timestamp.Now,
-                        acknowledgement.ResponseTimestamp,
-                        acknowledgement.Request?.EventTrackingId ?? EventTracking_Id.New,
-                        acknowledgement.Runtime,
-                        acknowledgement.StatusCode,
-                        acknowledgement.HTTPResponse,
-                        acknowledgement.Result,
-                        acknowledgement.SessionId,
-                        acknowledgement.CPOPartnerSessionId,
-                        acknowledgement.EMPPartnerSessionId,
-                        acknowledgement.ProcessId,
-                        acknowledgement.CustomData);
+            => AcknowledgementT is not null
+
+                   ? new (AcknowledgementT.Request?.Timestamp       ?? Timestamp.Now,
+                          AcknowledgementT.ResponseTimestamp,
+                          AcknowledgementT.Request?.EventTrackingId ?? EventTracking_Id.New,
+                          AcknowledgementT.Runtime,
+                          AcknowledgementT.StatusCode,
+                          AcknowledgementT.HTTPResponse,
+                          AcknowledgementT.Result,
+                          AcknowledgementT.SessionId,
+                          AcknowledgementT.CPOPartnerSessionId,
+                          AcknowledgementT.EMPPartnerSessionId,
+                          AcknowledgementT.ProcessId,
+                          AcknowledgementT.CustomData)
+
+                   : null;
+
+        #endregion
 
 
         #region Documentation

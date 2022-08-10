@@ -191,28 +191,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region From      (OICPResult)
-
-        ///// <summary>
-        ///// Create an OICPResult of type T from an OICPResult of type T2.
-        ///// </summary>
-        ///// <param name="Request">The request.</param>
-        ///// <param name="Result">The result.</param>
-        ///// <param name="ProcessId">The process identification of the result.</param>
-        //public static OICPResult<T> From<T2>(OICPResult<T2> OICPResult, Func<T2, T> Converter)
-        //    where T2 : IResponse
-
-        //    => new (OICPResult.Request,
-        //            OICPResult.Response is not null
-        //                ? Converter(OICPResult.Response)
-        //                : default,
-        //            OICPResult.IsSuccessful,
-        //            OICPResult.ValidationErrors,
-        //            OICPResult.ProcessId);
-
-        #endregion
-
-
         #region ToJSON(RequestJSON, ResponseJSON)
 
         /// <summary>
