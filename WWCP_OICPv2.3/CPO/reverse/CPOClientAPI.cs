@@ -2837,7 +2837,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingStartNotificationRequest>>? startAcknowledgement = null;
+                                                                 OICPResult<Acknowledgement<ChargingStartNotificationRequest>>? chargingStartNotificationResponse = null;
 
                                                                  var OnChargingStartNotificationLocal = OnChargingStartNotification;
                                                                  if (OnChargingStartNotificationLocal is not null)
@@ -2845,12 +2845,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      try
                                                                      {
 
-                                                                         startAcknowledgement = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
-                                                                                                                                                     Cast<OnChargingStartNotificationAPIDelegate>().
-                                                                                                                                                     Select(e => e(Timestamp.Now,
-                                                                                                                                                                   this,
-                                                                                                                                                                   chargingStartNotificationRequest!))).
-                                                                                                                                                     ConfigureAwait(false))?.FirstOrDefault();
+                                                                         chargingStartNotificationResponse = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
+                                                                                                                                                                  Cast<OnChargingStartNotificationAPIDelegate>().
+                                                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                                                this,
+                                                                                                                                                                                chargingStartNotificationRequest!))).
+                                                                                                                                                                  ConfigureAwait(false))?.FirstOrDefault();
 
                                                                          Counters.ChargingNotifications.    IncResponses_OK();
                                                                          Counters.ChargingStartNotification.IncResponses_OK();
@@ -2862,45 +2862,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                          Counters.ChargingNotifications.    IncResponses_Error();
                                                                          Counters.ChargingStartNotification.IncResponses_Error();
 
-                                                                         startAcknowledgement = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                                                                                    this,
-                                                                                                    new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                        Timestamp.Now,
-                                                                                                        Request.EventTrackingId,
-                                                                                                        processId,
-                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                        StatusCode: new StatusCode(
-                                                                                                                        StatusCodes.DataError,
-                                                                                                                        e.Message,
-                                                                                                                        e.StackTrace
-                                                                                                                    ),
-                                                                                                        chargingStartNotificationRequest
-                                                                                                    )
-                                                                                                );
+                                                                         chargingStartNotificationResponse = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                                                                                                                 this,
+                                                                                                                 new Acknowledgement<ChargingStartNotificationRequest>(
+                                                                                                                     Timestamp.Now,
+                                                                                                                     Request.EventTrackingId,
+                                                                                                                     processId,
+                                                                                                                     Timestamp.Now - Request.Timestamp,
+                                                                                                                     StatusCode: new StatusCode(
+                                                                                                                                     StatusCodes.DataError,
+                                                                                                                                     e.Message,
+                                                                                                                                     e.StackTrace
+                                                                                                                                 ),
+                                                                                                                     chargingStartNotificationRequest
+                                                                                                                 )
+                                                                                                             );
 
                                                                      }
                                                                  }
 
-                                                                 if (startAcknowledgement is null)
+                                                                 if (chargingStartNotificationResponse is null)
                                                                  {
 
                                                                      Counters.ChargingNotifications.    IncResponses_Error();
                                                                      Counters.ChargingStartNotification.IncResponses_Error();
 
-                                                                     startAcknowledgement = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                                                                                this,
-                                                                                                new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                    Timestamp.Now,
-                                                                                                    Request.EventTrackingId,
-                                                                                                    processId,
-                                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                                    StatusCode: new StatusCode(
-                                                                                                                    StatusCodes.SystemError,
-                                                                                                                    "Could not process the received ChargingStartNotification request!"
-                                                                                                                ),
-                                                                                                    chargingStartNotificationRequest
-                                                                                                )
-                                                                                            );
+                                                                     chargingStartNotificationResponse = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                                                                                                             this,
+                                                                                                             new Acknowledgement<ChargingStartNotificationRequest>(
+                                                                                                                 Timestamp.Now,
+                                                                                                                 Request.EventTrackingId,
+                                                                                                                 processId,
+                                                                                                                 Timestamp.Now - Request.Timestamp,
+                                                                                                                 StatusCode: new StatusCode(
+                                                                                                                                 StatusCodes.SystemError,
+                                                                                                                                 "Could not process the received ChargingStartNotification request!"
+                                                                                                                             ),
+                                                                                                                 chargingStartNotificationRequest
+                                                                                                             )
+                                                                                                         );
 
                                                                  }
 
@@ -2916,7 +2916,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingStartNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          startAcknowledgement,
+                                                                                                          chargingStartNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -2928,7 +2928,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(startAcknowledgement);
+
+                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                                    Request,
+                                                                                                    new Acknowledgement(
+                                                                                                        Request.Timestamp,
+                                                                                                        chargingStartNotificationResponse.Response.ResponseTimestamp,
+                                                                                                        chargingStartNotificationResponse.Response.EventTrackingId,
+                                                                                                        chargingStartNotificationResponse.Response.Runtime,
+                                                                                                        chargingStartNotificationResponse.Response.StatusCode,
+                                                                                                        chargingStartNotificationResponse.Response.HTTPResponse,
+                                                                                                        chargingStartNotificationResponse.Response.Result,
+                                                                                                        chargingStartNotificationResponse.Response.SessionId,
+                                                                                                        chargingStartNotificationResponse.Response.CPOPartnerSessionId,
+                                                                                                        chargingStartNotificationResponse.Response.EMPPartnerSessionId,
+                                                                                                        chargingStartNotificationResponse.Response.ProcessId,
+                                                                                                        chargingStartNotificationResponse.Response.CustomData
+                                                                                                    ),
+                                                                                                    chargingStartNotificationResponse.IsSuccessful,
+                                                                                                    chargingStartNotificationResponse.ValidationErrors,
+                                                                                                    chargingStartNotificationResponse.ProcessId);
 
                                                              }
                                                              else
@@ -3002,7 +3021,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>? progressAcknowledgement = null;
+                                                                 OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>? chargingProgressNotificationResponse = null;
 
                                                                  var OnChargingProgressNotificationLocal = OnChargingProgressNotification;
                                                                  if (OnChargingProgressNotificationLocal is not null)
@@ -3010,12 +3029,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      try
                                                                      {
 
-                                                                         progressAcknowledgement = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
-                                                                                                                                                           Cast<OnChargingProgressNotificationAPIDelegate>().
-                                                                                                                                                           Select(e => e(Timestamp.Now,
-                                                                                                                                                                         this,
-                                                                                                                                                                         chargingProgressNotificationRequest!))).
-                                                                                                                                                           ConfigureAwait(false))?.FirstOrDefault();
+                                                                         chargingProgressNotificationResponse = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
+                                                                                                                                                                        Cast<OnChargingProgressNotificationAPIDelegate>().
+                                                                                                                                                                        Select(e => e(Timestamp.Now,
+                                                                                                                                                                                      this,
+                                                                                                                                                                                      chargingProgressNotificationRequest!))).
+                                                                                                                                                                        ConfigureAwait(false))?.FirstOrDefault();
 
                                                                          Counters.ChargingNotifications.       IncResponses_OK();
                                                                          Counters.ChargingProgressNotification.IncResponses_OK();
@@ -3027,45 +3046,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                          Counters.ChargingNotifications.       IncResponses_Error();
                                                                          Counters.ChargingProgressNotification.IncResponses_Error();
 
-                                                                         progressAcknowledgement = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                                                                                    this,
-                                                                                                    new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                        Timestamp.Now,
-                                                                                                        Request.EventTrackingId,
-                                                                                                        processId,
-                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                        StatusCode: new StatusCode(
-                                                                                                                        StatusCodes.DataError,
-                                                                                                                        e.Message,
-                                                                                                                        e.StackTrace
-                                                                                                                    ),
-                                                                                                        chargingProgressNotificationRequest
-                                                                                                    )
-                                                                                                );
+                                                                         chargingProgressNotificationResponse = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                                                                                    this,
+                                                                                                                    new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                                                                                        Timestamp.Now,
+                                                                                                                        Request.EventTrackingId,
+                                                                                                                        processId,
+                                                                                                                        Timestamp.Now - Request.Timestamp,
+                                                                                                                        StatusCode: new StatusCode(
+                                                                                                                                        StatusCodes.DataError,
+                                                                                                                                        e.Message,
+                                                                                                                                        e.StackTrace
+                                                                                                                                    ),
+                                                                                                                        chargingProgressNotificationRequest
+                                                                                                                    )
+                                                                                                                );
 
                                                                      }
                                                                  }
 
-                                                                 if (progressAcknowledgement is null)
+                                                                 if (chargingProgressNotificationResponse is null)
                                                                  {
 
                                                                      Counters.ChargingNotifications.       IncResponses_Error();
                                                                      Counters.ChargingProgressNotification.IncResponses_Error();
 
-                                                                     progressAcknowledgement = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                                                                                   this,
-                                                                                                   new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                       Timestamp.Now,
-                                                                                                       Request.EventTrackingId,
-                                                                                                       processId,
-                                                                                                       Timestamp.Now - Request.Timestamp,
-                                                                                                       StatusCode: new StatusCode(
-                                                                                                                       StatusCodes.SystemError,
-                                                                                                                       "Could not process the received ChargingProgressNotification request!"
-                                                                                                                   ),
-                                                                                                       chargingProgressNotificationRequest
-                                                                                                   )
-                                                                                               );
+                                                                     chargingProgressNotificationResponse = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                                                                                this,
+                                                                                                                new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                                                                                    Timestamp.Now,
+                                                                                                                    Request.EventTrackingId,
+                                                                                                                    processId,
+                                                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                                                    StatusCode: new StatusCode(
+                                                                                                                                    StatusCodes.SystemError,
+                                                                                                                                    "Could not process the received ChargingProgressNotification request!"
+                                                                                                                                ),
+                                                                                                                    chargingProgressNotificationRequest
+                                                                                                                )
+                                                                                                            );
 
                                                                  }
 
@@ -3081,7 +3100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingProgressNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          progressAcknowledgement,
+                                                                                                          chargingProgressNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
 
@@ -3093,7 +3112,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(progressAcknowledgement);
+
+                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                                    Request,
+                                                                                                    new Acknowledgement(
+                                                                                                        Request.Timestamp,
+                                                                                                        chargingProgressNotificationResponse.Response.ResponseTimestamp,
+                                                                                                        chargingProgressNotificationResponse.Response.EventTrackingId,
+                                                                                                        chargingProgressNotificationResponse.Response.Runtime,
+                                                                                                        chargingProgressNotificationResponse.Response.StatusCode,
+                                                                                                        chargingProgressNotificationResponse.Response.HTTPResponse,
+                                                                                                        chargingProgressNotificationResponse.Response.Result,
+                                                                                                        chargingProgressNotificationResponse.Response.SessionId,
+                                                                                                        chargingProgressNotificationResponse.Response.CPOPartnerSessionId,
+                                                                                                        chargingProgressNotificationResponse.Response.EMPPartnerSessionId,
+                                                                                                        chargingProgressNotificationResponse.Response.ProcessId,
+                                                                                                        chargingProgressNotificationResponse.Response.CustomData
+                                                                                                    ),
+                                                                                                    chargingProgressNotificationResponse.IsSuccessful,
+                                                                                                    chargingProgressNotificationResponse.ValidationErrors,
+                                                                                                    chargingProgressNotificationResponse.ProcessId);
 
                                                              }
                                                              else
@@ -3258,7 +3296,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(chargingEndNotificationResponse);
+
+                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                                    Request,
+                                                                                                    new Acknowledgement(
+                                                                                                        Request.Timestamp,
+                                                                                                        chargingEndNotificationResponse.Response.ResponseTimestamp,
+                                                                                                        chargingEndNotificationResponse.Response.EventTrackingId,
+                                                                                                        chargingEndNotificationResponse.Response.Runtime,
+                                                                                                        chargingEndNotificationResponse.Response.StatusCode,
+                                                                                                        chargingEndNotificationResponse.Response.HTTPResponse,
+                                                                                                        chargingEndNotificationResponse.Response.Result,
+                                                                                                        chargingEndNotificationResponse.Response.SessionId,
+                                                                                                        chargingEndNotificationResponse.Response.CPOPartnerSessionId,
+                                                                                                        chargingEndNotificationResponse.Response.EMPPartnerSessionId,
+                                                                                                        chargingEndNotificationResponse.Response.ProcessId,
+                                                                                                        chargingEndNotificationResponse.Response.CustomData
+                                                                                                    ),
+                                                                                                    chargingEndNotificationResponse.IsSuccessful,
+                                                                                                    chargingEndNotificationResponse.ValidationErrors,
+                                                                                                    chargingEndNotificationResponse.ProcessId);
 
                                                              }
                                                              else
@@ -3423,7 +3480,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                                  #endregion
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.From(chargingErrorNotificationResponse);
+
+                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                                    Request,
+                                                                                                    new Acknowledgement(
+                                                                                                        Request.Timestamp,
+                                                                                                        chargingErrorNotificationResponse.Response.ResponseTimestamp,
+                                                                                                        chargingErrorNotificationResponse.Response.EventTrackingId,
+                                                                                                        chargingErrorNotificationResponse.Response.Runtime,
+                                                                                                        chargingErrorNotificationResponse.Response.StatusCode,
+                                                                                                        chargingErrorNotificationResponse.Response.HTTPResponse,
+                                                                                                        chargingErrorNotificationResponse.Response.Result,
+                                                                                                        chargingErrorNotificationResponse.Response.SessionId,
+                                                                                                        chargingErrorNotificationResponse.Response.CPOPartnerSessionId,
+                                                                                                        chargingErrorNotificationResponse.Response.EMPPartnerSessionId,
+                                                                                                        chargingErrorNotificationResponse.Response.ProcessId,
+                                                                                                        chargingErrorNotificationResponse.Response.CustomData
+                                                                                                    ),
+                                                                                                    chargingErrorNotificationResponse.IsSuccessful,
+                                                                                                    chargingErrorNotificationResponse.ValidationErrors,
+                                                                                                    chargingErrorNotificationResponse.ProcessId);
 
                                                              }
                                                              else

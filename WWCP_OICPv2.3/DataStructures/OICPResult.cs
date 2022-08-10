@@ -109,19 +109,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Request">The request.</param>
         /// <param name="Response">The result.</param>
-        /// <param name="WasSuccessful">The request was successful.</param>
+        /// <param name="IsSuccessful">The request is/was successful.</param>
         /// <param name="ValidationErrors">Possible request data validation errors.</param>
         /// <param name="ProcessId">The process identification of the result.</param>
-        private OICPResult(Object                Request,
-                           T?                    Response,
-                           Boolean               WasSuccessful,
-                           ValidationErrorList?  ValidationErrors   = null,
-                           Process_Id?           ProcessId          = null)
+        public OICPResult(Object                Request,
+                          T?                    Response,
+                          Boolean               IsSuccessful,
+                          ValidationErrorList?  ValidationErrors   = null,
+                          Process_Id?           ProcessId          = null)
         {
 
             this.Request           = Request;
             this.Response          = Response;
-            this.IsSuccessful     = WasSuccessful;
+            this.IsSuccessful      = IsSuccessful;
             this.ValidationErrors  = ValidationErrors;
             this.ProcessId         = ProcessId;
 
@@ -193,22 +193,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region From      (OICPResult)
 
-        /// <summary>
-        /// Create an OICPResult of type T from an OICPResult of type T2.
-        /// </summary>
-        /// <param name="Request">The request.</param>
-        /// <param name="Result">The result.</param>
-        /// <param name="ProcessId">The process identification of the result.</param>
-        public static OICPResult<T> From<T2>(OICPResult<T2> OICPResult)
-            where T2 : IResponse
+        ///// <summary>
+        ///// Create an OICPResult of type T from an OICPResult of type T2.
+        ///// </summary>
+        ///// <param name="Request">The request.</param>
+        ///// <param name="Result">The result.</param>
+        ///// <param name="ProcessId">The process identification of the result.</param>
+        //public static OICPResult<T> From<T2>(OICPResult<T2> OICPResult, Func<T2, T> Converter)
+        //    where T2 : IResponse
 
-            => new (OICPResult.Request,
-                    OICPResult.Response is not null
-                        ? (T) (Object) OICPResult.Response
-                        : default,
-                    OICPResult.IsSuccessful,
-                    OICPResult.ValidationErrors,
-                    OICPResult.ProcessId);
+        //    => new (OICPResult.Request,
+        //            OICPResult.Response is not null
+        //                ? Converter(OICPResult.Response)
+        //                : default,
+        //            OICPResult.IsSuccessful,
+        //            OICPResult.ValidationErrors,
+        //            OICPResult.ProcessId);
 
         #endregion
 
