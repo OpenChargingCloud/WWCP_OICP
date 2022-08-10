@@ -485,7 +485,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                                              CustomData:                                   null
                                                                          ),
                                         HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
-                                        HubProviderId:                   Provider_Id.Parse("DE*GDF"),
+                                        HubProviderId:                   Provider_Id.Parse("DE-GDF"),
 
                                         CustomData:                      null,
                                         InternalData:                    null

@@ -49,8 +49,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The charging session identification.
         /// </summary>
-        [Optional]
-        public Session_Id?            SessionId              { get; }
+        [Mandatory]
+        public Session_Id             SessionId              { get; }
 
         /// <summary>
         /// An optional CPO partner session identification.

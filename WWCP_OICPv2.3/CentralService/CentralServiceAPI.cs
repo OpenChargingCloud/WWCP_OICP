@@ -81,13 +81,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
         /// </summary>
         public CPOClientAPI        CPOClientAPI          { get; }
 
-        private readonly HashSet<CPOServerAPIClient> cpoServerAPIClients;
+        public readonly Dictionary<Operator_Id, CPOServerAPIClient> CPOServerAPIClients;
 
-        /// <summary>
-        /// All CPO Server API clients.
-        /// </summary>
-        public IEnumerable<CPOServerAPIClient> CPOServerAPIClients
-            => cpoServerAPIClients;
+        ///// <summary>
+        ///// All CPO Server API clients.
+        ///// </summary>
+        //public IEnumerable<CPOServerAPIClient> CPOServerAPIClients
+        //    => cpoServerAPIClients;
 
         #endregion
 
@@ -250,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             CPOClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
             this.empServerAPIClients   = new HashSet<EMPServerAPIClient>();
-            this.cpoServerAPIClients   = new HashSet<CPOServerAPIClient>();
+            this.CPOServerAPIClients   = new Dictionary<Operator_Id, CPOServerAPIClient>();
 
             if (Autostart)
                 httpAPI.Start();
@@ -283,7 +283,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             CPOClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
             this.empServerAPIClients   = new HashSet<EMPServerAPIClient>();
-            this.cpoServerAPIClients   = new HashSet<CPOServerAPIClient>();
+            this.CPOServerAPIClients   = new Dictionary<Operator_Id, CPOServerAPIClient>();
 
         }
 
@@ -351,7 +351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             foreach (var empServerAPIClient in EMPServerAPIClients)
                 empServerAPIClient.Dispose();
 
-            foreach (var cpoServerAPIClient in CPOServerAPIClients)
+            foreach (var cpoServerAPIClient in CPOServerAPIClients.Values)
                 cpoServerAPIClient.Dispose();
 
         }

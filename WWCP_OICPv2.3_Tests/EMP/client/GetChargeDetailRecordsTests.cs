@@ -186,7 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             Assert.AreEqual("Just use the Chargy Transparency Software!",                                cdr?.CalibrationLawVerificationInfo?.SignedMeteringValuesVerificationInstruction);
 
             Assert.AreEqual(Operator_Id.Parse("DE*GEF"),                                                 cdr?.HubOperatorId);
-            Assert.AreEqual(Provider_Id.Parse("DE*GDF"),                                                 cdr?.HubProviderId);
+            Assert.AreEqual(Provider_Id.Parse("DE-GDF"),                                                 cdr?.HubProviderId);
 
             Assert.AreEqual(1, empClient.   Counters.GetChargeDetailRecords.Requests_OK);
             Assert.AreEqual(0, empClient.   Counters.GetChargeDetailRecords.Requests_Error);

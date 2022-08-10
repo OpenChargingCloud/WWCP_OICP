@@ -46,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                 return;
             }
 
-            var request = new AuthorizeRemoteStartRequest(ProviderId:           Provider_Id.   Parse("DE*GDF"),
+            var request = new AuthorizeRemoteStartRequest(ProviderId:           Provider_Id.   Parse("DE-GDF"),
                                                           Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C12345678X")),
                                                           EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
                                                           PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
@@ -105,7 +105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                 return;
             }
 
-            var request = new AuthorizeRemoteStartRequest(ProviderId:           Provider_Id.Parse("DE*GDF"),
+            var request = new AuthorizeRemoteStartRequest(ProviderId:           Provider_Id.Parse("DE-GDF"),
                                                           Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C22222222X")),
                                                           EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
                                                           PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
@@ -165,7 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                 return;
             }
 
-            var request = new AuthorizeRemoteStopRequest(ProviderId:           Provider_Id.Parse("DE*GDF"),
+            var request = new AuthorizeRemoteStopRequest(ProviderId:           Provider_Id.Parse("DE-GDF"),
                                                          EVSEId:               EVSE_Id.    Parse("DE*GEF*E1234567*A*1"),
                                                          SessionId:            Session_Id. Parse("7e8f35a6-13c8-4b37-8099-b21323c83e85"),
                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                 return;
             }
 
-            var request = new AuthorizeRemoteStopRequest(ProviderId:           Provider_Id.Parse("DE*GDF"),
+            var request = new AuthorizeRemoteStopRequest(ProviderId:           Provider_Id.Parse("DE-GDF"),
                                                          EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
                                                          SessionId:            Session_Id. Parse("ae8f35a6-23d4-4b37-1994-21314c83e85c"),
                                                          CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
