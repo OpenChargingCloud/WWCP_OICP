@@ -39,10 +39,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         public async Task AuthorizeRemoteStart_Test1()
         {
 
-            if (centralServiceAPI is null ||
-                empClient         is null)
+            if (empRoaming_DEGDF  is null ||
+                centralServiceAPI is null ||
+                cpoRoaming_DEGEF  is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " or " + nameof(cpoRoaming_DEGEF) + " is null!");
                 return;
             }
 
@@ -61,17 +62,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_Error);
+
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_Error);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_Error);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Responses_Error);
 
-            var oicpResult = await empClient.AuthorizeRemoteStart(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteStart(request);
+
+         //   var ss = cpoRoaming_DEGEF.CPOClient.au
+
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -83,10 +92,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
 
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_Error);
+
+            Assert.AreEqual(1, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(1, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStart.Responses_Error);
 
         }
 
@@ -98,10 +112,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         public async Task AuthorizeRemoteStart_Test2()
         {
 
-            if (centralServiceAPI is null ||
-                empClient         is null)
+            if (empRoaming_DEGDF  is null ||
+                centralServiceAPI is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " is null!");
                 return;
             }
 
@@ -120,17 +134,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_Error);
+
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_Error);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_Error);
-
-            var oicpResult = await empClient.AuthorizeRemoteStart(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -142,10 +156,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
 
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStart.Responses_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStart.Responses_Error);
 
         }
 
@@ -158,10 +172,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         public async Task AuthorizeRemoteStop_Test1()
         {
 
-            if (centralServiceAPI is null ||
-                empClient         is null)
+            if (empRoaming_DEGDF  is null ||
+                centralServiceAPI is null ||
+                cpoRoaming_DEGEF  is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " or " + nameof(cpoRoaming_DEGEF) + " is null!");
                 return;
             }
 
@@ -178,32 +193,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Responses_Error);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Requests_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Requests_Error);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Responses_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Responses_Error);
 
-            var oicpResult = await empClient.AuthorizeRemoteStop(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteStop(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (true,                oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
 
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Responses_Error);
+            Assert.AreEqual(1, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Requests_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Requests_Error);
+            Assert.AreEqual(1, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Responses_OK);
+            Assert.AreEqual(0, cpoRoaming_DEGEF. CPOServer.   Counters.AuthorizeRemoteStop.Responses_Error);
 
         }
 
@@ -215,10 +240,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         public async Task AuthorizeRemoteStop_Test2()
         {
 
-            if (centralServiceAPI is null ||
-                empClient         is null)
+            if (empRoaming_DEGDF  is null ||
+                centralServiceAPI is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " is null!");
                 return;
             }
 
@@ -235,32 +260,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
 
             Assert.IsNotNull(request);
 
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Responses_Error);
-
-            var oicpResult = await empClient.AuthorizeRemoteStop(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteStop(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (false,                       oicpResult.Response?.Result);
             Assert.AreEqual (StatusCodes.NoValidContract, oicpResult.Response?.StatusCode.Code);
 
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
-
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteStop.Responses_Error);
 
         }
 

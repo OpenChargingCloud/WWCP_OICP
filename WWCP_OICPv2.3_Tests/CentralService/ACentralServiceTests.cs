@@ -42,11 +42,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
         protected CentralServiceAPI?  centralServiceAPI;
 
-        protected EMPClient?          empClient;
-        protected CPOClient?          cpoClient;
-
-
-        protected CPOServerAPI?       cpoServerAPI_DE_GEF;
+        protected CPORoaming?         cpoRoaming_DEGEF;
+        protected EMPRoaming?         empRoaming_DEGDF;
 
         #endregion
 
@@ -79,20 +76,62 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             Assert.IsNotNull(centralServiceAPI);
 
 
+            #region CPOClientAPI delegates...
+
+            centralServiceAPI.CPOClientAPI.OnAuthorizeStart += (timestamp, sender, authorizeStartRequest) => {
+
+                return Task.FromResult(
+                           OICPResult<AuthorizationStartResponse>.Success(
+                               authorizeStartRequest,
+                               AuthorizationStartResponse.Authorized(
+                                   Request:                           authorizeStartRequest,
+                                   SessionId:                         Session_Id.NewRandom,
+                                   CPOPartnerSessionId:               CPOPartnerSession_Id.NewRandom,
+                                   EMPPartnerSessionId:               EMPPartnerSession_Id.NewRandom,
+                                   ProviderId:                        Provider_Id.Parse("DE-GDF"),
+                                   StatusCodeDescription:             null,
+                                   StatusCodeAdditionalInfo:          null,
+                                   AuthorizationStopIdentifications:  null,
+                                   ResponseTimestamp:                 Timestamp.Now,
+                                   EventTrackingId:                   authorizeStartRequest.EventTrackingId,
+                                   Runtime:                           TimeSpan.FromMilliseconds(23),
+                                   ProcessId:                         Process_Id.NewRandom,
+                                   HTTPResponse:                      null,
+                                   CustomData:                        null
+                               )
+                           )
+                       );;
+
+            };
+
+            #endregion
+
+
 
             #region Register CPO "DE*GEF"
 
-            cpoServerAPI_DE_GEF = new CPOServerAPI(
-                                      ExternalDNSName:  "open.charging.cloud",
-                                      HTTPServerPort:   IPPort.Parse(7001),
-                                      LoggingPath:      "tests",
-                                      Autostart:        true
-                                  );
+            cpoRoaming_DEGEF = new CPORoaming(
 
-            Assert.IsNotNull(cpoServerAPI_DE_GEF);
+                                   new CPOClient(
+                                       RemoteURL:        URL.Parse("http://127.0.0.1:6000"),
+                                       RequestTimeout:   TimeSpan.FromSeconds(10)
+                                   ),
+
+                                   new CPOServerAPI(
+                                       ExternalDNSName:  "open.charging.cloud",
+                                       HTTPServerPort:   IPPort.Parse(7001),
+                                       LoggingPath:      "tests",
+                                       Autostart:        true
+                                   )
+
+                               );
+
+            Assert.IsNotNull(cpoRoaming_DEGEF);
+            Assert.IsNotNull(cpoRoaming_DEGEF.CPOClient);
+            Assert.IsNotNull(cpoRoaming_DEGEF.CPOServer);
 
 
-            cpoServerAPI_DE_GEF.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
+            cpoRoaming_DEGEF.CPOServer.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
 
                 if (authorizeRemoteReservationStartRequest.Identification is not null)
                 {
@@ -156,7 +195,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            cpoServerAPI_DE_GEF.OnAuthorizeRemoteReservationStop  += (timestamp, cpoServerAPI, authorizeRemoteReservationStopRequest)  => {
+            cpoRoaming_DEGEF.CPOServer.OnAuthorizeRemoteReservationStop  += (timestamp, cpoServerAPI, authorizeRemoteReservationStopRequest)  => {
 
                 return authorizeRemoteReservationStopRequest.SessionId.ToString() switch {
 
@@ -196,7 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             };
 
 
-            cpoServerAPI_DE_GEF.OnAuthorizeRemoteStart            += (timestamp, cpoServerAPI, authorizeRemoteStartRequest) => {
+            cpoRoaming_DEGEF.CPOServer.OnAuthorizeRemoteStart            += (timestamp, cpoServerAPI, authorizeRemoteStartRequest) => {
 
                 if (authorizeRemoteStartRequest.Identification is not null)
                 {
@@ -260,7 +299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            cpoServerAPI_DE_GEF.OnAuthorizeRemoteStop             += (timestamp, cpoServerAPI, authorizeRemoteStopRequest)  => {
+            cpoRoaming_DEGEF.CPOServer.OnAuthorizeRemoteStop             += (timestamp, cpoServerAPI, authorizeRemoteStopRequest)  => {
 
                 return authorizeRemoteStopRequest.SessionId.ToString() switch {
 
@@ -303,6 +342,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             centralServiceAPI.CPOServerAPIClients.Add(Operator_Id.Parse("DE*GEF"),
                                                       new CPOServerAPIClient(
                                                           URL.Parse("http://127.0.0.1:7001"),
+                                                          RequestTimeout: TimeSpan.FromSeconds(10)
+                                                      ));
+
+            #endregion
+
+            #region Register EMP "DE-GDF"
+
+            empRoaming_DEGDF = new EMPRoaming(
+
+                                   new EMPClient(
+                                       RemoteURL:        URL.Parse("http://127.0.0.1:6000"),
+                                       RequestTimeout:   TimeSpan.FromSeconds(10)
+                                   ),
+
+                                   new EMPServerAPI(
+                                       ExternalDNSName:  "open.charging.cloud",
+                                       HTTPServerPort:   IPPort.Parse(7002),
+                                       LoggingPath:      "tests",
+                                       Autostart:        true
+                                   )
+
+                               );
+
+            Assert.IsNotNull(cpoRoaming_DEGEF);
+            Assert.IsNotNull(cpoRoaming_DEGEF.CPOClient);
+            Assert.IsNotNull(cpoRoaming_DEGEF.CPOServer);
+
+
+
+            centralServiceAPI.EMPServerAPIClients.Add(Provider_Id.Parse("DE-GDF"),
+                                                      new EMPServerAPIClient(
+                                                          URL.Parse("http://127.0.0.1:7002"),
                                                           RequestTimeout: TimeSpan.FromSeconds(10)
                                                       ));
 
@@ -598,53 +669,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             #endregion
 
 
-            #region CPOClientAPI delegates...
-
-            centralServiceAPI.CPOClientAPI.OnAuthorizeStart += (timestamp, sender, authorizeStartRequest) => {
-
-                return Task.FromResult(
-                           OICPResult<AuthorizationStartResponse>.Success(
-                               authorizeStartRequest,
-                               AuthorizationStartResponse.Authorized(
-                                   Request:                           authorizeStartRequest,
-                                   SessionId:                         Session_Id.NewRandom,
-                                   CPOPartnerSessionId:               CPOPartnerSession_Id.NewRandom,
-                                   EMPPartnerSessionId:               EMPPartnerSession_Id.NewRandom,
-                                   ProviderId:                        Provider_Id.Parse("DE-GDF"),
-                                   StatusCodeDescription:             null,
-                                   StatusCodeAdditionalInfo:          null,
-                                   AuthorizationStopIdentifications:  null,
-                                   ResponseTimestamp:                 Timestamp.Now,
-                                   EventTrackingId:                   authorizeStartRequest.EventTrackingId,
-                                   Runtime:                           TimeSpan.FromMilliseconds(23),
-                                   ProcessId:                         Process_Id.NewRandom,
-                                   HTTPResponse:                      null,
-                                   CustomData:                        null
-                               )
-                           )
-                       );;
-
-            };
-
-            #endregion
-
-            #region Setup EMPClient...
-
-            empClient = new EMPClient(URL.Parse("http://127.0.0.1:6000"),
-                                      RequestTimeout: TimeSpan.FromSeconds(10));
-
-            Assert.IsNotNull(empClient);
-
-            #endregion
-
-            #region Setup CPOClient...
-
-            cpoClient = new CPOClient(URL.Parse("http://127.0.0.1:6000"),
-                                      RequestTimeout: TimeSpan.FromSeconds(10));
-
-            Assert.IsNotNull(cpoClient);
-
-            #endregion
 
         }
 
@@ -655,7 +679,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
         [TearDown]
         public void ShutdownEachTest()
         {
+
             centralServiceAPI?.Shutdown();
+
+            cpoRoaming_DEGEF?. Shutdown();
+            empRoaming_DEGDF?. Shutdown();
+
         }
 
         #endregion

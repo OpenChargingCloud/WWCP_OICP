@@ -40,9 +40,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         {
 
             if (centralServiceAPI is null ||
-                empClient         is null)
+                empRoaming_DEGDF  is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " is null!");
                 return;
             }
 
@@ -66,12 +66,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            var oicpResult = await empClient.AuthorizeRemoteReservationStart(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteReservationStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -83,10 +83,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
         }
 
@@ -99,9 +99,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         {
 
             if (centralServiceAPI is null ||
-                empClient         is null)
+                empRoaming_DEGDF  is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " is null!");
                 return;
             }
 
@@ -125,12 +125,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            var oicpResult = await empClient.AuthorizeRemoteReservationStart(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteReservationStart(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -142,10 +142,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
         }
 
@@ -159,9 +159,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         {
 
             if (centralServiceAPI is null ||
-                empClient         is null)
+                empRoaming_DEGDF  is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " is null!");
                 return;
             }
 
@@ -183,12 +183,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            var oicpResult = await empClient.AuthorizeRemoteReservationStop(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteReservationStop(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -200,10 +200,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
         }
 
@@ -216,9 +216,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
         {
 
             if (centralServiceAPI is null ||
-                empClient         is null)
+                empRoaming_DEGDF  is null)
             {
-                Assert.Fail("centralServiceAPI or empClient is null!");
+                Assert.Fail(nameof(centralServiceAPI) + " or " + nameof(empRoaming_DEGDF) + " is null!");
                 return;
             }
 
@@ -240,12 +240,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            var oicpResult = await empClient.AuthorizeRemoteReservationStop(request);
+            var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteReservationStop(request);
 
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -257,10 +257,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
             Assert.AreEqual(1, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_OK);
             Assert.AreEqual(0, centralServiceAPI.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(1, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, empClient.                     Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
         }
 

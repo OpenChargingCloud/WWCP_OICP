@@ -47,17 +47,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             public APICounterValues  AuthorizeRemoteReservationStart    { get; }
             public APICounterValues  AuthorizeRemoteReservationStop     { get; }
+
             public APICounterValues  AuthorizeRemoteStart               { get; }
             public APICounterValues  AuthorizeRemoteStop                { get; }
 
             public APICounters(APICounterValues? AuthorizeRemoteReservationStart   = null,
                                APICounterValues? AuthorizeRemoteReservationStop    = null,
+
                                APICounterValues? AuthorizeRemoteStart              = null,
                                APICounterValues? AuthorizeRemoteStop               = null)
             {
 
                 this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
                 this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
+
                 this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
                 this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
 
@@ -66,10 +69,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             public JObject ToJSON()
 
                 => JSONObject.Create(
+
                        new JProperty("AuthorizeRemoteReservationStart",  AuthorizeRemoteReservationStart.ToJSON()),
                        new JProperty("AuthorizeRemoteReservationStop",   AuthorizeRemoteReservationStop. ToJSON()),
+
                        new JProperty("AuthorizeRemoteStart",             AuthorizeRemoteStart.           ToJSON()),
                        new JProperty("AuthorizeRemoteStop",              AuthorizeRemoteStop.            ToJSON())
+
                    );
 
         }

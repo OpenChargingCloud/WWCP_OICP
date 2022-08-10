@@ -67,13 +67,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
         /// </summary>
         public EMPClientAPI        EMPClientAPI          { get; }
 
-        private readonly HashSet<EMPServerAPIClient> empServerAPIClients;
-
         /// <summary>
         /// All EMP Server API clients.
         /// </summary>
-        public IEnumerable<EMPServerAPIClient> EMPServerAPIClients
-            => empServerAPIClients;
+        public readonly Dictionary<Provider_Id, EMPServerAPIClient> EMPServerAPIClients;
 
 
         /// <summary>
@@ -82,12 +79,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
         public CPOClientAPI        CPOClientAPI          { get; }
 
         public readonly Dictionary<Operator_Id, CPOServerAPIClient> CPOServerAPIClients;
-
-        ///// <summary>
-        ///// All CPO Server API clients.
-        ///// </summary>
-        //public IEnumerable<CPOServerAPIClient> CPOServerAPIClients
-        //    => cpoServerAPIClients;
 
         #endregion
 
@@ -249,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             CPOClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
             CPOClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
-            this.empServerAPIClients   = new HashSet<EMPServerAPIClient>();
+            this.EMPServerAPIClients   = new Dictionary<Provider_Id, EMPServerAPIClient>();
             this.CPOServerAPIClients   = new Dictionary<Operator_Id, CPOServerAPIClient>();
 
             if (Autostart)
@@ -282,7 +273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             CPOClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
             CPOClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
-            this.empServerAPIClients   = new HashSet<EMPServerAPIClient>();
+            this.EMPServerAPIClients   = new Dictionary<Provider_Id, EMPServerAPIClient>();
             this.CPOServerAPIClients   = new Dictionary<Operator_Id, CPOServerAPIClient>();
 
         }
@@ -348,7 +339,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
             }
 
-            foreach (var empServerAPIClient in EMPServerAPIClients)
+            foreach (var empServerAPIClient in EMPServerAPIClients.Values)
                 empServerAPIClient.Dispose();
 
             foreach (var cpoServerAPIClient in CPOServerAPIClients.Values)
