@@ -1549,11 +1549,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.EMPClient  = EMPClient;
             this.EMPServer  = EMPServer;
 
-            // Link HTTP events... DO NOT DO THIS HERE! IT WILL END UP IN A STACKOVERFLOW!
-            //EMPServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            //EMPServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            //EMPServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
-
         }
 
         #endregion
