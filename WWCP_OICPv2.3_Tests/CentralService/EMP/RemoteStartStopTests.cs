@@ -79,9 +79,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
 
             var oicpResult = await empRoaming_DEGDF.AuthorizeRemoteStart(request);
 
-         //   var ss = cpoRoaming_DEGEF.CPOClient.au
-
-
             Assert.IsNotNull(oicpResult);
             Assert.IsTrue   (oicpResult.IsSuccessful);
             Assert.AreEqual (true,                oicpResult.Response?.Result);

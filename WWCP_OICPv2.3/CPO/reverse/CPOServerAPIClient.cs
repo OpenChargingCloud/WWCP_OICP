@@ -1086,22 +1086,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.AuthorizeRemoteStart.IncRequests_OK();
 
-            try
-            {
+            //try
+            //{
 
-                if (OnAuthorizeRemoteStart is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteStart.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteStartClientRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
+            //    if (OnAuthorizeRemoteStart is not null)
+            //        await Task.WhenAll(OnAuthorizeRemoteStart.GetInvocationList().
+            //                           Cast<OnAuthorizeRemoteStartClientRequestDelegate>().
+            //                           Select(e => e(startTime,
+            //                                         this,
+            //                                         Request))).
+            //                           ConfigureAwait(false);
 
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteStart));
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteStart));
+            //}
 
             #endregion
 
@@ -1139,9 +1139,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
 
-                                                      RequestLogDelegate:   OnAuthorizeRemoteStartHTTPRequest,
-                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
+                                                      //RequestLogDelegate:   OnAuthorizeRemoteStartHTTPRequest,
+                                                      //ResponseLogDelegate:  OnAuthorizeRemoteStartHTTPResponse,
+                                                      //CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
                                                       RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
 

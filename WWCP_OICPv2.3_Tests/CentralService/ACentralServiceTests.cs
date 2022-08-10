@@ -104,6 +104,333 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
+
+            centralServiceAPI.CPOClientAPI.OnChargeDetailRecord  += async (timestamp, sender, chargeDetailRecordRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                if (chargeDetailRecordRequest.ChargeDetailRecord.HubProviderId.HasValue &&
+                    centralServiceAPI.EMPServerAPIClients.TryGetValue(chargeDetailRecordRequest.ChargeDetailRecord.HubProviderId.Value,
+                                                                      out EMPServerAPIClient? empServerAPIClient) &&
+                    empServerAPIClient is not null)
+                {
+
+                    var response = await empServerAPIClient.SendChargeDetailRecord(chargeDetailRecordRequest);
+
+                    return response;
+
+                }
+
+                return OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(
+                           chargeDetailRecordRequest,
+                           new Acknowledgement<ChargeDetailRecordRequest>(
+                               ResponseTimestamp:     Timestamp.Now,
+                               EventTrackingId:       chargeDetailRecordRequest.EventTrackingId ?? EventTracking_Id.New,
+                               ProcessId:             processId,
+                               Runtime:               TimeSpan.FromMilliseconds(23),
+                               StatusCode:            new StatusCode(StatusCodes.Success),
+                               Request:               chargeDetailRecordRequest,
+                               HTTPResponse:          null,
+                               Result:                true,
+                               SessionId:             Session_Id.NewRandom,
+                               CPOPartnerSessionId:   CPOPartnerSession_Id.NewRandom,
+                               EMPPartnerSessionId:   EMPPartnerSession_Id.NewRandom,
+                               CustomData:            null
+                           )
+                       );
+
+            };
+
+            #endregion
+
+            #region EMPClientAPI delegates...
+
+            #region OnAuthorizeRemoteReservationStart/-Stop
+
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStart += async (timestamp, sender, authorizeRemoteReservationStartRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteReservationStartRequest.EVSEId.OperatorId,
+                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
+                    cpoServerAPIClient is not null)
+                {
+
+                    return await cpoServerAPIClient.AuthorizeRemoteReservationStart(new AuthorizeRemoteReservationStartRequest(
+                                                                                        authorizeRemoteReservationStartRequest.ProviderId,
+                                                                                        authorizeRemoteReservationStartRequest.EVSEId,
+                                                                                        authorizeRemoteReservationStartRequest.Identification,
+                                                                                        authorizeRemoteReservationStartRequest.SessionId,
+                                                                                        authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
+                                                                                        authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
+                                                                                        authorizeRemoteReservationStartRequest.PartnerProductId,
+                                                                                        authorizeRemoteReservationStartRequest.Duration,
+                                                                                        processId,
+                                                                                        authorizeRemoteReservationStartRequest.CustomData,
+                                                                                        authorizeRemoteReservationStartRequest.Timestamp,
+                                                                                        authorizeRemoteReservationStartRequest.CancellationToken,
+                                                                                        authorizeRemoteReservationStartRequest.EventTrackingId,
+                                                                                        TimeSpan.FromSeconds(10)
+                                                                                    ));
+
+                }
+
+                return OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                           authorizeRemoteReservationStartRequest,
+                           Acknowledgement<AuthorizeRemoteReservationStartRequest>.NoValidContract(
+                               Request:                   authorizeRemoteReservationStartRequest,
+                               SessionId:                 authorizeRemoteReservationStartRequest.SessionId,
+                               CPOPartnerSessionId:       null,
+                               EMPPartnerSessionId:       authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
+                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteReservationStartRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
+                               StatusCodeAdditionalInfo:  null,
+                               ResponseTimestamp:         Timestamp.Now,
+                               EventTrackingId:           authorizeRemoteReservationStartRequest.EventTrackingId,
+                               Runtime:                   TimeSpan.FromMilliseconds(23),
+                               ProcessId:                 processId,
+                               HTTPResponse:              null,
+                               CustomData:                null
+                           ),
+                           ProcessId:  processId
+                       );
+
+            };
+
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStop  += async (timestamp, sender, authorizeRemoteReservationStopRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteReservationStopRequest.EVSEId.OperatorId,
+                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
+                    cpoServerAPIClient is not null)
+                {
+
+                    return await cpoServerAPIClient.AuthorizeRemoteReservationStop(new AuthorizeRemoteReservationStopRequest(
+                                                                                       authorizeRemoteReservationStopRequest.ProviderId,
+                                                                                       authorizeRemoteReservationStopRequest.EVSEId,
+                                                                                       authorizeRemoteReservationStopRequest.SessionId,
+                                                                                       authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
+                                                                                       authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
+                                                                                       processId,
+                                                                                       authorizeRemoteReservationStopRequest.CustomData,
+                                                                                       authorizeRemoteReservationStopRequest.Timestamp,
+                                                                                       authorizeRemoteReservationStopRequest.CancellationToken,
+                                                                                       authorizeRemoteReservationStopRequest.EventTrackingId,
+                                                                                       TimeSpan.FromSeconds(10)
+                                                                                   ));
+
+                }
+
+                return OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                           authorizeRemoteReservationStopRequest,
+                           Acknowledgement<AuthorizeRemoteReservationStopRequest>.NoValidContract(
+                               Request:                   authorizeRemoteReservationStopRequest,
+                               SessionId:                 authorizeRemoteReservationStopRequest.SessionId,
+                               CPOPartnerSessionId:       null,
+                               EMPPartnerSessionId:       authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
+                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteReservationStopRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
+                               StatusCodeAdditionalInfo:  null,
+                               ResponseTimestamp:         Timestamp.Now,
+                               EventTrackingId:           authorizeRemoteReservationStopRequest.EventTrackingId,
+                               Runtime:                   TimeSpan.FromMilliseconds(23),
+                               ProcessId:                 processId,
+                               HTTPResponse:              null,
+                               CustomData:                null
+                           ),
+                           ProcessId:  processId
+                       );
+
+            };
+
+            #endregion
+
+            #region OnAuthorizeRemoteStart/-Stop
+
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStart += async (timestamp, sender, authorizeRemoteStartRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteStartRequest.EVSEId.OperatorId,
+                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
+                    cpoServerAPIClient is not null)
+                {
+
+                    return await cpoServerAPIClient.AuthorizeRemoteStart(new AuthorizeRemoteStartRequest(
+                                                                             authorizeRemoteStartRequest.ProviderId,
+                                                                             authorizeRemoteStartRequest.EVSEId,
+                                                                             authorizeRemoteStartRequest.Identification,
+                                                                             authorizeRemoteStartRequest.SessionId,
+                                                                             authorizeRemoteStartRequest.CPOPartnerSessionId,
+                                                                             authorizeRemoteStartRequest.EMPPartnerSessionId,
+                                                                             authorizeRemoteStartRequest.PartnerProductId,
+                                                                             processId,
+                                                                             authorizeRemoteStartRequest.CustomData,
+                                                                             authorizeRemoteStartRequest.Timestamp,
+                                                                             authorizeRemoteStartRequest.CancellationToken,
+                                                                             authorizeRemoteStartRequest.EventTrackingId,
+                                                                             TimeSpan.FromSeconds(10)
+                                                                         ));
+
+                }
+
+                var x = await new HTTPSClient(URL.Parse("https://www.graphdefined.com"), RemoteCertificateValidator: (a, b, c, d) => true, PreferIPv4: true).GET(HTTPPath.Root);
+
+                return OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
+                           authorizeRemoteStartRequest,
+                           Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
+                               Request:                   authorizeRemoteStartRequest,
+                               SessionId:                 authorizeRemoteStartRequest.SessionId,
+                               CPOPartnerSessionId:       null,
+                               EMPPartnerSessionId:       authorizeRemoteStartRequest.EMPPartnerSessionId,
+                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteStartRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
+                               StatusCodeAdditionalInfo:  null,
+                               ResponseTimestamp:         Timestamp.Now,
+                               EventTrackingId:           authorizeRemoteStartRequest.EventTrackingId,
+                               Runtime:                   TimeSpan.FromMilliseconds(23),
+                               ProcessId:                 processId,
+                               HTTPResponse:              null,
+                               CustomData:                null
+                           ),
+                           ProcessId:  processId
+                       );
+
+            };
+
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStop  += async (timestamp, sender, authorizeRemoteStopRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteStopRequest.EVSEId.OperatorId,
+                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
+                    cpoServerAPIClient is not null)
+                {
+
+                    return await cpoServerAPIClient.AuthorizeRemoteStop(new AuthorizeRemoteStopRequest(
+                                                                             authorizeRemoteStopRequest.ProviderId,
+                                                                             authorizeRemoteStopRequest.EVSEId,
+                                                                             authorizeRemoteStopRequest.SessionId,
+                                                                             authorizeRemoteStopRequest.CPOPartnerSessionId,
+                                                                             authorizeRemoteStopRequest.EMPPartnerSessionId,
+                                                                             processId,
+                                                                             authorizeRemoteStopRequest.CustomData,
+                                                                             authorizeRemoteStopRequest.Timestamp,
+                                                                             authorizeRemoteStopRequest.CancellationToken,
+                                                                             authorizeRemoteStopRequest.EventTrackingId,
+                                                                             TimeSpan.FromSeconds(10)
+                                                                         ));
+
+                }
+
+                return OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
+                           authorizeRemoteStopRequest,
+                           Acknowledgement<AuthorizeRemoteStopRequest>.NoValidContract(
+                               Request:                   authorizeRemoteStopRequest,
+                               SessionId:                 authorizeRemoteStopRequest.SessionId,
+                               CPOPartnerSessionId:       null,
+                               EMPPartnerSessionId:       authorizeRemoteStopRequest.EMPPartnerSessionId,
+                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteStopRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
+                               StatusCodeAdditionalInfo:  null,
+                               ResponseTimestamp:         Timestamp.Now,
+                               EventTrackingId:           authorizeRemoteStopRequest.EventTrackingId,
+                               Runtime:                   TimeSpan.FromMilliseconds(23),
+                               ProcessId:                 processId,
+                               HTTPResponse:              null,
+                               CustomData:                null
+                           ),
+                           ProcessId:  processId
+                       );
+
+            };
+
+            #endregion
+
+            #region OnGetChargeDetailRecords
+
+            centralServiceAPI.EMPClientAPI.OnGetChargeDetailRecords += (timestamp, sender, getChargeDetailRecordsRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<GetChargeDetailRecordsResponse>.Success(
+                               getChargeDetailRecordsRequest,
+                               new GetChargeDetailRecordsResponse(
+                                   Request:                   getChargeDetailRecordsRequest,
+                                   ResponseTimestamp:         Timestamp.Now,
+                                   EventTrackingId:           getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
+                                   Runtime:                   TimeSpan.FromMilliseconds(23),
+                                   ChargeDetailRecords:       new ChargeDetailRecord[] {
+
+                                                                  new ChargeDetailRecord(
+                                                                      SessionId:                       Session_Id.NewRandom,
+                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
+                                                                      Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
+                                                                      SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
+                                                                      SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
+                                                                      ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
+                                                                      ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
+                                                                      ConsumedEnergy:                  35,
+
+                                                                      PartnerProductId:                PartnerProduct_Id.Parse("AC1"),
+                                                                      CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
+                                                                      EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
+                                                                      MeterValueStart:                 3,
+                                                                      MeterValueEnd:                   38,
+                                                                      MeterValuesInBetween:            Array.Empty<Decimal>(),
+                                                                      SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
+                                                                      CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
+                                                                      HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
+                                                                      HubProviderId:                   Provider_Id.Parse("DE-GDF"),
+
+                                                                      CustomData:                      null,
+                                                                      InternalData:                    null
+                                                                  ),
+
+                                                                  new ChargeDetailRecord(
+                                                                      SessionId:                       Session_Id.NewRandom,
+                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
+                                                                      Identification:                  Identification.FromUID(UID.Parse("CCDDEEFFAABBCC")),
+                                                                      SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
+                                                                      SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
+                                                                      ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
+                                                                      ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
+                                                                      ConsumedEnergy:                  35,
+
+                                                                      PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
+                                                                      CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
+                                                                      EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
+                                                                      MeterValueStart:                 3,
+                                                                      MeterValueEnd:                   38,
+                                                                      MeterValuesInBetween:            Array.Empty<Decimal>(),
+                                                                      SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
+                                                                      CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
+                                                                      HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
+                                                                      HubProviderId:                   Provider_Id.Parse("DE-GDF"),
+
+                                                                      CustomData:                      null,
+                                                                      InternalData:                    null
+                                                                  )
+
+                                                              },
+                                   HTTPResponse:              null,
+                                   ProcessId:                 processId,
+                                   StatusCode:                null,
+                                   FirstPage:                 true,
+                                   LastPage:                  true,
+                                   Number:                    1,
+                                   NumberOfElements:          2,
+                                   Size:                      getChargeDetailRecordsRequest.Size,
+                                   TotalElements:             2,
+                                   TotalPages:                1,
+                                   CustomData:                null
+                               ),
+                               ProcessId:                 processId
+                           )
+                       );
+
+            };
+
+            #endregion
+
             #endregion
 
 
@@ -370,6 +697,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             Assert.IsNotNull(cpoRoaming_DEGEF.CPOServer);
 
 
+            empRoaming_DEGDF.OnChargeDetailRecord += (timestamp, cpoServerAPI, chargeDetailRecordRequest) => {
+
+                return Task.FromResult(
+                            new Acknowledgement<ChargeDetailRecordRequest>(
+                                Request:             chargeDetailRecordRequest,
+                                ResponseTimestamp:   Timestamp.Now,
+                                EventTrackingId:     EventTracking_Id.New,
+                                Runtime:             TimeSpan.FromMilliseconds(2),
+                                StatusCode:          new StatusCode(
+                                                         StatusCodes.Success
+                                                     ),
+                                HTTPResponse:        null,
+                                Result:              true,
+                                ProcessId:           Process_Id.NewRandom,
+                                CustomData:          null));
+
+            };
+
 
             centralServiceAPI.EMPServerAPIClients.Add(Provider_Id.Parse("DE-GDF"),
                                                       new EMPServerAPIClient(
@@ -378,296 +723,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                       ));
 
             #endregion
-
-
-            #region EMPClientAPI delegates...
-
-            #region OnAuthorizeRemoteReservationStart/-Stop
-
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStart += async (timestamp, sender, authorizeRemoteReservationStartRequest) => {
-
-                var processId = Process_Id.NewRandom;
-
-                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteReservationStartRequest.EVSEId.OperatorId,
-                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
-                    cpoServerAPIClient is not null)
-                {
-
-                    return await cpoServerAPIClient.AuthorizeRemoteReservationStart(new AuthorizeRemoteReservationStartRequest(
-                                                                                        authorizeRemoteReservationStartRequest.ProviderId,
-                                                                                        authorizeRemoteReservationStartRequest.EVSEId,
-                                                                                        authorizeRemoteReservationStartRequest.Identification,
-                                                                                        authorizeRemoteReservationStartRequest.SessionId,
-                                                                                        authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
-                                                                                        authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                                                                        authorizeRemoteReservationStartRequest.PartnerProductId,
-                                                                                        authorizeRemoteReservationStartRequest.Duration,
-                                                                                        processId,
-                                                                                        authorizeRemoteReservationStartRequest.CustomData,
-                                                                                        authorizeRemoteReservationStartRequest.Timestamp,
-                                                                                        authorizeRemoteReservationStartRequest.CancellationToken,
-                                                                                        authorizeRemoteReservationStartRequest.EventTrackingId,
-                                                                                        TimeSpan.FromSeconds(10)
-                                                                                    ));
-
-                }
-
-                return OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
-                           authorizeRemoteReservationStartRequest,
-                           Acknowledgement<AuthorizeRemoteReservationStartRequest>.NoValidContract(
-                               Request:                   authorizeRemoteReservationStartRequest,
-                               SessionId:                 authorizeRemoteReservationStartRequest.SessionId,
-                               CPOPartnerSessionId:       null,
-                               EMPPartnerSessionId:       authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteReservationStartRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
-                               StatusCodeAdditionalInfo:  null,
-                               ResponseTimestamp:         Timestamp.Now,
-                               EventTrackingId:           authorizeRemoteReservationStartRequest.EventTrackingId,
-                               Runtime:                   TimeSpan.FromMilliseconds(23),
-                               ProcessId:                 processId,
-                               HTTPResponse:              null,
-                               CustomData:                null
-                           ),
-                           ProcessId:  processId
-                       );
-
-            };
-
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStop  += async (timestamp, sender, authorizeRemoteReservationStopRequest) => {
-
-                var processId = Process_Id.NewRandom;
-
-                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteReservationStopRequest.EVSEId.OperatorId,
-                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
-                    cpoServerAPIClient is not null)
-                {
-
-                    return await cpoServerAPIClient.AuthorizeRemoteReservationStop(new AuthorizeRemoteReservationStopRequest(
-                                                                                       authorizeRemoteReservationStopRequest.ProviderId,
-                                                                                       authorizeRemoteReservationStopRequest.EVSEId,
-                                                                                       authorizeRemoteReservationStopRequest.SessionId,
-                                                                                       authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
-                                                                                       authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                                                                       processId,
-                                                                                       authorizeRemoteReservationStopRequest.CustomData,
-                                                                                       authorizeRemoteReservationStopRequest.Timestamp,
-                                                                                       authorizeRemoteReservationStopRequest.CancellationToken,
-                                                                                       authorizeRemoteReservationStopRequest.EventTrackingId,
-                                                                                       TimeSpan.FromSeconds(10)
-                                                                                   ));
-
-                }
-
-                return OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
-                           authorizeRemoteReservationStopRequest,
-                           Acknowledgement<AuthorizeRemoteReservationStopRequest>.NoValidContract(
-                               Request:                   authorizeRemoteReservationStopRequest,
-                               SessionId:                 authorizeRemoteReservationStopRequest.SessionId,
-                               CPOPartnerSessionId:       null,
-                               EMPPartnerSessionId:       authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteReservationStopRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
-                               StatusCodeAdditionalInfo:  null,
-                               ResponseTimestamp:         Timestamp.Now,
-                               EventTrackingId:           authorizeRemoteReservationStopRequest.EventTrackingId,
-                               Runtime:                   TimeSpan.FromMilliseconds(23),
-                               ProcessId:                 processId,
-                               HTTPResponse:              null,
-                               CustomData:                null
-                           ),
-                           ProcessId:  processId
-                       );
-
-            };
-
-            #endregion
-
-            #region OnAuthorizeRemoteStart/-Stop
-
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStart += async (timestamp, sender, authorizeRemoteStartRequest) => {
-
-                var processId = Process_Id.NewRandom;
-
-                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteStartRequest.EVSEId.OperatorId,
-                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
-                    cpoServerAPIClient is not null)
-                {
-
-                    return await cpoServerAPIClient.AuthorizeRemoteStart(new AuthorizeRemoteStartRequest(
-                                                                             authorizeRemoteStartRequest.ProviderId,
-                                                                             authorizeRemoteStartRequest.EVSEId,
-                                                                             authorizeRemoteStartRequest.Identification,
-                                                                             authorizeRemoteStartRequest.SessionId,
-                                                                             authorizeRemoteStartRequest.CPOPartnerSessionId,
-                                                                             authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                                                             authorizeRemoteStartRequest.PartnerProductId,
-                                                                             processId,
-                                                                             authorizeRemoteStartRequest.CustomData,
-                                                                             authorizeRemoteStartRequest.Timestamp,
-                                                                             authorizeRemoteStartRequest.CancellationToken,
-                                                                             authorizeRemoteStartRequest.EventTrackingId,
-                                                                             TimeSpan.FromSeconds(10)
-                                                                         ));
-
-                }
-
-                return OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
-                           authorizeRemoteStartRequest,
-                           Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
-                               Request:                   authorizeRemoteStartRequest,
-                               SessionId:                 authorizeRemoteStartRequest.SessionId,
-                               CPOPartnerSessionId:       null,
-                               EMPPartnerSessionId:       authorizeRemoteStartRequest.EMPPartnerSessionId,
-                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteStartRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
-                               StatusCodeAdditionalInfo:  null,
-                               ResponseTimestamp:         Timestamp.Now,
-                               EventTrackingId:           authorizeRemoteStartRequest.EventTrackingId,
-                               Runtime:                   TimeSpan.FromMilliseconds(23),
-                               ProcessId:                 processId,
-                               HTTPResponse:              null,
-                               CustomData:                null
-                           ),
-                           ProcessId:  processId
-                       );
-
-            };
-
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStop  += async (timestamp, sender, authorizeRemoteStopRequest) => {
-
-                var processId = Process_Id.NewRandom;
-
-                if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteStopRequest.EVSEId.OperatorId,
-                                                                      out CPOServerAPIClient? cpoServerAPIClient) &&
-                    cpoServerAPIClient is not null)
-                {
-
-                    return await cpoServerAPIClient.AuthorizeRemoteStop(new AuthorizeRemoteStopRequest(
-                                                                             authorizeRemoteStopRequest.ProviderId,
-                                                                             authorizeRemoteStopRequest.EVSEId,
-                                                                             authorizeRemoteStopRequest.SessionId,
-                                                                             authorizeRemoteStopRequest.CPOPartnerSessionId,
-                                                                             authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                                                             processId,
-                                                                             authorizeRemoteStopRequest.CustomData,
-                                                                             authorizeRemoteStopRequest.Timestamp,
-                                                                             authorizeRemoteStopRequest.CancellationToken,
-                                                                             authorizeRemoteStopRequest.EventTrackingId,
-                                                                             TimeSpan.FromSeconds(10)
-                                                                         ));
-
-                }
-
-                return OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(
-                           authorizeRemoteStopRequest,
-                           Acknowledgement<AuthorizeRemoteStopRequest>.NoValidContract(
-                               Request:                   authorizeRemoteStopRequest,
-                               SessionId:                 authorizeRemoteStopRequest.SessionId,
-                               CPOPartnerSessionId:       null,
-                               EMPPartnerSessionId:       authorizeRemoteStopRequest.EMPPartnerSessionId,
-                               StatusCodeDescription:     "The charge point operator '" + authorizeRemoteStopRequest.EVSEId.OperatorId.ToString() + "' is unknown!",
-                               StatusCodeAdditionalInfo:  null,
-                               ResponseTimestamp:         Timestamp.Now,
-                               EventTrackingId:           authorizeRemoteStopRequest.EventTrackingId,
-                               Runtime:                   TimeSpan.FromMilliseconds(23),
-                               ProcessId:                 processId,
-                               HTTPResponse:              null,
-                               CustomData:                null
-                           ),
-                           ProcessId:  processId
-                       );
-
-            };
-
-            #endregion
-
-            #region OnGetChargeDetailRecords
-
-            centralServiceAPI.EMPClientAPI.OnGetChargeDetailRecords += (timestamp, sender, getChargeDetailRecordsRequest) => {
-
-                var processId = Process_Id.NewRandom;
-
-                return Task.FromResult(
-                           OICPResult<GetChargeDetailRecordsResponse>.Success(
-                               getChargeDetailRecordsRequest,
-                               new GetChargeDetailRecordsResponse(
-                                   Request:                   getChargeDetailRecordsRequest,
-                                   ResponseTimestamp:         Timestamp.Now,
-                                   EventTrackingId:           getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
-                                   Runtime:                   TimeSpan.FromMilliseconds(23),
-                                   ChargeDetailRecords:       new ChargeDetailRecord[] {
-
-                                                                  new ChargeDetailRecord(
-                                                                      SessionId:                       Session_Id.NewRandom,
-                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
-                                                                      Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
-                                                                      SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
-                                                                      SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
-                                                                      ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
-                                                                      ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
-                                                                      ConsumedEnergy:                  35,
-
-                                                                      PartnerProductId:                PartnerProduct_Id.Parse("AC1"),
-                                                                      CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
-                                                                      EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
-                                                                      MeterValueStart:                 3,
-                                                                      MeterValueEnd:                   38,
-                                                                      MeterValuesInBetween:            Array.Empty<Decimal>(),
-                                                                      SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
-                                                                      CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
-                                                                      HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
-                                                                      HubProviderId:                   Provider_Id.Parse("DE-GDF"),
-
-                                                                      CustomData:                      null,
-                                                                      InternalData:                    null
-                                                                  ),
-
-                                                                  new ChargeDetailRecord(
-                                                                      SessionId:                       Session_Id.NewRandom,
-                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
-                                                                      Identification:                  Identification.FromUID(UID.Parse("CCDDEEFFAABBCC")),
-                                                                      SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
-                                                                      SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
-                                                                      ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
-                                                                      ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
-                                                                      ConsumedEnergy:                  35,
-
-                                                                      PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
-                                                                      CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
-                                                                      EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
-                                                                      MeterValueStart:                 3,
-                                                                      MeterValueEnd:                   38,
-                                                                      MeterValuesInBetween:            Array.Empty<Decimal>(),
-                                                                      SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
-                                                                      CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
-                                                                      HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
-                                                                      HubProviderId:                   Provider_Id.Parse("DE-GDF"),
-
-                                                                      CustomData:                      null,
-                                                                      InternalData:                    null
-                                                                  )
-
-                                                              },
-                                   HTTPResponse:              null,
-                                   ProcessId:                 processId,
-                                   StatusCode:                null,
-                                   FirstPage:                 true,
-                                   LastPage:                  true,
-                                   Number:                    1,
-                                   NumberOfElements:          2,
-                                   Size:                      getChargeDetailRecordsRequest.Size,
-                                   TotalElements:             2,
-                                   TotalPages:                1,
-                                   CustomData:                null
-                               ),
-                               ProcessId:                 processId
-                           )
-                       );
-
-            };
-
-            #endregion
-
-            #endregion
-
 
 
         }
