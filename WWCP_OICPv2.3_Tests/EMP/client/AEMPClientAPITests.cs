@@ -248,14 +248,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                     new OperatorEVSEPricing(
                                         new EVSEPricing[] {
                                             new EVSEPricing(
-                                                EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                 EVSEIdProductList:  new PartnerProduct_Id[] {
                                                                         PartnerProduct_Id.Parse("AC1")
                                                                     },
                                                 ProviderId:         Provider_Id.Parse("DE-GDF")
                                             ),
                                             new EVSEPricing(
-                                                EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*2"),
+                                                EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
                                                 EVSEIdProductList:  new PartnerProduct_Id[] {
                                                                         PartnerProduct_Id.Parse("AC3")
                                                                     },
@@ -446,7 +446,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
                                     new ChargeDetailRecord(
                                         SessionId:                       Session_Id.Parse("4cfe3192-87ec-4757-9560-a6ce896bb88b"),
-                                        EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                        EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                         Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
                                         SessionStart:                    DateTime.Parse("2022-08-09T10:18:25.229Z"),
                                         SessionEnd:                      DateTime.Parse("2022-08-09T11:18:25.229Z"),

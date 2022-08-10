@@ -31,10 +31,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
     public class PushAuthenticationDataTests : AEMPClientAPITests
     {
 
-        #region EMPPushAuthenticationData_Test1()
+        #region PushAuthenticationData_Test1()
 
         [Test]
-        public async Task EMPPushAuthenticationData_Test1()
+        public async Task PushAuthenticationData_Test1()
         {
 
             if (empClientAPI is null ||
@@ -47,7 +47,44 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             var request = new PushAuthenticationDataRequest(
                               new ProviderAuthenticationData(
                                   new Identification[] {
-                                      Identification.FromUID(UID.Parse("11223344"))
+
+                                      Identification.FromUID(
+                                          UID.Parse("11223344")
+                                      ),
+
+                                      Identification.FromRFIDIdentification(
+                                          new RFIDIdentification(
+                                              UID:             UID.Parse("55667788"),
+                                              RFIDType:        RFIDTypes.MifareClassic,
+                                              EVCOId:          EVCO_Id.Parse("DE-GDF-C12345678-X"),
+                                              PrintedNumber:  "GDF-0001",
+                                              ExpiryDate:      DateTime.Parse("2022-08-09T10:18:25.229Z"),
+                                              CustomData:      null
+                                          ),
+                                          CustomData:  null
+                                      ),
+
+                                      Identification.FromQRCodeIdentification(
+                                          new QRCodeIdentification(
+                                              EVCOId:          EVCO_Id.Parse("DE-GDF-C56781234-X"),
+                                              HashedPIN:       new HashedPIN(
+                                                                   Hash_Value.Parse("XXX"),
+                                                                   HashFunctions.Bcrypt
+                                                               )
+                                          ),
+                                          CustomData:  null
+                                      ),
+
+                                      Identification.FromRemoteIdentification(
+                                          EVCO_Id.Parse("DE-GDF-C23456781-X"),
+                                          CustomData:  null
+                                      ),
+
+                                      Identification.FromPlugAndChargeIdentification(
+                                          EVCO_Id.Parse("DE-GDF-C81235674-X"),
+                                          CustomData:  null
+                                      )
+
                                   },
                                   Provider_Id.Parse("DE-GDF")
                               ),

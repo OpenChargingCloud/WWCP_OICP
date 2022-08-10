@@ -164,22 +164,85 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             cpoClientAPI.OnPullAuthenticationData       += (timestamp, cpoClientAPI, pullAuthenticationDataRequest) => {
 
-                return Task.FromResult(
-                    OICPResult<PullAuthenticationDataResponse>.Success(
-                        pullAuthenticationDataRequest,
-                        new PullAuthenticationDataResponse(
-                            Timestamp.Now,
-                            pullAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
-                            Timestamp.Now - pullAuthenticationDataRequest.Timestamp,
-                            Array.Empty<ProviderAuthenticationData>(),
+                if (pullAuthenticationDataRequest.OperatorId == Operator_Id.Parse("DE*GEF"))
+                    return Task.FromResult(
+                        OICPResult<PullAuthenticationDataResponse>.Success(
                             pullAuthenticationDataRequest,
-                            StatusCode: new StatusCode(
-                                            StatusCodes.Success
-                                        )
+                            new PullAuthenticationDataResponse(
+                                Timestamp.Now,
+                                pullAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                                Process_Id.NewRandom,
+                                Timestamp.Now - pullAuthenticationDataRequest.Timestamp,
+                                new ProviderAuthenticationData[] {
+                                    new ProviderAuthenticationData(
+                                        new Identification[] {
+
+                                            Identification.FromUID(
+                                                UID.Parse("11223344")
+                                            ),
+
+                                            Identification.FromRFIDIdentification(
+                                                new RFIDIdentification(
+                                                    UID:             UID.Parse("55667788"),
+                                                    RFIDType:        RFIDTypes.MifareClassic,
+                                                    EVCOId:          EVCO_Id.Parse("DE-GDF-C12345678-X"),
+                                                    PrintedNumber:  "GDF-0001",
+                                                    ExpiryDate:      DateTime.Parse("2022-08-09T10:18:25.229Z"),
+                                                    CustomData:      null
+                                                ),
+                                                CustomData:  null
+                                            ),
+
+                                            Identification.FromQRCodeIdentification(
+                                                new QRCodeIdentification(
+                                                    EVCOId:          EVCO_Id.Parse("DE-GDF-C56781234-X"),
+                                                    HashedPIN:       new HashedPIN(
+                                                                         Hash_Value.Parse("XXX"),
+                                                                         HashFunctions.Bcrypt
+                                                                     )
+                                                ),
+                                                CustomData:  null
+                                            ),
+
+                                            Identification.FromRemoteIdentification(
+                                                EVCO_Id.Parse("DE-GDF-C23456781-X"),
+                                                CustomData:  null
+                                            ),
+
+                                            Identification.FromPlugAndChargeIdentification(
+                                                EVCO_Id.Parse("DE-GDF-C81235674-X"),
+                                                CustomData:  null
+                                            )
+
+                                        },
+                                        Provider_Id.Parse("DE-GDF")
+                                    )
+                                },
+                                pullAuthenticationDataRequest,
+                                StatusCode: new StatusCode(
+                                                StatusCodes.Success
+                                            )
+                            )
                         )
-                    )
-                );
+                    );
+
+                else
+                    return Task.FromResult(
+                        OICPResult<PullAuthenticationDataResponse>.Success(
+                            pullAuthenticationDataRequest,
+                            new PullAuthenticationDataResponse(
+                                Timestamp.Now,
+                                pullAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
+                                Process_Id.NewRandom,
+                                Timestamp.Now - pullAuthenticationDataRequest.Timestamp,
+                                Array.Empty<ProviderAuthenticationData>(),
+                                pullAuthenticationDataRequest,
+                                StatusCode: new StatusCode(
+                                                StatusCodes.Success
+                                            )
+                            )
+                        )
+                    );
 
             };
 
@@ -191,14 +254,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         authorizeStartRequest,
                         AuthorizationStartResponse.Authorized(
                             authorizeStartRequest,
-                            Session_Id.NewRandom,
-                            CPOPartnerSession_Id.NewRandom,
-                            EMPPartnerSession_Id.NewRandom,
+                            Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"), // generated by Hubject!
+                            authorizeStartRequest.CPOPartnerSessionId,
+                            EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
                             Provider_Id.Parse("DE-GDF"),
                             "Nice to see you!",
                             "Hello world!",
                             new Identification[] {
-                                Identification.FromUID(UID.Parse("11223344"))
+                                Identification.FromUID(UID.Parse("11223344")),
+                                Identification.FromUID(UID.Parse("55667788"))
                             }
                         )
                     )
@@ -213,12 +277,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         authorizeStopRequest,
                         AuthorizationStopResponse.Authorized(
                             authorizeStopRequest,
-                            Session_Id.NewRandom,
-                            CPOPartnerSession_Id.NewRandom,
-                            EMPPartnerSession_Id.NewRandom,
+                            authorizeStopRequest.SessionId,
+                            authorizeStopRequest.CPOPartnerSessionId,
+                            authorizeStopRequest.EMPPartnerSessionId,
                             Provider_Id.Parse("DE-GDF"),
-                            "Nice to see you!",
-                            "Hello world!"
+                            "Have a nice day!",
+                            "bye bye!"
                         )
                     )
                 );

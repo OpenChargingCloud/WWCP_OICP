@@ -34,10 +34,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
     public class ReceiveChargeDetailRecordTests : AEMPTests
     {
 
-        #region EMPReceiveChargeDetailRecord_Test1()
+        #region ReceiveChargeDetailRecord_Test1()
 
         [Test]
-        public async Task EMPReceiveChargeDetailRecord_Test1()
+        public async Task ReceiveChargeDetailRecord_Test1()
         {
 
             if (empServerAPI       is null ||
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
                                new ChargeDetailRecord(
                                    SessionId:                       Session_Id.Parse("4cfe3192-87ec-4757-9560-a6ce896bb88b"),
-                                   EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                   EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                    Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
                                    SessionStart:                    DateTime.Parse("2022-08-09T10:18:25.229Z"),
                                    SessionEnd:                      DateTime.Parse("2022-08-09T11:18:25.229Z"),

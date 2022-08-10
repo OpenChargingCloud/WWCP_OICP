@@ -33,10 +33,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
     public class PullEVSEDataAndStatusTests : AEMPClientAPITests
     {
 
-        #region EMPPullEVSEData_Test1()
+        #region PullEVSEData_Test1()
 
         [Test]
-        public async Task EMPPullEVSEData_Test1()
+        public async Task PullEVSEData_Test1()
         {
 
             if (empClientAPI is null ||
@@ -106,10 +106,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
         #endregion
 
-        #region EMPPullEVSEStatus_Test1()
+        #region PullEVSEStatus_Test1()
 
         [Test]
-        public async Task EMPPullEVSEStatus_Test1()
+        public async Task PullEVSEStatus_Test1()
         {
 
             if (empClientAPI is null ||
@@ -169,10 +169,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
         #endregion
 
-        #region EMPPullEVSEStatusById_Test1()
+        #region PullEVSEStatusById_Test1()
 
         [Test]
-        public async Task EMPPullEVSEStatusById_Test1()
+        public async Task PullEVSEStatusById_Test1()
         {
 
             if (empClientAPI is null ||
@@ -184,7 +184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             var request = new PullEVSEStatusByIdRequest(ProviderId:             Provider_Id.Parse("DE-GDF"),
                                                         EVSEIds:                new EVSE_Id[] {
-                                                                                    EVSE_Id.Parse("DE*GEF*E1234567*1")
+                                                                                    EVSE_Id.Parse("DE*GEF*E1234567*A*1")
                                                                                 },
 
                                                         Timestamp:              Timestamp.Now,
@@ -227,10 +227,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
         #endregion
 
-        #region EMPPullEVSEStatusByOperatorId_Test1()
+        #region PullEVSEStatusByOperatorId_Test1()
 
         [Test]
-        public async Task EMPPullEVSEStatusByOperatorId_Test1()
+        public async Task PullEVSEStatusByOperatorId_Test1()
         {
 
             if (empClientAPI is null ||

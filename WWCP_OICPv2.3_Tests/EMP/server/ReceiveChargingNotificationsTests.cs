@@ -33,10 +33,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
     public class ReceiveChargingNotificationsTests : AEMPTests
     {
 
-        #region EMPReceiveChargingStartNotification_Test1()
+        #region ReceiveChargingStartNotification_Test1()
 
         [Test]
-        public async Task EMPReceiveChargingStartNotification_Test1()
+        public async Task ReceiveChargingStartNotification_Test1()
         {
 
             if (empServerAPI       is null ||
@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
             var request     = new ChargingStartNotificationRequest(SessionId:            Session_Id.NewRandom,
                                                                    Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
-                                                                   EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                                   EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                    ChargingStart:        Timestamp.Now - TimeSpan.FromSeconds(5),
                                                                    CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
                                                                    EMPPartnerSessionId:  null,
@@ -95,10 +95,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
         #endregion
 
-        #region EMPReceiveChargingProgressNotification_Test1()
+        #region ReceiveChargingProgressNotification_Test1()
 
         [Test]
-        public async Task EMPReceiveChargingProgressNotification_Test1()
+        public async Task ReceiveChargingProgressNotification_Test1()
         {
 
             if (empServerAPI       is null ||
@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
             var request     = new ChargingProgressNotificationRequest(SessionId:               Session_Id.NewRandom,
                                                                       Identification:          Identification.FromUID(UID.Parse("AABBCCDD")),
-                                                                      EVSEId:                  EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                                      EVSEId:                  EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                       ChargingStart:           Timestamp.Now - TimeSpan.FromSeconds(5),
                                                                       EventOccurred:            Timestamp.Now,
                                                                       CPOPartnerSessionId:     CPOPartnerSession_Id.NewRandom,
@@ -161,10 +161,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
         #endregion
 
-        #region EMPReceiveChargingEndNotification_Test1()
+        #region ReceiveChargingEndNotification_Test1()
 
         [Test]
-        public async Task EMPReceiveChargingEndNotification_Test1()
+        public async Task ReceiveChargingEndNotification_Test1()
         {
 
             if (empServerAPI       is null ||
@@ -176,7 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
             var request     = new ChargingEndNotificationRequest(SessionId:             Session_Id.NewRandom,
                                                                  Identification:        Identification.FromUID(UID.Parse("AABBCCDD")),
-                                                                 EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                                 EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                  ChargingStart:         Timestamp.Now - TimeSpan.FromSeconds(5),
                                                                  ChargingEnd:           Timestamp.Now - TimeSpan.FromSeconds(1),
                                                                  CPOPartnerSessionId:   CPOPartnerSession_Id.NewRandom,
@@ -229,10 +229,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
         #endregion
 
-        #region EMPReceiveChargingErrorNotification_Test1()
+        #region ReceiveChargingErrorNotification_Test1()
 
         [Test]
-        public async Task EMPReceiveChargingErrorNotification_Test1()
+        public async Task ReceiveChargingErrorNotification_Test1()
         {
 
             if (empServerAPI       is null ||
@@ -245,7 +245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
             var request     = new ChargingErrorNotificationRequest(SessionId:            Session_Id.NewRandom,
                                                                    Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                    OperatorId:           Operator_Id.Parse("DE*GEF"),
-                                                                   EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                                   EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                    ErrorType:            ErrorClassTypes.CriticalError,
                                                                    CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
                                                                    EMPPartnerSessionId:  null,

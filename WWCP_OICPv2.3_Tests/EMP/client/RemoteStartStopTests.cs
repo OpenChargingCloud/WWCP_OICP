@@ -33,10 +33,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
     public class RemoteStartStopTests : AEMPClientAPITests
     {
 
-        #region EMPAuthorizeRemoteStart_Test1()
+        #region AuthorizeRemoteStart_Test1()
 
         [Test]
-        public async Task EMPAuthorizeRemoteStart_Test1()
+        public async Task AuthorizeRemoteStart_Test1()
         {
 
             if (empClientAPI is null ||
@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             var request = new AuthorizeRemoteStartRequest(
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
-                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*1"),
+                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
                               Identification:       Identification.FromUID(UID.Parse("11223344")),
                               SessionId:            Session_Id.          NewRandom,
                               CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
@@ -97,10 +97,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
         #endregion
 
 
-        #region EMPAuthorizeRemoteStop_Test1()
+        #region AuthorizeRemoteStop_Test1()
 
         [Test]
-        public async Task EMPAuthorizeRemoteStop_Test1()
+        public async Task AuthorizeRemoteStop_Test1()
         {
 
             if (empClientAPI is null ||
@@ -112,7 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             var request = new AuthorizeRemoteStopRequest(
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
-                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*1"),
+                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
                               SessionId:            Session_Id.          NewRandom,
                               CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
                               EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom,

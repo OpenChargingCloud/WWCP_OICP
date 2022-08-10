@@ -33,10 +33,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
     public class ReservationStartStopTests : AEMPClientAPITests
     {
 
-        #region EMPAuthorizeRemoteReservationStart_Test1()
+        #region AuthorizeRemoteReservationStart_Test1()
 
         [Test]
-        public async Task EMPAuthorizeRemoteReservationStart_Test1()
+        public async Task AuthorizeRemoteReservationStart_Test1()
         {
 
             if (empClientAPI is null ||
@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             var request = new AuthorizeRemoteReservationStartRequest(
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
-                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*1"),
+                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
                               Identification:       Identification.FromUID(UID.Parse("11223344")),
                               SessionId:            Session_Id.          NewRandom,
                               CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
@@ -98,10 +98,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
         #endregion
 
 
-        #region EMPAuthorizeRemoteReservationStop_Test1()
+        #region AuthorizeRemoteReservationStop_Test1()
 
         [Test]
-        public async Task EMPAuthorizeRemoteReservationStop_Test1()
+        public async Task AuthorizeRemoteReservationStop_Test1()
         {
 
             if (empClientAPI is null ||
@@ -113,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             var request = new AuthorizeRemoteReservationStopRequest(
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
-                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*1"),
+                              EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
                               SessionId:            Session_Id.          NewRandom,
                               CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
                               EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom,

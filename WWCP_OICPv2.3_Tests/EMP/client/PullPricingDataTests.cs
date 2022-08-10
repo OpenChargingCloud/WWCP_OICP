@@ -33,10 +33,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
     public class PullPricingDataTests : AEMPClientAPITests
     {
 
-        #region EMPPullPricingProductData_Test_Empty()
+        #region PullPricingProductData_Test_Empty()
 
         [Test]
-        public async Task EMPPullPricingProductData_Test_Empty()
+        public async Task PullPricingProductData_Test_Empty()
         {
 
             if (empClientAPI is null ||
@@ -97,10 +97,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
         #endregion
 
-        #region EMPPullPricingProductData_Test1()
+        #region PullPricingProductData_Test1()
 
         [Test]
-        public async Task EMPPullPricingProductData_Test1()
+        public async Task PullPricingProductData_Test1()
         {
 
             if (empClientAPI is null ||
@@ -196,10 +196,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
         #endregion
 
 
-        #region EMPPullEVSEPricing_Test_Empty()
+        #region PullEVSEPricing_Test_Empty()
 
         [Test]
-        public async Task EMPPullEVSEPricing_Test_Empty()
+        public async Task PullEVSEPricing_Test_Empty()
         {
 
             if (empClientAPI is null ||
@@ -260,10 +260,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
         #endregion
 
-        #region EMPPullEVSEPricing_Test1()
+        #region PullEVSEPricing_Test1()
 
         [Test]
-        public async Task EMPPullEVSEPricing_Test1()
+        public async Task PullEVSEPricing_Test1()
         {
 
             if (empClientAPI is null ||
@@ -318,14 +318,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             var evsePricing1         = operatorEVSEPricing?.EVSEPricings.FirstOrDefault();
             Assert.IsNotNull(evsePricing1);
-            Assert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*1"),  evsePricing1?.EVSEId);
+            Assert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),  evsePricing1?.EVSEId);
             Assert.AreEqual (Provider_Id.Parse("DE-GDF"),         evsePricing1?.ProviderId);
             Assert.AreEqual (1,                                   evsePricing1?.EVSEIdProductList.Count());
             Assert.AreEqual (PartnerProduct_Id.Parse("AC1"),      evsePricing1?.EVSEIdProductList.FirstOrDefault());
 
             var evsePricing2         = operatorEVSEPricing?.EVSEPricings.Skip(1).FirstOrDefault();
             Assert.IsNotNull(evsePricing1);
-            Assert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*2"),  evsePricing2?.EVSEId);
+            Assert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*2"),  evsePricing2?.EVSEId);
             Assert.IsNull   (                                     evsePricing2?.ProviderId);
             Assert.AreEqual (1,                                   evsePricing2?.EVSEIdProductList.Count());
             Assert.AreEqual (PartnerProduct_Id.Parse("AC3"),      evsePricing2?.EVSEIdProductList.FirstOrDefault());

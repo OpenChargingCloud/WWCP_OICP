@@ -212,7 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                                                                   new ChargeDetailRecord(
                                                                       SessionId:                       Session_Id.NewRandom,
-                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                       Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                       SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
                                                                       SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
@@ -237,7 +237,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                                                                   new ChargeDetailRecord(
                                                                       SessionId:                       Session_Id.NewRandom,
-                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*2"),
+                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
                                                                       Identification:                  Identification.FromUID(UID.Parse("CCDDEEFFAABBCC")),
                                                                       SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
                                                                       SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),

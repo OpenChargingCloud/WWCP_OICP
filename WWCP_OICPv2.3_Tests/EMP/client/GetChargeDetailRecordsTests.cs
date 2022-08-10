@@ -34,10 +34,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
     public class GetChargeDetailRecordsTests : AEMPClientAPITests
     {
 
-        #region EMPGetChargeDetailRecords_Empty()
+        #region GetChargeDetailRecords_Empty()
 
         [Test]
-        public async Task EMPGetChargeDetailRecords_Empty()
+        public async Task GetChargeDetailRecords_Empty()
         {
 
             if (empClientAPI is null ||
@@ -99,10 +99,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
         #endregion
 
-        #region EMPGetChargeDetailRecords_Test1()
+        #region GetChargeDetailRecords_Test1()
 
         [Test]
-        public async Task EMPGetChargeDetailRecords_Test1()
+        public async Task GetChargeDetailRecords_Test1()
         {
 
             if (empClientAPI is null ||
@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             var cdr = oicpResult.Response?.ChargeDetailRecords.FirstOrDefault();
 
             Assert.AreEqual(Session_Id.          Parse  ("4cfe3192-87ec-4757-9560-a6ce896bb88b"),        cdr?.SessionId);
-            Assert.AreEqual(EVSE_Id.             Parse  ("DE*GEF*E1234567*1"),                           cdr?.EVSEId);
+            Assert.AreEqual(EVSE_Id.             Parse  ("DE*GEF*E1234567*A*1"),                           cdr?.EVSEId);
             Assert.AreEqual(Identification.      FromUID(UID.Parse("AABBCCDD")),                         cdr?.Identification);
             Assert.AreEqual(DateTime.            Parse  ("2022-08-09T10:18:25.229Z").ToUniversalTime(),  cdr?.SessionStart);
             Assert.AreEqual(DateTime.            Parse  ("2022-08-09T11:18:25.229Z").ToUniversalTime(),  cdr?.SessionEnd);

@@ -28,7 +28,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 {
 
     /// <summary>
-    /// Sending EVSE data and status tests.
+    /// CPO sending EVSE data and status tests.
     /// </summary>
     [TestFixture]
     public class PushEVSEDataAndStatusTests : ACPOClientAPITests
@@ -52,7 +52,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                   new EVSEDataRecord[] {
                                       new EVSEDataRecord(
 
-                                          Id:                                EVSE_Id.Parse("DE*GEF*E1234567*1"),
+                                          Id:                                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                           OperatorId:                        Operator_Id.Parse("DE*GEF"),
                                           OperatorName:                      "GraphDefined",
                                           ChargingStationName:               I18NText.Create(LanguageCode.de, "Station Eins").
@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                   new EVSEDataRecord[] {
                                       new EVSEDataRecord(
 
-                                          Id:                                EVSE_Id.Parse("DE*GEF*E1234*567*1"),
+                                          Id:                                EVSE_Id.Parse("DE*GEF*E1234567*A*A*1"),
                                           OperatorId:                        Operator_Id.Parse("DE*GEF"),
                                           OperatorName:                      "GraphDefined",
                                           ChargingStationName:               I18NText.Create(LanguageCode.de, "Station Eins").
@@ -385,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               OperatorEVSEStatus:   new OperatorEVSEStatus(
                                                         EVSEStatusRecords:   new EVSEStatusRecord[] {
                                                                                  new EVSEStatusRecord(
-                                                                                     Id:          EVSE_Id.Parse("DE*GEF*E1234*567*1"),
+                                                                                     Id:          EVSE_Id.Parse("DE*GEF*E1234567*A*A*1"),
                                                                                      Status:      EVSEStatusTypes.Available,
                                                                                      CustomData:  null
                                                                                  )

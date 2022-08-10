@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -137,7 +135,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?              errorResponse,
                          CustomRFIDIdentificationParser))
             {
-                return calibrationLawVerification;
+                return calibrationLawVerification!;
             }
 
             throw new ArgumentException("The given JSON representation of a RFID identification is invalid: " + errorResponse, nameof(JSON));
@@ -162,7 +160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?              errorResponse,
                          CustomRFIDIdentificationParser))
             {
-                return calibrationLawVerification;
+                return calibrationLawVerification!;
             }
 
             throw new ArgumentException("The given text representation of a RFID identification is invalid: " + errorResponse, nameof(Text));
