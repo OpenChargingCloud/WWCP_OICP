@@ -22,7 +22,7 @@ This implementation aims to become one of the OICP reference implementations. Th
 ### Requirements & Configuration
 
 1. You will need .NET6+
-2. Tested and running in production since 2014 on Debian GNU/Linux servers
+2. Tested and running in production since 2014 on *Debian GNU/Linux* servers
 3. The mutual authentication (TLS client certificates) with Hubject must be set up.
 4. Your server(s) must be registered within the Hubject firewalls.
 
