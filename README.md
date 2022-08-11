@@ -16,6 +16,8 @@ This implementation aims to become one of the OICP reference implementations. Th
 2. The mutual authentication (TLS client certificates) with Hubject must be set up.
 3. Your server(s) must be registered within the Hubject firewalls.
 
+You can of course skip *2.* and *3.* when you use this software for your (internal) testing purposes only. 
+
 ### Versions
 
 - [OICP v2.2](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.2) is deprecated and only left for reference
