@@ -14,18 +14,19 @@ This implementation aims to become one of the OICP reference implementations. Th
 
 ### Versions
 
-- [OICP v2.2](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.2) is deprecated and only left for reference
-- [OICP v2.3](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.3) is deprecated and only left for reference
-- [OICP v2.3 NET6](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
+- [OICP v2.2 .NET Framework 4.8](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.2) is deprecated and only left for reference
+- [OICP v2.3 .NET Framework 4.8](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.3) is deprecated and only left for reference
+- [OICP v2.3 .NET6](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
 
 
 ### Requirements & Configuration
 
-1. You need .NET6+
-2. The mutual authentication (TLS client certificates) with Hubject must be set up.
-3. Your server(s) must be registered within the Hubject firewalls.
+1. You will need .NET6+
+2. Tested and running in production since 2014 on Debian GNU/Linux servers
+3. The mutual authentication (TLS client certificates) with Hubject must be set up.
+4. Your server(s) must be registered within the Hubject firewalls.
 
-You can of course skip *2.* and *3.* when you use this software for your (internal) testing purposes only. 
+You can of course skip *3.* and *4.* when you use this software for your (internal) testing purposes only. 
 
 
 ### Documentation
