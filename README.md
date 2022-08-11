@@ -34,6 +34,11 @@ You can of course skip *3.* and *4.* when you use this software for your (intern
 - Overview on the [OICP v2.3 implementation](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3)
 
 
+### Related Work
+
+- [OICP Tool](https://github.com/OpenChargingCloud/OICPTool) is a small tool using this OICP library allowing you to test requests and responses easily on the command line. It can also be used within (bash/zsh/...) scripts for automated testing or automated processes like e.g. downloading new *Charge Detail Records* every night.
+
+
 ### Your participation
 
 This software is **Free Open Source** under the [Apache 2.0 license](https://github.com/OpenChargingCloud/WWCP_OICP/blob/master/LICENSE). We appreciate your participation in this ongoing project, and your help to improve it and the e-mobility ICT in general. If you find bugs, want to request a feature or send us a pull request, feel free to use the normal GitHub features to do so. For this please read the [Contributor License Agreement](https://github.com/OpenChargingCloud/WWCP_OICP/blob/master/Contributor%20License%20Agreement.txt) carefully and send us a signed copy or use a similar free and open license.
