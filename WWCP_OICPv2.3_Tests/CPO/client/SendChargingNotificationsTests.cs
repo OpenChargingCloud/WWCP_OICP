@@ -52,7 +52,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               Identification:        Identification.FromUID(
                                                                       UID.Parse("11223344")
                                                      ),
-                              EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*A*1"),
+                              EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                               ChargingStart:         DateTime.Parse("2022-08-09T10:20:25.229Z"),
 
                               CPOPartnerSessionId:   CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
@@ -115,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               Identification:           Identification.FromUID(
                                                             UID.Parse("11223344")
                                                         ),
-                              EVSEId:                   EVSE_Id.Parse("DE*GEF*E1234567*A*A*1"),
+                              EVSEId:                   EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                               ChargingStart:            DateTime.Parse("2022-08-09T10:20:25.229Z"),
                               EventOccurred:            DateTime.Parse("2022-08-09T10:21:13.451Z"),
 
@@ -182,7 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               Identification:         Identification.FromUID(
                                                           UID.Parse("11223344")
                                                       ),
-                              EVSEId:                 EVSE_Id.Parse("DE*GEF*E1234567*A*A*1"),
+                              EVSEId:                 EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                               ChargingStart:          DateTime.Parse("2022-08-09T10:20:25.229Z"),
                               ChargingEnd:            DateTime.Parse("2022-08-09T11:13:25.229Z"),
 
@@ -256,7 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                          UID.Parse("11223344")
                                                      ),
                               OperatorId:            Operator_Id.Parse("DE*GEF"),
-                              EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*A*1"),
+                              EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                               ErrorType:             ErrorClassTypes.CriticalError,
 
                               CPOPartnerSessionId:   CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),

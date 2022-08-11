@@ -135,7 +135,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               OperatorId:    Operator_Id.Parse("DE*GEF"),
                               EVSEPricing:   new EVSEPricing[] {
                                                  new EVSEPricing(
-                                                     EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*A*A*1"),
+                                                     EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                      EVSEIdProductList:  new PartnerProduct_Id[] {
                                                                              PartnerProduct_Id.Parse("AC1")
                                                                          },

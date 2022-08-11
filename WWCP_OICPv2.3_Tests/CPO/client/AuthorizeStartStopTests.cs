@@ -49,7 +49,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               Identification:       Identification.FromUID(
                                                                      UID.Parse("11223344")
                                                     ),
-                              EVSEId:               EVSE_Id.             Parse("DE*GEF*E1234567*A*A*1"),
+                              EVSEId:               EVSE_Id.             Parse("DE*GEF*E1234567*A*1"),
                               PartnerProductId:     PartnerProduct_Id.AC1,
                               CPOPartnerSessionId:  CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
                               CustomData:           null
@@ -117,7 +117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               Identification:       Identification.FromUID(
                                                                      UID.Parse("11223344")
                                                     ),
-                              EVSEId:               EVSE_Id.             Parse("DE*GEF*E1234567*A*A*1"),
+                              EVSEId:               EVSE_Id.             Parse("DE*GEF*E1234567*A*1"),
                               CPOPartnerSessionId:  CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),
                               EMPPartnerSessionId:  EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
                               CustomData:           null
