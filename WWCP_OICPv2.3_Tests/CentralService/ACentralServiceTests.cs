@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.CentralService;
+using System.Linq;
 
 #endregion
 
@@ -78,34 +79,94 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             #region CPOClientAPI delegates...
 
-            centralServiceAPI.CPOClientAPI.OnAuthorizeStart += (timestamp, sender, authorizeStartRequest) => {
+            centralServiceAPI.CPOClientAPI.OnAuthorizeStart                  += async (timestamp, sender, authorizeStartRequest)                  => {
 
-                return Task.FromResult(
-                           OICPResult<AuthorizationStartResponse>.Success(
-                               authorizeStartRequest,
-                               AuthorizationStartResponse.Authorized(
-                                   Request:                           authorizeStartRequest,
-                                   SessionId:                         Session_Id.NewRandom,
-                                   CPOPartnerSessionId:               CPOPartnerSession_Id.NewRandom,
-                                   EMPPartnerSessionId:               EMPPartnerSession_Id.NewRandom,
-                                   ProviderId:                        Provider_Id.Parse("DE-GDF"),
-                                   StatusCodeDescription:             null,
-                                   StatusCodeAdditionalInfo:          null,
-                                   AuthorizationStopIdentifications:  null,
-                                   ResponseTimestamp:                 Timestamp.Now,
-                                   EventTrackingId:                   authorizeStartRequest.EventTrackingId,
-                                   Runtime:                           TimeSpan.FromMilliseconds(23),
-                                   ProcessId:                         Process_Id.NewRandom,
-                                   HTTPResponse:                      null,
-                                   CustomData:                        null
-                               )
+                var processId = Process_Id.NewRandom;
+
+                if (centralServiceAPI.EMPServerAPIClients.Any())
+                {
+
+                    var broadcastToAll  = centralServiceAPI.EMPServerAPIClients.Values.
+                                              Select(cli => cli.AuthorizeStart(authorizeStartRequest)).
+                                              ToArray();
+
+                    var responses       = await Task.WhenAll(broadcastToAll);
+
+                    var success         = responses.Where(response => response          is not null &&
+                                                                      response.IsSuccessful &&
+                                                                      response.Response is not null &&
+                                                                      response.Response.AuthorizationStatus == AuthorizationStatusTypes.Authorized).
+                                                    ToArray();
+
+                    if (success.Any())
+                        return success.First();
+
+                }
+
+                return OICPResult<AuthorizationStartResponse>.Failed(
+                           authorizeStartRequest,
+                           AuthorizationStartResponse.NotAuthorized(
+                               Request:               authorizeStartRequest,
+                               StatusCode:            new StatusCode(
+                                                           StatusCodes.NoValidContract,
+                                                           "No positive response from any connected e-mobility provider!"
+                                                       ),
+                               CPOPartnerSessionId:   authorizeStartRequest.CPOPartnerSessionId,
+                               ResponseTimestamp:     Timestamp.Now,
+                               EventTrackingId:       authorizeStartRequest.EventTrackingId,
+                               Runtime:               TimeSpan.FromMilliseconds(23),
+                               ProcessId:             processId,
+                               CustomData:            null
                            )
-                       );;
+                       );
+
+            };
+
+            centralServiceAPI.CPOClientAPI.OnAuthorizeStop                   += async (timestamp, sender, authorizeStopRequest)                   => {
+
+                var processId = Process_Id.NewRandom;
+
+                if (centralServiceAPI.EMPServerAPIClients.Any())
+                {
+
+                    var broadcastToAll  = centralServiceAPI.EMPServerAPIClients.Values.
+                                              Select(cli => cli.AuthorizeStop(authorizeStopRequest)).
+                                              ToArray();
+
+                    var responses       = await Task.WhenAll(broadcastToAll);
+
+                    var success         = responses.Where(response => response          is not null &&
+                                                                      response.IsSuccessful &&
+                                                                      response.Response is not null &&
+                                                                      response.Response.AuthorizationStatus == AuthorizationStatusTypes.Authorized).
+                                                    ToArray();
+
+                    if (success.Any())
+                        return success.First();
+
+                }
+
+                return OICPResult<AuthorizationStopResponse>.Failed(
+                           authorizeStopRequest,
+                           AuthorizationStopResponse.NotAuthorized(
+                               Request:               authorizeStopRequest,
+                               StatusCode:            new StatusCode(
+                                                           StatusCodes.NoValidContract,
+                                                           "No positive response from any connected e-mobility provider!"
+                                                       ),
+                               CPOPartnerSessionId:   authorizeStopRequest.CPOPartnerSessionId,
+                               ResponseTimestamp:     Timestamp.Now,
+                               EventTrackingId:       authorizeStopRequest.EventTrackingId,
+                               Runtime:               TimeSpan.FromMilliseconds(23),
+                               ProcessId:             processId,
+                               CustomData:            null
+                           )
+                       );
 
             };
 
 
-            centralServiceAPI.CPOClientAPI.OnChargeDetailRecord  += async (timestamp, sender, chargeDetailRecordRequest) => {
+            centralServiceAPI.CPOClientAPI.OnChargeDetailRecord              += async (timestamp, sender, chargeDetailRecordRequest)              => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -144,8 +205,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             #endregion
 
             #region EMPClientAPI delegates...
-
-            #region OnAuthorizeRemoteReservationStart/-Stop
 
             centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStart += async (timestamp, sender, authorizeRemoteReservationStartRequest) => {
 
@@ -196,7 +255,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStop  += async (timestamp, sender, authorizeRemoteReservationStopRequest) => {
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStop  += async (timestamp, sender, authorizeRemoteReservationStopRequest)  => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -242,11 +301,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            #endregion
 
-            #region OnAuthorizeRemoteStart/-Stop
-
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStart += async (timestamp, sender, authorizeRemoteStartRequest) => {
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStart            += async (timestamp, sender, authorizeRemoteStartRequest)            => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -273,8 +329,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                 }
 
-                var x = await new HTTPSClient(URL.Parse("https://www.graphdefined.com"), RemoteCertificateValidator: (a, b, c, d) => true, PreferIPv4: true).GET(HTTPPath.Root);
-
                 return OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(
                            authorizeRemoteStartRequest,
                            Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
@@ -296,7 +350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStop  += async (timestamp, sender, authorizeRemoteStopRequest) => {
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStop             += async (timestamp, sender, authorizeRemoteStopRequest)             => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -342,94 +396,86 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            #endregion
 
-            #region OnGetChargeDetailRecords
-
-            centralServiceAPI.EMPClientAPI.OnGetChargeDetailRecords += (timestamp, sender, getChargeDetailRecordsRequest) => {
+            centralServiceAPI.EMPClientAPI.OnGetChargeDetailRecords          += async (timestamp, sender, getChargeDetailRecordsRequest)          => {
 
                 var processId = Process_Id.NewRandom;
 
-                return Task.FromResult(
-                           OICPResult<GetChargeDetailRecordsResponse>.Success(
-                               getChargeDetailRecordsRequest,
-                               new GetChargeDetailRecordsResponse(
-                                   Request:                   getChargeDetailRecordsRequest,
-                                   ResponseTimestamp:         Timestamp.Now,
-                                   EventTrackingId:           getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
-                                   Runtime:                   TimeSpan.FromMilliseconds(23),
-                                   ChargeDetailRecords:       new ChargeDetailRecord[] {
+                return OICPResult<GetChargeDetailRecordsResponse>.Success(
+                           getChargeDetailRecordsRequest,
+                           new GetChargeDetailRecordsResponse(
+                               Request:                   getChargeDetailRecordsRequest,
+                               ResponseTimestamp:         Timestamp.Now,
+                               EventTrackingId:           getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
+                               Runtime:                   TimeSpan.FromMilliseconds(23),
+                               ChargeDetailRecords:       new ChargeDetailRecord[] {
 
-                                                                  new ChargeDetailRecord(
-                                                                      SessionId:                       Session_Id.NewRandom,
-                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
-                                                                      Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
-                                                                      SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
-                                                                      SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
-                                                                      ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
-                                                                      ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
-                                                                      ConsumedEnergy:                  35,
+                                                              new ChargeDetailRecord(
+                                                                  SessionId:                       Session_Id.NewRandom,
+                                                                  EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
+                                                                  Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
+                                                                  SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
+                                                                  SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
+                                                                  ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
+                                                                  ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
+                                                                  ConsumedEnergy:                  35,
 
-                                                                      PartnerProductId:                PartnerProduct_Id.Parse("AC1"),
-                                                                      CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
-                                                                      EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
-                                                                      MeterValueStart:                 3,
-                                                                      MeterValueEnd:                   38,
-                                                                      MeterValuesInBetween:            Array.Empty<Decimal>(),
-                                                                      SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
-                                                                      CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
-                                                                      HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
-                                                                      HubProviderId:                   Provider_Id.Parse("DE-GDF"),
+                                                                  PartnerProductId:                PartnerProduct_Id.Parse("AC1"),
+                                                                  CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
+                                                                  EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
+                                                                  MeterValueStart:                 3,
+                                                                  MeterValueEnd:                   38,
+                                                                  MeterValuesInBetween:            Array.Empty<Decimal>(),
+                                                                  SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
+                                                                  CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
+                                                                  HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
+                                                                  HubProviderId:                   Provider_Id.Parse("DE-GDF"),
 
-                                                                      CustomData:                      null,
-                                                                      InternalData:                    null
-                                                                  ),
+                                                                  CustomData:                      null,
+                                                                  InternalData:                    null
+                                                              ),
 
-                                                                  new ChargeDetailRecord(
-                                                                      SessionId:                       Session_Id.NewRandom,
-                                                                      EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
-                                                                      Identification:                  Identification.FromUID(UID.Parse("CCDDEEFFAABBCC")),
-                                                                      SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
-                                                                      SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
-                                                                      ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
-                                                                      ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
-                                                                      ConsumedEnergy:                  35,
+                                                              new ChargeDetailRecord(
+                                                                  SessionId:                       Session_Id.NewRandom,
+                                                                  EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
+                                                                  Identification:                  Identification.FromUID(UID.Parse("CCDDEEFFAABBCC")),
+                                                                  SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
+                                                                  SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
+                                                                  ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
+                                                                  ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
+                                                                  ConsumedEnergy:                  35,
 
-                                                                      PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
-                                                                      CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
-                                                                      EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
-                                                                      MeterValueStart:                 3,
-                                                                      MeterValueEnd:                   38,
-                                                                      MeterValuesInBetween:            Array.Empty<Decimal>(),
-                                                                      SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
-                                                                      CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
-                                                                      HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
-                                                                      HubProviderId:                   Provider_Id.Parse("DE-GDF"),
+                                                                  PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
+                                                                  CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
+                                                                  EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
+                                                                  MeterValueStart:                 3,
+                                                                  MeterValueEnd:                   38,
+                                                                  MeterValuesInBetween:            Array.Empty<Decimal>(),
+                                                                  SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
+                                                                  CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
+                                                                  HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
+                                                                  HubProviderId:                   Provider_Id.Parse("DE-GDF"),
 
-                                                                      CustomData:                      null,
-                                                                      InternalData:                    null
-                                                                  )
+                                                                  CustomData:                      null,
+                                                                  InternalData:                    null
+                                                              )
 
-                                                              },
-                                   HTTPResponse:              null,
-                                   ProcessId:                 processId,
-                                   StatusCode:                null,
-                                   FirstPage:                 true,
-                                   LastPage:                  true,
-                                   Number:                    1,
-                                   NumberOfElements:          2,
-                                   Size:                      getChargeDetailRecordsRequest.Size,
-                                   TotalElements:             2,
-                                   TotalPages:                1,
-                                   CustomData:                null
-                               ),
-                               ProcessId:                 processId
-                           )
-                       );
+                                                          },
+                               HTTPResponse:              null,
+                               ProcessId:                 processId,
+                               StatusCode:                null,
+                               FirstPage:                 true,
+                               LastPage:                  true,
+                               Number:                    1,
+                               NumberOfElements:          2,
+                               Size:                      getChargeDetailRecordsRequest.Size,
+                               TotalElements:             2,
+                               TotalPages:                1,
+                               CustomData:                null
+                           ),
+                           ProcessId:                 processId);
 
             };
-
-            #endregion
 
             #endregion
 
@@ -674,6 +720,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             #endregion
 
+
             #region Register EMP "DE-GDF"
 
             empRoaming_DEGDF = new EMPRoaming(
@@ -685,7 +732,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                                    new EMPServerAPI(
                                        ExternalDNSName:  "open.charging.cloud",
-                                       HTTPServerPort:   IPPort.Parse(7002),
+                                       HTTPServerPort:   IPPort.Parse(8001),
                                        LoggingPath:      "tests",
                                        Autostart:        true
                                    )
@@ -695,6 +742,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             Assert.IsNotNull(cpoRoaming_DEGEF);
             Assert.IsNotNull(cpoRoaming_DEGEF.CPOClient);
             Assert.IsNotNull(cpoRoaming_DEGEF.CPOServer);
+
+
+            empRoaming_DEGDF.OnAuthorizeStart     += (timestamp, empClientAPI, authorizeStartRequest)     => {
+
+                return Task.FromResult(
+                           AuthorizationStartResponse.Authorized(
+                               authorizeStartRequest,
+                               Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"), // generated by Hubject!
+                               authorizeStartRequest.CPOPartnerSessionId,
+                               EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),
+                               Provider_Id.Parse("DE-GDF"),
+                               "Nice to see you!",
+                               "Hello world!",
+                               new Identification[] {
+                                   Identification.FromUID(UID.Parse("11223344")),
+                                   Identification.FromUID(UID.Parse("55667788"))
+                               }
+                           )
+                       );
+
+            };
+
+            empRoaming_DEGDF.OnAuthorizeStop      += (timestamp, empClientAPI, authorizeStopRequest)      => {
+
+                return Task.FromResult(
+                           AuthorizationStopResponse.Authorized(
+                               authorizeStopRequest,
+                               authorizeStopRequest.SessionId,
+                               authorizeStopRequest.CPOPartnerSessionId,
+                               authorizeStopRequest.EMPPartnerSessionId,
+                               Provider_Id.Parse("DE-GDF"),
+                               "Have a nice day!",
+                               "bye bye!"
+                           )
+                       );
+
+            };
 
 
             empRoaming_DEGDF.OnChargeDetailRecord += (timestamp, cpoServerAPI, chargeDetailRecordRequest) => {
@@ -718,7 +802,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPServerAPIClients.Add(Provider_Id.Parse("DE-GDF"),
                                                       new EMPServerAPIClient(
-                                                          URL.Parse("http://127.0.0.1:7002"),
+                                                          URL.Parse("http://127.0.0.1:8001"),
                                                           RequestTimeout: TimeSpan.FromSeconds(10)
                                                       ));
 
