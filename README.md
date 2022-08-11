@@ -8,7 +8,7 @@ charge point operators (CPOs) and e-mobility providers (EMPs) in electric mobili
 
 ### Scope
 
-This implementation aims to become one of the OICP reference implementations. Therefore you will find a lot of inline documentation, many test cases and mockups. Beside the obvious implementation of the **Charge Point Operator (CPO)** and **E-Mobility Provider (EMP)** functionalities this software also provides basic functionality of the **Central Service** e.g. for your automated continous integration tests.
+This implementation aims to become one of the OICP reference implementations. Therefore you will find a lot of inline documentation, many test cases and mockups. Beside the obvious implementation of the [Charge Point Operator (CPO)](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3/CPO) and [E-Mobility Provider (EMP)](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3/EMP) functionalities this software also provides basic functionality of the [Central Service](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3/CentralService) e.g. for your automated continous integration tests.
 
 ### Requirements & Configuration
 
