@@ -6,6 +6,10 @@ which is defined and used by [Hubject GmbH](http://www.hubject.com). The focus
 of this protocol are the communication aspects between a central clearing house,
 charge point operators (CPOs) and e-mobility providers (EMPs) in electric mobility.
 
+### Scope
+
+This implementation aims to become one of the OICP reference implementations. Therefore you will find a lot of inline documentation, many test cases and mockups. Beside the obvious implementation of the **Charge Point Operator (CPO)** and **E-Mobility Provider (EMP)** functionalities this software also provides basic functionality of the **Central Service** e.g. for your automated continous integration tests.
+
 ### Requirements & Configuration
 
 1. You need .NET6+
