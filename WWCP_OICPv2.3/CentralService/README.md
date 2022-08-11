@@ -8,20 +8,20 @@ You can e.g. use this for creating automatic continous integration tests of your
 
 When you act as Hubject and receive CPO Client requests.
 
-| Feature                          | Implementation Status    | Test Status                        |
-| -------------------------------- | ------------------------ | ---------------------------------- |
-| PushEVSEData                     | :heavy_check_mark: ready | :broken_heart: more tests required |
-| PushEVSEStatus                   | :heavy_check_mark: ready | :broken_heart: more tests required |
-| PushPricingProductData           | :heavy_check_mark: ready | :broken_heart: more tests required |
-| PushEVSEPricing                  | :heavy_check_mark: ready | :broken_heart: more tests required |
-| PullAuthenticationData           | :heavy_check_mark: ready | :broken_heart: more tests required |
-| AuthorizeStart                   | :heavy_check_mark: ready | :broken_heart: more tests required |
-| AuthorizeStop                    | :heavy_check_mark: ready | :broken_heart: more tests required |
-| SendChargingStartNotification    | :heavy_check_mark: ready | :broken_heart: more tests required |
-| SendChargingProgressNotification | :heavy_check_mark: ready | :broken_heart: more tests required |
-| SendChargingEndNotification      | :heavy_check_mark: ready | :broken_heart: more tests required |
-| SendChargingErrorNotification    | :heavy_check_mark: ready | :broken_heart: more tests required |
-| SendChargeDetailRecord           | :heavy_check_mark: ready | :broken_heart: more tests required |
+| Feature                             | Implementation Status    | Test Status                        |
+| ----------------------------------- | ------------------------ | ---------------------------------- |
+| PushEVSEData                        | :heavy_check_mark: ready | :broken_heart: more tests required |
+| PushEVSEStatus                      | :heavy_check_mark: ready | :broken_heart: more tests required |
+| PushPricingProductData              | :heavy_check_mark: ready | :broken_heart: more tests required |
+| PushEVSEPricing                     | :heavy_check_mark: ready | :broken_heart: more tests required |
+| PullAuthenticationData *(obsolete)* | :heavy_check_mark: ready | :broken_heart: more tests required |
+| AuthorizeStart                      | :heavy_check_mark: ready | :broken_heart: more tests required |
+| AuthorizeStop                       | :heavy_check_mark: ready | :broken_heart: more tests required |
+| SendChargingStartNotification       | :heavy_check_mark: ready | :broken_heart: more tests required |
+| SendChargingProgressNotification    | :heavy_check_mark: ready | :broken_heart: more tests required |
+| SendChargingEndNotification         | :heavy_check_mark: ready | :broken_heart: more tests required |
+| SendChargingErrorNotification       | :heavy_check_mark: ready | :broken_heart: more tests required |
+| SendChargeDetailRecord              | :heavy_check_mark: ready | :broken_heart: more tests required |
 
 
 ### CPO Server API Client Feature Support
