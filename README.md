@@ -6,9 +6,18 @@ which is defined and used by [Hubject GmbH](http://www.hubject.com). The focus
 of this protocol are the communication aspects between a central clearing house,
 charge point operators (CPOs) and e-mobility providers (EMPs) in electric mobility.
 
+
 ### Scope
 
 This implementation aims to become one of the OICP reference implementations. Therefore you will find a lot of inline documentation, many test cases and mockups. Beside the obvious implementation of the [Charge Point Operator (CPO)](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3/CPO) and [E-Mobility Provider (EMP)](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3/EMP) functionalities this software also provides basic functionality of the [Central Service](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3/CentralService) e.g. for your automated continous integration tests.
+
+
+### Versions
+
+- [OICP v2.2](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.2) is deprecated and only left for reference
+- [OICP v2.3](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.3) is deprecated and only left for reference
+- [OICP v2.3 NET6](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
+
 
 ### Requirements & Configuration
 
@@ -18,15 +27,11 @@ This implementation aims to become one of the OICP reference implementations. Th
 
 You can of course skip *2.* and *3.* when you use this software for your (internal) testing purposes only. 
 
-### Versions
-
-- [OICP v2.2](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.2) is deprecated and only left for reference
-- [OICP v2.3](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.3) is deprecated and only left for reference
-- [OICP v2.3 NET6](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
 
 ### Documentation
 
 - Overview on the [OICP v2.3 implementation](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3)
+
 
 ### Your participation
 
