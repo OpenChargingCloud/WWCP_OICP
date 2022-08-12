@@ -236,14 +236,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// </summary>
         /// <param name="OperatorId">An charge point operator identification.</param>
         /// <param name="EMPClient">An EMP client.</param>
-        public EMPClient RegisterOperator(Operator_Id  OperatorId,
-                                          EMPClient    EMPClient)
+        public Boolean RegisterOperator(Operator_Id  OperatorId,
+                                        EMPClient    EMPClient)
         {
-
-            empClients.Add(OperatorId, EMPClient);
-
-            return EMPClient;
-
+            lock (empClients)
+            {
+                return empClients.TryAdd(OperatorId, EMPClient);
+            }
         }
 
         #endregion

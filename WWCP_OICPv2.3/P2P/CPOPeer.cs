@@ -236,14 +236,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// </summary>
         /// <param name="ProviderId">An e-mobility provider identification.</param>
         /// <param name="CPOClient">A CPO client.</param>
-        public CPOClient RegisterProvider(Provider_Id  ProviderId,
-                                          CPOClient    CPOClient)
+        public Boolean RegisterProvider(Provider_Id  ProviderId,
+                                        CPOClient    CPOClient)
         {
-
-            cpoClients.Add(ProviderId, CPOClient);
-
-            return CPOClient;
-
+            lock (cpoClients)
+            {
+                return cpoClients.TryAdd(ProviderId, CPOClient);
+            }
         }
 
         #endregion
