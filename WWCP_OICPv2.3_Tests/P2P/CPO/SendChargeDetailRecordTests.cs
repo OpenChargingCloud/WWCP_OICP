@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
 {
 
     /// <summary>
-    /// CPO sending charge detail records tests.
+    /// P2P CPO sending charge detail records tests.
     /// </summary>
     [TestFixture]
     public class SendChargeDetailRecordTests : AP2PTests

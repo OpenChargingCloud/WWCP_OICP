@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
 {
 
     /// <summary>
-    /// EMP client remote authorization start/stop tests.
+    /// EMP client sending remote authorization start/stop tests.
     /// </summary>
     [TestFixture]
     public class RemoteStartStopTests : ACentralServiceTests

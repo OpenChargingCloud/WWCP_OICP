@@ -249,6 +249,67 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
+        #region AuthorizeRemoteStart(Request, ...)
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStart request.</param>
+        public async Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>
+
+            AuthorizeRemoteStart(AuthorizeRemoteStartRequest  Request)
+
+        {
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.AuthorizeRemoteStart(Request);
+            }
+
+            return new OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>(
+                       Request,
+                       Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region AuthorizeRemoteStop (Request, ...)
+
+        /// <summary>
+        /// Stop a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteStop request.</param>
+        public async Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
+
+            AuthorizeRemoteStop(AuthorizeRemoteStopRequest  Request)
+
+        {
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.AuthorizeRemoteStop(Request);
+            }
+
+            return new OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>(
+                       Request,
+                       Acknowledgement<AuthorizeRemoteStopRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+
         #region Start()
 
         public void Start()

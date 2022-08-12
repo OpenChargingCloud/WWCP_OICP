@@ -249,8 +249,83 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
+        #region AuthorizeStart        (Provider, ...)
+
+        /// <summary>
+        /// Authorize for starting a charging session.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">An AuthorizeStart request.</param>
+        public async Task<OICPResult<AuthorizationStartResponse>>
+
+            AuthorizeStart(Provider_Id            Provider,
+                           AuthorizeStartRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.AuthorizeStart(Request);
+            }
+
+            return new OICPResult<AuthorizationStartResponse>(
+                       Request,
+                       AuthorizationStartResponse.NotAuthorized(
+                           Request,
+                           new StatusCode(
+                               StatusCodes.NoValidContract,
+                               "Unknown e-mobility provider!"
+                           )
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region AuthorizeStop         (Provider, ...)
+
+        /// <summary>
+        /// Authorize for starting a charging session.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">An AuthorizeStop request.</param>
+        public async Task<OICPResult<AuthorizationStopResponse>>
+
+            AuthorizeStop(Provider_Id           Provider,
+                          AuthorizeStopRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.AuthorizeStop(Request);
+            }
+
+            return new OICPResult<AuthorizationStopResponse>(
+                       Request,
+                       AuthorizationStopResponse.NotAuthorized(
+                           Request,
+                           new StatusCode(
+                               StatusCodes.NoValidContract,
+                               "Unknown e-mobility provider!"
+                           )
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
         #region SendChargeDetailRecord(Provider, ...)
 
+        /// <summary>
+        /// Send a charge detail record.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A SendChargeDetailRecord request.</param>
         public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
             SendChargeDetailRecord(Provider_Id                Provider,
