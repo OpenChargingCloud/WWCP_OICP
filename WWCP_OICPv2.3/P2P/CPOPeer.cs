@@ -249,7 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region PushEVSEData          (Provider, Request)
+        #region PushEVSEData                    (Provider, Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region PushEVSEStatus        (Provider, Request)
+        #region PushEVSEStatus                  (Provider, Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -314,7 +314,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region AuthorizeStart        (Provider, Request)
+        #region PushPricingProductData          (Provider, Request)
+
+        /// <summary>
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A PushPricingProductData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
+
+            PushPricingProductData(Provider_Id                    Provider,
+                                   PushPricingProductDataRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.PushPricingProductData(Request);
+            }
+
+            return new OICPResult<Acknowledgement<PushPricingProductDataRequest>>(
+                       Request,
+                       Acknowledgement<PushPricingProductDataRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region PushEVSEPricing                 (Provider, Request)
+
+        /// <summary>
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A PushPricingProductData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
+
+            PushEVSEPricing(Provider_Id             Provider,
+                            PushEVSEPricingRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.PushEVSEPricing(Request);
+            }
+
+            return new OICPResult<Acknowledgement<PushEVSEPricingRequest>>(
+                       Request,
+                       Acknowledgement<PushEVSEPricingRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+
+        #region AuthorizeStart                  (Provider, Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -349,7 +414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region AuthorizeStop         (Provider, Request)
+        #region AuthorizeStop                   (Provider, Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -385,7 +450,136 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region SendChargeDetailRecord(Provider, Request)
+        #region SendChargingStartNotification   (Provider, Request)
+
+        /// <summary>
+        /// Send a charging start notification.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A ChargingStartNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
+
+            SendChargingStartNotification(Provider_Id                       Provider,
+                                          ChargingStartNotificationRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.SendChargingStartNotification(Request);
+            }
+
+            return new OICPResult<Acknowledgement<ChargingStartNotificationRequest>>(
+                       Request,
+                       Acknowledgement<ChargingStartNotificationRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region SendChargingProgressNotification(Provider, Request)
+
+        /// <summary>
+        /// Send a charging progress notification.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A ChargingProgressNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
+
+            SendChargingProgressNotification(Provider_Id                       Provider,
+                                             ChargingProgressNotificationRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.SendChargingProgressNotification(Request);
+            }
+
+            return new OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>(
+                       Request,
+                       Acknowledgement<ChargingProgressNotificationRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region SendChargingEndNotification     (Provider, Request)
+
+        /// <summary>
+        /// Send a charging end notification.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A ChargingEndNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
+
+            SendChargingEndNotification(Provider_Id                     Provider,
+                                        ChargingEndNotificationRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.SendChargingEndNotification(Request);
+            }
+
+            return new OICPResult<Acknowledgement<ChargingEndNotificationRequest>>(
+                       Request,
+                       Acknowledgement<ChargingEndNotificationRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region SendChargingErrorNotification   (Provider, Request)
+
+        /// <summary>
+        /// Send a charging error notification.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A ChargingErrorNotification request.</param>
+        public async Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
+
+            SendChargingErrorNotification(Provider_Id                       Provider,
+                                          ChargingErrorNotificationRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.SendChargingErrorNotification(Request);
+            }
+
+            return new OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>(
+                       Request,
+                       Acknowledgement<ChargingErrorNotificationRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+
+        #region SendChargeDetailRecord          (Provider, Request)
 
         /// <summary>
         /// Send a charge detail record.

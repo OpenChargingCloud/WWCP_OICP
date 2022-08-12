@@ -2686,7 +2686,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region PullAuthenticationData          (Request) [Obsolete]
+        #region PullAuthenticationData          (Request)  [Obsolete!]
 
         /// <summary>
         /// Download provider authentication data.

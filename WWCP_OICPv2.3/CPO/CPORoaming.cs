@@ -1214,12 +1214,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region PullAuthenticationData          (Request)
+        #region PullAuthenticationData          (Request)  [Obsolete!]
 
         /// <summary>
         /// Download provider authentication data.
         /// </summary>
         /// <param name="Request">A PullAuthenticationData request.</param>
+        [Obsolete("PullAuthenticationData was removed from OICP.")]
         public Task<OICPResult<PullAuthenticationDataResponse>>
 
             PullAuthenticationData(PullAuthenticationDataRequest Request)

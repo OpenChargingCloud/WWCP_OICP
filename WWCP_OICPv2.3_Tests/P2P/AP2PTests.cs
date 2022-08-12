@@ -347,7 +347,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             Assert.IsNotNull(empP2P_DEGDF);
             Assert.IsNotNull(empP2P_DEGDF.CPOClientAPI);
 
-            empP2P_DEGDF.CPOClientAPI.OnPushEVSEData       += (timestamp, cpoClientAPI, pushEVSEDataRequest)       => {
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEData                 += (timestamp, cpoClientAPI, pushEVSEDataRequest)   => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -503,7 +503,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnPushEVSEStatus     += (timestamp, cpoClientAPI, pushEVSEStatusRequest)     => {
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEStatus               += (timestamp, cpoClientAPI, pushEVSEStatusRequest) => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -627,7 +627,60 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStart     += (timestamp, cpoClientAPI, authorizeStartRequest)     => {
+            empP2P_DEGDF.CPOClientAPI.OnPushPricingProductData       += (timestamp, cpoClientAPI, pushPricingProductDataRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           new OICPResult<Acknowledgement<PushPricingProductDataRequest>>(
+                               pushPricingProductDataRequest,
+                               new Acknowledgement<PushPricingProductDataRequest>(
+                                   Request:             pushPricingProductDataRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               true,
+                               null,
+                               processId));
+
+            };
+
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEPricing              += (timestamp, cpoClientAPI, pushEVSEPricingRequest)        => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           new OICPResult<Acknowledgement<PushEVSEPricingRequest>>(
+                               pushEVSEPricingRequest,
+                               new Acknowledgement<PushEVSEPricingRequest>(
+                                   Request:             pushEVSEPricingRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               true,
+                               null,
+                               processId));
+
+            };
+
+
+            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStart               += (timestamp, cpoClientAPI, authorizeStartRequest) => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -672,7 +725,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStop      += (timestamp, cpoClientAPI, authorizeStopRequest)      => {
+            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStop                += (timestamp, cpoClientAPI, authorizeStopRequest)  => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -696,7 +749,112 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnChargeDetailRecord += (timestamp, cpoClientAPI, chargeDetailRecordRequest) => {
+            empP2P_DEGDF.CPOClientAPI.OnChargingStartNotification    += (timestamp, cpoClientAPI, chargingStartNotificationRequest)    => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           new OICPResult<Acknowledgement<ChargingStartNotificationRequest>>(
+                               chargingStartNotificationRequest,
+                               new Acknowledgement<ChargingStartNotificationRequest>(
+                                   Request:             chargingStartNotificationRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               true,
+                               null,
+                               processId));
+
+            };
+
+            empP2P_DEGDF.CPOClientAPI.OnChargingProgressNotification += (timestamp, cpoClientAPI, chargingProgressNotificationRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           new OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>(
+                               chargingProgressNotificationRequest,
+                               new Acknowledgement<ChargingProgressNotificationRequest>(
+                                   Request:             chargingProgressNotificationRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               true,
+                               null,
+                               processId));
+
+            };
+
+            empP2P_DEGDF.CPOClientAPI.OnChargingEndNotification      += (timestamp, cpoClientAPI, chargingEndNotificationRequest)      => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           new OICPResult<Acknowledgement<ChargingEndNotificationRequest>>(
+                               chargingEndNotificationRequest,
+                               new Acknowledgement<ChargingEndNotificationRequest>(
+                                   Request:             chargingEndNotificationRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               true,
+                               null,
+                               processId));
+
+            };
+
+            empP2P_DEGDF.CPOClientAPI.OnChargingErrorNotification    += (timestamp, cpoClientAPI, chargingErrorNotificationRequest)    => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           new OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>(
+                               chargingErrorNotificationRequest,
+                               new Acknowledgement<ChargingErrorNotificationRequest>(
+                                   Request:             chargingErrorNotificationRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               true,
+                               null,
+                               processId));
+
+            };
+
+
+            empP2P_DEGDF.CPOClientAPI.OnChargeDetailRecord           += (timestamp, cpoClientAPI, chargeDetailRecordRequest) => {
 
                 var processId = Process_Id.NewRandom;
 
