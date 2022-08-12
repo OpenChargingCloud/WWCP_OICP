@@ -68,13 +68,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         public CPOClientAPI  CPOClientAPI    { get; }
 
 
-        private readonly HashSet<EMPClient> cpoClients;
-
-        /// <summary>
-        /// All EMP clients.
-        /// </summary>
-        public IEnumerable<EMPClient> EMPClients
-            => cpoClients;
+        public readonly Dictionary<Operator_Id, EMPClient> EMPClients;
 
         #endregion
 
@@ -85,17 +79,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public HTTPRequestLogEvent   RequestLog    = new ();
+        public HTTPRequestLogEvent   RequestLog
+            => httpAPI.RequestLog;
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public HTTPResponseLogEvent  ResponseLog   = new ();
+        public HTTPResponseLogEvent  ResponseLog
+            => httpAPI.ResponseLog;
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public HTTPErrorLogEvent     ErrorLog      = new ();
+        public HTTPErrorLogEvent     ErrorLog
+            => httpAPI.ErrorLog;
 
         #endregion
 
@@ -222,14 +219,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
                                                          }.AsImmutable);
                                                  });
 
-            this.CPOClientAPI          = new CPOClientAPI(httpAPI);
-
-            // Link HTTP events...
-            CPOClientAPI.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            CPOClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            CPOClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
-
-            this.cpoClients            = new HashSet<EMPClient>();
+            this.CPOClientAPI  = new CPOClientAPI(httpAPI);
+            this.EMPClients    = new Dictionary<Operator_Id, EMPClient>();
 
             if (Autostart)
                 httpAPI.Start();
@@ -290,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
             }
 
-            foreach (var cpoClient in EMPClients)
+            foreach (var cpoClient in EMPClients.Values)
                 cpoClient.Dispose();
 
         }

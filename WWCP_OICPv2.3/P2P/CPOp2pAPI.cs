@@ -68,13 +68,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         public EMPClientAPI  EMPClientAPI    { get; }
 
 
-        private readonly HashSet<CPOClient> cpoClients;
+        public readonly Dictionary<Provider_Id, CPOClient> CPOClients;
 
-        /// <summary>
-        /// All CPO clients.
-        /// </summary>
-        public IEnumerable<CPOClient> CPOClients
-            => cpoClients;
 
         #endregion
 
@@ -85,17 +80,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public HTTPRequestLogEvent   RequestLog    = new ();
+        public HTTPRequestLogEvent   RequestLog
+            => httpAPI.RequestLog;
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public HTTPResponseLogEvent  ResponseLog   = new ();
+        public HTTPResponseLogEvent  ResponseLog
+            => httpAPI.ResponseLog;
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public HTTPErrorLogEvent     ErrorLog      = new ();
+        public HTTPErrorLogEvent     ErrorLog
+            => httpAPI.ErrorLog;
 
         #endregion
 
@@ -222,17 +220,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
                                                          }.AsImmutable);
                                                  });
 
-            this.EMPClientAPI          = new EMPClientAPI(httpAPI);
-
-            // Link HTTP events...
-            EMPClientAPI.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            EMPClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            EMPClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
-
-            this.cpoClients            = new HashSet<CPOClient>();
+            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
+            this.CPOClients    = new Dictionary<Provider_Id, CPOClient>();
 
             if (Autostart)
                 httpAPI.Start();
+
+        }
+
+        #endregion
+
+
+        #region SendChargeDetailRecord(Provider, ...)
+
+        public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
+
+            SendChargeDetailRecord(Provider_Id                Provider,
+                                   ChargeDetailRecordRequest  Request)
+
+        {
+
+            if (CPOClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.SendChargeDetailRecord(Request);
+            }
+
+            return new OICPResult<Acknowledgement<ChargeDetailRecordRequest>>(
+                       Request,
+                       Acknowledgement<ChargeDetailRecordRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
 
         }
 
@@ -290,7 +310,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
             }
 
-            foreach (var cpoClient in CPOClients)
+            foreach (var cpoClient in CPOClients.Values)
                 cpoClient.Dispose();
 
         }
