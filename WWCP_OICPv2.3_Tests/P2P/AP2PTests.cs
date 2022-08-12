@@ -40,14 +40,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
         #region Data
 
-        protected          CPOPeer?                                            cpoP2P_DEGEF;
-        protected          CPOPeer?                                            cpoP2P_DEBDO;
+        protected          CPOPeer?                                                    cpoP2P_DEGEF;
+        protected          CPOPeer?                                                    cpoP2P_DEBDO;
 
-        protected          EMPPeer?                                            empP2P_DEGDF;
-        protected          EMPPeer?                                            empP2P_DEBDP;
+        protected          EMPPeer?                                                    empP2P_DEGDF;
+        protected          EMPPeer?                                                    empP2P_DEBDP;
 
-        protected readonly Dictionary<Operator_Id, HashSet<EVSEDataRecord>>    EVSEDataRecords;
-        protected readonly Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>  EVSEStatusRecords;
+        protected readonly Dictionary<Operator_Id, HashSet<EVSEDataRecord>>            EVSEDataRecords;
+        protected readonly Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>          EVSEStatusRecords;
+        protected readonly Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>  PricingProductData;
+        protected readonly Dictionary<Operator_Id, HashSet<EVSEPricing>>               EVSEPricings;
 
         #endregion
 
@@ -55,8 +57,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
         public AP2PTests()
         {
-            this.EVSEDataRecords    = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
-            this.EVSEStatusRecords  = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
+
+            this.EVSEDataRecords     = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
+            this.EVSEStatusRecords   = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
+            this.PricingProductData  = new Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>();
+            this.EVSEPricings        = new Dictionary<Operator_Id, HashSet<EVSEPricing>>();
+
         }
 
         #endregion
@@ -631,21 +637,156 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
                 var processId = Process_Id.NewRandom;
 
+                switch (pushPricingProductDataRequest.Action)
+                {
+
+                    case ActionTypes.FullLoad:
+                        {
+
+                            if (!PricingProductData.ContainsKey(pushPricingProductDataRequest.OperatorId))
+                                PricingProductData.Add(pushPricingProductDataRequest.OperatorId, new HashSet<PricingProductDataRecord>(pushPricingProductDataRequest.PricingProductDataRecords));
+
+                            else
+                            {
+
+                                PricingProductData[pushPricingProductDataRequest.OperatorId].Clear();
+
+                                foreach (var pricingProductDataRecord in pushPricingProductDataRequest.PricingProductDataRecords)
+                                    PricingProductData[pushPricingProductDataRequest.OperatorId].Add(pricingProductDataRecord);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Update:
+                        {
+
+                            // Update NOT Insert
+
+                            if (!PricingProductData.ContainsKey(pushPricingProductDataRequest.OperatorId))
+                                PricingProductData.Add(pushPricingProductDataRequest.OperatorId, new HashSet<PricingProductDataRecord>(pushPricingProductDataRequest.PricingProductDataRecords));
+
+                            else
+                            {
+
+                                PartnerProduct_Id? missing = default;
+
+                                var allEVSEIds = PricingProductData[pushPricingProductDataRequest.OperatorId].Select(pricingProductDataRecord => pricingProductDataRecord.ProductId).ToHashSet();
+
+                                foreach (var pricingProductDataRecord in pushPricingProductDataRequest.PricingProductDataRecords)
+                                {
+
+                                    missing = pushPricingProductDataRequest.PricingProductDataRecords.FirstOrDefault(pricingProductDataRecord => !allEVSEIds.Contains(pricingProductDataRecord.ProductId))?.ProductId;
+
+                                    if (missing.HasValue)
+                                        return Task.FromResult(
+                                                    OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                        pushPricingProductDataRequest,
+                                                        Acknowledgement<PushPricingProductDataRequest>.DataError(
+                                                            Request: pushPricingProductDataRequest,
+                                                            StatusCodeDescription: "EVSE pricing product data record for update not found: " + missing.Value.ToString(),
+                                                            StatusCodeAdditionalInfo: null,
+                                                            ResponseTimestamp: Timestamp.Now,
+                                                            EventTrackingId: EventTracking_Id.New,
+                                                            Runtime: TimeSpan.FromMilliseconds(2),
+                                                            ProcessId: processId,
+                                                            HTTPResponse: null,
+                                                            CustomData: null
+                                                        ),
+                                                        processId
+                                                    )
+                                                );
+
+                                }
+
+                                foreach (var pricingProductDataRecord in pushPricingProductDataRequest.PricingProductDataRecords)
+                                    PricingProductData[pushPricingProductDataRequest.OperatorId].Add(pricingProductDataRecord);
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Insert:
+                        {
+
+                            // Will fail if the EVSE data record already exists!
+
+                            if (!PricingProductData.ContainsKey(pushPricingProductDataRequest.OperatorId))
+                                PricingProductData.Add(pushPricingProductDataRequest.OperatorId, new HashSet<PricingProductDataRecord>(pushPricingProductDataRequest.PricingProductDataRecords));
+
+                            else
+                            {
+
+                                PartnerProduct_Id? duplicate = default;
+
+                                var allEVSEIds = PricingProductData[pushPricingProductDataRequest.OperatorId].Select(pricingProductDataRecord => pricingProductDataRecord.ProductId).ToHashSet();
+
+                                foreach (var pricingProductDataRecord in pushPricingProductDataRequest.PricingProductDataRecords)
+                                {
+
+                                    duplicate = pushPricingProductDataRequest.PricingProductDataRecords.FirstOrDefault(pricingProductDataRecord => allEVSEIds.Contains(pricingProductDataRecord.ProductId))?.ProductId;
+
+                                    if (duplicate.HasValue)
+                                        return Task.FromResult(
+                                                    OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                        pushPricingProductDataRequest,
+                                                        Acknowledgement<PushPricingProductDataRequest>.DataError(
+                                                            Request: pushPricingProductDataRequest,
+                                                            StatusCodeDescription: "EVSE pricing product data record '" + duplicate.Value.ToString() + "' already exists!'",
+                                                            StatusCodeAdditionalInfo: null,
+                                                            ResponseTimestamp: Timestamp.Now,
+                                                            EventTrackingId: EventTracking_Id.New,
+                                                            Runtime: TimeSpan.FromMilliseconds(2),
+                                                            ProcessId: processId,
+                                                            HTTPResponse: null,
+                                                            CustomData: null
+                                                        ),
+                                                        processId
+                                                    )
+                                                );
+
+                                }
+
+                                foreach (var pricingProductDataRecord in pushPricingProductDataRequest.PricingProductDataRecords)
+                                    PricingProductData[pushPricingProductDataRequest.OperatorId].Add(pricingProductDataRecord);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Delete:
+                        {
+
+                            if (PricingProductData.ContainsKey(pushPricingProductDataRequest.OperatorId))
+                            {
+
+                                foreach (var pricingProductDataRecord in pushPricingProductDataRequest.PricingProductDataRecords)
+                                    PricingProductData[pushPricingProductDataRequest.OperatorId].Remove(pricingProductDataRecord);
+
+                            }
+
+                        }
+                        break;
+
+                }
+
                 return Task.FromResult(
                            new OICPResult<Acknowledgement<PushPricingProductDataRequest>>(
                                pushPricingProductDataRequest,
                                new Acknowledgement<PushPricingProductDataRequest>(
-                                   Request:             pushPricingProductDataRequest,
-                                   ResponseTimestamp:   Timestamp.Now,
-                                   EventTrackingId:     EventTracking_Id.New,
-                                   Runtime:             TimeSpan.FromMilliseconds(2),
-                                   StatusCode:          new StatusCode(
+                                   Request: pushPricingProductDataRequest,
+                                   ResponseTimestamp: Timestamp.Now,
+                                   EventTrackingId: EventTracking_Id.New,
+                                   Runtime: TimeSpan.FromMilliseconds(2),
+                                   StatusCode: new StatusCode(
                                                             StatusCodes.Success
                                                         ),
-                                   HTTPResponse:        null,
-                                   Result:              true,
-                                   ProcessId:           processId,
-                                   CustomData:          null
+                                   HTTPResponse: null,
+                                   Result: true,
+                                   ProcessId: processId,
+                                   CustomData: null
                                ),
                                true,
                                null,
@@ -657,21 +798,156 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
                 var processId = Process_Id.NewRandom;
 
+                switch (pushEVSEPricingRequest.Action)
+                {
+
+                    case ActionTypes.FullLoad:
+                        {
+
+                            if (!EVSEPricings.ContainsKey(pushEVSEPricingRequest.OperatorId))
+                                EVSEPricings.Add(pushEVSEPricingRequest.OperatorId, new HashSet<EVSEPricing>(pushEVSEPricingRequest.EVSEPricing));
+
+                            else
+                            {
+
+                                EVSEPricings[pushEVSEPricingRequest.OperatorId].Clear();
+
+                                foreach (var evsePricing in pushEVSEPricingRequest.EVSEPricing)
+                                    EVSEPricings[pushEVSEPricingRequest.OperatorId].Add(evsePricing);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Update:
+                        {
+
+                            // Update NOT Insert
+
+                            if (!EVSEPricings.ContainsKey(pushEVSEPricingRequest.OperatorId))
+                                EVSEPricings.Add(pushEVSEPricingRequest.OperatorId, new HashSet<EVSEPricing>(pushEVSEPricingRequest.EVSEPricing));
+
+                            else
+                            {
+
+                                EVSE_Id? missing = default;
+
+                                var allEVSEIds = EVSEPricings[pushEVSEPricingRequest.OperatorId].Select(evsePricing => evsePricing.EVSEId).ToHashSet();
+
+                                foreach (var evsePricing in pushEVSEPricingRequest.EVSEPricing)
+                                {
+
+                                    missing = pushEVSEPricingRequest.EVSEPricing.FirstOrDefault(evsePricing => !allEVSEIds.Contains(evsePricing.EVSEId))?.EVSEId;
+
+                                    if (missing.HasValue)
+                                        return Task.FromResult(
+                                                    OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                        pushEVSEPricingRequest,
+                                                        Acknowledgement<PushEVSEPricingRequest>.DataError(
+                                                            Request: pushEVSEPricingRequest,
+                                                            StatusCodeDescription: "EVSE pricing record for update not found: " + missing.Value.ToString(),
+                                                            StatusCodeAdditionalInfo: null,
+                                                            ResponseTimestamp: Timestamp.Now,
+                                                            EventTrackingId: EventTracking_Id.New,
+                                                            Runtime: TimeSpan.FromMilliseconds(2),
+                                                            ProcessId: processId,
+                                                            HTTPResponse: null,
+                                                            CustomData: null
+                                                        ),
+                                                        processId
+                                                    )
+                                                );
+
+                                }
+
+                                foreach (var evsePricing in pushEVSEPricingRequest.EVSEPricing)
+                                    EVSEPricings[pushEVSEPricingRequest.OperatorId].Add(evsePricing);
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Insert:
+                        {
+
+                            // Will fail if the EVSE data record already exists!
+
+                            if (!EVSEPricings.ContainsKey(pushEVSEPricingRequest.OperatorId))
+                                EVSEPricings.Add(pushEVSEPricingRequest.OperatorId, new HashSet<EVSEPricing>(pushEVSEPricingRequest.EVSEPricing));
+
+                            else
+                            {
+
+                                EVSE_Id? duplicate = default;
+
+                                var allEVSEIds = EVSEPricings[pushEVSEPricingRequest.OperatorId].Select(evsePricing => evsePricing.EVSEId).ToHashSet();
+
+                                foreach (var evsePricing in pushEVSEPricingRequest.EVSEPricing)
+                                {
+
+                                    duplicate = pushEVSEPricingRequest.EVSEPricing.FirstOrDefault(evsePricing => allEVSEIds.Contains(evsePricing.EVSEId))?.EVSEId;
+
+                                    if (duplicate.HasValue)
+                                        return Task.FromResult(
+                                                    OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                        pushEVSEPricingRequest,
+                                                        Acknowledgement<PushEVSEPricingRequest>.DataError(
+                                                            Request: pushEVSEPricingRequest,
+                                                            StatusCodeDescription: "EVSE pricing record '" + duplicate.Value.ToString() + "' already exists!'",
+                                                            StatusCodeAdditionalInfo: null,
+                                                            ResponseTimestamp: Timestamp.Now,
+                                                            EventTrackingId: EventTracking_Id.New,
+                                                            Runtime: TimeSpan.FromMilliseconds(2),
+                                                            ProcessId: processId,
+                                                            HTTPResponse: null,
+                                                            CustomData: null
+                                                        ),
+                                                        processId
+                                                    )
+                                                );
+
+                                }
+
+                                foreach (var evsePricing in pushEVSEPricingRequest.EVSEPricing)
+                                    EVSEPricings[pushEVSEPricingRequest.OperatorId].Add(evsePricing);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Delete:
+                        {
+
+                            if (EVSEPricings.ContainsKey(pushEVSEPricingRequest.OperatorId))
+                            {
+
+                                foreach (var evsePricing in pushEVSEPricingRequest.EVSEPricing)
+                                    EVSEPricings[pushEVSEPricingRequest.OperatorId].Remove(evsePricing);
+
+                            }
+
+                        }
+                        break;
+
+                }
+
                 return Task.FromResult(
                            new OICPResult<Acknowledgement<PushEVSEPricingRequest>>(
                                pushEVSEPricingRequest,
                                new Acknowledgement<PushEVSEPricingRequest>(
-                                   Request:             pushEVSEPricingRequest,
-                                   ResponseTimestamp:   Timestamp.Now,
-                                   EventTrackingId:     EventTracking_Id.New,
-                                   Runtime:             TimeSpan.FromMilliseconds(2),
-                                   StatusCode:          new StatusCode(
+                                   Request: pushEVSEPricingRequest,
+                                   ResponseTimestamp: Timestamp.Now,
+                                   EventTrackingId: EventTracking_Id.New,
+                                   Runtime: TimeSpan.FromMilliseconds(2),
+                                   StatusCode: new StatusCode(
                                                             StatusCodes.Success
                                                         ),
-                                   HTTPResponse:        null,
-                                   Result:              true,
-                                   ProcessId:           processId,
-                                   CustomData:          null
+                                   HTTPResponse: null,
+                                   Result: true,
+                                   ProcessId: processId,
+                                   CustomData: null
                                ),
                                true,
                                null,
