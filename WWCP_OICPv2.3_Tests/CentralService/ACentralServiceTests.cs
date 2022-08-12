@@ -927,6 +927,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             #region EMPClientAPI delegates...
 
+            // PullEVSEData
+
+            // PullEVSEStatus
+
+            // PullEVSEStatusById
+
+            // PullEVSEStatusByOperatorId
+
+
+            // PullPricingProductData
+
+            // PullEVSEPricing
+
+
+            // PushAuthenticationData
+
+
             centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStart += async (timestamp, sender, authorizeRemoteReservationStartRequest) => {
 
                 var processId = Process_Id.NewRandom;

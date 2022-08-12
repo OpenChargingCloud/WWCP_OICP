@@ -101,6 +101,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             Assert.IsNotNull(cpoP2P_DEGEF.EMPClientAPI);
 
 
+            // PullEVSEData
+
+            // PullEVSEStatus
+
+            // PullEVSEStatusById
+
+            // PullEVSEStatusByOperatorId
+
+
+            // PullPricingProductData
+
+            // PullEVSEPricing
+
+
+            // PushAuthenticationData
+
+
             cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
 
                 if (authorizeRemoteReservationStartRequest.Identification is not null)
@@ -337,6 +354,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                 };
 
             };
+
+
+            // GetChargeDetailRecords
 
             #endregion
 
