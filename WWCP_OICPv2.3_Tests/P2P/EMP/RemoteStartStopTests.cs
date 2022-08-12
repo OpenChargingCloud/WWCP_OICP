@@ -19,9 +19,6 @@
 
 using NUnit.Framework;
 
-using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP

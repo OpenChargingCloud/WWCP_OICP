@@ -41,7 +41,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
     /// The CPO p2p combines the CPOClient(s) and EMPClientAPI
     /// and adds additional logging for all.
     /// </summary>
-    public class CPOp2pAPI
+    public class CPOPeer
     {
 
         #region Data
@@ -107,49 +107,49 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <summary>
         /// Create a new CPO p2p service.
         /// </summary>
-        public CPOp2pAPI(HTTPHostname?                         HTTPHostname                       = null,
-                         String?                               ExternalDNSName                    = null,
-                         IPPort?                               HTTPServerPort                     = null,
-                         HTTPPath?                             BasePath                           = null,
-                         String?                               HTTPServerName                     = DefaultHTTPServerName,
+        public CPOPeer(HTTPHostname?                         HTTPHostname                       = null,
+                       String?                               ExternalDNSName                    = null,
+                       IPPort?                               HTTPServerPort                     = null,
+                       HTTPPath?                             BasePath                           = null,
+                       String?                               HTTPServerName                     = DefaultHTTPServerName,
 
-                         HTTPPath?                             URLPathPrefix                      = null,
-                         String?                               HTTPServiceName                    = DefaultHTTPServiceName,
-                         String?                               HTMLTemplate                       = null,
-                         JObject?                              APIVersionHashes                   = null,
-                         ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
-                         RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
-                         LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
-                         SslProtocols?                         AllowedTLSProtocols                = null,
-                         Boolean?                              ClientCertificateRequired          = null,
-                         Boolean?                              CheckCertificateRevocation         = null,
+                       HTTPPath?                             URLPathPrefix                      = null,
+                       String?                               HTTPServiceName                    = DefaultHTTPServiceName,
+                       String?                               HTMLTemplate                       = null,
+                       JObject?                              APIVersionHashes                   = null,
+                       ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
+                       RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
+                       LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
+                       SslProtocols?                         AllowedTLSProtocols                = null,
+                       Boolean?                              ClientCertificateRequired          = null,
+                       Boolean?                              CheckCertificateRevocation         = null,
 
-                         String?                               ServerThreadName                   = null,
-                         ThreadPriority?                       ServerThreadPriority               = null,
-                         Boolean?                              ServerThreadIsBackground           = null,
-                         ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
-                         ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
-                         ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
-                         Boolean?                              ConnectionThreadsAreBackground     = null,
-                         TimeSpan?                             ConnectionTimeout                  = null,
-                         UInt32?                               MaxClientConnections               = null,
+                       String?                               ServerThreadName                   = null,
+                       ThreadPriority?                       ServerThreadPriority               = null,
+                       Boolean?                              ServerThreadIsBackground           = null,
+                       ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
+                       ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
+                       ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
+                       Boolean?                              ConnectionThreadsAreBackground     = null,
+                       TimeSpan?                             ConnectionTimeout                  = null,
+                       UInt32?                               MaxClientConnections               = null,
 
-                         Boolean?                              DisableMaintenanceTasks            = null,
-                         TimeSpan?                             MaintenanceInitialDelay            = null,
-                         TimeSpan?                             MaintenanceEvery                   = null,
+                       Boolean?                              DisableMaintenanceTasks            = null,
+                       TimeSpan?                             MaintenanceInitialDelay            = null,
+                       TimeSpan?                             MaintenanceEvery                   = null,
 
-                         Boolean?                              DisableWardenTasks                 = null,
-                         TimeSpan?                             WardenInitialDelay                 = null,
-                         TimeSpan?                             WardenCheckEvery                   = null,
+                       Boolean?                              DisableWardenTasks                 = null,
+                       TimeSpan?                             WardenInitialDelay                 = null,
+                       TimeSpan?                             WardenCheckEvery                   = null,
 
-                         Boolean?                              IsDevelopment                      = null,
-                         IEnumerable<String>?                  DevelopmentServers                 = null,
-                         Boolean?                              DisableLogging                     = null,
-                         String?                               LoggingPath                        = null,
-                         String?                               LogfileName                        = null,
-                         LogfileCreatorDelegate?               LogfileCreator                     = null,
-                         DNSClient?                            DNSClient                          = null,
-                         Boolean                               Autostart                          = false)
+                       Boolean?                              IsDevelopment                      = null,
+                       IEnumerable<String>?                  DevelopmentServers                 = null,
+                       Boolean?                              DisableLogging                     = null,
+                       String?                               LoggingPath                        = null,
+                       String?                               LogfileName                        = null,
+                       LogfileCreatorDelegate?               LogfileCreator                     = null,
+                       DNSClient?                            DNSClient                          = null,
+                       Boolean                               Autostart                          = false)
 
         {
 
@@ -249,7 +249,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region AuthorizeStart        (Provider, ...)
+        #region PushEVSEData          (Provider, Request)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A PushEVSEData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(Provider_Id          Provider,
+                         PushEVSEDataRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.PushEVSEData(Request);
+            }
+
+            return new OICPResult<Acknowledgement<PushEVSEDataRequest>>(
+                       Request,
+                       Acknowledgement<PushEVSEDataRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region PushEVSEStatus        (Provider, Request)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A PushEVSEStatus request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(Provider_Id          Provider,
+                         PushEVSEStatusRequest  Request)
+
+        {
+
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            {
+                return await cpoClient.PushEVSEStatus(Request);
+            }
+
+            return new OICPResult<Acknowledgement<PushEVSEStatusRequest>>(
+                       Request,
+                       Acknowledgement<PushEVSEStatusRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+
+        #region AuthorizeStart        (Provider, Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -284,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region AuthorizeStop         (Provider, ...)
+        #region AuthorizeStop         (Provider, Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -319,7 +384,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region SendChargeDetailRecord(Provider, ...)
+
+        #region SendChargeDetailRecord(Provider, Request)
 
         /// <summary>
         /// Send a charge detail record.

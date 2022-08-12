@@ -40,11 +40,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
         #region Data
 
-        protected CPOp2pAPI?  cpoP2P_DEGEF;
-        protected CPOp2pAPI?  cpoP2P_DEBDO;
+        protected          CPOPeer?                                            cpoP2P_DEGEF;
+        protected          CPOPeer?                                            cpoP2P_DEBDO;
 
-        protected EMPp2pAPI?  empP2P_DEGDF;
-        protected EMPp2pAPI?  empP2P_DEBDP;
+        protected          EMPPeer?                                            empP2P_DEGDF;
+        protected          EMPPeer?                                            empP2P_DEBDP;
+
+        protected readonly Dictionary<Operator_Id, HashSet<EVSEDataRecord>>    EVSEDataRecords;
+        protected readonly Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>  EVSEStatusRecords;
+
+        #endregion
+
+        #region Constructor(s)
+
+        public AP2PTests()
+        {
+            this.EVSEDataRecords    = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
+            this.EVSEStatusRecords  = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
+        }
 
         #endregion
 
@@ -66,11 +79,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
         {
 
             Timestamp.Reset();
+            EVSEDataRecords.Clear();
 
 
             #region Register CPO "DE*GEF"
 
-            cpoP2P_DEGEF = new CPOp2pAPI(
+            cpoP2P_DEGEF = new CPOPeer(
                                ExternalDNSName:  "open.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(7001),
                                LoggingPath:      "tests",
@@ -323,7 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             #region Register EMP "DE-GDF"
 
-            empP2P_DEGDF = new EMPp2pAPI(
+            empP2P_DEGDF = new EMPPeer(
                                ExternalDNSName:  "open.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(8001),
                                LoggingPath:      "tests",
@@ -333,8 +347,289 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             Assert.IsNotNull(empP2P_DEGDF);
             Assert.IsNotNull(empP2P_DEGDF.CPOClientAPI);
 
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEData       += (timestamp, cpoClientAPI, pushEVSEDataRequest)       => {
 
-            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStart     += (timestamp, empClientAPI, authorizeStartRequest)     => {
+                var processId = Process_Id.NewRandom;
+
+                switch (pushEVSEDataRequest.Action)
+                {
+
+                    case ActionTypes.FullLoad: {
+
+                            if (!EVSEDataRecords.ContainsKey(pushEVSEDataRequest.OperatorId))
+                                EVSEDataRecords.Add(pushEVSEDataRequest.OperatorId, new HashSet<EVSEDataRecord>(pushEVSEDataRequest.EVSEDataRecords));
+
+                            else
+                            {
+
+                                EVSEDataRecords[pushEVSEDataRequest.OperatorId].Clear();
+
+                                foreach (var evseDataRecord in pushEVSEDataRequest.EVSEDataRecords)
+                                    EVSEDataRecords[pushEVSEDataRequest.OperatorId].Add(evseDataRecord);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Update: {
+
+                            // Update NOT Insert
+
+                            if (!EVSEDataRecords.ContainsKey(pushEVSEDataRequest.OperatorId))
+                                EVSEDataRecords.Add(pushEVSEDataRequest.OperatorId, new HashSet<EVSEDataRecord>(pushEVSEDataRequest.EVSEDataRecords));
+
+                            else
+                            {
+
+                                EVSE_Id? missing = default;
+
+                                var allEVSEIds = EVSEDataRecords[pushEVSEDataRequest.OperatorId].Select(evseDataRecord => evseDataRecord.Id).ToHashSet();
+
+                                foreach (var evseDataRecord in pushEVSEDataRequest.EVSEDataRecords)
+                                {
+
+                                    missing = pushEVSEDataRequest.EVSEDataRecords.FirstOrDefault(evseDataRecord => !allEVSEIds.Contains(evseDataRecord.Id))?.Id;
+
+                                    if (missing.HasValue)
+                                        return Task.FromResult(
+                                                    OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                        pushEVSEDataRequest,
+                                                        Acknowledgement<PushEVSEDataRequest>.DataError(
+                                                            Request:                    pushEVSEDataRequest,
+                                                            StatusCodeDescription:     "EVSE data record for update not found: " + missing.Value.ToString(),
+                                                            StatusCodeAdditionalInfo:   null,
+                                                            ResponseTimestamp:          Timestamp.Now,
+                                                            EventTrackingId:            EventTracking_Id.New,
+                                                            Runtime:                    TimeSpan.FromMilliseconds(2),
+                                                            ProcessId:                  processId,
+                                                            HTTPResponse:               null,
+                                                            CustomData:                 null
+                                                        ),
+                                                        processId
+                                                    )
+                                                );
+
+                                }
+
+                                foreach (var evseDataRecord in pushEVSEDataRequest.EVSEDataRecords)
+                                    EVSEDataRecords[pushEVSEDataRequest.OperatorId].Add(evseDataRecord);
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Insert: {
+
+                            // Will fail if the EVSE data record already exists!
+
+                            if (!EVSEDataRecords.ContainsKey(pushEVSEDataRequest.OperatorId))
+                                EVSEDataRecords.Add(pushEVSEDataRequest.OperatorId, new HashSet<EVSEDataRecord>(pushEVSEDataRequest.EVSEDataRecords));
+
+                            else
+                            {
+
+                                EVSE_Id? duplicate = default;
+
+                                var allEVSEIds = EVSEDataRecords[pushEVSEDataRequest.OperatorId].Select(evseDataRecord => evseDataRecord.Id).ToHashSet();
+
+                                foreach (var evseDataRecord in pushEVSEDataRequest.EVSEDataRecords)
+                                {
+
+                                    duplicate = pushEVSEDataRequest.EVSEDataRecords.FirstOrDefault(evseDataRecord => allEVSEIds.Contains(evseDataRecord.Id))?.Id;
+
+                                    if (duplicate.HasValue)
+                                        return Task.FromResult(
+                                                    OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                        pushEVSEDataRequest,
+                                                        Acknowledgement<PushEVSEDataRequest>.DataError(
+                                                            Request:                    pushEVSEDataRequest,
+                                                            StatusCodeDescription:     "EVSE data record '" + duplicate.Value.ToString() + "' already exists!'",
+                                                            StatusCodeAdditionalInfo:   null,
+                                                            ResponseTimestamp:          Timestamp.Now,
+                                                            EventTrackingId:            EventTracking_Id.New,
+                                                            Runtime:                    TimeSpan.FromMilliseconds(2),
+                                                            ProcessId:                  processId,
+                                                            HTTPResponse:               null,
+                                                            CustomData:                 null
+                                                        ),
+                                                        processId
+                                                    )
+                                                );
+
+                                }
+
+                                foreach (var evseDataRecord in pushEVSEDataRequest.EVSEDataRecords)
+                                    EVSEDataRecords[pushEVSEDataRequest.OperatorId].Add(evseDataRecord);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Delete: {
+
+                            if (EVSEDataRecords.ContainsKey(pushEVSEDataRequest.OperatorId)) {
+
+                                foreach (var evseDataRecord in pushEVSEDataRequest.EVSEDataRecords)
+                                    EVSEDataRecords[pushEVSEDataRequest.OperatorId].Remove(evseDataRecord);
+
+                            }
+
+                        }
+                        break;
+
+                }
+
+                return Task.FromResult(
+                           OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(
+                               pushEVSEDataRequest,
+                               new Acknowledgement<PushEVSEDataRequest>(
+                                   Request:             pushEVSEDataRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEStatus     += (timestamp, cpoClientAPI, pushEVSEStatusRequest)     => {
+
+                var processId = Process_Id.NewRandom;
+
+                switch (pushEVSEStatusRequest.Action)
+                {
+
+                    case ActionTypes.FullLoad: {
+
+                            if (!EVSEStatusRecords.ContainsKey(pushEVSEStatusRequest.OperatorId))
+                                EVSEStatusRecords.Add(pushEVSEStatusRequest.OperatorId, new HashSet<EVSEStatusRecord>(pushEVSEStatusRequest.EVSEStatusRecords));
+
+                            else
+                            {
+
+                                EVSEStatusRecords[pushEVSEStatusRequest.OperatorId].Clear();
+
+                                foreach (var evseStatusRecord in pushEVSEStatusRequest.EVSEStatusRecords)
+                                    EVSEStatusRecords[pushEVSEStatusRequest.OperatorId].Add(evseStatusRecord);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Update: {
+
+                            // Update OR Insert
+
+                            if (!EVSEStatusRecords.ContainsKey(pushEVSEStatusRequest.OperatorId))
+                                EVSEStatusRecords.Add(pushEVSEStatusRequest.OperatorId, new HashSet<EVSEStatusRecord>(pushEVSEStatusRequest.EVSEStatusRecords));
+
+                            else
+                                foreach (var evseStatusRecord in pushEVSEStatusRequest.EVSEStatusRecords)
+                                    EVSEStatusRecords[pushEVSEStatusRequest.OperatorId].Add(evseStatusRecord);
+
+                        }
+                        break;
+
+                    case ActionTypes.Insert: {
+
+                            // Will fail if the EVSE data record already exists!
+
+                            if (!EVSEStatusRecords.ContainsKey(pushEVSEStatusRequest.OperatorId))
+                                EVSEStatusRecords.Add(pushEVSEStatusRequest.OperatorId, new HashSet<EVSEStatusRecord>(pushEVSEStatusRequest.EVSEStatusRecords));
+
+                            else
+                            {
+
+                                EVSE_Id? duplicate = default;
+
+                                var allEVSEIds = EVSEStatusRecords[pushEVSEStatusRequest.OperatorId].Select(evseStatusRecord => evseStatusRecord.Id).ToHashSet();
+
+                                foreach (var evseStatusRecord in pushEVSEStatusRequest.EVSEStatusRecords)
+                                {
+
+                                    duplicate = pushEVSEStatusRequest.EVSEStatusRecords.FirstOrDefault(evseStatusRecord => allEVSEIds.Contains(evseStatusRecord.Id)).Id;
+
+                                    if (duplicate.HasValue)
+                                        return Task.FromResult(
+                                                    OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                        pushEVSEStatusRequest,
+                                                        Acknowledgement<PushEVSEStatusRequest>.DataError(
+                                                            Request:                    pushEVSEStatusRequest,
+                                                            StatusCodeDescription:     "Duplicate EVSE status found: " + duplicate.Value.ToString(),
+                                                            StatusCodeAdditionalInfo:   null,
+                                                            ResponseTimestamp:          Timestamp.Now,
+                                                            EventTrackingId:            EventTracking_Id.New,
+                                                            Runtime:                    TimeSpan.FromMilliseconds(2),
+                                                            ProcessId:                  processId,
+                                                            HTTPResponse:               null,
+                                                            CustomData:                 null
+                                                        ),
+                                                        processId
+                                                    )
+                                                );
+
+                                }
+
+                                foreach (var evseStatusRecord in pushEVSEStatusRequest.EVSEStatusRecords)
+                                    EVSEStatusRecords[pushEVSEStatusRequest.OperatorId].Add(evseStatusRecord);
+
+                            }
+
+                        }
+                        break;
+
+                    case ActionTypes.Delete: {
+
+                            if (EVSEStatusRecords.ContainsKey(pushEVSEStatusRequest.OperatorId)) {
+
+                                foreach (var evseStatusRecord in pushEVSEStatusRequest.EVSEStatusRecords)
+                                    EVSEStatusRecords[pushEVSEStatusRequest.OperatorId].Remove(evseStatusRecord);
+
+                            }
+
+                        }
+                        break;
+
+                }
+
+                return Task.FromResult(
+                           OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(
+                               pushEVSEStatusRequest,
+                               new Acknowledgement<PushEVSEStatusRequest>(
+                                   Request:             pushEVSEStatusRequest,
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   Runtime:             TimeSpan.FromMilliseconds(2),
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   Result:              true,
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+
+            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStart     += (timestamp, cpoClientAPI, authorizeStartRequest)     => {
+
+                var processId = Process_Id.NewRandom;
 
                 if (authorizeStartRequest.Identification.RFIDId?.ToString() == "11223344")
                     return Task.FromResult(
@@ -353,7 +648,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                            Identification.FromUID(UID.Parse("55667788"))
                                        }
                                    ),
-                                   true)
+                                   true,
+                                   null,
+                                   processId)
                            );
 
                 return Task.FromResult(
@@ -368,12 +665,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                    CPOPartnerSessionId:   authorizeStartRequest.CPOPartnerSessionId,
                                    ProviderId:            Provider_Id.Parse("DE-GDF")
                                ),
-                               false)
+                               false,
+                               null,
+                               processId)
                            );
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStop      += (timestamp, empClientAPI, authorizeStopRequest)      => {
+            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStop      += (timestamp, cpoClientAPI, authorizeStopRequest)      => {
+
+                var processId = Process_Id.NewRandom;
 
                 return Task.FromResult(
                            new OICPResult<AuthorizationStopResponse>(
@@ -387,13 +688,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                    "Have a nice day!",
                                    "bye bye!"
                                ),
-                               true)
+                               true,
+                               null,
+                               processId)
                        );
 
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnChargeDetailRecord += (timestamp, cpoServerAPI, chargeDetailRecordRequest) => {
+            empP2P_DEGDF.CPOClientAPI.OnChargeDetailRecord += (timestamp, cpoClientAPI, chargeDetailRecordRequest) => {
+
+                var processId = Process_Id.NewRandom;
 
                 return Task.FromResult(
                            new OICPResult<Acknowledgement<ChargeDetailRecordRequest>>(
@@ -408,9 +713,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                                         ),
                                    HTTPResponse:        null,
                                    Result:              true,
-                                   ProcessId:           Process_Id.NewRandom,
-                                   CustomData:          null),
-                               true));
+                                   ProcessId:           processId,
+                                   CustomData:          null
+                               ),
+                               true,
+                               null,
+                               processId));
 
             };
 
@@ -456,6 +764,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
         }
 
         #endregion
+
 
     }
 
