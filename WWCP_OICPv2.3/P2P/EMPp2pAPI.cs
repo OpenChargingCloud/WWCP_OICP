@@ -49,14 +49,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <summary>
         /// The default HTTP server name.
         /// </summary>
-        public  const              String                  DefaultHTTPServerName           = "Open Charging Cloud - EMP p2p HTTP API";
+        public  const              String                    DefaultHTTPServerName           = "Open Charging Cloud - EMP p2p HTTP API";
 
         /// <summary>
         /// The default HTTP service name.
         /// </summary>
-        public  const              String                  DefaultHTTPServiceName          = "Open Charging Cloud - EMP p2p HTTP API";
+        public  const              String                    DefaultHTTPServiceName          = "Open Charging Cloud - EMP p2p HTTP API";
 
-        private readonly HTTPAPI? httpAPI;
+        private readonly HTTPAPI?                            httpAPI;
+
+        private readonly Dictionary<Operator_Id, EMPClient>  empClients;
 
         #endregion
 
@@ -66,9 +68,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// The CPO client API.
         /// </summary>
         public CPOClientAPI  CPOClientAPI    { get; }
-
-
-        public readonly Dictionary<Operator_Id, EMPClient> EMPClients;
 
         #endregion
 
@@ -220,10 +219,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
                                                  });
 
             this.CPOClientAPI  = new CPOClientAPI(httpAPI);
-            this.EMPClients    = new Dictionary<Operator_Id, EMPClient>();
+            this.empClients    = new Dictionary<Operator_Id, EMPClient>();
 
             if (Autostart)
                 httpAPI.Start();
+
+        }
+
+        #endregion
+
+
+        #region RegisterOperator(OperatorId, EMPClient)
+
+        /// <summary>
+        /// Register the given EMPClient for the given charge point operator identification.
+        /// </summary>
+        /// <param name="OperatorId">An charge point operator identification.</param>
+        /// <param name="EMPClient">An EMP client.</param>
+        public EMPClient RegisterOperator(Operator_Id  OperatorId,
+                                          EMPClient    EMPClient)
+        {
+
+            empClients.Add(OperatorId, EMPClient);
+
+            return EMPClient;
 
         }
 
@@ -281,7 +300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
             }
 
-            foreach (var cpoClient in EMPClients.Values)
+            foreach (var cpoClient in empClients.Values)
                 cpoClient.Dispose();
 
         }

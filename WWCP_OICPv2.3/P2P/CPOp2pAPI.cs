@@ -49,14 +49,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <summary>
         /// The default HTTP server name.
         /// </summary>
-        public  const              String                  DefaultHTTPServerName           = "Open Charging Cloud - CPO p2p HTTP API";
+        public  const              String                    DefaultHTTPServerName           = "Open Charging Cloud - CPO p2p HTTP API";
 
         /// <summary>
         /// The default HTTP service name.
         /// </summary>
-        public  const              String                  DefaultHTTPServiceName          = "Open Charging Cloud - CPO p2p HTTP API";
+        public  const              String                    DefaultHTTPServiceName          = "Open Charging Cloud - CPO p2p HTTP API";
 
-        private readonly HTTPAPI? httpAPI;
+        private readonly HTTPAPI?                            httpAPI;
+
+        private readonly Dictionary<Provider_Id, CPOClient>  cpoClients;
 
         #endregion
 
@@ -66,10 +68,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// The EMP client API.
         /// </summary>
         public EMPClientAPI  EMPClientAPI    { get; }
-
-
-        public readonly Dictionary<Provider_Id, CPOClient> CPOClients;
-
 
         #endregion
 
@@ -221,10 +219,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
                                                  });
 
             this.EMPClientAPI  = new EMPClientAPI(httpAPI);
-            this.CPOClients    = new Dictionary<Provider_Id, CPOClient>();
+            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
 
             if (Autostart)
                 httpAPI.Start();
+
+        }
+
+        #endregion
+
+
+        #region RegisterProvider(ProviderId, CPOClient)
+
+        /// <summary>
+        /// Register the given CPOClient for the given e-mobility provider identification.
+        /// </summary>
+        /// <param name="ProviderId">An e-mobility provider identification.</param>
+        /// <param name="CPOClient">A CPO client.</param>
+        public CPOClient RegisterProvider(Provider_Id  ProviderId,
+                                          CPOClient    CPOClient)
+        {
+
+            cpoClients.Add(ProviderId, CPOClient);
+
+            return CPOClient;
 
         }
 
@@ -240,7 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         {
 
-            if (CPOClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
             {
                 return await cpoClient.SendChargeDetailRecord(Request);
             }
@@ -310,7 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
             }
 
-            foreach (var cpoClient in CPOClients.Values)
+            foreach (var cpoClient in cpoClients.Values)
                 cpoClient.Dispose();
 
         }

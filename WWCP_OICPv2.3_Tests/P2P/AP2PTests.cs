@@ -418,17 +418,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
 
 
-            cpoP2P_DEGEF.CPOClients.Add(Provider_Id.Parse("DE-GDF"),
-                                        new CPOClient(
-                                            URL.Parse("http://127.0.0.1:8001"),
-                                            RequestTimeout: TimeSpan.FromSeconds(10)
-                                        ));
+            cpoP2P_DEGEF.RegisterProvider(Provider_Id.Parse("DE-GDF"),
+                                          new CPOClient(
+                                              URL.Parse("http://127.0.0.1:8001"),
+                                              RequestTimeout: TimeSpan.FromSeconds(10)
+                                          ));
 
-            empP2P_DEGDF.EMPClients.Add(Operator_Id.Parse("DE*GEF"),
-                                        new EMPClient(
-                                            URL.Parse("http://127.0.0.1:7001"),
-                                            RequestTimeout: TimeSpan.FromSeconds(10)
-                                        ));
+            empP2P_DEGDF.RegisterOperator(Operator_Id.Parse("DE*GEF"),
+                                          new EMPClient(
+                                              URL.Parse("http://127.0.0.1:7001"),
+                                              RequestTimeout: TimeSpan.FromSeconds(10)
+                                          ));
 
         }
 
