@@ -249,7 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region PushEVSEData                    (Provider, Request)
+        #region PushEVSEData                    (ProviderId, Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -258,12 +258,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A PushEVSEData request.</param>
         public async Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
 
-            PushEVSEData(Provider_Id          Provider,
+            PushEVSEData(Provider_Id          ProviderId,
                          PushEVSEDataRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.PushEVSEData(Request);
             }
@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region PushEVSEStatus                  (Provider, Request)
+        #region PushEVSEStatus                  (ProviderId, Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -290,12 +290,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A PushEVSEStatus request.</param>
         public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
-            PushEVSEStatus(Provider_Id          Provider,
+            PushEVSEStatus(Provider_Id          ProviderId,
                          PushEVSEStatusRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.PushEVSEStatus(Request);
             }
@@ -314,7 +314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region PushPricingProductData          (Provider, Request)
+        #region PushPricingProductData          (ProviderId, Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -323,12 +323,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A PushPricingProductData request.</param>
         public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
 
-            PushPricingProductData(Provider_Id                    Provider,
+            PushPricingProductData(Provider_Id                    ProviderId,
                                    PushPricingProductDataRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.PushPricingProductData(Request);
             }
@@ -346,7 +346,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region PushEVSEPricing                 (Provider, Request)
+        #region PushEVSEPricing                 (ProviderId, Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -355,12 +355,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A PushPricingProductData request.</param>
         public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
 
-            PushEVSEPricing(Provider_Id             Provider,
+            PushEVSEPricing(Provider_Id             ProviderId,
                             PushEVSEPricingRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.PushEVSEPricing(Request);
             }
@@ -379,7 +379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region AuthorizeStart                  (Provider, Request)
+        #region AuthorizeStart                  (ProviderId, Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -388,12 +388,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">An AuthorizeStart request.</param>
         public async Task<OICPResult<AuthorizationStartResponse>>
 
-            AuthorizeStart(Provider_Id            Provider,
+            AuthorizeStart(Provider_Id            ProviderId,
                            AuthorizeStartRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.AuthorizeStart(Request);
             }
@@ -414,7 +414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region AuthorizeStop                   (Provider, Request)
+        #region AuthorizeStop                   (ProviderId, Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -423,12 +423,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">An AuthorizeStop request.</param>
         public async Task<OICPResult<AuthorizationStopResponse>>
 
-            AuthorizeStop(Provider_Id           Provider,
+            AuthorizeStop(Provider_Id           ProviderId,
                           AuthorizeStopRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.AuthorizeStop(Request);
             }
@@ -450,7 +450,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region SendChargingStartNotification   (Provider, Request)
+        #region SendChargingStartNotification   (ProviderId, Request)
 
         /// <summary>
         /// Send a charging start notification.
@@ -459,12 +459,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A ChargingStartNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
 
-            SendChargingStartNotification(Provider_Id                       Provider,
+            SendChargingStartNotification(Provider_Id                       ProviderId,
                                           ChargingStartNotificationRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.SendChargingStartNotification(Request);
             }
@@ -482,7 +482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region SendChargingProgressNotification(Provider, Request)
+        #region SendChargingProgressNotification(ProviderId, Request)
 
         /// <summary>
         /// Send a charging progress notification.
@@ -491,12 +491,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A ChargingProgressNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
-            SendChargingProgressNotification(Provider_Id                       Provider,
+            SendChargingProgressNotification(Provider_Id                       ProviderId,
                                              ChargingProgressNotificationRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.SendChargingProgressNotification(Request);
             }
@@ -514,7 +514,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region SendChargingEndNotification     (Provider, Request)
+        #region SendChargingEndNotification     (ProviderId, Request)
 
         /// <summary>
         /// Send a charging end notification.
@@ -523,12 +523,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A ChargingEndNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
-            SendChargingEndNotification(Provider_Id                     Provider,
+            SendChargingEndNotification(Provider_Id                     ProviderId,
                                         ChargingEndNotificationRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.SendChargingEndNotification(Request);
             }
@@ -546,7 +546,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region SendChargingErrorNotification   (Provider, Request)
+        #region SendChargingErrorNotification   (ProviderId, Request)
 
         /// <summary>
         /// Send a charging error notification.
@@ -555,12 +555,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A ChargingErrorNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
 
-            SendChargingErrorNotification(Provider_Id                       Provider,
+            SendChargingErrorNotification(Provider_Id                       ProviderId,
                                           ChargingErrorNotificationRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.SendChargingErrorNotification(Request);
             }
@@ -579,7 +579,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region SendChargeDetailRecord          (Provider, Request)
+        #region SendChargeDetailRecord          (ProviderId, Request)
 
         /// <summary>
         /// Send a charge detail record.
@@ -588,12 +588,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// <param name="Request">A SendChargeDetailRecord request.</param>
         public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
-            SendChargeDetailRecord(Provider_Id                Provider,
+            SendChargeDetailRecord(Provider_Id                ProviderId,
                                    ChargeDetailRecordRequest  Request)
 
         {
 
-            if (cpoClients.TryGetValue(Provider, out CPOClient? cpoClient))
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
                 return await cpoClient.SendChargeDetailRecord(Request);
             }

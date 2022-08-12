@@ -249,7 +249,319 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
-        #region AuthorizeRemoteStart(Request, ...)
+        #region PullEVSEData          (OperatorId, Request)
+
+        /// <summary>
+        /// Download EVSE data records.
+        /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
+        /// </summary>
+        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="Request">A PullEVSEData request.</param>
+        public async Task<OICPResult<PullEVSEDataResponse>>
+
+            PullEVSEData(Operator_Id          OperatorId,
+                         PullEVSEDataRequest  Request)
+
+        {
+
+            var processId = Process_Id.NewRandom;
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.PullEVSEData(Request);
+            }
+
+            return OICPResult<PullEVSEDataResponse>.Failed(
+                       Request,
+                       new PullEVSEDataResponse(
+                           Timestamp.Now,
+                           Request.EventTrackingId ?? EventTracking_Id.New,
+                           processId,
+                           TimeSpan.FromMilliseconds(23),
+                           Array.Empty<EVSEDataRecord>(),
+                           Request,
+                           StatusCode: new StatusCode(
+                                           StatusCodes.NoValidContract,
+                                           "Unknown e-mobility provider!"
+                                       )
+                       ),
+                       processId
+                   );
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatus        (OperatorId, Request)
+
+        /// <summary>
+        /// Download EVSE status records.
+        /// The request might have an optional search radius and/or status filter.
+        /// </summary>
+        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="Request">A PullEVSEStatus request.</param>
+        public async Task<OICPResult<PullEVSEStatusResponse>>
+
+            PullEVSEStatus(Operator_Id            OperatorId,
+                           PullEVSEStatusRequest  Request)
+
+        {
+
+            var processId = Process_Id.NewRandom;
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.PullEVSEStatus(Request);
+            }
+
+            return OICPResult<PullEVSEStatusResponse>.Failed(
+                       Request,
+                       new PullEVSEStatusResponse(
+                           Timestamp.Now,
+                           Request.EventTrackingId ?? EventTracking_Id.New,
+                           processId,
+                           TimeSpan.FromMilliseconds(23),
+                           Array.Empty<OperatorEVSEStatus>(),
+                           Request,
+                           StatusCode: new StatusCode(
+                                           StatusCodes.NoValidContract,
+                                           "Unknown e-mobility provider!"
+                                       )
+                       ),
+                       processId
+                   );
+
+        }
+
+        #endregion
+
+        #region PullEVSEStatusById    (OperatorId, Request)
+
+        /// <summary>
+        /// Download the current status of up to 100 EVSEs.
+        /// </summary>
+        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="Request">A PullEVSEStatusById request.</param>
+        public async Task<OICPResult<PullEVSEStatusByIdResponse>>
+
+            PullEVSEStatusById(Operator_Id                OperatorId,
+                               PullEVSEStatusByIdRequest  Request)
+
+        {
+
+            var processId = Process_Id.NewRandom;
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.PullEVSEStatusById(Request);
+            }
+
+            return OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                       Request,
+                       new PullEVSEStatusByIdResponse(
+                           Timestamp.Now,
+                           Request.EventTrackingId ?? EventTracking_Id.New,
+                           processId,
+                           TimeSpan.FromMilliseconds(23),
+                           Array.Empty<EVSEStatusRecord>(),
+                           Request,
+                           StatusCode: new StatusCode(
+                                           StatusCodes.NoValidContract,
+                                           "Unknown e-mobility provider!"
+                                       )
+                       ),
+                       processId
+                   );
+
+        }
+
+        #endregion
+
+        // PullEVSEStatusByOperatorId is redundant within p2p!
+
+
+        #region PullPricingProductData(OperatorId, Request)
+
+        /// <summary>
+        /// Download EVSE data records.
+        /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
+        /// </summary>
+        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="Request">A PullPricingProductData request.</param>
+        public async Task<OICPResult<PullPricingProductDataResponse>>
+
+            PullPricingProductData(Operator_Id                    OperatorId,
+                                   PullPricingProductDataRequest  Request)
+
+        {
+
+            var processId = Process_Id.NewRandom;
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.PullPricingProductData(Request);
+            }
+
+            return OICPResult<PullPricingProductDataResponse>.Failed(
+                       Request,
+                       new PullPricingProductDataResponse(
+                           Timestamp.Now,
+                           Request.EventTrackingId ?? EventTracking_Id.New,
+                           processId,
+                           TimeSpan.FromMilliseconds(23),
+                           Array.Empty<PricingProductData>(),
+                           Request,
+                           StatusCode: new StatusCode(
+                                           StatusCodes.NoValidContract,
+                                           "Unknown e-mobility provider!"
+                                       )
+                       ),
+                       processId
+                   );
+
+        }
+
+        #endregion
+
+        #region PullEVSEPricing       (OperatorId, Request)
+
+        /// <summary>
+        /// Download EVSE data records.
+        /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
+        /// </summary>
+        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="Request">A PullEVSEPricing request.</param>
+        public async Task<OICPResult<PullEVSEPricingResponse>>
+
+            PullEVSEPricing(Operator_Id             OperatorId,
+                            PullEVSEPricingRequest  Request)
+
+        {
+
+            var processId = Process_Id.NewRandom;
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.PullEVSEPricing(Request);
+            }
+
+            return OICPResult<PullEVSEPricingResponse>.Failed(
+                       Request,
+                       new PullEVSEPricingResponse(
+                           Timestamp.Now,
+                           Request.EventTrackingId ?? EventTracking_Id.New,
+                           processId,
+                           TimeSpan.FromMilliseconds(23),
+                           Array.Empty<OperatorEVSEPricing>(),
+                           Request,
+                           StatusCode: new StatusCode(
+                                           StatusCodes.NoValidContract,
+                                           "Unknown e-mobility provider!"
+                                       )
+                       ),
+                       processId
+                   );
+
+        }
+
+        #endregion
+
+
+        #region PushAuthenticationData(OperatorId, Request)
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
+        public async Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
+
+            PushAuthenticationData(Operator_Id                    OperatorId,
+                                   PushAuthenticationDataRequest  Request)
+
+        {
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.PushAuthenticationData(Request);
+            }
+
+            return new OICPResult<Acknowledgement<PushAuthenticationDataRequest>>(
+                       Request,
+                       Acknowledgement<PushAuthenticationDataRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+
+        #region AuthorizeRemoteReservationStart   (Request)
+
+        /// <summary>
+        /// Start a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
+        public async Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
+
+            AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request)
+
+        {
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.AuthorizeRemoteReservationStart(Request);
+            }
+
+            return new OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>(
+                       Request,
+                       Acknowledgement<AuthorizeRemoteReservationStartRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+        #region AuthorizeRemoteReservationStop    (Request)
+
+        /// <summary>
+        /// Stop a charging session at the given EVSE.
+        /// </summary>
+        /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
+        public async Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
+
+            AuthorizeRemoteReservationStop(AuthorizeRemoteReservationStopRequest  Request)
+
+        {
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.AuthorizeRemoteReservationStop(Request);
+            }
+
+            return new OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>(
+                       Request,
+                       Acknowledgement<AuthorizeRemoteReservationStopRequest>.NoValidContract(
+                           Request,
+                           "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+
+        #region AuthorizeRemoteStart              (Request)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
@@ -279,7 +591,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region AuthorizeRemoteStop (Request, ...)
+        #region AuthorizeRemoteStop               (Request)
 
         /// <summary>
         /// Stop a charging session at the given EVSE.
@@ -303,6 +615,50 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
                            "Unknown e-mobility provider!"
                        ),
                        false
+                   );
+
+        }
+
+        #endregion
+
+
+        #region GetChargeDetailRecords(OperatorId, Request)
+
+        /// <summary>
+        /// Download EVSE data records.
+        /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
+        /// </summary>
+        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="Request">A GetChargeDetailRecords request.</param>
+        public async Task<OICPResult<GetChargeDetailRecordsResponse>>
+
+            GetChargeDetailRecords(Operator_Id                    OperatorId,
+                                   GetChargeDetailRecordsRequest  Request)
+
+        {
+
+            var processId = Process_Id.NewRandom;
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+                return await empClient.GetChargeDetailRecords(Request);
+            }
+
+            return OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                       Request,
+                       new GetChargeDetailRecordsResponse(
+                           Timestamp.Now,
+                           Request.EventTrackingId ?? EventTracking_Id.New,
+                           processId,
+                           TimeSpan.FromMilliseconds(23),
+                           Array.Empty<ChargeDetailRecord>(),
+                           Request,
+                           StatusCode: new StatusCode(
+                                           StatusCodes.NoValidContract,
+                                           "Unknown e-mobility provider!"
+                                       )
+                       ),
+                       processId
                    );
 
         }
