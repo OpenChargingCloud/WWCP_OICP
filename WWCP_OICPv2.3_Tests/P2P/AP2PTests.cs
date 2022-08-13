@@ -50,6 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
         protected readonly Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>          EVSEStatusRecords;
         protected readonly Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>  PricingProductData;
         protected readonly Dictionary<Operator_Id, HashSet<EVSEPricing>>               EVSEPricings;
+        protected readonly Dictionary<Operator_Id, HashSet<ChargeDetailRecord>>        ChargeDetailRecords;
 
         #endregion
 
@@ -58,10 +59,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
         public AP2PTests()
         {
 
-            this.EVSEDataRecords     = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
-            this.EVSEStatusRecords   = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
-            this.PricingProductData  = new Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>();
-            this.EVSEPricings        = new Dictionary<Operator_Id, HashSet<EVSEPricing>>();
+            this.EVSEDataRecords      = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
+            this.EVSEStatusRecords    = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
+            this.PricingProductData   = new Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>();
+            this.EVSEPricings         = new Dictionary<Operator_Id, HashSet<EVSEPricing>>();
+            this.ChargeDetailRecords  = new Dictionary<Operator_Id, HashSet<ChargeDetailRecord>>();
 
         }
 
@@ -101,24 +103,216 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             Assert.IsNotNull(cpoP2P_DEGEF.EMPClientAPI);
 
 
-            // PullEVSEData
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEData                    += (timestamp, empClientAPI, pullEVSEDataRequest)               => {
 
-            // PullEVSEStatus
+                var processId = Process_Id.NewRandom;
 
-            // PullEVSEStatusById
+                return Task.FromResult(
+                           OICPResult<PullEVSEDataResponse>.Success(
+                               pullEVSEDataRequest,
+                               new PullEVSEDataResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   EVSEDataRecords:     EVSEDataRecords.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                            ? EVSEDataRecords[Operator_Id.Parse("DE*GEF")]
+                                                            : Array.Empty<EVSEDataRecord>(),
+                                   Request:             pullEVSEDataRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null,
+                                   Warnings:            null
+                               ),
+                               processId
+                           )
+                       );
 
-            // PullEVSEStatusByOperatorId
+            };
+
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEStatus                  += (timestamp, empClientAPI, pullEVSEStatusRequest)             => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEStatusResponse>.Success(
+                               pullEVSEStatusRequest,
+                               new PullEVSEStatusResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   new OperatorEVSEStatus[] {
+                                       new OperatorEVSEStatus(EVSEDataRecords.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                                  ? EVSEStatusRecords[Operator_Id.Parse("DE*GEF")]
+                                                                  : Array.Empty<EVSEStatusRecord>(),
+                                                              Operator_Id.Parse("DE*GEF"),
+                                                              "GraphDefined")
+                                   },
+                                   Request:             pullEVSEStatusRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEStatusById              += (timestamp, empClientAPI, pullEVSEStatusByIdRequest)         => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEStatusByIdResponse>.Success(
+                               pullEVSEStatusByIdRequest,
+                               new PullEVSEStatusByIdResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   Array.Empty<EVSEStatusRecord>(),
+                                   Request:             pullEVSEStatusByIdRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEStatusByOperatorId      += (timestamp, empClientAPI, pullEVSEStatusByOperatorIdRequest) => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(
+                               pullEVSEStatusByOperatorIdRequest,
+                               new PullEVSEStatusByOperatorIdResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   Array.Empty<OperatorEVSEStatus>(),
+                                   Request:             pullEVSEStatusByOperatorIdRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
 
 
-            // PullPricingProductData
+            cpoP2P_DEGEF.EMPClientAPI.OnPullPricingProductData          += (timestamp, empClientAPI, pullPricingProductDataRequest) => {
 
-            // PullEVSEPricing
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullPricingProductDataResponse>.Success(
+                               pullPricingProductDataRequest,
+                               new PullPricingProductDataResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   PricingProductData:  new PricingProductData[] {
+                                                            new PricingProductData(
+                                                                Operator_Id.Parse("DE*GEF"),
+                                                                pullPricingProductDataRequest.ProviderId,
+                                                                1.2M,
+                                                                Currency_Id.EUR,
+                                                                Reference_Unit.KILOWATT_HOUR,
+                                                                PricingProductData.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                                    ? PricingProductData[Operator_Id.Parse("DE*GEF")]
+                                                                    : Array.Empty<PricingProductDataRecord>(),
+                                                                "GraphDefined"
+                                                            )
+                                                        },
+                                   Request:             pullPricingProductDataRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null,
+                                   Warnings:            null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEPricing                 += (timestamp, empClientAPI, pullEVSEPricingRequest)        => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEPricingResponse>.Success(
+                               pullEVSEPricingRequest,
+                               new PullEVSEPricingResponse(
+                                   ResponseTimestamp:     Timestamp.Now,
+                                   EventTrackingId:       EventTracking_Id.New,
+                                   ProcessId:             processId,
+                                   Runtime:               TimeSpan.FromMilliseconds(23),
+                                   OperatorEVSEPricings:  new OperatorEVSEPricing[] {
+                                                              new OperatorEVSEPricing(
+                                                                  EVSEPricings.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                                      ? EVSEPricings[Operator_Id.Parse("DE*GEF")]
+                                                                      : Array.Empty<EVSEPricing>(),
+                                                                  Operator_Id.Parse("DE*GEF"),
+                                                                  "GraphDefined"
+                                                              )
+                                                          },
+                                   Request:               pullEVSEPricingRequest,
+                                   StatusCode:            new StatusCode(
+                                                              StatusCodes.Success
+                                                          ),
+                                   HTTPResponse:          null,
+                                   CustomData:            null,
+                                   Warnings:              null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
 
 
-            // PushAuthenticationData
+            cpoP2P_DEGEF.EMPClientAPI.OnPushAuthenticationData          += (timestamp, empClientAPI, pushAuthenticationDataRequest) => {
+
+                return Task.FromResult(
+                    new OICPResult<Acknowledgement<PushAuthenticationDataRequest>>(
+                        pushAuthenticationDataRequest,
+                        new Acknowledgement<PushAuthenticationDataRequest>(
+                            Request:               pushAuthenticationDataRequest,
+                            ResponseTimestamp:     Timestamp.Now,
+                            EventTrackingId:       EventTracking_Id.New,
+                            Runtime:               TimeSpan.FromMilliseconds(2),
+                            StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                            HTTPResponse:          null,
+                            Result:                false,
+                            ProcessId:             Process_Id.NewRandom,
+                            CustomData:            null),
+                        false));
+
+            };
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) => {
 
                 if (authorizeRemoteReservationStartRequest.Identification is not null)
                 {
@@ -191,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStop  += (timestamp, cpoServerAPI, authorizeRemoteReservationStopRequest)  => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStop  += (timestamp, empClientAPI, authorizeRemoteReservationStopRequest)  => {
 
                 return authorizeRemoteReservationStopRequest.SessionId.ToString() switch {
 
@@ -237,7 +431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStart            += (timestamp, cpoServerAPI, authorizeRemoteStartRequest) => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStart            += (timestamp, empClientAPI, authorizeRemoteStartRequest) => {
 
                 if (authorizeRemoteStartRequest.Identification is not null)
                 {
@@ -310,7 +504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStop             += (timestamp, cpoServerAPI, authorizeRemoteStopRequest)  => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStop             += (timestamp, empClientAPI, authorizeRemoteStopRequest)  => {
 
                 return authorizeRemoteStopRequest.SessionId.ToString() switch {
 

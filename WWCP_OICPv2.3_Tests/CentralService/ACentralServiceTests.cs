@@ -52,6 +52,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
         protected readonly Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>          EVSEStatusRecords;
         protected readonly Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>  PricingProductData;
         protected readonly Dictionary<Operator_Id, HashSet<EVSEPricing>>               EVSEPricings;
+        protected readonly Dictionary<Operator_Id, HashSet<ChargeDetailRecord>>        ChargeDetailRecords;
 
         #endregion
 
@@ -60,10 +61,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
         public ACentralServiceTests()
         {
 
-            this.EVSEDataRecords     = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
-            this.EVSEStatusRecords   = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
-            this.PricingProductData  = new Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>();
-            this.EVSEPricings        = new Dictionary<Operator_Id, HashSet<EVSEPricing>>();
+            this.EVSEDataRecords      = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
+            this.EVSEStatusRecords    = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
+            this.PricingProductData   = new Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>();
+            this.EVSEPricings         = new Dictionary<Operator_Id, HashSet<EVSEPricing>>();
+            this.ChargeDetailRecords  = new Dictionary<Operator_Id, HashSet<ChargeDetailRecord>>();
 
         }
 
@@ -927,24 +929,216 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             #region EMPClientAPI delegates...
 
-            // PullEVSEData
+            centralServiceAPI.EMPClientAPI.OnPullEVSEData                    +=       (timestamp, empClientAPI, pullEVSEDataRequest)                    => {
 
-            // PullEVSEStatus
+                var processId = Process_Id.NewRandom;
 
-            // PullEVSEStatusById
+                return Task.FromResult(
+                           OICPResult<PullEVSEDataResponse>.Success(
+                               pullEVSEDataRequest,
+                               new PullEVSEDataResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   EVSEDataRecords:     EVSEDataRecords.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                            ? EVSEDataRecords[Operator_Id.Parse("DE*GEF")]
+                                                            : Array.Empty<EVSEDataRecord>(),
+                                   Request:             pullEVSEDataRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null,
+                                   Warnings:            null
+                               ),
+                               processId
+                           )
+                       );
 
-            // PullEVSEStatusByOperatorId
+            };
+
+            centralServiceAPI.EMPClientAPI.OnPullEVSEStatus                  +=       (timestamp, empClientAPI, pullEVSEStatusRequest)                  => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEStatusResponse>.Success(
+                               pullEVSEStatusRequest,
+                               new PullEVSEStatusResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   new OperatorEVSEStatus[] {
+                                       new OperatorEVSEStatus(EVSEDataRecords.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                                  ? EVSEStatusRecords[Operator_Id.Parse("DE*GEF")]
+                                                                  : Array.Empty<EVSEStatusRecord>(),
+                                                              Operator_Id.Parse("DE*GEF"),
+                                                              "GraphDefined")
+                                   },
+                                   Request:             pullEVSEStatusRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+            centralServiceAPI.EMPClientAPI.OnPullEVSEStatusById              +=       (timestamp, empClientAPI, pullEVSEStatusByIdRequest)              => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEStatusByIdResponse>.Success(
+                               pullEVSEStatusByIdRequest,
+                               new PullEVSEStatusByIdResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   Array.Empty<EVSEStatusRecord>(),
+                                   Request:             pullEVSEStatusByIdRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+            centralServiceAPI.EMPClientAPI.OnPullEVSEStatusByOperatorId      +=       (timestamp, empClientAPI, pullEVSEStatusByOperatorIdRequest)      => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(
+                               pullEVSEStatusByOperatorIdRequest,
+                               new PullEVSEStatusByOperatorIdResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   Array.Empty<OperatorEVSEStatus>(),
+                                   Request:             pullEVSEStatusByOperatorIdRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
 
 
-            // PullPricingProductData
+            centralServiceAPI.EMPClientAPI.OnPullPricingProductData          +=       (timestamp, empClientAPI, pullPricingProductDataRequest)          => {
 
-            // PullEVSEPricing
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullPricingProductDataResponse>.Success(
+                               pullPricingProductDataRequest,
+                               new PullPricingProductDataResponse(
+                                   ResponseTimestamp:   Timestamp.Now,
+                                   EventTrackingId:     EventTracking_Id.New,
+                                   ProcessId:           processId,
+                                   Runtime:             TimeSpan.FromMilliseconds(23),
+                                   PricingProductData:  new PricingProductData[] {
+                                                            new PricingProductData(
+                                                                Operator_Id.Parse("DE*GEF"),
+                                                                pullPricingProductDataRequest.ProviderId,
+                                                                1.2M,
+                                                                Currency_Id.EUR,
+                                                                Reference_Unit.KILOWATT_HOUR,
+                                                                PricingProductData.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                                    ? PricingProductData[Operator_Id.Parse("DE*GEF")]
+                                                                    : Array.Empty<PricingProductDataRecord>(),
+                                                                "GraphDefined"
+                                                            )
+                                                        },
+                                   Request:             pullPricingProductDataRequest,
+                                   StatusCode:          new StatusCode(
+                                                            StatusCodes.Success
+                                                        ),
+                                   HTTPResponse:        null,
+                                   CustomData:          null,
+                                   Warnings:            null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
+
+            centralServiceAPI.EMPClientAPI.OnPullEVSEPricing                 +=       (timestamp, empClientAPI, pullEVSEPricingRequest)                 => {
+
+                var processId = Process_Id.NewRandom;
+
+                return Task.FromResult(
+                           OICPResult<PullEVSEPricingResponse>.Success(
+                               pullEVSEPricingRequest,
+                               new PullEVSEPricingResponse(
+                                   ResponseTimestamp:     Timestamp.Now,
+                                   EventTrackingId:       EventTracking_Id.New,
+                                   ProcessId:             processId,
+                                   Runtime:               TimeSpan.FromMilliseconds(23),
+                                   OperatorEVSEPricings:  new OperatorEVSEPricing[] {
+                                                              new OperatorEVSEPricing(
+                                                                  EVSEPricings.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                                      ? EVSEPricings[Operator_Id.Parse("DE*GEF")]
+                                                                      : Array.Empty<EVSEPricing>(),
+                                                                  Operator_Id.Parse("DE*GEF"),
+                                                                  "GraphDefined"
+                                                              )
+                                                          },
+                                   Request:               pullEVSEPricingRequest,
+                                   StatusCode:            new StatusCode(
+                                                              StatusCodes.Success
+                                                          ),
+                                   HTTPResponse:          null,
+                                   CustomData:            null,
+                                   Warnings:              null
+                               ),
+                               processId
+                           )
+                       );
+
+            };
 
 
-            // PushAuthenticationData
+            centralServiceAPI.EMPClientAPI.OnPushAuthenticationData          +=       (timestamp, empClientAPI, pushAuthenticationDataRequest)          => {
+
+                return Task.FromResult(
+                    new OICPResult<Acknowledgement<PushAuthenticationDataRequest>>(
+                        pushAuthenticationDataRequest,
+                        new Acknowledgement<PushAuthenticationDataRequest>(
+                            Request:               pushAuthenticationDataRequest,
+                            ResponseTimestamp:     Timestamp.Now,
+                            EventTrackingId:       EventTracking_Id.New,
+                            Runtime:               TimeSpan.FromMilliseconds(2),
+                            StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
+                            HTTPResponse:          null,
+                            Result:                false,
+                            ProcessId:             Process_Id.NewRandom,
+                            CustomData:            null),
+                        false));
+
+            };
 
 
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStart += async (timestamp, sender, authorizeRemoteReservationStartRequest) => {
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStart += async (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -993,7 +1187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStop  += async (timestamp, sender, authorizeRemoteReservationStopRequest)  => {
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStop  += async (timestamp, empClientAPI, authorizeRemoteReservationStopRequest)  => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1040,7 +1234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             };
 
 
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStart            += async (timestamp, sender, authorizeRemoteStartRequest)            => {
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStart            += async (timestamp, empClientAPI, authorizeRemoteStartRequest)            => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1088,7 +1282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             };
 
-            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStop             += async (timestamp, sender, authorizeRemoteStopRequest)             => {
+            centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStop             += async (timestamp, empClientAPI, authorizeRemoteStopRequest)             => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1135,7 +1329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             };
 
 
-            centralServiceAPI.EMPClientAPI.OnGetChargeDetailRecords          += async (timestamp, sender, getChargeDetailRecordsRequest)          => {
+            centralServiceAPI.EMPClientAPI.OnGetChargeDetailRecords          += async (timestamp, empClientAPI, getChargeDetailRecordsRequest)          => {
 
                 var processId = Process_Id.NewRandom;
 
