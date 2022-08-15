@@ -17,11 +17,12 @@
 
 #region Usings
 
+using Newtonsoft.Json.Converters;
+
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
-using Newtonsoft.Json.Converters;
 
 #endregion
 
@@ -33,6 +34,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #region Data
 
+        /// <summary>
+        /// Some JSON helper as DateTime is not well-defined for JSON!
+        /// </summary>
         public static readonly IsoDateTimeConverter JSONDateTimeConverter = new() {
                                                                                 DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
                                                                             };
@@ -41,7 +45,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #region Properties
 
+        /// <summary>
+        /// The main private key of this OICP peer.
+        /// </summary>
         public ECPrivateKeyParameters?  PrivateKey    { get; set; }
+
+        /// <summary>
+        /// The main public key of this OICP peer.
+        /// </summary>
         public ECPublicKeyParameters?   PublicKey     { get; set; }
 
         #endregion
@@ -49,23 +60,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #region GenerateKeys(ECParameters)
 
-        public AsymmetricCipherKeyPair GenerateKeys(X9ECParameters ECParameters)
+        /// <summary>
+        /// Generate a private/public key pair.
+        /// </summary>
+        /// <param name="ECParameters">The elliptic curve parameters to use.</param>
+        public static AsymmetricCipherKeyPair GenerateKeys(X9ECParameters ECParameters)
         {
 
-            var EllipticCurveSpec = new ECDomainParameters(ECParameters.Curve,
-                                                           ECParameters.G,
-                                                           ECParameters.N,
-                                                           ECParameters.H,
-                                                           ECParameters.GetSeed());
+            var generator = GeneratorUtilities.GetKeyPairGenerator("ECDH");
+            generator.Init(new ECKeyGenerationParameters(new ECDomainParameters(ECParameters.Curve,
+                                                                                ECParameters.G,
+                                                                                ECParameters.N,
+                                                                                ECParameters.H,
+                                                                                ECParameters.GetSeed()),
+                                                         new SecureRandom()));
 
-            var g = GeneratorUtilities.GetKeyPairGenerator("ECDH");
-            g.Init(new ECKeyGenerationParameters(EllipticCurveSpec, new SecureRandom()));
-
-            return g.GenerateKeyPair();
+            return generator.GenerateKeyPair();
 
         }
 
         #endregion
+
 
     }
 

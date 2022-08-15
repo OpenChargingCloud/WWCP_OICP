@@ -31,8 +31,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using org.GraphDefined.Vanaheimr.Illias;
 
 using cloud.charging.open.protocols.OICPv2_3.p2p;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 #endregion
 
@@ -56,7 +54,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
         public ASignedP2PTests()
         {
 
-            secp256r1 = SecNamedCurves.GetByName("secp256r1");
+            this.secp256r1 = SecNamedCurves.GetByName("secp256r1");
 
         }
 
@@ -72,13 +70,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
             base.SetupEachTest();
 
             if (cpoP2P_DEGEF is not null) {
-                var keyPair_DEGEF = cpoP2P_DEGEF.GenerateKeys(secp256r1);
+                var keyPair_DEGEF = APeer.GenerateKeys(secp256r1);
                 cpoP2P_DEGEF.PrivateKey = keyPair_DEGEF?.Private as ECPrivateKeyParameters;
                 cpoP2P_DEGEF.PublicKey  = keyPair_DEGEF?.Public  as ECPublicKeyParameters;
             }
 
             if (empP2P_DEGDF is not null) {
-                var keyPair_DEGDF = empP2P_DEGDF.GenerateKeys(secp256r1);
+                var keyPair_DEGDF = APeer.GenerateKeys(secp256r1);
                 empP2P_DEGDF.PrivateKey = keyPair_DEGDF?.Private as ECPrivateKeyParameters;
                 empP2P_DEGDF.PublicKey  = keyPair_DEGDF?.Public  as ECPublicKeyParameters;
             }
@@ -131,8 +129,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                 var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                 verifier.Init(false, PublicKey);
                 verifier.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                                APeer.JSONDateTimeConverter).
-                                                                       ToUTF8Bytes()),
+                                                                               APeer.JSONDateTimeConverter).
+                                                                      ToUTF8Bytes()),
                                      0, 32);
 
                 Request.CustomData ??= new();
@@ -177,8 +175,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                 var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                 verifier.Init(false, PublicKey);
                 verifier.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                                APeer.JSONDateTimeConverter).
-                                                                       ToUTF8Bytes()),
+                                                                               APeer.JSONDateTimeConverter).
+                                                                      ToUTF8Bytes()),
                                      0, 32);
 
                 Response.CustomData ??= new();
