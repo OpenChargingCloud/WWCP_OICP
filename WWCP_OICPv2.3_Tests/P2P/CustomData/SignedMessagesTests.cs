@@ -98,17 +98,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                     if (cpoP2P_DEGEF.PrivateKey is not null) {
 
-                        var plainText    = json.ToString(Newtonsoft.Json.Formatting.None,
-                                                         APeer.JSONDateTimeConverter);
-                        var SHA256Hash   = SHA256.Create().ComputeHash(plainText.ToUTF8Bytes());
-                        var blockSize    = 32;
-
-                        var signer       = SignerUtilities.GetSigner("NONEwithECDSA");
+                        var signer = SignerUtilities.GetSigner("NONEwithECDSA");
                         signer.Init(true, cpoP2P_DEGEF.PrivateKey);
-                        signer.BlockUpdate(SHA256Hash, 0, blockSize);
-                        var signature    = signer.GenerateSignature();
+                        signer.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                                                     APeer.JSONDateTimeConverter).
+                                                                            ToUTF8Bytes()),
+                                           0, 32);
 
-                        json.Add(new JProperty("signature", Convert.ToBase64String(signature)));
+                        json.Add(new JProperty("signature", Convert.ToBase64String(signer.GenerateSignature())));
 
                     }
 
@@ -123,27 +120,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                         if (json["signatureValidation"] is not null)
                             json.Remove("signatureValidation");
 
-                        var json2        = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                       APeer.JSONDateTimeConverter));
+                        var json2    = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                                   APeer.JSONDateTimeConverter));
                         json2.Remove("signature");
 
-                        var json3        = json2.ToString(Newtonsoft.Json.Formatting.None,
-                                                          APeer.JSONDateTimeConverter);
-
-                        var signature    = signatureTXT.FromBase64();
-
-                        var ecp          = SecNamedCurves.GetByName("secp256r1");
-                        var ecParams     = new ECDomainParameters(ecp.Curve, ecp.G, ecp.N, ecp.H, ecp.GetSeed());
-
-                        var SHA256Hash   = SHA256.Create().ComputeHash(json3.ToUTF8Bytes());
-                        var blockSize    = 32;
-
-                        var verifier     = SignerUtilities.GetSigner("NONEwithECDSA");
+                        var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                         verifier.Init(false, empP2P_DEGDF.PublicKey);
-                        verifier.BlockUpdate(SHA256Hash, 0, blockSize);
+                        verifier.BlockUpdate(SHA256.Create().ComputeHash(json2.ToString(Newtonsoft.Json.Formatting.None,
+                                                                                        APeer.JSONDateTimeConverter).
+                                                                               ToUTF8Bytes()),
+                                             0, 32);
 
                         authorizationStartResponse.CustomData ??= new();
-                        authorizationStartResponse.CustomData?.Add("signatureValidation", verifier.VerifySignature(signature));
+                        authorizationStartResponse.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
 
                     }
 
@@ -160,27 +149,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                     if (json["signatureValidation"] is not null)
                         json.Remove("signatureValidation");
 
-                    var json2        = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                   APeer.JSONDateTimeConverter));
+                    var json2    = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                               APeer.JSONDateTimeConverter));
                     json2.Remove("signature");
 
-                    var json3        = json2.ToString(Newtonsoft.Json.Formatting.None,
-                                                      APeer.JSONDateTimeConverter);
-
-                    var signature    = signatureTXT.FromBase64();
-
-                    var ecp          = SecNamedCurves.GetByName("secp256r1");
-                    var ecParams     = new ECDomainParameters(ecp.Curve, ecp.G, ecp.N, ecp.H, ecp.GetSeed());
-
-                    var SHA256Hash   = SHA256.Create().ComputeHash(json3.ToUTF8Bytes());
-                    var blockSize    = 32;
-
-                    var verifier     = SignerUtilities.GetSigner("NONEwithECDSA");
+                    var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                     verifier.Init(false, cpoP2P_DEGEF.PublicKey);
-                    verifier.BlockUpdate(SHA256Hash, 0, blockSize);
+                    verifier.BlockUpdate(SHA256.Create().ComputeHash(json2.ToString(Newtonsoft.Json.Formatting.None,
+                                                                                    APeer.JSONDateTimeConverter).
+                                                                           ToUTF8Bytes()),
+                                         0, 32);
 
                     authorizeStartRequest.CustomData ??= new();
-                    authorizeStartRequest.CustomData?.Add("signatureValidation", verifier.VerifySignature(signature));
+                    authorizeStartRequest.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
 
                 }
 
@@ -192,17 +173,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                 if (cpoP2P_DEGEF.PrivateKey is not null) {
 
-                    var plainText    = json.ToString(Newtonsoft.Json.Formatting.None,
-                                                     APeer.JSONDateTimeConverter);
-                    var SHA256Hash   = SHA256.Create().ComputeHash(plainText.ToUTF8Bytes());
-                    var blockSize    = 32;
-
-                    var signer       = SignerUtilities.GetSigner("NONEwithECDSA");
+                    var signer = SignerUtilities.GetSigner("NONEwithECDSA");
                     signer.Init(true, empP2P_DEGDF.PrivateKey);
-                    signer.BlockUpdate(SHA256Hash, 0, blockSize);
-                    var signature    = signer.GenerateSignature();
+                    signer.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                                                 APeer.JSONDateTimeConverter).
+                                                                        ToUTF8Bytes()),
+                                       0, 32);
 
-                    json.Add(new JProperty("signature", Convert.ToBase64String(signature)));
+                    json.Add(new JProperty("signature", Convert.ToBase64String(signer.GenerateSignature())));
 
                 }
 
