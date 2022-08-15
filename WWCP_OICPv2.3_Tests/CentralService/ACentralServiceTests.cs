@@ -93,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI = new CentralServiceAPI(
                                     ExternalDNSName:  "open.charging.cloud",
-                                    HTTPServerPort:   IPPort.Parse(6000),
+                                    HTTPServerPort:   IPPort.Parse(6001),
                                     LoggingPath:      "tests",
                                     Autostart:        true
                                 );
@@ -1418,7 +1418,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             cpoRoaming_DEGEF = new CPORoaming(
 
                                    new CPOClient(
-                                       RemoteURL:        URL.Parse("http://127.0.0.1:6000"),
+                                       RemoteURL:        URL.Parse("http://127.0.0.1:6001"),
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
@@ -1657,7 +1657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             cpoRoaming_DEBDO = new CPORoaming(
 
                                    new CPOClient(
-                                       RemoteURL:        URL.Parse("http://127.0.0.1:6000"),
+                                       RemoteURL:        URL.Parse("http://127.0.0.1:6001"),
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
@@ -1897,7 +1897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             empRoaming_DEGDF = new EMPRoaming(
 
                                    new EMPClient(
-                                       RemoteURL:        URL.Parse("http://127.0.0.1:6000"),
+                                       RemoteURL:        URL.Parse("http://127.0.0.1:6001"),
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
@@ -1997,7 +1997,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
             empRoaming_DEBDP = new EMPRoaming(
 
                                    new EMPClient(
-                                       RemoteURL:        URL.Parse("http://127.0.0.1:6000"),
+                                       RemoteURL:        URL.Parse("http://127.0.0.1:6001"),
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
