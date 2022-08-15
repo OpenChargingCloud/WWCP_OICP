@@ -26,6 +26,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.p2p;
+using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -1173,6 +1174,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             empP2P_DEGDF.CPOClientAPI.OnAuthorizeStart               += (timestamp, cpoClientAPI, authorizeStartRequest) => {
 
                 var processId = Process_Id.NewRandom;
+
+                if (authorizeStartRequest.CustomData is not null &&
+                    authorizeStartRequest.CustomData["signatureValidation"]?.Value<Boolean>() is Boolean signatureValidation &&
+                    signatureValidation == false) {
+
+                    return Task.FromResult(
+                           new OICPResult<AuthorizationStartResponse>(
+                               authorizeStartRequest,
+                               AuthorizationStartResponse.NotAuthorized(
+                                   Request:               authorizeStartRequest,
+                                   StatusCode:            new StatusCode(
+                                                              StatusCodes.NoPositiveAuthenticationResponse,
+                                                              "Invalid crypto signature!"
+                                                          ),
+                                   CPOPartnerSessionId:   authorizeStartRequest.CPOPartnerSessionId,
+                                   ProviderId:            Provider_Id.Parse("DE-GDF")
+                               ),
+                               false,
+                               null,
+                               processId)
+                           );
+
+                }
 
                 if (authorizeStartRequest.Identification.RFIDId?.ToString() == "11223344")
                     return Task.FromResult(

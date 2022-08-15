@@ -31,6 +31,8 @@ using Org.BouncyCastle.Crypto.Parameters;
 using org.GraphDefined.Vanaheimr.Illias;
 
 using cloud.charging.open.protocols.OICPv2_3.p2p;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 #endregion
 
@@ -119,26 +121,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             if (JSON["signature"]?.Value<String>() is String signatureTXT) {
 
-                if (JSON["signatureValidation"] is not null)
-                    JSON.Remove("signatureValidation");
+                if (Request.CustomData?["signatureValidation"]?.Value<Boolean>() is not null)
+                    Request.CustomData.Remove("signatureValidation");
 
-                var json2    = JObject.Parse(JSON.ToString(Newtonsoft.Json.Formatting.None,
+                var json     = JObject.Parse(JSON.ToString(Newtonsoft.Json.Formatting.None,
                                                            APeer.JSONDateTimeConverter));
-                json2.Remove("signature");
+                json.Remove("signature");
 
                 var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                 verifier.Init(false, PublicKey);
-                verifier.BlockUpdate(SHA256.Create().ComputeHash(json2.ToString(Newtonsoft.Json.Formatting.None,
+                verifier.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
                                                                                 APeer.JSONDateTimeConverter).
-                                                                        ToUTF8Bytes()),
-                                        0, 32);
+                                                                       ToUTF8Bytes()),
+                                     0, 32);
 
                 Request.CustomData ??= new();
                 Request.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
 
-            }
+                return Request;
 
-            return Request;
+            }
+            else
+            {
+
+                Request.CustomData ??= new();
+                Request.CustomData?.Add("signatureValidation", false);
+
+                return Request;
+
+            }
 
         }
 
@@ -156,26 +167,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             if (JSON["signature"]?.Value<String>() is String signatureTXT) {
 
-                if (JSON["signatureValidation"] is not null)
+                if (Response.CustomData?["signatureValidation"]?.Value<Boolean>() is not null)
                     JSON.Remove("signatureValidation");
 
-                var json2    = JObject.Parse(JSON.ToString(Newtonsoft.Json.Formatting.None,
-                                                            APeer.JSONDateTimeConverter));
-                json2.Remove("signature");
+                var json     = JObject.Parse(JSON.ToString(Newtonsoft.Json.Formatting.None,
+                                                           APeer.JSONDateTimeConverter));
+                json.Remove("signature");
 
                 var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                 verifier.Init(false, PublicKey);
-                verifier.BlockUpdate(SHA256.Create().ComputeHash(json2.ToString(Newtonsoft.Json.Formatting.None,
+                verifier.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
                                                                                 APeer.JSONDateTimeConverter).
-                                                                        ToUTF8Bytes()),
-                                        0, 32);
+                                                                       ToUTF8Bytes()),
+                                     0, 32);
 
                 Response.CustomData ??= new();
                 Response.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
 
-            }
+                return Response;
 
-            return Response;
+            }
+            else
+            {
+
+                Response.CustomData ??= new();
+                Response.CustomData?.Add("signatureValidation", false);
+
+                return Response;
+
+            }
 
         }
 
