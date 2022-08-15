@@ -21,6 +21,7 @@ using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
+using Newtonsoft.Json.Converters;
 
 #endregion
 
@@ -29,6 +30,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
     public abstract class APeer
     {
+
+        #region Data
+
+        public static readonly IsoDateTimeConverter JSONDateTimeConverter = new() {
+                                                                                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
+                                                                            };
+
+        #endregion
 
         #region Properties
 

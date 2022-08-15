@@ -104,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?               CustomData             { get; }
+        public JObject?               CustomData             { get; set; }
 
         #endregion
 

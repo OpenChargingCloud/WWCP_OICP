@@ -30,6 +30,8 @@ using Org.BouncyCastle.Crypto.Parameters;
 using org.GraphDefined.Vanaheimr.Illias;
 
 using cloud.charging.open.protocols.OICPv2_3.CPO;
+using Newtonsoft.Json.Converters;
+using cloud.charging.open.protocols.OICPv2_3.p2p;
 
 #endregion
 
@@ -80,6 +82,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
             Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
 
 
+
             var keyPair_DEGEF = cpoP2P_DEGEF.GenerateKeys(SecNamedCurves.GetByName("secp256r1"));
             cpoP2P_DEGEF.PrivateKey = keyPair_DEGEF?.Private as ECPrivateKeyParameters;
             cpoP2P_DEGEF.PublicKey  = keyPair_DEGEF?.Public  as ECPublicKeyParameters;
@@ -95,11 +98,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                     if (cpoP2P_DEGEF.PrivateKey is not null) {
 
-                        var cc = new Newtonsoft.Json.Converters.IsoDateTimeConverter {
-                            DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
-                        };
-
-                        var plainText    = json.ToString(Newtonsoft.Json.Formatting.None, cc);
+                        var plainText    = json.ToString(Newtonsoft.Json.Formatting.None,
+                                                         APeer.JSONDateTimeConverter);
                         var SHA256Hash   = SHA256.Create().ComputeHash(plainText.ToUTF8Bytes());
                         var blockSize    = 32;
 
@@ -120,14 +120,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                     if (json["signature"]?.Value<String>() is String signatureTXT) {
 
-                        var cc = new Newtonsoft.Json.Converters.IsoDateTimeConverter {
-                            DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
-                        };
+                        if (json["signatureValidation"] is not null)
+                            json.Remove("signatureValidation");
 
-                        var json2        = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None, cc));
+                        var json2        = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                                       APeer.JSONDateTimeConverter));
                         json2.Remove("signature");
 
-                        var json3        = json2.ToString(Newtonsoft.Json.Formatting.None, cc);
+                        var json3        = json2.ToString(Newtonsoft.Json.Formatting.None,
+                                                          APeer.JSONDateTimeConverter);
 
                         var signature    = signatureTXT.FromBase64();
 
@@ -141,7 +142,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                         verifier.Init(false, empP2P_DEGDF.PublicKey);
                         verifier.BlockUpdate(SHA256Hash, 0, blockSize);
 
-                        json.Add("signatureValidation", verifier.VerifySignature(signature));
+                        authorizationStartResponse.CustomData ??= new();
+                        authorizationStartResponse.CustomData?.Add("signatureValidation", verifier.VerifySignature(signature));
 
                     }
 
@@ -151,18 +153,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             }
 
-            empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser = (json, authorizeStartRequest) => {
+            empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) => {
 
                 if (json["signature"]?.Value<String>() is String signatureTXT) {
 
-                    var cc = new Newtonsoft.Json.Converters.IsoDateTimeConverter {
-                        DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
-                    };
+                    if (json["signatureValidation"] is not null)
+                        json.Remove("signatureValidation");
 
-                    var json2        = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None, cc));
+                    var json2        = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                                   APeer.JSONDateTimeConverter));
                     json2.Remove("signature");
 
-                    var json3        = json2.ToString(Newtonsoft.Json.Formatting.None, cc);
+                    var json3        = json2.ToString(Newtonsoft.Json.Formatting.None,
+                                                      APeer.JSONDateTimeConverter);
 
                     var signature    = signatureTXT.FromBase64();
 
@@ -176,7 +179,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                     verifier.Init(false, cpoP2P_DEGEF.PublicKey);
                     verifier.BlockUpdate(SHA256Hash, 0, blockSize);
 
-                    json.Add("signatureValidation", verifier.VerifySignature(signature));
+                    authorizeStartRequest.CustomData ??= new();
+                    authorizeStartRequest.CustomData?.Add("signatureValidation", verifier.VerifySignature(signature));
 
                 }
 
@@ -188,11 +192,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                 if (cpoP2P_DEGEF.PrivateKey is not null) {
 
-                    var cc = new Newtonsoft.Json.Converters.IsoDateTimeConverter {
-                        DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
-                    };
-
-                    var plainText    = json.ToString(Newtonsoft.Json.Formatting.None, cc);
+                    var plainText    = json.ToString(Newtonsoft.Json.Formatting.None,
+                                                     APeer.JSONDateTimeConverter);
                     var SHA256Hash   = SHA256.Create().ComputeHash(plainText.ToUTF8Bytes());
                     var blockSize    = 32;
 
@@ -226,6 +227,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
             Assert.AreEqual (2,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
             Assert.AreEqual (UID.Parse("11223344"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId);
             Assert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
+
+            Assert.IsTrue   (oicpResult.Response?.CustomData?["signatureValidation"]?.Value<Boolean>());
+
 
             //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
             //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
