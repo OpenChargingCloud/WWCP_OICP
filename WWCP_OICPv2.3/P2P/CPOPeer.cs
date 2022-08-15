@@ -41,7 +41,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
     /// The CPO p2p combines the CPOClient(s) and EMPClientAPI
     /// and adds additional logging for all.
     /// </summary>
-    public class CPOPeer
+    public class CPOPeer : APeer
     {
 
         #region Data
@@ -229,6 +229,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
 
+
+
         #region RegisterProvider(ProviderId, CPOClient)
 
         /// <summary>
@@ -242,6 +244,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
             lock (cpoClients)
             {
                 return cpoClients.TryAdd(ProviderId, CPOClient);
+            }
+        }
+
+        #endregion
+
+        #region GetProvider(ProviderId)
+
+        public CPOClient? GetProvider(Provider_Id ProviderId)
+        {
+            lock (cpoClients)
+            {
+                return cpoClients.GetValueOrDefault(ProviderId);
             }
         }
 

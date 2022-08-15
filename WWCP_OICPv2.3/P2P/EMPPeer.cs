@@ -41,7 +41,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
     /// The EMP p2p combines the EMPClient(s) and CPOClientAPI
     /// and adds additional logging for all.
     /// </summary>
-    public class EMPPeer
+    public class EMPPeer : APeer
     {
 
         #region Data
@@ -242,6 +242,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
             lock (empClients)
             {
                 return empClients.TryAdd(OperatorId, EMPClient);
+            }
+        }
+
+        #endregion
+
+        #region GetOperator(OperatorId)
+
+        public EMPClient? GetProvider(Operator_Id OperatorId)
+        {
+            lock (empClients)
+            {
+                return empClients.GetValueOrDefault(OperatorId);
             }
         }
 
