@@ -17,21 +17,11 @@
 
 #region Usings
 
-using System.Security.Cryptography;
-
 using Newtonsoft.Json.Linq;
 
 using NUnit.Framework;
 
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Asn1.Sec;
-using Org.BouncyCastle.Crypto.Parameters;
-
-using org.GraphDefined.Vanaheimr.Illias;
-
 using cloud.charging.open.protocols.OICPv2_3.CPO;
-using Newtonsoft.Json.Converters;
-using cloud.charging.open.protocols.OICPv2_3.p2p;
 
 #endregion
 
@@ -39,10 +29,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 {
 
     /// <summary>
-    /// P2P CPO sending AuthorizeStarts/-Stops tests.
+    /// P2P CPO sending cryptographical signed messages tests.
     /// </summary>
     [TestFixture]
-    public class SignedMessagesTests : AP2PTests
+    public class SignedMessagesTests : ASignedP2PTests
     {
 
         #region SignedAuthorizeStart_Test1()
@@ -82,111 +72,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
             Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
 
 
-
-            var keyPair_DEGEF = cpoP2P_DEGEF.GenerateKeys(SecNamedCurves.GetByName("secp256r1"));
-            cpoP2P_DEGEF.PrivateKey = keyPair_DEGEF?.Private as ECPrivateKeyParameters;
-            cpoP2P_DEGEF.PublicKey  = keyPair_DEGEF?.Public  as ECPublicKeyParameters;
-
-            var keyPair_DEGDF = empP2P_DEGDF.GenerateKeys(SecNamedCurves.GetByName("secp256r1"));
-            empP2P_DEGDF.PrivateKey = keyPair_DEGDF?.Private as ECPrivateKeyParameters;
-            empP2P_DEGDF.PublicKey  = keyPair_DEGDF?.Public  as ECPublicKeyParameters;
-
             if (cpoP2P_DEGEF.GetProvider(Provider_Id.Parse("DE-GDF")) is CPOClient DEGDF)
             {
 
-                DEGDF.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) => {
+                if (cpoP2P_DEGEF.PrivateKey is not null)
+                    DEGDF.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) =>
+                        CryptoSerializer(json,
+                                         cpoP2P_DEGEF.PrivateKey);
 
-                    if (cpoP2P_DEGEF.PrivateKey is not null) {
-
-                        var signer = SignerUtilities.GetSigner("NONEwithECDSA");
-                        signer.Init(true, cpoP2P_DEGEF.PrivateKey);
-                        signer.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                                     APeer.JSONDateTimeConverter).
-                                                                            ToUTF8Bytes()),
-                                           0, 32);
-
-                        json.Add(new JProperty("signature", Convert.ToBase64String(signer.GenerateSignature())));
-
-                    }
-
-                    return json;
-
-                };
-
-                DEGDF.CustomAuthorizationStartResponseParser = (json, authorizationStartResponse) => {
-
-                    if (json["signature"]?.Value<String>() is String signatureTXT) {
-
-                        if (json["signatureValidation"] is not null)
-                            json.Remove("signatureValidation");
-
-                        var json2    = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                   APeer.JSONDateTimeConverter));
-                        json2.Remove("signature");
-
-                        var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
-                        verifier.Init(false, empP2P_DEGDF.PublicKey);
-                        verifier.BlockUpdate(SHA256.Create().ComputeHash(json2.ToString(Newtonsoft.Json.Formatting.None,
-                                                                                        APeer.JSONDateTimeConverter).
-                                                                               ToUTF8Bytes()),
-                                             0, 32);
-
-                        authorizationStartResponse.CustomData ??= new();
-                        authorizationStartResponse.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
-
-                    }
-
-                    return authorizationStartResponse;
-
-                };
+                if (empP2P_DEGDF.PublicKey  is not null)
+                    DEGDF.CustomAuthorizationStartResponseParser = (json, authorizationStartResponse) =>
+                        CryptoResponseParser(json,
+                                             empP2P_DEGDF.PublicKey,
+                                             authorizationStartResponse);
 
             }
 
-            empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) => {
+            if (cpoP2P_DEGEF.PublicKey  is not null)
+                empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
+                    CryptoRequestParser(json,
+                                        cpoP2P_DEGEF.PublicKey,
+                                        authorizeStartRequest);
 
-                if (json["signature"]?.Value<String>() is String signatureTXT) {
-
-                    if (json["signatureValidation"] is not null)
-                        json.Remove("signatureValidation");
-
-                    var json2    = JObject.Parse(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                               APeer.JSONDateTimeConverter));
-                    json2.Remove("signature");
-
-                    var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
-                    verifier.Init(false, cpoP2P_DEGEF.PublicKey);
-                    verifier.BlockUpdate(SHA256.Create().ComputeHash(json2.ToString(Newtonsoft.Json.Formatting.None,
-                                                                                    APeer.JSONDateTimeConverter).
-                                                                           ToUTF8Bytes()),
-                                         0, 32);
-
-                    authorizeStartRequest.CustomData ??= new();
-                    authorizeStartRequest.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
-
-                }
-
-                return authorizeStartRequest;
-
-            };
-
-            empP2P_DEGDF.CPOClientAPI.CustomAuthorizationStartSerializer = (authorizationStartResponse, json) => {
-
-                if (cpoP2P_DEGEF.PrivateKey is not null) {
-
-                    var signer = SignerUtilities.GetSigner("NONEwithECDSA");
-                    signer.Init(true, empP2P_DEGDF.PrivateKey);
-                    signer.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                                 APeer.JSONDateTimeConverter).
-                                                                        ToUTF8Bytes()),
-                                       0, 32);
-
-                    json.Add(new JProperty("signature", Convert.ToBase64String(signer.GenerateSignature())));
-
-                }
-
-                return json;
-
-            };
+            if (empP2P_DEGDF.PrivateKey is not null)
+                empP2P_DEGDF.CPOClientAPI.CustomAuthorizationStartSerializer = (authorizationStartResponse, json) =>
+                    CryptoSerializer(json,
+                                     empP2P_DEGDF.PrivateKey);
 
 
 
@@ -205,6 +116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
             Assert.AreEqual (2,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
             Assert.AreEqual (UID.Parse("11223344"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId);
             Assert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
+
 
             Assert.IsTrue   (oicpResult.Response?.CustomData?["signatureValidation"]?.Value<Boolean>());
 

@@ -83,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
         #region SetupEachTest()
 
         [SetUp]
-        public void SetupEachTest()
+        public virtual void SetupEachTest()
         {
 
             Timestamp.Reset();
