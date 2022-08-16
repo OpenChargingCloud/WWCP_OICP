@@ -625,7 +625,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Download EVSE data records.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// </summary>
-        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="OperatorId">The unique identification of a registered charge point operator.</param>
         /// <param name="Request">A PullEVSEData request.</param>
         public async Task<OICPResult<PullEVSEDataResponse>>
 
@@ -634,29 +634,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
+            #region Send OnPullEVSEDataRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PullEVSEData.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullEVSEDataRequest is not null)
+                    await Task.WhenAll(OnPullEVSEDataRequest.GetInvocationList().
+                                       Cast<OnPullEVSEDataRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEDataRequest));
+            }
+
+            #endregion
+
+
             var processId = Process_Id.NewRandom;
+
+            OICPResult<PullEVSEDataResponse> result;
 
             if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
             {
-                return await empClient.PullEVSEData(Request);
+
+                result = await empClient.PullEVSEData(Request);
+
             }
 
-            return OICPResult<PullEVSEDataResponse>.Failed(
-                       Request,
-                       new PullEVSEDataResponse(
-                           Timestamp.Now,
-                           Request.EventTrackingId ?? EventTracking_Id.New,
-                           processId,
-                           TimeSpan.FromMilliseconds(23),
-                           Array.Empty<EVSEDataRecord>(),
-                           Request,
-                           StatusCode: new StatusCode(
-                                           StatusCodes.NoValidContract,
-                                           "Unknown e-mobility provider!"
-                                       )
-                       ),
-                       processId
-                   );
+            else
+                result = OICPResult<PullEVSEDataResponse>.Failed(
+                             Request,
+                             new PullEVSEDataResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 processId,
+                                 TimeSpan.FromMilliseconds(23),
+                                 Array.Empty<EVSEDataRecord>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.NoValidContract,
+                                                 "Unknown e-mobility provider!"
+                                             )
+                             ),
+                             processId
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PullEVSEData.IncResponses_OK();
+            else
+                Counters.PullEVSEData.IncResponses_Error();
+
+            #region Send OnPullEVSEDataResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullEVSEDataResponse is not null)
+                    await Task.WhenAll(OnPullEVSEDataResponse.GetInvocationList().
+                                       Cast<OnPullEVSEDataResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -668,7 +732,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Download EVSE status records.
         /// The request might have an optional search radius and/or status filter.
         /// </summary>
-        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="OperatorId">The unique identification of a registered charge point operator.</param>
         /// <param name="Request">A PullEVSEStatus request.</param>
         public async Task<OICPResult<PullEVSEStatusResponse>>
 
@@ -677,29 +741,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
+            #region Send OnPullEVSEStatusRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PullEVSEStatus.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullEVSEStatusRequest is not null)
+                    await Task.WhenAll(OnPullEVSEStatusRequest.GetInvocationList().
+                                       Cast<OnPullEVSEStatusRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusRequest));
+            }
+
+            #endregion
+
+
             var processId = Process_Id.NewRandom;
+
+            OICPResult<PullEVSEStatusResponse> result;
 
             if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
             {
-                return await empClient.PullEVSEStatus(Request);
+
+                result = await empClient.PullEVSEStatus(Request);
+
             }
 
-            return OICPResult<PullEVSEStatusResponse>.Failed(
-                       Request,
-                       new PullEVSEStatusResponse(
-                           Timestamp.Now,
-                           Request.EventTrackingId ?? EventTracking_Id.New,
-                           processId,
-                           TimeSpan.FromMilliseconds(23),
-                           Array.Empty<OperatorEVSEStatus>(),
-                           Request,
-                           StatusCode: new StatusCode(
-                                           StatusCodes.NoValidContract,
-                                           "Unknown e-mobility provider!"
-                                       )
-                       ),
-                       processId
-                   );
+            else
+                result = OICPResult<PullEVSEStatusResponse>.Failed(
+                             Request,
+                             new PullEVSEStatusResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 processId,
+                                 TimeSpan.FromMilliseconds(23),
+                                 Array.Empty<OperatorEVSEStatus>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.NoValidContract,
+                                                 "Unknown e-mobility provider!"
+                                             )
+                             ),
+                             processId
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PullEVSEStatus.IncResponses_OK();
+            else
+                Counters.PullEVSEStatus.IncResponses_Error();
+
+            #region Send OnPullEVSEStatusResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullEVSEStatusResponse is not null)
+                    await Task.WhenAll(OnPullEVSEStatusResponse.GetInvocationList().
+                                       Cast<OnPullEVSEStatusResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -710,7 +838,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// <summary>
         /// Download the current status of up to 100 EVSEs.
         /// </summary>
-        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="OperatorId">The unique identification of a registered charge point operator.</param>
         /// <param name="Request">A PullEVSEStatusById request.</param>
         public async Task<OICPResult<PullEVSEStatusByIdResponse>>
 
@@ -719,29 +847,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
+            #region Send OnPullEVSEStatusByIdRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PullEVSEStatusById.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullEVSEStatusByIdRequest is not null)
+                    await Task.WhenAll(OnPullEVSEStatusByIdRequest.GetInvocationList().
+                                       Cast<OnPullEVSEStatusByIdRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdRequest));
+            }
+
+            #endregion
+
+
             var processId = Process_Id.NewRandom;
+
+            OICPResult<PullEVSEStatusByIdResponse> result;
 
             if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
             {
-                return await empClient.PullEVSEStatusById(Request);
+
+                result = await empClient.PullEVSEStatusById(Request);
+
             }
 
-            return OICPResult<PullEVSEStatusByIdResponse>.Failed(
-                       Request,
-                       new PullEVSEStatusByIdResponse(
-                           Timestamp.Now,
-                           Request.EventTrackingId ?? EventTracking_Id.New,
-                           processId,
-                           TimeSpan.FromMilliseconds(23),
-                           Array.Empty<EVSEStatusRecord>(),
-                           Request,
-                           StatusCode: new StatusCode(
-                                           StatusCodes.NoValidContract,
-                                           "Unknown e-mobility provider!"
-                                       )
-                       ),
-                       processId
-                   );
+            else
+                result = OICPResult<PullEVSEStatusByIdResponse>.Failed(
+                             Request,
+                             new PullEVSEStatusByIdResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 processId,
+                                 TimeSpan.FromMilliseconds(23),
+                                 Array.Empty<EVSEStatusRecord>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.NoValidContract,
+                                                 "Unknown e-mobility provider!"
+                                             )
+                             ),
+                             processId
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PullEVSEStatusById.IncResponses_OK();
+            else
+                Counters.PullEVSEStatusById.IncResponses_Error();
+
+            #region Send OnPullEVSEStatusByIdResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullEVSEStatusByIdResponse is not null)
+                    await Task.WhenAll(OnPullEVSEStatusByIdResponse.GetInvocationList().
+                                       Cast<OnPullEVSEStatusByIdResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -754,7 +946,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Download EVSE data records.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// </summary>
-        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="OperatorId">The unique identification of a registered charge point operator.</param>
         /// <param name="Request">A PullPricingProductData request.</param>
         public async Task<OICPResult<PullPricingProductDataResponse>>
 
@@ -763,29 +955,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
+            #region Send OnPullPricingProductDataRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PullPricingProductData.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullPricingProductDataRequest is not null)
+                    await Task.WhenAll(OnPullPricingProductDataRequest.GetInvocationList().
+                                       Cast<OnPullPricingProductDataRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullPricingProductDataRequest));
+            }
+
+            #endregion
+
+
             var processId = Process_Id.NewRandom;
+
+            OICPResult<PullPricingProductDataResponse> result;
 
             if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
             {
-                return await empClient.PullPricingProductData(Request);
+
+                result = await empClient.PullPricingProductData(Request);
+
             }
 
-            return OICPResult<PullPricingProductDataResponse>.Failed(
-                       Request,
-                       new PullPricingProductDataResponse(
-                           Timestamp.Now,
-                           Request.EventTrackingId ?? EventTracking_Id.New,
-                           processId,
-                           TimeSpan.FromMilliseconds(23),
-                           Array.Empty<PricingProductData>(),
-                           Request,
-                           StatusCode: new StatusCode(
-                                           StatusCodes.NoValidContract,
-                                           "Unknown e-mobility provider!"
-                                       )
-                       ),
-                       processId
-                   );
+            else
+                result = OICPResult<PullPricingProductDataResponse>.Failed(
+                             Request,
+                             new PullPricingProductDataResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 processId,
+                                 TimeSpan.FromMilliseconds(23),
+                                 Array.Empty<PricingProductData>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.NoValidContract,
+                                                 "Unknown e-mobility provider!"
+                                             )
+                             ),
+                             processId
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PullPricingProductData.IncResponses_OK();
+            else
+                Counters.PullPricingProductData.IncResponses_Error();
+
+            #region Send OnPullPricingProductDataResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullPricingProductDataResponse is not null)
+                    await Task.WhenAll(OnPullPricingProductDataResponse.GetInvocationList().
+                                       Cast<OnPullPricingProductDataResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullPricingProductDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -797,7 +1053,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Download EVSE data records.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// </summary>
-        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="OperatorId">The unique identification of a registered charge point operator.</param>
         /// <param name="Request">A PullEVSEPricing request.</param>
         public async Task<OICPResult<PullEVSEPricingResponse>>
 
@@ -806,29 +1062,93 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
+            #region Send OnPullEVSEPricingRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PullEVSEPricing.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullEVSEPricingRequest is not null)
+                    await Task.WhenAll(OnPullEVSEPricingRequest.GetInvocationList().
+                                       Cast<OnPullEVSEPricingRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEPricingRequest));
+            }
+
+            #endregion
+
+
             var processId = Process_Id.NewRandom;
+
+            OICPResult<PullEVSEPricingResponse> result;
 
             if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
             {
-                return await empClient.PullEVSEPricing(Request);
+
+                result = await empClient.PullEVSEPricing(Request);
+
             }
 
-            return OICPResult<PullEVSEPricingResponse>.Failed(
-                       Request,
-                       new PullEVSEPricingResponse(
-                           Timestamp.Now,
-                           Request.EventTrackingId ?? EventTracking_Id.New,
-                           processId,
-                           TimeSpan.FromMilliseconds(23),
-                           Array.Empty<OperatorEVSEPricing>(),
-                           Request,
-                           StatusCode: new StatusCode(
-                                           StatusCodes.NoValidContract,
-                                           "Unknown e-mobility provider!"
-                                       )
-                       ),
-                       processId
-                   );
+            else
+                result = OICPResult<PullEVSEPricingResponse>.Failed(
+                             Request,
+                             new PullEVSEPricingResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 processId,
+                                 TimeSpan.FromMilliseconds(23),
+                                 Array.Empty<OperatorEVSEPricing>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.NoValidContract,
+                                                 "Unknown e-mobility provider!"
+                                             )
+                             ),
+                             processId
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PullEVSEPricing.IncResponses_OK();
+            else
+                Counters.PullEVSEPricing.IncResponses_Error();
+
+            #region Send OnPullEVSEPricingResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullEVSEPricingResponse is not null)
+                    await Task.WhenAll(OnPullEVSEPricingResponse.GetInvocationList().
+                                       Cast<OnPullEVSEPricingResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnPullEVSEPricingResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -840,7 +1160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// <summary>
         /// Start a charging session at the given EVSE.
         /// </summary>
-        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="OperatorId">The unique identification of a registered charge point operator.</param>
         /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
         public async Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
 
@@ -849,18 +1169,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
-            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            #region Send OnPushAuthenticationDataRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PushAuthenticationData.IncRequests_OK();
+
+            try
             {
-                return await empClient.PushAuthenticationData(Request);
+
+                if (OnPushAuthenticationDataRequest is not null)
+                    await Task.WhenAll(OnPushAuthenticationDataRequest.GetInvocationList().
+                                       Cast<OnPushAuthenticationDataRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnPushAuthenticationDataRequest));
             }
 
-            return OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
-                       Request,
-                       Acknowledgement<PushAuthenticationDataRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<PushAuthenticationDataRequest>> result;
+
+            if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
+            {
+
+                result = await empClient.PushAuthenticationData(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Failed(
+                             Request,
+                             Acknowledgement<PushAuthenticationDataRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PushAuthenticationData.IncResponses_OK();
+            else
+                Counters.PushAuthenticationData.IncResponses_Error();
+
+            #region Send OnPushAuthenticationDataResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPushAuthenticationDataResponse is not null)
+                    await Task.WhenAll(OnPushAuthenticationDataResponse.GetInvocationList().
+                                       Cast<OnPushAuthenticationDataResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnPushAuthenticationDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -879,18 +1263,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
-            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            #region Send OnAuthorizeRemoteReservationStartRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
+
+            try
             {
-                return await empClient.AuthorizeRemoteReservationStart(Request);
+
+                if (OnAuthorizeRemoteReservationStartRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
             }
 
-            return OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
-                       Request,
-                       Acknowledgement<AuthorizeRemoteReservationStartRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>> result;
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+
+                result = await empClient.AuthorizeRemoteReservationStart(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Failed(
+                             Request,
+                             Acknowledgement<AuthorizeRemoteReservationStartRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
+            else
+                Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
+
+            #region Send OnAuthorizeRemoteReservationStartResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnAuthorizeRemoteReservationStartResponse is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -908,18 +1356,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
-            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            #region Send OnAuthorizeRemoteReservationStopRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
+
+            try
             {
-                return await empClient.AuthorizeRemoteReservationStop(Request);
+
+                if (OnAuthorizeRemoteReservationStopRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
             }
 
-            return OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
-                       Request,
-                       Acknowledgement<AuthorizeRemoteReservationStopRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>> result;
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+
+                result = await empClient.AuthorizeRemoteReservationStop(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Failed(
+                             Request,
+                             Acknowledgement<AuthorizeRemoteReservationStopRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
+            else
+                Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
+
+            #region Send OnAuthorizeRemoteReservationStopResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnAuthorizeRemoteReservationStopResponse is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -983,7 +1495,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                          );
 
 
-            if (result.IsNotSuccessful)
+            if (result.IsSuccessful)
+                Counters.AuthorizeRemoteStart.IncResponses_OK();
+            else
                 Counters.AuthorizeRemoteStart.IncResponses_Error();
 
             #region Send OnAuthorizeRemoteStartResponse event
@@ -999,7 +1513,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -1073,7 +1588,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                          );
 
 
-            if (result.IsNotSuccessful)
+            if (result.IsSuccessful)
+                Counters.AuthorizeRemoteStop.IncResponses_OK();
+            else
                 Counters.AuthorizeRemoteStop.IncResponses_Error();
 
             #region Send OnAuthorizeRemoteStopResponse event
@@ -1089,7 +1606,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -1113,7 +1631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Download EVSE data records.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// </summary>
-        /// <param name="OperatorId">A registered charge point operator.</param>
+        /// <param name="OperatorId">The unique identification of a registered charge point operator.</param>
         /// <param name="Request">A GetChargeDetailRecords request.</param>
         public async Task<OICPResult<GetChargeDetailRecordsResponse>>
 
@@ -1122,29 +1640,94 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         {
 
+            #region Send OnGetChargeDetailRecordsRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.GetChargeDetailRecords.IncRequests_OK();
+
+            try
+            {
+
+                if (OnGetChargeDetailRecordsRequest is not null)
+                    await Task.WhenAll(OnGetChargeDetailRecordsRequest.GetInvocationList().
+                                       Cast<OnGetChargeDetailRecordsRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnGetChargeDetailRecordsRequest));
+            }
+
+            #endregion
+
+
+
             var processId = Process_Id.NewRandom;
+
+            OICPResult<GetChargeDetailRecordsResponse> result;
 
             if (empClients.TryGetValue(OperatorId, out EMPClient? empClient))
             {
-                return await empClient.GetChargeDetailRecords(Request);
+
+                result = await empClient.GetChargeDetailRecords(Request);
+
             }
 
-            return OICPResult<GetChargeDetailRecordsResponse>.Failed(
-                       Request,
-                       new GetChargeDetailRecordsResponse(
-                           Timestamp.Now,
-                           Request.EventTrackingId ?? EventTracking_Id.New,
-                           processId,
-                           TimeSpan.FromMilliseconds(23),
-                           Array.Empty<ChargeDetailRecord>(),
-                           Request,
-                           StatusCode: new StatusCode(
-                                           StatusCodes.NoValidContract,
-                                           "Unknown e-mobility provider!"
-                                       )
-                       ),
-                       processId
-                   );
+            else
+                result = OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                             Request,
+                             new GetChargeDetailRecordsResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 processId,
+                                 TimeSpan.FromMilliseconds(23),
+                                 Array.Empty<ChargeDetailRecord>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.NoValidContract,
+                                                 "Unknown e-mobility provider!"
+                                             )
+                             ),
+                             processId
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.GetChargeDetailRecords.IncResponses_OK();
+            else
+                Counters.GetChargeDetailRecords.IncResponses_Error();
+
+            #region Send OnGetChargeDetailRecordsResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnGetChargeDetailRecordsResponse is not null)
+                    await Task.WhenAll(OnGetChargeDetailRecordsResponse.GetInvocationList().
+                                       Cast<OnGetChargeDetailRecordsResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnGetChargeDetailRecordsResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

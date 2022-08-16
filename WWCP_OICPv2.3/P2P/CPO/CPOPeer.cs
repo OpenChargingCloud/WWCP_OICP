@@ -689,7 +689,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Upload the given EVSE data records.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A PushEVSEData request.</param>
         public async Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
 
@@ -698,18 +698,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region Send OnPushEVSEDataRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PushEVSEData.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.PushEVSEData(Request);
+
+                if (OnPushEVSEDataRequest is not null)
+                    await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
+                                       Cast<OnPushEVSEDataRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushEVSEDataRequest));
             }
 
-            return OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                       Request,
-                       Acknowledgement<PushEVSEDataRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<PushEVSEDataRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.PushEVSEData(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                             Request,
+                             Acknowledgement<PushEVSEDataRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PushEVSEData.IncResponses_OK();
+            else
+                Counters.PushEVSEData.IncResponses_Error();
+
+            #region Send OnPushEVSEDataResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPushEVSEDataResponse is not null)
+                    await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
+                                       Cast<OnPushEVSEDataResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushEVSEDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -749,7 +813,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Upload the given EVSE data records.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A PushEVSEStatus request.</param>
         public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
@@ -758,18 +822,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region Send OnPushEVSEStatusRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PushEVSEStatus.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.PushEVSEStatus(Request);
+
+                if (OnPushEVSEStatusRequest is not null)
+                    await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
+                                       Cast<OnPushEVSEStatusRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushEVSEStatusRequest));
             }
 
-            return OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                       Request,
-                       Acknowledgement<PushEVSEStatusRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<PushEVSEStatusRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.PushEVSEStatus(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                             Request,
+                             Acknowledgement<PushEVSEStatusRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PushEVSEStatus.IncResponses_OK();
+            else
+                Counters.PushEVSEStatus.IncResponses_Error();
+
+            #region Send OnPushEVSEStatusResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPushEVSEStatusResponse is not null)
+                    await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
+                                       Cast<OnPushEVSEStatusResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushEVSEStatusResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -810,7 +938,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Upload the given pricing product data.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A PushPricingProductData request.</param>
         public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
 
@@ -819,55 +947,88 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region Send OnPushPricingProductDataRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PushPricingProductData.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.PushPricingProductData(Request);
+
+                if (OnPushPricingProductDataRequest is not null)
+                    await Task.WhenAll(OnPushPricingProductDataRequest.GetInvocationList().
+                                       Cast<OnPushPricingProductDataRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushPricingProductDataRequest));
             }
 
-            return OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
-                       Request,
-                       Acknowledgement<PushPricingProductDataRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<PushPricingProductDataRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.PushPricingProductData(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                             Request,
+                             Acknowledgement<PushPricingProductDataRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PushPricingProductData.IncResponses_OK();
+            else
+                Counters.PushPricingProductData.IncResponses_Error();
+
+            #region Send OnPushPricingProductDataResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPushPricingProductDataResponse is not null)
+                    await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
+                                       Cast<OnPushPricingProductDataResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushPricingProductDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
         #endregion
 
         #region PushEVSEPricing                 (            Request)
-
-        /// <summary>
-        /// Upload the given pricing product data.
-        /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
-        /// <param name="Request">A PushPricingProductData request.</param>
-        public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
-
-            PushEVSEPricing(Provider_Id             ProviderId,
-                            PushEVSEPricingRequest  Request)
-
-        {
-
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-                return await cpoClient.PushEVSEPricing(Request);
-            }
-
-            return OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
-                       Request,
-                       Acknowledgement<PushEVSEPricingRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
-
-        }
-
-        #endregion
-
-        #region PushEVSEPricing                 (ProviderId, Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -896,13 +1057,108 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
+        #region PushEVSEPricing                 (ProviderId, Request)
+
+        /// <summary>
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
+        /// <param name="Request">A PushPricingProductData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
+
+            PushEVSEPricing(Provider_Id             ProviderId,
+                            PushEVSEPricingRequest  Request)
+
+        {
+
+            #region Send OnPushEVSEPricingRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PushEVSEPricing.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPushEVSEPricingRequest is not null)
+                    await Task.WhenAll(OnPushEVSEPricingRequest.GetInvocationList().
+                                       Cast<OnPushEVSEPricingRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushEVSEPricingRequest));
+            }
+
+            #endregion
+
+
+            OICPResult<Acknowledgement<PushEVSEPricingRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.PushEVSEPricing(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                             Request,
+                             Acknowledgement<PushEVSEPricingRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PushEVSEPricing.IncResponses_OK();
+            else
+                Counters.PushEVSEPricing.IncResponses_Error();
+
+            #region Send OnPushEVSEPricingResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPushEVSEPricingResponse is not null)
+                    await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
+                                       Cast<OnPushEVSEPricingResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPushEVSEPricingResponse));
+            }
+
+            #endregion
+
+            return result;
+
+        }
+
+        #endregion
+
 
         #region PullAuthenticationData          (ProviderId, Request)
 
         /// <summary>
         /// Download provider authentication data.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A PullAuthenticationData request.</param>
         public async Task<OICPResult<PullAuthenticationDataResponse>>
 
@@ -911,28 +1167,90 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            var processId = Process_Id.NewRandom;
+            #region Send OnPullAuthenticationDataRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.PullAuthenticationData.IncRequests_OK();
+
+            try
+            {
+
+                if (OnPullAuthenticationDataRequest is not null)
+                    await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
+                                       Cast<OnPullAuthenticationDataRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPullAuthenticationDataRequest));
+            }
+
+            #endregion
+
+
+            OICPResult<PullAuthenticationDataResponse> result;
 
             if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
             {
-                return await cpoClient.PullAuthenticationData(Request);
+
+                result = await cpoClient.PullAuthenticationData(Request);
+
             }
 
-            return OICPResult<PullAuthenticationDataResponse>.Failed(
-                       Request,
-                       new PullAuthenticationDataResponse(
-                           Timestamp.Now,
-                           Request.EventTrackingId ?? EventTracking_Id.New,
-                           processId,
-                           TimeSpan.FromMilliseconds(23),
-                           Array.Empty<ProviderAuthenticationData>(),
-                           Request,
-                           StatusCode: new StatusCode(
-                                           StatusCodes.NoValidContract,
-                                           "Unknown e-mobility provider!"
-                                       )
-                       )
-                   );
+            else
+                result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                             Request,
+                             new PullAuthenticationDataResponse(
+                                 Timestamp.Now,
+                                 Request.EventTrackingId ?? EventTracking_Id.New,
+                                 Process_Id.NewRandom,
+                                 TimeSpan.FromMilliseconds(23),
+                                 Array.Empty<ProviderAuthenticationData>(),
+                                 Request,
+                                 StatusCode: new StatusCode(
+                                                 StatusCodes.NoValidContract,
+                                                 "Unknown e-mobility provider!"
+                                             )
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.PullAuthenticationData.IncResponses_OK();
+            else
+                Counters.PullAuthenticationData.IncResponses_Error();
+
+            #region Send OnPullAuthenticationDataResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnPullAuthenticationDataResponse is not null)
+                    await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
+                                       Cast<OnPullAuthenticationDataResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnPullAuthenticationDataResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -985,7 +1303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Authorize for starting a charging session.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">An AuthorizeStart request.</param>
         public async Task<OICPResult<AuthorizationStartResponse>>
 
@@ -994,21 +1312,85 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region Send OnAuthorizeStartRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.AuthorizeStart.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.AuthorizeStart(Request);
+
+                if (OnAuthorizeStartRequest is not null)
+                    await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
+                                       Cast<OnAuthorizeStartRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnAuthorizeStartRequest));
             }
 
-            return OICPResult<AuthorizationStartResponse>.Failed(
-                       Request,
-                       AuthorizationStartResponse.NotAuthorized(
-                           Request,
-                           new StatusCode(
-                               StatusCodes.NoValidContract,
-                               "Unknown e-mobility provider!"
-                           )
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<AuthorizationStartResponse> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.AuthorizeStart(Request);
+
+            }
+
+            else
+                result = OICPResult<AuthorizationStartResponse>.Failed(
+                             Request,
+                             AuthorizationStartResponse.NotAuthorized(
+                                 Request,
+                                 new StatusCode(
+                                     StatusCodes.NoValidContract,
+                                     "Unknown e-mobility provider!"
+                                 )
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.AuthorizeStart.IncResponses_OK();
+            else
+                Counters.AuthorizeStart.IncResponses_Error();
+
+            #region Send OnAuthorizeStartResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnAuthorizeStartResponse is not null)
+                    await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
+                                       Cast<OnAuthorizeStartResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnAuthorizeStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1060,7 +1442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Authorize for stopping a charging session.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">An AuthorizeStop request.</param>
         public async Task<OICPResult<AuthorizationStopResponse>>
 
@@ -1069,21 +1451,85 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region Send OnAuthorizeStopRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.AuthorizeStop.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.AuthorizeStop(Request);
+
+                if (OnAuthorizeStopRequest is not null)
+                    await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                       Cast<OnAuthorizeStopRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnAuthorizeStopRequest));
             }
 
-            return OICPResult<AuthorizationStopResponse>.Failed(
-                       Request,
-                       AuthorizationStopResponse.NotAuthorized(
-                           Request,
-                           new StatusCode(
-                               StatusCodes.NoValidContract,
-                               "Unknown e-mobility provider!"
-                           )
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<AuthorizationStopResponse> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.AuthorizeStop(Request);
+
+            }
+
+            else
+                result = OICPResult<AuthorizationStopResponse>.Failed(
+                             Request,
+                             AuthorizationStopResponse.NotAuthorized(
+                                 Request,
+                                 new StatusCode(
+                                     StatusCodes.NoValidContract,
+                                     "Unknown e-mobility provider!"
+                                 )
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.AuthorizeStop.IncResponses_OK();
+            else
+                Counters.AuthorizeStop.IncResponses_Error();
+
+            #region Send OnAuthorizeStopResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnAuthorizeStopResponse is not null)
+                    await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                       Cast<OnAuthorizeStopResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnAuthorizeStopResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1095,7 +1541,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Send a charging start notification.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A ChargingStartNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
 
@@ -1104,18 +1550,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region  OnChargingStartNotificationRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.SendChargingStartNotification.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.SendChargingStartNotification(Request);
+
+                if (OnChargingStartNotificationRequest is not null)
+                    await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingStartNotificationRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingStartNotificationRequest));
             }
 
-            return OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                       Request,
-                       Acknowledgement<ChargingStartNotificationRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<ChargingStartNotificationRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.SendChargingStartNotification(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                             Request,
+                             Acknowledgement<ChargingStartNotificationRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.SendChargingStartNotification.IncResponses_OK();
+            else
+                Counters.SendChargingStartNotification.IncResponses_Error();
+
+            #region  OnChargingStartNotificationResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnChargingStartNotificationResponse is not null)
+                    await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingStartNotificationResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingStartNotificationResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1126,7 +1636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Send a charging progress notification.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A ChargingProgressNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
@@ -1135,18 +1645,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region  OnChargingProgressNotificationRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.SendChargingProgressNotification.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.SendChargingProgressNotification(Request);
+
+                if (OnChargingProgressNotificationRequest is not null)
+                    await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingProgressNotificationRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingProgressNotificationRequest));
             }
 
-            return OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                       Request,
-                       Acknowledgement<ChargingProgressNotificationRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<ChargingProgressNotificationRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.SendChargingProgressNotification(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                             Request,
+                             Acknowledgement<ChargingProgressNotificationRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.SendChargingProgressNotification.IncResponses_OK();
+            else
+                Counters.SendChargingProgressNotification.IncResponses_Error();
+
+            #region  OnChargingProgressNotificationResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnChargingProgressNotificationResponse is not null)
+                    await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingProgressNotificationResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingProgressNotificationResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1157,7 +1731,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Send a charging end notification.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A ChargingEndNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
@@ -1166,18 +1740,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region  OnChargingEndNotificationRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.SendChargingEndNotification.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.SendChargingEndNotification(Request);
+
+                if (OnChargingEndNotificationRequest is not null)
+                    await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingEndNotificationRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingEndNotificationRequest));
             }
 
-            return OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                       Request,
-                       Acknowledgement<ChargingEndNotificationRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<ChargingEndNotificationRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.SendChargingEndNotification(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                             Request,
+                             Acknowledgement<ChargingEndNotificationRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.SendChargingEndNotification.IncResponses_OK();
+            else
+                Counters.SendChargingEndNotification.IncResponses_Error();
+
+            #region  OnChargingEndNotificationResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnChargingEndNotificationResponse is not null)
+                    await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingEndNotificationResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingEndNotificationResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1188,7 +1826,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Send a charging error notification.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A ChargingErrorNotification request.</param>
         public async Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
 
@@ -1197,18 +1835,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region  OnChargingErrorNotificationRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.SendChargingErrorNotification.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.SendChargingErrorNotification(Request);
+
+                if (OnChargingErrorNotificationRequest is not null)
+                    await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
+                                       Cast<OnChargingErrorNotificationRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingErrorNotificationRequest));
             }
 
-            return OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
-                       Request,
-                       Acknowledgement<ChargingErrorNotificationRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<ChargingErrorNotificationRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.SendChargingErrorNotification(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                             Request,
+                             Acknowledgement<ChargingErrorNotificationRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.SendChargingErrorNotification.IncResponses_OK();
+            else
+                Counters.SendChargingErrorNotification.IncResponses_Error();
+
+            #region  OnChargingErrorNotificationResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnChargingErrorNotificationResponse is not null)
+                    await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
+                                       Cast<OnChargingErrorNotificationResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnChargingErrorNotificationResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -1220,7 +1922,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Send a charge detail record.
         /// </summary>
-        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
         public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
@@ -1229,18 +1931,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            #region Send OnSendChargeDetailRecord event
+
+            var startTime = Timestamp.Now;
+
+            Counters.SendChargeDetailRecord.IncRequests_OK();
+
+            try
             {
-                return await cpoClient.SendChargeDetailRecord(Request);
+
+                if (OnSendChargeDetailRecordRequest is not null)
+                    await Task.WhenAll(OnSendChargeDetailRecordRequest.GetInvocationList().
+                                       Cast<OnSendChargeDetailRecordRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnSendChargeDetailRecordRequest));
             }
 
-            return OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
-                       Request,
-                       Acknowledgement<ChargeDetailRecordRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       )
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<ChargeDetailRecordRequest>> result;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+
+                result = await cpoClient.SendChargeDetailRecord(Request);
+
+            }
+
+            else
+                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                             Request,
+                             Acknowledgement<ChargeDetailRecordRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             )
+                         );
+
+
+            if (result.IsSuccessful)
+                Counters.SendChargeDetailRecord.IncResponses_OK();
+            else
+                Counters.SendChargeDetailRecord.IncResponses_Error();
+
+            #region Send OnChargeDetailRecordSent event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnSendChargeDetailRecordResponse is not null)
+                    await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
+                                       Cast<OnSendChargeDetailRecordResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result,
+                                                     endtime - startTime))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOPeer) + "." + nameof(OnSendChargeDetailRecordResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

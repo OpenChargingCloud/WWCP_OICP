@@ -656,7 +656,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="Request">A PushEVSEData request.</param>
-        public async Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>> PushEVSEData(PushEVSEDataRequest Request)
+        public async Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
+
+            PushEVSEData(PushEVSEDataRequest Request)
+
         {
 
             #region Initial checks
@@ -1169,7 +1172,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="Request">A PushEVSEStatus request.</param>
-        public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>> PushEVSEStatus(PushEVSEStatusRequest Request)
+        public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
+
+            PushEVSEStatus(PushEVSEStatusRequest Request)
+
         {
 
             #region Initial checks
@@ -1674,7 +1680,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Upload the given pricing product data.
         /// </summary>
         /// <param name="Request">A PushPricingProductData request.</param>
-        public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>> PushPricingProductData(PushPricingProductDataRequest Request)
+        public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
+
+            PushPricingProductData(PushPricingProductDataRequest Request)
+
         {
 
             #region Initial checks
@@ -2181,7 +2190,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Upload the given EVSE pricing data.
         /// </summary>
         /// <param name="Request">A PushEVSEPricing request.</param>
-        public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>> PushEVSEPricing(PushEVSEPricingRequest Request)
+        public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
+
+            PushEVSEPricing(PushEVSEPricingRequest Request)
+
         {
 
             #region Initial checks
@@ -2689,7 +2701,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         /// <param name="Request">A PullAuthenticationData request.</param>
         [Obsolete("PullAuthenticationData was removed from OICP.")]
-        public async Task<OICPResult<PullAuthenticationDataResponse>> PullAuthenticationData(PullAuthenticationDataRequest Request)
+        public async Task<OICPResult<PullAuthenticationDataResponse>>
+
+            PullAuthenticationData(PullAuthenticationDataRequest Request)
+
         {
 
             #region Initial checks
@@ -3240,7 +3255,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
-        public async Task<OICPResult<AuthorizationStartResponse>> AuthorizeStart(AuthorizeStartRequest Request)
+        public async Task<OICPResult<AuthorizationStartResponse>>
+
+            AuthorizeStart(AuthorizeStartRequest Request)
+
         {
 
             #region Initial checks
@@ -3635,7 +3653,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStop request.</param>
-        public async Task<OICPResult<AuthorizationStopResponse>> AuthorizeStop(AuthorizeStopRequest Request)
+        public async Task<OICPResult<AuthorizationStopResponse>>
+
+            AuthorizeStop(AuthorizeStopRequest Request)
+
         {
 
             #region Initial checks
@@ -4054,7 +4075,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charging start notification.
         /// </summary>
         /// <param name="Request">A ChargingStartNotification request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>> SendChargingStartNotification(ChargingStartNotificationRequest Request)
+        public async Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
+
+            SendChargingStartNotification(ChargingStartNotificationRequest Request)
+
         {
 
             #region Initial checks
@@ -4520,7 +4544,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charging progress notification.
         /// </summary>
         /// <param name="Request">A ChargingProgressNotification request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>> SendChargingProgressNotification(ChargingProgressNotificationRequest Request)
+        public async Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
+
+            SendChargingProgressNotification(ChargingProgressNotificationRequest Request)
+
         {
 
             #region Initial checks
@@ -4986,7 +5013,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charging start notification.
         /// </summary>
         /// <param name="Request">A ChargingEndNotification request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>> SendChargingEndNotification(ChargingEndNotificationRequest Request)
+        public async Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
+
+            SendChargingEndNotification(ChargingEndNotificationRequest Request)
+
         {
 
             #region Initial checks
@@ -5452,7 +5482,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charging error notification.
         /// </summary>
         /// <param name="Request">A ChargingErrorNotification request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>> SendChargingErrorNotification(ChargingErrorNotificationRequest Request)
+        public async Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
+
+            SendChargingErrorNotification(ChargingErrorNotificationRequest Request)
+
         {
 
             #region Initial checks
@@ -5987,7 +6020,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>> SendChargeDetailRecord(ChargeDetailRecordRequest Request)
+        public async Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
+
+            SendChargeDetailRecord(ChargeDetailRecordRequest Request)
+
         {
 
             #region Initial checks
