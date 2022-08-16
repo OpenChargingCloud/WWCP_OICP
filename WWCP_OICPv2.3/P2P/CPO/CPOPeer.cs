@@ -31,17 +31,18 @@ using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
+using System.Diagnostics;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.p2p
+namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 {
 
     /// <summary>
-    /// The CPO p2p combines the CPOClient(s) and EMPClientAPI
+    /// The CPO p2p combines CPOClient(s) and the EMPClientAPI,
     /// and adds additional logging for all.
     /// </summary>
-    public class CPOPeer : APeer
+    public class CPOPeer : APeer, ICPOPeer
     {
 
         #region Data
@@ -249,9 +250,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region GetProvider(ProviderId)
+        #region GetCPOClient(ProviderId)
 
-        public CPOClient? GetProvider(Provider_Id ProviderId)
+        public CPOClient? GetCPOClient(Provider_Id ProviderId)
         {
             lock (cpoClients)
             {
@@ -383,6 +384,49 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
                        Acknowledgement<PushEVSEPricingRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
+                       ),
+                       false
+                   );
+
+        }
+
+        #endregion
+
+
+        #region PullAuthenticationData          (ProviderId, Request)
+
+        /// <summary>
+        /// Download provider authentication data.
+        /// </summary>
+        /// <param name="Provider">A registered e-mobility provider.</param>
+        /// <param name="Request">A PullAuthenticationData request.</param>
+        public async Task<OICPResult<PullAuthenticationDataResponse>>
+
+            PullAuthenticationData(Provider_Id                    ProviderId,
+                                   PullAuthenticationDataRequest  Request)
+
+        {
+
+            var processId = Process_Id.NewRandom;
+
+            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
+            {
+                return await cpoClient.PullAuthenticationData(Request);
+            }
+
+            return new OICPResult<PullAuthenticationDataResponse>(
+                       Request,
+                       new PullAuthenticationDataResponse(
+                           Timestamp.Now,
+                           Request.EventTrackingId ?? EventTracking_Id.New,
+                           processId,
+                           TimeSpan.FromMilliseconds(23),
+                           Array.Empty<ProviderAuthenticationData>(),
+                           Request,
+                           StatusCode: new StatusCode(
+                                           StatusCodes.NoValidContract,
+                                           "Unknown e-mobility provider!"
+                                       )
                        ),
                        false
                    );

@@ -670,19 +670,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEDataRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PushEVSEData.IncRequests_OK();
 
             try
             {
 
-                if (OnPushEVSEDataRequest != null)
+                if (OnPushEVSEDataRequest is not null)
                     await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
                                        Cast<OnPushEVSEDataRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -1135,17 +1134,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEDataResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPushEVSEDataResponse != null)
+                if (OnPushEVSEDataResponse is not null)
                     await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
                                        Cast<OnPushEVSEDataResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -1184,19 +1182,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEStatusRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PushEVSEStatus.IncRequests_OK();
 
             try
             {
 
-                if (OnPushEVSEStatusRequest != null)
+                if (OnPushEVSEStatusRequest is not null)
                     await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
                                        Cast<OnPushEVSEStatusRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -1640,17 +1637,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEStatusResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPushEVSEStatusResponse != null)
+                if (OnPushEVSEStatusResponse is not null)
                     await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
                                        Cast<OnPushEVSEStatusResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -1690,19 +1686,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushPricingProductDataRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PushPricingProductData.IncRequests_OK();
 
             try
             {
 
-                if (OnPushPricingProductDataRequest != null)
+                if (OnPushPricingProductDataRequest is not null)
                     await Task.WhenAll(OnPushPricingProductDataRequest.GetInvocationList().
                                        Cast<OnPushPricingProductDataRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -2149,17 +2144,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushPricingProductDataResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPushPricingProductDataResponse != null)
+                if (OnPushPricingProductDataResponse is not null)
                     await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
                                        Cast<OnPushPricingProductDataResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -2198,19 +2192,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEPricingRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PushEVSEPricing.IncRequests_OK();
 
             try
             {
 
-                if (OnPushEVSEPricingRequest != null)
+                if (OnPushEVSEPricingRequest is not null)
                     await Task.WhenAll(OnPushEVSEPricingRequest.GetInvocationList().
                                        Cast<OnPushEVSEPricingRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -2656,17 +2649,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEPricingResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPushEVSEPricingResponse != null)
+                if (OnPushEVSEPricingResponse is not null)
                     await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
                                        Cast<OnPushEVSEPricingResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -2707,19 +2699,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPullAuthenticationDataRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PullAuthenticationData.IncRequests_OK();
 
             try
             {
 
-                if (OnPullAuthenticationDataRequest != null)
+                if (OnPullAuthenticationDataRequest is not null)
                     await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
                                        Cast<OnPullAuthenticationDataRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -2730,7 +2721,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
 
             #endregion
-
 
 
             var statusDescription = "HTTP request failed!";
@@ -3210,17 +3200,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPullAuthenticationDataResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPullAuthenticationDataResponse != null)
+                if (OnPullAuthenticationDataResponse is not null)
                     await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
                                        Cast<OnPullAuthenticationDataResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -3260,19 +3249,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.AuthorizeStart.IncRequests_OK();
 
             try
             {
 
-                if (OnAuthorizeStartRequest != null)
+                if (OnAuthorizeStartRequest is not null)
                     await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
                                        Cast<OnAuthorizeStartRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -3607,17 +3595,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeStartResponse != null)
+                if (OnAuthorizeStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeStartResponseDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -3656,19 +3643,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.AuthorizeStop.IncRequests_OK();
 
             try
             {
 
-                if (OnAuthorizeStopRequest != null)
+                if (OnAuthorizeStopRequest is not null)
                     await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
                                        Cast<OnAuthorizeStopRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -4026,17 +4012,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeStopResponse != null)
+                if (OnAuthorizeStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeStopResponseDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -4076,19 +4061,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingStartNotificationRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.SendChargingStartNotification.IncRequests_OK();
 
             try
             {
 
-                if (OnChargingStartNotificationRequest != null)
+                if (OnChargingStartNotificationRequest is not null)
                     await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
                                        Cast<OnChargingStartNotificationRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -4494,17 +4478,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingStartNotificationResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnChargingStartNotificationResponse != null)
+                if (OnChargingStartNotificationResponse is not null)
                     await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
                                        Cast<OnChargingStartNotificationResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -4543,19 +4526,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingProgressNotificationRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.SendChargingProgressNotification.IncRequests_OK();
 
             try
             {
 
-                if (OnChargingProgressNotificationRequest != null)
+                if (OnChargingProgressNotificationRequest is not null)
                     await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
                                        Cast<OnChargingProgressNotificationRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -4961,17 +4943,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingProgressNotificationResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnChargingProgressNotificationResponse != null)
+                if (OnChargingProgressNotificationResponse is not null)
                     await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
                                        Cast<OnChargingProgressNotificationResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -5010,19 +4991,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingEndNotificationRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.SendChargingEndNotification.IncRequests_OK();
 
             try
             {
 
-                if (OnChargingEndNotificationRequest != null)
+                if (OnChargingEndNotificationRequest is not null)
                     await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
                                        Cast<OnChargingEndNotificationRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -5428,17 +5408,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingEndNotificationResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnChargingEndNotificationResponse != null)
+                if (OnChargingEndNotificationResponse is not null)
                     await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
                                        Cast<OnChargingEndNotificationResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -5477,19 +5456,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingErrorNotificationRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.SendChargingErrorNotification.IncRequests_OK();
 
             try
             {
 
-                if (OnChargingErrorNotificationRequest != null)
+                if (OnChargingErrorNotificationRequest is not null)
                     await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
                                        Cast<OnChargingErrorNotificationRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -5963,17 +5941,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingErrorNotificationResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnChargingErrorNotificationResponse != null)
+                if (OnChargingErrorNotificationResponse is not null)
                     await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
                                        Cast<OnChargingErrorNotificationResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -6013,19 +5990,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnSendChargeDetailRecord event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.SendChargeDetailRecord.IncRequests_OK();
 
             try
             {
 
-                if (OnSendChargeDetailRecordRequest != null)
+                if (OnSendChargeDetailRecordRequest is not null)
                     await Task.WhenAll(OnSendChargeDetailRecordRequest.GetInvocationList().
                                        Cast<OnSendChargeDetailRecordRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -6358,17 +6334,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnChargeDetailRecordSent event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnSendChargeDetailRecordResponse != null)
+                if (OnSendChargeDetailRecordResponse is not null)
                     await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
                                        Cast<OnSendChargeDetailRecordResponseDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);

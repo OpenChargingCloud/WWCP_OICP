@@ -146,217 +146,217 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             #region OnPullEVSEData
 
-            EMPClient.OnPullEVSEDataHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpRequest);
+            EMPClient.OnPullEVSEDataHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpRequest);
 
-            EMPClient.OnPullEVSEDataRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPullEVSEDataRequest",        request. ToJSON(EMPClient.CustomPullEVSEDataRequestSerializer,
-                                                                                                                                                                                           EMPClient.CustomGeoCoordinatesSerializer));
+            EMPClient.OnPullEVSEDataRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEDataRequest",        request. ToJSON(EMPClient.CustomPullEVSEDataRequestSerializer,
+                                                                                                                                                                                 EMPClient.CustomGeoCoordinatesSerializer));
 
-            EMPClient.OnPullEVSEDataResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPullEVSEDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEDataRequestSerializer,
-                                                                                                                                                                                                                     EMPClient.CustomGeoCoordinatesSerializer),
-                                                                                                                                                                                           response.Response?.ToJSON(//CustomPullEVSEDataResponseSerializer,
-                                                                                                                                                                                                                     //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                     //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                     //CustomDataCodeSerializer
-                                                                                                                                                                                                                     )));
+            EMPClient.OnPullEVSEDataResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEDataRequestSerializer,
+                                                                                                                                                                                                           EMPClient.CustomGeoCoordinatesSerializer),
+                                                                                                                                                                                 response.Response?.ToJSON(//CustomPullEVSEDataResponseSerializer,
+                                                                                                                                                                                                           //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                           //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                           //CustomDataCodeSerializer
+                                                                                                                                                                                                           )));
 
-            EMPClient.OnPullEVSEDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpResponse);
+            EMPClient.OnPullEVSEDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPullEVSEStatus
 
-            EMPClient.OnPullEVSEStatusHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse", httpRequest);
+            EMPClient.OnPullEVSEStatusHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse", httpRequest);
 
-            EMPClient.OnPullEVSEStatusRequest      += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPullEVSEStatusRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusRequestSerializer,
-                                                                                                                                                                                           EMPClient.CustomGeoCoordinatesSerializer));
+            EMPClient.OnPullEVSEStatusRequest      += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEStatusRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusRequestSerializer,
+                                                                                                                                                                                 EMPClient.CustomGeoCoordinatesSerializer));
 
-            EMPClient.OnPullEVSEStatusResponse     += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPullEVSEStatusResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusRequestSerializer,
-                                                                                                                                                                                                                     EMPClient.CustomGeoCoordinatesSerializer),
-                                                                                                                                                                                           response.Response?.ToJSON(//CustomPullEVSEStatusResponseSerializer,
-                                                                                                                                                                                                                     //CustomOperatorEVSEStatusSerializer,
-                                                                                                                                                                                                                     //CustomEVSEStatusRecordSerializer,
-                                                                                                                                                                                                                     //CustomStatusCodeSerializer
-                                                                                                                                                                                                                     )));
+            EMPClient.OnPullEVSEStatusResponse     += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEStatusResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusRequestSerializer,
+                                                                                                                                                                                                           EMPClient.CustomGeoCoordinatesSerializer),
+                                                                                                                                                                                 response.Response?.ToJSON(//CustomPullEVSEStatusResponseSerializer,
+                                                                                                                                                                                                           //CustomOperatorEVSEStatusSerializer,
+                                                                                                                                                                                                           //CustomEVSEStatusRecordSerializer,
+                                                                                                                                                                                                           //CustomStatusCodeSerializer
+                                                                                                                                                                                                           )));
 
-            EMPClient.OnPullEVSEStatusHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse", httpResponse);
+            EMPClient.OnPullEVSEStatusHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse", httpResponse);
 
             #endregion
 
             #region OnPullEVSEStatusById
 
-            EMPClient.OnPullEVSEStatusByIdHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse", httpRequest);
+            EMPClient.OnPullEVSEStatusByIdHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse", httpRequest);
 
-            EMPClient.OnPullEVSEStatusByIdRequest      += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPullEVSEStatusByIdRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusByIdRequestSerializer));
+            EMPClient.OnPullEVSEStatusByIdRequest      += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEStatusByIdRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusByIdRequestSerializer));
 
-            EMPClient.OnPullEVSEStatusByIdResponse     += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPullEVSEStatusByIdResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusByIdRequestSerializer),
-                                                                                                                                                                                                   response.Response?.ToJSON(//CustomPullEVSEStatusByIdResponseSerializer,
-                                                                                                                                                                                                                             //CustomOperatorEVSEStatusByIdSerializer,
-                                                                                                                                                                                                                             //CustomEVSEStatusByIdRecordSerializer,
-                                                                                                                                                                                                                             //CustomStatusByIdCodeSerializer
-                                                                                                                                                                                                                             )));
+            EMPClient.OnPullEVSEStatusByIdResponse     += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEStatusByIdResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusByIdRequestSerializer),
+                                                                                                                                                                                         response.Response?.ToJSON(//CustomPullEVSEStatusByIdResponseSerializer,
+                                                                                                                                                                                                                   //CustomOperatorEVSEStatusByIdSerializer,
+                                                                                                                                                                                                                   //CustomEVSEStatusByIdRecordSerializer,
+                                                                                                                                                                                                                   //CustomStatusByIdCodeSerializer
+                                                                                                                                                                                                                   )));
 
-            EMPClient.OnPullEVSEStatusByIdHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse", httpResponse);
+            EMPClient.OnPullEVSEStatusByIdHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse", httpResponse);
 
             #endregion
 
             #region OnPullEVSEStatusByOperatorId
 
-            EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse", httpRequest);
+            EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse", httpRequest);
 
-            EMPClient.OnPullEVSEStatusByOperatorIdRequest      += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusByOperatorIdRequestSerializer));
+            EMPClient.OnPullEVSEStatusByOperatorIdRequest      += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusByOperatorIdRequestSerializer));
 
-            EMPClient.OnPullEVSEStatusByOperatorIdResponse     += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdResponse",     response.ToJSON(request.ToJSON(EMPClient.CustomPullEVSEStatusByOperatorIdRequestSerializer),
-                                                                                                                                                                                                                   response.Response?.ToJSON(//CustomPullEVSEStatusByOperatorIdResponseSerializer,
-                                                                                                                                                                                                                                             //CustomOperatorEVSEStatusByOperatorIdSerializer,
-                                                                                                                                                                                                                                             //CustomEVSEStatusByOperatorIdRecordSerializer,
-                                                                                                                                                                                                                                             //CustomStatusByOperatorIdCodeSerializer
-                                                                                                                                                                                                                                             )));
+            EMPClient.OnPullEVSEStatusByOperatorIdResponse     += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdResponse",     response.ToJSON(request.ToJSON(EMPClient.CustomPullEVSEStatusByOperatorIdRequestSerializer),
+                                                                                                                                                                                                         response.Response?.ToJSON(//CustomPullEVSEStatusByOperatorIdResponseSerializer,
+                                                                                                                                                                                                                                   //CustomOperatorEVSEStatusByOperatorIdSerializer,
+                                                                                                                                                                                                                                   //CustomEVSEStatusByOperatorIdRecordSerializer,
+                                                                                                                                                                                                                                   //CustomStatusByOperatorIdCodeSerializer
+                                                                                                                                                                                                                                   )));
 
-            EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse", httpResponse);
+            EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse", httpResponse);
 
             #endregion
 
 
             #region OnPullPricingProductData
 
-            EMPClient.OnPullPricingProductDataHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpRequest);
+            EMPClient.OnPullPricingProductDataHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpRequest);
 
-            EMPClient.OnPullPricingProductDataRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPullPricingProductDataRequest",        request. ToJSON(EMPClient.CustomPullPricingProductDataRequestSerializer));
+            EMPClient.OnPullPricingProductDataRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullPricingProductDataRequest",        request. ToJSON(EMPClient.CustomPullPricingProductDataRequestSerializer));
 
-            EMPClient.OnPullPricingProductDataResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPullPricingProductDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullPricingProductDataRequestSerializer),
-                                                                                                                                                                                               response.Response?.ToJSON(//CustomPullPricingProductDataResponseSerializer,
-                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                         //CustomDataCodeSerializer
-                                                                                                                                                                                                                         )));
+            EMPClient.OnPullPricingProductDataResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullPricingProductDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullPricingProductDataRequestSerializer),
+                                                                                                                                                                                     response.Response?.ToJSON(//CustomPullPricingProductDataResponseSerializer,
+                                                                                                                                                                                                               //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                               //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                               //CustomDataCodeSerializer
+                                                                                                                                                                                                               )));
 
-            EMPClient.OnPullPricingProductDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpResponse);
+            EMPClient.OnPullPricingProductDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPullEVSEPricing
 
-            EMPClient.OnPullEVSEPricingHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpRequest);
+            EMPClient.OnPullEVSEPricingHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpRequest);
 
-            EMPClient.OnPullEVSEPricingRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPullEVSEPricingRequest",        request. ToJSON(EMPClient.CustomPullEVSEPricingRequestSerializer));
+            EMPClient.OnPullEVSEPricingRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEPricingRequest",        request. ToJSON(EMPClient.CustomPullEVSEPricingRequestSerializer));
 
-            EMPClient.OnPullEVSEPricingResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPullEVSEPricingResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEPricingRequestSerializer),
-                                                                                                                                                                                                 response.Response?.ToJSON(//CustomPullEVSEPricingResponseSerializer,
-                                                                                                                                                                                                                           //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                           //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                           //CustomDataCodeSerializer
-                                                                                                                                                                                                                           )));
+            EMPClient.OnPullEVSEPricingResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEPricingResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEPricingRequestSerializer),
+                                                                                                                                                                                       response.Response?.ToJSON(//CustomPullEVSEPricingResponseSerializer,
+                                                                                                                                                                                                                 //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                 //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                 //CustomDataCodeSerializer
+                                                                                                                                                                                                                 )));
 
-            EMPClient.OnPullEVSEPricingHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpResponse);
+            EMPClient.OnPullEVSEPricingHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnPushAuthenticationData
 
-            EMPClient.OnPushAuthenticationDataHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpRequest);
+            EMPClient.OnPushAuthenticationDataHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpRequest);
 
-            EMPClient.OnPushAuthenticationDataRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPushAuthenticationDataRequest",        request. ToJSON(EMPClient.CustomPushAuthenticationDataRequestSerializer));
+            EMPClient.OnPushAuthenticationDataRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPushAuthenticationDataRequest",        request. ToJSON(EMPClient.CustomPushAuthenticationDataRequestSerializer));
 
-            EMPClient.OnPushAuthenticationDataResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPushAuthenticationDataResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomPushAuthenticationDataRequestSerializer),
-                                                                                                                                                                                               response.Response?.ToJSON(//CustomPushAuthenticationDataResponseSerializer,
-                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                         //CustomDataCodeSerializer
-                                                                                                                                                                                                                         )));
+            EMPClient.OnPushAuthenticationDataResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPushAuthenticationDataResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomPushAuthenticationDataRequestSerializer),
+                                                                                                                                                                                     response.Response?.ToJSON(//CustomPushAuthenticationDataResponseSerializer,
+                                                                                                                                                                                                               //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                               //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                               //CustomDataCodeSerializer
+                                                                                                                                                                                                               )));
 
-            EMPClient.OnPushAuthenticationDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpResponse);
+            EMPClient.OnPushAuthenticationDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnAuthorizeRemoteReservationStart
 
-            EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpRequest);
+            EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpRequest);
 
-            EMPClient.OnAuthorizeRemoteReservationStartRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteReservationStartRequestSerializer,
-                                                                                                                                                                                                                              EMPClient.CustomIdentificationSerializer));
+            EMPClient.OnAuthorizeRemoteReservationStartRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteReservationStartRequestSerializer,
+                                                                                                                                                                                                                    EMPClient.CustomIdentificationSerializer));
 
-            EMPClient.OnAuthorizeRemoteReservationStartResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStartRequestSerializer,
-                                                                                                                                                                                                                                                           EMPClient.CustomIdentificationSerializer),
-                                                                                                                                                                                                                 response.Response?.ToJSON(//CustomAuthorizeRemoteReservationStartResponseSerializer,
-                                                                                                                                                                                                                                           //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                           //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                           //CustomDataCodeSerializer
-                                                                                                                                                                                                                                           )));
+            EMPClient.OnAuthorizeRemoteReservationStartResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStartRequestSerializer,
+                                                                                                                                                                                                                                                 EMPClient.CustomIdentificationSerializer),
+                                                                                                                                                                                                       response.Response?.ToJSON(//CustomAuthorizeRemoteReservationStartResponseSerializer,
+                                                                                                                                                                                                                                 //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                                 //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                                 //CustomDataCodeSerializer
+                                                                                                                                                                                                                                 )));
 
-            EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpResponse);
+            EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnAuthorizeRemoteReservationStop
 
-            EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",   httpRequest);
+            EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",   httpRequest);
 
-            EMPClient.OnAuthorizeRemoteReservationStopRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteReservationStopRequestSerializer));
+            EMPClient.OnAuthorizeRemoteReservationStopRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteReservationStopRequestSerializer));
 
-            EMPClient.OnAuthorizeRemoteReservationStopResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStopRequestSerializer),
-                                                                                                                                                                                                               response.Response?.ToJSON(//CustomAuthorizeRemoteReservationStopResponseSerializer,
-                                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                         //CustomDataCodeSerializer
-                                                                                                                                                                                                                                         )));
+            EMPClient.OnAuthorizeRemoteReservationStopResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStopRequestSerializer),
+                                                                                                                                                                                                     response.Response?.ToJSON(//CustomAuthorizeRemoteReservationStopResponseSerializer,
+                                                                                                                                                                                                                               //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                               //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                               //CustomDataCodeSerializer
+                                                                                                                                                                                                                               )));
 
-            EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",   httpResponse);
+            EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnAuthorizeRemoteStart
 
-            EMPClient.OnAuthorizeRemoteStartHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpRequest);
+            EMPClient.OnAuthorizeRemoteStartHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpRequest);
 
-            EMPClient.OnAuthorizeRemoteStartRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnAuthorizeRemoteStartRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteStartRequestSerializer,
-                                                                                                                                                                                                           EMPClient.CustomIdentificationSerializer));
+            EMPClient.OnAuthorizeRemoteStartRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteStartRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteStartRequestSerializer,
+                                                                                                                                                                                                 EMPClient.CustomIdentificationSerializer));
 
-            EMPClient.OnAuthorizeRemoteStartResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnAuthorizeRemoteStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteStartRequestSerializer,
-                                                                                                                                                                                                                                     EMPClient.CustomIdentificationSerializer),
-                                                                                                                                                                                           response.Response?.ToJSON(//CustomAuthorizeRemoteStartResponseSerializer,
-                                                                                                                                                                                                                     //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                     //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                     //CustomDataCodeSerializer
-                                                                                                                                                                                                                     )));
+            EMPClient.OnAuthorizeRemoteStartResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteStartRequestSerializer,
+                                                                                                                                                                                                                           EMPClient.CustomIdentificationSerializer),
+                                                                                                                                                                                 response.Response?.ToJSON(//CustomAuthorizeRemoteStartResponseSerializer,
+                                                                                                                                                                                                           //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                           //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                           //CustomDataCodeSerializer
+                                                                                                                                                                                                           )));
 
-            EMPClient.OnAuthorizeRemoteStartHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpResponse);
+            EMPClient.OnAuthorizeRemoteStartHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnAuthorizeRemoteStop
 
-            EMPClient.OnAuthorizeRemoteStopHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",   httpRequest);
+            EMPClient.OnAuthorizeRemoteStopHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",   httpRequest);
 
-            EMPClient.OnAuthorizeRemoteStopRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnAuthorizeRemoteStopRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteStopRequestSerializer));
+            EMPClient.OnAuthorizeRemoteStopRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteStopRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteStopRequestSerializer));
 
-            EMPClient.OnAuthorizeRemoteStopResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnAuthorizeRemoteStopResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomAuthorizeRemoteStopRequestSerializer),
-                                                                                                                                                                                         response.Response?.ToJSON(//CustomAuthorizeRemoteStopResponseSerializer,
-                                                                                                                                                                                                                   //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                   //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                   //CustomDataCodeSerializer
-                                                                                                                                                                                                                   )));
+            EMPClient.OnAuthorizeRemoteStopResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteStopResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomAuthorizeRemoteStopRequestSerializer),
+                                                                                                                                                                               response.Response?.ToJSON(//CustomAuthorizeRemoteStopResponseSerializer,
+                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                         //CustomDataCodeSerializer
+                                                                                                                                                                                                         )));
 
-            EMPClient.OnAuthorizeRemoteStopHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",   httpResponse);
+            EMPClient.OnAuthorizeRemoteStopHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnGetChargeDetailRecords
 
-            EMPClient.OnGetChargeDetailRecordsHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpRequest);
+            EMPClient.OnGetChargeDetailRecordsHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpRequest);
 
-            EMPClient.OnGetChargeDetailRecordsRequest        += (timestamp, empClient, senderDescription, request)           => DebugLog.SubmitEvent("OnGetChargeDetailRecordsRequest",        request. ToJSON(EMPClient.CustomGetChargeDetailRecordsRequestSerializer));
+            EMPClient.OnGetChargeDetailRecordsRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnGetChargeDetailRecordsRequest",        request. ToJSON(EMPClient.CustomGetChargeDetailRecordsRequestSerializer));
 
-            EMPClient.OnGetChargeDetailRecordsResponse       += (timestamp, empClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnGetChargeDetailRecordsResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomGetChargeDetailRecordsRequestSerializer),
-                                                                                                                                                                                               response.Response?.ToJSON(//CustomGetChargeDetailRecordsResponseSerializer,
-                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                         //CustomDataCodeSerializer
-                                                                                                                                                                                                                         )));
+            EMPClient.OnGetChargeDetailRecordsResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnGetChargeDetailRecordsResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomGetChargeDetailRecordsRequestSerializer),
+                                                                                                                                                                                     response.Response?.ToJSON(//CustomGetChargeDetailRecordsResponseSerializer,
+                                                                                                                                                                                                               //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                               //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                               //CustomDataCodeSerializer
+                                                                                                                                                                                                               )));
 
-            EMPClient.OnGetChargeDetailRecordsHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpResponse);
+            EMPClient.OnGetChargeDetailRecordsHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpResponse);
 
             #endregion
 
@@ -496,256 +496,256 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             #region OnPushEVSEData
 
-            CPOClient.OnPushEVSEDataHTTPRequest    += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",     httpRequest);
+            CPOClient.OnPushEVSEDataHTTPRequest    += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",     httpRequest);
 
-            CPOClient.OnPushEVSEDataRequest        += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPushEVSEDataRequest",          request. ToJSON(CPOClient.CustomPushEVSEDataRequestSerializer,
-                                                                                                                                                                                             CPOClient.CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                             CPOClient.CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                             CPOClient.CustomAddressSerializer,
-                                                                                                                                                                                             CPOClient.CustomChargingFacilitySerializer,
-                                                                                                                                                                                             CPOClient.CustomGeoCoordinatesSerializer,
-                                                                                                                                                                                             CPOClient.CustomEnergySourceSerializer,
-                                                                                                                                                                                             CPOClient.CustomEnvironmentalImpactSerializer,
-                                                                                                                                                                                             CPOClient.CustomOpeningTimesSerializer));
+            CPOClient.OnPushEVSEDataRequest        += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnPushEVSEDataRequest",          request. ToJSON(CPOClient.CustomPushEVSEDataRequestSerializer,
+                                                                                                                                                                                   CPOClient.CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                   CPOClient.CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                   CPOClient.CustomAddressSerializer,
+                                                                                                                                                                                   CPOClient.CustomChargingFacilitySerializer,
+                                                                                                                                                                                   CPOClient.CustomGeoCoordinatesSerializer,
+                                                                                                                                                                                   CPOClient.CustomEnergySourceSerializer,
+                                                                                                                                                                                   CPOClient.CustomEnvironmentalImpactSerializer,
+                                                                                                                                                                                   CPOClient.CustomOpeningTimesSerializer));
 
-            CPOClient.OnPushEVSEDataResponse       += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPushEVSEDataResponse",         response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEDataRequestSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomAddressSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomChargingFacilitySerializer,
-                                                                                                                                                                                                                       CPOClient.CustomGeoCoordinatesSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomEnergySourceSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomEnvironmentalImpactSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomOpeningTimesSerializer),
-                                                                                                                                                                                             response.Response?.ToJSON(//CustomPushEVSEDataResponseSerializer,
-                                                                                                                                                                                                                       //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                       //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                       //CustomDataCodeSerializer
-                                                                                                                                                                                                                       )));
+            CPOClient.OnPushEVSEDataResponse       += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushEVSEDataResponse",         response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEDataRequestSerializer,
+                                                                                                                                                                                                             CPOClient.CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                             CPOClient.CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                             CPOClient.CustomAddressSerializer,
+                                                                                                                                                                                                             CPOClient.CustomChargingFacilitySerializer,
+                                                                                                                                                                                                             CPOClient.CustomGeoCoordinatesSerializer,
+                                                                                                                                                                                                             CPOClient.CustomEnergySourceSerializer,
+                                                                                                                                                                                                             CPOClient.CustomEnvironmentalImpactSerializer,
+                                                                                                                                                                                                             CPOClient.CustomOpeningTimesSerializer),
+                                                                                                                                                                                   response.Response?.ToJSON(//CustomPushEVSEDataResponseSerializer,
+                                                                                                                                                                                                             //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                             //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                             //CustomDataCodeSerializer
+                                                                                                                                                                                                             )));
 
-            CPOClient.OnPushEVSEDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",     httpResponse);
+            CPOClient.OnPushEVSEDataHTTPResponse   += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",     httpResponse);
 
             #endregion
 
             #region OnPushEVSEStatus
 
-            CPOClient.OnPushEVSEStatusHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpRequest);
+            CPOClient.OnPushEVSEStatusHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpRequest);
 
-            CPOClient.OnPushEVSEStatusRequest      += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPushEVSEStatusRequest",        request. ToJSON(CPOClient.CustomPushEVSEStatusRequestSerializer,
-                                                                                                                                                                                             CPOClient.CustomOperatorEVSEStatusSerializer,
-                                                                                                                                                                                             CPOClient.CustomEVSEStatusRecordSerializer));
+            CPOClient.OnPushEVSEStatusRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnPushEVSEStatusRequest",        request. ToJSON(CPOClient.CustomPushEVSEStatusRequestSerializer,
+                                                                                                                                                                                   CPOClient.CustomOperatorEVSEStatusSerializer,
+                                                                                                                                                                                   CPOClient.CustomEVSEStatusRecordSerializer));
 
-            CPOClient.OnPushEVSEStatusResponse     += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPushEVSEStatusResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEStatusRequestSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomOperatorEVSEStatusSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomEVSEStatusRecordSerializer),
-                                                                                                                                                                                             response.Response?.ToJSON(//CustomPushEVSEStatusResponseSerializer,
-                                                                                                                                                                                                                       //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                       //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                       //CustomDataCodeSerializer
-                                                                                                                                                                                                                       )));
+            CPOClient.OnPushEVSEStatusResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushEVSEStatusResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEStatusRequestSerializer,
+                                                                                                                                                                                                             CPOClient.CustomOperatorEVSEStatusSerializer,
+                                                                                                                                                                                                             CPOClient.CustomEVSEStatusRecordSerializer),
+                                                                                                                                                                                   response.Response?.ToJSON(//CustomPushEVSEStatusResponseSerializer,
+                                                                                                                                                                                                             //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                             //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                             //CustomDataCodeSerializer
+                                                                                                                                                                                                             )));
 
-            CPOClient.OnPushEVSEStatusHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpResponse);
+            CPOClient.OnPushEVSEStatusHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnPushPricingProductData
 
-            CPOClient.OnPushPricingProductDataHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpRequest);
+            CPOClient.OnPushPricingProductDataHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpRequest);
 
-            CPOClient.OnPushPricingProductDataRequest      += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPushPricingProductDataRequest",        request. ToJSON(CPOClient.CustomPushPricingProductDataRequestSerializer,
-                                                                                                                                                                                                             CPOClient.CustomPricingProductDataSerializer,
-                                                                                                                                                                                                             CPOClient.CustomPricingProductDataRecordSerializer));
+            CPOClient.OnPushPricingProductDataRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnPushPricingProductDataRequest",        request. ToJSON(CPOClient.CustomPushPricingProductDataRequestSerializer,
+                                                                                                                                                                                                   CPOClient.CustomPricingProductDataSerializer,
+                                                                                                                                                                                                   CPOClient.CustomPricingProductDataRecordSerializer));
 
-            CPOClient.OnPushPricingProductDataResponse     += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPushPricingProductDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushPricingProductDataRequestSerializer,
-                                                                                                                                                                                                                                       CPOClient.CustomPricingProductDataSerializer,
-                                                                                                                                                                                                                                       CPOClient.CustomPricingProductDataRecordSerializer),
-                                                                                                                                                                                             response.Response?.ToJSON(//CustomPushPricingProductDataResponseSerializer,
-                                                                                                                                                                                                                       //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                       //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                       //CustomDataCodeSerializer
-                                                                                                                                                                                                                       )));
+            CPOClient.OnPushPricingProductDataResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushPricingProductDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushPricingProductDataRequestSerializer,
+                                                                                                                                                                                                                             CPOClient.CustomPricingProductDataSerializer,
+                                                                                                                                                                                                                             CPOClient.CustomPricingProductDataRecordSerializer),
+                                                                                                                                                                                   response.Response?.ToJSON(//CustomPushPricingProductDataResponseSerializer,
+                                                                                                                                                                                                             //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                             //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                             //CustomDataCodeSerializer
+                                                                                                                                                                                                             )));
 
-            CPOClient.OnPushPricingProductDataHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpResponse);
+            CPOClient.OnPushPricingProductDataHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPushEVSEPricing
 
-            CPOClient.OnPushEVSEPricingHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpRequest);
+            CPOClient.OnPushEVSEPricingHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpRequest);
 
-            CPOClient.OnPushEVSEPricingRequest      += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPushEVSEPricingRequest",        request. ToJSON(CPOClient.CustomPushEVSEPricingRequestSerializer,
-                                                                                                                                                                                               CPOClient.CustomEVSEPricingSerializer));
+            CPOClient.OnPushEVSEPricingRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnPushEVSEPricingRequest",        request. ToJSON(CPOClient.CustomPushEVSEPricingRequestSerializer,
+                                                                                                                                                                                     CPOClient.CustomEVSEPricingSerializer));
 
-            CPOClient.OnPushEVSEPricingResponse     += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPushEVSEPricingResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEPricingRequestSerializer,
-                                                                                                                                                                                                                         CPOClient.CustomEVSEPricingSerializer),
-                                                                                                                                                                                               response.Response?.ToJSON(//CustomPushEVSEPricingResponseSerializer,
-                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                         //CustomDataCodeSerializer
-                                                                                                                                                                                                                         )));
+            CPOClient.OnPushEVSEPricingResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushEVSEPricingResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEPricingRequestSerializer,
+                                                                                                                                                                                                               CPOClient.CustomEVSEPricingSerializer),
+                                                                                                                                                                                     response.Response?.ToJSON(//CustomPushEVSEPricingResponseSerializer,
+                                                                                                                                                                                                               //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                               //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                               //CustomDataCodeSerializer
+                                                                                                                                                                                                               )));
 
-            CPOClient.OnPushEVSEPricingHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpResponse);
+            CPOClient.OnPushEVSEPricingHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnPullAuthenticationData
 
-            CPOClient.OnPullAuthenticationDataHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpRequest);
+            CPOClient.OnPullAuthenticationDataHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpRequest);
 
-            CPOClient.OnPullAuthenticationDataRequest      += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnPullAuthenticationDataRequest",        request. ToJSON(CPOClient.CustomPullAuthenticationDataRequestSerializer));
+            CPOClient.OnPullAuthenticationDataRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnPullAuthenticationDataRequest",        request. ToJSON(CPOClient.CustomPullAuthenticationDataRequestSerializer));
 
-            CPOClient.OnPullAuthenticationDataResponse     += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnPullAuthenticationDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPullAuthenticationDataRequestSerializer),
-                                                                                                                                                                                                             response.Response?.ToJSON(//CustomPullAuthenticationDataResponseSerializer,
-                                                                                                                                                                                                                                       //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                       //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                       //CustomDataCodeSerializer
-                                                                                                                                                                                                                                       )));
+            CPOClient.OnPullAuthenticationDataResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPullAuthenticationDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPullAuthenticationDataRequestSerializer),
+                                                                                                                                                                                                   response.Response?.ToJSON(//CustomPullAuthenticationDataResponseSerializer,
+                                                                                                                                                                                                                             //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                             //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                             //CustomDataCodeSerializer
+                                                                                                                                                                                                                             )));
 
-            CPOClient.OnPullAuthenticationDataHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpResponse);
+            CPOClient.OnPullAuthenticationDataHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnAuthorizeStart
 
-            CPOClient.OnAuthorizeStartHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpRequest);
+            CPOClient.OnAuthorizeStartHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpRequest);
 
-            CPOClient.OnAuthorizeStartRequest      += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnAuthorizeStartRequest",        request. ToJSON(CPOClient.CustomAuthorizeStartRequestSerializer,
-                                                                                                                                                                                             CPOClient.CustomIdentificationSerializer));
+            CPOClient.OnAuthorizeStartRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeStartRequest",        request. ToJSON(CPOClient.CustomAuthorizeStartRequestSerializer,
+                                                                                                                                                                                   CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnAuthorizeStartResponse     += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnAuthorizeStartResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStartRequestSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomIdentificationSerializer),
-                                                                                                                                                                                             response.Response?.ToJSON(//CustomAuthorizeStartResponseSerializer,
-                                                                                                                                                                                                                       //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                       //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                       //CustomDataCodeSerializer
-                                                                                                                                                                                                                       )));
+            CPOClient.OnAuthorizeStartResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeStartResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStartRequestSerializer,
+                                                                                                                                                                                                             CPOClient.CustomIdentificationSerializer),
+                                                                                                                                                                                   response.Response?.ToJSON(//CustomAuthorizeStartResponseSerializer,
+                                                                                                                                                                                                             //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                             //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                             //CustomDataCodeSerializer
+                                                                                                                                                                                                             )));
 
-            CPOClient.OnAuthorizeStartHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpResponse);
+            CPOClient.OnAuthorizeStartHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnAuthorizeStop
 
-            CPOClient.OnAuthorizeStopHTTPRequest   += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpRequest);
+            CPOClient.OnAuthorizeStopHTTPRequest   += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpRequest);
 
-            CPOClient.OnAuthorizeStopRequest       += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnAuthorizeStopRequest",         request. ToJSON(CPOClient.CustomAuthorizeStopRequestSerializer,
-                                                                                                                                                                                             CPOClient.CustomIdentificationSerializer));
+            CPOClient.OnAuthorizeStopRequest       += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeStopRequest",         request. ToJSON(CPOClient.CustomAuthorizeStopRequestSerializer,
+                                                                                                                                                                                   CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnAuthorizeStopResponse      += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnAuthorizeStopResponse",        response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStopRequestSerializer,
-                                                                                                                                                                                                                       CPOClient.CustomIdentificationSerializer),
-                                                                                                                                                                                             response.Response?.ToJSON(//CustomAuthorizeStopResponseSerializer,
-                                                                                                                                                                                                                       //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                       //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                       //CustomDataCodeSerializer
-                                                                                                                                                                                                                       )));
+            CPOClient.OnAuthorizeStopResponse      += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeStopResponse",        response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStopRequestSerializer,
+                                                                                                                                                                                                             CPOClient.CustomIdentificationSerializer),
+                                                                                                                                                                                   response.Response?.ToJSON(//CustomAuthorizeStopResponseSerializer,
+                                                                                                                                                                                                             //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                             //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                             //CustomDataCodeSerializer
+                                                                                                                                                                                                             )));
 
-            CPOClient.OnAuthorizeStopHTTPResponse  += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpResponse);
+            CPOClient.OnAuthorizeStopHTTPResponse  += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpResponse);
 
             #endregion
 
 
             #region OnChargingStartNotification
 
-            CPOClient.OnChargingStartNotificationHTTPRequest     += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnChargingStartNotificationHTTPResponse",      httpRequest);
+            CPOClient.OnChargingStartNotificationHTTPRequest     += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnChargingStartNotificationHTTPResponse",      httpRequest);
 
-            CPOClient.OnChargingStartNotificationRequest         += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnChargingStartNotificationRequest",           request. ToJSON(CPOClient.CustomChargingStartNotificationRequestSerializer,
-                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer));
+            CPOClient.OnChargingStartNotificationRequest         += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingStartNotificationRequest",           request. ToJSON(CPOClient.CustomChargingStartNotificationRequestSerializer,
+                                                                                                                                                                                                               CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingStartNotificationResponse        += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnChargingStartNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingStartNotificationRequestSerializer,
-                                                                                                                                                                                                                                                   CPOClient.CustomIdentificationSerializer),
-                                                                                                                                                                                                                         response.Response?.ToJSON(//CustomChargingStartNotificationResponseSerializer,
-                                                                                                                                                                                                                                                   //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                                   //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                                   //CustomDataCodeSerializer
-                                                                                                                                                                                                                                                   )));
+            CPOClient.OnChargingStartNotificationResponse        += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingStartNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingStartNotificationRequestSerializer,
+                                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer),
+                                                                                                                                                                                                               response.Response?.ToJSON(//CustomChargingStartNotificationResponseSerializer,
+                                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                                         //CustomDataCodeSerializer
+                                                                                                                                                                                                                                         )));
 
-            CPOClient.OnChargingStartNotificationHTTPResponse    += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnChargingStartNotificationHTTPResponse",      httpResponse);
+            CPOClient.OnChargingStartNotificationHTTPResponse    += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnChargingStartNotificationHTTPResponse",      httpResponse);
 
             #endregion
 
             #region OnChargingProgressNotification
 
-            CPOClient.OnChargingProgressNotificationHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnChargingProgressNotificationHTTPResponse",   httpRequest);
+            CPOClient.OnChargingProgressNotificationHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnChargingProgressNotificationHTTPResponse",   httpRequest);
 
-            CPOClient.OnChargingProgressNotificationRequest      += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnChargingProgressNotificationRequest",        request. ToJSON(CPOClient.CustomChargingProgressNotificationRequestSerializer,
-                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer));
+            CPOClient.OnChargingProgressNotificationRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingProgressNotificationRequest",        request. ToJSON(CPOClient.CustomChargingProgressNotificationRequestSerializer,
+                                                                                                                                                                                                               CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingProgressNotificationResponse     += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnChargingProgressNotificationResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargingProgressNotificationRequestSerializer,
-                                                                                                                                                                                                                                                   CPOClient.CustomIdentificationSerializer),
-                                                                                                                                                                                                                         response.Response?.ToJSON(//CustomChargingProgressNotificationResponseSerializer,
-                                                                                                                                                                                                                                                   //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                                   //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                                   //CustomDataCodeSerializer
-                                                                                                                                                                                                                                                   )));
+            CPOClient.OnChargingProgressNotificationResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingProgressNotificationResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargingProgressNotificationRequestSerializer,
+                                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer),
+                                                                                                                                                                                                               response.Response?.ToJSON(//CustomChargingProgressNotificationResponseSerializer,
+                                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                                         //CustomDataCodeSerializer
+                                                                                                                                                                                                                                         )));
 
-            CPOClient.OnChargingProgressNotificationHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnChargingProgressNotificationHTTPResponse",   httpResponse);
+            CPOClient.OnChargingProgressNotificationHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnChargingProgressNotificationHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnChargingEndNotification
 
-            CPOClient.OnChargingEndNotificationHTTPRequest       += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnChargingEndNotificationHTTPResponse",        httpRequest);
+            CPOClient.OnChargingEndNotificationHTTPRequest       += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnChargingEndNotificationHTTPResponse",        httpRequest);
 
-            CPOClient.OnChargingEndNotificationRequest           += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnChargingEndNotificationRequest",             request. ToJSON(CPOClient.CustomChargingEndNotificationRequestSerializer,
-                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer));
+            CPOClient.OnChargingEndNotificationRequest           += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingEndNotificationRequest",             request. ToJSON(CPOClient.CustomChargingEndNotificationRequestSerializer,
+                                                                                                                                                                                                               CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingEndNotificationResponse          += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnChargingEndNotificationResponse",            response.ToJSON(request.           ToJSON(CPOClient.CustomChargingEndNotificationRequestSerializer,
-                                                                                                                                                                                                                                                   CPOClient.CustomIdentificationSerializer),
-                                                                                                                                                                                                                         response.Response?.ToJSON(//CustomChargingEndNotificationResponseSerializer,
-                                                                                                                                                                                                                                                   //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                                   //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                                   //CustomDataCodeSerializer
-                                                                                                                                                                                                                                                   )));
+            CPOClient.OnChargingEndNotificationResponse          += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingEndNotificationResponse",            response.ToJSON(request.           ToJSON(CPOClient.CustomChargingEndNotificationRequestSerializer,
+                                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer),
+                                                                                                                                                                                                               response.Response?.ToJSON(//CustomChargingEndNotificationResponseSerializer,
+                                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                                         //CustomDataCodeSerializer
+                                                                                                                                                                                                                                         )));
 
-            CPOClient.OnChargingEndNotificationHTTPResponse      += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnChargingEndNotificationHTTPResponse",        httpResponse);
+            CPOClient.OnChargingEndNotificationHTTPResponse      += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnChargingEndNotificationHTTPResponse",        httpResponse);
 
             #endregion
 
             #region OnChargingErrorNotification
 
-            CPOClient.OnChargingErrorNotificationHTTPRequest     += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnChargingErrorNotificationHTTPResponse",      httpRequest);
+            CPOClient.OnChargingErrorNotificationHTTPRequest     += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnChargingErrorNotificationHTTPResponse",      httpRequest);
 
-            CPOClient.OnChargingErrorNotificationRequest         += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnChargingErrorNotificationRequest",           request. ToJSON(CPOClient.CustomChargingErrorNotificationRequestSerializer,
-                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer));
+            CPOClient.OnChargingErrorNotificationRequest         += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingErrorNotificationRequest",           request. ToJSON(CPOClient.CustomChargingErrorNotificationRequestSerializer,
+                                                                                                                                                                                                               CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingErrorNotificationResponse        += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnChargingErrorNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingErrorNotificationRequestSerializer,
-                                                                                                                                                                                                                                                   CPOClient.CustomIdentificationSerializer),
-                                                                                                                                                                                                                         response.Response?.ToJSON(//CustomChargingErrorNotificationResponseSerializer,
-                                                                                                                                                                                                                                                   //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                                   //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                                   //CustomDataCodeSerializer
-                                                                                                                                                                                                                                                   )));
+            CPOClient.OnChargingErrorNotificationResponse        += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingErrorNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingErrorNotificationRequestSerializer,
+                                                                                                                                                                                                                                         CPOClient.CustomIdentificationSerializer),
+                                                                                                                                                                                                               response.Response?.ToJSON(//CustomChargingErrorNotificationResponseSerializer,
+                                                                                                                                                                                                                                         //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                                         //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                                         //CustomDataCodeSerializer
+                                                                                                                                                                                                                                         )));
 
-            CPOClient.OnChargingErrorNotificationHTTPResponse    += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnChargingErrorNotificationHTTPResponse",      httpResponse);
+            CPOClient.OnChargingErrorNotificationHTTPResponse    += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnChargingErrorNotificationHTTPResponse",      httpResponse);
 
             #endregion
 
 
             #region OnSendChargeDetailRecord
 
-            CPOClient.OnSendChargeDetailRecordHTTPRequest  += (timestamp, httpClient, httpRequest)                         => DebugLog.SubmitEvent("OnSendChargeDetailRecordHTTPResponse",   httpRequest);
+            CPOClient.OnSendChargeDetailRecordHTTPRequest  += (timestamp, httpClient, httpRequest)               => DebugLog.SubmitEvent("OnSendChargeDetailRecordHTTPResponse",   httpRequest);
 
-            CPOClient.OnSendChargeDetailRecordRequest      += (timestamp, cpoClient, senderDescription, request)           => DebugLog.SubmitEvent("OnSendChargeDetailRecordRequest",        request. ToJSON(CPOClient.CustomChargeDetailRecordRequestSerializer,
-                                                                                                                                                                                                             CPOClient.CustomChargeDetailRecordSerializer,
-                                                                                                                                                                                                             CPOClient.CustomIdentificationSerializer,
-                                                                                                                                                                                                             CPOClient.CustomSignedMeteringValueSerializer,
-                                                                                                                                                                                                             CPOClient.CustomCalibrationLawVerificationSerializer));
+            CPOClient.OnSendChargeDetailRecordRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnSendChargeDetailRecordRequest",        request. ToJSON(CPOClient.CustomChargeDetailRecordRequestSerializer,
+                                                                                                                                                                                                   CPOClient.CustomChargeDetailRecordSerializer,
+                                                                                                                                                                                                   CPOClient.CustomIdentificationSerializer,
+                                                                                                                                                                                                   CPOClient.CustomSignedMeteringValueSerializer,
+                                                                                                                                                                                                   CPOClient.CustomCalibrationLawVerificationSerializer));
 
-            CPOClient.OnSendChargeDetailRecordResponse     += (timestamp, cpoClient, senderDescription, request, response) => DebugLog.SubmitEvent("OnSendChargeDetailRecordResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargeDetailRecordRequestSerializer,
-                                                                                                                                                                                                                                       CPOClient.CustomChargeDetailRecordSerializer,
-                                                                                                                                                                                                                                       CPOClient.CustomIdentificationSerializer,
-                                                                                                                                                                                                                                       CPOClient.CustomSignedMeteringValueSerializer,
-                                                                                                                                                                                                                                       CPOClient.CustomCalibrationLawVerificationSerializer),
-                                                                                                                                                                                                             response.Response?.ToJSON(//CustomSendChargeDetailRecordResponseSerializer,
-                                                                                                                                                                                                                                       //CustomOperatorEVSEDataSerializer,
-                                                                                                                                                                                                                                       //CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                                                       //CustomDataCodeSerializer
-                                                                                                                                                                                                                                       )));
+            CPOClient.OnSendChargeDetailRecordResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnSendChargeDetailRecordResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargeDetailRecordRequestSerializer,
+                                                                                                                                                                                                                             CPOClient.CustomChargeDetailRecordSerializer,
+                                                                                                                                                                                                                             CPOClient.CustomIdentificationSerializer,
+                                                                                                                                                                                                                             CPOClient.CustomSignedMeteringValueSerializer,
+                                                                                                                                                                                                                             CPOClient.CustomCalibrationLawVerificationSerializer),
+                                                                                                                                                                                                   response.Response?.ToJSON(//CustomSendChargeDetailRecordResponseSerializer,
+                                                                                                                                                                                                                             //CustomOperatorEVSEDataSerializer,
+                                                                                                                                                                                                                             //CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                                             //CustomDataCodeSerializer
+                                                                                                                                                                                                                             )));
 
-            CPOClient.OnSendChargeDetailRecordHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse)           => DebugLog.SubmitEvent("OnSendChargeDetailRecordHTTPResponse",   httpResponse);
+            CPOClient.OnSendChargeDetailRecordHTTPResponse += (timestamp, httpClient, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnSendChargeDetailRecordHTTPResponse",   httpResponse);
 
             #endregion
 

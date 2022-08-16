@@ -34,15 +34,96 @@ using cloud.charging.open.protocols.OICPv2_3.CPO;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.p2p
+namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 {
 
     /// <summary>
-    /// The EMP p2p combines the EMPClient(s) and CPOClientAPI
+    /// The EMP p2p combines EMPClient(s) and the CPOClientAPI,
     /// and adds additional logging for all.
     /// </summary>
-    public class EMPPeer : APeer
+    public class EMPPeer : APeer, IEMPPeer
     {
+
+        #region (class) APICounters
+
+        public class APICounters
+        {
+
+            public APICounterValues  PullEVSEData                       { get; }
+            public APICounterValues  PullEVSEStatus                     { get; }
+            public APICounterValues  PullEVSEStatusById                 { get; }
+
+            public APICounterValues  PullPricingProductData             { get; }
+            public APICounterValues  PullEVSEPricing                    { get; }
+
+            public APICounterValues  PushAuthenticationData             { get; }
+
+            public APICounterValues  AuthorizeRemoteReservationStart    { get; }
+            public APICounterValues  AuthorizeRemoteReservationStop     { get; }
+            public APICounterValues  AuthorizeRemoteStart               { get; }
+            public APICounterValues  AuthorizeRemoteStop                { get; }
+
+            public APICounterValues  GetChargeDetailRecords             { get; }
+
+            public APICounters(APICounterValues? PullEVSEData                       = null,
+                               APICounterValues? PullEVSEStatus                     = null,
+                               APICounterValues? PullEVSEStatusById                 = null,
+
+                               APICounterValues? PullPricingProductData             = null,
+                               APICounterValues? PullEVSEPricing                    = null,
+
+                               APICounterValues? PushAuthenticationData             = null,
+
+                               APICounterValues? AuthorizeRemoteReservationStart    = null,
+                               APICounterValues? AuthorizeRemoteReservationStop     = null,
+                               APICounterValues? AuthorizeRemoteStart               = null,
+                               APICounterValues? AuthorizeRemoteStop                = null,
+
+                               APICounterValues? GetChargeDetailRecords             = null)
+            {
+
+                this.PullEVSEData                     = PullEVSEData                    ?? new APICounterValues();
+                this.PullEVSEStatus                   = PullEVSEStatus                  ?? new APICounterValues();
+                this.PullEVSEStatusById               = PullEVSEStatusById              ?? new APICounterValues();
+
+                this.PullPricingProductData           = PullPricingProductData          ?? new APICounterValues();
+                this.PullEVSEPricing                  = PullEVSEPricing                 ?? new APICounterValues();
+
+                this.PushAuthenticationData           = PushAuthenticationData          ?? new APICounterValues();
+
+                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
+                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
+                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
+                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
+
+                this.GetChargeDetailRecords           = GetChargeDetailRecords          ?? new APICounterValues();
+
+            }
+
+            public JObject ToJSON()
+
+                => JSONObject.Create(
+                       new JProperty("PullEVSEData",                     PullEVSEData.                   ToJSON()),
+                       new JProperty("PullEVSEStatus",                   PullEVSEStatus.                 ToJSON()),
+                       new JProperty("PullEVSEStatusById",               PullEVSEStatusById.             ToJSON()),
+
+                       new JProperty("PullPricingProductData",           PullPricingProductData.         ToJSON()),
+                       new JProperty("PullEVSEPricing",                  PullEVSEPricing.                ToJSON()),
+
+                       new JProperty("PushAuthenticationData",           PushAuthenticationData.         ToJSON()),
+
+                       new JProperty("AuthorizeRemoteReservationStart",  AuthorizeRemoteReservationStart.ToJSON()),
+                       new JProperty("AuthorizeRemoteReservationStop",   AuthorizeRemoteReservationStop. ToJSON()),
+                       new JProperty("AuthorizeRemoteStart",             AuthorizeRemoteStart.           ToJSON()),
+                       new JProperty("AuthorizeRemoteStop",              AuthorizeRemoteStop.            ToJSON()),
+
+                       new JProperty("GetChargeDetailRecords",           GetChargeDetailRecords.         ToJSON())
+                   );
+
+        }
+
+        #endregion
+
 
         #region Data
 
@@ -63,6 +144,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         #endregion
 
         #region Properties
+
+        public APICounters   Counters        { get; }
 
         /// <summary>
         /// The CPO client API.
@@ -92,6 +175,275 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// </summary>
         public HTTPErrorLogEvent     ErrorLog
             => httpAPI.ErrorLog;
+
+        #endregion
+
+
+        #region OnPullEVSEDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEData request will be send.
+        /// </summary>
+        public event OnPullEVSEDataRequestDelegate?   OnPullEVSEDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?         OnPullEVSEDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?        OnPullEVSEDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEData request had been received.
+        /// </summary>
+        public event OnPullEVSEDataResponseDelegate?  OnPullEVSEDataResponse;
+
+        #endregion
+
+        #region OnPullEVSEStatusRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatus request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusRequestDelegate?   OnPullEVSEStatusRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatus HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?           OnPullEVSEStatusHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEStatus HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?          OnPullEVSEStatusHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEStatus request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusResponseDelegate?  OnPullEVSEStatusResponse;
+
+        #endregion
+
+        #region OnPullEVSEStatusByIdRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatusById request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusByIdRequestDelegate?   OnPullEVSEStatusByIdRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatusById HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?               OnPullEVSEStatusByIdHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEStatusById HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?              OnPullEVSEStatusByIdHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEStatusById request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusByIdResponseDelegate?  OnPullEVSEStatusByIdResponse;
+
+        #endregion
+
+
+        #region OnPullPricingProductDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullPricingProductData request will be send.
+        /// </summary>
+        public event OnPullPricingProductDataRequestDelegate?   OnPullPricingProductDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullPricingProductData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                   OnPullPricingProductDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullPricingProductData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                  OnPullPricingProductDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullPricingProductData request had been received.
+        /// </summary>
+        public event OnPullPricingProductDataResponseDelegate?  OnPullPricingProductDataResponse;
+
+        #endregion
+
+        #region OnPullEVSEPricingRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEPricing request will be send.
+        /// </summary>
+        public event OnPullEVSEPricingRequestDelegate?   OnPullEVSEPricingRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEPricing HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?            OnPullEVSEPricingHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?           OnPullEVSEPricingHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a PullEVSEPricing request had been received.
+        /// </summary>
+        public event OnPullEVSEPricingResponseDelegate?  OnPullEVSEPricingResponse;
+
+        #endregion
+
+
+        #region OnPushAuthenticationDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an PushAuthenticationData request will be send.
+        /// </summary>
+        public event OnPushAuthenticationDataRequestDelegate?   OnPushAuthenticationDataRequest;
+
+        /// <summary>
+        /// An event fired whenever an PushAuthenticationData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                   OnPushAuthenticationDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for an PushAuthenticationData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                  OnPushAuthenticationDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for an PushAuthenticationData request had been received.
+        /// </summary>
+        public event OnPushAuthenticationDataResponseDelegate?  OnPushAuthenticationDataResponse;
+
+        #endregion
+
+
+        #region OnAuthorizeRemoteReservationStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteReservationReservationStart request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartRequestDelegate?   OnAuthorizeRemoteReservationStartRequest;
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteReservationReservationStart HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                            OnAuthorizeRemoteReservationStartHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStart HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                           OnAuthorizeRemoteReservationStartHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStart request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartResponseDelegate?  OnAuthorizeRemoteReservationStartResponse;
+
+        #endregion
+
+        #region OnAuthorizeRemoteReservationStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteReservationReservationStop request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopRequestDelegate?   OnAuthorizeRemoteReservationStopRequest;
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteReservationReservationStop HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                           OnAuthorizeRemoteReservationStopHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStop HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                          OnAuthorizeRemoteReservationStopHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteReservationReservationStop request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopResponseDelegate?  OnAuthorizeRemoteReservationStopResponse;
+
+        #endregion
+
+        #region OnAuthorizeRemoteStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteStart request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteStartRequestDelegate?   OnAuthorizeRemoteStartRequest;
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteStart HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                 OnAuthorizeRemoteStartHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteStart HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                OnAuthorizeRemoteStartHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteStart request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteStartResponseDelegate?  OnAuthorizeRemoteStartResponse;
+
+        #endregion
+
+        #region OnAuthorizeRemoteStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteStop request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteStopRequestDelegate?   OnAuthorizeRemoteStopRequest;
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeRemoteStop HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                OnAuthorizeRemoteStopHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteStop HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?               OnAuthorizeRemoteStopHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for an AuthorizeRemoteStop request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteStopResponseDelegate?  OnAuthorizeRemoteStopResponse;
+
+        #endregion
+
+
+        #region OnGetChargeDetailRecordsRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a GetChargeDetailRecords request will be send.
+        /// </summary>
+        public event OnGetChargeDetailRecordsRequestDelegate?   OnGetChargeDetailRecordsRequest;
+
+        /// <summary>
+        /// An event fired whenever a GetChargeDetailRecords HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                   OnGetChargeDetailRecordsHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response for a GetChargeDetailRecords HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                  OnGetChargeDetailRecordsHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response for a GetChargeDetailRecords request had been received.
+        /// </summary>
+        public event OnGetChargeDetailRecordsResponseDelegate?  OnGetChargeDetailRecordsResponse;
 
         #endregion
 
@@ -247,9 +599,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         #endregion
 
-        #region GetOperator(OperatorId)
+        #region GetEMPClient(OperatorId)
 
-        public EMPClient? GetProvider(Operator_Id OperatorId)
+        public EMPClient? GetEMPClient(Operator_Id OperatorId)
         {
             lock (empClients)
             {
@@ -584,19 +936,80 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         {
 
-            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            #region Send OnAuthorizeRemoteStartRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.AuthorizeRemoteStart.IncRequests_OK();
+
+            try
             {
-                return await empClient.AuthorizeRemoteStart(Request);
+
+                if (OnAuthorizeRemoteStartRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteStartRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteStartRequest));
             }
 
-            return new OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>(
-                       Request,
-                       Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       ),
-                       false
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>> result;
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+
+                result = await empClient.AuthorizeRemoteStart(Request);
+
+            }
+
+            else
+                result = new OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>(
+                             Request,
+                             Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             ),
+                             false
+                         );
+
+
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteStart.IncResponses_Error();
+
+            #region Send OnAuthorizeRemoteStartResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnAuthorizeRemoteStartResponse is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteStartResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteStartResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 
@@ -614,19 +1027,80 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
 
         {
 
-            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            #region Send OnAuthorizeRemoteStopRequest event
+
+            var startTime = Timestamp.Now;
+
+            Counters.AuthorizeRemoteStop.IncRequests_OK();
+
+            try
             {
-                return await empClient.AuthorizeRemoteStop(Request);
+
+                if (OnAuthorizeRemoteStopRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteStopRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteStopRequest));
             }
 
-            return new OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>(
-                       Request,
-                       Acknowledgement<AuthorizeRemoteStopRequest>.NoValidContract(
-                           Request,
-                           "Unknown e-mobility provider!"
-                       ),
-                       false
-                   );
+            #endregion
+
+
+            OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>> result;
+
+            if (empClients.TryGetValue(Request.EVSEId.OperatorId, out EMPClient? empClient))
+            {
+
+                result = await empClient.AuthorizeRemoteStop(Request);
+
+            }
+
+            else
+                result = new OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>(
+                             Request,
+                             Acknowledgement<AuthorizeRemoteStopRequest>.NoValidContract(
+                                 Request,
+                                 "Unknown e-mobility provider!"
+                             ),
+                             false
+                         );
+
+
+            if (result.IsNotSuccessful)
+                Counters.AuthorizeRemoteStart.IncResponses_Error();
+
+            #region Send OnAuthorizeRemoteStopResponse event
+
+            var endtime = Timestamp.Now;
+
+            try
+            {
+
+                if (OnAuthorizeRemoteStopResponse is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteStopResponseDelegate>().
+                                       Select(e => e(endtime,
+                                                     this,
+                                                     Request,
+                                                     result))).
+                                       ConfigureAwait(false);
+
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(EMPPeer) + "." + nameof(OnAuthorizeRemoteStopResponse));
+            }
+
+            #endregion
+
+            return result;
 
         }
 

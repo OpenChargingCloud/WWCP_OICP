@@ -17,16 +17,19 @@
 
 #region Usings
 
+using Newtonsoft.Json.Linq;
+
 using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
-using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.CPO;
+using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.p2p;
-using Newtonsoft.Json.Linq;
+using cloud.charging.open.protocols.OICPv2_3.p2p.CPO;
+using cloud.charging.open.protocols.OICPv2_3.p2p.EMP;
 
 #endregion
 
@@ -41,9 +44,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
         #region Data
 
+        protected readonly Operator_Id                                                 DEGEF_Id;
+        protected readonly Operator_Id                                                 DEBDO_Id;
         protected          CPOPeer?                                                    cpoP2P_DEGEF;
         protected          CPOPeer?                                                    cpoP2P_DEBDO;
 
+        protected readonly Provider_Id                                                 DEGDF_Id;
+        protected readonly Provider_Id                                                 DEBDP_Id;
         protected          EMPPeer?                                                    empP2P_DEGDF;
         protected          EMPPeer?                                                    empP2P_DEBDP;
 
@@ -59,6 +66,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
         public AP2PTests()
         {
+
+            this.DEGEF_Id             = Operator_Id.Parse("DE*GEF");
+            this.DEBDO_Id             = Operator_Id.Parse("DE*BDO");
+            this.DEGDF_Id             = Provider_Id.Parse("DE-GDF");
+            this.DEBDP_Id             = Provider_Id.Parse("DE-BDP");
 
             this.EVSEDataRecords      = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
             this.EVSEStatusRecords    = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
@@ -1398,13 +1410,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
 
 
-            cpoP2P_DEGEF.RegisterProvider(Provider_Id.Parse("DE-GDF"),
+            cpoP2P_DEGEF.RegisterProvider(DEGDF_Id,
                                           new CPOClient(
                                               URL.Parse("http://127.0.0.1:8001"),
                                               RequestTimeout: TimeSpan.FromSeconds(10)
                                           ));
 
-            empP2P_DEGDF.RegisterOperator(Operator_Id.Parse("DE*GEF"),
+            empP2P_DEGDF.RegisterOperator(DEGEF_Id,
                                           new EMPClient(
                                               URL.Parse("http://127.0.0.1:7001"),
                                               RequestTimeout: TimeSpan.FromSeconds(10)

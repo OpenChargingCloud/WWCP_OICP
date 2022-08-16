@@ -61,75 +61,78 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
-
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
-
-
-            if (cpoP2P_DEGEF.GetProvider(Provider_Id.Parse("DE-GDF")) is CPOClient DEGDF)
+            if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient cpoClient)
             {
 
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
+
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+
+
                 if (cpoP2P_DEGEF.PrivateKey is not null)
-                    DEGDF.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) =>
+                    cpoClient.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) =>
                         CryptoSerializer(json,
                                          cpoP2P_DEGEF.PrivateKey);
 
                 if (empP2P_DEGDF.PublicKey  is not null)
-                    DEGDF.CustomAuthorizationStartResponseParser = (json, authorizationStartResponse) =>
+                    cpoClient.CustomAuthorizationStartResponseParser = (json, authorizationStartResponse) =>
                         CryptoResponseParser(json,
                                              empP2P_DEGDF.PublicKey,
                                              authorizationStartResponse);
 
+
+                if (cpoP2P_DEGEF.PublicKey  is not null)
+                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
+                        CryptoRequestParser(json,
+                                            cpoP2P_DEGEF.PublicKey,
+                                            authorizeStartRequest);
+
+                if (empP2P_DEGDF.PrivateKey is not null)
+                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizationStartSerializer = (authorizationStartResponse, json) =>
+                        CryptoSerializer(json,
+                                         empP2P_DEGDF.PrivateKey);
+
+
+                var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(DEGDF_Id, request);
+
+
+                Assert.IsNotNull(oicpResult);
+                Assert.IsNotNull(oicpResult.Response);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
+                Assert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
+                Assert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
+                Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
+                Assert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
+                Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
+
+                Assert.AreEqual (2,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
+                Assert.AreEqual (UID.Parse("11223344"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId);
+                Assert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
+
+
+                Assert.IsTrue   (oicpResult.Response?.CustomData?["signatureValidation"]?.Value<Boolean>());
+
+
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
+
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+
             }
-
-            if (cpoP2P_DEGEF.PublicKey  is not null)
-                empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
-                    CryptoRequestParser(json,
-                                        cpoP2P_DEGEF.PublicKey,
-                                        authorizeStartRequest);
-
-            if (empP2P_DEGDF.PrivateKey is not null)
-                empP2P_DEGDF.CPOClientAPI.CustomAuthorizationStartSerializer = (authorizationStartResponse, json) =>
-                    CryptoSerializer(json,
-                                     empP2P_DEGDF.PrivateKey);
-
-
-
-            var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(Provider_Id.Parse("DE*GDF"), request);
-
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
-            Assert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
-            Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            Assert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
-            Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
-
-            Assert.AreEqual (2,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
-            Assert.AreEqual (UID.Parse("11223344"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId);
-            Assert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
-
-
-            Assert.IsTrue   (oicpResult.Response?.CustomData?["signatureValidation"]?.Value<Boolean>());
-
-
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
-
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+            else
+                Assert.Fail("Missing CPOClient!");
 
         }
 
@@ -161,50 +164,57 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
+            if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient cpoClient)
+            {
 
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
 
-
-            if (cpoP2P_DEGEF.PublicKey  is not null)
-                empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
-                    CryptoRequestParser(json,
-                                        cpoP2P_DEGEF.PublicKey,
-                                        authorizeStartRequest);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
 
 
-            var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(Provider_Id.Parse("DE*GDF"), request);
+                if (cpoP2P_DEGEF.PublicKey  is not null)
+                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
+                        CryptoRequestParser(json,
+                                            cpoP2P_DEGEF.PublicKey,
+                                            authorizeStartRequest);
 
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.NoPositiveAuthenticationResponse,                         oicpResult.Response?.StatusCode?.Code);
-            Assert.AreEqual ("Invalid crypto signature!",                                          oicpResult.Response?.StatusCode?.Description);
-            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized,                               oicpResult.Response?.AuthorizationStatus);
-            Assert.IsNull   (oicpResult.Response?.SessionId);
-            Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            Assert.IsNull   (oicpResult.Response?.EMPPartnerSessionId);
-            Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
-
-            Assert.AreEqual (0,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
+                var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(DEGDF_Id, request);
 
 
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
+                Assert.IsNotNull(oicpResult);
+                Assert.IsNotNull(oicpResult.Response);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (StatusCodes.NoPositiveAuthenticationResponse,                         oicpResult.Response?.StatusCode?.Code);
+                Assert.AreEqual ("Invalid crypto signature!",                                          oicpResult.Response?.StatusCode?.Description);
+                Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized,                               oicpResult.Response?.AuthorizationStatus);
+                Assert.IsNull   (oicpResult.Response?.SessionId);
+                Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
+                Assert.IsNull   (oicpResult.Response?.EMPPartnerSessionId);
+                Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
 
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+                Assert.AreEqual (0,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
+
+
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
+
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+
+            }
+            else
+                Assert.Fail("Missing CPOClient!");
 
         }
 
@@ -236,61 +246,68 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
-
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
-
-
-            if (cpoP2P_DEGEF.GetProvider(Provider_Id.Parse("DE-GDF")) is CPOClient DEGDF)
+            if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient cpoClient)
             {
 
-                if (cpoP2P_DEGEF.PrivateKey is not null)
-                    DEGDF.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) => {
-                        json.Add("signature", "1234");
-                        return json;
-                    };
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
+
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+
+
+                if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient DEGDF)
+                {
+
+                    if (cpoP2P_DEGEF.PrivateKey is not null)
+                        DEGDF.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) => {
+                            json.Add("signature", "1234");
+                            return json;
+                        };
+
+                }
+
+                if (cpoP2P_DEGEF.PublicKey  is not null)
+                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
+                        CryptoRequestParser(json,
+                                            cpoP2P_DEGEF.PublicKey,
+                                            authorizeStartRequest);
+
+
+                var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(DEGDF_Id, request);
+
+
+                Assert.IsNotNull(oicpResult);
+                Assert.IsNotNull(oicpResult.Response);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (StatusCodes.NoPositiveAuthenticationResponse,                         oicpResult.Response?.StatusCode?.Code);
+                Assert.AreEqual ("Invalid crypto signature!",                                          oicpResult.Response?.StatusCode?.Description);
+                Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized,                               oicpResult.Response?.AuthorizationStatus);
+                Assert.IsNull   (oicpResult.Response?.SessionId);
+                Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
+                Assert.IsNull   (oicpResult.Response?.EMPPartnerSessionId);
+                Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
+
+                Assert.AreEqual (0,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
+
+
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
+
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
 
             }
-
-            if (cpoP2P_DEGEF.PublicKey  is not null)
-                empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
-                    CryptoRequestParser(json,
-                                        cpoP2P_DEGEF.PublicKey,
-                                        authorizeStartRequest);
-
-
-            var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(Provider_Id.Parse("DE*GDF"), request);
-
-
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.NoPositiveAuthenticationResponse,                         oicpResult.Response?.StatusCode?.Code);
-            Assert.AreEqual ("Invalid crypto signature!",                                          oicpResult.Response?.StatusCode?.Description);
-            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized,                               oicpResult.Response?.AuthorizationStatus);
-            Assert.IsNull   (oicpResult.Response?.SessionId);
-            Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            Assert.IsNull   (oicpResult.Response?.EMPPartnerSessionId);
-            Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
-
-            Assert.AreEqual (0,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
-
-
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
-
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+            else
+                Assert.Fail("Missing CPOClient!");
 
         }
 
@@ -324,66 +341,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
-
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
-
-
-            if (cpoP2P_DEGEF.GetProvider(Provider_Id.Parse("DE-GDF")) is CPOClient DEGDF)
+            if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient cpoClient)
             {
 
-                if (cpoP2P_DEGEF.PrivateKey is not null)
-                    DEGDF.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) => {
-                        json.Add("signature", "1234");
-                        return json;
-                    };
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
+
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+
+
+                if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient DEGDF)
+                {
+
+                    if (cpoP2P_DEGEF.PrivateKey is not null)
+                        DEGDF.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) => {
+                            json.Add("signature", "1234");
+                            return json;
+                        };
+
+                }
+
+                if (cpoP2P_DEGEF.PublicKey  is not null)
+                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
+                        CryptoRequestParser(json,
+                                            cpoP2P_DEGEF.PublicKey,
+                                            authorizeStartRequest);
+
+
+                var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(DEGDF_Id, request);
+
+
+                Assert.IsNotNull(oicpResult);
+                Assert.IsNotNull(oicpResult.Response);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (StatusCodes.NoPositiveAuthenticationResponse,                         oicpResult.Response?.StatusCode?.Code);
+                Assert.AreEqual ("Invalid crypto signature!",                                          oicpResult.Response?.StatusCode?.Description);
+                Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized,                               oicpResult.Response?.AuthorizationStatus);
+                Assert.IsNull   (oicpResult.Response?.SessionId);
+                Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
+                Assert.IsNull   (oicpResult.Response?.EMPPartnerSessionId);
+                Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
+
+                Assert.AreEqual (0,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
+
+
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.AuthorizeStart.Responses_Error);
+
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
 
             }
-
-            if (cpoP2P_DEGEF.PublicKey  is not null)
-                empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
-                    CryptoRequestParser(json,
-                                        cpoP2P_DEGEF.PublicKey,
-                                        authorizeStartRequest);
-
-
-            var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(Provider_Id.Parse("DE*GDF"), request);
-
-
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.NoPositiveAuthenticationResponse,                         oicpResult.Response?.StatusCode?.Code);
-            Assert.AreEqual ("Invalid crypto signature!",                                          oicpResult.Response?.StatusCode?.Description);
-            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized,                               oicpResult.Response?.AuthorizationStatus);
-            Assert.IsNull   (oicpResult.Response?.SessionId);
-            Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            Assert.IsNull   (oicpResult.Response?.EMPPartnerSessionId);
-            Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
-
-            Assert.AreEqual (0,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
-
-
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
-
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+            else
+                Assert.Fail("Missing CPOClient!");
 
         }
 
         #endregion
-
 
     }
 

@@ -635,7 +635,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEDataRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PullEVSEData.IncRequests_OK();
 
@@ -645,9 +645,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPullEVSEDataRequest is not null)
                     await Task.WhenAll(OnPullEVSEDataRequest.GetInvocationList().
                                        Cast<OnPullEVSEDataRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -977,17 +976,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEDataResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPullEVSEDataResponse != null)
+                if (OnPullEVSEDataResponse is not null)
                     await Task.WhenAll(OnPullEVSEDataResponse.GetInvocationList().
                                        Cast<OnPullEVSEDataResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -1030,7 +1028,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PullEVSEStatus.IncRequests_OK();
 
@@ -1040,9 +1038,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPullEVSEStatusRequest is not null)
                     await Task.WhenAll(OnPullEVSEStatusRequest.GetInvocationList().
                                        Cast<OnPullEVSEStatusRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -1371,17 +1368,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPullEVSEStatusResponse != null)
+                if (OnPullEVSEStatusResponse is not null)
                     await Task.WhenAll(OnPullEVSEStatusResponse.GetInvocationList().
                                        Cast<OnPullEVSEStatusResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -1423,7 +1419,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByIdRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PullEVSEStatusById.IncRequests_OK();
 
@@ -1433,9 +1429,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPullEVSEStatusByIdRequest is not null)
                     await Task.WhenAll(OnPullEVSEStatusByIdRequest.GetInvocationList().
                                        Cast<OnPullEVSEStatusByIdRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -1748,17 +1743,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByIdResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPullEVSEStatusByIdResponse != null)
+                if (OnPullEVSEStatusByIdResponse is not null)
                     await Task.WhenAll(OnPullEVSEStatusByIdResponse.GetInvocationList().
                                        Cast<OnPullEVSEStatusByIdResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -1800,7 +1794,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByOperatorIdRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PullEVSEStatusByOperatorId.IncRequests_OK();
 
@@ -1810,9 +1804,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPullEVSEStatusByOperatorIdRequest is not null)
                     await Task.WhenAll(OnPullEVSEStatusByOperatorIdRequest.GetInvocationList().
                                        Cast<OnPullEVSEStatusByOperatorIdRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -2125,17 +2118,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEStatusByOperatorIdResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPullEVSEStatusByOperatorIdResponse != null)
+                if (OnPullEVSEStatusByOperatorIdResponse is not null)
                     await Task.WhenAll(OnPullEVSEStatusByOperatorIdResponse.GetInvocationList().
                                        Cast<OnPullEVSEStatusByOperatorIdResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -2178,7 +2170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullPricingProductDataRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PullPricingProductData.IncRequests_OK();
 
@@ -2188,9 +2180,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPullPricingProductDataRequest is not null)
                     await Task.WhenAll(OnPullPricingProductDataRequest.GetInvocationList().
                                        Cast<OnPullPricingProductDataRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -2594,17 +2585,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullPricingProductDataResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPullPricingProductDataResponse != null)
+                if (OnPullPricingProductDataResponse is not null)
                     await Task.WhenAll(OnPullPricingProductDataResponse.GetInvocationList().
                                        Cast<OnPullPricingProductDataResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -2646,7 +2636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEPricingRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PullEVSEPricing.IncRequests_OK();
 
@@ -2656,9 +2646,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPullEVSEPricingRequest is not null)
                     await Task.WhenAll(OnPullEVSEPricingRequest.GetInvocationList().
                                        Cast<OnPullEVSEPricingRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -3062,17 +3051,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPullEVSEPricingResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnPullEVSEPricingResponse != null)
+                if (OnPullEVSEPricingResponse is not null)
                     await Task.WhenAll(OnPullEVSEPricingResponse.GetInvocationList().
                                        Cast<OnPullEVSEPricingResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -3115,7 +3103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPushAuthenticationDataRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.PushAuthenticationData.IncRequests_OK();
 
@@ -3125,9 +3113,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPushAuthenticationDataRequest is not null)
                     await Task.WhenAll(OnPushAuthenticationDataRequest.GetInvocationList().
                                        Cast<OnPushAuthenticationDataRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -3635,7 +3622,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnPushAuthenticationDataResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
@@ -3643,9 +3630,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnPushAuthenticationDataResponse is not null)
                     await Task.WhenAll(OnPushAuthenticationDataResponse.GetInvocationList().
                                        Cast<OnPushAuthenticationDataResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -3688,7 +3674,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
@@ -3698,9 +3684,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeRemoteReservationStartRequest is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -4038,17 +4023,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeRemoteReservationStartResponse != null)
+                if (OnAuthorizeRemoteReservationStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -4090,7 +4074,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
@@ -4100,9 +4084,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeRemoteReservationStopRequest is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -4439,17 +4422,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeRemoteReservationStopResponse != null)
+                if (OnAuthorizeRemoteReservationStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -4491,7 +4473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.AuthorizeRemoteStart.IncRequests_OK();
 
@@ -4501,9 +4483,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeRemoteStartRequest is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStartRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -4840,17 +4821,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStartResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeRemoteStartResponse != null)
+                if (OnAuthorizeRemoteStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStartResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -4892,7 +4872,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.AuthorizeRemoteStop.IncRequests_OK();
 
@@ -4902,9 +4882,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnAuthorizeRemoteStopRequest is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStopRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -5241,17 +5220,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeRemoteStopResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeRemoteStopResponse != null)
+                if (OnAuthorizeRemoteStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStopResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);
@@ -5294,7 +5272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var StartTime = Timestamp.Now;
+            var startTime = Timestamp.Now;
 
             Counters.GetChargeDetailRecords.IncRequests_OK();
 
@@ -5304,9 +5282,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnGetChargeDetailRecordsRequest is not null)
                     await Task.WhenAll(OnGetChargeDetailRecordsRequest.GetInvocationList().
                                        Cast<OnGetChargeDetailRecordsRequestDelegate>().
-                                       Select(e => e(StartTime,
+                                       Select(e => e(startTime,
                                                      this,
-                                                     Description,
                                                      Request))).
                                        ConfigureAwait(false);
 
@@ -5636,17 +5613,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnGetChargeDetailRecordsResponse event
 
-            var Endtime = Timestamp.Now;
+            var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnGetChargeDetailRecordsResponse != null)
+                if (OnGetChargeDetailRecordsResponse is not null)
                     await Task.WhenAll(OnGetChargeDetailRecordsResponse.GetInvocationList().
                                        Cast<OnGetChargeDetailRecordsResponseDelegate>().
-                                       Select(e => e(Endtime,
+                                       Select(e => e(endtime,
                                                      this,
-                                                     Description,
                                                      Request,
                                                      result))).
                                        ConfigureAwait(false);

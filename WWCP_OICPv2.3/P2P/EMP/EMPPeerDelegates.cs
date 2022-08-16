@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace cloud.charging.open.protocols.OICPv2_3.EMP
+namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 {
 
     #region OnPullEVSEData                             (Request|Response)Delegate
@@ -24,14 +24,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever a PullEVSEData request will be send.
     /// </summary>
     public delegate Task OnPullEVSEDataRequestDelegate   (DateTime                           Timestamp,
-                                                          IEMPClient                         Sender,
+                                                          IEMPPeer                           Sender,
                                                           PullEVSEDataRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEData request had been received.
     /// </summary>
     public delegate Task OnPullEVSEDataResponseDelegate  (DateTime                           Timestamp,
-                                                          IEMPClient                         Sender,
+                                                          IEMPPeer                           Sender,
                                                           PullEVSEDataRequest                Request,
                                                           OICPResult<PullEVSEDataResponse>   Response);
 
@@ -43,14 +43,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever a PullEVSEStatus request will be send.
     /// </summary>
     public delegate Task OnPullEVSEStatusRequestDelegate (DateTime                             Timestamp,
-                                                          IEMPClient                           Sender,
+                                                          IEMPPeer                             Sender,
                                                           PullEVSEStatusRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEStatus request had been received.
     /// </summary>
     public delegate Task OnPullEVSEStatusResponseDelegate(DateTime                             Timestamp,
-                                                          IEMPClient                           Sender,
+                                                          IEMPPeer                             Sender,
                                                           PullEVSEStatusRequest                Request,
                                                           OICPResult<PullEVSEStatusResponse>   Response);
 
@@ -62,14 +62,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever a PullEVSEStatusById request will be send.
     /// </summary>
     public delegate Task OnPullEVSEStatusByIdRequestDelegate (DateTime                                 Timestamp,
-                                                              IEMPClient                               Sender,
+                                                              IEMPPeer                                 Sender,
                                                               PullEVSEStatusByIdRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEStatusById request had been received.
     /// </summary>
     public delegate Task OnPullEVSEStatusByIdResponseDelegate(DateTime                                 Timestamp,
-                                                              IEMPClient                               Sender,
+                                                              IEMPPeer                                 Sender,
                                                               PullEVSEStatusByIdRequest                Request,
                                                               OICPResult<PullEVSEStatusByIdResponse>   Response);
 
@@ -81,14 +81,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever a PullEVSEStatusByOperatorId request will be send.
     /// </summary>
     public delegate Task OnPullEVSEStatusByOperatorIdRequestDelegate (DateTime                                         Timestamp,
-                                                                      IEMPClient                                       Sender,
+                                                                      IEMPPeer                                         Sender,
                                                                       PullEVSEStatusByOperatorIdRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEStatusByOperatorId request had been received.
     /// </summary>
     public delegate Task OnPullEVSEStatusByOperatorIdResponseDelegate(DateTime                                         Timestamp,
-                                                                      IEMPClient                                       Sender,
+                                                                      IEMPPeer                                         Sender,
                                                                       PullEVSEStatusByOperatorIdRequest                Request,
                                                                       OICPResult<PullEVSEStatusByOperatorIdResponse>   Response);
 
@@ -101,14 +101,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever a PullPricingProductData request will be send.
     /// </summary>
     public delegate Task OnPullPricingProductDataRequestDelegate   (DateTime                                     Timestamp,
-                                                                    IEMPClient                                   Sender,
+                                                                    IEMPPeer                                     Sender,
                                                                     PullPricingProductDataRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullPricingProductData request had been received.
     /// </summary>
     public delegate Task OnPullPricingProductDataResponseDelegate  (DateTime                                     Timestamp,
-                                                                    IEMPClient                                   Sender,
+                                                                    IEMPPeer                                     Sender,
                                                                     PullPricingProductDataRequest                Request,
                                                                     OICPResult<PullPricingProductDataResponse>   Response);
 
@@ -120,14 +120,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever a PullEVSEPricing request will be send.
     /// </summary>
     public delegate Task OnPullEVSEPricingRequestDelegate   (DateTime                              Timestamp,
-                                                             IEMPClient                            Sender,
+                                                             IEMPPeer                              Sender,
                                                              PullEVSEPricingRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEPricing request had been received.
     /// </summary>
     public delegate Task OnPullEVSEPricingResponseDelegate  (DateTime                              Timestamp,
-                                                             IEMPClient                            Sender,
+                                                             IEMPPeer                              Sender,
                                                              PullEVSEPricingRequest                Request,
                                                              OICPResult<PullEVSEPricingResponse>   Response);
 
@@ -142,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     public delegate Task
 
         OnPushAuthenticationDataRequestDelegate(DateTime                                                    Timestamp,
-                                                IEMPClient                                                  Sender,
+                                                IEMPPeer                                                    Sender,
                                                 PushAuthenticationDataRequest                               Request);
 
     /// <summary>
@@ -151,7 +151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     public delegate Task
 
         OnPushAuthenticationDataResponseDelegate(DateTime                                                      Timestamp,
-                                                 IEMPClient                                                    Sender,
+                                                 IEMPPeer                                                      Sender,
                                                  PushAuthenticationDataRequest                                 Request,
                                                  OICPResult<Acknowledgement<PushAuthenticationDataRequest>>    Response);
 
@@ -164,14 +164,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever an AuthorizeRemoteReservationStart request will be send.
     /// </summary>
     public delegate Task OnAuthorizeRemoteReservationStartRequestDelegate (DateTime                                                              Timestamp,
-                                                                           IEMPClient                                                            Sender,
+                                                                           IEMPPeer                                                              Sender,
                                                                            AuthorizeRemoteReservationStartRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteReservationStart request had been received.
     /// </summary>
     public delegate Task OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                              Timestamp,
-                                                                           IEMPClient                                                            Sender,
+                                                                           IEMPPeer                                                              Sender,
                                                                            AuthorizeRemoteReservationStartRequest                                Request,
                                                                            OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>   Response);
 
@@ -181,14 +181,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever an AuthorizeRemoteReservationStop request will be send.
     /// </summary>
     public delegate Task OnAuthorizeRemoteReservationStopRequestDelegate  (DateTime                                                             Timestamp,
-                                                                           IEMPClient                                                           Sender,
+                                                                           IEMPPeer                                                             Sender,
                                                                            AuthorizeRemoteReservationStopRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteReservationStop request had been received.
     /// </summary>
     public delegate Task OnAuthorizeRemoteReservationStopResponseDelegate (DateTime                                                             Timestamp,
-                                                                           IEMPClient                                                           Sender,
+                                                                           IEMPPeer                                                             Sender,
                                                                            AuthorizeRemoteReservationStopRequest                                Request,
                                                                            OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>   Response);
 
@@ -200,14 +200,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever an AuthorizeRemoteStart request will be send.
     /// </summary>
     public delegate Task OnAuthorizeRemoteStartRequestDelegate (DateTime                                                   Timestamp,
-                                                                IEMPClient                                                 Sender,
+                                                                IEMPPeer                                                   Sender,
                                                                 AuthorizeRemoteStartRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteStart request had been received.
     /// </summary>
     public delegate Task OnAuthorizeRemoteStartResponseDelegate(DateTime                                                   Timestamp,
-                                                                IEMPClient                                                 Sender,
+                                                                IEMPPeer                                                   Sender,
                                                                 AuthorizeRemoteStartRequest                                Request,
                                                                 OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>   Response);
 
@@ -217,14 +217,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever an AuthorizeRemoteStop request will be send.
     /// </summary>
     public delegate Task OnAuthorizeRemoteStopRequestDelegate  (DateTime                                                  Timestamp,
-                                                                IEMPClient                                                Sender,
+                                                                IEMPPeer                                                  Sender,
                                                                 AuthorizeRemoteStopRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteStop request had been received.
     /// </summary>
     public delegate Task OnAuthorizeRemoteStopResponseDelegate (DateTime                                                  Timestamp,
-                                                                IEMPClient                                                Sender,
+                                                                IEMPPeer                                                  Sender,
                                                                 AuthorizeRemoteStopRequest                                Request,
                                                                 OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>   Response);
 
@@ -237,14 +237,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A delegate called whenever a GetChargeDetailRecords request will be send.
     /// </summary>
     public delegate Task OnGetChargeDetailRecordsRequestDelegate (DateTime                                     Timestamp,
-                                                                  IEMPClient                                   Sender,
+                                                                  IEMPPeer                                     Sender,
                                                                   GetChargeDetailRecordsRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a GetChargeDetailRecords request had been received.
     /// </summary>
     public delegate Task OnGetChargeDetailRecordsResponseDelegate(DateTime                                     Timestamp,
-                                                                  IEMPClient                                   Sender,
+                                                                  IEMPPeer                                     Sender,
                                                                   GetChargeDetailRecordsRequest                Request,
                                                                   OICPResult<GetChargeDetailRecordsResponse>   Response);
 
