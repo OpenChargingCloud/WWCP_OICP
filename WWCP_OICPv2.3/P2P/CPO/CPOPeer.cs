@@ -22,6 +22,8 @@ using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
 
+using Org.BouncyCastle.Crypto;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
@@ -31,7 +33,6 @@ using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
-using System.Diagnostics;
 
 #endregion
 
@@ -44,6 +45,98 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
     /// </summary>
     public class CPOPeer : APeer, ICPOPeer
     {
+
+        #region (class) APICounters
+
+        public class APICounters
+        {
+
+            public APICounterValues  PushEVSEData                        { get; }
+            public APICounterValues  PushEVSEStatus                      { get; }
+
+            public APICounterValues  PushPricingProductData              { get; }
+            public APICounterValues  PushEVSEPricing                     { get; }
+
+
+            public APICounterValues  PullAuthenticationData              { get; }
+
+            public APICounterValues  AuthorizeStart                      { get; }
+            public APICounterValues  AuthorizeStop                       { get; }
+
+            public APICounterValues  SendChargingStartNotification       { get; }
+            public APICounterValues  SendChargingProgressNotification    { get; }
+            public APICounterValues  SendChargingEndNotification         { get; }
+            public APICounterValues  SendChargingErrorNotification       { get; }
+
+            public APICounterValues  SendChargeDetailRecord              { get; }
+
+
+            public APICounters(APICounterValues? PushEVSEData                       = null,
+                               APICounterValues? PushEVSEStatus                     = null,
+
+                               APICounterValues? PushPricingProductData             = null,
+                               APICounterValues? PushEVSEPricing                    = null,
+
+                               APICounterValues? PullAuthenticationData             = null,
+
+                               APICounterValues? AuthorizeStart                     = null,
+                               APICounterValues? AuthorizeStop                      = null,
+
+                               APICounterValues? SendChargingStartNotification      = null,
+                               APICounterValues? SendChargingProgressNotification   = null,
+                               APICounterValues? SendChargingEndNotification        = null,
+                               APICounterValues? SendChargingErrorNotification      = null,
+
+                               APICounterValues? SendChargeDetailRecord             = null)
+
+            {
+
+                this.PushEVSEData                      = PushEVSEData                     ?? new APICounterValues();
+                this.PushEVSEStatus                    = PushEVSEStatus                   ?? new APICounterValues();
+
+                this.PushPricingProductData            = PushPricingProductData           ?? new APICounterValues();
+                this.PushEVSEPricing                   = PushEVSEPricing                  ?? new APICounterValues();
+
+                this.PullAuthenticationData            = PullAuthenticationData           ?? new APICounterValues();
+
+                this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
+                this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
+
+                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new APICounterValues();
+                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new APICounterValues();
+                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new APICounterValues();
+                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new APICounterValues();
+
+                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new APICounterValues();
+
+            }
+
+            public JObject ToJSON()
+
+                => JSONObject.Create(
+                       new JProperty("PushEVSEData",                 PushEVSEData.                ToJSON()),
+                       new JProperty("PushEVSEStatus",               PushEVSEStatus.              ToJSON()),
+
+                       new JProperty("PushPricingProductData",       PushPricingProductData.      ToJSON()),
+                       new JProperty("PushEVSEPricing",              PushEVSEPricing.             ToJSON()),
+
+                       new JProperty("PullAuthenticationData",       PullAuthenticationData.      ToJSON()),
+
+                       new JProperty("AuthorizeStart",               AuthorizeStart.              ToJSON()),
+                       new JProperty("AuthorizeStop",                AuthorizeStop.               ToJSON()),
+
+                       new JProperty("ChargingStartNotification",    SendChargingStartNotification.   ToJSON()),
+                       new JProperty("ChargingProgressNotification", SendChargingProgressNotification.ToJSON()),
+                       new JProperty("ChargingEndNotification",      SendChargingEndNotification.     ToJSON()),
+                       new JProperty("ChargingErrorNotification",    SendChargingErrorNotification.   ToJSON()),
+
+                       new JProperty("SendChargeDetailRecord",       SendChargeDetailRecord.          ToJSON())
+                   );
+
+        }
+
+        #endregion
+
 
         #region Data
 
@@ -64,6 +157,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
         #region Properties
+
+        public APICounters   Counters        { get; }
 
         /// <summary>
         /// The EMP client API.
@@ -96,6 +191,300 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
+
+        #region OnPushEVSEDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEData will be send.
+        /// </summary>
+        public event OnPushEVSEDataRequestDelegate?   OnPushEVSEDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?         OnPushEVSEDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?        OnPushEVSEDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEData HTTP request had been received.
+        /// </summary>
+        public event OnPushEVSEDataResponseDelegate?  OnPushEVSEDataResponse;
+
+        #endregion
+
+        #region OnPushEVSEStatusRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEStatus will be send.
+        /// </summary>
+        public event OnPushEVSEStatusRequestDelegate?   OnPushEVSEStatusRequest;
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEStatus HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?           OnPushEVSEStatusHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEStatus HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?          OnPushEVSEStatusHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEStatus HTTP request had been received.
+        /// </summary>
+        public event OnPushEVSEStatusResponseDelegate?  OnPushEVSEStatusResponse;
+
+        #endregion
+
+
+        #region OnPushPricingProductDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushPricingProductData will be send.
+        /// </summary>
+        public event OnPushPricingProductDataRequestDelegate?   OnPushPricingProductDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PushPricingProductData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                   OnPushPricingProductDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                  OnPushPricingProductDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushPricingProductData HTTP request had been received.
+        /// </summary>
+        public event OnPushPricingProductDataResponseDelegate?  OnPushPricingProductDataResponse;
+
+        #endregion
+
+        #region OnPushEVSEPricingRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEPricing will be send.
+        /// </summary>
+        public event OnPushEVSEPricingRequestDelegate?   OnPushEVSEPricingRequest;
+
+        /// <summary>
+        /// An event fired whenever a PushEVSEPricing HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?            OnPushEVSEPricingHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?           OnPushEVSEPricingHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PushEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event OnPushEVSEPricingResponseDelegate?  OnPushEVSEPricingResponse;
+
+        #endregion
+
+
+        #region OnPullAuthenticationDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullAuthenticationData will be send.
+        /// </summary>
+        public event OnPullAuthenticationDataRequestDelegate?   OnPullAuthenticationDataRequest;
+
+        /// <summary>
+        /// An event fired whenever a PullAuthenticationData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                   OnPullAuthenticationDataHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a PullAuthenticationData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                  OnPullAuthenticationDataHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a PullAuthenticationData HTTP request had been received.
+        /// </summary>
+        public event OnPullAuthenticationDataResponseDelegate?  OnPullAuthenticationDataResponse;
+
+        #endregion
+
+
+        #region OnAuthorizeStartRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeStart request will be send.
+        /// </summary>
+        public event OnAuthorizeStartRequestDelegate?     OnAuthorizeStartRequest;
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeStart HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?             OnAuthorizeStartHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to an AuthorizeStart HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?            OnAuthorizeStartHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to an AuthorizeStart request had been received.
+        /// </summary>
+        public event OnAuthorizeStartResponseDelegate?    OnAuthorizeStartResponse;
+
+        #endregion
+
+        #region OnAuthorizeStopRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeStop request will be send.
+        /// </summary>
+        public event OnAuthorizeStopRequestDelegate?   OnAuthorizeStopRequest;
+
+        /// <summary>
+        /// An event fired whenever an AuthorizeStop HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?          OnAuthorizeStopHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to an AuthorizeStop HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?         OnAuthorizeStopHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to an AuthorizeStop request had been received.
+        /// </summary>
+        public event OnAuthorizeStopResponseDelegate?  OnAuthorizeStopResponse;
+
+        #endregion
+
+
+        #region OnChargingStartNotificationRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingStartNotification will be send.
+        /// </summary>
+        public event OnChargingStartNotificationRequestDelegate?   OnChargingStartNotificationRequest;
+
+        /// <summary>
+        /// An event fired whenever a ChargingStartNotification HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                      OnChargingStartNotificationHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingStartNotification HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                     OnChargingStartNotificationHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingStartNotification had been received.
+        /// </summary>
+        public event OnChargingStartNotificationResponseDelegate?  OnChargingStartNotificationResponse;
+
+        #endregion
+
+        #region OnChargingProgressNotificationRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingProgressNotification will be send.
+        /// </summary>
+        public event OnChargingProgressNotificationRequestDelegate?   OnChargingProgressNotificationRequest;
+
+        /// <summary>
+        /// An event fired whenever a ChargingProgressNotification HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                         OnChargingProgressNotificationHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingProgressNotification HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                        OnChargingProgressNotificationHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingProgressNotification had been received.
+        /// </summary>
+        public event OnChargingProgressNotificationResponseDelegate?  OnChargingProgressNotificationResponse;
+
+        #endregion
+
+        #region OnChargingEndNotificationRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingEndNotification will be send.
+        /// </summary>
+        public event OnChargingEndNotificationRequestDelegate?   OnChargingEndNotificationRequest;
+
+        /// <summary>
+        /// An event fired whenever a ChargingEndNotification HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                    OnChargingEndNotificationHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingEndNotification HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                   OnChargingEndNotificationHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingEndNotification had been received.
+        /// </summary>
+        public event OnChargingEndNotificationResponseDelegate?  OnChargingEndNotificationResponse;
+
+        #endregion
+
+        #region OnChargingErrorNotificationRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargingErrorNotification will be send.
+        /// </summary>
+        public event OnChargingErrorNotificationRequestDelegate?   OnChargingErrorNotificationRequest;
+
+        /// <summary>
+        /// An event fired whenever a ChargingErrorNotification HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                      OnChargingErrorNotificationHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingErrorNotification HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                     OnChargingErrorNotificationHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargingErrorNotification had been received.
+        /// </summary>
+        public event OnChargingErrorNotificationResponseDelegate?  OnChargingErrorNotificationResponse;
+
+        #endregion
+
+
+        #region OnSendChargeDetailRecordRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a ChargeDetailRecord will be send.
+        /// </summary>
+        public event OnSendChargeDetailRecordRequestDelegate?   OnSendChargeDetailRecordRequest;
+
+        /// <summary>
+        /// An event fired whenever a ChargeDetailRecord HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler?                   OnSendChargeDetailRecordHTTPRequest;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargeDetailRecord HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler?                  OnSendChargeDetailRecordHTTPResponse;
+
+        /// <summary>
+        /// An event fired whenever a response to a ChargeDetailRecord had been received.
+        /// </summary>
+        public event OnSendChargeDetailRecordResponseDelegate?  OnSendChargeDetailRecordResponse;
+
+        #endregion
+
         #endregion
 
         #region Custom request mappers
@@ -108,7 +497,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// Create a new CPO p2p service.
         /// </summary>
-        public CPOPeer(HTTPHostname?                         HTTPHostname                       = null,
+        public CPOPeer(AsymmetricCipherKeyPair?              KeyPair                            = null,
+
+                       HTTPHostname?                         HTTPHostname                       = null,
                        String?                               ExternalDNSName                    = null,
                        IPPort?                               HTTPServerPort                     = null,
                        HTTPPath?                             BasePath                           = null,
@@ -151,6 +542,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                        LogfileCreatorDelegate?               LogfileCreator                     = null,
                        DNSClient?                            DNSClient                          = null,
                        Boolean                               Autostart                          = false)
+
+            : base(KeyPair)
 
         {
 
@@ -221,6 +614,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             this.EMPClientAPI  = new EMPClientAPI(httpAPI);
             this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
+            this.Counters      = new APICounters();
 
             if (Autostart)
                 httpAPI.Start();

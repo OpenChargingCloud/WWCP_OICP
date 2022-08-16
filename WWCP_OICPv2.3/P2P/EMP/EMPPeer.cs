@@ -22,6 +22,8 @@ using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
 
+using Org.BouncyCastle.Crypto;
+
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
@@ -459,7 +461,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// <summary>
         /// Create a new EMP p2p service.
         /// </summary>
-        public EMPPeer(HTTPHostname?                         HTTPHostname                       = null,
+        public EMPPeer(AsymmetricCipherKeyPair?              KeyPair                            = null,
+
+                       HTTPHostname?                         HTTPHostname                       = null,
                        String?                               ExternalDNSName                    = null,
                        IPPort?                               HTTPServerPort                     = null,
                        HTTPPath?                             BasePath                           = null,
@@ -502,6 +506,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                        LogfileCreatorDelegate?               LogfileCreator                     = null,
                        DNSClient?                            DNSClient                          = null,
                        Boolean                               Autostart                          = false)
+
+            : base(KeyPair)
 
         {
 
@@ -572,6 +578,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             this.CPOClientAPI  = new CPOClientAPI(httpAPI);
             this.empClients    = new Dictionary<Operator_Id, EMPClient>();
+            this.Counters      = new APICounters();
 
             if (Autostart)
                 httpAPI.Start();

@@ -413,12 +413,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeStart HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler?            OnAuthorizeStartHTTPRequest;
+        public event ClientRequestLogHandler?             OnAuthorizeStartHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStart HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler?           OnAuthorizeStartHTTPResponse;
+        public event ClientResponseLogHandler?            OnAuthorizeStartHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStart request had been received.
@@ -437,12 +437,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeStop HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler?         OnAuthorizeStopHTTPRequest;
+        public event ClientRequestLogHandler?          OnAuthorizeStopHTTPRequest;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStop HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler?        OnAuthorizeStopHTTPResponse;
+        public event ClientResponseLogHandler?         OnAuthorizeStopHTTPResponse;
 
         /// <summary>
         /// An event fired whenever a response to an AuthorizeStop request had been received.

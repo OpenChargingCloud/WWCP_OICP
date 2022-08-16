@@ -38,8 +38,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// Some JSON helper as DateTime is not well-defined for JSON!
         /// </summary>
         public static readonly IsoDateTimeConverter JSONDateTimeConverter = new() {
-                                                                                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
-                                                                            };
+            DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffZ"
+        };
 
         #endregion
 
@@ -54,6 +54,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p
         /// The main public key of this OICP peer.
         /// </summary>
         public ECPublicKeyParameters?   PublicKey     { get; set; }
+
+        #endregion
+
+        #region Constructor(s)
+
+        /// <summary>
+        /// Create a new abstract OICP peer.
+        /// </summary>
+        /// <param name="KeyPair">An optional private/public-keypair.</param>
+        public APeer(AsymmetricCipherKeyPair? KeyPair = null)
+        {
+
+            if (KeyPair is not null) {
+                this.PrivateKey = KeyPair.Private as ECPrivateKeyParameters;
+                this.PublicKey  = KeyPair.Public  as ECPublicKeyParameters;
+            }
+
+        }
 
         #endregion
 
