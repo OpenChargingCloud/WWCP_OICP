@@ -57,4 +57,4 @@ empP2P_DEGDF.RegisterOperator(Operator_Id.Parse("DE*GEF"),
                               ));                   
 ```
 
-That's it! Everything else will be just the same except, that for most requests you have to add the *providerId* or *operatorId* of the remote peer. Some requests, e.g. the remote start requests already comes with the required *operatorId* and thus it is not required again.
+That's it! Everything else will be just the same except, that for most requests you have to add the *providerId* or *operatorId* of the remote peer. Some requests, e.g. the remote start request already comes with the required *operatorId* and thus it is not required again.
