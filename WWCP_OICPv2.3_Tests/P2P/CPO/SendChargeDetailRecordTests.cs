@@ -21,6 +21,8 @@ using NUnit.Framework;
 
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
+using cloud.charging.open.protocols.OICPv2_3.CPO;
+
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
@@ -100,33 +102,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, cpoP2P_DEGEF.     Counters.SendChargeDetailRecord.Requests_OK);
-            //Assert.AreEqual(0, cpoP2P_DEGEF.     Counters.SendChargeDetailRecord.Requests_Error);
-            //Assert.AreEqual(0, cpoP2P_DEGEF.     Counters.SendChargeDetailRecord.Responses_OK);
-            //Assert.AreEqual(0, cpoP2P_DEGEF.     Counters.SendChargeDetailRecord.Responses_Error);
+            if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient cpoClient)
+            {
 
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Requests_Error);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Responses_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.SendChargeDetailRecord.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.SendChargeDetailRecord.Requests_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.SendChargeDetailRecord.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.SendChargeDetailRecord.Responses_Error);
 
-            var oicpResult  = await cpoP2P_DEGEF.SendChargeDetailRecord(Provider_Id.Parse("DE*GDF"), request);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Requests_Error);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Responses_Error);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
 
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.SendChargeDetailRecord.Requests_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.SendChargeDetailRecord.Requests_Error);
-            //Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.SendChargeDetailRecord.Responses_OK);
-            //Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.SendChargeDetailRecord.Responses_Error);
+                var oicpResult  = await cpoP2P_DEGEF.SendChargeDetailRecord(Provider_Id.Parse("DE*GDF"), request);
 
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Requests_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Requests_Error);
-            Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Responses_OK);
-            Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.Responses_Error);
+                Assert.IsNotNull(oicpResult);
+                Assert.IsNotNull(oicpResult.Response);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+                Assert.IsTrue   (oicpResult.Response?.Result);
+
+
+                Assert.AreEqual(1, cpoClient.                Counters.SendChargeDetailRecord.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.SendChargeDetailRecord.Requests_Error);
+                Assert.AreEqual(1, cpoClient.                Counters.SendChargeDetailRecord.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.SendChargeDetailRecord.Responses_Error);
+
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Requests_Error);
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.ChargeDetailRecord.    Responses_Error);
+
+            }
+            else
+                Assert.Fail("Missing CPOClient!");
 
         }
 

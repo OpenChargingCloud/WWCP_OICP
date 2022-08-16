@@ -655,6 +655,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
+        #region PushEVSEData                    (            Request)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="Request">A PushEVSEData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>[]>
+
+            PushEVSEData(PushEVSEDataRequest  Request)
+
+        {
+
+            if (cpoClients.Any())
+                return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushEVSEData(Request)));
+
+            return new OICPResult<Acknowledgement<PushEVSEDataRequest>>[] {
+                       OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                              Request,
+                              Acknowledgement<PushEVSEDataRequest>.NoValidContract(
+                                  Request,
+                                  "No e-mobility providers registered!"
+                              )
+                          )
+                   };
+
+        }
+
+        #endregion
+
         #region PushEVSEData                    (ProviderId, Request)
 
         /// <summary>
@@ -686,6 +715,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
+        #region PushEVSEStatus                  (            Request)
+
+        /// <summary>
+        /// Upload the given EVSE data records.
+        /// </summary>
+        /// <param name="Request">A PushEVSEStatus request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>[]>
+
+            PushEVSEStatus(PushEVSEStatusRequest  Request)
+
+        {
+
+            if (cpoClients.Any())
+                return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushEVSEStatus(Request)));
+
+            return new OICPResult<Acknowledgement<PushEVSEStatusRequest>>[] {
+                       OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                              Request,
+                              Acknowledgement<PushEVSEStatusRequest>.NoValidContract(
+                                  Request,
+                                  "No e-mobility providers registered!"
+                              )
+                          )
+                   };
+
+        }
+
+        #endregion
+
         #region PushEVSEStatus                  (ProviderId, Request)
 
         /// <summary>
@@ -695,8 +753,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <param name="Request">A PushEVSEStatus request.</param>
         public async Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
-            PushEVSEStatus(Provider_Id          ProviderId,
-                         PushEVSEStatusRequest  Request)
+            PushEVSEStatus(Provider_Id            ProviderId,
+                           PushEVSEStatusRequest  Request)
 
         {
 
@@ -717,6 +775,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
+
+        #region PushPricingProductData          (            Request)
+
+        /// <summary>
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="Request">A PushPricingProductData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>[]>
+
+            PushPricingProductData(PushPricingProductDataRequest  Request)
+
+        {
+
+            if (cpoClients.Any())
+                return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushPricingProductData(Request)));
+
+            return new OICPResult<Acknowledgement<PushPricingProductDataRequest>>[] {
+                       OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                              Request,
+                              Acknowledgement<PushPricingProductDataRequest>.NoValidContract(
+                                  Request,
+                                  "No e-mobility providers registered!"
+                              )
+                          )
+                   };
+
+        }
+
+        #endregion
 
         #region PushPricingProductData          (ProviderId, Request)
 
@@ -749,7 +836,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region PushEVSEPricing                 (ProviderId, Request)
+        #region PushEVSEPricing                 (            Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -775,6 +862,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                            "Unknown e-mobility provider!"
                        )
                    );
+
+        }
+
+        #endregion
+
+        #region PushEVSEPricing                 (ProviderId, Request)
+
+        /// <summary>
+        /// Upload the given pricing product data.
+        /// </summary>
+        /// <param name="Request">A PushPricingProductData request.</param>
+        public async Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>[]>
+
+            PushEVSEPricing(PushEVSEPricingRequest  Request)
+
+        {
+
+            if (cpoClients.Any())
+                return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushEVSEPricing(Request)));
+
+            return new OICPResult<Acknowledgement<PushEVSEPricingRequest>>[] {
+                       OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                              Request,
+                              Acknowledgement<PushEVSEPricingRequest>.NoValidContract(
+                                  Request,
+                                  "No e-mobility providers registered!"
+                              )
+                          )
+                   };
 
         }
 
@@ -823,6 +939,47 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
+        #region AuthorizeStart                  (            Request)
+
+        /// <summary>
+        /// Authorize for starting a charging session.
+        /// </summary>
+        /// <param name="Request">An AuthorizeStart request.</param>
+        public async Task<OICPResult<AuthorizationStartResponse>>
+
+            AuthorizeStart(AuthorizeStartRequest  Request)
+
+        {
+
+            if (cpoClients.Any())
+            {
+
+                var responses = await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.AuthorizeStart(Request)));
+
+                var success   = responses.First(response => response.IsSuccessful);
+
+                if (success is not null)
+                    return success;
+
+                return responses.First();
+
+            }
+
+            return OICPResult<AuthorizationStartResponse>.Failed(
+                       Request,
+                       AuthorizationStartResponse.NotAuthorized(
+                           Request,
+                           new StatusCode(
+                               StatusCodes.NoValidContract,
+                               "No e-mobility providers registered!"
+                           )
+                       )
+                   );
+
+        }
+
+        #endregion
+
         #region AuthorizeStart                  (ProviderId, Request)
 
         /// <summary>
@@ -857,10 +1014,51 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
+        #region AuthorizeStop                   (            Request)
+
+        /// <summary>
+        /// Authorize for stopping a charging session.
+        /// </summary>
+        /// <param name="Request">An AuthorizeStop request.</param>
+        public async Task<OICPResult<AuthorizationStopResponse>>
+
+            AuthorizeStop(AuthorizeStopRequest  Request)
+
+        {
+
+            if (cpoClients.Any())
+            {
+
+                var responses = await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.AuthorizeStop(Request)));
+
+                var success   = responses.First(response => response.IsSuccessful);
+
+                if (success is not null)
+                    return success;
+
+                return responses.First();
+
+            }
+
+            return OICPResult<AuthorizationStopResponse>.Failed(
+                       Request,
+                       AuthorizationStopResponse.NotAuthorized(
+                           Request,
+                           new StatusCode(
+                               StatusCodes.NoValidContract,
+                               "No e-mobility providers registered!"
+                           )
+                       )
+                   );
+
+        }
+
+        #endregion
+
         #region AuthorizeStop                   (ProviderId, Request)
 
         /// <summary>
-        /// Authorize for starting a charging session.
+        /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="Provider">A registered e-mobility provider.</param>
         /// <param name="Request">An AuthorizeStop request.</param>

@@ -747,8 +747,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         #endregion
 
-        // PullEVSEStatusByOperatorId is redundant within p2p!
-
 
         #region PullPricingProductData(OperatorId, Request)
 
