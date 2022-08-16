@@ -174,32 +174,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+            if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
+            {
 
-            Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
-            Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
-            Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
-            Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Requests_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Requests_Error);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Responses_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Responses_Error);
 
-            var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStop(request);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response?.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
-            //Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
-            //Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStop(request);
 
-            Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
-            Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
-            Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
-            Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
+                Assert.IsNotNull(oicpResult);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (true,                oicpResult.Response?.Result);
+                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
+
+
+                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteStop.Requests_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Requests_Error);
+                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteStop.Responses_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Responses_Error);
+
+                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
+                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
+
+            }
+            else
+                Assert.Fail("Missing EMPClient!");
 
         }
 
@@ -227,22 +236,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
             Assert.IsNotNull(request);
 
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+            if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
+            {
 
-            var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStop(request);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Requests_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Requests_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Responses_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Responses_Error);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsFalse  (oicpResult.IsSuccessful);
-            Assert.AreEqual (false,                       oicpResult.Response?.Result);
-            Assert.AreEqual (StatusCodes.NoValidContract, oicpResult.Response?.StatusCode.Code);
 
-            //Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Requests_Error);
-            //Assert.AreEqual(1, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_OK);
-            //Assert.AreEqual(0, empRoaming_DEGDF. EMPClient.   Counters.AuthorizeRemoteStop.Responses_Error);
+                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStop(request);
+
+                Assert.IsNotNull(oicpResult);
+                Assert.IsFalse  (oicpResult.IsSuccessful);
+                Assert.AreEqual (false,                       oicpResult.Response?.Result);
+                Assert.AreEqual (StatusCodes.NoValidContract, oicpResult.Response?.StatusCode.Code);
+
+
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_Error);
+
+            }
+            else
+                Assert.Fail("Missing EMPClient!");
 
         }
 
