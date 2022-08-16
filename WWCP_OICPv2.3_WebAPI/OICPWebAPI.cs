@@ -151,7 +151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             EMPClient.OnPullEVSEDataRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEDataRequest",        request. ToJSON(EMPClient.CustomPullEVSEDataRequestSerializer,
                                                                                                                                                                                  EMPClient.CustomGeoCoordinatesSerializer));
 
-            EMPClient.OnPullEVSEDataResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEDataRequestSerializer,
+            EMPClient.OnPullEVSEDataResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnPullEVSEDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEDataRequestSerializer,
                                                                                                                                                                                                            EMPClient.CustomGeoCoordinatesSerializer),
                                                                                                                                                                                  response.Response?.ToJSON(//CustomPullEVSEDataResponseSerializer,
                                                                                                                                                                                                            //CustomOperatorEVSEDataSerializer,
@@ -170,7 +170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             EMPClient.OnPullEVSEStatusRequest      += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEStatusRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusRequestSerializer,
                                                                                                                                                                                  EMPClient.CustomGeoCoordinatesSerializer));
 
-            EMPClient.OnPullEVSEStatusResponse     += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEStatusResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusRequestSerializer,
+            EMPClient.OnPullEVSEStatusResponse     += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnPullEVSEStatusResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusRequestSerializer,
                                                                                                                                                                                                            EMPClient.CustomGeoCoordinatesSerializer),
                                                                                                                                                                                  response.Response?.ToJSON(//CustomPullEVSEStatusResponseSerializer,
                                                                                                                                                                                                            //CustomOperatorEVSEStatusSerializer,
@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnPullEVSEStatusByIdRequest      += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEStatusByIdRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusByIdRequestSerializer));
 
-            EMPClient.OnPullEVSEStatusByIdResponse     += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEStatusByIdResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusByIdRequestSerializer),
+            EMPClient.OnPullEVSEStatusByIdResponse     += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnPullEVSEStatusByIdResponse",     response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEStatusByIdRequestSerializer),
                                                                                                                                                                                          response.Response?.ToJSON(//CustomPullEVSEStatusByIdResponseSerializer,
                                                                                                                                                                                                                    //CustomOperatorEVSEStatusByIdSerializer,
                                                                                                                                                                                                                    //CustomEVSEStatusByIdRecordSerializer,
@@ -205,7 +205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnPullEVSEStatusByOperatorIdRequest      += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdRequest",      request. ToJSON(EMPClient.CustomPullEVSEStatusByOperatorIdRequestSerializer));
 
-            EMPClient.OnPullEVSEStatusByOperatorIdResponse     += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdResponse",     response.ToJSON(request.ToJSON(EMPClient.CustomPullEVSEStatusByOperatorIdRequestSerializer),
+            EMPClient.OnPullEVSEStatusByOperatorIdResponse     += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdResponse",     response.ToJSON(request.ToJSON(EMPClient.CustomPullEVSEStatusByOperatorIdRequestSerializer),
                                                                                                                                                                                                          response.Response?.ToJSON(//CustomPullEVSEStatusByOperatorIdResponseSerializer,
                                                                                                                                                                                                                                    //CustomOperatorEVSEStatusByOperatorIdSerializer,
                                                                                                                                                                                                                                    //CustomEVSEStatusByOperatorIdRecordSerializer,
@@ -223,7 +223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnPullPricingProductDataRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullPricingProductDataRequest",        request. ToJSON(EMPClient.CustomPullPricingProductDataRequestSerializer));
 
-            EMPClient.OnPullPricingProductDataResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullPricingProductDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullPricingProductDataRequestSerializer),
+            EMPClient.OnPullPricingProductDataResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnPullPricingProductDataResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullPricingProductDataRequestSerializer),
                                                                                                                                                                                      response.Response?.ToJSON(//CustomPullPricingProductDataResponseSerializer,
                                                                                                                                                                                                                //CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                                //CustomEVSEDataRecordSerializer,
@@ -240,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnPullEVSEPricingRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPullEVSEPricingRequest",        request. ToJSON(EMPClient.CustomPullEVSEPricingRequestSerializer));
 
-            EMPClient.OnPullEVSEPricingResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPullEVSEPricingResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEPricingRequestSerializer),
+            EMPClient.OnPullEVSEPricingResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnPullEVSEPricingResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomPullEVSEPricingRequestSerializer),
                                                                                                                                                                                        response.Response?.ToJSON(//CustomPullEVSEPricingResponseSerializer,
                                                                                                                                                                                                                  //CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                                  //CustomEVSEDataRecordSerializer,
@@ -258,7 +258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnPushAuthenticationDataRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnPushAuthenticationDataRequest",        request. ToJSON(EMPClient.CustomPushAuthenticationDataRequestSerializer));
 
-            EMPClient.OnPushAuthenticationDataResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnPushAuthenticationDataResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomPushAuthenticationDataRequestSerializer),
+            EMPClient.OnPushAuthenticationDataResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnPushAuthenticationDataResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomPushAuthenticationDataRequestSerializer),
                                                                                                                                                                                      response.Response?.ToJSON(//CustomPushAuthenticationDataResponseSerializer,
                                                                                                                                                                                                                //CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                                //CustomEVSEDataRecordSerializer,
@@ -277,7 +277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             EMPClient.OnAuthorizeRemoteReservationStartRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteReservationStartRequestSerializer,
                                                                                                                                                                                                                     EMPClient.CustomIdentificationSerializer));
 
-            EMPClient.OnAuthorizeRemoteReservationStartResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStartRequestSerializer,
+            EMPClient.OnAuthorizeRemoteReservationStartResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStartRequestSerializer,
                                                                                                                                                                                                                                                  EMPClient.CustomIdentificationSerializer),
                                                                                                                                                                                                        response.Response?.ToJSON(//CustomAuthorizeRemoteReservationStartResponseSerializer,
                                                                                                                                                                                                                                  //CustomOperatorEVSEDataSerializer,
@@ -295,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnAuthorizeRemoteReservationStopRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteReservationStopRequestSerializer));
 
-            EMPClient.OnAuthorizeRemoteReservationStopResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStopRequestSerializer),
+            EMPClient.OnAuthorizeRemoteReservationStopResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteReservationStopRequestSerializer),
                                                                                                                                                                                                      response.Response?.ToJSON(//CustomAuthorizeRemoteReservationStopResponseSerializer,
                                                                                                                                                                                                                                //CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                                                //CustomEVSEDataRecordSerializer,
@@ -313,7 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             EMPClient.OnAuthorizeRemoteStartRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteStartRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteStartRequestSerializer,
                                                                                                                                                                                                  EMPClient.CustomIdentificationSerializer));
 
-            EMPClient.OnAuthorizeRemoteStartResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteStartRequestSerializer,
+            EMPClient.OnAuthorizeRemoteStartResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnAuthorizeRemoteStartResponse",       response.ToJSON(request.           ToJSON(EMPClient.CustomAuthorizeRemoteStartRequestSerializer,
                                                                                                                                                                                                                            EMPClient.CustomIdentificationSerializer),
                                                                                                                                                                                  response.Response?.ToJSON(//CustomAuthorizeRemoteStartResponseSerializer,
                                                                                                                                                                                                            //CustomOperatorEVSEDataSerializer,
@@ -331,7 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnAuthorizeRemoteStopRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeRemoteStopRequest",        request. ToJSON(EMPClient.CustomAuthorizeRemoteStopRequestSerializer));
 
-            EMPClient.OnAuthorizeRemoteStopResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeRemoteStopResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomAuthorizeRemoteStopRequestSerializer),
+            EMPClient.OnAuthorizeRemoteStopResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnAuthorizeRemoteStopResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomAuthorizeRemoteStopRequestSerializer),
                                                                                                                                                                                response.Response?.ToJSON(//CustomAuthorizeRemoteStopResponseSerializer,
                                                                                                                                                                                                          //CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                          //CustomEVSEDataRecordSerializer,
@@ -349,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             EMPClient.OnGetChargeDetailRecordsRequest        += (timestamp, empClient, request)                    => DebugLog.SubmitEvent("OnGetChargeDetailRecordsRequest",        request. ToJSON(EMPClient.CustomGetChargeDetailRecordsRequestSerializer));
 
-            EMPClient.OnGetChargeDetailRecordsResponse       += (timestamp, empClient, request, response)          => DebugLog.SubmitEvent("OnGetChargeDetailRecordsResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomGetChargeDetailRecordsRequestSerializer),
+            EMPClient.OnGetChargeDetailRecordsResponse       += (timestamp, empClient, request, response, runtime) => DebugLog.SubmitEvent("OnGetChargeDetailRecordsResponse",       response.ToJSON(request.ToJSON(EMPClient.CustomGetChargeDetailRecordsRequestSerializer),
                                                                                                                                                                                      response.Response?.ToJSON(//CustomGetChargeDetailRecordsResponseSerializer,
                                                                                                                                                                                                                //CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                                //CustomEVSEDataRecordSerializer,
@@ -508,7 +508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                    CPOClient.CustomEnvironmentalImpactSerializer,
                                                                                                                                                                                    CPOClient.CustomOpeningTimesSerializer));
 
-            CPOClient.OnPushEVSEDataResponse       += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushEVSEDataResponse",         response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEDataRequestSerializer,
+            CPOClient.OnPushEVSEDataResponse       += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnPushEVSEDataResponse",         response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEDataRequestSerializer,
                                                                                                                                                                                                              CPOClient.CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                              CPOClient.CustomEVSEDataRecordSerializer,
                                                                                                                                                                                                              CPOClient.CustomAddressSerializer,
@@ -535,7 +535,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                    CPOClient.CustomOperatorEVSEStatusSerializer,
                                                                                                                                                                                    CPOClient.CustomEVSEStatusRecordSerializer));
 
-            CPOClient.OnPushEVSEStatusResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushEVSEStatusResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEStatusRequestSerializer,
+            CPOClient.OnPushEVSEStatusResponse     += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnPushEVSEStatusResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEStatusRequestSerializer,
                                                                                                                                                                                                              CPOClient.CustomOperatorEVSEStatusSerializer,
                                                                                                                                                                                                              CPOClient.CustomEVSEStatusRecordSerializer),
                                                                                                                                                                                    response.Response?.ToJSON(//CustomPushEVSEStatusResponseSerializer,
@@ -557,7 +557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                    CPOClient.CustomPricingProductDataSerializer,
                                                                                                                                                                                                    CPOClient.CustomPricingProductDataRecordSerializer));
 
-            CPOClient.OnPushPricingProductDataResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushPricingProductDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushPricingProductDataRequestSerializer,
+            CPOClient.OnPushPricingProductDataResponse     += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnPushPricingProductDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushPricingProductDataRequestSerializer,
                                                                                                                                                                                                                              CPOClient.CustomPricingProductDataSerializer,
                                                                                                                                                                                                                              CPOClient.CustomPricingProductDataRecordSerializer),
                                                                                                                                                                                    response.Response?.ToJSON(//CustomPushPricingProductDataResponseSerializer,
@@ -577,7 +577,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             CPOClient.OnPushEVSEPricingRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnPushEVSEPricingRequest",        request. ToJSON(CPOClient.CustomPushEVSEPricingRequestSerializer,
                                                                                                                                                                                      CPOClient.CustomEVSEPricingSerializer));
 
-            CPOClient.OnPushEVSEPricingResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPushEVSEPricingResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEPricingRequestSerializer,
+            CPOClient.OnPushEVSEPricingResponse     += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnPushEVSEPricingResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPushEVSEPricingRequestSerializer,
                                                                                                                                                                                                                CPOClient.CustomEVSEPricingSerializer),
                                                                                                                                                                                      response.Response?.ToJSON(//CustomPushEVSEPricingResponseSerializer,
                                                                                                                                                                                                                //CustomOperatorEVSEDataSerializer,
@@ -596,7 +596,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             CPOClient.OnPullAuthenticationDataRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnPullAuthenticationDataRequest",        request. ToJSON(CPOClient.CustomPullAuthenticationDataRequestSerializer));
 
-            CPOClient.OnPullAuthenticationDataResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnPullAuthenticationDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPullAuthenticationDataRequestSerializer),
+            CPOClient.OnPullAuthenticationDataResponse     += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnPullAuthenticationDataResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomPullAuthenticationDataRequestSerializer),
                                                                                                                                                                                                    response.Response?.ToJSON(//CustomPullAuthenticationDataResponseSerializer,
                                                                                                                                                                                                                              //CustomOperatorEVSEDataSerializer,
                                                                                                                                                                                                                              //CustomEVSEDataRecordSerializer,
@@ -615,7 +615,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             CPOClient.OnAuthorizeStartRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeStartRequest",        request. ToJSON(CPOClient.CustomAuthorizeStartRequestSerializer,
                                                                                                                                                                                    CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnAuthorizeStartResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeStartResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStartRequestSerializer,
+            CPOClient.OnAuthorizeStartResponse     += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnAuthorizeStartResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStartRequestSerializer,
                                                                                                                                                                                                              CPOClient.CustomIdentificationSerializer),
                                                                                                                                                                                    response.Response?.ToJSON(//CustomAuthorizeStartResponseSerializer,
                                                                                                                                                                                                              //CustomOperatorEVSEDataSerializer,
@@ -634,7 +634,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             CPOClient.OnAuthorizeStopRequest       += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnAuthorizeStopRequest",         request. ToJSON(CPOClient.CustomAuthorizeStopRequestSerializer,
                                                                                                                                                                                    CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnAuthorizeStopResponse      += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnAuthorizeStopResponse",        response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStopRequestSerializer,
+            CPOClient.OnAuthorizeStopResponse      += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnAuthorizeStopResponse",        response.ToJSON(request.           ToJSON(CPOClient.CustomAuthorizeStopRequestSerializer,
                                                                                                                                                                                                              CPOClient.CustomIdentificationSerializer),
                                                                                                                                                                                    response.Response?.ToJSON(//CustomAuthorizeStopResponseSerializer,
                                                                                                                                                                                                              //CustomOperatorEVSEDataSerializer,
@@ -654,7 +654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             CPOClient.OnChargingStartNotificationRequest         += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingStartNotificationRequest",           request. ToJSON(CPOClient.CustomChargingStartNotificationRequestSerializer,
                                                                                                                                                                                                                CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingStartNotificationResponse        += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingStartNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingStartNotificationRequestSerializer,
+            CPOClient.OnChargingStartNotificationResponse        += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnChargingStartNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingStartNotificationRequestSerializer,
                                                                                                                                                                                                                                          CPOClient.CustomIdentificationSerializer),
                                                                                                                                                                                                                response.Response?.ToJSON(//CustomChargingStartNotificationResponseSerializer,
                                                                                                                                                                                                                                          //CustomOperatorEVSEDataSerializer,
@@ -673,7 +673,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             CPOClient.OnChargingProgressNotificationRequest      += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingProgressNotificationRequest",        request. ToJSON(CPOClient.CustomChargingProgressNotificationRequestSerializer,
                                                                                                                                                                                                                CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingProgressNotificationResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingProgressNotificationResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargingProgressNotificationRequestSerializer,
+            CPOClient.OnChargingProgressNotificationResponse     += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnChargingProgressNotificationResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargingProgressNotificationRequestSerializer,
                                                                                                                                                                                                                                          CPOClient.CustomIdentificationSerializer),
                                                                                                                                                                                                                response.Response?.ToJSON(//CustomChargingProgressNotificationResponseSerializer,
                                                                                                                                                                                                                                          //CustomOperatorEVSEDataSerializer,
@@ -692,7 +692,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             CPOClient.OnChargingEndNotificationRequest           += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingEndNotificationRequest",             request. ToJSON(CPOClient.CustomChargingEndNotificationRequestSerializer,
                                                                                                                                                                                                                CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingEndNotificationResponse          += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingEndNotificationResponse",            response.ToJSON(request.           ToJSON(CPOClient.CustomChargingEndNotificationRequestSerializer,
+            CPOClient.OnChargingEndNotificationResponse          += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnChargingEndNotificationResponse",            response.ToJSON(request.           ToJSON(CPOClient.CustomChargingEndNotificationRequestSerializer,
                                                                                                                                                                                                                                          CPOClient.CustomIdentificationSerializer),
                                                                                                                                                                                                                response.Response?.ToJSON(//CustomChargingEndNotificationResponseSerializer,
                                                                                                                                                                                                                                          //CustomOperatorEVSEDataSerializer,
@@ -711,7 +711,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             CPOClient.OnChargingErrorNotificationRequest         += (timestamp, cpoClient, request)                    => DebugLog.SubmitEvent("OnChargingErrorNotificationRequest",           request. ToJSON(CPOClient.CustomChargingErrorNotificationRequestSerializer,
                                                                                                                                                                                                                CPOClient.CustomIdentificationSerializer));
 
-            CPOClient.OnChargingErrorNotificationResponse        += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnChargingErrorNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingErrorNotificationRequestSerializer,
+            CPOClient.OnChargingErrorNotificationResponse        += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnChargingErrorNotificationResponse",          response.ToJSON(request.           ToJSON(CPOClient.CustomChargingErrorNotificationRequestSerializer,
                                                                                                                                                                                                                                          CPOClient.CustomIdentificationSerializer),
                                                                                                                                                                                                                response.Response?.ToJSON(//CustomChargingErrorNotificationResponseSerializer,
                                                                                                                                                                                                                                          //CustomOperatorEVSEDataSerializer,
@@ -734,7 +734,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
                                                                                                                                                                                                    CPOClient.CustomSignedMeteringValueSerializer,
                                                                                                                                                                                                    CPOClient.CustomCalibrationLawVerificationSerializer));
 
-            CPOClient.OnSendChargeDetailRecordResponse     += (timestamp, cpoClient, request, response)          => DebugLog.SubmitEvent("OnSendChargeDetailRecordResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargeDetailRecordRequestSerializer,
+            CPOClient.OnSendChargeDetailRecordResponse     += (timestamp, cpoClient, request, response, runtime) => DebugLog.SubmitEvent("OnSendChargeDetailRecordResponse",       response.ToJSON(request.           ToJSON(CPOClient.CustomChargeDetailRecordRequestSerializer,
                                                                                                                                                                                                                              CPOClient.CustomChargeDetailRecordSerializer,
                                                                                                                                                                                                                              CPOClient.CustomIdentificationSerializer,
                                                                                                                                                                                                                              CPOClient.CustomSignedMeteringValueSerializer,

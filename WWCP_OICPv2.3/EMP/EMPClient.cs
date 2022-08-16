@@ -987,7 +987,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -1379,7 +1380,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -1754,7 +1756,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -2129,7 +2132,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -2596,7 +2600,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -3062,7 +3067,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -3633,7 +3639,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -4034,7 +4041,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -4433,7 +4441,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -4832,7 +4841,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -5231,7 +5241,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
@@ -5624,7 +5635,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Select(e => e(endtime,
                                                      this,
                                                      Request,
-                                                     result))).
+                                                     result,
+                                                     endtime - startTime))).
                                        ConfigureAwait(false);
 
             }
