@@ -230,8 +230,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-
-
         #region RegisterProvider(ProviderId, CPOClient)
 
         /// <summary>
@@ -282,13 +280,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.PushEVSEData(Request);
             }
 
-            return new OICPResult<Acknowledgement<PushEVSEDataRequest>>(
+            return OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                        Request,
                        Acknowledgement<PushEVSEDataRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -314,13 +311,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.PushEVSEStatus(Request);
             }
 
-            return new OICPResult<Acknowledgement<PushEVSEStatusRequest>>(
+            return OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                        Request,
                        Acknowledgement<PushEVSEStatusRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -347,13 +343,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.PushPricingProductData(Request);
             }
 
-            return new OICPResult<Acknowledgement<PushPricingProductDataRequest>>(
+            return OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                        Request,
                        Acknowledgement<PushPricingProductDataRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -379,13 +374,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.PushEVSEPricing(Request);
             }
 
-            return new OICPResult<Acknowledgement<PushEVSEPricingRequest>>(
+            return OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                        Request,
                        Acknowledgement<PushEVSEPricingRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -414,7 +408,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.PullAuthenticationData(Request);
             }
 
-            return new OICPResult<PullAuthenticationDataResponse>(
+            return OICPResult<PullAuthenticationDataResponse>.Failed(
                        Request,
                        new PullAuthenticationDataResponse(
                            Timestamp.Now,
@@ -427,8 +421,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                            StatusCodes.NoValidContract,
                                            "Unknown e-mobility provider!"
                                        )
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -455,7 +448,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.AuthorizeStart(Request);
             }
 
-            return new OICPResult<AuthorizationStartResponse>(
+            return OICPResult<AuthorizationStartResponse>.Failed(
                        Request,
                        AuthorizationStartResponse.NotAuthorized(
                            Request,
@@ -463,8 +456,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                StatusCodes.NoValidContract,
                                "Unknown e-mobility provider!"
                            )
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -490,7 +482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.AuthorizeStop(Request);
             }
 
-            return new OICPResult<AuthorizationStopResponse>(
+            return OICPResult<AuthorizationStopResponse>.Failed(
                        Request,
                        AuthorizationStopResponse.NotAuthorized(
                            Request,
@@ -498,8 +490,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                StatusCodes.NoValidContract,
                                "Unknown e-mobility provider!"
                            )
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -526,13 +517,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.SendChargingStartNotification(Request);
             }
 
-            return new OICPResult<Acknowledgement<ChargingStartNotificationRequest>>(
+            return OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                        Request,
                        Acknowledgement<ChargingStartNotificationRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -558,13 +548,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.SendChargingProgressNotification(Request);
             }
 
-            return new OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>(
+            return OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                        Request,
                        Acknowledgement<ChargingProgressNotificationRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -590,13 +579,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.SendChargingEndNotification(Request);
             }
 
-            return new OICPResult<Acknowledgement<ChargingEndNotificationRequest>>(
+            return OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                        Request,
                        Acknowledgement<ChargingEndNotificationRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -622,13 +610,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.SendChargingErrorNotification(Request);
             }
 
-            return new OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>(
+            return OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                        Request,
                        Acknowledgement<ChargingErrorNotificationRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }
@@ -655,13 +642,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 return await cpoClient.SendChargeDetailRecord(Request);
             }
 
-            return new OICPResult<Acknowledgement<ChargeDetailRecordRequest>>(
+            return OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                        Request,
                        Acknowledgement<ChargeDetailRecordRequest>.NoValidContract(
                            Request,
                            "Unknown e-mobility provider!"
-                       ),
-                       false
+                       )
                    );
 
         }

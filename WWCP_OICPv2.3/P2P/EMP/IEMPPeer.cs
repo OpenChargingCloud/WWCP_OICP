@@ -30,20 +30,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
         /// <param name="Request">A PullEVSEData request.</param>
-        Task<OICPResult<PullEVSEDataResponse>>                                     PullEVSEData                   (Operator_Id  OperatorId, PullEVSEDataRequest                     Request);
+        Task<OICPResult<PullEVSEDataResponse>>
+            PullEVSEData                   (Operator_Id                             OperatorId,
+                                            PullEVSEDataRequest                     Request);
 
         /// <summary>
         /// Download EVSE status records.
         /// The request might have an optional search radius and/or status filter.
         /// </summary>
         /// <param name="Request">A PullEVSEStatus request.</param>
-        Task<OICPResult<PullEVSEStatusResponse>>                                   PullEVSEStatus                 (Operator_Id  OperatorId, PullEVSEStatusRequest                   Request);
+        Task<OICPResult<PullEVSEStatusResponse>>
+            PullEVSEStatus                 (Operator_Id                             OperatorId,
+                                            PullEVSEStatusRequest                   Request);
 
         /// <summary>
         /// Download the current status of up to 100 EVSEs.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusById request.</param>
-        Task<OICPResult<PullEVSEStatusByIdResponse>>                               PullEVSEStatusById             (Operator_Id  OperatorId, PullEVSEStatusByIdRequest               Request);
+        Task<OICPResult<PullEVSEStatusByIdResponse>>
+            PullEVSEStatusById             (Operator_Id                             OperatorId,
+                                            PullEVSEStatusByIdRequest               Request);
 
 
 
@@ -51,13 +57,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Download pricing product data.
         /// </summary>
         /// <param name="Request">A PullPricingProductData request.</param>
-        Task<OICPResult<PullPricingProductDataResponse>>                           PullPricingProductData         (Operator_Id  OperatorId, PullPricingProductDataRequest           Request);
+        Task<OICPResult<PullPricingProductDataResponse>>
+            PullPricingProductData         (Operator_Id                             OperatorId,
+                                            PullPricingProductDataRequest           Request);
 
         /// <summary>
         /// Download EVSE pricing data.
         /// </summary>
         /// <param name="Request">A PullEVSEPricing request.</param></param>
-        Task<OICPResult<PullEVSEPricingResponse>>                                  PullEVSEPricing                (Operator_Id  OperatorId, PullEVSEPricingRequest                  Request);
+        Task<OICPResult<PullEVSEPricingResponse>>
+            PullEVSEPricing                (Operator_Id                             OperatorId,
+                                            PullEVSEPricingRequest                  Request);
 
 
 
@@ -65,7 +75,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Upload provider authentication data records.
         /// </summary>
         /// <param name="Request">A PushAuthenticationData request.</param>
-        Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>           PushAuthenticationData         (Operator_Id  OperatorId, PushAuthenticationDataRequest           Request);
+        Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
+            PushAuthenticationData         (Operator_Id                             OperatorId,
+                                            PushAuthenticationDataRequest           Request);
 
 
 
@@ -73,26 +85,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Create a charging reservation at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
-        Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>  AuthorizeRemoteReservationStart(                         AuthorizeRemoteReservationStartRequest  Request);
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
+            AuthorizeRemoteReservationStart(AuthorizeRemoteReservationStartRequest  Request);
 
         /// <summary>
         /// Stop the given charging reservation.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
-        Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>   AuthorizeRemoteReservationStop (                         AuthorizeRemoteReservationStopRequest   Request);
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
+            AuthorizeRemoteReservationStop (AuthorizeRemoteReservationStopRequest   Request);
 
 
         /// <summary>
         /// Start a charging session at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteStart request.</param>
-        Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>             AuthorizeRemoteStart           (                         AuthorizeRemoteStartRequest             Request);
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>
+            AuthorizeRemoteStart           (AuthorizeRemoteStartRequest             Request);
 
         /// <summary>
         /// Stop the given charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteStop request.</param>
-        Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>              AuthorizeRemoteStop            (                         AuthorizeRemoteStopRequest              Request);
+        Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
+            AuthorizeRemoteStop            (AuthorizeRemoteStopRequest              Request);
 
 
 
@@ -100,7 +116,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// Download charge detail records.
         /// </summary>
         /// <param name="Request">An GetChargeDetailRecords request.</param>
-        Task<OICPResult<GetChargeDetailRecordsResponse>>                           GetChargeDetailRecords         (Operator_Id  OperatorId, GetChargeDetailRecordsRequest           Request);
+        Task<OICPResult<GetChargeDetailRecordsResponse>>
+            GetChargeDetailRecords         (Operator_Id                             OperatorId,
+                                            GetChargeDetailRecordsRequest           Request);
 
     }
 

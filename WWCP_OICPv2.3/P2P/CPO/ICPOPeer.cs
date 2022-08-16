@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 {
 
@@ -34,78 +28,102 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// Upload the given EVSE data records.
         /// </summary>
         /// <param name="Request">A PushEVSEData request.</param>
-        Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>                  PushEVSEData                    (Provider_Id  ProviderId, PushEVSEDataRequest                  Request);
+        Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
+            PushEVSEData                    (Provider_Id                          ProviderId,
+                                             PushEVSEDataRequest                  Request);
 
         /// <summary>
         /// Upload the given EVSE status records.
         /// </summary>
         /// <param name="Request">A PushEVSEStatus request.</param>
-        Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>                PushEVSEStatus                  (Provider_Id  ProviderId, PushEVSEStatusRequest                Request);
+        Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
+            PushEVSEStatus                  (Provider_Id                          ProviderId,
+                                             PushEVSEStatusRequest                Request);
 
 
         /// <summary>
         /// Upload the given pricing product data.
         /// </summary>
         /// <param name="Request">A PushPricingProductData request.</param>
-        Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>        PushPricingProductData          (Provider_Id  ProviderId, PushPricingProductDataRequest        Request);
+        Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
+            PushPricingProductData          (Provider_Id                          ProviderId,
+                                             PushPricingProductDataRequest        Request);
 
         /// <summary>
         /// Upload the given EVSE pricing data.
         /// </summary>
         /// <param name="Request">A PushEVSEPricing request.</param>
-        Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>               PushEVSEPricing                 (Provider_Id  ProviderId, PushEVSEPricingRequest               Request);
+        Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
+            PushEVSEPricing                 (Provider_Id                          ProviderId,
+                                             PushEVSEPricingRequest               Request);
 
 
         /// <summary>
         /// Download provider authentication data.
         /// </summary>
         /// <param name="Request">A PullAuthenticationData request.</param>
-        Task<OICPResult<PullAuthenticationDataResponse>>                        PullAuthenticationData          (Provider_Id  ProviderId, PullAuthenticationDataRequest        Request);
+        Task<OICPResult<PullAuthenticationDataResponse>>
+            PullAuthenticationData          (Provider_Id                          ProviderId,
+                                             PullAuthenticationDataRequest        Request);
 
 
         /// <summary>
         /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStart request.</param>
-        Task<OICPResult<AuthorizationStartResponse>>                            AuthorizeStart                  (Provider_Id  ProviderId, AuthorizeStartRequest                Request);
+        Task<OICPResult<AuthorizationStartResponse>>
+            AuthorizeStart                  (Provider_Id                          ProviderId,
+                                             AuthorizeStartRequest                Request);
 
         /// <summary>
         /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeStop request.</param>
-        Task<OICPResult<AuthorizationStopResponse>>                             AuthorizeStop                   (Provider_Id  ProviderId, AuthorizeStopRequest                 Request);
+        Task<OICPResult<AuthorizationStopResponse>>
+            AuthorizeStop                   (Provider_Id                          ProviderId,
+                                             AuthorizeStopRequest                 Request);
 
 
         /// <summary>
         /// Send a charging start notification.
         /// </summary>
         /// <param name="Request">A ChargingStartNotification request.</param>
-        Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>     SendChargingStartNotification   (Provider_Id  ProviderId, ChargingStartNotificationRequest     Request);
+        Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
+            SendChargingStartNotification   (Provider_Id                          ProviderId,
+                                             ChargingStartNotificationRequest     Request);
 
         /// <summary>
         /// Send a charging progress notification.
         /// </summary>
         /// <param name="Request">A ChargingProgressNotification request.</param>
-        Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>  SendChargingProgressNotification(Provider_Id  ProviderId, ChargingProgressNotificationRequest  Request);
+        Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
+            SendChargingProgressNotification(Provider_Id                          ProviderId,
+                                             ChargingProgressNotificationRequest  Request);
 
         /// <summary>
         /// Send a charging end notification.
         /// </summary>
         /// <param name="Request">A ChargingEndNotification request.</param>
-        Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>       SendChargingEndNotification     (Provider_Id  ProviderId, ChargingEndNotificationRequest       Request);
+        Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
+            SendChargingEndNotification     (Provider_Id                          ProviderId,
+                                             ChargingEndNotificationRequest       Request);
 
         /// <summary>
         /// Send a charging error notification.
         /// </summary>
         /// <param name="Request">A ChargingErrorNotification request.</param>
-        Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>     SendChargingErrorNotification   (Provider_Id  ProviderId, ChargingErrorNotificationRequest     Request);
+        Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
+            SendChargingErrorNotification   (Provider_Id                          ProviderId,
+                                             ChargingErrorNotificationRequest     Request);
 
 
         /// <summary>
         /// Send a charge detail record.
         /// </summary>
         /// <param name="Request">A SendChargeDetailRecord request.</param>
-        Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>            SendChargeDetailRecord          (Provider_Id  ProviderId, ChargeDetailRecordRequest            Request);
+        Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
+            SendChargeDetailRecord          (Provider_Id                          ProviderId,
+                                             ChargeDetailRecordRequest            Request);
 
     }
 
