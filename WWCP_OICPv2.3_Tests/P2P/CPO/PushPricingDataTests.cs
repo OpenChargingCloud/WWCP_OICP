@@ -19,16 +19,18 @@
 
 using NUnit.Framework;
 
+using cloud.charging.open.protocols.OICPv2_3.CPO;
+
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
+namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
 {
 
     /// <summary>
-    /// CPO sending pricing data tests.
+    /// P2P CPO sending pricing data tests.
     /// </summary>
     [TestFixture]
-    public class PushPricingDataTests : ACPOClientAPITests
+    public class PushPricingDataTests : AP2PTests
     {
 
         #region PushPricingProductData_Test1()
@@ -37,10 +39,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
         public async Task PushPricingProductData_Test1()
         {
 
-            if (cpoClientAPI is null ||
-                cpoClient    is null)
+            if (cpoP2P_DEGEF is null ||
+                empP2P_DEGDF is null)
             {
-                Assert.Fail("cpoClientAPI or cpoClient is null!");
+                Assert.Fail(nameof(cpoP2P_DEGEF) + " or " + nameof(empP2P_DEGDF) + " is null!");
                 return;
             }
 
@@ -85,33 +87,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             Assert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.PushPricingProductData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushPricingProductData.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.PushPricingProductData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushPricingProductData.Responses_Error);
+            if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient cpoClient)
+            {
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushPricingProductData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushPricingProductData.Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushPricingProductData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushPricingProductData.Responses_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.PushPricingProductData.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushPricingProductData.Requests_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.PushPricingProductData.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushPricingProductData.Responses_Error);
 
-            var oicpResult  = await cpoClient.PushPricingProductData(request);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Requests_Error);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Responses_Error);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.PushPricingProductData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushPricingProductData.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.PushPricingProductData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushPricingProductData.Responses_Error);
+                var oicpResult  = await cpoClient.PushPricingProductData(request);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushPricingProductData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushPricingProductData.Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushPricingProductData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushPricingProductData.Responses_Error);
+                Assert.IsNotNull(oicpResult);
+                Assert.IsNotNull(oicpResult.Response);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+                Assert.IsTrue   (oicpResult.Response?.Result);
+
+
+                Assert.AreEqual(1, cpoClient.                Counters.PushPricingProductData.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushPricingProductData.Requests_Error);
+                Assert.AreEqual(1, cpoClient.                Counters.PushPricingProductData.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushPricingProductData.Responses_Error);
+
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Requests_Error);
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushPricingProductData.Responses_Error);
+
+            }
+            else
+                Assert.Fail("Missing CPOClient!");
 
         }
 
@@ -124,10 +135,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
         public async Task PushEVSEPricing_Test1()
         {
 
-            if (cpoClientAPI is null ||
-                cpoClient    is null)
+            if (cpoP2P_DEGEF is null ||
+                empP2P_DEGDF is null)
             {
-                Assert.Fail("cpoClientAPI or cpoClient is null!");
+                Assert.Fail(nameof(cpoP2P_DEGEF) + " or " + nameof(empP2P_DEGDF) + " is null!");
                 return;
             }
 
@@ -153,33 +164,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             Assert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEPricing.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEPricing.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEPricing.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEPricing.Responses_Error);
+            if (cpoP2P_DEGEF.GetCPOClient(DEGDF_Id) is CPOClient cpoClient)
+            {
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEPricing.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEPricing.Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEPricing.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEPricing.Responses_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.PushEVSEPricing.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushEVSEPricing.Requests_Error);
+                Assert.AreEqual(0, cpoClient.                Counters.PushEVSEPricing.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushEVSEPricing.Responses_Error);
 
-            var oicpResult  = await cpoClient.PushEVSEPricing(request);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Requests_Error);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Responses_Error);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEPricing.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEPricing.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEPricing.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEPricing.Responses_Error);
+                var oicpResult  = await cpoClient.PushEVSEPricing(request);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEPricing.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEPricing.Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEPricing.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEPricing.Responses_Error);
+                Assert.IsNotNull(oicpResult);
+                Assert.IsNotNull(oicpResult.Response);
+                Assert.IsTrue   (oicpResult.IsSuccessful);
+                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+                Assert.IsTrue   (oicpResult.Response?.Result);
+
+
+                Assert.AreEqual(1, cpoClient.                Counters.PushEVSEPricing.Requests_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushEVSEPricing.Requests_Error);
+                Assert.AreEqual(1, cpoClient.                Counters.PushEVSEPricing.Responses_OK);
+                Assert.AreEqual(0, cpoClient.                Counters.PushEVSEPricing.Responses_Error);
+
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Requests_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Requests_Error);
+                Assert.AreEqual(1, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Responses_OK);
+                Assert.AreEqual(0, empP2P_DEGDF.CPOClientAPI.Counters.PushEVSEPricing.Responses_Error);
+
+            }
+            else
+                Assert.Fail("Missing CPOClient!");
 
         }
 

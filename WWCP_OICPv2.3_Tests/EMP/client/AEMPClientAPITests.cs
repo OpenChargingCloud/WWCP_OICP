@@ -72,7 +72,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             Assert.IsNotNull(empClientAPI);
 
 
-            empClientAPI.OnPullEVSEData                    += (timestamp, empClientAPI, pullEVSEDataRequest)               => {
+            empClientAPI.OnPullEVSEData                    += (timestamp, empClientAPI, pullEVSEDataRequest)                    => {
 
                 return Task.FromResult(
                     OICPResult<PullEVSEDataResponse>.Success(
@@ -93,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             };
 
-            empClientAPI.OnPullEVSEStatus                  += (timestamp, empClientAPI, pullEVSEStatusRequest)             => {
+            empClientAPI.OnPullEVSEStatus                  += (timestamp, empClientAPI, pullEVSEStatusRequest)                  => {
 
                 return Task.FromResult(
                     OICPResult<PullEVSEStatusResponse>.Success(
@@ -114,7 +114,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             };
 
-            empClientAPI.OnPullEVSEStatusById              += (timestamp, empClientAPI, pullEVSEStatusByIdRequest)         => {
+            empClientAPI.OnPullEVSEStatusById              += (timestamp, empClientAPI, pullEVSEStatusByIdRequest)              => {
 
                 return Task.FromResult(
                     OICPResult<PullEVSEStatusByIdResponse>.Success(
@@ -135,7 +135,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             };
 
-            empClientAPI.OnPullEVSEStatusByOperatorId      += (timestamp, empClientAPI, pullEVSEStatusByOperatorIdRequest) => {
+            empClientAPI.OnPullEVSEStatusByOperatorId      += (timestamp, empClientAPI, pullEVSEStatusByOperatorIdRequest)      => {
 
                 return Task.FromResult(
                     OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(
@@ -157,8 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             };
 
 
-            empClientAPI.OnPullPricingProductData          += (timestamp, empClientAPI, pullPricingProductDataRequest) =>
-            {
+            empClientAPI.OnPullPricingProductData          += (timestamp, empClientAPI, pullPricingProductDataRequest)          => {
 
                 if (pullPricingProductDataRequest.OperatorIds.Contains(Operator_Id.Parse("DE*GEF")))
                     return Task.FromResult(
@@ -232,8 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             };
 
-            empClientAPI.OnPullEVSEPricing                 += (timestamp, empClientAPI, pullEVSEPricingRequest)        =>
-            {
+            empClientAPI.OnPullEVSEPricing                 += (timestamp, empClientAPI, pullEVSEPricingRequest)                 => {
 
                 if (pullEVSEPricingRequest.OperatorIds.Contains(Operator_Id.Parse("DE*GEF")))
                     return Task.FromResult(
@@ -254,12 +252,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                                     },
                                                 ProviderId:         Provider_Id.Parse("DE-GDF")
                                             ),
-                                            new EVSEPricing(
+                                            new EVSEPricing( // '*' meaning for all providers!
                                                 EVSEId:             EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
                                                 EVSEIdProductList:  new PartnerProduct_Id[] {
                                                                         PartnerProduct_Id.Parse("AC3")
-                                                                    },
-                                                ProviderId:         null // == '*' meaning for all providers!
+                                                                    }
                                             )
                                         },
                                         OperatorId:     Operator_Id.Parse("DE*GEF"),
@@ -295,8 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             };
 
 
-            empClientAPI.OnPushAuthenticationData          += (timestamp, empClientAPI, pushPushAuthenticationDataRequest) =>
-            {
+            empClientAPI.OnPushAuthenticationData          += (timestamp, empClientAPI, pushPushAuthenticationDataRequest)      => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<PushAuthenticationDataRequest>>.Success(
@@ -319,8 +315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             };
 
 
-            empClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) =>
-            {
+            empClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.Success(
@@ -342,8 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             };
 
-            empClientAPI.OnAuthorizeRemoteReservationStop  += (timestamp, empClientAPI, authorizeRemoteReservationStopRequest)  =>
-            {
+            empClientAPI.OnAuthorizeRemoteReservationStop  += (timestamp, empClientAPI, authorizeRemoteReservationStopRequest)  => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.Success(
@@ -365,8 +359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             };
 
-            empClientAPI.OnAuthorizeRemoteStart            += (timestamp, empClientAPI, authorizeRemoteStartRequest)            =>
-            {
+            empClientAPI.OnAuthorizeRemoteStart            += (timestamp, empClientAPI, authorizeRemoteStartRequest)            => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Success(
@@ -388,8 +381,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             };
 
-            empClientAPI.OnAuthorizeRemoteStop             += (timestamp, empClientAPI, authorizeRemoteStopRequest)             =>
-            {
+            empClientAPI.OnAuthorizeRemoteStop             += (timestamp, empClientAPI, authorizeRemoteStopRequest)             => {
 
                 return Task.FromResult(
                    OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Success(
@@ -412,10 +404,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             };
 
 
-            empClientAPI.OnGetChargeDetailRecords          += (timestamp, empClientAPI, getChargeDetailRecordsRequest) =>
-            {
+            empClientAPI.OnGetChargeDetailRecords          += (timestamp, empClientAPI, getChargeDetailRecordsRequest)          => {
 
-                if (Timestamp.Now - getChargeDetailRecordsRequest.From > TimeSpan.FromMinutes(1))
+                if (Timestamp.Now - getChargeDetailRecordsRequest.To > TimeSpan.FromMinutes(1))
                     return Task.FromResult(
                         OICPResult<GetChargeDetailRecordsResponse>.Success(
                             getChargeDetailRecordsRequest,

@@ -76,6 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             Assert.AreEqual(0, empClientAPI.Counters.GetChargeDetailRecords.Responses_OK);
             Assert.AreEqual(0, empClientAPI.Counters.GetChargeDetailRecords.Responses_Error);
 
+
             var oicpResult  = await empClient.GetChargeDetailRecords(request);
 
             Assert.IsNotNull(oicpResult);
@@ -84,6 +85,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
             Assert.IsNotNull(oicpResult.Response?.ChargeDetailRecords);
             Assert.IsFalse  (oicpResult.Response?.ChargeDetailRecords.Any());
+
 
             Assert.AreEqual(1, empClient.   Counters.GetChargeDetailRecords.Requests_OK);
             Assert.AreEqual(0, empClient.   Counters.GetChargeDetailRecords.Requests_Error);
@@ -113,8 +115,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             }
 
             var request = new GetChargeDetailRecordsRequest(ProviderId:         Provider_Id.Parse("DE-GDF"),
-                                                            From:               Timestamp.Now,
-                                                            To:                 Timestamp.Now - TimeSpan.FromDays(1),
+                                                            From:               Timestamp.Now - TimeSpan.FromDays(1),
+                                                            To:                 Timestamp.Now,
                                                             SessionIds:         null,
                                                             OperatorIds:        null,
                                                             CDRForwarded:       null,
@@ -140,6 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             Assert.AreEqual(0, empClientAPI.Counters.GetChargeDetailRecords.Requests_Error);
             Assert.AreEqual(0, empClientAPI.Counters.GetChargeDetailRecords.Responses_OK);
             Assert.AreEqual(0, empClientAPI.Counters.GetChargeDetailRecords.Responses_Error);
+
 
             var oicpResult  = await empClient.GetChargeDetailRecords(request);
 
@@ -187,6 +190,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             Assert.AreEqual(Operator_Id.Parse("DE*GEF"),                                                 cdr?.HubOperatorId);
             Assert.AreEqual(Provider_Id.Parse("DE-GDF"),                                                 cdr?.HubProviderId);
+
 
             Assert.AreEqual(1, empClient.   Counters.GetChargeDetailRecords.Requests_OK);
             Assert.AreEqual(0, empClient.   Counters.GetChargeDetailRecords.Requests_Error);

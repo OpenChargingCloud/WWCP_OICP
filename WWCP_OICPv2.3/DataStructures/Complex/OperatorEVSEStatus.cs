@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -81,17 +79,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   JObject?                       CustomData   = null)
         {
 
-            if (!EVSEStatusRecords.SafeAny())
-                throw new ArgumentNullException(nameof(EVSEStatusRecords),  "The given enumeration of EVSE status records must not be null or empty!");
-
-            OperatorName = OperatorName.Trim();
-
-            if (OperatorName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(OperatorName),       "The given EVSE operator name must not be null or empty!");
+            var duplicateEVSEStatusRecords  = EVSEStatusRecords.GroupBy(evseStatusRecord => evseStatusRecord.Id).Where(group => group.Count() > 1).ToArray();
+            if (duplicateEVSEStatusRecords.SafeAny())
+                throw new ArgumentException("The following EVSE Ids are not unique: " + duplicateEVSEStatusRecords.AggregateWith(", "), nameof(EVSEStatusRecords));
 
             this.EVSEStatusRecords  = EVSEStatusRecords;
             this.OperatorId         = OperatorId;
-            this.OperatorName       = OperatorName;
+            this.OperatorName       = OperatorName.Trim();
 
             this.CustomData         = CustomData;
 

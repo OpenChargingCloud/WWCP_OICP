@@ -30,13 +30,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
     /// P2P EMP client sending remote authorization start/stop tests.
     /// </summary>
     [TestFixture]
-    public class RemoteStartStopTests : AP2PTests
+    public class RemoteReservationStartStopTests : AP2PTests
     {
 
-        #region AuthorizeRemoteStart_Test1()
+        #region AuthorizeRemoteReservationStart_Test1()
 
         [Test]
-        public async Task AuthorizeRemoteStart_Test1()
+        public async Task AuthorizeRemoteReservationStart_Test1()
         {
 
             if (cpoP2P_DEGEF is null ||
@@ -46,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new AuthorizeRemoteStartRequest(
+            var request = new AuthorizeRemoteReservationStartRequest(
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
                               Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C12345678X")),
                               EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
@@ -62,18 +62,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStart.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStart.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStart.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStart.Responses_Error);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStart.Requests_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStart.Requests_Error);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStart.Responses_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
 
-                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStart(request);
+                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteReservationStart(request);
 
                 Assert.IsNotNull(oicpResult);
                 Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -81,15 +81,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
 
-                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteStart.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStart.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteStart.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStart.Responses_Error);
+                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteReservationStart.Requests_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStart.Requests_Error);
+                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteReservationStart.Responses_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStart.Responses_Error);
+                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
             }
             else
@@ -99,10 +99,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
         #endregion
 
-        #region AuthorizeRemoteStart_Test2()
+        #region AuthorizeRemoteReservationStart_Test2()
 
         [Test]
-        public async Task AuthorizeRemoteStart_Test2()
+        public async Task AuthorizeRemoteReservationStart_Test2()
         {
 
             if (cpoP2P_DEGEF is null ||
@@ -112,7 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new AuthorizeRemoteStartRequest(
+            var request = new AuthorizeRemoteReservationStartRequest(
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
                               Identification:       Identification.FromRemoteIdentification(EVCO_Id.Parse("DE-GDF-C12345678X")),
                               EVSEId:               EVSE_Id.       Parse("DE*XXX*E1234567*A*1"),
@@ -128,13 +128,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_Error);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
 
-                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStart(request);
+                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteReservationStart(request);
 
                 Assert.IsNotNull(oicpResult);
                 Assert.IsFalse  (oicpResult.IsSuccessful);
@@ -142,10 +142,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 Assert.AreEqual (StatusCodes.NoValidContract, oicpResult.Response?.StatusCode.Code);
 
 
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_Error);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
             }
             else
@@ -156,10 +156,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
         #endregion
 
 
-        #region AuthorizeRemoteStop_Test1()
+        #region AuthorizeRemoteReservationStop_Test1()
 
         [Test]
-        public async Task AuthorizeRemoteStop_Test1()
+        public async Task AuthorizeRemoteReservationStop_Test1()
         {
 
             if (cpoP2P_DEGEF is null ||
@@ -169,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new AuthorizeRemoteStopRequest(
+            var request = new AuthorizeRemoteReservationStopRequest(
                               ProviderId:           Provider_Id.Parse("DE-GDF"),
                               EVSEId:               EVSE_Id.    Parse("DE*GEF*E1234567*A*1"),
                               SessionId:            Session_Id. Parse("7e8f35a6-13c8-4b37-8099-b21323c83e85"),
@@ -183,18 +183,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Responses_Error);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStop.Requests_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStop.Requests_Error);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStop.Responses_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Requests_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Requests_Error);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
 
-                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStop(request);
+                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteReservationStop(request);
 
                 Assert.IsNotNull(oicpResult);
                 Assert.IsTrue   (oicpResult.IsSuccessful);
@@ -202,15 +202,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
 
-                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteStop.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteStop.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteStop.Responses_Error);
+                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteReservationStop.Requests_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStop.Requests_Error);
+                Assert.AreEqual(1, empClient.                Counters.AuthorizeRemoteReservationStop.Responses_OK);
+                Assert.AreEqual(0, empClient.                Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteStop.Responses_Error);
+                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Requests_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Requests_Error);
+                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_OK);
+                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
             }
             else
@@ -220,10 +220,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
         #endregion
 
-        #region AuthorizeRemoteStop_Test2()
+        #region AuthorizeRemoteReservationStop_Test2()
 
         [Test]
-        public async Task AuthorizeRemoteStop_Test2()
+        public async Task AuthorizeRemoteReservationStop_Test2()
         {
 
             if (cpoP2P_DEGEF is null ||
@@ -233,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new AuthorizeRemoteStopRequest(
+            var request = new AuthorizeRemoteReservationStopRequest(
                               ProviderId:           Provider_Id.Parse("DE-GDF"),
                               EVSEId:               EVSE_Id.    Parse("DE*XXX*E1234567*A*1"),
                               SessionId:            Session_Id. Parse("7e8f35a6-13c8-4b37-8099-b21323c83e85"),
@@ -247,13 +247,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Requests_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Requests_Error);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Responses_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStop.Responses_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
 
-                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteStop(request);
+                var oicpResult = await empP2P_DEGDF.AuthorizeRemoteReservationStop(request);
 
                 Assert.IsNotNull(oicpResult);
                 Assert.IsFalse  (oicpResult.IsSuccessful);
@@ -261,10 +261,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 Assert.AreEqual (StatusCodes.NoValidContract, oicpResult.Response?.StatusCode.Code);
 
 
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Requests_Error);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_OK);
-                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteStart.Responses_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+                Assert.AreEqual(0, empClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
             }
             else

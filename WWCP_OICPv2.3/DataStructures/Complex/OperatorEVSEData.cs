@@ -79,21 +79,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 JObject?                     CustomData   = null)
         {
 
-            if (!EVSEDataRecords.SafeAny())
-                throw new ArgumentNullException(nameof(EVSEDataRecords),  "The given enumeration of EVSE data records must not be null or empty!");
-
-            OperatorName = OperatorName.Trim();
-
-            if (OperatorName.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(OperatorName),     "The given EVSE operator name must not be null or empty!");
-
             var duplicateEVSEDataRecords  = EVSEDataRecords.GroupBy(evseDataRecord => evseDataRecord.Id).Where(group => group.Count() > 1).ToArray();
             if (duplicateEVSEDataRecords.SafeAny())
                 throw new ArgumentException("The following EVSE Ids are not unique: " + duplicateEVSEDataRecords.AggregateWith(", "), nameof(EVSEDataRecords));
 
             this.EVSEDataRecords  = EVSEDataRecords;
             this.OperatorId       = OperatorId;
-            this.OperatorName     = OperatorName;
+            this.OperatorName     = OperatorName.Trim();
 
             this.CustomData       = CustomData;
 

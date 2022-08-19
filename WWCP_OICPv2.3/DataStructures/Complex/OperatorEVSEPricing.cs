@@ -79,6 +79,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                    JObject?                  CustomData     = null)
         {
 
+            var duplicateEVSEPricings = EVSEPricings.GroupBy(evsePricing => evsePricing.EVSEId).Where(group => group.Count() > 1).ToArray();
+            if (duplicateEVSEPricings.SafeAny())
+                throw new ArgumentException("The following EVSE Ids are not unique: " + duplicateEVSEPricings.AggregateWith(", "), nameof(EVSEPricings));
+
             this.EVSEPricings  = EVSEPricings.Distinct();
             this.OperatorId    = OperatorId;
             this.OperatorName  = OperatorName?.Trim();
@@ -92,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Documentation
 
-        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#OperatorEvseDataType
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#OperatorEVSEPricingType
 
         // {
         //   "OperatorID":     "string",

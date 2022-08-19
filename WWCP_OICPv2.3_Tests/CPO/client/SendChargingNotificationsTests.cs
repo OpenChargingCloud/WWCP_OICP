@@ -17,10 +17,7 @@
 
 #region Usings
 
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using NUnit.Framework;
-using org.GraphDefined.Vanaheimr.Illias;
-using System.Diagnostics;
 
 #endregion
 
@@ -235,7 +232,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
         }
 
         #endregion
-
 
         #region SendChargingErrorNotification_Test1()
 

@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -201,13 +199,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) AC2
+        #region (static) AC3
 
         /// <summary>
         /// Product for AC 3 Phase charging.
         /// </summary>
-        public static PartnerProduct_Id AC2
-            => Parse("AC2");
+        public static PartnerProduct_Id AC3
+            => Parse("AC3");
 
         #endregion
 

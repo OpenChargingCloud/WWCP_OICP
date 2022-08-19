@@ -50,7 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Provider_Id?                    ProviderId           { get; }
 
         /// <summary>
-        /// A list of pricing products applicable per EVSE.
+        /// An enumeration of pricing products applicable for this EVSE.
         /// </summary>
         [Mandatory]
         public IEnumerable<PartnerProduct_Id>  EVSEIdProductList    { get; }
@@ -65,18 +65,46 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+        #region EVSEPricing(EVSEId,             EVSEIdProductList, CustomData = null)
+
         /// <summary>
         /// Create a new EVSE pricing information object.
         /// </summary>
-        /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        /// <param name="OperatorId">The unqiue identification of the EVSE operator maintaining the given EVSE data records.</param>
-        /// <param name="OperatorName">The name of the EVSE operator maintaining the given EVSE data records.</param>
+        /// <param name="EVSEId">The unique identification of the EVSE for which the defined pricing products are applicable.</param>
+        /// <param name="EVSEIdProductList">An enumeration of pricing products applicable for this EVSE.</param>
         /// 
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public EVSEPricing(EVSE_Id                         EVSEId,
-                           Provider_Id?                    ProviderId,
                            IEnumerable<PartnerProduct_Id>  EVSEIdProductList,
+                           JObject?                        CustomData   = null)
+        {
 
+            if (EVSEIdProductList is null || !EVSEIdProductList.Any())
+                throw new ArgumentNullException(nameof(EVSEIdProductList), "The given enumeration of charging product identifications must not be null or empty!");
+
+            this.EVSEId             = EVSEId;
+            this.ProviderId         = default;
+            this.EVSEIdProductList  = EVSEIdProductList.Distinct();
+
+            this.CustomData         = CustomData;
+
+        }
+
+        #endregion
+
+        #region EVSEPricing(EVSEId, ProviderId, EVSEIdProductList, CustomData = null)
+
+        /// <summary>
+        /// Create a new EVSE pricing information object.
+        /// </summary>
+        /// <param name="EVSEId">The unique identification of the EVSE for which the defined pricing products are applicable.</param>
+        /// <param name="ProviderId">The EMP for whom the pricing data is applicable. In case the data is to be made available for all EMPs (e.g. for Offer-to-All prices), the asterix character (*) can be set as the value in this field.</param>
+        /// <param name="EVSEIdProductList">An enumeration of pricing products applicable for this EVSE.</param>
+        /// 
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        public EVSEPricing(EVSE_Id                         EVSEId,
+                           Provider_Id                     ProviderId,
+                           IEnumerable<PartnerProduct_Id>  EVSEIdProductList,
                            JObject?                        CustomData   = null)
         {
 
@@ -90,6 +118,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.CustomData         = CustomData;
 
         }
+
+        #endregion
 
         #endregion
 
@@ -246,7 +276,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-
                 #region Parse CustomData           [optional]
 
                 var customData = JSON[nameof(CustomData)] as JObject;
@@ -254,11 +283,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                EVSEPricing = new EVSEPricing(EVSEId,
-                                              ProviderId,
-                                              EVSEIdProductList,
+                EVSEPricing = ProviderId.HasValue
 
-                                              customData);
+                                  ? new EVSEPricing(EVSEId,
+                                                    ProviderId.Value,
+                                                    EVSEIdProductList,
+                                                    customData)
+
+                                  : new EVSEPricing(EVSEId,
+                                                    EVSEIdProductList,
+                                                    customData);
 
 
                 if (CustomEVSEPricingParser is not null)
@@ -358,7 +392,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                     ProviderId.HasValue
                         ? ProviderId.Value.Clone
-                        : null,
+                        : default,
 
                     EVSEIdProductList.SafeSelect(productId => productId.Clone).ToArray(),
 

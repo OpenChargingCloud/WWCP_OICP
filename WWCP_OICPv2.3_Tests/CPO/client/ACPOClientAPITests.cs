@@ -72,7 +72,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
             Assert.IsNotNull(cpoClientAPI);
 
 
-            cpoClientAPI.OnPushEVSEData                 += (timestamp, cpoClientAPI, pushEVSEDataRequest)   => {
+            cpoClientAPI.OnPushEVSEData                 += (timestamp, cpoClientAPI, pushEVSEDataRequest)                 => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(
@@ -94,7 +94,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             };
 
-            cpoClientAPI.OnPushEVSEStatus               += (timestamp, cpoClientAPI, pushEVSEStatusRequest) => {
+            cpoClientAPI.OnPushEVSEStatus               += (timestamp, cpoClientAPI, pushEVSEStatusRequest)               => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(
@@ -117,7 +117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
             };
 
 
-            cpoClientAPI.OnPushPricingProductData       += (timestamp, cpoClientAPI, pushPricingProductDataRequest) => {
+            cpoClientAPI.OnPushPricingProductData       += (timestamp, cpoClientAPI, pushPricingProductDataRequest)       => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(
@@ -139,7 +139,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             };
 
-            cpoClientAPI.OnPushEVSEPricing              += (timestamp, cpoClientAPI, pushEVSEPricingRequest)        => {
+            cpoClientAPI.OnPushEVSEPricing              += (timestamp, cpoClientAPI, pushEVSEPricingRequest)              => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(
@@ -162,7 +162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
             };
 
 
-            cpoClientAPI.OnPullAuthenticationData       += (timestamp, cpoClientAPI, pullAuthenticationDataRequest) => {
+            cpoClientAPI.OnPullAuthenticationData       += (timestamp, cpoClientAPI, pullAuthenticationDataRequest)       => {
 
                 if (pullAuthenticationDataRequest.OperatorId == Operator_Id.Parse("DE*GEF"))
                     return Task.FromResult(
@@ -247,7 +247,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
             };
 
 
-            cpoClientAPI.OnAuthorizeStart               += (timestamp, empClientAPI, authorizeStartRequest) => {
+            cpoClientAPI.OnAuthorizeStart               += (timestamp, empClientAPI, authorizeStartRequest)               => {
 
                 return Task.FromResult(
                     OICPResult<AuthorizationStartResponse>.Success(
@@ -270,7 +270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
             };
 
-            cpoClientAPI.OnAuthorizeStop                += (timestamp, empClientAPI, authorizeStopRequest)  => {
+            cpoClientAPI.OnAuthorizeStop                += (timestamp, empClientAPI, authorizeStopRequest)                => {
 
                 return Task.FromResult(
                     OICPResult<AuthorizationStopResponse>.Success(
@@ -379,7 +379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
             };
 
 
-            cpoClientAPI.OnChargeDetailRecord           += (timestamp, cpoClientAPI, chargeDetailRecordRequest) => {
+            cpoClientAPI.OnChargeDetailRecord           += (timestamp, cpoClientAPI, chargeDetailRecordRequest)           => {
 
                 return Task.FromResult(
                     OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(
