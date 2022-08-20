@@ -105,7 +105,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             #region Register CPO "DE*GEF"
 
             cpoP2P_DEGEF = new CPOPeer(
-                               ExternalDNSName:  "open.charging.cloud",
+                               OperatorId:       DEGEF_Id,
+                               ExternalDNSName:  "cso.graphdefined.ops.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(7001),
                                LoggingPath:      "tests",
                                Autostart:        true
@@ -787,7 +788,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             #region Register EMP "DE-GDF"
 
             empP2P_DEGDF = new EMPPeer(
-                               ExternalDNSName:  "open.charging.cloud",
+                               ProviderId:       DEGDF_Id,
+                               ExternalDNSName: "emp.graphdefined.ops.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(8001),
                                LoggingPath:      "tests",
                                Autostart:        true

@@ -159,6 +159,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #region Properties
 
         /// <summary>
+        /// The charge point operator identification of this peer.
+        /// </summary>
+        public Operator_Id   OperatorId      { get; }
+
+        /// <summary>
         /// CPO Peer API counters.
         /// </summary>
         public APICounters   Counters        { get; }
@@ -497,12 +502,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #region Constructor(s)
 
-        #region CPOPeer(KeyPair = null, ...)
+        #region CPOPeer(OperatorId, KeyPair = null, ...)
 
         /// <summary>
         /// Create a new CPO p2p service.
         /// </summary>
-        public CPOPeer(AsymmetricCipherKeyPair?              KeyPair                            = null,
+        public CPOPeer(Operator_Id                           OperatorId,
+                       AsymmetricCipherKeyPair?              KeyPair                            = null,
 
                        HTTPHostname?                         HTTPHostname                       = null,
                        String?                               ExternalDNSName                    = null,
@@ -598,6 +604,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                   DNSClient,
                                   false);
 
+            this.OperatorId    = OperatorId;
+            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
+            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
+            this.Counters      = new APICounters();
+
             httpAPI.HTTPServer.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
                                                  HTTPMethod.GET,
                                                  new HTTPPath[] {
@@ -617,10 +628,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                                          }.AsImmutable);
                                                  });
 
-            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
-            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
-            this.Counters      = new APICounters();
-
             if (Autostart)
                 httpAPI.Start();
 
@@ -628,12 +635,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region CPOPeer(HTTPAPI, KeyPair = null, ...)
+        #region CPOPeer(OperatorId, HTTPAPI, KeyPair = null, ...)
 
         /// <summary>
         /// Attach a CPO p2p service to the given HTTP API.
         /// </summary>
-        public CPOPeer(HTTPAPI                               HTTPAPI,
+        public CPOPeer(Operator_Id                           OperatorId,
+                       HTTPAPI                               HTTPAPI,
                        HTTPPath?                             URLPathPrefix                      = null,
 
                        AsymmetricCipherKeyPair?              KeyPair                            = null,
@@ -649,7 +657,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            httpAPI = HTTPAPI;
+            this.OperatorId    = OperatorId;
+            this.httpAPI       = HTTPAPI;
+            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
+            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
+            this.Counters      = new APICounters();
 
             if (URLPathPrefix.HasValue)
                 httpAPI.HTTPServer.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
@@ -670,10 +682,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                                                  Connection      = "close"
                                                              }.AsImmutable);
                                                      });
-
-            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
-            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
-            this.Counters      = new APICounters();
 
         }
 
