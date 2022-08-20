@@ -671,13 +671,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         #endregion
 
-        #region GetEMPClient(OperatorId)
+        #region GetEMPClient   (OperatorId)
 
         public EMPClient? GetEMPClient(Operator_Id OperatorId)
         {
             lock (empClients)
             {
                 return empClients.GetValueOrDefault(OperatorId);
+            }
+        }
+
+        #endregion
+
+        #region TryGetEMPClient(OperatorId, out EMPClient)
+
+        public Boolean TryGetEMPClient(Operator_Id OperatorId, out EMPClient? EMPClient)
+        {
+            lock (empClients)
+            {
+
+                if (empClients.TryGetValue(OperatorId, out EMPClient))
+                    return true;
+
+                return false;
+
             }
         }
 

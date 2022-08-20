@@ -708,13 +708,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region GetCPOClient(ProviderId)
+        #region GetCPOClient   (ProviderId)
 
         public CPOClient? GetCPOClient(Provider_Id ProviderId)
         {
             lock (cpoClients)
             {
                 return cpoClients.GetValueOrDefault(ProviderId);
+            }
+        }
+
+        #endregion
+
+        #region TryGetCPOClient(ProviderId, out CPOClient)
+
+        public Boolean TryGetCPOClient(Provider_Id ProviderId, out CPOClient? CPOClient)
+        {
+            lock (cpoClients)
+            {
+
+                if (cpoClients.TryGetValue(ProviderId, out CPOClient))
+                    return true;
+
+                return false;
+
             }
         }
 
