@@ -158,6 +158,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #region Properties
 
+        /// <summary>
+        /// CPO Peer API counters.
+        /// </summary>
         public APICounters   Counters        { get; }
 
         /// <summary>
@@ -494,6 +497,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #region Constructor(s)
 
+        #region CPOPeer(KeyPair = null, ...)
+
         /// <summary>
         /// Create a new CPO p2p service.
         /// </summary>
@@ -620,6 +625,59 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 httpAPI.Start();
 
         }
+
+        #endregion
+
+        #region CPOPeer(HTTPAPI, KeyPair = null, ...)
+
+        /// <summary>
+        /// Attach a CPO p2p service to the given HTTP API.
+        /// </summary>
+        public CPOPeer(HTTPAPI                               HTTPAPI,
+                       HTTPPath?                             URLPathPrefix                      = null,
+
+                       AsymmetricCipherKeyPair?              KeyPair                            = null,
+
+                       HTTPHostname?                         HTTPHostname                       = null,
+                       String?                               ExternalDNSName                    = null,
+                       HTTPPath?                             BasePath                           = null,
+
+                       String?                               HTMLTemplate                       = null,
+                       JObject?                              APIVersionHashes                   = null)
+
+            : base(KeyPair)
+
+        {
+
+            httpAPI = HTTPAPI;
+
+            if (URLPathPrefix.HasValue)
+                httpAPI.HTTPServer.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
+                                                     HTTPMethod.GET,
+                                                     new HTTPPath[] {
+                                                         URLPathPrefix + "/",
+                                                         URLPathPrefix + "/{FileName}"
+                                                     },
+                                                     HTTPDelegate: Request => {
+                                                         return Task.FromResult(
+                                                             new HTTPResponse.Builder(Request) {
+                                                                 HTTPStatusCode  = HTTPStatusCode.OK,
+                                                                 Server          = httpAPI.HTTPServer.DefaultServerName,
+                                                                 Date            = Timestamp.Now,
+                                                                 ContentType     = HTTPContentType.TEXT_UTF8,
+                                                                 Content         = "This is an OICP v2.3 CPO p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                                 CacheControl    = "public, max-age=300",
+                                                                 Connection      = "close"
+                                                             }.AsImmutable);
+                                                     });
+
+            this.EMPClientAPI  = new EMPClientAPI(httpAPI);
+            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
+            this.Counters      = new APICounters();
+
+        }
+
+        #endregion
 
         #endregion
 

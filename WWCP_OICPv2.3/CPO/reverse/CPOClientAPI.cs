@@ -156,6 +156,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Properties
 
+        /// <summary>
+        /// The optional URL path prefix, used when defining URL templates.
+        /// </summary>
+        public new HTTPPath                URLPathPrefix     { get; }
+
+        /// <summary>
+        /// CPO Client API counters.
+        /// </summary>
         public APICounters                 Counters          { get; }
 
         public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
@@ -886,25 +894,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Constructor(s)
 
-        #region CPOClientAPI(HTTPAPI, ...)
+        #region CPOClientAPI(HTTPAPI, URLPathPrefix = null, ...)
 
-        public CPOClientAPI(HTTPAPI  HTTPAPI,
-                            String   LoggingPath      = DefaultHTTPAPI_LoggingPath,
-                            String   LoggingContext   = DefaultLoggingContext,
-                            String   LogfileName      = DefaultHTTPAPI_LogfileName)
+        public CPOClientAPI(HTTPAPI    HTTPAPI,
+                            HTTPPath?  URLPathPrefix    = null,
+
+                            String     LoggingPath      = DefaultHTTPAPI_LoggingPath,
+                            String     LoggingContext   = DefaultLoggingContext,
+                            String     LogfileName      = DefaultHTTPAPI_LogfileName)
 
             : base(HTTPAPI)
 
         {
 
-            this.Counters    = new APICounters();
+            this.URLPathPrefix  = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
 
-            this.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext ?? DefaultLoggingContext,
-                                                LogfileCreator)
-                                   : null;
+            this.Counters       = new APICounters();
+
+            this.HTTPLogger     = DisableLogging == false
+                                      ? new Logger(this,
+                                                   LoggingPath,
+                                                   LoggingContext ?? DefaultLoggingContext,
+                                                   LogfileCreator)
+                                      : null;
 
             RegisterURLTemplates(false);
 
@@ -1051,14 +1063,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.Counters    = new APICounters();
+            this.URLPathPrefix  = base.URLPathPrefix;
 
-            this.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext ?? DefaultLoggingContext,
-                                                LogfileCreator)
-                                   : null;
+            this.Counters       = new APICounters();
+
+            this.HTTPLogger     = DisableLogging == false
+                                      ? new Logger(this,
+                                                   LoggingPath,
+                                                   LoggingContext ?? DefaultLoggingContext,
+                                                   LogfileCreator)
+                                      : null;
 
             RegisterURLTemplates(RegisterRootService);
 
@@ -1077,7 +1091,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         private void RegisterURLTemplates(Boolean RegisterRootService = true)
         {
 
-            #region / (HTTPRoot)
+            #region ~/ (HTTPRoot)
 
             if (RegisterRootService)
                 HTTPServer.AddMethodCallback(HTTPHostname.Any,

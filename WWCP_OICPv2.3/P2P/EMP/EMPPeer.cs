@@ -147,6 +147,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         #region Properties
 
+        /// <summary>
+        /// EMP Peer API counters.
+        /// </summary>
         public APICounters   Counters        { get; }
 
         /// <summary>
@@ -458,6 +461,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         #region Constructor(s)
 
+        #region EMPPeer(KeyPair = null, ...)
+
         /// <summary>
         /// Create a new EMP p2p service.
         /// </summary>
@@ -584,6 +589,58 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 httpAPI.Start();
 
         }
+
+        #endregion
+
+        #region EMPPeer(HTTPAPI, KeyPair = null, ...)
+
+        /// <summary>
+        /// Attach an EMP p2p service to the given HTTP API.
+        /// </summary>
+        public EMPPeer(HTTPAPI                               HTTPAPI,
+                       AsymmetricCipherKeyPair?              KeyPair                            = null,
+
+                       HTTPHostname?                         HTTPHostname                       = null,
+                       String?                               ExternalDNSName                    = null,
+                       HTTPPath?                             BasePath                           = null,
+
+                       HTTPPath?                             URLPathPrefix                      = null,
+                       String?                               HTMLTemplate                       = null,
+                       JObject?                              APIVersionHashes                   = null)
+
+            : base(KeyPair)
+
+        {
+
+            httpAPI = HTTPAPI;
+
+            if (URLPathPrefix.HasValue)
+                httpAPI.HTTPServer.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
+                                                     HTTPMethod.GET,
+                                                     new HTTPPath[] {
+                                                         URLPathPrefix + "/",
+                                                         URLPathPrefix + "/{FileName}"
+                                                     },
+                                                     HTTPDelegate: Request => {
+                                                         return Task.FromResult(
+                                                             new HTTPResponse.Builder(Request) {
+                                                                 HTTPStatusCode  = HTTPStatusCode.OK,
+                                                                 Server          = httpAPI.HTTPServer.DefaultServerName,
+                                                                 Date            = Timestamp.Now,
+                                                                 ContentType     = HTTPContentType.TEXT_UTF8,
+                                                                 Content         = "This is an OICP v2.3 EMP p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                                 CacheControl    = "public, max-age=300",
+                                                                 Connection      = "close"
+                                                             }.AsImmutable);
+                                                     });
+
+            this.CPOClientAPI  = new CPOClientAPI(httpAPI);
+            this.empClients    = new Dictionary<Operator_Id, EMPClient>();
+            this.Counters      = new APICounters();
+
+        }
+
+        #endregion
 
         #endregion
 

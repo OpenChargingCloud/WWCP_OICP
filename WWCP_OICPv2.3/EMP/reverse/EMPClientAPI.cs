@@ -147,6 +147,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
+        /// <summary>
+        /// The optional URL path prefix, used when defining URL templates.
+        /// </summary>
+        public new HTTPPath                URLPathPrefix     { get; }
+
+        /// <summary>
+        /// CPO Client API counters.
+        /// </summary>
         public APICounters                 Counters          { get; }
 
         public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
@@ -1056,23 +1064,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region EMPClientAPI(HTTPAPI, ...)
 
-        public EMPClientAPI(HTTPAPI  HTTPAPI,
-                            String   LoggingPath      = DefaultHTTPAPI_LoggingPath,
-                            String   LoggingContext   = DefaultLoggingContext,
-                            String   LogfileName      = DefaultHTTPAPI_LogfileName)
+        public EMPClientAPI(HTTPAPI    HTTPAPI,
+                            HTTPPath?  URLPathPrefix    = null,
+
+                            String     LoggingPath      = DefaultHTTPAPI_LoggingPath,
+                            String     LoggingContext   = DefaultLoggingContext,
+                            String     LogfileName      = DefaultHTTPAPI_LogfileName)
 
             : base(HTTPAPI)
 
         {
 
-            this.Counters    = new APICounters();
+            this.URLPathPrefix  = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
 
-            this.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext ?? DefaultLoggingContext,
-                                                LogfileCreator)
-                                   : null;
+            this.Counters       = new APICounters();
+
+            this.HTTPLogger     = DisableLogging == false
+                                      ? new Logger(this,
+                                                   LoggingPath,
+                                                   LoggingContext ?? DefaultLoggingContext,
+                                                   LogfileCreator)
+                                      : null;
 
             RegisterURLTemplates(false);
 
@@ -1219,14 +1231,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.Counters    = new APICounters();
+            this.URLPathPrefix  = base.URLPathPrefix;
 
-            this.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext ?? DefaultLoggingContext,
-                                                LogfileCreator)
-                                   : null;
+            this.Counters       = new APICounters();
+
+            this.HTTPLogger     = DisableLogging == false
+                                      ? new Logger(this,
+                                                   LoggingPath,
+                                                   LoggingContext ?? DefaultLoggingContext,
+                                                   LogfileCreator)
+                                      : null;
 
             RegisterURLTemplates(RegisterRootService);
 
@@ -1245,7 +1259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         private void RegisterURLTemplates(Boolean RegisterRootService = true)
         {
 
-            #region / (HTTPRoot)
+            #region ~/ (HTTPRoot)
 
             if (RegisterRootService)
                 HTTPServer.AddMethodCallback(HTTPHostname.Any,
