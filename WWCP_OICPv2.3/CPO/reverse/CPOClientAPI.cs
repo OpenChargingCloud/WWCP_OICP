@@ -718,7 +718,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region (event)              OnChargingStartNotification(Request-/Response)
+        #region (event)              OnChargingStartNotification   (Request-/Response)
 
         /// <summary>
         /// An event send whenever a ChargingStartNotification request was received.
@@ -756,7 +756,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region (event)              OnChargingEndNotification(Request-/Response)
+        #region (event)              OnChargingEndNotification     (Request-/Response)
 
         /// <summary>
         /// An event send whenever a ChargingEndNotification request was received.
@@ -775,7 +775,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region (event)              OnChargingErrorNotification(Request-/Response)
+        #region (event)              OnChargingErrorNotification   (Request-/Response)
 
         /// <summary>
         /// An event send whenever a ChargingErrorNotification request was received.

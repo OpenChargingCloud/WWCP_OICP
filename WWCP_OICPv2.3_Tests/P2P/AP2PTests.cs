@@ -116,7 +116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             Assert.IsNotNull(cpoP2P_DEGEF.EMPClientAPI);
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEData                    += (timestamp, empClientAPI, pullEVSEDataRequest)                    => {
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEData                     += (timestamp, empClientAPI, pullEVSEDataRequest)                    => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -145,7 +145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEStatus                  += (timestamp, empClientAPI, pullEVSEStatusRequest)                  => {
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEStatus                   += (timestamp, empClientAPI, pullEVSEStatusRequest)                  => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -208,7 +208,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEStatusById              += (timestamp, empClientAPI, pullEVSEStatusByIdRequest)              => {
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEStatusById               += (timestamp, empClientAPI, pullEVSEStatusByIdRequest)              => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -262,7 +262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnPullPricingProductData          += (timestamp, empClientAPI, pullPricingProductDataRequest)          => {
+            cpoP2P_DEGEF.EMPClientAPI.OnPullPricingProductData           += (timestamp, empClientAPI, pullPricingProductDataRequest)          => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -347,7 +347,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEPricing                 += (timestamp, empClientAPI, pullEVSEPricingRequest)                 => {
+            cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEPricing                  += (timestamp, empClientAPI, pullEVSEPricingRequest)                 => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -418,7 +418,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnPushAuthenticationData          += (timestamp, empClientAPI, pushAuthenticationDataRequest)          => {
+            cpoP2P_DEGEF.EMPClientAPI.OnPushAuthenticationData           += (timestamp, empClientAPI, pushAuthenticationDataRequest)          => {
 
                 return Task.FromResult(
                     new OICPResult<Acknowledgement<PushAuthenticationDataRequest>>(
@@ -440,7 +440,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStart += (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStart  += (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) => {
 
                 if (authorizeRemoteReservationStartRequest.Identification is not null)
                 {
@@ -513,7 +513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStop  += (timestamp, empClientAPI, authorizeRemoteReservationStopRequest)  => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteReservationStop   += (timestamp, empClientAPI, authorizeRemoteReservationStopRequest)  => {
 
                 return authorizeRemoteReservationStopRequest.SessionId.ToString() switch {
 
@@ -559,7 +559,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStart            += (timestamp, empClientAPI, authorizeRemoteStartRequest)            => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStart             += (timestamp, empClientAPI, authorizeRemoteStartRequest)            => {
 
                 if (authorizeRemoteStartRequest.Identification is not null)
                 {
@@ -632,7 +632,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStop             += (timestamp, empClientAPI, authorizeRemoteStopRequest)             => {
+            cpoP2P_DEGEF.EMPClientAPI.OnAuthorizeRemoteStop              += (timestamp, empClientAPI, authorizeRemoteStopRequest)             => {
 
                 return authorizeRemoteStopRequest.SessionId.ToString() switch {
 
@@ -678,7 +678,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            cpoP2P_DEGEF.EMPClientAPI.OnGetChargeDetailRecords          += (timestamp, empClientAPI, getChargeDetailRecordsRequest)          => {
+            cpoP2P_DEGEF.EMPClientAPI.OnGetChargeDetailRecords           += (timestamp, empClientAPI, getChargeDetailRecordsRequest)          => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -784,7 +784,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             #endregion
 
-
             #region Register EMP "DE-GDF"
 
             empP2P_DEGDF = new EMPPeer(
@@ -798,7 +797,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             Assert.IsNotNull(empP2P_DEGDF);
             Assert.IsNotNull(empP2P_DEGDF.CPOClientAPI);
 
-            empP2P_DEGDF.CPOClientAPI.OnPushEVSEData                 += (timestamp, cpoClientAPI, pushEVSEDataRequest)                 => {
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEData                  += (timestamp, cpoClientAPI, pushEVSEDataRequest)                 => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -954,7 +953,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnPushEVSEStatus               += (timestamp, cpoClientAPI, pushEVSEStatusRequest)               => {
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEStatus                += (timestamp, cpoClientAPI, pushEVSEStatusRequest)               => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1078,15 +1077,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnPushPricingProductData       += (timestamp, cpoClientAPI, pushPricingProductDataRequest)       => {
+            empP2P_DEGDF.CPOClientAPI.OnPushPricingProductData        += (timestamp, cpoClientAPI, pushPricingProductDataRequest)       => {
 
                 var processId = Process_Id.NewRandom;
 
                 switch (pushPricingProductDataRequest.Action)
                 {
 
-                    case ActionTypes.FullLoad:
-                        {
+                    case ActionTypes.FullLoad: {
 
                             if (!PricingProductData.ContainsKey(pushPricingProductDataRequest.OperatorId))
                                 PricingProductData.Add(pushPricingProductDataRequest.OperatorId, new HashSet<PricingProductDataRecord>(pushPricingProductDataRequest.PricingProductDataRecords));
@@ -1104,8 +1102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                         }
                         break;
 
-                    case ActionTypes.Update:
-                        {
+                    case ActionTypes.Update: {
 
                             // Update NOT Insert
 
@@ -1152,8 +1149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                         }
                         break;
 
-                    case ActionTypes.Insert:
-                        {
+                    case ActionTypes.Insert: {
 
                             // Will fail if the EVSE data record already exists!
 
@@ -1201,8 +1197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                         }
                         break;
 
-                    case ActionTypes.Delete:
-                        {
+                    case ActionTypes.Delete: {
 
                             if (PricingProductData.ContainsKey(pushPricingProductDataRequest.OperatorId))
                             {
@@ -1239,15 +1234,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnPushEVSEPricing              += (timestamp, cpoClientAPI, pushEVSEPricingRequest)              => {
+            empP2P_DEGDF.CPOClientAPI.OnPushEVSEPricing               += (timestamp, cpoClientAPI, pushEVSEPricingRequest)              => {
 
                 var processId = Process_Id.NewRandom;
 
                 switch (pushEVSEPricingRequest.Action)
                 {
 
-                    case ActionTypes.FullLoad:
-                        {
+                    case ActionTypes.FullLoad: {
 
                             if (!EVSEPricings.ContainsKey(pushEVSEPricingRequest.OperatorId))
                                 EVSEPricings.Add(pushEVSEPricingRequest.OperatorId, new HashSet<EVSEPricing>(pushEVSEPricingRequest.EVSEPricing));
@@ -1265,8 +1259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                         }
                         break;
 
-                    case ActionTypes.Update:
-                        {
+                    case ActionTypes.Update: {
 
                             // Update NOT Insert
 
@@ -1313,8 +1306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                         }
                         break;
 
-                    case ActionTypes.Insert:
-                        {
+                    case ActionTypes.Insert: {
 
                             // Will fail if the EVSE data record already exists!
 
@@ -1362,8 +1354,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                         }
                         break;
 
-                    case ActionTypes.Delete:
-                        {
+                    case ActionTypes.Delete: {
 
                             if (EVSEPricings.ContainsKey(pushEVSEPricingRequest.OperatorId))
                             {
@@ -1401,7 +1392,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnPullAuthenticationData       += (timestamp, cpoClientAPI, pullAuthenticationDataRequest)       => {
+            empP2P_DEGDF.CPOClientAPI.OnPullAuthenticationData        += (timestamp, cpoClientAPI, pullAuthenticationDataRequest)       => {
 
                 if (pullAuthenticationDataRequest.OperatorId == Operator_Id.Parse("DE*GEF"))
                     return Task.FromResult(
@@ -1486,7 +1477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStart               += (timestamp, cpoClientAPI, authorizeStartRequest)               => {
+            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStart                += (timestamp, cpoClientAPI, authorizeStartRequest)               => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1554,7 +1545,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStop                += (timestamp, cpoClientAPI, authorizeStopRequest)                => {
+            empP2P_DEGDF.CPOClientAPI.OnAuthorizeStop                 += (timestamp, cpoClientAPI, authorizeStopRequest)                => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1578,7 +1569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnChargingStartNotification    += (timestamp, cpoClientAPI, chargingStartNotificationRequest)    => {
+            empP2P_DEGDF.CPOClientAPI.OnChargingStartNotification     += (timestamp, cpoClientAPI, chargingStartNotificationRequest)    => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1604,7 +1595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnChargingProgressNotification += (timestamp, cpoClientAPI, chargingProgressNotificationRequest) => {
+            empP2P_DEGDF.CPOClientAPI.OnChargingProgressNotification  += (timestamp, cpoClientAPI, chargingProgressNotificationRequest) => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1630,7 +1621,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnChargingEndNotification      += (timestamp, cpoClientAPI, chargingEndNotificationRequest)      => {
+            empP2P_DEGDF.CPOClientAPI.OnChargingEndNotification       += (timestamp, cpoClientAPI, chargingEndNotificationRequest)      => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1656,7 +1647,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
 
             };
 
-            empP2P_DEGDF.CPOClientAPI.OnChargingErrorNotification    += (timestamp, cpoClientAPI, chargingErrorNotificationRequest)    => {
+            empP2P_DEGDF.CPOClientAPI.OnChargingErrorNotification     += (timestamp, cpoClientAPI, chargingErrorNotificationRequest)    => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1683,7 +1674,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
 
-            empP2P_DEGDF.CPOClientAPI.OnChargeDetailRecord           += (timestamp, cpoClientAPI, chargeDetailRecordRequest)           => {
+            empP2P_DEGDF.CPOClientAPI.OnChargeDetailRecord            += (timestamp, cpoClientAPI, chargeDetailRecordRequest)           => {
 
                 var processId = Process_Id.NewRandom;
 
@@ -1710,7 +1701,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
             };
 
             #endregion
-
 
 
             cpoP2P_DEGEF.RegisterProvider(DEGDF_Id,

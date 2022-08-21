@@ -76,27 +76,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
 
                 if (cpoP2P_DEGEF.PrivateKey is not null)
-                    cpoClient.CustomAuthorizeStartRequestSerializer  = (authorizeStartRequest, json) =>
+                    cpoClient.CustomAuthorizeStartRequestSerializer               = (authorizeStartRequest, json)      =>
                         CryptoSerializer(json,
                                          cpoP2P_DEGEF.PrivateKey);
 
-                if (empP2P_DEGDF.PublicKey  is not null)
-                    cpoClient.CustomAuthorizationStartResponseParser = (json, authorizationStartResponse) =>
-                        CryptoResponseParser(json,
-                                             empP2P_DEGDF.PublicKey,
-                                             authorizationStartResponse);
-
-
                 if (cpoP2P_DEGEF.PublicKey  is not null)
-                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser  = (json, authorizeStartRequest) =>
+                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizeStartRequestParser   = (json, authorizeStartRequest)      =>
                         CryptoRequestParser(json,
                                             cpoP2P_DEGEF.PublicKey,
                                             authorizeStartRequest);
 
                 if (empP2P_DEGDF.PrivateKey is not null)
-                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizationStartSerializer = (authorizationStartResponse, json) =>
-                        CryptoSerializer(json,
-                                         empP2P_DEGDF.PrivateKey);
+                    empP2P_DEGDF.CPOClientAPI.CustomAuthorizationStartSerializer  = (authorizationStartResponse, json) => {
+
+                        json.Add("requestSignatureValidation", authorizationStartResponse.Request?.CustomData?["signatureValidation"]?.Value<Boolean>());
+
+                        return CryptoSerializer(json,
+                                                empP2P_DEGDF.PrivateKey);
+
+                    };
+
+                if (empP2P_DEGDF.PublicKey  is not null)
+                    cpoClient.CustomAuthorizationStartResponseParser              = (json, authorizationStartResponse) => {
+
+                        var requestSignatureValidationValue = json["requestSignatureValidation"]?.Value<Boolean>();
+
+                        if (requestSignatureValidationValue is not null)
+                        {
+                            authorizationStartResponse.CustomData ??= new();
+                            authorizationStartResponse.CustomData.Add("requestSignatureValidation", requestSignatureValidationValue);
+                        }
+
+                        return CryptoResponseParser(json,
+                                                    empP2P_DEGDF.PublicKey,
+                                                    authorizationStartResponse);
+
+                    };
 
 
                 var oicpResult  = await cpoP2P_DEGEF.AuthorizeStart(DEGDF_Id, request);
@@ -117,7 +132,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                 Assert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
 
 
-                Assert.IsTrue   (oicpResult.Response?.CustomData?["signatureValidation"]?.Value<Boolean>());
+                Assert.IsTrue   (oicpResult.Response?.CustomData?["requestSignatureValidation"]?.Value<Boolean>());
+                Assert.IsTrue   (oicpResult.Response?.CustomData?["signatureValidation"]?.       Value<Boolean>());
 
 
                 Assert.AreEqual(1, cpoClient.                Counters.AuthorizeStart.Requests_OK);
