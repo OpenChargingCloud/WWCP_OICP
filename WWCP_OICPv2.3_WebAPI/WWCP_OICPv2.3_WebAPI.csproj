@@ -8,10 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <PackageReference Include="BouncyCastle.NetCore" Version="1.9.0" />
-=======
->>>>>>> f508c03991c4d30bd6f0de8a374116152ae80ffb
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
