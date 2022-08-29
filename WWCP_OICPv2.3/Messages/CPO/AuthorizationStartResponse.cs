@@ -17,10 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -91,6 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="ProcessId">The server side process identification of the request.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="AuthorizationStatus">The authorization status.</param>
         /// <param name="StatusCode">A status code.</param>
@@ -100,30 +97,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="AuthorizationStopIdentifications">Optional authorization stop identifications.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         private AuthorizationStartResponse(DateTime                      ResponseTimestamp,
                                            EventTracking_Id              EventTrackingId,
+                                           Process_Id                    ProcessId,
                                            TimeSpan                      Runtime,
                                            AuthorizationStatusTypes      AuthorizationStatus,
                                            StatusCode                    StatusCode,
+
                                            AuthorizeStartRequest?        Request                            = null,
                                            Session_Id?                   SessionId                          = null,
                                            CPOPartnerSession_Id?         CPOPartnerSessionId                = null,
                                            EMPPartnerSession_Id?         EMPPartnerSessionId                = null,
                                            Provider_Id?                  ProviderId                         = null,
                                            IEnumerable<Identification>?  AuthorizationStopIdentifications   = null,
-                                           Process_Id?                   ProcessId                          = null,
                                            HTTPResponse?                 HTTPResponse                       = null,
                                            JObject?                      CustomData                         = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
                    Request,
                    HTTPResponse,
-                   ProcessId,
                    CustomData)
 
         {
@@ -178,6 +175,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.Authorized,
                     new StatusCode(
@@ -191,7 +189,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     AuthorizationStopIdentifications,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -229,6 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     StatusCode,
@@ -238,7 +236,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -278,6 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -291,7 +289,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -331,6 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -344,7 +342,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -384,6 +381,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -397,7 +395,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -437,6 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -450,7 +448,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -490,6 +487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -503,7 +501,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -543,6 +540,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -556,7 +554,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -596,6 +593,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -609,7 +607,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -649,6 +646,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Request is not null
                                               ? Timestamp.Now - Request.Timestamp
                                               : TimeSpan.Zero),
@@ -664,7 +662,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -704,6 +701,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
+                    ProcessId         ?? Process_Id.NewRandom,
                     Runtime           ?? (Request is not null
                                               ? Timestamp.Now - Request.Timestamp
                                               : TimeSpan.Zero),
@@ -719,7 +717,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     null,
-                    ProcessId,
                     HTTPResponse,
                     CustomData);
 
@@ -936,7 +933,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Session_Id? SessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -950,7 +947,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -964,7 +961,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -978,7 +975,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Provider_Id? ProviderId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -992,7 +989,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<Identification> AuthorizationStopIdentifications,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -1000,13 +997,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                            [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
                 AuthorizationStartResponse = new AuthorizationStartResponse(ResponseTimestamp ?? Timestamp.Now,
-                                                                            EventTrackingId   ?? Request.EventTrackingId,
+                                                                            EventTrackingId   ?? Request.EventTrackingId ?? EventTracking_Id.New,
+                                                                            ProcessId         ?? Process_Id.NewRandom,
                                                                             Runtime           ?? Timestamp.Now - Request.Timestamp,
                                                                             AuthorizationStatus,
                                                                             StatusCode,
@@ -1016,9 +1014,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                             EMPPartnerSessionId,
                                                                             ProviderId,
                                                                             AuthorizationStopIdentifications,
-                                                                            ProcessId,
                                                                             HTTPResponse,
-                                                                            CustomData);
+                                                                            customData);
 
                 if (CustomAuthorizationStartResponseParser is not null)
                     AuthorizationStartResponse = CustomAuthorizationStartResponseParser(JSON,
@@ -1107,24 +1104,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("AuthorizationStatus",                     AuthorizationStatus.ToString()),
+                           new JProperty("AuthorizationStatus",                     AuthorizationStatus.      ToString()),
 
-                           new JProperty("StatusCode",                              StatusCode.         ToJSON(CustomStatusCodeSerializer)),
+                           new JProperty("StatusCode",                              StatusCode.               ToJSON(CustomStatusCodeSerializer)),
 
                            ProviderId.HasValue
-                               ? new JProperty("ProviderID",                        ProviderId.         ToString())
+                               ? new JProperty("ProviderID",                        ProviderId.         Value.ToString())
                                : null,
 
                            SessionId.HasValue
-                               ? new JProperty("SessionID",                         SessionId.          ToString())
+                               ? new JProperty("SessionID",                         SessionId.          Value.ToString())
                                : null,
 
                            CPOPartnerSessionId.HasValue
-                               ? new JProperty("CPOPartnerSessionID",               CPOPartnerSessionId.ToString())
+                               ? new JProperty("CPOPartnerSessionID",               CPOPartnerSessionId.Value.ToString())
                                : null,
 
                            EMPPartnerSessionId.HasValue
-                               ? new JProperty("EMPPartnerSessionID",               EMPPartnerSessionId.ToString())
+                               ? new JProperty("EMPPartnerSessionID",               EMPPartnerSessionId.Value.ToString())
                                : null,
 
                            AuthorizationStopIdentifications is not null && AuthorizationStopIdentifications.Any()
@@ -1219,7 +1216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => AuthorizationStart is not null &&
                AuthorizationStatus.Equals(AuthorizationStart.AuthorizationStatus) &&
                StatusCode.         Equals(AuthorizationStart.StatusCode)          &&
-               //AuthorizationStopIdentifications
+               //ToDo: AuthorizationStopIdentifications
 
                ((!SessionId.          HasValue && !AuthorizationStart.SessionId.          HasValue) ||
                  (SessionId.          HasValue &&  AuthorizationStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStart.SessionId.          Value))) &&
@@ -1418,7 +1415,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// Return an immutable version of the AuthorizationStart response.
             /// </summary>
-            /// <param name="Builder">A EVSE data record builder.</param>
+            /// <param name="Builder">An AuthorizationStartResponse builder.</param>
             public static implicit operator AuthorizationStartResponse(Builder Builder)
 
                 => Builder.ToImmutable();
@@ -1442,6 +1439,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return new AuthorizationStartResponse(ResponseTimestamp ?? Timestamp.Now,
                                                       EventTrackingId   ?? EventTracking_Id.New,
+                                                      ProcessId         ?? Process_Id.NewRandom,
                                                       Runtime           ?? (Request is not null
                                                                                 ? Timestamp.Now - Request.Timestamp
                                                                                 : TimeSpan.Zero),
@@ -1453,7 +1451,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       EMPPartnerSessionId,
                                                       ProviderId,
                                                       AuthorizationStopIdentifications,
-                                                      ProcessId,
                                                       HTTPResponse,
                                                       CustomData);
 

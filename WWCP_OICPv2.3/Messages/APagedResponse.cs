@@ -17,11 +17,10 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -47,49 +46,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode  StatusCode          { get; }
+        public StatusCode?  StatusCode          { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    First               { get; }
+        public Boolean?     FirstPage           { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    Last                { get; }
+        public Boolean?     LastPage            { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     Number              { get; }
+        public UInt64?      Number              { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     NumberOfElements    { get; }
+        public UInt64?      NumberOfElements    { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     Size                { get; }
+        public UInt64?      Size                { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     TotalElements       { get; }
+        public UInt64?      TotalElements       { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     TotalPages          { get; }
+        public UInt64?      TotalPages          { get; }
 
         #endregion
 
@@ -98,45 +97,47 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new generic response.
         /// </summary>
-        /// <param name="Request">The request leading to this result.</param>
+        /// 
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="ProcessId">The server side process identification of the request.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// 
+        /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
+        /// 
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer-specific data of the response.</param>
-        protected APagedResponse(TRequest          Request,
-                                 DateTime          ResponseTimestamp,
+        protected APagedResponse(DateTime          ResponseTimestamp,
                                  EventTracking_Id  EventTrackingId,
+                                 Process_Id        ProcessId,
                                  TimeSpan          Runtime,
 
-                                 HTTPResponse      HTTPResponse       = null,
-                                 Process_Id?       ProcessId          = null,
-                                 StatusCode        StatusCode         = null,
-                                 Boolean?          First              = null,
-                                 Boolean?          Last               = null,
-                                 UInt32?           Number             = null,
-                                 UInt32?           NumberOfElements   = null,
-                                 UInt32?           Size               = null,
-                                 UInt32?           TotalElements      = null,
-                                 UInt32?           TotalPages         = null,
+                                 TRequest?         Request            = null,
+                                 Boolean?          FirstPage          = null,
+                                 Boolean?          LastPage           = null,
+                                 UInt64?           Number             = null,
+                                 UInt64?           NumberOfElements   = null,
+                                 UInt64?           Size               = null,
+                                 UInt64?           TotalElements      = null,
+                                 UInt64?           TotalPages         = null,
+                                 StatusCode?       StatusCode         = null,
 
-                                 JObject           CustomData         = null)
+                                 HTTPResponse?     HTTPResponse       = null,
+                                 JObject?          CustomData         = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
                    Request,
                    HTTPResponse,
-                   ProcessId,
                    CustomData)
 
         {
 
             this.StatusCode        = StatusCode;
-            this.First             = First;
-            this.Last              = Last;
+            this.FirstPage         = FirstPage;
+            this.LastPage          = LastPage;
             this.Number            = Number;
             this.NumberOfElements  = NumberOfElements;
             this.Size              = Size;
@@ -155,22 +156,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomIPagedResponseSerializer">A delegate to customize the serialization of paged responses.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
-        protected JObject ToJSON(CustomJObjectSerializerDelegate<IPagedResponse>  CustomIPagedResponseSerializer   = null,
-                                 CustomJObjectSerializerDelegate<StatusCode>      CustomStatusCodeSerializer       = null)
+        protected JObject ToJSON(CustomJObjectSerializerDelegate<IPagedResponse>?  CustomIPagedResponseSerializer   = null,
+                                 CustomJObjectSerializerDelegate<StatusCode>?      CustomStatusCodeSerializer       = null)
         {
 
             var JSON = JSONObject.Create(
 
-                           StatusCode != null
+                           StatusCode is not null
                                ? new JProperty("StatusCode",        StatusCode.ToJSON(CustomStatusCodeSerializer))
                                : null,
 
-                           First.HasValue
-                               ? new JProperty("first",             First.Value)
+                           FirstPage.HasValue
+                               ? new JProperty("first",             FirstPage.Value)
                                : null,
 
-                           Last.HasValue
-                               ? new JProperty("last",              Last.Value)
+                           LastPage.HasValue
+                               ? new JProperty("last",              LastPage.Value)
                                : null,
 
                            Number.HasValue
@@ -195,7 +196,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                        );
 
-            return CustomIPagedResponseSerializer != null
+            return CustomIPagedResponseSerializer is not null
                        ? CustomIPagedResponseSerializer(this, JSON)
                        : JSON;
 
@@ -218,49 +219,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The optional status code of this response.
             /// </summary>
             [Optional]
-            public StatusCode  StatusCode          { get; }
+            public StatusCode.Builder  StatusCode          { get; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public Boolean?    First               { get; set; }
+            public Boolean?            FirstPage           { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public Boolean?    Last                { get; set; }
+            public Boolean?            LastPage            { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     Number              { get; set; }
+            public UInt64?             Number              { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     NumberOfElements    { get; set; }
+            public UInt64?             NumberOfElements    { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     Size                { get; set; }
+            public UInt64?             Size                { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     TotalElements       { get; set; }
+            public UInt64?             TotalElements       { get; set; }
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt32?     TotalPages          { get; set; }
+            public UInt64?             TotalPages          { get; set; }
 
             #endregion
 
@@ -277,23 +278,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// 
             /// <param name="CustomData">Optional customer-specific data of the response.</param>
-            protected Builder(TRequest          Request             = null,
-                              DateTime?         ResponseTimestamp   = null,
-                              EventTracking_Id  EventTrackingId     = null,
-                              TimeSpan?         Runtime             = null,
+            protected Builder(TRequest?          Request             = null,
+                              DateTime?          ResponseTimestamp   = null,
+                              EventTracking_Id?  EventTrackingId     = null,
+                              TimeSpan?          Runtime             = null,
 
-                              HTTPResponse      HTTPResponse        = null,
-                              Process_Id?       ProcessId           = null,
-                              StatusCode        StatusCode          = null,
-                              Boolean?          First               = null,
-                              Boolean?          Last                = null,
-                              UInt32?           Number              = null,
-                              UInt32?           NumberOfElements    = null,
-                              UInt32?           Size                = null,
-                              UInt32?           TotalElements       = null,
-                              UInt32?           TotalPages          = null,
+                              HTTPResponse?      HTTPResponse        = null,
+                              Process_Id?        ProcessId           = null,
+                              StatusCode?        StatusCode          = null,
+                              Boolean?           FirstPage           = null,
+                              Boolean?           LastPage            = null,
+                              UInt64?            Number              = null,
+                              UInt64?            NumberOfElements    = null,
+                              UInt64?            Size                = null,
+                              UInt64?            TotalElements       = null,
+                              UInt64?            TotalPages          = null,
 
-                              JObject           CustomData          = null)
+                              JObject?           CustomData          = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
@@ -305,9 +306,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             {
 
-                this.StatusCode        = StatusCode != null ? StatusCode.ToBuilder() : new StatusCode.Builder();
-                this.First             = First;
-                this.Last              = Last;
+                this.StatusCode        = StatusCode is not null
+                                             ? StatusCode.ToBuilder()
+                                             : new StatusCode.Builder();
+                this.FirstPage         = FirstPage;
+                this.LastPage          = LastPage;
                 this.Number            = Number;
                 this.NumberOfElements  = NumberOfElements;
                 this.Size              = Size;

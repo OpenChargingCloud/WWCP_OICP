@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -42,43 +40,43 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    First               { get; }
+        public Boolean?    FirstPage           { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    Last                { get; }
+        public Boolean?    LastPage            { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     Number              { get; }
+        public UInt64?     Number              { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     NumberOfElements    { get; }
+        public UInt64?     NumberOfElements    { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     Size                { get; }
+        public UInt64?     Size                { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     TotalElements       { get; }
+        public UInt64?     TotalElements       { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt32?     TotalPages          { get; }
+        public UInt64?     TotalPages          { get; }
 
     }
 

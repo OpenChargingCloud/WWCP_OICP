@@ -17,9 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Threading;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -106,14 +103,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                            PartnerProduct_Id?     PartnerProductId      = null,
-                                           JObject                CustomData            = null,
+                                           Process_Id?            ProcessId             = null,
+                                           JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
                                            CancellationToken?     CancellationToken     = null,
-                                           EventTracking_Id       EventTrackingId       = null,
+                                           EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -180,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of an AuthorizeRemoteStart request.
@@ -191,33 +190,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart JSON objects.</param>
-        public static AuthorizeRemoteStartRequest Parse(JObject                                                   JSON,
-                                                        Provider_Id                                               ProviderIdURL,
-                                                        TimeSpan                                                  RequestTimeout,
-                                                        DateTime?                                                 Timestamp                                 = null,
-                                                        EventTracking_Id                                          EventTrackingId                           = null,
-                                                        CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null)
+        public static AuthorizeRemoteStartRequest Parse(JObject                                                    JSON,
+                                                        Provider_Id                                                ProviderIdURL,
+                                                        Process_Id?                                                ProcessId                                 = null,
+
+                                                        DateTime?                                                  Timestamp                                 = null,
+                                                        CancellationToken?                                         CancellationToken                         = null,
+                                                        EventTracking_Id?                                          EventTrackingId                           = null,
+                                                        TimeSpan?                                                  RequestTimeout                            = null,
+
+                                                        CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
             if (TryParse(JSON,
                          ProviderIdURL,
-                         RequestTimeout,
-                         out AuthorizeRemoteStartRequest  authorizeRemoteStartRequest,
-                         out String                       ErrorResponse,
+                         out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
+                         out String?                       errorResponse,
+                         ProcessId,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeRemoteStartRequestParser))
             {
-                return authorizeRemoteStartRequest;
+                return authorizeRemoteStartRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of an AuthorizeRemoteStart request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of an AuthorizeRemoteStart request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of an AuthorizeRemoteStart request.
@@ -228,33 +233,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
-        public static AuthorizeRemoteStartRequest Parse(String                                                    Text,
-                                                        Provider_Id                                               ProviderIdURL,
-                                                        TimeSpan                                                  RequestTimeout,
-                                                        DateTime?                                                 Timestamp                                 = null,
-                                                        EventTracking_Id                                          EventTrackingId                           = null,
-                                                        CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null)
+        public static AuthorizeRemoteStartRequest Parse(String                                                     Text,
+                                                        Provider_Id                                                ProviderIdURL,
+                                                        Process_Id?                                                ProcessId                                 = null,
+
+                                                        DateTime?                                                  Timestamp                                 = null,
+                                                        CancellationToken?                                         CancellationToken                         = null,
+                                                        EventTracking_Id?                                          EventTrackingId                           = null,
+                                                        TimeSpan?                                                  RequestTimeout                            = null,
+
+                                                        CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
             if (TryParse(Text,
                          ProviderIdURL,
-                         RequestTimeout,
-                         out AuthorizeRemoteStartRequest  authorizeRemoteStartRequest,
-                         out String                       ErrorResponse,
+                         out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
+                         out String?                       errorResponse,
+                         ProcessId,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomAuthorizeRemoteStartRequestParser))
             {
-                return authorizeRemoteStartRequest;
+                return authorizeRemoteStartRequest!;
             }
 
-            throw new ArgumentException("The given text representation of an AuthorizeRemoteStart request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of an AuthorizeRemoteStart request is invalid: " + errorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out AuthorizeRemoteStartRequest, out ErrorResponse, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) TryParse(JSON, out AuthorizeRemoteStartRequest, out ErrorResponse, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of an AuthorizeRemoteStart request.
@@ -267,14 +278,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                   JSON,
-                                       Provider_Id                                               ProviderIdURL,
-                                       TimeSpan                                                  RequestTimeout,
-                                       out AuthorizeRemoteStartRequest                           AuthorizeRemoteStartRequest,
-                                       out String                                                ErrorResponse,
-                                       DateTime?                                                 Timestamp                                 = null,
-                                       EventTracking_Id                                          EventTrackingId                           = null,
-                                       CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null)
+        public static Boolean TryParse(JObject                                                    JSON,
+                                       Provider_Id                                                ProviderIdURL,
+                                       out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
+                                       out String?                                                ErrorResponse,
+                                       Process_Id?                                                ProcessId                                 = null,
+
+                                       DateTime?                                                  Timestamp                                 = null,
+                                       CancellationToken?                                         CancellationToken                         = null,
+                                       EventTracking_Id?                                          EventTrackingId                           = null,
+                                       TimeSpan?                                                  RequestTimeout                            = null,
+
+                                       CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
             try
@@ -341,7 +356,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Session_Id? SessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -355,7 +370,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -369,7 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -383,7 +398,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out PartnerProduct_Id? PartnerProductId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -391,7 +406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -403,14 +418,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                               CPOPartnerSessionId,
                                                                               EMPPartnerSessionId,
                                                                               PartnerProductId,
-                                                                              CustomData,
+                                                                              ProcessId,
+                                                                              customData,
 
                                                                               Timestamp,
-                                                                              null,
+                                                                              CancellationToken,
                                                                               EventTrackingId,
                                                                               RequestTimeout);
 
-                if (CustomAuthorizeRemoteStartRequestParser != null)
+                if (CustomAuthorizeRemoteStartRequestParser is not null)
                     AuthorizeRemoteStartRequest = CustomAuthorizeRemoteStartRequestParser(JSON,
                                                                                           AuthorizeRemoteStartRequest);
 
@@ -428,7 +444,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out AuthorizeRemoteStartRequest, out ErrorResponse, CustomAuthorizeRemoteStartRequestParser = null)
+        #region (static) TryParse(Text, out AuthorizeRemoteStartRequest, out ErrorResponse, ..., CustomAuthorizeRemoteStartRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of an AuthorizeRemoteStart request.
@@ -441,14 +457,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
-        public static Boolean TryParse(String                                                    Text,
-                                       Provider_Id                                               ProviderIdURL,
-                                       TimeSpan                                                  RequestTimeout,
-                                       out AuthorizeRemoteStartRequest                           AuthorizeRemoteStartRequest,
-                                       out String                                                ErrorResponse,
-                                       DateTime?                                                 Timestamp                                 = null,
-                                       EventTracking_Id                                          EventTrackingId                           = null,
-                                       CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestParser   = null)
+        public static Boolean TryParse(String                                                     Text,
+                                       Provider_Id                                                ProviderIdURL,
+                                       out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
+                                       out String?                                                ErrorResponse,
+                                       Process_Id?                                                ProcessId                                 = null,
+
+                                       DateTime?                                                  Timestamp                                 = null,
+                                       CancellationToken?                                         CancellationToken                         = null,
+                                       EventTracking_Id?                                          EventTrackingId                           = null,
+                                       TimeSpan?                                                  RequestTimeout                            = null,
+
+                                       CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
         {
 
             try
@@ -456,11 +476,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return TryParse(JObject.Parse(Text),
                                 ProviderIdURL,
-                                RequestTimeout,
                                 out AuthorizeRemoteStartRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomAuthorizeRemoteStartRequestParser);
 
             }
@@ -482,8 +504,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomAuthorizeRemoteStartRequestSerializer">A delegate to customize the serialization of AuthorizeRemoteStartRequest responses.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeRemoteStartRequest>  CustomAuthorizeRemoteStartRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>               CustomIdentificationSerializer                = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>?               CustomIdentificationSerializer                = null)
         {
 
             var JSON = JSONObject.Create(
@@ -508,13 +530,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("PartnerProductID",      PartnerProductId.   Value.ToString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
-            return CustomAuthorizeRemoteStartRequestSerializer != null
+            return CustomAuthorizeRemoteStartRequestSerializer is not null
                        ? CustomAuthorizeRemoteStartRequestSerializer(this, JSON)
                        : JSON;
 
@@ -577,7 +599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is AuthorizeRemoteStartRequest authorizeRemoteStartRequest &&
                    Equals(authorizeRemoteStartRequest);
@@ -591,29 +613,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AuthorizeRemoteStartRequest">An authorize remote start request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(AuthorizeRemoteStartRequest AuthorizeRemoteStartRequest)
-        {
+        public override Boolean Equals(AuthorizeRemoteStartRequest? AuthorizeRemoteStartRequest)
 
-            if (AuthorizeRemoteStartRequest is null)
-                return false;
+            => AuthorizeRemoteStartRequest is not null &&
 
-            return ProviderId.    Equals(AuthorizeRemoteStartRequest.ProviderId)     &&
-                   EVSEId.        Equals(AuthorizeRemoteStartRequest.EVSEId)         &&
-                   Identification.Equals(AuthorizeRemoteStartRequest.Identification) &&
+               ProviderId.    Equals(AuthorizeRemoteStartRequest.ProviderId)     &&
+               EVSEId.        Equals(AuthorizeRemoteStartRequest.EVSEId)         &&
+               Identification.Equals(AuthorizeRemoteStartRequest.Identification) &&
 
-                   ((!SessionId.          HasValue && !AuthorizeRemoteStartRequest.SessionId.          HasValue) ||
-                     (SessionId.          HasValue &&  AuthorizeRemoteStartRequest.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeRemoteStartRequest.SessionId.          Value))) &&
+               ((!SessionId.          HasValue && !AuthorizeRemoteStartRequest.SessionId.          HasValue) ||
+                 (SessionId.          HasValue &&  AuthorizeRemoteStartRequest.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizeRemoteStartRequest.SessionId.          Value))) &&
 
-                   ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue) ||
-                     (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.CPOPartnerSessionId.Value))) &&
+               ((!CPOPartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue) ||
+                 (CPOPartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.CPOPartnerSessionId.Value))) &&
 
-                   ((!EMPPartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.EMPPartnerSessionId.HasValue) ||
-                     (EMPPartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.EMPPartnerSessionId.Value))) &&
+               ((!EMPPartnerSessionId.HasValue && !AuthorizeRemoteStartRequest.EMPPartnerSessionId.HasValue) ||
+                 (EMPPartnerSessionId.HasValue &&  AuthorizeRemoteStartRequest.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizeRemoteStartRequest.EMPPartnerSessionId.Value))) &&
 
-                   ((!PartnerProductId.   HasValue && !AuthorizeRemoteStartRequest.PartnerProductId.   HasValue) ||
-                     (PartnerProductId.   HasValue &&  AuthorizeRemoteStartRequest.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeRemoteStartRequest.PartnerProductId.   Value)));
-
-        }
+               ((!PartnerProductId.   HasValue && !AuthorizeRemoteStartRequest.PartnerProductId.   HasValue) ||
+                 (PartnerProductId.   HasValue &&  AuthorizeRemoteStartRequest.PartnerProductId.   HasValue && PartnerProductId.   Value.Equals(AuthorizeRemoteStartRequest.PartnerProductId.   Value)));
 
         #endregion
 

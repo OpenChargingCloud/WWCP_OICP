@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
@@ -30,11 +24,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public class OICPException : ApplicationException
     {
 
-        public StatusCode StatusCode { get; }
+        #region Properties
+
+        public StatusCode?  StatusCode    { get; }
+
+        #endregion
+
+        #region Constructor(s)
+
+        #region OICPException(Message)
 
         public OICPException(String Message)
             : base(Message)
         { }
+
+        #endregion
+
+        #region OICPException(Message, InnerException)
 
         public OICPException(String     Message,
                              Exception  InnerException)
@@ -42,16 +48,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    InnerException)
         { }
 
+        #endregion
+
+        #region OICPException(StatusCode, Message = null)
+
         /// <summary>
         /// Create a new OICP exception for the given status code.
         /// </summary>
         /// <param name="StatusCode"></param>
         public OICPException(StatusCode  StatusCode,
-                             String      Message = null)
+                             String?     Message = null)
             : base(Message)
         {
             this.StatusCode  = StatusCode;
         }
+
+        #endregion
+
+        #endregion
 
     }
 
@@ -60,13 +74,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public class InvalidEVSEIdentificationException : OICPException
     {
 
-        public String EVSEId { get; }
+        #region Properties
+
+        public String  EVSEId    { get; }
+
+        #endregion
+
+        #region Constructor(s)
 
         public InvalidEVSEIdentificationException(String EVSEId)
             : base("Invalid EVSE identification '" + EVSEId + "'!")
         {
             this.EVSEId = EVSEId;
         }
+
+        #endregion
 
     }
 

@@ -17,10 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -50,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode                       StatusCode            { get; }
+        public StatusCode?                      StatusCode            { get; }
 
         #endregion
 
@@ -59,31 +55,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new PullEVSEStatusByOperatorId response.
         /// </summary>
-        /// <param name="Request">A PullEVSEStatusByOperatorIdRequest request.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="ProcessId">The server side process identification of the request.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
         /// <param name="OperatorEVSEStatus">An enumeration of EVSE status records grouped by their operators.</param>
+        /// 
+        /// <param name="Request">An optional PullEVSEStatusByOperatorIdRequest request.</param>
         /// <param name="StatusCode">An optional status code of this response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public PullEVSEStatusByOperatorIdResponse(PullEVSEStatusByOperatorIdRequest  Request,
-                                                  DateTime                           ResponseTimestamp,
-                                                  EventTracking_Id                   EventTrackingId,
-                                                  TimeSpan                           Runtime,
-                                                  IEnumerable<OperatorEVSEStatus>    OperatorEVSEStatus,
-                                                  StatusCode                         StatusCode     = null,
-                                                  Process_Id?                        ProcessId      = null,
-                                                  HTTPResponse                       HTTPResponse   = null,
-                                                  JObject                            CustomData     = null)
+        public PullEVSEStatusByOperatorIdResponse(DateTime                            ResponseTimestamp,
+                                                  EventTracking_Id                    EventTrackingId,
+                                                  Process_Id                          ProcessId,
+                                                  TimeSpan                            Runtime,
+                                                  IEnumerable<OperatorEVSEStatus>     OperatorEVSEStatus,
+
+                                                  PullEVSEStatusByOperatorIdRequest?  Request        = null,
+                                                  StatusCode?                         StatusCode     = null,
+                                                  HTTPResponse?                       HTTPResponse   = null,
+                                                  JObject?                            CustomData     = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
                    Request,
                    HTTPResponse,
-                   ProcessId,
                    CustomData)
 
         {
@@ -97,6 +95,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         #region Documentation
+
+        // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20EMP/02_EMP_Services_and_Operations.asciidoc#eRoamingPullEVSEStatusByOperatorIDmessage
 
         // {
         //   "EvseStatuses": {
@@ -122,7 +122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomPullEVSEStatusByOperatorIdResponseParser = null)
+        #region (static) Parse   (JSON, ..., CustomPullEVSEStatusByOperatorIdResponseParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a PullEVSEStatusByOperatorId response.
@@ -135,14 +135,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomPullEVSEStatusByOperatorIdResponseParser">A delegate to parse custom PullEVSEStatusByOperatorId JSON objects.</param>
-        public static PullEVSEStatusByOperatorIdResponse Parse(PullEVSEStatusByOperatorIdRequest                                Request,
-                                                               JObject                                                          JSON,
-                                                               DateTime                                                         ResponseTimestamp,
-                                                               EventTracking_Id                                                 EventTrackingId,
-                                                               TimeSpan                                                         Runtime,
-                                                               Process_Id?                                                      ProcessId                                        = null,
-                                                               HTTPResponse                                                     HTTPResponse                                     = null,
-                                                               CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
+        public static PullEVSEStatusByOperatorIdResponse Parse(PullEVSEStatusByOperatorIdRequest                                 Request,
+                                                               JObject                                                           JSON,
+                                                               DateTime                                                          ResponseTimestamp,
+                                                               EventTracking_Id                                                  EventTrackingId,
+                                                               TimeSpan                                                          Runtime,
+                                                               Process_Id?                                                       ProcessId                                        = null,
+                                                               HTTPResponse?                                                     HTTPResponse                                     = null,
+                                                               CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
         {
 
             if (TryParse(Request,
@@ -150,22 +150,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
-                         out PullEVSEStatusByOperatorIdResponse  pullEVSEStatusByOperatorIdResponse,
-                         out String                              ErrorResponse,
+                         out PullEVSEStatusByOperatorIdResponse?  pullEVSEStatusByOperatorIdResponse,
+                         out String?                              errorResponse,
                          ProcessId,
                          HTTPResponse,
                          CustomPullEVSEStatusByOperatorIdResponseParser))
             {
-                return pullEVSEStatusByOperatorIdResponse;
+                return pullEVSEStatusByOperatorIdResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEStatusByOperatorId response is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatusByOperatorId response is invalid: " + errorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomPullEVSEStatusByOperatorIdResponseParser = null)
+        #region (static) Parse   (Text, ..., CustomPullEVSEStatusByOperatorIdResponseParser = null)
 
         /// <summary>
         /// Parse the given text representation of a PullEVSEStatusByOperatorId response.
@@ -178,14 +178,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomPullEVSEStatusByOperatorIdResponseParser">A delegate to parse custom PullEVSEStatusByOperatorId response JSON objects.</param>
-        public static PullEVSEStatusByOperatorIdResponse Parse(PullEVSEStatusByOperatorIdRequest                                Request,
-                                                               String                                                           Text,
-                                                               DateTime                                                         ResponseTimestamp,
-                                                               EventTracking_Id                                                 EventTrackingId,
-                                                               TimeSpan                                                         Runtime,
-                                                               Process_Id?                                                      ProcessId                                        = null,
-                                                               HTTPResponse                                                     HTTPResponse                                     = null,
-                                                               CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
+        public static PullEVSEStatusByOperatorIdResponse Parse(PullEVSEStatusByOperatorIdRequest                                 Request,
+                                                               String                                                            Text,
+                                                               DateTime                                                          ResponseTimestamp,
+                                                               EventTracking_Id                                                  EventTrackingId,
+                                                               TimeSpan                                                          Runtime,
+                                                               Process_Id?                                                       ProcessId                                        = null,
+                                                               HTTPResponse?                                                     HTTPResponse                                     = null,
+                                                               CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
         {
 
             if (TryParse(Request,
@@ -193,22 +193,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
-                         out PullEVSEStatusByOperatorIdResponse  pullEVSEStatusByOperatorIdResponse,
-                         out String                              ErrorResponse,
+                         out PullEVSEStatusByOperatorIdResponse?  pullEVSEStatusByOperatorIdResponse,
+                         out String?                              errorResponse,
                          ProcessId,
                          HTTPResponse,
                          CustomPullEVSEStatusByOperatorIdResponseParser))
             {
-                return pullEVSEStatusByOperatorIdResponse;
+                return pullEVSEStatusByOperatorIdResponse!;
             }
 
-            throw new ArgumentException("The given text representation of a PullEVSEStatusByOperatorId response is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a PullEVSEStatusByOperatorId response is invalid: " + errorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out PullEVSEStatusByOperatorIdResponse, out ErrorResponse, CustomPullEVSEStatusByOperatorIdResponseParser = null)
+        #region (static) TryParse(JSON, ..., out PullEVSEStatusByOperatorIdResponse, out ErrorResponse, ..., CustomPullEVSEStatusByOperatorIdResponseParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a PullEVSEStatusByOperatorId response.
@@ -223,16 +223,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomPullEVSEStatusByOperatorIdResponseParser">A delegate to parse custom PullEVSEStatusByOperatorId response JSON objects.</param>
-        public static Boolean TryParse(PullEVSEStatusByOperatorIdRequest                                Request,
-                                       JObject                                                          JSON,
-                                       DateTime                                                         ResponseTimestamp,
-                                       EventTracking_Id                                                 EventTrackingId,
-                                       TimeSpan                                                         Runtime,
-                                       out PullEVSEStatusByOperatorIdResponse                           PullEVSEStatusByOperatorIdResponse,
-                                       out String                                                       ErrorResponse,
-                                       Process_Id?                                                      ProcessId                                        = null,
-                                       HTTPResponse                                                     HTTPResponse                                     = null,
-                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
+        public static Boolean TryParse(PullEVSEStatusByOperatorIdRequest                                 Request,
+                                       JObject                                                           JSON,
+                                       DateTime                                                          ResponseTimestamp,
+                                       EventTracking_Id                                                  EventTrackingId,
+                                       TimeSpan                                                          Runtime,
+                                       out PullEVSEStatusByOperatorIdResponse?                           PullEVSEStatusByOperatorIdResponse,
+                                       out String?                                                       ErrorResponse,
+                                       Process_Id?                                                       ProcessId                                        = null,
+                                       HTTPResponse?                                                     HTTPResponse                                     = null,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
         {
 
             try
@@ -275,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out StatusCode StatusCode,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -283,22 +283,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData            [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
-                PullEVSEStatusByOperatorIdResponse = new PullEVSEStatusByOperatorIdResponse(Request,
-                                                                                            ResponseTimestamp,
+                PullEVSEStatusByOperatorIdResponse = new PullEVSEStatusByOperatorIdResponse(ResponseTimestamp,
                                                                                             EventTrackingId,
+                                                                                            ProcessId ?? Process_Id.NewRandom,
                                                                                             Runtime,
                                                                                             OperatorEVSEStatus,
+                                                                                            Request,
                                                                                             StatusCode,
-                                                                                            ProcessId,
                                                                                             HTTPResponse,
-                                                                                            CustomData);
+                                                                                            customData);
 
-                if (CustomPullEVSEStatusByOperatorIdResponseParser != null)
+                if (CustomPullEVSEStatusByOperatorIdResponseParser is not null)
                     PullEVSEStatusByOperatorIdResponse = CustomPullEVSEStatusByOperatorIdResponseParser(JSON,
                                                                                                         PullEVSEStatusByOperatorIdResponse);
 
@@ -316,7 +316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out PullEVSEStatusByOperatorIdResponse, out ErrorResponse, CustomPullEVSEStatusByOperatorIdResponseParser = null)
+        #region (static) TryParse(Text, ..., out PullEVSEStatusByOperatorIdResponse, out ErrorResponse, ..., CustomPullEVSEStatusByOperatorIdResponseParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a PullEVSEStatusByOperatorId response.
@@ -331,16 +331,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomPullEVSEStatusByOperatorIdResponseParser">A delegate to parse custom PullEVSEStatusByOperatorId response JSON objects.</param>
-        public static Boolean TryParse(PullEVSEStatusByOperatorIdRequest                                Request,
-                                       String                                                           Text,
-                                       DateTime                                                         ResponseTimestamp,
-                                       EventTracking_Id                                                 EventTrackingId,
-                                       TimeSpan                                                         Runtime,
-                                       out PullEVSEStatusByOperatorIdResponse                           PullEVSEStatusByOperatorIdResponse,
-                                       out String                                                       ErrorResponse,
-                                       Process_Id?                                                      ProcessId                                        = null,
-                                       HTTPResponse                                                     HTTPResponse                                     = null,
-                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
+        public static Boolean TryParse(PullEVSEStatusByOperatorIdRequest                                 Request,
+                                       String                                                            Text,
+                                       DateTime                                                          ResponseTimestamp,
+                                       EventTracking_Id                                                  EventTrackingId,
+                                       TimeSpan                                                          Runtime,
+                                       out PullEVSEStatusByOperatorIdResponse?                           PullEVSEStatusByOperatorIdResponse,
+                                       out String?                                                       ErrorResponse,
+                                       Process_Id?                                                       ProcessId                                        = null,
+                                       HTTPResponse?                                                     HTTPResponse                                     = null,
+                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
         {
 
             try
@@ -378,26 +378,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomOperatorEVSEStatusSerializer">A delegate to serialize custom operator EVSE status JSON objects.</param>
         /// <param name="CustomEVSEStatusRecordSerializer">A delegate to serialize custom EVSE status record JSON objects.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusByOperatorIdResponse>  CustomPullEVSEStatusByOperatorIdResponseSerializer   = null,
-                              CustomJObjectSerializerDelegate<OperatorEVSEStatus>                  CustomOperatorEVSEStatusSerializer                   = null,
-                              CustomJObjectSerializerDelegate<EVSEStatusRecord>                    CustomEVSEStatusRecordSerializer                     = null,
-                              CustomJObjectSerializerDelegate<StatusCode>                          CustomStatusCodeSerializer                           = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseSerializer   = null,
+                              CustomJObjectSerializerDelegate<OperatorEVSEStatus>?                  CustomOperatorEVSEStatusSerializer                   = null,
+                              CustomJObjectSerializerDelegate<EVSEStatusRecord>?                    CustomEVSEStatusRecordSerializer                     = null,
+                              CustomJObjectSerializerDelegate<StatusCode>?                          CustomStatusCodeSerializer                           = null)
         {
 
             var JSON = JSONObject.Create(
 
-                           new JProperty("EvseStatuses",
+                           new JProperty("EvseStatuses",  new JObject(
                                new JProperty("OperatorEvseStatus",  new JArray(OperatorEVSEStatus.Select(operatorEVSEStatus => operatorEVSEStatus.ToJSON(CustomOperatorEVSEStatusSerializer,
                                                                                                                                                          CustomEVSEStatusRecordSerializer))))
-                           ),
+                           )),
 
-                           StatusCode != null
+                           StatusCode is not null
                                ? new JProperty("StatusCode",  StatusCode.ToJSON(CustomStatusCodeSerializer))
                                : null
 
                        );
 
-            return CustomPullEVSEStatusByOperatorIdResponseSerializer != null
+            return CustomPullEVSEStatusByOperatorIdResponseSerializer is not null
                        ? CustomPullEVSEStatusByOperatorIdResponseSerializer(this, JSON)
                        : JSON;
 
@@ -458,7 +458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is PullEVSEStatusByOperatorIdResponse pullEVSEStatusByOperatorIdResponse &&
                    Equals(pullEVSEStatusByOperatorIdResponse);
@@ -472,15 +472,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PullEVSEStatusByOperatorIdResponse">A PullEVSEStatusByOperatorId response to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(PullEVSEStatusByOperatorIdResponse PullEVSEStatusByOperatorIdResponse)
+        public override Boolean Equals(PullEVSEStatusByOperatorIdResponse? PullEVSEStatusByOperatorIdResponse)
 
-            => !(PullEVSEStatusByOperatorIdResponse is null) &&
+            => PullEVSEStatusByOperatorIdResponse is not null &&
 
-               (!OperatorEVSEStatus.Any() && !PullEVSEStatusByOperatorIdResponse.OperatorEVSEStatus.Any()) ||
-                (OperatorEVSEStatus.Any() &&  PullEVSEStatusByOperatorIdResponse.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(PullEVSEStatusByOperatorIdResponse.OperatorEVSEStatus.Count())) &&
+               (!OperatorEVSEStatus.Any() && !PullEVSEStatusByOperatorIdResponse.OperatorEVSEStatus.Any() ||
+                 OperatorEVSEStatus.Any() &&  PullEVSEStatusByOperatorIdResponse.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(PullEVSEStatusByOperatorIdResponse.OperatorEVSEStatus.Count())) &&
 
-               ((StatusCode == null && PullEVSEStatusByOperatorIdResponse.StatusCode == null) ||
-                (StatusCode != null && PullEVSEStatusByOperatorIdResponse.StatusCode != null && StatusCode.Equals(PullEVSEStatusByOperatorIdResponse.StatusCode)));
+               ((StatusCode is     null && PullEVSEStatusByOperatorIdResponse.StatusCode is     null) ||
+                (StatusCode is not null && PullEVSEStatusByOperatorIdResponse.StatusCode is not null && StatusCode.Equals(PullEVSEStatusByOperatorIdResponse.StatusCode)));
 
         #endregion
 
@@ -513,7 +513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat(OperatorEVSEStatus.Count() + " operator EVSE status record(s)",
-                             StatusCode != null
+                             StatusCode is not null
                                  ? " -> " + StatusCode.Code
                                  : "");
 
@@ -527,22 +527,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Builder ToBuilder
 
-            => new Builder(Request,
-                           ResponseTimestamp,
-                           EventTrackingId,
-                           Runtime,
-                           OperatorEVSEStatus,
-                           StatusCode,
-                           ProcessId,
-                           HTTPResponse,
-                           CustomData);
+            => new (Request,
+                    ResponseTimestamp,
+                    EventTrackingId,
+                    Runtime,
+                    OperatorEVSEStatus,
+                    StatusCode,
+                    ProcessId,
+                    HTTPResponse,
+                    CustomData);
 
         #endregion
 
         #region (class) Builder
 
         /// <summary>
-        /// An EVSEStatus response builder.
+        /// The PullEVSEStatusByOperatorId response builder.
         /// </summary>
         public new class Builder : AResponse<PullEVSEStatusByOperatorIdRequest,
                                              PullEVSEStatusByOperatorIdResponse>.Builder
@@ -576,15 +576,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(PullEVSEStatusByOperatorIdRequest  Request              = null,
-                           DateTime?                          ResponseTimestamp    = null,
-                           EventTracking_Id                   EventTrackingId      = null,
-                           TimeSpan?                          Runtime              = null,
-                           IEnumerable<OperatorEVSEStatus>    OperatorEVSEStatus   = null,
-                           StatusCode                         StatusCode           = null,
-                           Process_Id?                        ProcessId            = null,
-                           HTTPResponse                       HTTPResponse         = null,
-                           JObject                            CustomData           = null)
+            public Builder(PullEVSEStatusByOperatorIdRequest?  Request              = null,
+                           DateTime?                           ResponseTimestamp    = null,
+                           EventTracking_Id?                   EventTrackingId      = null,
+                           TimeSpan?                           Runtime              = null,
+                           IEnumerable<OperatorEVSEStatus>?    OperatorEVSEStatus   = null,
+                           StatusCode?                         StatusCode           = null,
+                           Process_Id?                         ProcessId            = null,
+                           HTTPResponse?                       HTTPResponse         = null,
+                           JObject?                            CustomData           = null)
 
                 : base(ResponseTimestamp,
                        EventTrackingId,
@@ -596,44 +596,45 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             {
 
-                this.OperatorEVSEStatus  = OperatorEVSEStatus != null ? new HashSet<OperatorEVSEStatus>(OperatorEVSEStatus) : new HashSet<OperatorEVSEStatus>();
-                this.StatusCode          = StatusCode         != null ? StatusCode.ToBuilder()                              : new StatusCode.Builder();
+                this.OperatorEVSEStatus  = OperatorEVSEStatus is not null
+                                               ? new HashSet<OperatorEVSEStatus>(OperatorEVSEStatus)
+                                               : new HashSet<OperatorEVSEStatus>();
+
+                this.StatusCode          = StatusCode is not null
+                                               ? StatusCode.ToBuilder()
+                                               : new StatusCode.Builder();
 
             }
 
             #endregion
 
+            #region ToImmutable()
 
-            #region Equals(EVSEStatus)
+            /// <summary>
+            /// Return an immutable version of the PullEVSEStatusByOperatorId response.
+            /// </summary>
+            /// <param name="Builder">A PullEVSEStatusByOperatorIdResponse builder.</param>
+            public static implicit operator PullEVSEStatusByOperatorIdResponse(Builder Builder)
 
-            ///// <summary>
-            ///// Compares two EVSE status for equality.
-            ///// </summary>
-            ///// <param name="EVSEStatus">An EVSE status to compare with.</param>
-            ///// <returns>True if both match; False otherwise.</returns>
-            //public Boolean Equals(EVSEStatus2 EVSEStatus)
+                => Builder.ToImmutable();
 
-            //    => !(EVSEStatus is null) &&
 
-            //       (!OperatorEVSEStatus.Any() && !EVSEStatus.OperatorEVSEStatus.Any()) ||
-            //       (OperatorEVSEStatus.Any() &&  EVSEStatus.OperatorEVSEStatus.Any() && OperatorEVSEStatus.Count().Equals(EVSEStatus.OperatorEVSEStatus.Count())) &&
-
-            //       (!StatusCode.HasValue && !EVSEStatus.StatusCode.HasValue) ||
-            //        (StatusCode.HasValue &&  EVSEStatus.StatusCode.HasValue && StatusCode.Value.Equals(EVSEStatus.StatusCode.Value));
-
-            #endregion
-
+            /// <summary>
+            /// Return an immutable version of the PullEVSEStatusByOperatorId response.
+            /// </summary>
             public override PullEVSEStatusByOperatorIdResponse ToImmutable()
 
-                => new PullEVSEStatusByOperatorIdResponse(Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                                                          ResponseTimestamp ?? DateTime.UtcNow,
-                                                          EventTrackingId   ?? EventTracking_Id.New,
-                                                          Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
-                                                          OperatorEVSEStatus,
-                                                          StatusCode,
-                                                          ProcessId,
-                                                          HTTPResponse,
-                                                          CustomData);
+                => new (ResponseTimestamp ?? Timestamp.Now,
+                        EventTrackingId   ?? EventTracking_Id.New,
+                        ProcessId         ?? Process_Id.NewRandom,
+                        Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
+                        OperatorEVSEStatus,
+                        Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
+                        StatusCode,
+                        HTTPResponse,
+                        CustomData);
+
+            #endregion
 
         }
 

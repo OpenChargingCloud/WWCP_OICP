@@ -17,10 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -56,51 +52,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Request">A GetChargeDetailRecords request.</param>
         /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="ProcessId">The server side process identification of the request.</param>
         /// <param name="Runtime">The runtime of the request/response.</param>
-        /// 
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
         /// 
-        /// <param name="StatusCode">An optional status code of this response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
+        /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
         /// 
+        /// <param name="StatusCode">An optional status code of this response.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public GetChargeDetailRecordsResponse(GetChargeDetailRecordsRequest    Request,
-                                              DateTime                         ResponseTimestamp,
+        public GetChargeDetailRecordsResponse(DateTime                         ResponseTimestamp,
                                               EventTracking_Id                 EventTrackingId,
+                                              Process_Id                       ProcessId,
                                               TimeSpan                         Runtime,
-
                                               IEnumerable<ChargeDetailRecord>  ChargeDetailRecords,
 
-                                              HTTPResponse                     HTTPResponse       = null,
-                                              Process_Id?                      ProcessId          = null,
-                                              StatusCode                       StatusCode         = null,
-                                              Boolean?                         First              = null,
-                                              Boolean?                         Last               = null,
-                                              UInt32?                          Number             = null,
-                                              UInt32?                          NumberOfElements   = null,
-                                              UInt32?                          Size               = null,
-                                              UInt32?                          TotalElements      = null,
-                                              UInt32?                          TotalPages         = null,
+                                              GetChargeDetailRecordsRequest?   Request            = null,
+                                              Boolean?                         FirstPage          = null,
+                                              Boolean?                         LastPage           = null,
+                                              UInt64?                          Number             = null,
+                                              UInt64?                          NumberOfElements   = null,
+                                              UInt64?                          Size               = null,
+                                              UInt64?                          TotalElements      = null,
+                                              UInt64?                          TotalPages         = null,
 
-                                              JObject                          CustomData         = null)
+                                              StatusCode?                      StatusCode         = null,
+                                              HTTPResponse?                    HTTPResponse       = null,
+                                              JObject?                         CustomData         = null)
 
-            : base(Request,
-                   ResponseTimestamp,
+            : base(ResponseTimestamp,
                    EventTrackingId,
+                   ProcessId,
                    Runtime,
 
-                   HTTPResponse,
-                   ProcessId,
-                   StatusCode,
-                   First,
-                   Last,
+                   Request,
+                   FirstPage,
+                   LastPage,
                    Number,
                    NumberOfElements,
                    Size,
                    TotalElements,
                    TotalPages,
+                   StatusCode,
 
+                   HTTPResponse,
                    CustomData)
 
         {
@@ -151,14 +146,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords JSON objects.</param>
-        public static GetChargeDetailRecordsResponse Parse(GetChargeDetailRecordsRequest                                Request,
-                                                           JObject                                                      JSON,
-                                                           DateTime                                                     ResponseTimestamp,
-                                                           EventTracking_Id                                             EventTrackingId,
-                                                           TimeSpan                                                     Runtime,
-                                                           Process_Id?                                                  ProcessId                                    = null,
-                                                           HTTPResponse                                                 HTTPResponse                                 = null,
-                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null)
+        public static GetChargeDetailRecordsResponse Parse(GetChargeDetailRecordsRequest                                 Request,
+                                                           JObject                                                       JSON,
+                                                           DateTime                                                      ResponseTimestamp,
+                                                           EventTracking_Id                                              EventTrackingId,
+                                                           TimeSpan                                                      Runtime,
+                                                           Process_Id?                                                   ProcessId                                    = null,
+                                                           HTTPResponse?                                                 HTTPResponse                                 = null,
+                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseParser   = null)
         {
 
             if (TryParse(Request,
@@ -166,16 +161,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
-                         out GetChargeDetailRecordsResponse  getChargeDetailRecordsResponse,
-                         out String                          ErrorResponse,
+                         out GetChargeDetailRecordsResponse?  getChargeDetailRecordsResponse,
+                         out String?                          errorResponse,
                          HTTPResponse,
                          ProcessId,
                          CustomGetChargeDetailRecordsResponseParser))
             {
-                return getChargeDetailRecordsResponse;
+                return getChargeDetailRecordsResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords response is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords response is invalid: " + errorResponse, nameof(JSON));
 
         }
 
@@ -194,14 +189,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords response JSON objects.</param>
-        public static GetChargeDetailRecordsResponse Parse(GetChargeDetailRecordsRequest                                Request,
-                                                           String                                                       Text,
-                                                           DateTime                                                     ResponseTimestamp,
-                                                           EventTracking_Id                                             EventTrackingId,
-                                                           TimeSpan                                                     Runtime,
-                                                           Process_Id?                                                  ProcessId                                    = null,
-                                                           HTTPResponse                                                 HTTPResponse                                 = null,
-                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null)
+        public static GetChargeDetailRecordsResponse Parse(GetChargeDetailRecordsRequest                                 Request,
+                                                           String                                                        Text,
+                                                           DateTime                                                      ResponseTimestamp,
+                                                           EventTracking_Id                                              EventTrackingId,
+                                                           TimeSpan                                                      Runtime,
+                                                           Process_Id?                                                   ProcessId                                    = null,
+                                                           HTTPResponse?                                                 HTTPResponse                                 = null,
+                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseParser   = null)
         {
 
             if (TryParse(Request,
@@ -209,16 +204,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
-                         out GetChargeDetailRecordsResponse  getChargeDetailRecordsResponse,
-                         out String                          ErrorResponse,
+                         out GetChargeDetailRecordsResponse?  getChargeDetailRecordsResponse,
+                         out String?                          errorResponse,
                          ProcessId,
                          HTTPResponse,
                          CustomGetChargeDetailRecordsResponseParser))
             {
-                return getChargeDetailRecordsResponse;
+                return getChargeDetailRecordsResponse!;
             }
 
-            throw new ArgumentException("The given text representation of a GetChargeDetailRecords response is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a GetChargeDetailRecords response is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -239,16 +234,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords response JSON objects.</param>
-        public static Boolean TryParse(GetChargeDetailRecordsRequest                                Request,
-                                       JObject                                                      JSON,
-                                       DateTime                                                     ResponseTimestamp,
-                                       EventTracking_Id                                             EventTrackingId,
-                                       TimeSpan                                                     Runtime,
-                                       out GetChargeDetailRecordsResponse                           GetChargeDetailRecordsResponse,
-                                       out String                                                   ErrorResponse,
-                                       HTTPResponse                                                 HTTPResponse                                 = null,
-                                       Process_Id?                                                  ProcessId                                    = null,
-                                       CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null)
+        public static Boolean TryParse(GetChargeDetailRecordsRequest                                 Request,
+                                       JObject                                                       JSON,
+                                       DateTime                                                      ResponseTimestamp,
+                                       EventTracking_Id                                              EventTrackingId,
+                                       TimeSpan                                                      Runtime,
+                                       out GetChargeDetailRecordsResponse?                           GetChargeDetailRecordsResponse,
+                                       out String?                                                   ErrorResponse,
+                                       HTTPResponse?                                                 HTTPResponse                                 = null,
+                                       Process_Id?                                                   ProcessId                                    = null,
+                                       CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseParser   = null)
         {
 
             try
@@ -270,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<ChargeDetailRecord> ChargeDetailRecords,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -284,7 +279,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out StatusCode StatusCode,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -297,7 +292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? First,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -310,7 +305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? Last,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -323,7 +318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? Number,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -336,7 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? NumberOfElements,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -349,7 +344,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? Size,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -362,7 +357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? TotalElements,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -375,7 +370,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out UInt32? TotalPages,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -383,20 +378,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData             [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
-                GetChargeDetailRecordsResponse = new GetChargeDetailRecordsResponse(Request,
-                                                                                    ResponseTimestamp,
+                GetChargeDetailRecordsResponse = new GetChargeDetailRecordsResponse(ResponseTimestamp,
                                                                                     EventTrackingId,
+                                                                                    ProcessId           ?? Process_Id.NewRandom,
                                                                                     Runtime,
-                                                                                    ChargeDetailRecords ?? new ChargeDetailRecord[0],
+                                                                                    ChargeDetailRecords ?? Array.Empty<ChargeDetailRecord>(),
 
-                                                                                    HTTPResponse,
-                                                                                    ProcessId,
-                                                                                    StatusCode,
+                                                                                    Request,
                                                                                     First,
                                                                                     Last,
                                                                                     Number,
@@ -404,10 +397,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                     Size,
                                                                                     TotalElements,
                                                                                     TotalPages,
+                                                                                    StatusCode,
 
-                                                                                    CustomData);
+                                                                                    HTTPResponse,
+                                                                                    customData);
 
-                if (CustomGetChargeDetailRecordsResponseParser != null)
+                if (CustomGetChargeDetailRecordsResponseParser is not null)
                     GetChargeDetailRecordsResponse = CustomGetChargeDetailRecordsResponseParser(JSON,
                                                                                                 GetChargeDetailRecordsResponse);
 
@@ -440,16 +435,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords response JSON objects.</param>
-        public static Boolean TryParse(GetChargeDetailRecordsRequest                                Request,
-                                       String                                                       Text,
-                                       DateTime                                                     ResponseTimestamp,
-                                       EventTracking_Id                                             EventTrackingId,
-                                       TimeSpan                                                     Runtime,
-                                       out GetChargeDetailRecordsResponse                           GetChargeDetailRecordsResponse,
-                                       out String                                                   ErrorResponse,
-                                       Process_Id?                                                  ProcessId                                    = null,
-                                       HTTPResponse                                                 HTTPResponse                                 = null,
-                                       CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseParser   = null)
+        public static Boolean TryParse(GetChargeDetailRecordsRequest                                 Request,
+                                       String                                                        Text,
+                                       DateTime                                                      ResponseTimestamp,
+                                       EventTracking_Id                                              EventTrackingId,
+                                       TimeSpan                                                      Runtime,
+                                       out GetChargeDetailRecordsResponse?                           GetChargeDetailRecordsResponse,
+                                       out String?                                                   ErrorResponse,
+                                       Process_Id?                                                   ProcessId                                    = null,
+                                       HTTPResponse?                                                 HTTPResponse                                 = null,
+                                       CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseParser   = null)
         {
 
             try
@@ -490,13 +485,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsResponse>  CustomGetChargeDetailRecordsResponseSerializer   = null,
-                              CustomJObjectSerializerDelegate<IPagedResponse>                  CustomIPagedResponseSerializer                   = null,
-                              CustomJObjectSerializerDelegate<ChargeDetailRecord>              CustomChargeDetailRecordSerializer               = null,
-                              CustomJObjectSerializerDelegate<Identification>                  CustomIdentificationSerializer                   = null,
-                              CustomJObjectSerializerDelegate<SignedMeteringValue>             CustomSignedMeteringValueSerializer              = null,
-                              CustomJObjectSerializerDelegate<CalibrationLawVerification>      CustomCalibrationLawVerificationSerializer       = null,
-                              CustomJObjectSerializerDelegate<StatusCode>                      CustomStatusCodeSerializer                       = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseSerializer   = null,
+                              CustomJObjectSerializerDelegate<IPagedResponse>?                  CustomIPagedResponseSerializer                   = null,
+                              CustomJObjectSerializerDelegate<ChargeDetailRecord>?              CustomChargeDetailRecordSerializer               = null,
+                              CustomJObjectSerializerDelegate<Identification>?                  CustomIdentificationSerializer                   = null,
+                              CustomJObjectSerializerDelegate<SignedMeteringValue>?             CustomSignedMeteringValueSerializer              = null,
+                              CustomJObjectSerializerDelegate<CalibrationLawVerification>?      CustomCalibrationLawVerificationSerializer       = null,
+                              CustomJObjectSerializerDelegate<StatusCode>?                      CustomStatusCodeSerializer                       = null)
         {
 
             var JSON = ToJSON(CustomIPagedResponseSerializer,
@@ -509,7 +504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                                              CustomSignedMeteringValueSerializer,
                                                                                                                              CustomCalibrationLawVerificationSerializer)))));
 
-            return CustomGetChargeDetailRecordsResponseSerializer != null
+            return CustomGetChargeDetailRecordsResponseSerializer is not null
                        ? CustomGetChargeDetailRecordsResponseSerializer(this, JSON)
                        : JSON;
 
@@ -570,7 +565,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is GetChargeDetailRecordsResponse getChargeDetailRecordsResponse &&
                    Equals(getChargeDetailRecordsResponse);
@@ -584,15 +579,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="GetChargeDetailRecordsResponse">A GetChargeDetailRecords response to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(GetChargeDetailRecordsResponse GetChargeDetailRecordsResponse)
+        public override Boolean Equals(GetChargeDetailRecordsResponse? GetChargeDetailRecordsResponse)
 
-            => !(GetChargeDetailRecordsResponse is null) &&
+            => GetChargeDetailRecordsResponse is not null &&
 
-               (!ChargeDetailRecords.SafeAny() && !GetChargeDetailRecordsResponse.ChargeDetailRecords.SafeAny()) ||
-                (ChargeDetailRecords.SafeAny() &&  GetChargeDetailRecordsResponse.ChargeDetailRecords.SafeAny() && ChargeDetailRecords.Count().Equals(GetChargeDetailRecordsResponse.ChargeDetailRecords.Count())) &&
+               (!ChargeDetailRecords.Any() && !GetChargeDetailRecordsResponse.ChargeDetailRecords.Any() ||
+                 ChargeDetailRecords.Any() &&  GetChargeDetailRecordsResponse.ChargeDetailRecords.Any() && ChargeDetailRecords.Count().Equals(GetChargeDetailRecordsResponse.ChargeDetailRecords.Count())) &&
 
-               ((StatusCode == null && GetChargeDetailRecordsResponse.StatusCode == null) ||
-                (StatusCode != null && GetChargeDetailRecordsResponse.StatusCode != null && StatusCode.Equals(GetChargeDetailRecordsResponse.StatusCode)));
+               ((StatusCode is     null && GetChargeDetailRecordsResponse.StatusCode is     null) ||
+                (StatusCode is not null && GetChargeDetailRecordsResponse.StatusCode is not null && StatusCode.Equals(GetChargeDetailRecordsResponse.StatusCode)));
 
         #endregion
 
@@ -625,7 +620,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat(ChargeDetailRecords.Count() + " charge detail record(s)",
-                             StatusCode != null
+                             StatusCode is not null
                                  ? " -> " + StatusCode.Code
                                  : "");
 
@@ -639,22 +634,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Builder ToBuilder
 
-            => new Builder(Request,
-                           ResponseTimestamp,
-                           EventTrackingId,
-                           Runtime,
-                           ChargeDetailRecords,
-                           HTTPResponse,
-                           ProcessId,
-                           StatusCode,
-                           First,
-                           Last,
-                           Number,
-                           NumberOfElements,
-                           Size,
-                           TotalElements,
-                           TotalPages,
-                           CustomData);
+            => new (Request,
+                    ResponseTimestamp,
+                    EventTrackingId,
+                    ProcessId,
+                    Runtime,
+                    ChargeDetailRecords,
+                    FirstPage,
+                    LastPage,
+                    Number,
+                    NumberOfElements,
+                    Size,
+                    TotalElements,
+                    TotalPages,
+                    StatusCode,
+                    HTTPResponse,
+                    CustomData);
 
         #endregion
 
@@ -690,25 +685,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(GetChargeDetailRecordsRequest    Request               = null,
-                           DateTime?                        ResponseTimestamp     = null,
-                           EventTracking_Id                 EventTrackingId       = null,
-                           TimeSpan?                        Runtime               = null,
+            public Builder(GetChargeDetailRecordsRequest?    Request               = null,
+                           DateTime?                         ResponseTimestamp     = null,
+                           EventTracking_Id?                 EventTrackingId       = null,
+                           Process_Id?                       ProcessId             = null,
+                           TimeSpan?                         Runtime               = null,
 
-                           IEnumerable<ChargeDetailRecord>  ChargeDetailRecords   = null,
+                           IEnumerable<ChargeDetailRecord>?  ChargeDetailRecords   = null,
+                           Boolean?                          FirstPage             = null,
+                           Boolean?                          LastPage              = null,
+                           UInt64?                           Number                = null,
+                           UInt64?                           NumberOfElements      = null,
+                           UInt64?                           Size                  = null,
+                           UInt64?                           TotalElements         = null,
+                           UInt64?                           TotalPages            = null,
+                           StatusCode?                       StatusCode            = null,
 
-                           HTTPResponse                     HTTPResponse          = null,
-                           Process_Id?                      ProcessId             = null,
-                           StatusCode                       StatusCode            = null,
-                           Boolean?                         First                 = null,
-                           Boolean?                         Last                  = null,
-                           UInt32?                          Number                = null,
-                           UInt32?                          NumberOfElements      = null,
-                           UInt32?                          Size                  = null,
-                           UInt32?                          TotalElements         = null,
-                           UInt32?                          TotalPages            = null,
-
-                           JObject                          CustomData            = null)
+                           HTTPResponse?                     HTTPResponse          = null,
+                           JObject?                          CustomData            = null)
 
                 : base(Request,
                        ResponseTimestamp,
@@ -718,8 +712,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        HTTPResponse,
                        ProcessId,
                        StatusCode,
-                       First,
-                       Last,
+                       FirstPage,
+                       LastPage,
                        Number,
                        NumberOfElements,
                        Size,
@@ -730,31 +724,50 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             {
 
-                this.ChargeDetailRecords = ChargeDetailRecords != null ? new HashSet<ChargeDetailRecord>(ChargeDetailRecords) : new HashSet<ChargeDetailRecord>();
+                this.ChargeDetailRecords = ChargeDetailRecords is not null
+                                               ? new HashSet<ChargeDetailRecord>(ChargeDetailRecords)
+                                               : new HashSet<ChargeDetailRecord>();
 
             }
 
             #endregion
 
+            #region ToImmutable()
 
+            /// <summary>
+            /// Return an immutable version of the GetChargeDetailRecords response.
+            /// </summary>
+            /// <param name="Builder">A GetChargeDetailRecordsResponse builder.</param>
+            public static implicit operator GetChargeDetailRecordsResponse(Builder Builder)
+
+                => Builder.ToImmutable();
+
+
+            /// <summary>
+            /// Return an immutable version of the GetChargeDetailRecords response.
+            /// </summary>
             public override GetChargeDetailRecordsResponse ToImmutable()
 
-                => new GetChargeDetailRecordsResponse(Request           ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
-                                                      ResponseTimestamp ?? DateTime.UtcNow,
-                                                      EventTrackingId   ?? EventTracking_Id.New,
-                                                      Runtime           ?? (DateTime.UtcNow - Request.Timestamp),
-                                                      ChargeDetailRecords,
-                                                      HTTPResponse,
-                                                      ProcessId,
-                                                      StatusCode,
-                                                      First,
-                                                      Last,
-                                                      Number,
-                                                      NumberOfElements,
-                                                      Size,
-                                                      TotalElements,
-                                                      TotalPages,
-                                                      CustomData);
+                => new (ResponseTimestamp ?? Timestamp.Now,
+                        EventTrackingId   ?? EventTracking_Id.New,
+                        ProcessId         ?? Process_Id.NewRandom,
+                        Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
+                        ChargeDetailRecords,
+
+                        Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),
+                        FirstPage,
+                        LastPage,
+                        Number,
+                        NumberOfElements,
+                        Size,
+                        TotalElements,
+                        TotalPages,
+                        StatusCode,
+
+                        HTTPResponse,
+                        CustomData);
+
+            #endregion
 
         }
 

@@ -78,6 +78,7 @@ namespace org.GraphDefined.WWCP
             CreateOICPv2_3_CPORoamingProvider(this RoamingNetwork                                     RoamingNetwork,
                                               CSORoamingProvider_Id                                   Id,
                                               I18NString                                              Name,
+                                              I18NString                                              Description,
                                               OICPv2_3.EMP.EMPRoaming                                 EMPRoaming,
 
                                               OICPv2_3.EMP.EVSEDataRecord2EVSEDelegate                EVSEDataRecord2EVSE                                 = null,
@@ -133,6 +134,7 @@ namespace org.GraphDefined.WWCP
 
             var newRoamingProvider = new OICPv2_3.EMP.WWCPCSOAdapter(Id,
                                                                      Name,
+                                                                     Description,
                                                                      RoamingNetwork,
                                                                      EMPRoaming,
 

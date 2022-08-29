@@ -17,9 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Threading;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -68,6 +65,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Identification             Identification            { get; }
 
         /// <summary>
+        /// The charge point operator identification.
+        /// </summary>
+        [Mandatory]
+        public Operator_Id                OperatorId                { get; }
+
+        /// <summary>
         /// The EVSE identification, that identifies the location of the charging process.
         /// </summary>
         [Mandatory]
@@ -83,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Additional information about the error.
         /// </summary>
         [Optional]
-        public String                     ErrorAdditionalInfo       { get; }
+        public String?                    ErrorAdditionalInfo       { get; }
 
         #endregion
 
@@ -94,6 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId">The Hubject session identification, that identifies the charging process.</param>
         /// <param name="Identification">The authentication data used to authorize the user or the car.</param>
+        /// <param name="OperatorId">The charge point operator identification.</param>
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ErrorType">The error class.</param>
         /// 
@@ -107,21 +111,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public ChargingErrorNotificationRequest(Session_Id             SessionId,
-                                                 Identification         Identification,
-                                                 EVSE_Id                EVSEId,
-                                                 ErrorClassTypes        ErrorType,
+                                                Identification         Identification,
+                                                Operator_Id            OperatorId,
+                                                EVSE_Id                EVSEId,
+                                                ErrorClassTypes        ErrorType,
 
-                                                 CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
-                                                 EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                                 String                 ErrorAdditionalInfo   = null,
-                                                 JObject                CustomData            = null,
+                                                CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
+                                                EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
+                                                String?                ErrorAdditionalInfo   = null,
+                                                Process_Id?            ProcessId             = null,
+                                                JObject?               CustomData            = null,
 
-                                                 DateTime?              Timestamp             = null,
-                                                 CancellationToken?     CancellationToken     = null,
-                                                 EventTracking_Id       EventTrackingId       = null,
-                                                 TimeSpan?              RequestTimeout        = null)
+                                                DateTime?              Timestamp             = null,
+                                                CancellationToken?     CancellationToken     = null,
+                                                EventTracking_Id?      EventTrackingId       = null,
+                                                TimeSpan?              RequestTimeout        = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -129,9 +136,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            this.Type                 = ChargingNotificationTypes.End;
+            this.Type                 = ChargingNotificationTypes.Error;
             this.SessionId            = SessionId;
             this.Identification       = Identification;
+            this.OperatorId           = OperatorId;
             this.EVSEId               = EVSEId;
             this.ErrorType            = ErrorType;
 
@@ -149,12 +157,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/02_CPO_Services_and_Operations.asciidoc#64-eroamingchargingnotifications-error
 
         // {
-        //     Swagger file is missing!
+        //     "CPOPartnerSessionID":       "1234XYZ",
+        //     "EMPPartnerSessionID":       "2345ABC",
+        //     "EvseID":                    "DE*XYZ*ETEST1",
+        //     "ErrorType":                 "Connector Error",
+        //     "ErrorAdditionalInfo":       "Plug was not connected, EVSEID timed out reached",
+        //     "Identification": {
+        //         "RFIDMifareFamilyIdentification": {
+        //             "UID":               "1234ABCD"
+        //         }
+        //     },
+        //     "OperatorID":                "DE*ABC",
+        //     "SessionID":                 "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+        //     "Type":                      "Error"
         // }
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomChargingErrorNotificationRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomChargingErrorNotificationRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a charging notification error request.
@@ -164,31 +184,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingErrorNotificationRequestParser">A delegate to parse custom charging notification error request JSON objects.</param>
-        public static ChargingErrorNotificationRequest Parse(JObject                                                        JSON,
-                                                             TimeSpan                                                       RequestTimeout,
-                                                             DateTime?                                                      Timestamp                                      = null,
-                                                             EventTracking_Id                                               EventTrackingId                                = null,
-                                                             CustomJObjectParserDelegate<ChargingErrorNotificationRequest>  CustomChargingErrorNotificationRequestParser   = null)
+        public static ChargingErrorNotificationRequest Parse(JObject                                                         JSON,
+                                                             Process_Id?                                                     ProcessId                                      = null,
+
+                                                             DateTime?                                                       Timestamp                                      = null,
+                                                             CancellationToken?                                              CancellationToken                              = null,
+                                                             EventTracking_Id?                                               EventTrackingId                                = null,
+                                                             TimeSpan?                                                       RequestTimeout                                 = null,
+
+                                                             CustomJObjectParserDelegate<ChargingErrorNotificationRequest>?  CustomChargingErrorNotificationRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         RequestTimeout,
-                         out ChargingErrorNotificationRequest  chargingErrorNotificationRequest,
-                         out String                            ErrorResponse,
+                         out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
+                         out String?                            errorResponse,
+                         ProcessId,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomChargingErrorNotificationRequestParser))
             {
-                return chargingErrorNotificationRequest;
+                return chargingErrorNotificationRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a charging notification error request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a charging notification error request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomChargingErrorNotificationRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomChargingErrorNotificationRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a charging notification error request.
@@ -198,31 +224,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingErrorNotificationRequestParser">A delegate to parse custom charging notification error request JSON objects.</param>
-        public static ChargingErrorNotificationRequest Parse(String                                                         Text,
-                                                             TimeSpan                                                       RequestTimeout,
-                                                             DateTime?                                                      Timestamp                                      = null,
-                                                             EventTracking_Id                                               EventTrackingId                                = null,
-                                                             CustomJObjectParserDelegate<ChargingErrorNotificationRequest>  CustomChargingErrorNotificationRequestParser   = null)
+        public static ChargingErrorNotificationRequest Parse(String                                                          Text,
+                                                             Process_Id?                                                     ProcessId                                      = null,
+
+                                                             DateTime?                                                       Timestamp                                      = null,
+                                                             CancellationToken?                                              CancellationToken                              = null,
+                                                             EventTracking_Id?                                               EventTrackingId                                = null,
+                                                             TimeSpan?                                                       RequestTimeout                                 = null,
+
+                                                             CustomJObjectParserDelegate<ChargingErrorNotificationRequest>?  CustomChargingErrorNotificationRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         RequestTimeout,
-                         out ChargingErrorNotificationRequest  chargingErrorNotificationRequest,
-                         out String                            ErrorResponse,
+                         out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
+                         out String?                            errorResponse,
+                         ProcessId,
                          Timestamp,
+                         CancellationToken,
                          EventTrackingId,
+                         RequestTimeout,
                          CustomChargingErrorNotificationRequestParser))
             {
-                return chargingErrorNotificationRequest;
+                return chargingErrorNotificationRequest!;
             }
 
-            throw new ArgumentException("The given text representation of a charging notification error request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a charging notification error request is invalid: " + errorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out ChargingErrorNotificationRequest, out ErrorResponse, CustomChargingErrorNotificationRequestParser = null)
+        #region (static) TryParse(JSON, out ChargingErrorNotificationRequest, out ErrorResponse, ..., CustomChargingErrorNotificationRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a charging notification error request.
@@ -234,13 +266,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingErrorNotificationRequestParser">A delegate to parse custom charging notification error request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                        JSON,
-                                       TimeSpan                                                       RequestTimeout,
-                                       out ChargingErrorNotificationRequest                           ChargingErrorNotificationRequest,
-                                       out String                                                     ErrorResponse,
-                                       DateTime?                                                      Timestamp                                      = null,
-                                       EventTracking_Id                                               EventTrackingId                                = null,
-                                       CustomJObjectParserDelegate<ChargingErrorNotificationRequest>  CustomChargingErrorNotificationRequestParser   = null)
+        public static Boolean TryParse(JObject                                                         JSON,
+                                       out ChargingErrorNotificationRequest?                           ChargingErrorNotificationRequest,
+                                       out String?                                                     ErrorResponse,
+                                       Process_Id?                                                     ProcessId                                      = null,
+
+                                       DateTime?                                                       Timestamp                                      = null,
+                                       CancellationToken?                                              CancellationToken                              = null,
+                                       EventTracking_Id?                                               EventTrackingId                                = null,
+                                       TimeSpan?                                                       RequestTimeout                                 = null,
+
+                                       CustomJObjectParserDelegate<ChargingErrorNotificationRequest>?  CustomChargingErrorNotificationRequestParser   = null)
         {
 
             try
@@ -287,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out CPOPartnerSession_Id? CPOPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -301,7 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EMPPartnerSession_Id? EMPPartnerSessionId,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -314,6 +350,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               OICPv2_3.Identification.TryParse,
                                               out Identification Identification,
                                               out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+                #region Parse OperatorId                [mandatory]
+
+                if (!JSON.ParseMandatory("OperatorID",
+                                         "EVSE identification",
+                                         Operator_Id.TryParse,
+                                         out Operator_Id OperatorId,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -354,27 +403,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData                [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
                 ChargingErrorNotificationRequest = new ChargingErrorNotificationRequest(SessionId,
                                                                                         Identification,
+                                                                                        OperatorId,
                                                                                         EVSEId,
                                                                                         ErrorType,
 
                                                                                         CPOPartnerSessionId,
                                                                                         EMPPartnerSessionId,
                                                                                         ErrorAdditionalInfo,
-                                                                                        CustomData,
+                                                                                        ProcessId,
+
+                                                                                        customData,
 
                                                                                         Timestamp,
-                                                                                        null,
+                                                                                        CancellationToken,
                                                                                         EventTrackingId,
                                                                                         RequestTimeout);
 
-                if (CustomChargingErrorNotificationRequestParser != null)
+                if (CustomChargingErrorNotificationRequestParser is not null)
                     ChargingErrorNotificationRequest = CustomChargingErrorNotificationRequestParser(JSON,
                                                                                                     ChargingErrorNotificationRequest);
 
@@ -392,7 +444,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out ChargingErrorNotificationRequest, out ErrorResponse, CustomChargingErrorNotificationRequestParser = null)
+        #region (static) TryParse(Text, out ChargingErrorNotificationRequest, out ErrorResponse, ..., CustomChargingErrorNotificationRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a charging notification error request.
@@ -404,24 +456,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingErrorNotificationRequestParser">A delegate to parse custom charging notification error request JSON objects.</param>
-        public static Boolean TryParse(String                                                         Text,
-                                       TimeSpan                                                       RequestTimeout,
-                                       out ChargingErrorNotificationRequest                           ChargingErrorNotificationRequest,
-                                       out String                                                     ErrorResponse,
-                                       DateTime?                                                      Timestamp                                      = null,
-                                       EventTracking_Id                                               EventTrackingId                                = null,
-                                       CustomJObjectParserDelegate<ChargingErrorNotificationRequest>  CustomChargingErrorNotificationRequestParser   = null)
+        public static Boolean TryParse(String                                                          Text,
+                                       out ChargingErrorNotificationRequest?                           ChargingErrorNotificationRequest,
+                                       out String?                                                     ErrorResponse,
+                                       Process_Id?                                                     ProcessId                                      = null,
+
+                                       DateTime?                                                       Timestamp                                      = null,
+                                       CancellationToken?                                              CancellationToken                              = null,
+                                       EventTracking_Id?                                               EventTrackingId                                = null,
+                                       TimeSpan?                                                       RequestTimeout                                 = null,
+
+                                       CustomJObjectParserDelegate<ChargingErrorNotificationRequest>?  CustomChargingErrorNotificationRequestParser   = null)
         {
 
             try
             {
 
                 return TryParse(JObject.Parse(Text),
-                                RequestTimeout,
                                 out ChargingErrorNotificationRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Timestamp,
+                                CancellationToken,
                                 EventTrackingId,
+                                RequestTimeout,
                                 CustomChargingErrorNotificationRequestParser);
 
             }
@@ -443,8 +501,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomChargingErrorNotificationRequestSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingErrorNotificationRequest>  CustomChargingErrorNotificationRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<Identification>                    CustomIdentificationSerializer                     = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingErrorNotificationRequest>?  CustomChargingErrorNotificationRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<Identification>?                    CustomIdentificationSerializer                     = null)
         {
 
             var JSON = JSONObject.Create(
@@ -453,6 +511,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("EvseID",                      EVSEId.                   ToString()),
                            new JProperty("Identification",              Identification.           ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
                            new JProperty("ErrorType",                   ErrorType.                AsString()),
+                           new JProperty("OperatorID",                  OperatorId.               ToString()),
 
                            CPOPartnerSessionId.   HasValue
                                ? new JProperty("CPOPartnerSessionID",   CPOPartnerSessionId.Value.ToString())
@@ -466,13 +525,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("ErrorAdditionalInfo",   ErrorAdditionalInfo)
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
-            return CustomChargingErrorNotificationRequestSerializer != null
+            return CustomChargingErrorNotificationRequestSerializer is not null
                        ? CustomChargingErrorNotificationRequestSerializer(this, JSON)
                        : JSON;
 
@@ -487,20 +546,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ChargingErrorNotificationRequest Clone
 
-            => new ChargingErrorNotificationRequest(SessionId,
-                                                     Identification,
-                                                     EVSEId,
-                                                     ErrorType,
+            => new (SessionId,
+                    Identification,
+                    OperatorId,
+                    EVSEId,
+                    ErrorType,
 
-                                                     CPOPartnerSessionId,
-                                                     EMPPartnerSessionId,
-                                                     ErrorAdditionalInfo,
-                                                     CustomData,
+                    CPOPartnerSessionId,
+                    EMPPartnerSessionId,
+                    ErrorAdditionalInfo,
+                    ProcessId,
+                    CustomData,
 
-                                                     Timestamp,
-                                                     CancellationToken,
-                                                     EventTrackingId,
-                                                     RequestTimeout);
+                    Timestamp,
+                    CancellationToken,
+                    EventTrackingId,
+                    RequestTimeout);
 
         #endregion
 
@@ -559,7 +620,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is ChargingErrorNotificationRequest chargingErrorNotificationRequest &&
                    Equals(chargingErrorNotificationRequest);
@@ -573,15 +634,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargingErrorNotificationRequest">A charging notification error request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(ChargingErrorNotificationRequest ChargingErrorNotificationRequest)
+        public override Boolean Equals(ChargingErrorNotificationRequest? ChargingErrorNotificationRequest)
 
-            => !(ChargingErrorNotificationRequest is null) &&
+            => ChargingErrorNotificationRequest is not null &&
 
-                 Type.          Equals(ChargingErrorNotificationRequest.Type)           &&
-                 SessionId.     Equals(ChargingErrorNotificationRequest.SessionId)      &&
-                 Identification.Equals(ChargingErrorNotificationRequest.Identification) &&
-                 EVSEId.        Equals(ChargingErrorNotificationRequest.EVSEId)         &&
-                 ErrorType.     Equals(ChargingErrorNotificationRequest.ErrorType);
+               Type.          Equals(ChargingErrorNotificationRequest.Type)           &&
+               SessionId.     Equals(ChargingErrorNotificationRequest.SessionId)      &&
+               Identification.Equals(ChargingErrorNotificationRequest.Identification) &&
+               OperatorId.    Equals(ChargingErrorNotificationRequest.OperatorId)     &&
+               EVSEId.        Equals(ChargingErrorNotificationRequest.EVSEId)         &&
+               ErrorType.     Equals(ChargingErrorNotificationRequest.ErrorType);
 
         #endregion
 
@@ -598,9 +660,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return Type.                   GetHashCode()       * 19 ^
-                       SessionId.              GetHashCode()       * 17 ^
-                       Identification.         GetHashCode()       * 13 ^
+                return Type.                   GetHashCode()       * 27 ^
+                       SessionId.              GetHashCode()       * 23 ^
+                       Identification.         GetHashCode()       * 17 ^
+                       OperatorId.             GetHashCode()       * 13 ^
                        EVSEId.                 GetHashCode()       * 11 ^
                        ErrorType.              GetHashCode()       *  7 ^
 
@@ -621,7 +684,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat(Type,
-                             " at ",  EVSEId,
+                             " at ",  EVSEId, " (", OperatorId, ")",
                              " for ", Identification,
 
                              " (", SessionId, ") => ",

@@ -17,11 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -43,38 +38,38 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The e-mobility provider identification.
         /// </summary>
         [Mandatory]
-        public Provider_Id               ProviderId       { get; }
+        public Provider_Id                ProviderId       { get; }
 
         /// <summary>
         /// The start of the requested time range.
         /// </summary>
         [Mandatory]
-        public DateTime                  From             { get; }
+        public DateTime                   From             { get; }
 
         /// <summary>
         /// The end of the requested time range.
         /// </summary>
         [Mandatory]
-        public DateTime                  To               { get; }
+        public DateTime                   To               { get; }
 
 
         /// <summary>
         /// An optional enumeration of charging session identifications.
         /// </summary>
         [Optional]
-        public IEnumerable<Session_Id>   SessionIds       { get; }
+        public IEnumerable<Session_Id>?   SessionIds       { get; }
 
         /// <summary>
         /// An optional enumeration of operator identifications.
         /// </summary>
         [Optional]
-        public IEnumerable<Operator_Id>  OperatorIds      { get; }
+        public IEnumerable<Operator_Id>?  OperatorIds      { get; }
 
         /// <summary>
         /// Whether the CDR was successfuly forwarded to the EMP or not.
         /// </summary>
         [Optional]
-        public Boolean?                  CDRForwarded     { get; }
+        public Boolean?                   CDRForwarded     { get; }
 
         #endregion
 
@@ -100,24 +95,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public GetChargeDetailRecordsRequest(Provider_Id               ProviderId,
-                                             DateTime                  From,
-                                             DateTime                  To,
-                                             IEnumerable<Session_Id>   SessionIds          = null,
-                                             IEnumerable<Operator_Id>  OperatorIds         = null,
-                                             Boolean?                  CDRForwarded        = null,
+        public GetChargeDetailRecordsRequest(Provider_Id                ProviderId,
+                                             DateTime                   From,
+                                             DateTime                   To,
+                                             IEnumerable<Session_Id>?   SessionIds          = null,
+                                             IEnumerable<Operator_Id>?  OperatorIds         = null,
+                                             Boolean?                   CDRForwarded        = null,
 
-                                             UInt32?                   Page                = null,
-                                             UInt32?                   Size                = null,
-                                             IEnumerable<String>       SortOrder           = null,
-                                             JObject                   CustomData          = null,
+                                             Process_Id?                ProcessId           = null,
+                                             UInt32?                    Page                = null,
+                                             UInt32?                    Size                = null,
+                                             IEnumerable<String>?       SortOrder           = null,
+                                             JObject?                   CustomData          = null,
 
-                                             DateTime?                 Timestamp           = null,
-                                             CancellationToken?        CancellationToken   = null,
-                                             EventTracking_Id          EventTrackingId     = null,
-                                             TimeSpan?                 RequestTimeout      = null)
+                                             DateTime?                  Timestamp           = null,
+                                             CancellationToken?         CancellationToken   = null,
+                                             EventTracking_Id?          EventTrackingId     = null,
+                                             TimeSpan?                  RequestTimeout      = null)
 
-            : base(Page,
+            : base(ProcessId,
+                   Page,
                    Size,
                    SortOrder,
                    CustomData,
@@ -157,7 +154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a GetChargeDetailRecords request.
@@ -167,31 +164,43 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Size">An optional size of a request page.</param>
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
-        public static GetChargeDetailRecordsRequest Parse(JObject                                                     JSON,
-                                                          UInt32?                                                     Page                                        = null,
-                                                          UInt32?                                                     Size                                        = null,
-                                                          IEnumerable<String>                                         SortOrder                                   = null,
-                                                          CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null)
+        public static GetChargeDetailRecordsRequest Parse(JObject                                                      JSON,
+                                                          Process_Id?                                                  ProcessId                                   = null,
+                                                          UInt32?                                                      Page                                        = null,
+                                                          UInt32?                                                      Size                                        = null,
+                                                          IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                                          DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
+                                                          EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
+                                                          CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         out GetChargeDetailRecordsRequest  getChargeDetailRecordsRequest,
-                         out String                         ErrorResponse,
+                         out GetChargeDetailRecordsRequest?  getChargeDetailRecordsRequest,
+                         out String?                         errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout,
                          CustomGetChargeDetailRecordsRequestParser))
             {
-                return getChargeDetailRecordsRequest;
+                return getChargeDetailRecordsRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a GetChargeDetailRecords request.
@@ -201,31 +210,43 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Size">An optional size of a request page.</param>
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
-        public static GetChargeDetailRecordsRequest Parse(String                                                      Text,
-                                                          UInt32?                                                     Page                                        = null,
-                                                          UInt32?                                                     Size                                        = null,
-                                                          IEnumerable<String>                                         SortOrder                                   = null,
-                                                          CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null)
+        public static GetChargeDetailRecordsRequest Parse(String                                                       Text,
+                                                          Process_Id?                                                  ProcessId                                   = null,
+                                                          UInt32?                                                      Page                                        = null,
+                                                          UInt32?                                                      Size                                        = null,
+                                                          IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                                          DateTime?                                                    Timestamp                                   = null,
+                                                          CancellationToken?                                           CancellationToken                           = null,
+                                                          EventTracking_Id?                                            EventTrackingId                             = null,
+                                                          TimeSpan?                                                    RequestTimeout                              = null,
+
+                                                          CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         out GetChargeDetailRecordsRequest  getChargeDetailRecordsRequest,
-                         out String                         ErrorResponse,
+                         out GetChargeDetailRecordsRequest?  getChargeDetailRecordsRequest,
+                         out String?                         errorResponse,
+                         ProcessId,
                          Page,
                          Size,
                          SortOrder,
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout,
                          CustomGetChargeDetailRecordsRequestParser))
             {
-                return getChargeDetailRecordsRequest;
+                return getChargeDetailRecordsRequest!;
             }
 
-            throw new ArgumentException("The given text representation of a GetChargeDetailRecords request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a GetChargeDetailRecords request is invalid: " + errorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out GetChargeDetailRecordsRequest, out ErrorResponse, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) TryParse(JSON, out GetChargeDetailRecordsRequest, out ErrorResponse, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a GetChargeDetailRecords request.
@@ -237,13 +258,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Size">An optional size of a request page.</param>
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
-        public static Boolean TryParse(JObject                                                     JSON,
-                                       out GetChargeDetailRecordsRequest                           GetChargeDetailRecordsRequest,
-                                       out String                                                  ErrorResponse,
-                                       UInt32?                                                     Page                                        = null,
-                                       UInt32?                                                     Size                                        = null,
-                                       IEnumerable<String>                                         SortOrder                                   = null,
-                                       CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null)
+        public static Boolean TryParse(JObject                                                      JSON,
+                                       out GetChargeDetailRecordsRequest?                           GetChargeDetailRecordsRequest,
+                                       out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
+                                       UInt32?                                                      Page                                        = null,
+                                       UInt32?                                                      Size                                        = null,
+                                       IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                       DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
+                                       EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
+                                       CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
             try
@@ -275,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatory("From",
                                          "from timestamp",
                                          out DateTime From,
-                                         out          ErrorResponse))
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -287,7 +315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatory("To",
                                          "to timestamp",
                                          out DateTime To,
-                                         out          ErrorResponse))
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -302,7 +330,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out HashSet<Session_Id> SessionIds,
                                               out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -316,7 +344,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               out HashSet<Operator_Id> OperatorIds,
                                               out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -329,7 +357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out Boolean? CDRForwarded,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -337,7 +365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData      [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -348,12 +376,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                   SessionIds,
                                                                                   OperatorIds,
                                                                                   CDRForwarded,
+
+                                                                                  ProcessId,
                                                                                   Page,
                                                                                   Size,
                                                                                   SortOrder,
-                                                                                  CustomData);
 
-                if (CustomGetChargeDetailRecordsRequestParser != null)
+                                                                                  customData,
+
+                                                                                  Timestamp,
+                                                                                  CancellationToken,
+                                                                                  EventTrackingId,
+                                                                                  RequestTimeout);
+
+                if (CustomGetChargeDetailRecordsRequestParser is not null)
                     GetChargeDetailRecordsRequest = CustomGetChargeDetailRecordsRequestParser(JSON,
                                                                                               GetChargeDetailRecordsRequest);
 
@@ -371,7 +407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out GetChargeDetailRecordsRequest, out ErrorResponse, CustomGetChargeDetailRecordsRequestParser = null)
+        #region (static) TryParse(Text, out GetChargeDetailRecordsRequest, out ErrorResponse, ..., CustomGetChargeDetailRecordsRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a GetChargeDetailRecords request.
@@ -383,13 +419,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Size">An optional size of a request page.</param>
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
-        public static Boolean TryParse(String                                                      Text,
-                                       out GetChargeDetailRecordsRequest                           GetChargeDetailRecordsRequest,
-                                       out String                                                  ErrorResponse,
-                                       UInt32?                                                     Page                                        = null,
-                                       UInt32?                                                     Size                                        = null,
-                                       IEnumerable<String>                                         SortOrder                                   = null,
-                                       CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestParser   = null)
+        public static Boolean TryParse(String                                                       Text,
+                                       out GetChargeDetailRecordsRequest?                           GetChargeDetailRecordsRequest,
+                                       out String?                                                  ErrorResponse,
+                                       Process_Id?                                                  ProcessId                                   = null,
+                                       UInt32?                                                      Page                                        = null,
+                                       UInt32?                                                      Size                                        = null,
+                                       IEnumerable<String>?                                         SortOrder                                   = null,
+
+                                       DateTime?                                                    Timestamp                                   = null,
+                                       CancellationToken?                                           CancellationToken                           = null,
+                                       EventTracking_Id?                                            EventTrackingId                             = null,
+                                       TimeSpan?                                                    RequestTimeout                              = null,
+
+                                       CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
         {
 
             try
@@ -398,9 +441,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out GetChargeDetailRecordsRequest,
                                 out ErrorResponse,
+                                ProcessId,
                                 Page,
                                 Size,
                                 SortOrder,
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout,
                                 CustomGetChargeDetailRecordsRequestParser);
 
             }
@@ -421,7 +469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON-representation of this object.
         /// </summary>
         /// <param name="CustomGetChargeDetailRecordsRequestSerializer">A delegate to customize the serialization of GetChargeDetailRecordsRequest responses.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsRequest>  CustomGetChargeDetailRecordsRequestSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestSerializer   = null)
         {
 
             var JSON = JSONObject.Create(
@@ -430,21 +478,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("From",               From.      ToIso8601()),
                            new JProperty("To",                 To.        ToIso8601()),
 
-                           SessionIds.SafeAny()
-                               ? new JProperty("SessionID",    new JArray(SessionIds.Select(sessionId => sessionId.ToString())))
+                           SessionIds  is not null && SessionIds .Any()
+                               ? new JProperty("SessionID",    new JArray(SessionIds. Select(sessionId  => sessionId. ToString())))
                                : null,
 
-                           OperatorIds.SafeAny()
-                               ? new JProperty("OperatorID",   new JArray(SessionIds.Select(sessionId => sessionId.ToString())))
+                           OperatorIds is not null && OperatorIds.Any()
+                               ? new JProperty("OperatorID",   new JArray(OperatorIds.Select(operatorId => operatorId.ToString())))
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",   CustomData)
                                : null
 
                        );
 
-            return CustomGetChargeDetailRecordsRequestSerializer != null
+            return CustomGetChargeDetailRecordsRequestSerializer is not null
                        ? CustomGetChargeDetailRecordsRequestSerializer(this, JSON)
                        : JSON;
 
@@ -507,7 +555,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is GetChargeDetailRecordsRequest getChargeDetailRecordsRequest &&
                    Equals(getChargeDetailRecordsRequest);
@@ -521,16 +569,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="GetChargeDetailRecordsRequest">A pull EVSE status request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(GetChargeDetailRecordsRequest GetChargeDetailRecordsRequest)
+        public override Boolean Equals(GetChargeDetailRecordsRequest? GetChargeDetailRecordsRequest)
 
-            => !(GetChargeDetailRecordsRequest is null) &&
+            => GetChargeDetailRecordsRequest is not null &&
 
-                 ProviderId.      Equals(GetChargeDetailRecordsRequest.ProviderId) &&
-                 From.            Equals(GetChargeDetailRecordsRequest.From)       &&
-                 To.              Equals(GetChargeDetailRecordsRequest.To)         &&
+               ProviderId.      Equals(GetChargeDetailRecordsRequest.ProviderId) &&
+               From.            Equals(GetChargeDetailRecordsRequest.From)       &&
+               To.              Equals(GetChargeDetailRecordsRequest.To)         &&
 
-              ((!CDRForwarded.HasValue && !GetChargeDetailRecordsRequest.CDRForwarded.HasValue) ||
-                (CDRForwarded.HasValue &&  GetChargeDetailRecordsRequest.CDRForwarded.HasValue && CDRForwarded.Value.Equals(GetChargeDetailRecordsRequest.CDRForwarded.Value)));
+            ((!CDRForwarded.HasValue && !GetChargeDetailRecordsRequest.CDRForwarded.HasValue) ||
+              (CDRForwarded.HasValue &&  GetChargeDetailRecordsRequest.CDRForwarded.HasValue && CDRForwarded.Value.Equals(GetChargeDetailRecordsRequest.CDRForwarded.Value)));
 
         #endregion
 

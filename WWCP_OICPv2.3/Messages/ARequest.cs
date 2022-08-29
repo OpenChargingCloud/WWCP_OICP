@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -51,6 +49,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
+        /// The unique OICP process identification.
+        /// </summary>
+        public Process_Id?               ProcessId                  { get; }
+
+        /// <summary>
         /// The optional timestamp of the request.
         /// </summary>
         public DateTime                  Timestamp                  { get; }
@@ -79,7 +82,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?                  CustomData                 { get; }
+        public JObject?                  CustomData                 { get; set; }
 
         #endregion
 
@@ -88,20 +91,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new generic request message.
         /// </summary>
+        /// <param name="ProcessId">The optional unique OICP process identification.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public ARequest(JObject?            CustomData          = null,
+        public ARequest(Process_Id?         ProcessId           = null,
+                        JObject?            CustomData          = null,
                         DateTime?           Timestamp           = null,
                         CancellationToken?  CancellationToken   = null,
                         EventTracking_Id?   EventTrackingId     = null,
                         TimeSpan?           RequestTimeout      = null)
         {
 
+            this.ProcessId                = ProcessId;
             this.CustomData               = CustomData;
-            this.Timestamp                = Timestamp         ?? DateTime.UtcNow;
+            this.Timestamp                = Timestamp         ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             this.CancellationTokenSource  = CancellationToken is null
                                                 ? new CancellationTokenSource()
                                                 : null;

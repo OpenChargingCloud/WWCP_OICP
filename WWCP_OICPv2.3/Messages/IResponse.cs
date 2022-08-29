@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 #endregion
@@ -45,7 +43,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
-        JObject   CustomData           { get; }
+        JObject?  CustomData           { get; set; }
+
+
+        //JObject ToJSON();
 
     }
 

@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
@@ -68,10 +66,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(EMPClient               EMPClient,
-                          String                  LoggingPath,
-                          String                  Context         = DefaultContext,
-                          LogfileCreatorDelegate  LogfileCreator  = null)
+            public Logger(EMPClient                EMPClient,
+                          String                   LoggingPath,
+                          String                   Context         = DefaultContext,
+                          LogfileCreatorDelegate?  LogfileCreator  = null)
 
                 : this(EMPClient,
                        LoggingPath,
@@ -112,26 +110,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(EMPClient                   EMPClient,
-                          String                      LoggingPath,
-                          String                      Context,
+            public Logger(EMPClient                    EMPClient,
+                          String                       LoggingPath,
+                          String                       Context,
 
-                          HTTPRequestLoggerDelegate   LogHTTPRequest_toConsole,
-                          HTTPResponseLoggerDelegate  LogHTTPResponse_toConsole,
-                          HTTPRequestLoggerDelegate   LogHTTPRequest_toDisc,
-                          HTTPResponseLoggerDelegate  LogHTTPResponse_toDisc,
+                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,
+                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toDisc       = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toDisc      = null,
 
-                          HTTPRequestLoggerDelegate   LogHTTPRequest_toNetwork    = null,
-                          HTTPResponseLoggerDelegate  LogHTTPResponse_toNetwork   = null,
-                          HTTPRequestLoggerDelegate   LogHTTPRequest_toHTTPSSE    = null,
-                          HTTPResponseLoggerDelegate  LogHTTPResponse_toHTTPSSE   = null,
+                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toNetwork    = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toNetwork   = null,
+                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toHTTPSSE    = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toHTTPSSE   = null,
 
-                          HTTPResponseLoggerDelegate  LogHTTPError_toConsole      = null,
-                          HTTPResponseLoggerDelegate  LogHTTPError_toDisc         = null,
-                          HTTPResponseLoggerDelegate  LogHTTPError_toNetwork      = null,
-                          HTTPResponseLoggerDelegate  LogHTTPError_toHTTPSSE      = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPError_toConsole      = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPError_toDisc         = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPError_toNetwork      = null,
+                          HTTPResponseLoggerDelegate?  LogHTTPError_toHTTPSSE      = null,
 
-                          LogfileCreatorDelegate      LogfileCreator              = null)
+                          LogfileCreatorDelegate?      LogfileCreator              = null)
 
                 : base(EMPClient,
                        LoggingPath,
@@ -216,6 +214,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                               handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse += handler,
                               handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse -= handler,
                               "PullEVSEStatusByOperatorId", "pull", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                #endregion
+
+                #region PullPricingProductData/EVSEPricing
+
+                RegisterEvent("PullPricingProductDataHTTPRequest",
+                              handler => EMPClient.OnPullPricingProductDataHTTPRequest += handler,
+                              handler => EMPClient.OnPullPricingProductDataHTTPRequest -= handler,
+                              "PullPricingProductData", "PullPricing", "pull", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("PullPricingProductDataHTTPResponse",
+                              handler => EMPClient.OnPullPricingProductDataHTTPResponse += handler,
+                              handler => EMPClient.OnPullPricingProductDataHTTPResponse -= handler,
+                              "PullPricingProductData", "PullPricing", "pull", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("PullEVSEPricingHTTPRequest",
+                              handler => EMPClient.OnPullEVSEPricingHTTPRequest += handler,
+                              handler => EMPClient.OnPullEVSEPricingHTTPRequest -= handler,
+                              "PullEVSEPricing", "PullPricing", "pull", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("PullEVSEPricingHTTPResponse",
+                              handler => EMPClient.OnPullEVSEPricingHTTPResponse += handler,
+                              handler => EMPClient.OnPullEVSEPricingHTTPResponse -= handler,
+                              "PullEVSEPricing", "PullPricing", "pull", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 

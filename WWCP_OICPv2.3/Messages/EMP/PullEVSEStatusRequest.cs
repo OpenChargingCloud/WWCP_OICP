@@ -17,9 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Threading;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -72,6 +69,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SearchCenter">An optional geo coordinate of the search center.</param>
         /// <param name="DistanceKM">An optional search distance relative to the search center.</param>
         /// <param name="EVSEStatusFilter">An optional EVSE status as filter criteria.</param>
+        /// <param name="ProcessId">The optional unique OICP process identification.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -82,14 +80,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      GeoCoordinates?      SearchCenter        = null,
                                      Single?              DistanceKM          = null,
                                      EVSEStatusTypes?     EVSEStatusFilter    = null,
-                                     JObject              CustomData          = null,
+                                     Process_Id?          ProcessId           = null,
+                                     JObject?             CustomData          = null,
 
                                      DateTime?            Timestamp           = null,
                                      CancellationToken?   CancellationToken   = null,
-                                     EventTracking_Id     EventTrackingId     = null,
+                                     EventTracking_Id?    EventTrackingId     = null,
                                      TimeSpan?            RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,
@@ -134,57 +134,81 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (JSON, CustomPullEVSEStatusRequestParser = null)
+        #region (static) Parse   (JSON, ..., CustomPullEVSEStatusRequestParser = null)
 
         /// <summary>
         /// Parse the given JSON representation of a PullEVSEStatus request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus JSON objects.</param>
-        public static PullEVSEStatusRequest Parse(JObject                                             JSON,
-                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null)
+        public static PullEVSEStatusRequest Parse(JObject                                              JSON,
+                                                  Process_Id?                                          ProcessId                           = null,
+
+                                                  DateTime?                                            Timestamp                           = null,
+                                                  CancellationToken?                                   CancellationToken                   = null,
+                                                  EventTracking_Id?                                    EventTrackingId                     = null,
+                                                  TimeSpan?                                            RequestTimeout                      = null,
+
+                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null)
         {
 
             if (TryParse(JSON,
-                         out PullEVSEStatusRequest  pullEVSEStatusResponse,
-                         out String                 ErrorResponse,
+                         out PullEVSEStatusRequest?  pullEVSEStatusResponse,
+                         out String?                 errorResponse,
+                         ProcessId,
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout,
                          CustomPullEVSEStatusRequestParser))
             {
-                return pullEVSEStatusResponse;
+                return pullEVSEStatusResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEStatus request is invalid: " + ErrorResponse, nameof(JSON));
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatus request is invalid: " + errorResponse, nameof(JSON));
 
         }
 
         #endregion
 
-        #region (static) Parse   (Text, CustomPullEVSEStatusRequestParser = null)
+        #region (static) Parse   (Text, ..., CustomPullEVSEStatusRequestParser = null)
 
         /// <summary>
         /// Parse the given text representation of a PullEVSEStatus request.
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus request JSON objects.</param>
-        public static PullEVSEStatusRequest Parse(String                                              Text,
-                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null)
+        public static PullEVSEStatusRequest Parse(String                                               Text,
+                                                  Process_Id?                                          ProcessId                           = null,
+
+                                                  DateTime?                                            Timestamp                           = null,
+                                                  CancellationToken?                                   CancellationToken                   = null,
+                                                  EventTracking_Id?                                    EventTrackingId                     = null,
+                                                  TimeSpan?                                            RequestTimeout                      = null,
+
+                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null)
         {
 
             if (TryParse(Text,
-                         out PullEVSEStatusRequest  pullEVSEStatusResponse,
-                         out String                 ErrorResponse,
+                         out PullEVSEStatusRequest?  pullEVSEStatusResponse,
+                         out String?                 errorResponse,
+                         ProcessId,
+                         Timestamp,
+                         CancellationToken,
+                         EventTrackingId,
+                         RequestTimeout,
                          CustomPullEVSEStatusRequestParser))
             {
-                return pullEVSEStatusResponse;
+                return pullEVSEStatusResponse!;
             }
 
-            throw new ArgumentException("The given text representation of a PullEVSEStatus request is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given text representation of a PullEVSEStatus request is invalid: " + errorResponse, nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(JSON, out PullEVSEStatusRequest, out ErrorResponse, CustomPullEVSEStatusRequestParser = null)
+        #region (static) TryParse(JSON, out PullEVSEStatusRequest, out ErrorResponse, ..., CustomPullEVSEStatusRequestParser = null)
 
         /// <summary>
         /// Try to parse the given JSON representation of a PullEVSEStatus request.
@@ -193,10 +217,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEStatusRequest">The parsed PullEVSEStatus request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus request JSON objects.</param>
-        public static Boolean TryParse(JObject                                             JSON,
-                                       out PullEVSEStatusRequest                           PullEVSEStatusRequest,
-                                       out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null)
+        public static Boolean TryParse(JObject                                              JSON,
+                                       out PullEVSEStatusRequest?                           PullEVSEStatusRequest,
+                                       out String?                                          ErrorResponse,
+                                       Process_Id?                                          ProcessId                           = null,
+
+                                       DateTime?                                            Timestamp                           = null,
+                                       CancellationToken?                                   CancellationToken                   = null,
+                                       EventTracking_Id?                                    EventTrackingId                     = null,
+                                       TimeSpan?                                            RequestTimeout                      = null,
+
+                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null)
         {
 
             try
@@ -225,8 +256,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse SearchCenter          [optional]
 
-                GeoCoordinates SearchCenter  = default;
-                Single?        DistanceKM    = default;
+                GeoCoordinates? SearchCenter   = default;
+                Single?         DistanceKM     = default;
 
                 if (JSON.ParseOptional("SearchCenter",
                                        "SearchCenter",
@@ -240,7 +271,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                        out SearchCenter,
                                                        out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -253,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    out DistanceKM,
                                                    out ErrorResponse))
                     {
-                        if (ErrorResponse != null)
+                        if (ErrorResponse is not null)
                             return false;
                     }
 
@@ -269,7 +300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out EVSEStatusTypes EVSEStatusFilter,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -277,7 +308,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData            [optional]
 
-                var CustomData = JSON["CustomData"] as JObject;
+                var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
@@ -286,11 +317,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   SearchCenter,
                                                                   DistanceKM,
                                                                   EVSEStatusFilter,
-                                                                  CustomData);
+                                                                  ProcessId,
 
-                if (CustomPullEVSEStatusRequestParser != null)
+                                                                  customData,
+
+                                                                  Timestamp,
+                                                                  CancellationToken,
+                                                                  EventTrackingId,
+                                                                  RequestTimeout);
+
+                if (CustomPullEVSEStatusRequestParser is not null)
                     PullEVSEStatusRequest = CustomPullEVSEStatusRequestParser(JSON,
-                                                                          PullEVSEStatusRequest);
+                                                                              PullEVSEStatusRequest);
 
                 return true;
 
@@ -306,7 +344,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out PullEVSEStatusRequest, out ErrorResponse, CustomPullEVSEStatusRequestParser = null)
+        #region (static) TryParse(Text, out PullEVSEStatusRequest, out ErrorResponse, ..., CustomPullEVSEStatusRequestParser = null)
 
         /// <summary>
         /// Try to parse the given text representation of a PullEVSEStatus request.
@@ -315,10 +353,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEStatusRequest">The parsed PullEVSEStatus request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEStatusRequestParser">A delegate to parse custom PullEVSEStatus request JSON objects.</param>
-        public static Boolean TryParse(String                                              Text,
-                                       out PullEVSEStatusRequest                           PullEVSEStatusRequest,
-                                       out String                                          ErrorResponse,
-                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestParser   = null)
+        public static Boolean TryParse(String                                               Text,
+                                       out PullEVSEStatusRequest?                           PullEVSEStatusRequest,
+                                       out String?                                          ErrorResponse,
+                                       Process_Id?                                          ProcessId                           = null,
+
+                                       DateTime?                                            Timestamp                           = null,
+                                       CancellationToken?                                   CancellationToken                   = null,
+                                       EventTracking_Id?                                    EventTrackingId                     = null,
+                                       TimeSpan?                                            RequestTimeout                      = null,
+
+                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null)
         {
 
             try
@@ -327,6 +372,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return TryParse(JObject.Parse(Text),
                                 out PullEVSEStatusRequest,
                                 out ErrorResponse,
+                                ProcessId,
+                                Timestamp,
+                                CancellationToken,
+                                EventTrackingId,
+                                RequestTimeout,
                                 CustomPullEVSEStatusRequestParser);
 
             }
@@ -348,8 +398,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomPullEVSEStatusRequestSerializer">A delegate to customize the serialization of PullEVSEStatusRequest responses.</param>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusRequest>  CustomPullEVSEStatusRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<GeoCoordinates>         CustomGeoCoordinatesSerializer          = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestSerializer   = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>?         CustomGeoCoordinatesSerializer          = null)
         {
 
             var JSON = JSONObject.Create(
@@ -367,13 +417,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("EvseStatus",              EVSEStatusFilter.Value.AsString())
                                : null,
 
-                           CustomData != null
+                           CustomData is not null
                                ? new JProperty("CustomData",              CustomData)
                                : null
 
                        );
 
-            return CustomPullEVSEStatusRequestSerializer != null
+            return CustomPullEVSEStatusRequestSerializer is not null
                        ? CustomPullEVSEStatusRequestSerializer(this, JSON)
                        : JSON;
 
@@ -436,7 +486,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is PullEVSEStatusRequest pullEVSEStatusRequest &&
                    Equals(pullEVSEStatusRequest);
@@ -450,9 +500,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PullEVSEStatusRequest">A pull EVSE status request to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(PullEVSEStatusRequest PullEVSEStatusRequest)
+        public override Boolean Equals(PullEVSEStatusRequest? PullEVSEStatusRequest)
 
-            => !(PullEVSEStatusRequest is null) &&
+            => PullEVSEStatusRequest is not null &&
 
                  ProviderId.      Equals(PullEVSEStatusRequest.ProviderId) &&
 
@@ -501,11 +551,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    ProviderId.ToString(),
                    SearchCenter.HasValue && DistanceKM.HasValue
                        ? SearchCenter.ToString() + " / " + DistanceKM + " km"
-                       : null,
+                       : "",
                    EVSEStatusFilter.HasValue
                        ? EVSEStatusFilter.Value.ToString()
-                       : null
-               }.AggregateWith(", ");
+                       : ""
+               }.Where(text => text.IsNotNullOrEmpty()).
+                 AggregateWith(", ");
 
         #endregion
 

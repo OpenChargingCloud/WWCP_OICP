@@ -15,198 +15,250 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-using System.Threading.Tasks;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
-    #region OnPullEVSEDataRequest/-Response
+    #region OnPullEVSEData                             (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEData request will be send.
     /// </summary>
-    public delegate Task OnPullEVSEDataRequestDelegate   (DateTime                           Timestamp,
-                                                          IEMPClient                         Sender,
-                                                          String                             SenderDescription,
-                                                          PullEVSEDataRequest                Request);
+    public delegate Task OnPullEVSEDataRequestDelegate   (DateTime                            Timestamp,
+                                                          IEMPClient                          Sender,
+                                                          PullEVSEDataRequest                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEData request had been received.
     /// </summary>
-    public delegate Task OnPullEVSEDataResponseDelegate  (DateTime                           Timestamp,
-                                                          IEMPClient                         Sender,
-                                                          String                             SenderDescription,
-                                                          PullEVSEDataRequest                Request,
-                                                          OICPResult<PullEVSEDataResponse>   Response);
+    public delegate Task OnPullEVSEDataResponseDelegate  (DateTime                            Timestamp,
+                                                          IEMPClient                          Sender,
+                                                          PullEVSEDataRequest                 Request,
+                                                          OICPResult<PullEVSEDataResponse>    Response,
+                                                          TimeSpan                            Runtime);
 
     #endregion
 
-    #region OnPullEVSEStatusRequest/-Response
+    #region OnPullEVSEStatus                           (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatus request will be send.
     /// </summary>
-    public delegate Task OnPullEVSEStatusRequestDelegate (DateTime                             Timestamp,
-                                                          IEMPClient                           Sender,
-                                                          String                               SenderDescription,
-                                                          PullEVSEStatusRequest                Request);
+    public delegate Task OnPullEVSEStatusRequestDelegate (DateTime                              Timestamp,
+                                                          IEMPClient                            Sender,
+                                                          PullEVSEStatusRequest                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEStatus request had been received.
     /// </summary>
-    public delegate Task OnPullEVSEStatusResponseDelegate(DateTime                             Timestamp,
-                                                          EMPClient                            Sender,
-                                                          String                               SenderDescription,
-                                                          PullEVSEStatusRequest                Request,
-                                                          OICPResult<PullEVSEStatusResponse>   Response);
+    public delegate Task OnPullEVSEStatusResponseDelegate(DateTime                              Timestamp,
+                                                          IEMPClient                            Sender,
+                                                          PullEVSEStatusRequest                 Request,
+                                                          OICPResult<PullEVSEStatusResponse>    Response,
+                                                          TimeSpan                              Runtime);
 
     #endregion
 
-    #region OnPullEVSEStatusByIdRequest/-Response
+    #region OnPullEVSEStatusById                       (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatusById request will be send.
     /// </summary>
-    public delegate Task OnPullEVSEStatusByIdRequestDelegate (DateTime                                 Timestamp,
-                                                              IEMPClient                               Sender,
-                                                              String                                   SenderDescription,
-                                                              PullEVSEStatusByIdRequest                Request);
+    public delegate Task OnPullEVSEStatusByIdRequestDelegate (DateTime                                  Timestamp,
+                                                              IEMPClient                                Sender,
+                                                              PullEVSEStatusByIdRequest                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEStatusById request had been received.
     /// </summary>
-    public delegate Task OnPullEVSEStatusByIdResponseDelegate(DateTime                                 Timestamp,
-                                                              EMPClient                                Sender,
-                                                              String                                   SenderDescription,
-                                                              PullEVSEStatusByIdRequest                Request,
-                                                              OICPResult<PullEVSEStatusByIdResponse>   Response);
+    public delegate Task OnPullEVSEStatusByIdResponseDelegate(DateTime                                  Timestamp,
+                                                              IEMPClient                                Sender,
+                                                              PullEVSEStatusByIdRequest                 Request,
+                                                              OICPResult<PullEVSEStatusByIdResponse>    Response,
+                                                              TimeSpan                                  Runtime);
 
     #endregion
 
-    #region OnPullEVSEStatusByOperatorIdRequest/-Response
+    #region OnPullEVSEStatusByOperatorId               (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a PullEVSEStatusByOperatorId request will be send.
     /// </summary>
-    public delegate Task OnPullEVSEStatusByOperatorIdRequestDelegate (DateTime                                         Timestamp,
-                                                                      IEMPClient                                       Sender,
-                                                                      String                                           SenderDescription,
-                                                                      PullEVSEStatusByOperatorIdRequest                Request);
+    public delegate Task OnPullEVSEStatusByOperatorIdRequestDelegate (DateTime                                          Timestamp,
+                                                                      IEMPClient                                        Sender,
+                                                                      PullEVSEStatusByOperatorIdRequest                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullEVSEStatusByOperatorId request had been received.
     /// </summary>
-    public delegate Task OnPullEVSEStatusByOperatorIdResponseDelegate(DateTime                                         Timestamp,
-                                                                      EMPClient                                        Sender,
-                                                                      String                                           SenderDescription,
-                                                                      PullEVSEStatusByOperatorIdRequest                Request,
-                                                                      OICPResult<PullEVSEStatusByOperatorIdResponse>   Response);
+    public delegate Task OnPullEVSEStatusByOperatorIdResponseDelegate(DateTime                                          Timestamp,
+                                                                      IEMPClient                                        Sender,
+                                                                      PullEVSEStatusByOperatorIdRequest                 Request,
+                                                                      OICPResult<PullEVSEStatusByOperatorIdResponse>    Response,
+                                                                      TimeSpan                                          Runtime);
 
     #endregion
 
 
-    #region OnAuthorizeRemoteReservationStart/-Stop
+    #region OnPullPricingProductData                   (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullPricingProductData request will be send.
+    /// </summary>
+    public delegate Task OnPullPricingProductDataRequestDelegate (DateTime                                      Timestamp,
+                                                                  IEMPClient                                    Sender,
+                                                                  PullPricingProductDataRequest                 Request);
+
+    /// <summary>
+    /// A delegate called whenever a response for a PullPricingProductData request had been received.
+    /// </summary>
+    public delegate Task OnPullPricingProductDataResponseDelegate(DateTime                                      Timestamp,
+                                                                  IEMPClient                                    Sender,
+                                                                  PullPricingProductDataRequest                 Request,
+                                                                  OICPResult<PullPricingProductDataResponse>    Response,
+                                                                  TimeSpan                                      Runtime);
+
+    #endregion
+
+    #region OnPullEVSEPricing                          (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PullEVSEPricing request will be send.
+    /// </summary>
+    public delegate Task OnPullEVSEPricingRequestDelegate (DateTime                               Timestamp,
+                                                           IEMPClient                             Sender,
+                                                           PullEVSEPricingRequest                 Request);
+
+    /// <summary>
+    /// A delegate called whenever a response for a PullEVSEPricing request had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEPricingResponseDelegate(DateTime                               Timestamp,
+                                                           IEMPClient                             Sender,
+                                                           PullEVSEPricingRequest                 Request,
+                                                           OICPResult<PullEVSEPricingResponse>    Response,
+                                                           TimeSpan                               Runtime);
+
+    #endregion
+
+
+    #region OnPushAuthenticationDataAPI                (Request|Response)Delegate
+
+    /// <summary>
+    /// A delegate called whenever a PushAuthenticationData request request will be send.
+    /// </summary>
+    public delegate Task
+
+        OnPushAuthenticationDataRequestDelegate (DateTime                                                      Timestamp,
+                                                 IEMPClient                                                    Sender,
+                                                 PushAuthenticationDataRequest                                 Request);
+
+    /// <summary>
+    /// A delegate called whenever a response for a PushAuthenticationData request had been received.
+    /// </summary>
+    public delegate Task
+
+        OnPushAuthenticationDataResponseDelegate(DateTime                                                      Timestamp,
+                                                 IEMPClient                                                    Sender,
+                                                 PushAuthenticationDataRequest                                 Request,
+                                                 OICPResult<Acknowledgement<PushAuthenticationDataRequest>>    Response,
+                                                 TimeSpan                                                      Runtime);
+
+    #endregion
+
+
+    #region OnAuthorizeRemoteReservationStart/-Stop    (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever an AuthorizeRemoteReservationStart request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteReservationStartRequestDelegate (DateTime                                                              Timestamp,
-                                                                           IEMPClient                                                            Sender,
-                                                                           String                                                                SenderDescription,
-                                                                           AuthorizeRemoteReservationStartRequest                                Request);
+    public delegate Task OnAuthorizeRemoteReservationStartRequestDelegate (DateTime                                                               Timestamp,
+                                                                           IEMPClient                                                             Sender,
+                                                                           AuthorizeRemoteReservationStartRequest                                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteReservationStart request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                              Timestamp,
-                                                                           IEMPClient                                                            Sender,
-                                                                           String                                                                SenderDescription,
-                                                                           AuthorizeRemoteReservationStartRequest                                Request,
-                                                                           OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>   Response);
+    public delegate Task OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                               Timestamp,
+                                                                           IEMPClient                                                             Sender,
+                                                                           AuthorizeRemoteReservationStartRequest                                 Request,
+                                                                           OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>    Response,
+                                                                           TimeSpan                                                               Runtime);
+
 
 
     /// <summary>
     /// A delegate called whenever an AuthorizeRemoteReservationStop request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteReservationStopRequestDelegate  (DateTime                                                             Timestamp,
-                                                                           IEMPClient                                                           Sender,
-                                                                           String                                                               SenderDescription,
-                                                                           AuthorizeRemoteReservationStopRequest                                Request);
+    public delegate Task OnAuthorizeRemoteReservationStopRequestDelegate  (DateTime                                                               Timestamp,
+                                                                           IEMPClient                                                             Sender,
+                                                                           AuthorizeRemoteReservationStopRequest                                  Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteReservationStop request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteReservationStopResponseDelegate (DateTime                                                             Timestamp,
-                                                                           IEMPClient                                                           Sender,
-                                                                           String                                                               SenderDescription,
-                                                                           AuthorizeRemoteReservationStopRequest                                Request,
-                                                                           OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>   Response);
+    public delegate Task OnAuthorizeRemoteReservationStopResponseDelegate (DateTime                                                               Timestamp,
+                                                                           IEMPClient                                                             Sender,
+                                                                           AuthorizeRemoteReservationStopRequest                                  Request,
+                                                                           OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>     Response,
+                                                                           TimeSpan                                                               Runtime);
 
     #endregion
 
-    #region OnAuthorizeRemoteStart/-Stop
+    #region OnAuthorizeRemoteStart/-Stop               (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever an AuthorizeRemoteStart request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStartRequestDelegate (DateTime                                                   Timestamp,
-                                                                IEMPClient                                                 Sender,
-                                                                String                                                     SenderDescription,
-                                                                AuthorizeRemoteStartRequest                                Request);
+    public delegate Task OnAuthorizeRemoteStartRequestDelegate (DateTime                                                    Timestamp,
+                                                                IEMPClient                                                  Sender,
+                                                                AuthorizeRemoteStartRequest                                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteStart request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStartResponseDelegate(DateTime                                                   Timestamp,
-                                                                IEMPClient                                                 Sender,
-                                                                String                                                     SenderDescription,
-                                                                AuthorizeRemoteStartRequest                                Request,
-                                                                OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>   Response);
+    public delegate Task OnAuthorizeRemoteStartResponseDelegate(DateTime                                                    Timestamp,
+                                                                IEMPClient                                                  Sender,
+                                                                AuthorizeRemoteStartRequest                                 Request,
+                                                                OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>    Response,
+                                                                TimeSpan                                                    Runtime);
+
 
 
     /// <summary>
     /// A delegate called whenever an AuthorizeRemoteStop request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStopRequestDelegate  (DateTime                                                  Timestamp,
-                                                                IEMPClient                                                Sender,
-                                                                String                                                    SenderDescription,
-                                                                AuthorizeRemoteStopRequest                                Request);
+    public delegate Task OnAuthorizeRemoteStopRequestDelegate  (DateTime                                                    Timestamp,
+                                                                IEMPClient                                                  Sender,
+                                                                AuthorizeRemoteStopRequest                                  Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeRemoteStop request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeRemoteStopResponseDelegate (DateTime                                                  Timestamp,
-                                                                IEMPClient                                                Sender,
-                                                                String                                                    SenderDescription,
-                                                                AuthorizeRemoteStopRequest                                Request,
-                                                                OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>   Response);
+    public delegate Task OnAuthorizeRemoteStopResponseDelegate (DateTime                                                    Timestamp,
+                                                                IEMPClient                                                  Sender,
+                                                                AuthorizeRemoteStopRequest                                  Request,
+                                                                OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>     Response,
+                                                                TimeSpan                                                    Runtime);
 
     #endregion
 
 
-    #region OnGetChargeDetailRecords
+    #region OnGetChargeDetailRecords                   (Request|Response)Delegate
 
     /// <summary>
     /// A delegate called whenever a GetChargeDetailRecords request will be send.
     /// </summary>
-    public delegate Task OnGetChargeDetailRecordsRequestDelegate (DateTime                                     Timestamp,
-                                                                  IEMPClient                                   Sender,
-                                                                  String                                       SenderDescription,
-                                                                  GetChargeDetailRecordsRequest                Request);
+    public delegate Task OnGetChargeDetailRecordsRequestDelegate (DateTime                                      Timestamp,
+                                                                  IEMPClient                                    Sender,
+                                                                  GetChargeDetailRecordsRequest                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a GetChargeDetailRecords request had been received.
     /// </summary>
-    public delegate Task OnGetChargeDetailRecordsResponseDelegate(DateTime                                     Timestamp,
-                                                                  IEMPClient                                   Sender,
-                                                                  String                                       SenderDescription,
-                                                                  GetChargeDetailRecordsRequest                Request,
-                                                                  OICPResult<GetChargeDetailRecordsResponse>   Response);
+    public delegate Task OnGetChargeDetailRecordsResponseDelegate(DateTime                                      Timestamp,
+                                                                  IEMPClient                                    Sender,
+                                                                  GetChargeDetailRecordsRequest                 Request,
+                                                                  OICPResult<GetChargeDetailRecordsResponse>    Response,
+                                                                  TimeSpan                                      Runtime);
 
     #endregion
 

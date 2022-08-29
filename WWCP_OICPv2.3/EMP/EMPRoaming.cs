@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2020 GraphDefined GmbH
+ * Copyright (c) 2014-2022 GraphDefined GmbH
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,12 @@
 
 #region Usings
 
+using System.Net.Security;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
+
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using System;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 #endregion
 
@@ -30,8 +30,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// The EMP roaming object combines the EMP client and EMP server
-    /// and adds additional logging for both.
+    /// The EMP roaming object combines the EMP client and EMP server.
     /// </summary>
     public class EMPRoaming : IEMPClient
     {
@@ -86,6 +85,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         X509Certificate                      IHTTPClient.ClientCert
             => EMPClient.ClientCert;
+
+        /// <summary>
+        /// The TLS protocol to use.
+        /// </summary>
+        SslProtocols                         IHTTPClient.TLSProtocol
+            => EMPClient.TLSProtocol;
+
+        /// <summary>
+        /// Prefer IPv4 instead of IPv6.
+        /// </summary>
+        Boolean                              IHTTPClient.PreferIPv4
+            => EMPClient.PreferIPv4;
 
         /// <summary>
         /// The HTTP user agent identification.
@@ -164,16 +175,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region Events
-
-        // EMPClient methods
+        #region EMPClient events
 
         #region OnPullEVSEDataRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a 'pull EVSE data' request will be send.
+        /// An event fired whenever a PullEVSEData request will be send.
         /// </summary>
-        public event OnPullEVSEDataRequestDelegate OnPullEVSEDataRequest
+        public event OnPullEVSEDataRequestDelegate   OnPullEVSEDataRequest
         {
 
             add
@@ -189,9 +198,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// An event fired whenever a 'pull EVSE data' HTTP request will be send.
+        /// An event fired whenever a PullEVSEData HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnPullEVSEDataHTTPRequest
+        public event ClientRequestLogHandler         OnPullEVSEDataHTTPRequest
         {
 
             add
@@ -207,9 +216,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// An event fired whenever a response to a 'pull EVSE data' HTTP request had been received.
+        /// An event fired whenever a response to a PullEVSEData HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnPullEVSEDataHTTPResponse
+        public event ClientResponseLogHandler        OnPullEVSEDataHTTPResponse
         {
 
             add
@@ -225,9 +234,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// An event fired whenever a response to a 'pull EVSE data' request had been received.
+        /// An event fired whenever a response to a PullEVSEData request had been received.
         /// </summary>
-        public event OnPullEVSEDataResponseDelegate OnPullEVSEDataResponse
+        public event OnPullEVSEDataResponseDelegate  OnPullEVSEDataResponse
         {
 
             add
@@ -247,9 +256,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region OnPullEVSEStatusRequest/-Response
 
         /// <summary>
-        /// An event fired whenever a 'pull EVSE status' request will be send.
+        /// An event fired whenever a PullEVSEStatus request will be send.
         /// </summary>
-        public event OnPullEVSEStatusRequestDelegate OnPullEVSEStatusRequest
+        public event OnPullEVSEStatusRequestDelegate   OnPullEVSEStatusRequest
         {
 
             add
@@ -265,9 +274,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// An event fired whenever a 'pull EVSE status' HTTP request will be send.
+        /// An event fired whenever a PullEVSEStatus HTTP request will be send.
         /// </summary>
-        public event ClientRequestLogHandler OnPullEVSEStatusHTTPRequest
+        public event ClientRequestLogHandler           OnPullEVSEStatusHTTPRequest
         {
 
             add
@@ -283,9 +292,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// An event fired whenever a response to a 'pull EVSE status' HTTP request had been received.
+        /// An event fired whenever a response to a PullEVSEStatus HTTP request had been received.
         /// </summary>
-        public event ClientResponseLogHandler OnPullEVSEStatusHTTPResponse
+        public event ClientResponseLogHandler          OnPullEVSEStatusHTTPResponse
         {
 
             add
@@ -301,9 +310,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// An event fired whenever a response to a 'pull EVSE status' request had been received.
+        /// An event fired whenever a response to a PullEVSEStatus request had been received.
         /// </summary>
-        public event OnPullEVSEStatusResponseDelegate OnPullEVSEStatusResponse
+        public event OnPullEVSEStatusResponseDelegate  OnPullEVSEStatusResponse
         {
 
             add
@@ -322,567 +331,785 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region OnPullEVSEStatusByIdRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a 'pull EVSE status by id' request will be send.
-        ///// </summary>
-        //public event OnPullEVSEStatusByIdRequestDelegate OnPullEVSEStatusByIdRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatusById request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusByIdRequestDelegate   OnPullEVSEStatusByIdRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a 'pull EVSE status by id' HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnPullEVSEStatusByIdSOAPRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatusById HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler               OnPullEVSEStatusByIdHTTPRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdSOAPRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdHTTPRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdSOAPRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdHTTPRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'pull EVSE status by id' HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnPullEVSEStatusByIdOICPResult
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a PullEVSEStatusById HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler              OnPullEVSEStatusByIdHTTPResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdHTTPResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdHTTPResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdHTTPResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdHTTPResponse -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'pull EVSE status by id' request had been received.
-        ///// </summary>
-        //public event OnPullEVSEStatusByIdResponseDelegate OnPullEVSEStatusByIdResponse
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a PullEVSEStatusById request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusByIdResponseDelegate  OnPullEVSEStatusByIdResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnPullEVSEStatusByIdResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPullEVSEStatusByIdResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByIdResponse -= value;
+            }
 
-        //}
+        }
+
+        #endregion
+
+        #region OnPullEVSEStatusByOperatorIdRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatusByOperatorId request will be send.
+        /// </summary>
+        public event OnPullEVSEStatusByOperatorIdRequestDelegate   OnPullEVSEStatusByOperatorIdRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEStatusByOperatorId HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                       OnPullEVSEStatusByOperatorIdHTTPRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PullEVSEStatusByOperatorId HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                      OnPullEVSEStatusByOperatorIdHTTPResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PullEVSEStatusByOperatorId request had been received.
+        /// </summary>
+        public event OnPullEVSEStatusByOperatorIdResponseDelegate  OnPullEVSEStatusByOperatorIdResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEStatusByOperatorIdResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+
+        #region OnPullPricingProductDataRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullPricingProductData request will be send.
+        /// </summary>
+        public event OnPullPricingProductDataRequestDelegate   OnPullPricingProductDataRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullPricingProductDataRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullPricingProductDataRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a PullPricingProductData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                   OnPullPricingProductDataHTTPRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullPricingProductDataHTTPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullPricingProductDataHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PullPricingProductData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                  OnPullPricingProductDataHTTPResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullPricingProductDataHTTPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullPricingProductDataHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PullPricingProductData request had been received.
+        /// </summary>
+        public event OnPullPricingProductDataResponseDelegate  OnPullPricingProductDataResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullPricingProductDataResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullPricingProductDataResponse -= value;
+            }
+
+        }
+
+        #endregion
+
+        #region OnPullEVSEPricingRequest/-Response
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEPricing request will be send.
+        /// </summary>
+        public event OnPullEVSEPricingRequestDelegate   OnPullEVSEPricingRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEPricingRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEPricingRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a PullEVSEPricing HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler            OnPullEVSEPricingHTTPRequest
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEPricingHTTPRequest += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEPricingHTTPRequest -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PullEVSEPricing HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler           OnPullEVSEPricingHTTPResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEPricingHTTPResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEPricingHTTPResponse -= value;
+            }
+
+        }
+
+        /// <summary>
+        /// An event fired whenever a response to a PullEVSEPricing request had been received.
+        /// </summary>
+        public event OnPullEVSEPricingResponseDelegate  OnPullEVSEPricingResponse
+        {
+
+            add
+            {
+                EMPClient.OnPullEVSEPricingResponse += value;
+            }
+
+            remove
+            {
+                EMPClient.OnPullEVSEPricingResponse -= value;
+            }
+
+        }
 
         #endregion
 
 
         #region OnPushAuthenticationDataRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a 'push authentication data' request will be send.
-        ///// </summary>
-        //public event OnPushAuthenticationDataRequestDelegate OnPushAuthenticationDataRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a PushAuthenticationData request will be send.
+        /// </summary>
+        public event OnPushAuthenticationDataRequestDelegate   OnPushAuthenticationDataRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPushAuthenticationDataRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnPushAuthenticationDataRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPushAuthenticationDataRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a 'push authentication data' HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnPushAuthenticationDataSOAPRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a PushAuthenticationData HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                   OnPushAuthenticationDataHTTPRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPushAuthenticationDataSOAPRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnPushAuthenticationDataHTTPRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPushAuthenticationDataSOAPRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataHTTPRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'push authentication data' HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnPushAuthenticationDataOICPResult
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a PushAuthenticationData HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                  OnPushAuthenticationDataHTTPResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPushAuthenticationDataHTTPResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnPushAuthenticationDataHTTPResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPushAuthenticationDataHTTPResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataHTTPResponse -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'push authentication data' request had been received.
-        ///// </summary>
-        //public event OnPushAuthenticationDataResponseDelegate OnPushAuthenticationDataResponse
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a PushAuthenticationData request had been received.
+        /// </summary>
+        public event OnPushAuthenticationDataResponseDelegate  OnPushAuthenticationDataResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnPushAuthenticationDataResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnPushAuthenticationDataResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnPushAuthenticationDataResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnPushAuthenticationDataResponse -= value;
+            }
 
-        //}
+        }
 
         #endregion
 
 
         #region OnAuthorizeRemoteReservationStartRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a 'reservation start' request will be send.
-        ///// </summary>
-        //public event OnAuthorizeRemoteReservationStartRequestDelegate OnAuthorizeRemoteReservationStartRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a 'reservation start' request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartRequestDelegate   OnAuthorizeRemoteReservationStartRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a 'reservation start' HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnAuthorizeRemoteReservationStartSOAPRequest
+        /// <summary>
+        /// An event fired whenever a 'reservation start' HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                            OnAuthorizeRemoteReservationStartHTTPRequest
 
-        //{
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartSOAPRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartSOAPRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'reservation start' HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnAuthorizeRemoteReservationStartOICPResult
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation start' HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                           OnAuthorizeRemoteReservationStartHTTPResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'reservation start' request had been received.
-        ///// </summary>
-        //public event OnAuthorizeRemoteReservationStartResponseDelegate OnAuthorizeRemoteReservationStartResponse
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation start' request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartResponseDelegate  OnAuthorizeRemoteReservationStartResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStartResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStartResponse -= value;
+            }
 
-        //}
+        }
 
         #endregion
 
         #region OnAuthorizeRemoteReservationStopRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a 'reservation stop' request will be send.
-        ///// </summary>
-        //public event OnAuthorizeRemoteReservationStopRequestDelegate OnAuthorizeRemoteReservationStopRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a 'reservation stop' request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopRequestDelegate   OnAuthorizeRemoteReservationStopRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a 'reservation stop' HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnAuthorizeRemoteReservationStopSOAPRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a 'reservation stop' HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                           OnAuthorizeRemoteReservationStopHTTPRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopSOAPRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopSOAPRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'reservation stop' HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnAuthorizeRemoteReservationStopOICPResult
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation stop' HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                          OnAuthorizeRemoteReservationStopHTTPResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'reservation stop' request had been received.
-        ///// </summary>
-        //public event OnAuthorizeRemoteReservationStopResponseDelegate OnAuthorizeRemoteReservationStopResponse
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a 'reservation stop' request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopResponseDelegate  OnAuthorizeRemoteReservationStopResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteReservationStopResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteReservationStopResponse -= value;
+            }
 
-        //}
+        }
 
         #endregion
 
         #region OnAuthorizeRemoteStartRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever an 'authorize remote start' request will be send.
-        ///// </summary>
-        //public event OnAuthorizeRemoteStartRequestDelegate OnAuthorizeRemoteStartRequest
-        //{
+        /// <summary>
+        /// An event fired whenever an 'authorize remote start' request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteStartRequestDelegate   OnAuthorizeRemoteStartRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever an 'authorize remote start' HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnAuthorizeRemoteStartSOAPRequest
-        //{
+        /// <summary>
+        /// An event fired whenever an 'authorize remote start' HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                 OnAuthorizeRemoteStartHTTPRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartSOAPRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartHTTPRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartSOAPRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartHTTPRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to an 'authorize remote start' HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnAuthorizeRemoteStartOICPResult
-        //{
+        /// <summary>
+        /// An event fired whenever a response to an 'authorize remote start' HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                OnAuthorizeRemoteStartHTTPResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartHTTPResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartHTTPResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartHTTPResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartHTTPResponse -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to an 'authorize remote start' request had been received.
-        ///// </summary>
-        //public event OnAuthorizeRemoteStartResponseDelegate OnAuthorizeRemoteStartResponse
-        //{
+        /// <summary>
+        /// An event fired whenever a response to an 'authorize remote start' request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteStartResponseDelegate  OnAuthorizeRemoteStartResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStartResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStartResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStartResponse -= value;
+            }
 
-        //}
+        }
 
         #endregion
 
         #region OnAuthorizeRemoteStopRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever an 'authorize remote stop' request will be send.
-        ///// </summary>
-        //public event OnAuthorizeRemoteStopRequestDelegate OnAuthorizeRemoteStopRequest
-        //{
+        /// <summary>
+        /// An event fired whenever an 'authorize remote stop' request will be send.
+        /// </summary>
+        public event OnAuthorizeRemoteStopRequestDelegate   OnAuthorizeRemoteStopRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever an 'authorize remote stop' HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnAuthorizeRemoteStopSOAPRequest
-        //{
+        /// <summary>
+        /// An event fired whenever an 'authorize remote stop' HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                OnAuthorizeRemoteStopHTTPRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopSOAPRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopHTTPRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopSOAPRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopHTTPRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to an 'authorize remote stop' HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnAuthorizeRemoteStopOICPResult
-        //{
+        /// <summary>
+        /// An event fired whenever a response to an 'authorize remote stop' HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler               OnAuthorizeRemoteStopHTTPResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopHTTPResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopHTTPResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopHTTPResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopHTTPResponse -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to an 'authorize remote stop' request had been received.
-        ///// </summary>
-        //public event OnAuthorizeRemoteStopResponseDelegate OnAuthorizeRemoteStopResponse
-        //{
+        /// <summary>
+        /// An event fired whenever a response to an 'authorize remote stop' request had been received.
+        /// </summary>
+        public event OnAuthorizeRemoteStopResponseDelegate  OnAuthorizeRemoteStopResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnAuthorizeRemoteStopResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnAuthorizeRemoteStopResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnAuthorizeRemoteStopResponse -= value;
+            }
 
-        //}
+        }
 
         #endregion
 
 
         #region OnGetChargeDetailRecordsRequest/-Response
 
-        ///// <summary>
-        ///// An event fired whenever a 'get charge detail records' request will be send.
-        ///// </summary>
-        //public event OnGetChargeDetailRecordsRequestDelegate OnGetChargeDetailRecordsRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a 'get charge detail records' request will be send.
+        /// </summary>
+        public event OnGetChargeDetailRecordsRequestDelegate   OnGetChargeDetailRecordsRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a 'get charge detail records' HTTP request will be send.
-        ///// </summary>
-        //public event ClientRequestLogHandler OnGetChargeDetailRecordsSOAPRequest
-        //{
+        /// <summary>
+        /// An event fired whenever a 'get charge detail records' HTTP request will be send.
+        /// </summary>
+        public event ClientRequestLogHandler                   OnGetChargeDetailRecordsHTTPRequest
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsSOAPRequest += value;
-        //    }
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsHTTPRequest += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsSOAPRequest -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsHTTPRequest -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response to a 'get charge detail records' HTTP request had been received.
-        ///// </summary>
-        //public event ClientResponseLogHandler OnGetChargeDetailRecordsOICPResult
-        //{
+        /// <summary>
+        /// An event fired whenever a response to a 'get charge detail records' HTTP request had been received.
+        /// </summary>
+        public event ClientResponseLogHandler                  OnGetChargeDetailRecordsHTTPResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsHTTPResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsHTTPResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsHTTPResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsHTTPResponse -= value;
+            }
 
-        //}
+        }
 
-        ///// <summary>
-        ///// An event fired whenever a response for a 'get charge detail records' request was received.
-        ///// </summary>
-        //public event OnGetChargeDetailRecordsResponseDelegate OnGetChargeDetailRecordsResponse
-        //{
+        /// <summary>
+        /// An event fired whenever a response for a 'get charge detail records' request was received.
+        /// </summary>
+        public event OnGetChargeDetailRecordsResponseDelegate  OnGetChargeDetailRecordsResponse
+        {
 
-        //    add
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsResponse += value;
-        //    }
+            add
+            {
+                EMPClient.OnGetChargeDetailRecordsResponse += value;
+            }
 
-        //    remove
-        //    {
-        //        EMPClient.OnGetChargeDetailRecordsResponse -= value;
-        //    }
+            remove
+            {
+                EMPClient.OnGetChargeDetailRecordsResponse -= value;
+            }
 
-        //}
+        }
 
         #endregion
 
+        #endregion
 
-        // EMPServer methods
+        #region EMPServer events
 
-        #region OnAuthorizeStart    (HTTP)(Request/-Response)
+        #region OnAuthorizeStart       (HTTP)(Request/-Response)
 
-        ///// <summary>
-        ///// An event sent whenever a authorize start HTTP request was received.
-        ///// </summary>
-        //public event RequestLogHandler OnAuthorizeStartHTTPRequest
-        //{
-
-        //    add
-        //    {
-        //        EMPServer.OnAuthorizeStartHTTPRequest += value;
-        //    }
-
-        //    remove
-        //    {
-        //        EMPServer.OnAuthorizeStartHTTPRequest -= value;
-        //    }
-
-        //}
+        /// <summary>
+        /// An event sent whenever an AuthorizeStart HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest
+            => EMPServer.OnAuthorizeStartHTTPRequest;
 
         /// <summary>
         /// An event sent whenever a authorize start request was received.
         /// </summary>
-        public event OnAuthorizeStartRequestDelegate OnAuthorizeStartRequest
+        public event OnAuthorizeStartRequestDelegate   OnAuthorizeStartRequest
         {
 
             add
@@ -900,7 +1127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a authorize start request was received.
         /// </summary>
-        public event OnAuthorizeStartDelegate OnAuthorizeStart
+        public event OnAuthorizeStartDelegate          OnAuthorizeStart
         {
 
             add
@@ -918,7 +1145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a authorize start response was sent.
         /// </summary>
-        public event OnAuthorizeStartResponseDelegate OnAuthorizeStartResponse
+        public event OnAuthorizeStartResponseDelegate  OnAuthorizeStartResponse
         {
 
             add
@@ -933,50 +1160,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         }
 
-        ///// <summary>
-        ///// An event sent whenever a authorize start SOAP response was sent.
-        ///// </summary>
-        //public event HTTPResponseLogEvent OnAuthorizeStartOICPResult
-        //{
-
-        //    add
-        //    {
-        //        EMPServer.OnAuthorizationStartHTTPResponse += value;
-        //    }
-
-        //    remove
-        //    {
-        //        EMPServer.OnAuthorizationStartHTTPResponse -= value;
-        //    }
-
-        //}
+        /// <summary>
+        /// An event sent whenever an AuthorizationStart HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse
+            => EMPServer.OnAuthorizationStartHTTPResponse;
 
         #endregion
 
-        #region OnAuthorizeStop     (HTTP)(Request/-Response)
+        #region OnAuthorizeStop        (HTTP)(Request/-Response)
 
-        ///// <summary>
-        ///// An event sent whenever a authorize stop HTTP request was received.
-        ///// </summary>
-        //public event RequestLogHandler OnAuthorizeStopSOAPRequest
-        //{
-
-        //    add
-        //    {
-        //        EMPServer.OnAuthorizeStopSOAPRequest += value;
-        //    }
-
-        //    remove
-        //    {
-        //        EMPServer.OnAuthorizeStopSOAPRequest -= value;
-        //    }
-
-        //}
+        /// <summary>
+        /// An event sent whenever an AuthorizeStop HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest
+            => EMPServer.OnAuthorizeStopHTTPRequest;
 
         /// <summary>
         /// An event sent whenever a authorize stop HTTP request was received.
         /// </summary>
-        public event OnAuthorizeStopRequestDelegate OnAuthorizeStopRequest
+        public event OnAuthorizeStopRequestDelegate   OnAuthorizeStopRequest
         {
 
             add
@@ -994,7 +1197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a authorize stop command was received.
         /// </summary>
-        public event OnAuthorizeStopDelegate  OnAuthorizeStop
+        public event OnAuthorizeStopDelegate          OnAuthorizeStop
         {
 
             add
@@ -1012,7 +1215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a authorize stop SOAP response was sent.
         /// </summary>
-        public event OnAuthorizeStopResponseDelegate OnAuthorizeStopResponse
+        public event OnAuthorizeStopResponseDelegate  OnAuthorizeStopResponse
         {
 
             add
@@ -1027,50 +1230,229 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         }
 
-        ///// <summary>
-        ///// An event sent whenever a authorize stop SOAP response was sent.
-        ///// </summary>
-        //public event AccessLogHandler OnAuthorizeStopOICPResult
-        //{
-
-        //    add
-        //    {
-        //        EMPServer.OnAuthorizeStopHTTPResponse += value;
-        //    }
-
-        //    remove
-        //    {
-        //        EMPServer.OnAuthorizeStopHTTPResponse -= value;
-        //    }
-
-        //}
+        /// <summary>
+        /// An event sent whenever an AuthorizationStop HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse
+            => EMPServer.OnAuthorizationStopHTTPResponse;
 
         #endregion
 
-        #region OnChargeDetailRecord(HTTP)(Request/-Response)
 
-        ///// <summary>
-        ///// An event sent whenever a charge detail record HTTP request was received.
-        ///// </summary>
-        //public event RequestLogHandler OnChargeDetailRecordSOAPRequest
-        //{
+        #region OnChargingNotifications(HTTP)(Request/-Response)
 
-        //    add
-        //    {
-        //        EMPServer.OnChargeDetailRecordSOAPRequest += value;
-        //    }
+        /// <summary>
+        /// An event sent whenever a ChargingNotification HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest
+            => EMPServer.OnChargingNotificationsHTTPRequest;
 
-        //    remove
-        //    {
-        //        EMPServer.OnChargeDetailRecordSOAPRequest -= value;
-        //    }
 
-        //}
+        public event OnChargingStartNotificationRequestDelegate?      OnChargingStartNotificationRequest
+        {
+
+            add
+            {
+                EMPServer.OnChargingStartNotificationRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingStartNotificationRequest -= value;
+            }
+
+        }
+
+        public event OnChargingStartNotificationDelegate?             OnChargingStartNotification
+        {
+
+            add
+            {
+                EMPServer.OnChargingStartNotification += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingStartNotification -= value;
+            }
+
+        }
+
+        public event OnChargingStartNotificationResponseDelegate?     OnChargingStartNotificationResponse
+        {
+
+            add
+            {
+                EMPServer.OnChargingStartNotificationResponse += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingStartNotificationResponse -= value;
+            }
+
+        }
+
+
+        public event OnChargingProgressNotificationRequestDelegate?   OnChargingProgressNotificationRequest
+        {
+
+            add
+            {
+                EMPServer.OnChargingProgressNotificationRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingProgressNotificationRequest -= value;
+            }
+
+        }
+
+        public event OnChargingProgressNotificationDelegate?          OnChargingProgressNotification
+        {
+
+            add
+            {
+                EMPServer.OnChargingProgressNotification += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingProgressNotification -= value;
+            }
+
+        }
+
+        public event OnChargingProgressNotificationResponseDelegate?  OnChargingProgressNotificationResponse
+        {
+
+            add
+            {
+                EMPServer.OnChargingProgressNotificationResponse += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingProgressNotificationResponse -= value;
+            }
+
+        }
+
+
+        public event OnChargingEndNotificationRequestDelegate?        OnChargingEndNotificationRequest
+        {
+
+            add
+            {
+                EMPServer.OnChargingEndNotificationRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingEndNotificationRequest -= value;
+            }
+
+        }
+
+        public event OnChargingEndNotificationDelegate?               OnChargingEndNotification
+        {
+
+            add
+            {
+                EMPServer.OnChargingEndNotification += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingEndNotification -= value;
+            }
+
+        }
+
+        public event OnChargingEndNotificationResponseDelegate?       OnChargingEndNotificationResponse
+        {
+
+            add
+            {
+                EMPServer.OnChargingEndNotificationResponse += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingEndNotificationResponse -= value;
+            }
+
+        }
+
+
+        public event OnChargingErrorNotificationRequestDelegate?      OnChargingErrorNotificationRequest
+        {
+
+            add
+            {
+                EMPServer.OnChargingErrorNotificationRequest += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingErrorNotificationRequest -= value;
+            }
+
+        }
+
+        public event OnChargingErrorNotificationDelegate?             OnChargingErrorNotification
+        {
+
+            add
+            {
+                EMPServer.OnChargingErrorNotification += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingErrorNotification -= value;
+            }
+
+        }
+
+        public event OnChargingErrorNotificationResponseDelegate?     OnChargingErrorNotificationResponse
+        {
+
+            add
+            {
+                EMPServer.OnChargingErrorNotificationResponse += value;
+            }
+
+            remove
+            {
+                EMPServer.OnChargingErrorNotificationResponse -= value;
+            }
+
+        }
+
+
+        /// <summary>
+        /// An event sent whenever a ChargingNotification HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse
+            => EMPServer.OnChargingNotificationsHTTPResponse;
+
+        #endregion
+
+
+        #region OnChargeDetailRecord   (HTTP)(Request/-Response)
+
+        /// <summary>
+        /// An event sent whenever a ChargeDetailRecord HTTP request was received.
+        /// </summary>
+        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest
+            => EMPServer.OnChargeDetailRecordHTTPRequest;
 
         /// <summary>
         /// An event sent whenever a charge detail record request was received.
         /// </summary>
-        public event OnChargeDetailRecordRequestDelegate OnChargeDetailRecordRequest
+        public event OnChargeDetailRecordRequestDelegate   OnChargeDetailRecordRequest
         {
 
             add
@@ -1088,7 +1470,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a charge detail record was received.
         /// </summary>
-        public event OnChargeDetailRecordDelegate OnChargeDetailRecord
+        public event OnChargeDetailRecordDelegate          OnChargeDetailRecord
         {
 
             add
@@ -1106,7 +1488,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a charge detail record response was sent.
         /// </summary>
-        public event OnChargeDetailRecordResponseDelegate OnSendChargeDetailRecordResponse
+        public event OnChargeDetailRecordResponseDelegate  OnSendChargeDetailRecordResponse
         {
 
             add
@@ -1121,110 +1503,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         }
 
-        ///// <summary>
-        ///// An event sent whenever a charge detail record SOAP response was sent.
-        ///// </summary>
-        //public event AccessLogHandler OnChargeDetailRecordOICPResult
-        //{
-
-        //    add
-        //    {
-        //        EMPServer.OnChargeDetailRecordHTTPResponse += value;
-        //    }
-
-        //    remove
-        //    {
-        //        EMPServer.OnChargeDetailRecordHTTPResponse -= value;
-        //    }
-
-        //}
+        /// <summary>
+        /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
+        /// </summary>
+        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse
+            => EMPServer.OnChargeDetailRecordHTTPResponse;
 
         #endregion
 
+        #endregion
 
-        #region Generic HTTP/SOAP server logging
+        #region HTTP server logging
 
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public HTTPRequestLogEvent   RequestLog    = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent   RequestLog
+            => EMPServer.RequestLog;
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public HTTPResponseLogEvent  ResponseLog   = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent  ResponseLog
+            => EMPServer.ResponseLog;
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public HTTPErrorLogEvent     ErrorLog      = new HTTPErrorLogEvent();
-
-        #endregion
-
-        #endregion
-
-        #region Custom request mappers
-
+        public HTTPErrorLogEvent     ErrorLog
+            => EMPServer.ErrorLog;
 
         #endregion
 
         #region Constructor(s)
-
-        #region (private) EMPRoaming(EMPServer, EMPClient)
-
-        /// <summary>
-        /// Create a new EMP roaming.
-        /// </summary>
-        /// <param name="EMPServer">An EMP Server.</param>
-        /// <param name="EMPClient">An EMP client.</param>
-        private EMPRoaming(EMPServerAPI  EMPServer,
-                           EMPClient     EMPClient)
-        {
-
-            this.EMPClient  = EMPClient;
-            this.EMPServer  = EMPServer;
-
-            // Link HTTP events...
-            EMPServer.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            EMPServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            EMPServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
-
-        }
-
-        #endregion
-
-
-        #region EMPRoaming(EMPClient)
-
-        /// <summary>
-        /// Create a new EMP roaming.
-        /// </summary>
-        /// <param name="EMPClient">An EMP client.</param>
-        public EMPRoaming(EMPClient EMPClient)
-
-            : this(null,
-                   EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!"))
-
-        { }
-
-        #endregion
-
-        #region EMPRoaming(EMPServer)
-
-        /// <summary>
-        /// Create a new EMP roaming.
-        /// </summary>
-        /// <param name="EMPServer">An EMP Server.</param>
-        public EMPRoaming(EMPServerAPI  EMPServer)
-
-            : this(EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMPServer must not be null!"),
-                   null)
-
-        { }
-
-        #endregion
-
-        #region EMPRoaming(EMPClient, EMPServer)
 
         /// <summary>
         /// Create a new EMP roaming.
@@ -1233,13 +1544,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="EMPServer">An EMP Server.</param>
         public EMPRoaming(EMPClient     EMPClient,
                           EMPServerAPI  EMPServer)
+        {
 
-            : this(EMPServer ?? throw new ArgumentNullException(nameof(EMPServer), "The given EMPServer must not be null!"),
-                   EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!"))
+            this.EMPClient  = EMPClient;
+            this.EMPServer  = EMPServer;
 
-        { }
-
-        #endregion
+        }
 
         #endregion
 
@@ -1247,7 +1557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEData              (Request)
 
         /// <summary>
-        /// Create a new task querying EVSE data from the OICP server.
+        /// Download EVSE data records.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
@@ -1263,7 +1573,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatus            (Request)
 
         /// <summary>
-        /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
+        /// Download EVSE status records.
+        /// The request might have an optional search radius and/or status filter.
         /// </summary>
         /// <param name="Request">A PullEVSEStatus request.</param>
         public Task<OICPResult<PullEVSEStatusResponse>>
@@ -1277,7 +1588,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusById        (Request)
 
         /// <summary>
-        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE identifications.
+        /// Download the current status of up to 100 EVSEs.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusById request.</param>
         public Task<OICPResult<PullEVSEStatusByIdResponse>>
@@ -1291,7 +1602,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusByOperatorId(Request)
 
         /// <summary>
-        /// Create a new task requesting the current EVSE status of the given charging station operators.
+        /// Download the current EVSE status of the given charge point operators.
         /// </summary>
         /// <param name="Request">A PullEVSEStatusById request.</param>
         public Task<OICPResult<PullEVSEStatusByOperatorIdResponse>>
@@ -1303,17 +1614,46 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+        #region PullPricingProductData    (Request)
+
+        /// <summary>
+        /// Download pricing product data.
+        /// </summary>
+        /// <param name="Request">A PullPricingProductData request.</param>
+        public Task<OICPResult<PullPricingProductDataResponse>>
+
+            PullPricingProductData(PullPricingProductDataRequest Request)
+
+                => EMPClient.PullPricingProductData(Request);
+
+        #endregion
+
+        #region PullEVSEPricing           (Request)
+
+        /// <summary>
+        /// Create a new task pushing provider authentication data records onto the OICP server.
+        /// </summary>
+        /// <param name="Request">A PushAuthenticationData request.</param>
+        public Task<OICPResult<PullEVSEPricingResponse>>
+
+            PullEVSEPricing(PullEVSEPricingRequest Request)
+
+                => EMPClient.PullEVSEPricing(Request);
+
+        #endregion
+
+
         #region PushAuthenticationData    (Request)
 
-        ///// <summary>
-        ///// Create a new task pushing provider authentication data records onto the OICP server.
-        ///// </summary>
-        ///// <param name="Request">An PushAuthenticationData request.</param>
-        //public Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
+        /// <summary>
+        /// Create a new task pushing provider authentication data records onto the OICP server.
+        /// </summary>
+        /// <param name="Request">A PushAuthenticationData request.</param>
+        public Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
 
-        //    PushAuthenticationData(PushAuthenticationDataRequest Request)
+            PushAuthenticationData(PushAuthenticationDataRequest Request)
 
-        //        => EMPClient.PushAuthenticationData(Request);
+                => EMPClient.PushAuthenticationData(Request);
 
         #endregion
 
@@ -1321,7 +1661,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region ReservationStart          (Request)
 
         /// <summary>
-        /// Create a reservation at the given EVSE.
+        /// Create a charging reservation at the given EVSE.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStart request.</param>
         public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
@@ -1335,7 +1675,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region ReservationStop           (Request)
 
         /// <summary>
-        /// Delete a reservation at the given EVSE.
+        /// Stop the given charging reservation.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteReservationStop request.</param>
         public Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
@@ -1363,7 +1703,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region RemoteStop                (Request)
 
         /// <summary>
-        /// Stop the given charging session at the given EVSE.
+        /// Stop the given charging session.
         /// </summary>
         /// <param name="Request">An AuthorizeRemoteStop request.</param>
         public Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
@@ -1378,7 +1718,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region GetChargeDetailRecords    (Request)
 
         /// <summary>
-        /// Create a new task querying charge detail records from the OICP server.
+        /// Download charge detail records.
         /// </summary>
         /// <param name="Request">An GetChargeDetailRecords request.</param>
         public Task<OICPResult<GetChargeDetailRecordsResponse>>
@@ -1408,8 +1748,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
+        #region Dispose()
+
+        /// <summary>
+        /// Dispose this object.
+        /// </summary>
         public void Dispose()
-        { }
+        {
+            EMPServer?.Dispose();
+        }
+
+        #endregion
+
 
     }
 

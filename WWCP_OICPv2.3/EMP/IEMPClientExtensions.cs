@@ -17,11 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -40,7 +35,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEData              (ProviderId, ...)
 
         /// <summary>
-        /// Create a new task querying EVSE data from the OICP server.
+        /// Download EVSE data records.
         /// The request might either have none, 'SearchCenter + DistanceKM' or 'LastCall' parameters.
         /// Because of limitations at Hubject the SearchCenter and LastCall parameters can not be used at the same time!
         /// </summary>
@@ -66,32 +61,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public static Task<OICPResult<PullEVSEDataResponse>>
 
-            PullEVSEData(this IEMPClient                                EMPClient,
-                         Provider_Id                                    ProviderId,
-                         DateTime?                                      LastCall                               = null,
+            PullEVSEData(this IEMPClient                                 EMPClient,
+                         Provider_Id                                     ProviderId,
+                         DateTime?                                       LastCall                               = null,
 
-                         IEnumerable<Operator_Id>                       OperatorIdFilter                       = null,
-                         IEnumerable<Country>                           CountryCodeFilter                      = null,
-                         IEnumerable<AccessibilityTypes>                AccessibilityFilter                    = null,
-                         IEnumerable<AuthenticationModes>               AuthenticationModeFilter               = null,
-                         IEnumerable<CalibrationLawDataAvailabilities>  CalibrationLawDataAvailabilityFilter   = null,
-                         Boolean?                                       RenewableEnergyFilter                  = null,
-                         Boolean?                                       IsHubjectCompatibleFilter              = null,
-                         Boolean?                                       IsOpen24HoursFilter                    = null,
+                         IEnumerable<Operator_Id>?                       OperatorIdFilter                       = null,
+                         IEnumerable<Country>?                           CountryCodeFilter                      = null,
+                         IEnumerable<AccessibilityTypes>?                AccessibilityFilter                    = null,
+                         IEnumerable<AuthenticationModes>?               AuthenticationModeFilter               = null,
+                         IEnumerable<CalibrationLawDataAvailabilities>?  CalibrationLawDataAvailabilityFilter   = null,
+                         Boolean?                                        RenewableEnergyFilter                  = null,
+                         Boolean?                                        IsHubjectCompatibleFilter              = null,
+                         Boolean?                                        IsOpen24HoursFilter                    = null,
 
-                         GeoCoordinates?                                SearchCenter                           = null,
-                         Single?                                        DistanceKM                             = null,
-                         GeoCoordinatesFormats?                         GeoCoordinatesResponseFormat           = GeoCoordinatesFormats.DecimalDegree,
+                         GeoCoordinates?                                 SearchCenter                           = null,
+                         Single?                                         DistanceKM                             = null,
+                         GeoCoordinatesFormats?                          GeoCoordinatesResponseFormat           = GeoCoordinatesFormats.DecimalDegree,
 
-                         UInt32?                                        Page                                   = null,
-                         UInt32?                                        Size                                   = null,
-                         IEnumerable<String>                            SortOrder                              = null,
-                         JObject                                        CustomData                             = null,
+                         UInt32?                                         Page                                   = null,
+                         UInt32?                                         Size                                   = null,
+                         IEnumerable<String>?                            SortOrder                              = null,
+                         JObject?                                        CustomData                             = null,
 
-                         DateTime?                                      Timestamp                              = null,
-                         CancellationToken?                             CancellationToken                      = null,
-                         EventTracking_Id                               EventTrackingId                        = null,
-                         TimeSpan?                                      RequestTimeout                         = null)
+                         DateTime?                                       Timestamp                              = null,
+                         CancellationToken?                              CancellationToken                      = null,
+                         EventTracking_Id?                               EventTrackingId                        = null,
+                         TimeSpan?                                       RequestTimeout                         = null)
 
                 => EMPClient.PullEVSEData(
                        new PullEVSEDataRequest(
@@ -111,6 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            DistanceKM,
                            GeoCoordinatesResponseFormat,
 
+                           null,
                            Page,
                            Size,
                            SortOrder,
@@ -126,7 +122,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatus            (ProviderId, ...)
 
         /// <summary>
-        /// Create a new task requesting the current status of all EVSEs (within an optional search radius and status).
+        /// Download EVSE status records.
+        /// The request might have an optional search radius and/or status filter.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
         /// 
@@ -147,11 +144,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            GeoCoordinates?      SearchCenter        = null,
                            Single?              DistanceKM          = null,
                            EVSEStatusTypes?     EVSEStatusFilter    = null,
-                           JObject              CustomData          = null,
+                           JObject?             CustomData          = null,
 
                            DateTime?            Timestamp           = null,
                            CancellationToken?   CancellationToken   = null,
-                           EventTracking_Id     EventTrackingId     = null,
+                           EventTracking_Id?    EventTrackingId     = null,
                            TimeSpan?            RequestTimeout      = null)
 
                 => EMPClient.PullEVSEStatus(
@@ -160,6 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            SearchCenter,
                            DistanceKM,
                            EVSEStatusFilter,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -172,7 +170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusById        (ProviderId, EVSEIds, ...)
 
         /// <summary>
-        /// Create a new task requesting the current status of up to 100 EVSEs by their EVSE identifications.
+        /// Download the current status of up to 100 EVSEs.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
         /// 
@@ -189,17 +187,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             PullEVSEStatusById(this IEMPClient       EMPClient,
                                Provider_Id           ProviderId,
                                IEnumerable<EVSE_Id>  EVSEIds,
-                               JObject               CustomData          = null,
+                               JObject?              CustomData          = null,
 
                                DateTime?             Timestamp           = null,
                                CancellationToken?    CancellationToken   = null,
-                               EventTracking_Id      EventTrackingId     = null,
+                               EventTracking_Id?     EventTrackingId     = null,
                                TimeSpan?             RequestTimeout      = null)
 
                 => EMPClient.PullEVSEStatusById(
                        new PullEVSEStatusByIdRequest(
                            ProviderId,
                            EVSEIds,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -212,7 +211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region PullEVSEStatusByOperatorId(ProviderId, OperatorIds, ...)
 
         /// <summary>
-        /// Create a new task requesting the current EVSE status of the given charging station operators.
+        /// Download the current EVSE status of the given charge point operators.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
         /// 
@@ -229,17 +228,128 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             PullEVSEStatusByOperatorId(this IEMPClient           EMPClient,
                                        Provider_Id               ProviderId,
                                        IEnumerable<Operator_Id>  OperatorIds,
-                                       JObject                   CustomData          = null,
+                                       JObject?                  CustomData          = null,
 
                                        DateTime?                 Timestamp           = null,
                                        CancellationToken?        CancellationToken   = null,
-                                       EventTracking_Id          EventTrackingId     = null,
+                                       EventTracking_Id?         EventTrackingId     = null,
                                        TimeSpan?                 RequestTimeout      = null)
 
                 => EMPClient.PullEVSEStatusByOperatorId(
                        new PullEVSEStatusByOperatorIdRequest(
                            ProviderId,
                            OperatorIds,
+                           null,
+                           CustomData,
+
+                           Timestamp,
+                           CancellationToken,
+                           EventTrackingId,
+                           RequestTimeout ?? EMPClient.RequestTimeout));
+
+        #endregion
+
+
+        #region PullPricingProductData    (Request)
+
+        /// <summary>
+        /// Download EVSE pricing data.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
+        /// <param name="LastCall">An optional timestamp of the last call. Cannot be combined with 'SearchCenter'.</param>
+        /// <param name="OperatorIds">An enumeration of EVSE operator identifications to download pricing data from.</param>
+        /// 
+        /// <param name="Page">An optional page number of the request page.</param>
+        /// <param name="Size">An optional size of a request page.</param>
+        /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        public static Task<OICPResult<PullPricingProductDataResponse>>
+
+            PullPricingProductData(this IEMPClient           EMPClient,
+                                   Provider_Id               ProviderId,
+                                   IEnumerable<Operator_Id>  OperatorIds,
+                                   DateTime?                 LastCall            = null,
+
+                                   Process_Id?               ProcessId           = null,
+                                   UInt32?                   Page                = null,
+                                   UInt32?                   Size                = null,
+                                   IEnumerable<String>?      SortOrder           = null,
+                                   JObject?                  CustomData          = null,
+
+                                   DateTime?                 Timestamp           = null,
+                                   CancellationToken?        CancellationToken   = null,
+                                   EventTracking_Id?         EventTrackingId     = null,
+                                   TimeSpan?                 RequestTimeout      = null)
+
+                => EMPClient.PullPricingProductData(
+                       new PullPricingProductDataRequest(
+                           ProviderId,
+                           OperatorIds,
+                           LastCall,
+
+                           ProcessId,
+                           Page,
+                           Size,
+                           SortOrder,
+                           CustomData,
+
+                           Timestamp,
+                           CancellationToken,
+                           EventTrackingId,
+                           RequestTimeout ?? EMPClient.RequestTimeout));
+
+        #endregion
+
+        #region PullEVSEPricing    (Request)
+
+        /// <summary>
+        /// Download EVSE pricing data.
+        /// </summary>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
+        /// <param name="OperatorIds">An enumeration of EVSE operator identifications to download pricing data from.</param>
+        /// <param name="LastCall">An optional timestamp of the last call. Cannot be combined with 'SearchCenter'.</param>
+        /// 
+        /// <param name="Page">An optional page number of the request page.</param>
+        /// <param name="Size">An optional size of a request page.</param>
+        /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        public static Task<OICPResult<PullEVSEPricingResponse>>
+
+            PullEVSEPricing(this IEMPClient           EMPClient,
+                            Provider_Id               ProviderId,
+                            IEnumerable<Operator_Id>  OperatorIds,
+                            DateTime?                 LastCall            = null,
+
+                            Process_Id?               ProcessId           = null,
+                            UInt32?                   Page                = null,
+                            UInt32?                   Size                = null,
+                            IEnumerable<String>?      SortOrder           = null,
+                            JObject?                  CustomData          = null,
+
+                            DateTime?                 Timestamp           = null,
+                            CancellationToken?        CancellationToken   = null,
+                            EventTracking_Id?         EventTrackingId     = null,
+                            TimeSpan?                 RequestTimeout      = null)
+
+                => EMPClient.PullEVSEPricing(
+                       new PullEVSEPricingRequest(
+                           ProviderId,
+                           OperatorIds,
+                           LastCall,
+
+                           ProcessId,
+                           Page,
+                           Size,
+                           SortOrder,
                            CustomData,
 
                            Timestamp,
@@ -252,15 +362,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PushAuthenticationData    (Request)
 
-        ///// <summary>
-        ///// Create a new task pushing provider authentication data records onto the OICP server.
-        ///// </summary>
-        ///// <param name="Request">An PushAuthenticationData request.</param>
-        //public Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
+        /// <summary>
+        /// Upload provider authentication data records.
+        /// </summary>
+        /// <param name="ProviderAuthenticationData">The provider authentication data record.</param>
+        /// <param name="Action">The server-side data management operation.</param>
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
+        public static Task<OICPResult<Acknowledgement<PushAuthenticationDataRequest>>>
 
-        //    PushAuthenticationData(PushAuthenticationDataRequest Request)
+            PushAuthenticationData(this IEMPClient             EMPClient,
+                                   ProviderAuthenticationData  ProviderAuthenticationData,
+                                   ActionTypes                 Action              = ActionTypes.FullLoad,
+                                   Process_Id?                 ProcessId           = null,
+                                   JObject?                    CustomData          = null,
 
-        //        => EMPClient.PushAuthenticationData(Request);
+                                   DateTime?                   Timestamp           = null,
+                                   CancellationToken?          CancellationToken   = null,
+                                   EventTracking_Id?           EventTrackingId     = null,
+                                   TimeSpan?                   RequestTimeout      = null)
+
+                => EMPClient.PushAuthenticationData(
+                       new PushAuthenticationDataRequest(
+                           ProviderAuthenticationData,
+                           Action,
+                           ProcessId,
+                           CustomData,
+
+                           Timestamp,
+                           CancellationToken,
+                           EventTrackingId,
+                           RequestTimeout ?? EMPClient.RequestTimeout));
 
         #endregion
 
@@ -268,7 +404,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region ReservationStart          (ProviderId, EVSEId, Identification, ...)
 
         /// <summary>
-        /// Create a reservation at the given EVSE.
+        /// Create a charging reservation at the given EVSE.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
         /// 
@@ -297,11 +433,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                             EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                             PartnerProduct_Id?     PartnerProductId      = null,
                                             TimeSpan?              Duration              = null,
-                                            JObject                CustomData            = null,
+                                            JObject?               CustomData            = null,
 
                                             DateTime?              Timestamp             = null,
                                             CancellationToken?     CancellationToken     = null,
-                                            EventTracking_Id       EventTrackingId       = null,
+                                            EventTracking_Id?      EventTrackingId       = null,
                                             TimeSpan?              RequestTimeout        = null)
 
 
@@ -315,6 +451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            EMPPartnerSessionId,
                            PartnerProductId,
                            Duration,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -327,7 +464,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region ReservationStop           (ProviderId, EVSEId, SessionId, ...)
 
         /// <summary>
-        /// Delete a reservation at the given EVSE.
+        /// Stop the given charging reservation.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
         /// 
@@ -350,11 +487,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                            Session_Id             SessionId,
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                           JObject                CustomData            = null,
+                                           JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
                                            CancellationToken?     CancellationToken     = null,
-                                           EventTracking_Id       EventTrackingId       = null,
+                                           EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null)
 
                 => EMPClient.AuthorizeRemoteReservationStop(
@@ -364,6 +501,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            SessionId,
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -403,11 +541,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                  EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                  PartnerProduct_Id?     PartnerProductId      = null,
-                                 JObject                CustomData            = null,
+                                 JObject?               CustomData            = null,
 
                                  DateTime?              Timestamp             = null,
                                  CancellationToken?     CancellationToken     = null,
-                                 EventTracking_Id       EventTrackingId       = null,
+                                 EventTracking_Id?      EventTrackingId       = null,
                                  TimeSpan?              RequestTimeout        = null)
 
                 => EMPClient.AuthorizeRemoteStart(
@@ -419,6 +557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
                            PartnerProductId,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -431,7 +570,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region RemoteStop                (ProviderId, EVSEId, SessionId, ...)
 
         /// <summary>
-        /// Stop the given charging session at the given EVSE.
+        /// Stop the given charging session.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
         /// 
@@ -454,11 +593,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 Session_Id             SessionId,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                JObject                CustomData            = null,
+                                JObject?               CustomData            = null,
 
                                 DateTime?              Timestamp             = null,
                                 CancellationToken?     CancellationToken     = null,
-                                EventTracking_Id       EventTrackingId       = null,
+                                EventTracking_Id?      EventTrackingId       = null,
                                 TimeSpan?              RequestTimeout        = null)
 
                 => EMPClient.AuthorizeRemoteStop(
@@ -468,6 +607,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            SessionId,
                            CPOPartnerSessionId,
                            EMPPartnerSessionId,
+                           null,
                            CustomData,
 
                            Timestamp,
@@ -481,7 +621,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region GetChargeDetailRecords    (ProviderId, From, To, ...)
 
         /// <summary>
-        /// Create a new task querying charge detail records from the OICP server.
+        /// Download charge detail records.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
         /// 
@@ -504,23 +644,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public static Task<OICPResult<GetChargeDetailRecordsResponse>>
 
-            GetChargeDetailRecords(this IEMPClient           EMPClient,
-                                   Provider_Id               ProviderId,
-                                   DateTime                  From,
-                                   DateTime                  To,
-                                   IEnumerable<Session_Id>   SessionIds          = null,
-                                   IEnumerable<Operator_Id>  OperatorIds         = null,
-                                   Boolean?                  CDRForwarded        = null,
+            GetChargeDetailRecords(this IEMPClient            EMPClient,
+                                   Provider_Id                ProviderId,
+                                   DateTime                   From,
+                                   DateTime                   To,
+                                   IEnumerable<Session_Id>?   SessionIds          = null,
+                                   IEnumerable<Operator_Id>?  OperatorIds         = null,
+                                   Boolean?                   CDRForwarded        = null,
 
-                                   UInt32?                   Page                = null,
-                                   UInt32?                   Size                = null,
-                                   IEnumerable<String>       SortOrder           = null,
-                                   JObject                   CustomData          = null,
+                                   UInt32?                    Page                = null,
+                                   UInt32?                    Size                = null,
+                                   IEnumerable<String>?       SortOrder           = null,
+                                   JObject?                   CustomData          = null,
 
-                                   DateTime?                 Timestamp           = null,
-                                   CancellationToken?        CancellationToken   = null,
-                                   EventTracking_Id          EventTrackingId     = null,
-                                   TimeSpan?                 RequestTimeout      = null)
+                                   DateTime?                  Timestamp           = null,
+                                   CancellationToken?         CancellationToken   = null,
+                                   EventTracking_Id?          EventTrackingId     = null,
+                                   TimeSpan?                  RequestTimeout      = null)
 
                 => EMPClient.GetChargeDetailRecords(
                        new GetChargeDetailRecordsRequest(
@@ -531,6 +671,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            OperatorIds,
                            CDRForwarded,
 
+                           null,
                            Page,
                            Size,
                            SortOrder,
@@ -542,6 +683,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            RequestTimeout ?? EMPClient.RequestTimeout));
 
         #endregion
+
 
     }
 

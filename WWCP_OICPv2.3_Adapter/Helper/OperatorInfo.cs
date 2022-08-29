@@ -266,7 +266,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out String OperatorName,
                                        out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 
@@ -280,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            out IEnumerable<ChargingPoolInfo> ChargingPools,
                                            out ErrorResponse))
                 {
-                    if (ErrorResponse != null)
+                    if (ErrorResponse is not null)
                         return false;
                 }
 

@@ -17,12 +17,7 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Threading;
 using System.Net.Security;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -45,36 +40,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     public partial class EMPServerAPI : HTTPAPI
     {
 
-        #region (class) Counters
+        #region (class) APICounters
 
-        public class Counters
+        public class APICounters
         {
 
-            public CounterValues  AuthorizeStart                  { get; }
-            public CounterValues  AuthorizeStop                   { get; }
-            public CounterValues  ChargingStartNotification       { get; }
-            public CounterValues  ChargingProgressNotification    { get; }
-            public CounterValues  ChargingEndNotification         { get; }
-            public CounterValues  ChargingErrorNotification       { get; }
-            public CounterValues  ChargeDetailRecord              { get; }
+            public APICounterValues  AuthorizeStart                  { get; }
+            public APICounterValues  AuthorizeStop                   { get; }
+            public APICounterValues  ChargingNotifications           { get; }
+            public APICounterValues  ChargingStartNotification       { get; }
+            public APICounterValues  ChargingProgressNotification    { get; }
+            public APICounterValues  ChargingEndNotification         { get; }
+            public APICounterValues  ChargingErrorNotification       { get; }
+            public APICounterValues  ChargeDetailRecord              { get; }
 
 
-            public Counters(CounterValues? AuthorizeStart                 = null,
-                            CounterValues? AuthorizeStop                  = null,
-                            CounterValues? ChargingStartNotification      = null,
-                            CounterValues? ChargingProgressNotification   = null,
-                            CounterValues? ChargingEndNotification        = null,
-                            CounterValues? ChargingErrorNotification      = null,
-                            CounterValues? ChargeDetailRecord             = null)
+            public APICounters(APICounterValues? AuthorizeStart                 = null,
+                               APICounterValues? AuthorizeStop                  = null,
+                               APICounterValues? ChargingNotifications          = null,
+                               APICounterValues? ChargingStartNotification      = null,
+                               APICounterValues? ChargingProgressNotification   = null,
+                               APICounterValues? ChargingEndNotification        = null,
+                               APICounterValues? ChargingErrorNotification      = null,
+                               APICounterValues? ChargeDetailRecord             = null)
             {
 
-                this.AuthorizeStart                = AuthorizeStart               ?? new CounterValues();
-                this.AuthorizeStop                 = AuthorizeStop                ?? new CounterValues();
-                this.ChargingStartNotification     = ChargingStartNotification    ?? new CounterValues();
-                this.ChargingProgressNotification  = ChargingProgressNotification ?? new CounterValues();
-                this.ChargingEndNotification       = ChargingEndNotification      ?? new CounterValues();
-                this.ChargingErrorNotification     = ChargingErrorNotification    ?? new CounterValues();
-                this.ChargeDetailRecord            = ChargeDetailRecord           ?? new CounterValues();
+                this.AuthorizeStart                = AuthorizeStart               ?? new APICounterValues();
+                this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
+                this.ChargingNotifications         = ChargingNotifications        ?? new APICounterValues();
+                this.ChargingStartNotification     = ChargingStartNotification    ?? new APICounterValues();
+                this.ChargingProgressNotification  = ChargingProgressNotification ?? new APICounterValues();
+                this.ChargingEndNotification       = ChargingEndNotification      ?? new APICounterValues();
+                this.ChargingErrorNotification     = ChargingErrorNotification    ?? new APICounterValues();
+                this.ChargeDetailRecord            = ChargeDetailRecord           ?? new APICounterValues();
 
             }
 
@@ -83,6 +81,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 => JSONObject.Create(
                        new JProperty("AuthorizeStart",                AuthorizeStart.              ToJSON()),
                        new JProperty("AuthorizeStop",                 AuthorizeStop.               ToJSON()),
+                       new JProperty("ChargingNotifications",         ChargingNotifications.       ToJSON()),
                        new JProperty("ChargingStartNotification",     ChargingStartNotification.   ToJSON()),
                        new JProperty("ChargingProgressNotification",  ChargingProgressNotification.ToJSON()),
                        new JProperty("ChargingEndNotification",       ChargingEndNotification.     ToJSON()),
@@ -116,30 +115,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public Counters                                                          Counter                                            { get; }
+        public APICounters                                                        Counters                                           { get; }
 
-        // Custom JSON parsers
+        public Newtonsoft.Json.Formatting                                         JSONFormatting                                     { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizeStartRequest>                CustomAuthorizeStartRequestParser                  { get; set; }
-        public CustomJObjectParserDelegate<AuthorizeStopRequest>                 CustomAuthorizeStopRequestParser                   { get; set; }
+        #endregion
 
+        #region Custom JSON parsers
 
-        public CustomJObjectParserDelegate<ChargingStartNotificationRequest>     CustomChargingStartNotificationRequestParser       { get; set; }
-        public CustomJObjectParserDelegate<ChargingProgressNotificationRequest>  CustomChargingProgressNotificationRequestParser    { get; set; }
-        public CustomJObjectParserDelegate<ChargingEndNotificationRequest>       CustomChargingEndNotificationRequestParser         { get; set; }
-        public CustomJObjectParserDelegate<ChargingErrorNotificationRequest>     CustomChargingErrorNotificationRequestParser       { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeStartRequest>?                CustomAuthorizeStartRequestParser                  { get; set; }
+        public CustomJObjectSerializerDelegate<AuthorizationStartResponse>?       CustomAuthorizationStartSerializer                 { get; set; }
 
-
-        public CustomJObjectParserDelegate<ChargeDetailRecordRequest>            CustomChargeDetailRecordRequestParser              { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeStopRequest>?                 CustomAuthorizeStopRequestParser                   { get; set; }
+        public CustomJObjectSerializerDelegate<AuthorizationStopResponse>?        CustomAuthorizationStopSerializer                  { get; set; }
 
 
-        // Custom JSON serializers
-        public CustomJObjectSerializerDelegate<Acknowledgement>                  CustomAcknowledgementSerializer                    { get; set; }
+        public CustomJObjectParserDelegate<ChargingStartNotificationRequest>?     CustomChargingStartNotificationRequestParser       { get; set; }
+        public CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser    { get; set; }
+        public CustomJObjectParserDelegate<ChargingEndNotificationRequest>?       CustomChargingEndNotificationRequestParser         { get; set; }
+        public CustomJObjectParserDelegate<ChargingErrorNotificationRequest>?     CustomChargingErrorNotificationRequestParser       { get; set; }
 
-        public CustomJObjectSerializerDelegate<StatusCode>                       CustomStatusCodeSerializer                         { get; set; }
+
+        public CustomJObjectParserDelegate<ChargeDetailRecordRequest>?            CustomChargeDetailRecordRequestParser              { get; set; }
+
+        #endregion
+
+        #region Custom JSON serializers
+        public CustomJObjectSerializerDelegate<Acknowledgement>?                  CustomAcknowledgementSerializer                    { get; set; }
+
+        public CustomJObjectSerializerDelegate<StatusCode>?                       CustomStatusCodeSerializer                         { get; set; }
 
 
-        public Newtonsoft.Json.Formatting                                        JSONFormatting                                     { get; set; }
+        public CustomJObjectSerializerDelegate<Identification>?                   CustomIdentificationSerializer                     { get; set; }
 
         #endregion
 
@@ -150,7 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
@@ -162,9 +169,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                              HTTPAPI      API,
                                                              HTTPRequest  Request)
 
-            => OnAuthorizeStartHTTPRequest?.WhenAll(Timestamp,
-                                                    API ?? this,
-                                                    Request);
+            => OnAuthorizeStartHTTPRequest.WhenAll(Timestamp,
+                                                   API ?? this,
+                                                   Request);
 
         #endregion
 
@@ -173,17 +180,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event send whenever an AuthorizeStart request was received.
         /// </summary>
-        public event OnAuthorizeStartRequestDelegate   OnAuthorizeStartRequest;
+        public event OnAuthorizeStartRequestDelegate?   OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event send whenever an AuthorizeStart request was received.
         /// </summary>
-        public event OnAuthorizeStartDelegate          OnAuthorizeStart;
+        public event OnAuthorizeStartDelegate?          OnAuthorizeStart;
 
         /// <summary>
         /// An event send whenever a response to an AuthorizeStart request was sent.
         /// </summary>
-        public event OnAuthorizeStartResponseDelegate  OnAuthorizeStartResponse;
+        public event OnAuthorizeStartResponseDelegate?  OnAuthorizeStartResponse;
 
         #endregion
 
@@ -192,7 +199,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
@@ -206,10 +213,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   HTTPRequest   Request,
                                                                   HTTPResponse  Response)
 
-            => OnAuthorizationStartHTTPResponse?.WhenAll(Timestamp,
-                                                         API ?? this,
-                                                         Request,
-                                                         Response);
+            => OnAuthorizationStartHTTPResponse.WhenAll(Timestamp,
+                                                        API ?? this,
+                                                        Request,
+                                                        Response);
 
         #endregion
 
@@ -219,7 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
@@ -227,13 +234,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeStopHTTPRequest(DateTime      Timestamp,
-                                                            HTTPAPI       API,
-                                                            HTTPRequest   Request)
+        protected internal Task logAuthorizeStopHTTPRequest(DateTime     Timestamp,
+                                                            HTTPAPI      API,
+                                                            HTTPRequest  Request)
 
-            => OnAuthorizeStopHTTPRequest?.WhenAll(Timestamp,
-                                                    API ?? this,
-                                                    Request);
+            => OnAuthorizeStopHTTPRequest.WhenAll(Timestamp,
+                                                  API ?? this,
+                                                  Request);
 
         #endregion
 
@@ -242,17 +249,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event send whenever an AuthorizeStop request was received.
         /// </summary>
-        public event OnAuthorizeStopRequestDelegate   OnAuthorizeStopRequest;
+        public event OnAuthorizeStopRequestDelegate?   OnAuthorizeStopRequest;
 
         /// <summary>
         /// An event send whenever an AuthorizeStop request was received.
         /// </summary>
-        public event OnAuthorizeStopDelegate          OnAuthorizeStop;
+        public event OnAuthorizeStopDelegate?          OnAuthorizeStop;
 
         /// <summary>
         /// An event send whenever a response to an AuthorizeStop request was sent.
         /// </summary>
-        public event OnAuthorizeStopResponseDelegate  OnAuthorizeStopResponse;
+        public event OnAuthorizeStopResponseDelegate?  OnAuthorizeStopResponse;
 
         #endregion
 
@@ -261,7 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
@@ -275,66 +282,67 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  HTTPRequest   Request,
                                                                  HTTPResponse  Response)
 
-            => OnAuthorizationStopHTTPResponse?.WhenAll(Timestamp,
-                                                         API ?? this,
-                                                         Request,
-                                                         Response);
+            => OnAuthorizationStopHTTPResponse.WhenAll(Timestamp,
+                                                       API ?? this,
+                                                       Request,
+                                                       Response);
 
         #endregion
+
 
 
         #region (protected internal) OnChargingNotificationsHTTPRequest
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP request was received.
+        /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest = new();
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP request was received.
+        /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the notification.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logChargingNotificationsHTTPRequest(DateTime      Timestamp,
-                                                                    HTTPAPI       API,
-                                                                    HTTPRequest   Request)
+        protected internal Task logChargingNotificationsHTTPRequest(DateTime     Timestamp,
+                                                                    HTTPAPI      API,
+                                                                    HTTPRequest  Request)
 
-            => OnChargingNotificationsHTTPRequest?.WhenAll(Timestamp,
-                                                           API ?? this,
-                                                           Request);
+            => OnChargingNotificationsHTTPRequest.WhenAll(Timestamp,
+                                                          API ?? this,
+                                                          Request);
 
         #endregion
 
         #region (event)              OnCharging(...)Notification(Request-/Response)
 
-        public event OnChargingStartNotificationRequestDelegate      OnChargingStartNotificationRequest;
-        public event OnChargingStartNotificationDelegate             OnChargingStartNotification;
-        public event OnChargingStartNotificationResponseDelegate     OnChargingStartNotificationResponse;
+        public event OnChargingStartNotificationRequestDelegate?      OnChargingStartNotificationRequest;
+        public event OnChargingStartNotificationDelegate?             OnChargingStartNotification;
+        public event OnChargingStartNotificationResponseDelegate?     OnChargingStartNotificationResponse;
 
-        public event OnChargingProgressNotificationRequestDelegate   OnChargingProgressNotificationRequest;
-        public event OnChargingProgressNotificationDelegate          OnChargingProgressNotification;
-        public event OnChargingProgressNotificationResponseDelegate  OnChargingProgressNotificationResponse;
+        public event OnChargingProgressNotificationRequestDelegate?   OnChargingProgressNotificationRequest;
+        public event OnChargingProgressNotificationDelegate?          OnChargingProgressNotification;
+        public event OnChargingProgressNotificationResponseDelegate?  OnChargingProgressNotificationResponse;
 
-        public event OnChargingEndNotificationRequestDelegate        OnChargingEndNotificationRequest;
-        public event OnChargingEndNotificationDelegate               OnChargingEndNotification;
-        public event OnChargingEndNotificationResponseDelegate       OnChargingEndNotificationResponse;
+        public event OnChargingEndNotificationRequestDelegate?        OnChargingEndNotificationRequest;
+        public event OnChargingEndNotificationDelegate?               OnChargingEndNotification;
+        public event OnChargingEndNotificationResponseDelegate?       OnChargingEndNotificationResponse;
 
-        public event OnChargingErrorNotificationRequestDelegate      OnChargingErrorNotificationRequest;
-        public event OnChargingErrorNotificationDelegate             OnChargingErrorNotification;
-        public event OnChargingErrorNotificationResponseDelegate     OnChargingErrorNotificationResponse;
+        public event OnChargingErrorNotificationRequestDelegate?      OnChargingErrorNotificationRequest;
+        public event OnChargingErrorNotificationDelegate?             OnChargingErrorNotification;
+        public event OnChargingErrorNotificationResponseDelegate?     OnChargingErrorNotificationResponse;
 
         #endregion
 
         #region (protected internal) OnChargingNotificationsHTTPResponse
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP response was sent.
+        /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse = new();
 
         /// <summary>
-        /// An event sent whenever a ChargingNotifications HTTP response was sent.
+        /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
         /// <param name="Timestamp">The timestamp of the notification.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
@@ -345,12 +353,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      HTTPRequest   Request,
                                                                      HTTPResponse  Response)
 
-            => OnChargingNotificationsHTTPResponse?.WhenAll(Timestamp,
-                                                            API ?? this,
-                                                            Request,
-                                                            Response);
+            => OnChargingNotificationsHTTPResponse.WhenAll(Timestamp,
+                                                           API ?? this,
+                                                           Request,
+                                                           Response);
 
         #endregion
+
 
 
         #region (protected internal) OnChargeDetailRecordHTTPRequest
@@ -358,7 +367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new HTTPRequestLogEvent();
+        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new();
 
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
@@ -370,9 +379,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                  HTTPAPI       API,
                                                                  HTTPRequest   Request)
 
-            => OnChargeDetailRecordHTTPRequest?.WhenAll(Timestamp,
-                                                        API ?? this,
-                                                        Request);
+            => OnChargeDetailRecordHTTPRequest.WhenAll(Timestamp,
+                                                       API ?? this,
+                                                       Request);
 
         #endregion
 
@@ -381,17 +390,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event send whenever a charge detail record was received.
         /// </summary>
-        public event OnChargeDetailRecordRequestDelegate   OnChargeDetailRecordRequest;
+        public event OnChargeDetailRecordRequestDelegate?   OnChargeDetailRecordRequest;
 
         /// <summary>
         /// An event send whenever a charge detail record was received.
         /// </summary>
-        public event OnChargeDetailRecordDelegate          OnChargeDetailRecord;
+        public event OnChargeDetailRecordDelegate?          OnChargeDetailRecord;
 
         /// <summary>
         /// An event send whenever a response to a received charge detail record was sent.
         /// </summary>
-        public event OnChargeDetailRecordResponseDelegate  OnChargeDetailRecordResponse;
+        public event OnChargeDetailRecordResponseDelegate?  OnChargeDetailRecordResponse;
 
         #endregion
 
@@ -400,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new HTTPResponseLogEvent();
+        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new();
 
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
@@ -414,10 +423,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   HTTPRequest   Request,
                                                                   HTTPResponse  Response)
 
-            => OnChargeDetailRecordHTTPResponse?.WhenAll(Timestamp,
-                                                         API ?? this,
-                                                         Request,
-                                                         Response);
+            => OnChargeDetailRecordHTTPResponse.WhenAll(Timestamp,
+                                                        API ?? this,
+                                                        Request,
+                                                        Response);
 
         #endregion
 
@@ -469,48 +478,50 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
         /// <param name="DNSClient">The DNS client of the API.</param>
         /// <param name="Autostart">Whether to start the API automatically.</param>
-        public EMPServerAPI(HTTPHostname?                        HTTPHostname                       = null,
-                            String                               ExternalDNSName                    = null,
-                            IPPort?                              HTTPServerPort                     = null,
-                            HTTPPath?                            BasePath                           = null,
-                            String                               HTTPServerName                     = DefaultHTTPServerName,
+        public EMPServerAPI(HTTPHostname?                         HTTPHostname                       = null,
+                            String?                               ExternalDNSName                    = null,
+                            IPPort?                               HTTPServerPort                     = null,
+                            HTTPPath?                             BasePath                           = null,
+                            String                                HTTPServerName                     = DefaultHTTPServerName,
 
-                            HTTPPath?                            URLPathPrefix                      = null,
-                            String                               HTTPServiceName                    = DefaultHTTPServiceName,
-                            JObject                              APIVersionHashes                   = null,
+                            HTTPPath?                             URLPathPrefix                      = null,
+                            String                                HTTPServiceName                    = DefaultHTTPServiceName,
+                            JObject?                              APIVersionHashes                   = null,
 
-                            ServerCertificateSelectorDelegate    ServerCertificateSelector          = null,
-                            LocalCertificateSelectionCallback    ClientCertificateSelector          = null,
-                            RemoteCertificateValidationCallback  ClientCertificateValidator         = null,
-                            SslProtocols                         AllowedTLSProtocols                = SslProtocols.Tls12 | SslProtocols.Tls13,
+                            ServerCertificateSelectorDelegate?    ServerCertificateSelector          = null,
+                            LocalCertificateSelectionCallback?    ClientCertificateSelector          = null,
+                            RemoteCertificateValidationCallback?  ClientCertificateValidator         = null,
+                            SslProtocols?                         AllowedTLSProtocols                = null,
+                            Boolean?                              ClientCertificateRequired          = null,
+                            Boolean?                              CheckCertificateRevocation         = null,
 
-                            String                               ServerThreadName                   = null,
-                            ThreadPriority?                      ServerThreadPriority               = null,
-                            Boolean?                             ServerThreadIsBackground           = null,
-                            ConnectionIdBuilder                  ConnectionIdBuilder                = null,
-                            ConnectionThreadsNameBuilder         ConnectionThreadsNameBuilder       = null,
-                            ConnectionThreadsPriorityBuilder     ConnectionThreadsPriorityBuilder   = null,
-                            Boolean?                             ConnectionThreadsAreBackground     = null,
-                            TimeSpan?                            ConnectionTimeout                  = null,
-                            UInt32?                              MaxClientConnections               = null,
+                            String?                               ServerThreadName                   = null,
+                            ThreadPriority?                       ServerThreadPriority               = null,
+                            Boolean?                              ServerThreadIsBackground           = null,
+                            ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
+                            ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
+                            ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
+                            Boolean?                              ConnectionThreadsAreBackground     = null,
+                            TimeSpan?                             ConnectionTimeout                  = null,
+                            UInt32?                               MaxClientConnections               = null,
 
-                            Boolean?                             DisableMaintenanceTasks            = false,
-                            TimeSpan?                            MaintenanceInitialDelay            = null,
-                            TimeSpan?                            MaintenanceEvery                   = null,
+                            Boolean?                              DisableMaintenanceTasks            = false,
+                            TimeSpan?                             MaintenanceInitialDelay            = null,
+                            TimeSpan?                             MaintenanceEvery                   = null,
 
-                            Boolean?                             DisableWardenTasks                 = false,
-                            TimeSpan?                            WardenInitialDelay                 = null,
-                            TimeSpan?                            WardenCheckEvery                   = null,
+                            Boolean?                              DisableWardenTasks                 = false,
+                            TimeSpan?                             WardenInitialDelay                 = null,
+                            TimeSpan?                             WardenCheckEvery                   = null,
 
-                            Boolean?                             IsDevelopment                      = null,
-                            IEnumerable<String>                  DevelopmentServers                 = null,
-                            Boolean                              DisableLogging                     = false,
-                            String                               LoggingPath                        = DefaultHTTPAPI_LoggingPath,
-                            String                               LoggingContext                     = DefaultLoggingContext,
-                            String                               LogfileName                        = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate               LogfileCreator                     = null,
-                            DNSClient                            DNSClient                          = null,
-                            Boolean                              Autostart                          = false)
+                            Boolean?                              IsDevelopment                      = null,
+                            IEnumerable<String>?                  DevelopmentServers                 = null,
+                            Boolean                               DisableLogging                     = false,
+                            String                                LoggingPath                        = DefaultHTTPAPI_LoggingPath,
+                            String                                LoggingContext                     = DefaultLoggingContext,
+                            String                                LogfileName                        = DefaultHTTPAPI_LogfileName,
+                            LogfileCreatorDelegate?               LogfileCreator                     = null,
+                            DNSClient?                            DNSClient                          = null,
+                            Boolean                               Autostart                          = false)
 
             : base(HTTPHostname,
                    ExternalDNSName,
@@ -527,6 +538,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    ClientCertificateValidator,
                    ClientCertificateSelector,
                    AllowedTLSProtocols,
+                   ClientCertificateRequired,
+                   CheckCertificateRevocation,
 
                    ServerThreadName,
                    ServerThreadPriority,
@@ -557,9 +570,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            RegisterURLTemplates();
-
-            this.Counter     = new Counters();
+            this.Counters    = new APICounters();
 
             this.HTTPLogger  = DisableLogging == false
                                    ? new Logger(this,
@@ -567,6 +578,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                 LoggingContext ?? DefaultLoggingContext,
                                                 LogfileCreator)
                                    : null;
+
+            RegisterURLTemplates();
 
             if (Autostart)
                 Start();
@@ -576,31 +589,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region (private) RegisterURLTemplates()
+        #region (private) RegisterURLTemplates(RegisterRootService = true)
 
-        private void RegisterURLTemplates()
+        private void RegisterURLTemplates(Boolean RegisterRootService = true)
         {
 
             #region / (HTTPRoot)
 
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.GET,
-                                         new HTTPPath[] {
-                                             URLPathPrefix + "/",
-                                             URLPathPrefix + "/{FileName}"
-                                         },
-                                         HTTPDelegate: Request => {
-                                             return Task.FromResult(
-                                                 new HTTPResponse.Builder(Request) {
-                                                     HTTPStatusCode  = HTTPStatusCode.OK,
-                                                     Server          = HTTPServer.DefaultServerName,
-                                                     Date            = Timestamp.Now,
-                                                     ContentType     = HTTPContentType.TEXT_UTF8,
-                                                     Content         = "This is an OICP v2.3 HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                     CacheControl    = "public, max-age=300",
-                                                     Connection      = "close"
-                                                 }.AsImmutable);
-                                         });
+            if (RegisterRootService)
+                HTTPServer.AddMethodCallback(HTTPHostname.Any,
+                                             HTTPMethod.GET,
+                                             new HTTPPath[] {
+                                                 URLPathPrefix + "/",
+                                                 URLPathPrefix + "/{FileName}"
+                                             },
+                                             HTTPDelegate: Request => {
+                                                 return Task.FromResult(
+                                                     new HTTPResponse.Builder(Request) {
+                                                         HTTPStatusCode  = HTTPStatusCode.OK,
+                                                         Server          = HTTPServer.DefaultServerName,
+                                                         Date            = Timestamp.Now,
+                                                         ContentType     = HTTPContentType.TEXT_UTF8,
+                                                         Content         = "This is an OICP v2.3 EMP Server HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                         CacheControl    = "public, max-age=300",
+                                                         Connection      = "close"
+                                                     }.AsImmutable);
+                                             },
+                                             AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -609,9 +624,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/start
 
-            // --------------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/{operatorId}/authorize/start
-            // --------------------------------------------------------------------------------------------------------------------------------------------
+            // --------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GDF/authorize/start
+            // --------------------------------------------------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.POST,
                                          URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/start",
@@ -620,33 +635,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
-                                             AuthorizationStartResponse authorizationStartResponse = null;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                                             AuthorizationStartResponse? authorizationStartResponse = null;
 
                                              try
                                              {
 
                                                  #region Try to parse OperatorId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(Request.ParsedURLParameters[0], out Operator_Id operatorId))
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.AuthorizeStart.IncRequests_Error();
+
                                                      authorizationStartResponse = AuthorizationStartResponse.SystemError(
-                                                                                      null,
-                                                                                      "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                      StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
                                                                                   );
+
+                                                 }
 
                                                  #endregion
 
                                                  else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                          operatorId,
-                                                                                         Request.Timeout ?? DefaultRequestTimeout,
                                                                                          out AuthorizeStartRequest?  authorizeStartRequest,
                                                                                          out String?                 errorResponse,
+                                                                                         processId,
                                                                                          Request.Timestamp,
+                                                                                         Request.CancellationToken,
                                                                                          Request.EventTrackingId,
+                                                                                         Request.Timeout ?? DefaultRequestTimeout,
                                                                                          CustomAuthorizeStartRequestParser))
                                                  {
 
-                                                     Counter.AuthorizeStart.IncRequests();
+                                                     Counters.AuthorizeStart.IncRequests_OK();
 
                                                      #region Send OnAuthorizeStartRequest event
 
@@ -674,7 +698,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      var OnAuthorizeStartLocal = OnAuthorizeStart;
                                                      if (OnAuthorizeStartLocal is not null)
                                                      {
-
                                                          try
                                                          {
 
@@ -684,23 +707,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                   this,
                                                                                                                                                   authorizeStartRequest!))))?.FirstOrDefault();
 
+                                                             Counters.AuthorizeStart.IncResponses_OK();
+
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.AuthorizeStart.IncResponses_Error();
+
                                                              authorizationStartResponse = AuthorizationStartResponse.DataError(
-                                                                                              Request:                   authorizeStartRequest!,
+                                                                                              Request:                   authorizeStartRequest,
                                                                                               StatusCodeDescription:     e.Message,
                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
                                                                                               SessionId:                 authorizeStartRequest?.SessionId,
                                                                                               CPOPartnerSessionId:       authorizeStartRequest?.CPOPartnerSessionId
                                                                                           );
-                                                         }
 
-                                                         if (authorizationStartResponse is null)
-                                                             authorizationStartResponse = AuthorizationStartResponse.SystemError(
-                                                                                              authorizeStartRequest!,
-                                                                                              "Could not process the received AuthorizeStart request!"
-                                                                                          );
+                                                         }
+                                                     }
+
+                                                     if (authorizationStartResponse is null)
+                                                     {
+
+                                                         Counters.AuthorizeStart.IncResponses_Error();
+
+                                                         authorizationStartResponse = AuthorizationStartResponse.SystemError(
+                                                                                          authorizeStartRequest!,
+                                                                                          "Could not process the received AuthorizeStart request!"
+                                                                                      );
 
                                                      }
 
@@ -711,12 +745,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeStartResponse != null)
+                                                         if (OnAuthorizeStartResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizationStartResponse!,
+                                                                                              authorizationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
 
@@ -730,23 +764,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeStart.IncRequests_Error();
+
                                                      authorizationStartResponse = AuthorizationStartResponse.DataError(
-                                                                                      Request:                   authorizeStartRequest, // maybe null!
+                                                                                      Request:                   authorizeStartRequest,
                                                                                       StatusCodeDescription:     "We could not parse the given AuthorizeStart request!",
                                                                                       StatusCodeAdditionalInfo:  errorResponse,
                                                                                       SessionId:                 authorizeStartRequest?.SessionId,
                                                                                       CPOPartnerSessionId:       authorizeStartRequest?.CPOPartnerSessionId
                                                                                   );
 
+                                                 }
+
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.AuthorizeStart.IncResponses_Error();
+
                                                  authorizationStartResponse = AuthorizationStartResponse.SystemError(
                                                                                   Request:                   null,
                                                                                   StatusCodeDescription:     e.Message,
                                                                                   StatusCodeAdditionalInfo:  e.StackTrace
                                                                               );
+
                                              }
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -756,7 +801,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizationStartResponse.ToJSON().
+                                                        Content                    = authorizationStartResponse.ToJSON(CustomAuthorizationStartSerializer,
+                                                                                                                       CustomStatusCodeSerializer).
                                                                                                                 ToString(JSONFormatting).
                                                                                                                 ToUTF8Bytes(),
                                                         Connection                 = "close"
@@ -768,9 +814,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/stop
 
-            // --------------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/{operatorId}/authorize/stop
-            // --------------------------------------------------------------------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GDF/authorize/stop
+            // -------------------------------------------------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.POST,
                                          URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/stop",
@@ -779,45 +825,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
-                                             AuthorizationStopResponse authorizationStopResponse = null;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                                             AuthorizationStopResponse? authorizationStopResponse = null;
 
                                              try
                                              {
 
                                                  #region Try to parse OperatorId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(Request.ParsedURLParameters[0], out Operator_Id operatorId))
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
+
+                                                     Counters.AuthorizeStop.IncRequests_Error();
+
                                                      authorizationStopResponse = AuthorizationStopResponse.SystemError(
-                                                                                     null,
-                                                                                     "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                     StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
                                                                                  );
+
+                                                 }
 
                                                  #endregion
 
                                                  else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                         operatorId,
-                                                                                        Request.Timeout ?? DefaultRequestTimeout,
-                                                                                        out AuthorizeStopRequest  authorizeStopRequest,
-                                                                                        out String                errorResponse,
+                                                                                        out AuthorizeStopRequest?  authorizeStopRequest,
+                                                                                        out String?                errorResponse,
+                                                                                        processId,
                                                                                         Request.Timestamp,
+                                                                                        Request.CancellationToken,
                                                                                         Request.EventTrackingId,
+                                                                                        Request.Timeout ?? DefaultRequestTimeout,
                                                                                         CustomAuthorizeStopRequestParser))
                                                  {
 
-                                                     Counter.AuthorizeStop.IncRequests();
+                                                     Counters.AuthorizeStop.IncRequests_OK();
 
                                                      #region Send OnAuthorizeStopRequest event
 
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeStopRequest != null)
+                                                         if (OnAuthorizeStopRequest is not null)
                                                              await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
                                                                                 Cast<OnAuthorizeStopRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeStopRequest))).
+                                                                                              authorizeStopRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -831,7 +886,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      #region Call async subscribers
 
                                                      var OnAuthorizeStopLocal = OnAuthorizeStop;
-                                                     if (OnAuthorizeStopLocal != null)
+                                                     if (OnAuthorizeStopLocal is not null)
                                                      {
                                                          try
                                                          {
@@ -840,26 +895,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                   Cast<OnAuthorizeStopDelegate>().
                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                 this,
-                                                                                                                                                authorizeStopRequest))))?.FirstOrDefault();
+                                                                                                                                                authorizeStopRequest!))))?.FirstOrDefault();
+
+                                                             Counters.AuthorizeStop.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
                                                          {
+
+                                                             Counters.AuthorizeStop.IncResponses_Error();
+
                                                              authorizationStopResponse = AuthorizationStopResponse.DataError(
                                                                                              Request:                   authorizeStopRequest,
                                                                                              StatusCodeDescription:     e.Message,
                                                                                              StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                             SessionId:                 authorizeStopRequest.SessionId,
-                                                                                             CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                             SessionId:                 authorizeStopRequest?.SessionId,
+                                                                                             CPOPartnerSessionId:       authorizeStopRequest?.CPOPartnerSessionId
                                                                                          );
+
                                                          }
                                                      }
 
-                                                     if (authorizationStopResponse == null)
+                                                     if (authorizationStopResponse is null)
+                                                     {
+
+                                                         Counters.AuthorizeStop.IncResponses_Error();
+
                                                          authorizationStopResponse = AuthorizationStopResponse.SystemError(
                                                                                          authorizeStopRequest,
                                                                                          "Could not process the received AuthorizeStop request!"
                                                                                      );
+
+                                                     }
 
                                                      #endregion
 
@@ -868,7 +935,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnAuthorizeStopResponse != null)
+                                                         if (OnAuthorizeStopResponse is not null)
                                                              await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
                                                                                 Cast<OnAuthorizeStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -887,23 +954,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.AuthorizeStop.IncRequests_Error();
+
                                                      authorizationStopResponse = AuthorizationStopResponse.DataError(
                                                                                      Request:                   authorizeStopRequest,
                                                                                      StatusCodeDescription:     "We could not handle the given AuthorizeStop request!",
                                                                                      StatusCodeAdditionalInfo:  errorResponse,
-                                                                                     SessionId:                 authorizeStopRequest.SessionId,
-                                                                                     CPOPartnerSessionId:       authorizeStopRequest.CPOPartnerSessionId
+                                                                                     SessionId:                 authorizeStopRequest?.SessionId,
+                                                                                     CPOPartnerSessionId:       authorizeStopRequest?.CPOPartnerSessionId
                                                                                  );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.AuthorizeStop.IncResponses_Error();
+
                                                  authorizationStopResponse = AuthorizationStopResponse.SystemError(
                                                                                  Request:                   null,
                                                                                  StatusCodeDescription:     e.Message,
                                                                                  StatusCodeAdditionalInfo:  e.StackTrace
                                                                              );
+
                                              }
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -913,7 +991,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         AccessControlAllowMethods  = "POST",
                                                         AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
                                                         ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizationStopResponse.ToJSON().
+                                                        Content                    = authorizationStopResponse.ToJSON(CustomAuthorizationStopSerializer,
+                                                                                                                      CustomStatusCodeSerializer).
                                                                                                                ToString(JSONFormatting).
                                                                                                                ToUTF8Bytes(),
                                                         Connection                 = "close"
@@ -937,465 +1016,642 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logChargingNotificationsHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                                             Acknowledgement? chargingNotificationsResponse = null;
+
                                              try
                                              {
 
-                                                 #region Try to parse the charging notification
-
-                                                 var startTime      = Timestamp.Now;
-                                                 var errorResponse  = String.Empty;
-
-                                                 JObject acknowledgementJSON = null;
-
-                                                 if (!Request.TryParseJObjectRequestBody(out JObject JSONRequest, out HTTPResponse.Builder HTTPResponse)
-                                                        ||
-                                                     !JSONRequest.ParseMandatory("Type",
-                                                                                 "charging notification type",
-                                                                                 ChargingNotificationTypesExtensions.TryParse,
-                                                                                 out ChargingNotificationTypes  chargingNotificationType,
-                                                                                 out                            errorResponse))
+                                                 if (Request.TryParseJObjectRequestBody(out JObject JSONRequest, out _) &&
+                                                     JSONRequest.ParseMandatory("Type",
+                                                                                "charging notification type",
+                                                                                ChargingNotificationTypesExtensions.TryParse,
+                                                                                out ChargingNotificationTypes chargingNotificationType,
+                                                                                out _))
                                                  {
 
-                                                     return new HTTPResponse.Builder(Request) {
-                                                                HTTPStatusCode             = HTTPStatusCode.BadRequest,
-                                                                Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = Timestamp.Now,
-                                                                AccessControlAllowOrigin   = "*",
-                                                                AccessControlAllowMethods  = "POST",
-                                                                AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                ContentType                = HTTPContentType.JSON_UTF8,
-                                                                Content                    = Acknowledgement.DataError(
-                                                                                                                 RequestTimestamp:          Request.Timestamp,
-                                                                                                                 StatusCodeDescription:     "We could not handle the given charging notification request!",
-                                                                                                                 StatusCodeAdditionalInfo:  errorResponse
-                                                                                                             ).
-                                                                                                             ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                    CustomStatusCodeSerializer).
-                                                                                                             ToString(JSONFormatting).
-                                                                                                             ToUTF8Bytes(),
-                                                                Connection                 = "close"
-                                                            }.AsImmutable;
+                                                     Counters.ChargingNotifications.IncRequests_OK();
+
+                                                     switch (chargingNotificationType)
+                                                     {
+
+                                                         #region Start
+
+                                                         case ChargingNotificationTypes.Start:
+
+                                                             if (ChargingStartNotificationRequest.TryParse(JSONRequest,
+                                                                                                           out ChargingStartNotificationRequest?  chargingStartNotificationRequest,
+                                                                                                           out String?                            errorResponse,
+                                                                                                           processId,
+                                                                                                           Request.Timestamp,
+                                                                                                           Request.CancellationToken,
+                                                                                                           Request.EventTrackingId,
+                                                                                                           Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                           CustomChargingStartNotificationRequestParser))
+                                                             {
+
+                                                                 Counters.ChargingStartNotification.IncRequests_OK();
+
+                                                                 #region Send OnChargingStartNotificationRequest event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingStartNotificationRequest is not null)
+                                                                         await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
+                                                                                            Cast<OnChargingStartNotificationRequestDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingStartNotificationRequest!))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationRequest));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Call async subscribers
+
+                                                                 Acknowledgement<ChargingStartNotificationRequest>? chargingStartNotificationResponse = null;
+
+                                                                 var OnChargingStartNotificationLocal = OnChargingStartNotification;
+                                                                 if (OnChargingStartNotificationLocal is not null)
+                                                                 {
+                                                                     try
+                                                                     {
+
+                                                                         chargingStartNotificationResponse = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
+                                                                                                                                                                  Cast<OnChargingStartNotificationDelegate>().
+                                                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                                                this,
+                                                                                                                                                                                chargingStartNotificationRequest!))).
+                                                                                                                                                                  ConfigureAwait(false))?.FirstOrDefault();
+
+                                                                         Counters.ChargingNotifications.    IncResponses_OK();
+                                                                         Counters.ChargingStartNotification.IncResponses_OK();
+
+                                                                     }
+                                                                     catch (Exception e)
+                                                                     {
+
+                                                                         Counters.ChargingNotifications.    IncResponses_Error();
+                                                                         Counters.ChargingStartNotification.IncResponses_Error();
+
+                                                                         chargingStartNotificationResponse = Acknowledgement<ChargingStartNotificationRequest>.DataError(
+                                                                                                                 Request:                   chargingStartNotificationRequest,
+                                                                                                                 StatusCodeDescription:     e.Message,
+                                                                                                                 StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                                 SessionId:                 chargingStartNotificationRequest?.SessionId,
+                                                                                                                 CPOPartnerSessionId:       chargingStartNotificationRequest?.CPOPartnerSessionId
+                                                                                                             );
+
+                                                                     }
+                                                                 }
+
+                                                                 if (chargingStartNotificationResponse is null)
+                                                                 {
+
+                                                                     Counters.ChargingNotifications.    IncResponses_Error();
+                                                                     Counters.ChargingStartNotification.IncResponses_Error();
+
+                                                                     chargingStartNotificationResponse = Acknowledgement<ChargingStartNotificationRequest>.SystemError(
+                                                                                                             chargingStartNotificationRequest,
+                                                                                                             "Could not process the received ChargingStartNotification request!"
+                                                                                                         );
+
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Send OnChargingStartNotificationResponse event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingStartNotificationResponse is not null)
+                                                                         await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
+                                                                                            Cast<OnChargingStartNotificationResponseDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingStartNotificationResponse,
+                                                                                                          Timestamp.Now - startTime))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationResponse));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 chargingNotificationsResponse = chargingStartNotificationResponse;
+
+                                                             }
+                                                             else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.    IncResponses_Error();
+                                                                 Counters.ChargingStartNotification.IncResponses_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingStartNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
+
+                                                             break;
+
+                                                         #endregion
+
+                                                         #region Progress
+
+                                                         case ChargingNotificationTypes.Progress:
+
+                                                             if (ChargingProgressNotificationRequest.TryParse(JSONRequest,
+                                                                                                              out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
+                                                                                                              out                                       errorResponse,
+                                                                                                              processId,
+                                                                                                              Request.Timestamp,
+                                                                                                              Request.CancellationToken,
+                                                                                                              Request.EventTrackingId,
+                                                                                                              Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                              CustomChargingProgressNotificationRequestParser))
+                                                             {
+
+                                                                 Counters.ChargingProgressNotification.IncRequests_OK();
+
+                                                                 #region Send OnChargingProgressNotificationRequest event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingProgressNotificationRequest is not null)
+                                                                         await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
+                                                                                            Cast<OnChargingProgressNotificationRequestDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingProgressNotificationRequest))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationRequest));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Call async subscribers
+
+                                                                 Acknowledgement<ChargingProgressNotificationRequest>? chargingProgressNotificationResponse = null;
+
+                                                                 var OnChargingProgressNotificationLocal = OnChargingProgressNotification;
+                                                                 if (OnChargingProgressNotificationLocal is not null)
+                                                                 {
+                                                                     try
+                                                                     {
+
+                                                                         chargingProgressNotificationResponse = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
+                                                                                                                                                                        Cast<OnChargingProgressNotificationDelegate>().
+                                                                                                                                                                        Select(e => e(Timestamp.Now,
+                                                                                                                                                                                      this,
+                                                                                                                                                                                      chargingProgressNotificationRequest!))).
+                                                                                                                                                                        ConfigureAwait(false))?.FirstOrDefault();
+
+                                                                         Counters.ChargingNotifications.       IncResponses_OK();
+                                                                         Counters.ChargingProgressNotification.IncResponses_OK();
+
+                                                                     }
+                                                                     catch (Exception e)
+                                                                     {
+
+                                                                         Counters.ChargingNotifications.       IncResponses_Error();
+                                                                         Counters.ChargingProgressNotification.IncResponses_Error();
+
+                                                                         chargingProgressNotificationResponse = Acknowledgement<ChargingProgressNotificationRequest>.DataError(
+                                                                                                       Request:                   chargingProgressNotificationRequest,
+                                                                                                       StatusCodeDescription:     e.Message,
+                                                                                                       StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                       SessionId:                 chargingProgressNotificationRequest?.SessionId,
+                                                                                                       CPOPartnerSessionId:       chargingProgressNotificationRequest?.CPOPartnerSessionId
+                                                                                                   );
+
+                                                                     }
+                                                                 }
+
+                                                                 if (chargingProgressNotificationResponse is null)
+                                                                 {
+
+                                                                     Counters.ChargingNotifications.       IncResponses_Error();
+                                                                     Counters.ChargingProgressNotification.IncResponses_Error();
+
+                                                                     chargingProgressNotificationResponse = Acknowledgement<ChargingProgressNotificationRequest>.SystemError(
+                                                                                                                chargingProgressNotificationRequest,
+                                                                                                                "Could not process the received ChargingProgressNotification request!"
+                                                                                                            );
+
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Send OnChargingProgressNotificationResponse event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingProgressNotificationResponse is not null)
+                                                                         await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
+                                                                                            Cast<OnChargingProgressNotificationResponseDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingProgressNotificationResponse,
+                                                                                                          Timestamp.Now - startTime))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationResponse));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 chargingNotificationsResponse = chargingProgressNotificationResponse;
+
+                                                             }
+                                                             else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.       IncRequests_Error();
+                                                                 Counters.ChargingProgressNotification.IncRequests_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingProgressNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
+
+                                                             break;
+
+                                                         #endregion
+
+                                                         #region End
+
+                                                         case ChargingNotificationTypes.End:
+
+                                                             if (ChargingEndNotificationRequest.TryParse(JSONRequest,
+                                                                                                         out ChargingEndNotificationRequest?  chargingEndNotificationRequest,
+                                                                                                         out                                  errorResponse,
+                                                                                                         processId,
+                                                                                                         Request.Timestamp,
+                                                                                                         Request.CancellationToken,
+                                                                                                         Request.EventTrackingId,
+                                                                                                         Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                         CustomChargingEndNotificationRequestParser))
+                                                             {
+
+                                                                 Counters.ChargingEndNotification.IncRequests_OK();
+
+                                                                 #region Send OnChargingEndNotificationRequest event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingEndNotificationRequest is not null)
+                                                                         await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
+                                                                                            Cast<OnChargingEndNotificationRequestDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingEndNotificationRequest))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationRequest));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Call async subscribers
+
+                                                                 Acknowledgement<ChargingEndNotificationRequest>? chargingEndNotificationResponse = null;
+
+                                                                 var OnChargingEndNotificationLocal = OnChargingEndNotification;
+                                                                 if (OnChargingEndNotificationLocal is not null)
+                                                                 {
+                                                                     try
+                                                                     {
+
+                                                                         chargingEndNotificationResponse = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
+                                                                                                                                                              Cast<OnChargingEndNotificationDelegate>().
+                                                                                                                                                              Select(e => e(Timestamp.Now,
+                                                                                                                                                                            this,
+                                                                                                                                                                            chargingEndNotificationRequest!))).
+                                                                                                                                                              ConfigureAwait(false))?.FirstOrDefault();
+
+                                                                         Counters.ChargingNotifications.  IncResponses_OK();
+                                                                         Counters.ChargingEndNotification.IncResponses_OK();
+
+                                                                     }
+                                                                     catch (Exception e)
+                                                                     {
+
+                                                                         Counters.ChargingNotifications.  IncResponses_Error();
+                                                                         Counters.ChargingEndNotification.IncResponses_Error();
+
+                                                                         chargingEndNotificationResponse = Acknowledgement<ChargingEndNotificationRequest>.DataError(
+                                                                                                               Request:                   chargingEndNotificationRequest,
+                                                                                                               StatusCodeDescription:     e.Message,
+                                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                               SessionId:                 chargingEndNotificationRequest?.SessionId,
+                                                                                                               CPOPartnerSessionId:       chargingEndNotificationRequest?.CPOPartnerSessionId
+                                                                                                           );
+
+                                                                     }
+                                                                 }
+
+                                                                 if (chargingEndNotificationResponse is null)
+                                                                 {
+
+                                                                     Counters.ChargingNotifications.  IncResponses_Error();
+                                                                     Counters.ChargingEndNotification.IncResponses_Error();
+
+                                                                     chargingEndNotificationResponse = Acknowledgement<ChargingEndNotificationRequest>.SystemError(
+                                                                                                           chargingEndNotificationRequest,
+                                                                                                           "Could not process the received ChargingEndNotification request!"
+                                                                                                       );
+
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Send OnChargingEndNotificationResponse event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingEndNotificationResponse is not null)
+                                                                         await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
+                                                                                            Cast<OnChargingEndNotificationResponseDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingEndNotificationResponse,
+                                                                                                          Timestamp.Now - startTime))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationResponse));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 chargingNotificationsResponse = chargingEndNotificationResponse;
+
+                                                             }
+                                                             else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.  IncRequests_Error();
+                                                                 Counters.ChargingEndNotification.IncRequests_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingEndNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
+
+                                                             break;
+
+                                                         #endregion
+
+                                                         #region Error
+
+                                                         case ChargingNotificationTypes.Error:
+
+                                                             if (ChargingErrorNotificationRequest.TryParse(JSONRequest,
+                                                                                                           out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
+                                                                                                           out                                    errorResponse,
+                                                                                                           processId,
+                                                                                                           Request.Timestamp,
+                                                                                                           Request.CancellationToken,
+                                                                                                           Request.EventTrackingId,
+                                                                                                           Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                           CustomChargingErrorNotificationRequestParser))
+                                                             {
+
+                                                                 Counters.ChargingErrorNotification.IncRequests_OK();
+
+                                                                 #region Send OnChargingErrorNotificationRequest event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingErrorNotificationRequest is not null)
+                                                                         await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
+                                                                                            Cast<OnChargingErrorNotificationRequestDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingErrorNotificationRequest!))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationRequest));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Call async subscribers
+
+                                                                 Acknowledgement<ChargingErrorNotificationRequest>? chargingErrorNotificationResponse = null;
+
+                                                                 var OnChargingErrorNotificationLocal = OnChargingErrorNotification;
+                                                                 if (OnChargingErrorNotificationLocal is not null)
+                                                                 {
+                                                                     try
+                                                                     {
+
+                                                                         chargingErrorNotificationResponse = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
+                                                                                                                                                                  Cast<OnChargingErrorNotificationDelegate>().
+                                                                                                                                                                  Select(e => e(Timestamp.Now,
+                                                                                                                                                                                this,
+                                                                                                                                                                                chargingErrorNotificationRequest!))).
+                                                                                                                                                                  ConfigureAwait(false))?.FirstOrDefault();
+
+                                                                         Counters.ChargingNotifications.    IncResponses_OK();
+                                                                         Counters.ChargingErrorNotification.IncResponses_OK();
+
+                                                                     }
+                                                                     catch (Exception e)
+                                                                     {
+
+                                                                         Counters.ChargingNotifications.    IncResponses_Error();
+                                                                         Counters.ChargingErrorNotification.IncResponses_Error();
+
+                                                                         chargingErrorNotificationResponse = Acknowledgement<ChargingErrorNotificationRequest>.DataError(
+                                                                                                    Request:                   chargingErrorNotificationRequest,
+                                                                                                    StatusCodeDescription:     e.Message,
+                                                                                                    StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                                    SessionId:                 chargingErrorNotificationRequest?.SessionId,
+                                                                                                    CPOPartnerSessionId:       chargingErrorNotificationRequest?.CPOPartnerSessionId
+                                                                                                );
+
+                                                                     }
+                                                                 }
+
+                                                                 if (chargingErrorNotificationResponse is null)
+                                                                 {
+
+                                                                     Counters.ChargingNotifications.    IncResponses_Error();
+                                                                     Counters.ChargingErrorNotification.IncResponses_Error();
+
+                                                                     chargingErrorNotificationResponse = Acknowledgement<ChargingErrorNotificationRequest>.SystemError(
+                                                                                                             chargingErrorNotificationRequest,
+                                                                                                             "Could not process the received ChargingErrorNotification request!"
+                                                                                                         );
+
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 #region Send OnChargingErrorNotificationResponse event
+
+                                                                 try
+                                                                 {
+
+                                                                     if (OnChargingErrorNotificationResponse is not null)
+                                                                         await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
+                                                                                            Cast<OnChargingErrorNotificationResponseDelegate>().
+                                                                                            Select(e => e(Timestamp.Now,
+                                                                                                          this,
+                                                                                                          chargingErrorNotificationResponse,
+                                                                                                          Timestamp.Now - startTime))).
+                                                                                            ConfigureAwait(false);
+
+                                                                 }
+                                                                 catch (Exception e)
+                                                                 {
+                                                                     DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationResponse));
+                                                                 }
+
+                                                                 #endregion
+
+                                                                 chargingNotificationsResponse = chargingErrorNotificationResponse;
+
+                                                             }
+                                                             else
+                                                             {
+
+                                                                 Counters.ChargingNotifications.    IncRequests_Error();
+                                                                 Counters.ChargingErrorNotification.IncRequests_Error();
+
+                                                                 chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                     StatusCodeDescription:    "Could not parse the received ChargingErrorNotification request!",
+                                                                                                     StatusCodeAdditionalInfo:  errorResponse,
+                                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                                 );
+
+                                                             }
+
+                                                             break;
+
+                                                         #endregion
+
+                                                         #region ...or default
+
+                                                         default:
+
+                                                             Counters.ChargingNotifications.IncRequests_Error();
+
+                                                             chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                                 StatusCodeDescription: "Unknown or invalid charging notification type '" + chargingNotificationType.ToString() + "'!",
+                                                                                                 RequestTimestamp:       Request.Timestamp,
+                                                                                                 EventTrackingId:        Request.EventTrackingId
+                                                                                             );
+
+                                                             break;
+
+                                                         #endregion
+
+                                                     }
 
                                                  }
-
-                                                 #endregion
-
-                                                 switch (chargingNotificationType)
+                                                 else
                                                  {
 
-                                                     #region Start
-
-                                                     case ChargingNotificationTypes.Start:
-
-                                                         if (ChargingStartNotificationRequest.TryParse(JSONRequest,
-                                                                                                       Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                       out ChargingStartNotificationRequest  chargingStartNotificationRequest,
-                                                                                                       out                                   errorResponse,
-                                                                                                       Request.Timestamp,
-                                                                                                       Request.EventTrackingId,
-                                                                                                       CustomChargingStartNotificationRequestParser))
-                                                         {
-
-                                                             Counter.ChargingStartNotification.IncRequests();
-
-                                                             #region Send OnChargingStartNotificationRequest event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingStartNotificationRequest != null)
-                                                                     await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
-                                                                                        Cast<OnChargingStartNotificationRequestDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      chargingStartNotificationRequest))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationRequest));
-                                                             }
-
-                                                             #endregion
-
-                                                             #region Call async subscribers
-
-                                                             Acknowledgement<ChargingStartNotificationRequest> acknowledgement = null;
-
-                                                             if (OnChargingStartNotification != null)
-                                                                 acknowledgement = (await Task.WhenAll(OnChargingStartNotification.GetInvocationList().
-                                                                                                       Cast<OnChargingStartNotificationDelegate>().
-                                                                                                       Select(e => e(Timestamp.Now,
-                                                                                                                     this,
-                                                                                                                     chargingStartNotificationRequest))).
-                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
-
-                                                             if (acknowledgement == null)
-                                                                 acknowledgement = Acknowledgement<ChargingStartNotificationRequest>.SystemError(
-                                                                                       chargingStartNotificationRequest,
-                                                                                       "Could not process the received ChargingStartNotification request!"
-                                                                                   );
-
-                                                             #endregion
-
-                                                             #region Send OnChargingStartNotificationResponse event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingStartNotificationResponse != null)
-                                                                     await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
-                                                                                        Cast<OnChargingStartNotificationResponseDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      acknowledgement,
-                                                                                                      Timestamp.Now - startTime))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingStartNotificationResponse));
-                                                             }
-
-                                                             #endregion
-
-                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                          CustomStatusCodeSerializer);
-
-                                                         }
-
-                                                     break;
-
-                                                     #endregion
-
-                                                     #region Progress
-
-                                                     case ChargingNotificationTypes.Progress:
-
-                                                         if (ChargingProgressNotificationRequest.TryParse(JSONRequest,
-                                                                                                          Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                          out ChargingProgressNotificationRequest  chargingProgressNotificationRequest,
-                                                                                                          out                                      errorResponse,
-                                                                                                          Request.Timestamp,
-                                                                                                          Request.EventTrackingId,
-                                                                                                          CustomChargingProgressNotificationRequestParser))
-                                                         {
-
-                                                             Counter.ChargingProgressNotification.IncRequests();
-
-                                                             #region Send OnChargingProgressNotificationRequest event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingProgressNotificationRequest != null)
-                                                                     await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
-                                                                                        Cast<OnChargingProgressNotificationRequestDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      chargingProgressNotificationRequest))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationRequest));
-                                                             }
-
-                                                             #endregion
-
-                                                             #region Call async subscribers
-
-                                                             Acknowledgement<ChargingProgressNotificationRequest> acknowledgement = null;
-
-                                                             if (OnChargingProgressNotification != null)
-                                                                 acknowledgement = (await Task.WhenAll(OnChargingProgressNotification.GetInvocationList().
-                                                                                                       Cast<OnChargingProgressNotificationDelegate>().
-                                                                                                       Select(e => e(Timestamp.Now,
-                                                                                                                     this,
-                                                                                                                     chargingProgressNotificationRequest))).
-                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
-
-                                                             if (acknowledgement == null)
-                                                                 acknowledgement = Acknowledgement<ChargingProgressNotificationRequest>.SystemError(
-                                                                                       chargingProgressNotificationRequest,
-                                                                                       "Could not process the received ChargingProgressNotification request!"
-                                                                                   );
-
-                                                             #endregion
-
-                                                             #region Send OnChargingProgressNotificationResponse event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingProgressNotificationResponse != null)
-                                                                     await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
-                                                                                        Cast<OnChargingProgressNotificationResponseDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      acknowledgement,
-                                                                                                      Timestamp.Now - startTime))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingProgressNotificationResponse));
-                                                             }
-
-                                                             #endregion
-
-                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                          CustomStatusCodeSerializer);
-
-                                                         }
-
-                                                     break;
-
-                                                     #endregion
-
-                                                     #region End
-
-                                                     case ChargingNotificationTypes.End:
-
-                                                         if (ChargingEndNotificationRequest.TryParse(JSONRequest,
-                                                                                                          Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                          out ChargingEndNotificationRequest  chargingEndNotificationRequest,
-                                                                                                          out                                      errorResponse,
-                                                                                                          Request.Timestamp,
-                                                                                                          Request.EventTrackingId,
-                                                                                                          CustomChargingEndNotificationRequestParser))
-                                                         {
-
-                                                             Counter.ChargingEndNotification.IncRequests();
-
-                                                             #region Send OnChargingEndNotificationRequest event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingEndNotificationRequest != null)
-                                                                     await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
-                                                                                        Cast<OnChargingEndNotificationRequestDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      chargingEndNotificationRequest))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationRequest));
-                                                             }
-
-                                                             #endregion
-
-                                                             #region Call async subscribers
-
-                                                             Acknowledgement<ChargingEndNotificationRequest> acknowledgement = null;
-
-                                                             if (OnChargingEndNotification != null)
-                                                                 acknowledgement = (await Task.WhenAll(OnChargingEndNotification.GetInvocationList().
-                                                                                                       Cast<OnChargingEndNotificationDelegate>().
-                                                                                                       Select(e => e(Timestamp.Now,
-                                                                                                                     this,
-                                                                                                                     chargingEndNotificationRequest))).
-                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
-
-                                                             if (acknowledgement == null)
-                                                                 acknowledgement = Acknowledgement<ChargingEndNotificationRequest>.SystemError(
-                                                                                       chargingEndNotificationRequest,
-                                                                                       "Could not process the received ChargingEndNotification request!"
-                                                                                   );
-
-                                                             #endregion
-
-                                                             #region Send OnChargingEndNotificationResponse event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingEndNotificationResponse != null)
-                                                                     await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
-                                                                                        Cast<OnChargingEndNotificationResponseDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      acknowledgement,
-                                                                                                      Timestamp.Now - startTime))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingEndNotificationResponse));
-                                                             }
-
-                                                             #endregion
-
-                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                          CustomStatusCodeSerializer);
-
-                                                         }
-
-                                                     break;
-
-                                                     #endregion
-
-                                                     #region Error
-
-                                                     case ChargingNotificationTypes.Error:
-
-                                                         if (ChargingErrorNotificationRequest.TryParse(JSONRequest,
-                                                                                                          Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                          out ChargingErrorNotificationRequest  chargingErrorNotificationRequest,
-                                                                                                          out                                      errorResponse,
-                                                                                                          Request.Timestamp,
-                                                                                                          Request.EventTrackingId,
-                                                                                                          CustomChargingErrorNotificationRequestParser))
-                                                         {
-
-                                                             Counter.ChargingErrorNotification.IncRequests();
-
-                                                             #region Send OnChargingErrorNotificationRequest event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingErrorNotificationRequest != null)
-                                                                     await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
-                                                                                        Cast<OnChargingErrorNotificationRequestDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      chargingErrorNotificationRequest))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationRequest));
-                                                             }
-
-                                                             #endregion
-
-                                                             #region Call async subscribers
-
-                                                             Acknowledgement<ChargingErrorNotificationRequest> acknowledgement = null;
-
-                                                             if (OnChargingErrorNotification != null)
-                                                                 acknowledgement = (await Task.WhenAll(OnChargingErrorNotification.GetInvocationList().
-                                                                                                       Cast<OnChargingErrorNotificationDelegate>().
-                                                                                                       Select(e => e(Timestamp.Now,
-                                                                                                                     this,
-                                                                                                                     chargingErrorNotificationRequest))).
-                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
-
-                                                             if (acknowledgement == null)
-                                                                 acknowledgement = Acknowledgement<ChargingErrorNotificationRequest>.SystemError(
-                                                                                       chargingErrorNotificationRequest,
-                                                                                       "Could not process the received ChargingErrorNotification request!"
-                                                                                   );
-
-                                                             #endregion
-
-                                                             #region Send OnChargingErrorNotificationResponse event
-
-                                                             try
-                                                             {
-
-                                                                 if (OnChargingErrorNotificationResponse != null)
-                                                                     await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
-                                                                                        Cast<OnChargingErrorNotificationResponseDelegate>().
-                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                      this,
-                                                                                                      acknowledgement,
-                                                                                                      Timestamp.Now - startTime))).
-                                                                                        ConfigureAwait(false);
-
-                                                             }
-                                                             catch (Exception e)
-                                                             {
-                                                                 DebugX.LogException(e, nameof(EMPServerAPI) + "." + nameof(OnChargingErrorNotificationResponse));
-                                                             }
-
-                                                             #endregion
-
-                                                             acknowledgementJSON = acknowledgement.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                          CustomStatusCodeSerializer);
-
-                                                         }
-
-                                                     break;
-
-                                                     #endregion
-
-                                                     #region ...or default
-
-                                                     default:
-                                                         return new HTTPResponse.Builder(Request) {
-                                                                    HTTPStatusCode             = HTTPStatusCode.BadRequest,
-                                                                    Server                     = HTTPServer.DefaultServerName,
-                                                                    Date                       = Timestamp.Now,
-                                                                    AccessControlAllowOrigin   = "*",
-                                                                    AccessControlAllowMethods  = "POST",
-                                                                    AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                    ContentType                = HTTPContentType.JSON_UTF8,
-                                                                    Content                    = Acknowledgement.DataError(
-                                                                                                                     RequestTimestamp:          Request.Timestamp,
-                                                                                                                     StatusCodeDescription:     "We could not handle the given charging notification request!",
-                                                                                                                     StatusCodeAdditionalInfo:  errorResponse
-                                                                                                                 ).
-                                                                                                                 ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                        CustomStatusCodeSerializer).
-                                                                                                                 ToString(JSONFormatting).
-                                                                                                                 ToUTF8Bytes(),
-                                                                    Connection                 = "close"
-                                                                }.AsImmutable;
-
-                                                     #endregion
+                                                     Counters.ChargingNotifications.IncRequests_Error();
+
+                                                     chargingNotificationsResponse = Acknowledgement.DataError(
+                                                                                         StatusCodeDescription: "Could not parse the received ChargingNotifications request!",
+                                                                                         RequestTimestamp:       Request.Timestamp,
+                                                                                         EventTrackingId:        Request.EventTrackingId
+                                                                                     );
 
                                                  }
-
-                                                 return new HTTPResponse.Builder(Request) {
-                                                            HTTPStatusCode             = HTTPStatusCode.OK,
-                                                            Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = Timestamp.Now,
-                                                            AccessControlAllowOrigin   = "*",
-                                                            AccessControlAllowMethods  = "POST",
-                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                            ContentType                = HTTPContentType.JSON_UTF8,
-                                                            Content                    = acknowledgementJSON.ToString(JSONFormatting).
-                                                                                                             ToUTF8Bytes(),
-                                                            Connection                 = "close"
-                                                        }.AsImmutable;
 
                                              }
                                              catch (Exception e)
                                              {
 
-                                                 return new HTTPResponse.Builder(Request) {
-                                                            HTTPStatusCode             = HTTPStatusCode.BadRequest,
-                                                            Server                     = HTTPServer.DefaultServerName,
-                                                            Date                       = Timestamp.Now,
-                                                            AccessControlAllowOrigin   = "*",
-                                                            AccessControlAllowMethods  = "POST",
-                                                            AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                            ContentType                = HTTPContentType.JSON_UTF8,
-                                                            Content                    = Acknowledgement.DataError(
-                                                                                                             RequestTimestamp:          Request.Timestamp,
-                                                                                                             StatusCodeDescription:     e.Message,
-                                                                                                             StatusCodeAdditionalInfo:  e.StackTrace
-                                                                                                         ).
-                                                                                                         ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                CustomStatusCodeSerializer).
-                                                                                                         ToString(JSONFormatting).
-                                                                                                         ToUTF8Bytes(),
-                                                            Connection                 = "close"
-                                                        }.AsImmutable;
+                                                 Counters.ChargingNotifications.IncRequests_Error();
+
+                                                 chargingNotificationsResponse = Acknowledgement.SystemError(
+                                                                                     StatusCodeDescription:     e.Message,
+                                                                                     StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                     RequestTimestamp:          Request.Timestamp,
+                                                                                     EventTrackingId:           Request.EventTrackingId
+                                                                                 );
 
                                              }
+
+                                             if (chargingNotificationsResponse is null)
+                                             {
+
+                                                 Counters.ChargingNotifications.IncResponses_Error();
+
+                                                 chargingNotificationsResponse = Acknowledgement.SystemError(
+                                                                                     StatusCodeDescription: "Could not process the received ChargingNotifications request!",
+                                                                                     RequestTimestamp:       Request.Timestamp,
+                                                                                     EventTrackingId:        Request.EventTrackingId
+                                                                                 );
+
+                                             }
+
+
+                                             return new HTTPResponse.Builder(Request) {
+                                                        HTTPStatusCode             = HTTPStatusCode.OK,
+                                                        Server                     = HTTPServer.DefaultServerName,
+                                                        Date                       = Timestamp.Now,
+                                                        AccessControlAllowOrigin   = "*",
+                                                        AccessControlAllowMethods  = "POST",
+                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                                        ContentType                = HTTPContentType.JSON_UTF8,
+                                                        Content                    = chargingNotificationsResponse.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                          CustomStatusCodeSerializer).
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes(),
+                                                        Connection                 = "close"
+                                                    }.AsImmutable;
 
                                           }, AllowReplacement: URLReplacement.Allow);
 
@@ -1404,9 +1660,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region POST  ~/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record
 
-            // ------------------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record
-            // ------------------------------------------------------------------------------------------------------------------------------------------------
+            // ------------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/operators/DE*GDF/charge-detail-record
+            // ------------------------------------------------------------------------------------------------------------------------------------------
             HTTPServer.AddMethodCallback(HTTPHostname.Any,
                                          HTTPMethod.POST,
                                          URLPathPrefix + "/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record",
@@ -1415,33 +1671,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPResponseLogger:  logChargeDetailRecordHTTPResponse,
                                          HTTPDelegate:        async Request => {
 
-                                             var startTime = Timestamp.Now;
-                                             Acknowledgement<ChargeDetailRecordRequest> chargeDetailRecordResponse = null;
+                                             var startTime  = Timestamp.Now;
+                                             var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+
+                                             Acknowledgement<ChargeDetailRecordRequest>? chargeDetailRecordResponse = null;
 
                                              try
                                              {
 
                                                  #region Try to parse OperatorId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(Request.ParsedURLParameters[0], out Operator_Id operatorId)) {
+                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                                 {
 
-                                                     return new HTTPResponse.Builder(Request) {
-                                                                HTTPStatusCode             = HTTPStatusCode.BadRequest,
-                                                                Server                     = HTTPServer.DefaultServerName,
-                                                                Date                       = Timestamp.Now,
-                                                                AccessControlAllowOrigin   = "*",
-                                                                AccessControlAllowMethods  = "POST",
-                                                                AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                                ContentType                = HTTPContentType.JSON_UTF8,
-                                                                Content                    = Acknowledgement.DataError(
-                                                                                                 StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                             ).
-                                                                                             ToJSON(CustomAcknowledgementSerializer,
-                                                                                                    CustomStatusCodeSerializer).
-                                                                                             ToString(JSONFormatting).
-                                                                                             ToUTF8Bytes(),
-                                                                Connection                 = "close"
-                                                            }.AsImmutable;
+                                                     Counters.ChargeDetailRecord.IncRequests_OK();
+
+                                                     chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                                                                      StatusCodeDescription: "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                  );
 
                                                  }
 
@@ -1449,27 +1696,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (ChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                              operatorId,
-                                                                                             Request.Timeout ?? DefaultRequestTimeout,
-                                                                                             out ChargeDetailRecordRequest  chargeDetailRecordRequest,
-                                                                                             out String                     errorResponse,
+                                                                                             out ChargeDetailRecordRequest?  chargeDetailRecordRequest,
+                                                                                             out String?                     errorResponse,
+                                                                                             processId,
                                                                                              Request.Timestamp,
+                                                                                             Request.CancellationToken,
                                                                                              Request.EventTrackingId,
+                                                                                             Request.Timeout ?? DefaultRequestTimeout,
                                                                                              CustomChargeDetailRecordRequestParser))
                                                  {
 
-                                                     Counter.ChargeDetailRecord.IncRequests();
+                                                     Counters.ChargeDetailRecord.IncRequests_OK();
 
                                                      #region  Send OnChargeDetailRecordRequest event
 
                                                      try
                                                      {
 
-                                                         if (OnChargeDetailRecordRequest != null)
+                                                         if (OnChargeDetailRecordRequest is not null)
                                                              await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
                                                                                 Cast<OnChargeDetailRecordRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              chargeDetailRecordRequest))).
+                                                                                              chargeDetailRecordRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -1483,9 +1732,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      #region Call async subscribers
 
                                                      var OnChargeDetailRecordLocal = OnChargeDetailRecord;
-                                                     if (OnChargeDetailRecordLocal != null)
+                                                     if (OnChargeDetailRecordLocal is not null)
                                                      {
-
                                                          try
                                                          {
 
@@ -1493,25 +1741,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                             Cast<OnChargeDetailRecordDelegate>().
                                                                                                                                             Select(e => e(Timestamp.Now,
                                                                                                                                                           this,
-                                                                                                                                                          chargeDetailRecordRequest))))?.FirstOrDefault();
+                                                                                                                                                          chargeDetailRecordRequest!))))?.FirstOrDefault();
+
+                                                             Counters.ChargeDetailRecord.IncResponses_OK();
 
                                                          }
                                                          catch (Exception e)
                                                          {
-                                                             chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.DataError(
-                                                                                                  Request:                   chargeDetailRecordRequest,
-                                                                                                  StatusCodeDescription:     e.Message,
-                                                                                                  StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                                  SessionId:                 chargeDetailRecordRequest.ChargeDetailRecord?.SessionId,
-                                                                                                  CPOPartnerSessionId:       chargeDetailRecordRequest.ChargeDetailRecord?.CPOPartnerSessionId
-                                                                                              );
-                                                         }
 
-                                                         if (chargeDetailRecordResponse == null)
-                                                             chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
-                                                                                                  chargeDetailRecordRequest,
-                                                                                                  "Could not process the received charge detail record!"
-                                                                                              );
+                                                             Counters.ChargeDetailRecord.IncResponses_Error();
+
+                                                             chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.DataError(
+                                                                                             Request:                   chargeDetailRecordRequest,
+                                                                                             StatusCodeDescription:     e.Message,
+                                                                                             StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                             SessionId:                 chargeDetailRecordRequest?.ChargeDetailRecord?.SessionId,
+                                                                                             CPOPartnerSessionId:       chargeDetailRecordRequest?.ChargeDetailRecord?.CPOPartnerSessionId
+                                                                                          );
+
+                                                         }
+                                                     }
+
+                                                     if (chargeDetailRecordResponse is null)
+                                                     {
+
+                                                         Counters.ChargeDetailRecord.IncResponses_Error();
+
+                                                         chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
+                                                                                          chargeDetailRecordRequest,
+                                                                                          "Could not process the received charge detail record!"
+                                                                                      );
 
                                                      }
 
@@ -1522,7 +1781,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      try
                                                      {
 
-                                                         if (OnChargeDetailRecordResponse != null)
+                                                         if (OnChargeDetailRecordResponse is not null)
                                                              await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
                                                                                 Cast<OnChargeDetailRecordResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
@@ -1541,23 +1800,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  }
                                                  else
+                                                 {
+
+                                                     Counters.ChargeDetailRecord.IncRequests_OK();
+
                                                      chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.DataError(
                                                                                       Request:                   chargeDetailRecordRequest,
                                                                                       StatusCodeDescription:     "We could not handle the given charge detail record!",
                                                                                       StatusCodeAdditionalInfo:  errorResponse,
-                                                                                      SessionId:                 chargeDetailRecordRequest.ChargeDetailRecord?.SessionId,
-                                                                                      CPOPartnerSessionId:       chargeDetailRecordRequest.ChargeDetailRecord?.CPOPartnerSessionId
+                                                                                      SessionId:                 chargeDetailRecordRequest?.ChargeDetailRecord?.SessionId,
+                                                                                      CPOPartnerSessionId:       chargeDetailRecordRequest?.ChargeDetailRecord?.CPOPartnerSessionId
                                                                                   );
+
+                                                 }
 
                                              }
                                              catch (Exception e)
                                              {
+
+                                                 Counters.ChargeDetailRecord.IncResponses_Error();
+
                                                  chargeDetailRecordResponse = Acknowledgement<ChargeDetailRecordRequest>.SystemError(
                                                                                   Request:                   null,
                                                                                   StatusCodeDescription:     e.Message,
                                                                                   StatusCodeAdditionalInfo:  e.StackTrace
                                                                               );
+
                                              }
+
 
                                              return new HTTPResponse.Builder(Request) {
                                                         HTTPStatusCode             = HTTPStatusCode.OK,
@@ -1578,7 +1848,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #endregion
 
-
         }
 
         #endregion
@@ -1589,7 +1858,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// Dispose this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         { }
 
         #endregion

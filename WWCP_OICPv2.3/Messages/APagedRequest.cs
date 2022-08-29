@@ -17,10 +17,6 @@
 
 #region Usings
 
-using System;
-using System.Threading;
-using System.Collections.Generic;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -45,17 +41,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The optional page number of the request page.
         /// </summary>
-        public UInt32?              Page         { get; }
+        public UInt32?               Page         { get; }
 
         /// <summary>
         /// The optional size of a request page.
         /// </summary>
-        public UInt32?              Size         { get; }
+        public UInt32?               Size         { get; }
 
         /// <summary>
         /// Optional sorting criteria in the format: property(,asc|desc).
         /// </summary>
-        public IEnumerable<String>  SortOrder    { get; }
+        public IEnumerable<String>?  SortOrder    { get; }
 
         #endregion
 
@@ -64,6 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new generic request message.
         /// </summary>
+        /// <param name="ProcessId">The optional unique OICP process identification.</param>
         /// <param name="Page">An optional page number of the request page.</param>
         /// <param name="Size">An optional size of a request page.</param>
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
@@ -73,17 +70,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public APagedRequest(UInt32?              Page                = null,
-                             UInt32?              Size                = null,
-                             IEnumerable<String>  SortOrder           = null,
-                             JObject              CustomData          = null,
+        public APagedRequest(Process_Id?           ProcessId           = null,
+                             UInt32?               Page                = null,
+                             UInt32?               Size                = null,
+                             IEnumerable<String>?  SortOrder           = null,
+                             JObject?              CustomData          = null,
 
-                             DateTime?            Timestamp           = null,
-                             CancellationToken?   CancellationToken   = null,
-                             EventTracking_Id     EventTrackingId     = null,
-                             TimeSpan?            RequestTimeout      = null)
+                             DateTime?             Timestamp           = null,
+                             CancellationToken?    CancellationToken   = null,
+                             EventTracking_Id?     EventTrackingId     = null,
+                             TimeSpan?             RequestTimeout      = null)
 
-            : base(CustomData,
+            : base(ProcessId,
+                   CustomData,
                    Timestamp,
                    CancellationToken,
                    EventTrackingId,

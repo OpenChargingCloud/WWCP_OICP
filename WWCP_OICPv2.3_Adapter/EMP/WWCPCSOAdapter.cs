@@ -124,6 +124,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Properties
 
         /// <summary>
+        /// An optional (multi-language) description.
+        /// </summary>
+        [Optional]
+        public I18NString  Description    { get; }
+
+
+        /// <summary>
         /// The wrapped EMP roaming object.
         /// </summary>
         public EMPRoaming EMPRoaming { get; }
@@ -464,6 +471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
         public WWCPCSOAdapter(WWCP.CSORoamingProvider_Id                     Id,
                               I18NString                                     Name,
+                              I18NString                                     Description,
                               WWCP.RoamingNetwork                            RoamingNetwork,
                               EMPRoaming                                     EMPRoaming,
 
@@ -505,6 +513,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    RoamingNetwork)
 
         {
+
+            this.Description                                        = Description;
 
             this.EMPRoaming                                         = EMPRoaming                              ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
             this.EVSEDataRecord2EVSE                                = EVSEDataRecord2EVSE;
@@ -1080,6 +1090,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                      null, // DistanceKM
                                      null, // GeoCoordinatesResponseFormat
 
+                                     null, // ProcessId
                                      null, // Page
                                      null, // Size
                                      null, // SortOrder
@@ -1409,6 +1420,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+        //ToDo: Implement PushAuthenticationData!
         #region PushAuthenticationData(...AuthorizationIdentifications, Action = fullLoad, ProviderId = null, ...)
 
         ///// <summary>
@@ -2536,7 +2548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         #region Everything is ok!
 
-                        if (pullEVSEDataResponse.WasSuccessful)
+                        if (pullEVSEDataResponse.IsSuccessful)
                         {
 
                             DebugX.Log(String.Concat("Imported ", pullEVSEDataResponse.Response.NumberOfElements, " OICP EVSE data records (page " + (requestPage + 1) + " of " + pullEVSEDataResponse.Response.TotalPages + ")"));
@@ -3005,7 +3017,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         #region Everything is ok!
 
-                        if (pullEVSEStatusResult.WasSuccessful &&
+                        if (pullEVSEStatusResult.IsSuccessful &&
                             pullEVSEStatusResult.Response?.OperatorEVSEStatus.SafeAny() == true)
                         {
 
@@ -3247,7 +3259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Everything is ok!
 
-                    if (getChargeDetailRecordsResult.WasSuccessful)
+                    if (getChargeDetailRecordsResult.IsSuccessful)
                     {
 
                         var chargeDetailRecords = getChargeDetailRecordsResult.Response.ChargeDetailRecords;
