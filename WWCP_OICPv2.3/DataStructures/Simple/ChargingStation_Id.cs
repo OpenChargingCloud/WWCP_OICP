@@ -17,10 +17,11 @@
 
 #region Usings
 
-using System;
 using System.Text;
 using System.Security.Cryptography;
+
 using Newtonsoft.Json;
+
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion

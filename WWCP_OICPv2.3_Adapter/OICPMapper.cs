@@ -86,6 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     {
 
         public const String WWCP_CDR                              = "WWCP.CDR";
+        public const String OICP_EVSEDataRecord                   = "OICP.EVSEDataRecord";
         public const String OICP_CDR                              = "OICP.CDR";
         public const String OICP_CPOPartnerSessionId              = "OICP.CPOPartnerSessionId";
         public const String OICP_EMPPartnerSessionId              = "OICP.EMPPartnerSessionId";
@@ -136,70 +137,69 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToWWCP(this EVSEDataRecord, ..., EVSEDataRecord2EVSE = null)
+        #region ToWWCP(this EVSEDataRecord, ..., DataSource = null, CustomConverter = null)
 
         /// <summary>
         /// Convert an OICP EVSE data record into a corresponding WWCP EVSE.
         /// </summary>
         /// <param name="EVSEDataRecord">An EVSE data record.</param>
-        /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record, e.g. before importing it into a roaming network.</param>
-        public static WWCP.EVSE ToWWCP(this EVSEDataRecord                   EVSEDataRecord,
+        /// 
+        /// <param name="CustomConverter">A delegate to process an EVSE data record, e.g. before importing it into a roaming network.</param>
+        public static WWCP.EVSE? ToWWCP(this EVSEDataRecord                   EVSEDataRecord,
 
-                                       String                                DataSource                              = "",
-                                       WWCP.EVSEAdminStatusTypes             InitialEVSEAdminStatus                  = WWCP.EVSEAdminStatusTypes.OutOfService,
-                                       WWCP.ChargingStationAdminStatusTypes  InitialChargingStationAdminStatus       = WWCP.ChargingStationAdminStatusTypes.OutOfService,
-                                       WWCP.EVSEStatusTypes                  InitialEVSEStatus                       = WWCP.EVSEStatusTypes.OutOfService,
-                                       WWCP.ChargingStationStatusTypes       InitialChargingStationStatus            = WWCP.ChargingStationStatusTypes.OutOfService,
-                                       UInt16                                MaxEVSEAdminStatusListSize              = WWCP.EVSE.DefaultMaxAdminStatusListSize,
-                                       UInt16                                MaxChargingStationAdminStatusListSize   = WWCP.EVSE.DefaultMaxAdminStatusListSize,
-                                       UInt16                                MaxEVSEStatusListSize                   = WWCP.EVSE.DefaultMaxEVSEStatusListSize,
-                                       UInt16                                MaxChargingStationStatusListSize        = WWCP.EVSE.DefaultMaxEVSEStatusListSize,
+                                        WWCP.EVSEAdminStatusTypes             InitialEVSEAdminStatus                  = WWCP.EVSEAdminStatusTypes.OutOfService,
+                                        WWCP.ChargingStationAdminStatusTypes  InitialChargingStationAdminStatus       = WWCP.ChargingStationAdminStatusTypes.OutOfService,
+                                        WWCP.EVSEStatusTypes                  InitialEVSEStatus                       = WWCP.EVSEStatusTypes.OutOfService,
+                                        WWCP.ChargingStationStatusTypes       InitialChargingStationStatus            = WWCP.ChargingStationStatusTypes.OutOfService,
+                                        UInt16                                MaxEVSEAdminStatusListSize              = WWCP.EVSE.DefaultMaxAdminStatusListSize,
+                                        UInt16                                MaxChargingStationAdminStatusListSize   = WWCP.EVSE.DefaultMaxAdminStatusListSize,
+                                        UInt16                                MaxEVSEStatusListSize                   = WWCP.EVSE.DefaultMaxEVSEStatusListSize,
+                                        UInt16                                MaxChargingStationStatusListSize        = WWCP.EVSE.DefaultMaxEVSEStatusListSize,
 
-                                       EVSEDataRecord2EVSEDelegate           EVSEDataRecord2EVSE                     = null)
+                                        String?                               DataSource                              = null,
+                                        EVSEDataRecord2EVSEDelegate?          CustomConverter                         = null)
 
         {
 
-            WWCP.EVSE _EVSE = null;
+            WWCP.EVSE? evse = null;
 
             try
             {
 
-                var _EVSEId             = EVSEDataRecord.Id.ToWWCP();
+                var evseId             = EVSEDataRecord.Id.ToWWCP();
 
-                if (!_EVSEId.HasValue)
+                if (!evseId.HasValue)
                     return null;
 
-                var _ChargingStationId  = WWCP.ChargingStation_Id.Create(_EVSEId.Value);
+                var chargingStationId  = WWCP.ChargingStation_Id.Create(evseId.Value);
 
-                var internalData = new Dictionary<String, Object>();
-                internalData.Add("OICP.EVSEDataRecord", EVSEDataRecord);
-
-
-                _EVSE = new WWCP.EVSE(_EVSEId.Value,
-                                      new WWCP.ChargingStation(_ChargingStationId,
-                                                               station => {
-                                                                   station.DataSource   = DataSource;
-                                                                   //station.Address      = EVSEDataRecord.Address.ToWWCP();
-                                                                   station.GeoLocation  = new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
-                                                                                              org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
-                                                                                              org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
-                                                                                          );
-                                                               },
-                                                               null,
-                                                               InitialChargingStationAdminStatus,
-                                                               InitialChargingStationStatus,
-                                                               MaxChargingStationAdminStatusListSize,
-                                                               MaxChargingStationStatusListSize),
-                                      evse => {
-                                          evse.DataSource  = DataSource;
-                                      },
-                                      null,
-                                      InitialEVSEAdminStatus,
-                                      InitialEVSEStatus,
-                                      MaxEVSEAdminStatusListSize,
-                                      MaxEVSEStatusListSize,
-                                      EVSEDataRecord.CustomData,
-                                      internalData);
+                evse = new WWCP.EVSE(evseId.Value,
+                                     new WWCP.ChargingStation(chargingStationId,
+                                                              station => {
+                                                                  station.DataSource   = DataSource;
+                                                                  station.Address      = EVSEDataRecord.Address.ToWWCP();
+                                                                  station.GeoLocation  = new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
+                                                                                             org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
+                                                                                             org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
+                                                                                         );
+                                                              },
+                                                              null,
+                                                              InitialChargingStationAdminStatus,
+                                                              InitialChargingStationStatus,
+                                                              MaxChargingStationAdminStatusListSize,
+                                                              MaxChargingStationStatusListSize),
+                                     _evse => {
+                                         _evse.DataSource  = DataSource;
+                                     },
+                                     null,
+                                     InitialEVSEAdminStatus,
+                                     InitialEVSEStatus,
+                                     MaxEVSEAdminStatusListSize,
+                                     MaxEVSEStatusListSize,
+                                     EVSEDataRecord.CustomData,
+                                     new Dictionary<String, Object> {
+                                         { OICP_EVSEDataRecord, EVSEDataRecord }
+                                     });
 
 
                 //evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
@@ -212,12 +212,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
             catch (Exception e)
             {
+                DebugX.Log("Could not convert OICP EVSEDataRecord '" + EVSEDataRecord.Id + "' into a WWCP EVSE: " + e.Message + Environment.NewLine + e.StackTrace);
                 return null;
             }
 
-            return EVSEDataRecord2EVSE != null
-                       ? EVSEDataRecord2EVSE(EVSEDataRecord, _EVSE)
-                       : _EVSE;
+            return CustomConverter is not null
+                       ? CustomConverter(EVSEDataRecord, evse)
+                       : evse;
 
         }
 
@@ -231,11 +232,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
         /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord ToOICP(this WWCP.EVSE               EVSE,
-                                            EVSE2EVSEDataRecordDelegate  EVSE2EVSEDataRecord   = null,
-                                            DeltaTypes?                  DeltaType             = null,
-                                            DateTime?                    LastUpdate            = null,
-                                            String                       OperatorName          = null)
+        public static EVSEDataRecord ToOICP(this WWCP.EVSE                EVSE,
+                                            String                        OperatorName,
+
+                                            EVSE2EVSEDataRecordDelegate?  EVSE2EVSEDataRecord   = null,
+                                            DeltaTypes?                   DeltaType             = null,
+                                            DateTime?                     LastUpdate            = null)
         {
 
             try
@@ -288,9 +290,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         ValueAddedServices:                new ValueAddedServices[] { ValueAddedServices.None },
                                                         Accessibility:                     accessibility.Value,
                                                         HotlinePhoneNumber:                Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.FirstText()),
-                                                        IsOpen24Hours:                     EVSE.ChargingStation.OpeningTimes != null ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours : true,
+                                                        IsOpen24Hours:                     EVSE.ChargingStation.OpeningTimes is not null
+                                                                                               ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
+                                                                                               : true,
                                                         IsHubjectCompatible:               EVSE.ChargingStation.IsHubjectCompatible,
-                                                        DynamicInfoAvailable:              EVSE.ChargingStation.DynamicInfoAvailable ? FalseTrueAuto.True : FalseTrueAuto.False,
+                                                        DynamicInfoAvailable:              EVSE.ChargingStation.DynamicInfoAvailable
+                                                                                               ? FalseTrueAuto.True
+                                                                                               : FalseTrueAuto.False,
 
                                                         DeltaType:                         DeltaType,
                                                         LastUpdate:                        LastUpdate,
@@ -299,7 +305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         ChargingPoolId:                    ChargingPool_Id.   Parse(EVSE.ChargingPool.   Id.ToString()),
                                                         HardwareManufacturer:              null,
                                                         ChargingStationImageURL:           null,
-                                                        SubOperatorName:                   EVSE.ChargingStation.ChargingPool.SubOperator?.Name?.FirstText(),
+                                                        SubOperatorName:                   EVSE.ChargingStation.ChargingPool?.SubOperator?.Name?.FirstText(),
                                                         DynamicPowerLevel:                 null,
                                                         EnergySources:                     null,
                                                         EnvironmentalImpact:               null,
@@ -313,8 +319,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                      )
                                                                                                : null,
                                                         ChargingStationLocationReference:  null,
-                                                        GeoChargingPointEntrance:          EVSE.ChargingStation.ChargingPool.EntranceLocation.ToOICP(),
-                                                        OpeningTimes:                      null,//EVSE.ChargingStation.OpeningTimes?.ToOICP(),
+                                                        GeoChargingPointEntrance:          EVSE.ChargingStation.ChargingPool?.EntranceLocation.ToOICP(),
+                                                        OpeningTimes:                      EVSE.ChargingStation.OpeningTimes?.ToOICP(),
                                                         HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     (OICP_HubOperatorId),
                                                         ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>(OICP_ClearingHouseId),
 
@@ -337,8 +343,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         public static I18NText ToOICP(this I18NString MLText)
-            => new I18NText(MLText.Select(text => new KeyValuePair<LanguageCode, String>(LanguageCode.Parse(text.Language.ToString()),
-                                                                                                            text.Text)));
+            => new (MLText.Select(text => new KeyValuePair<LanguageCode, String>(LanguageCode.Parse(text.Language.ToString()),
+                                                                                 text.Text)));
 
 
         #region ToWWCP(this EVSEStatusType)
@@ -911,7 +917,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToWWCP(PaymentOption)
+        #region ToWWCP(this PaymentOption)
 
         public static WWCP.PaymentOptions ToWWCP(this PaymentOptions PaymentOption)
 
@@ -924,7 +930,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToOICP(PaymentOption)
+        #region ToOICP(this PaymentOption)
 
         public static PaymentOptions ToOICP(this WWCP.PaymentOptions PaymentOption)
 
@@ -938,7 +944,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToOICP(AuthenticationMode)
+        #region ToOICP(this AuthenticationMode)
 
         /// <summary>
         /// Maps a WWCP authentication mode to an OICP authentication mode.
@@ -1007,7 +1013,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToWWCP(AuthenticationMode)
+        #region ToWWCP(this AuthenticationMode)
 
         public static WWCP.AuthenticationModes ToWWCP(this AuthenticationModes AuthenticationMode)
 
@@ -1024,7 +1030,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToWWCP(ChargingMode)
+        #region ToWWCP(this ChargingMode)
 
         public static WWCP.ChargingModes ToWWCP(this ChargingModes ChargingMode)
 
@@ -1052,7 +1058,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToOICP(ChargingMode)
+        #region ToOICP(this ChargingMode)
 
         public static ChargingModes ToOICP(this WWCP.ChargingModes ChargingMode)
 
@@ -1081,7 +1087,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToWWCP(PlugType)
+        #region ToWWCP(this PlugType)
 
         public static WWCP.PlugTypes ToWWCP(this PlugTypes PlugType)
 
@@ -1109,7 +1115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToOICP(PlugType)
+        #region ToOICP(this PlugType)
 
         public static PlugTypes ToOICP(this WWCP.PlugTypes PlugType)
 
@@ -1270,6 +1276,159 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //    }
 
         //}
+
+        #endregion
+
+
+        #region ToWWCP(this OpeningTime, IsOpen24Hours)
+
+        public static OpeningTimes? ToWWCP(this IEnumerable<OpeningTime>  OpeningTime,
+                                           Boolean                        IsOpen24Hours)
+        {
+
+            var openingTimes = new OpeningTimes(IsOpen24Hours);
+
+            foreach (var openingTime in OpeningTime)
+            {
+                foreach (var period in openingTime.Periods)
+                {
+
+                    var begin  = period.Begin.ToWWCP();
+                    var end    = period.End.  ToWWCP();
+
+                    switch (openingTime.On)
+                    {
+
+                        case DaysOfWeek.Everyday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Monday,     begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Tuesday,    begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Wednesday,  begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Thursday,   begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Friday,     begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Saturday,   begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Sunday,     begin, end);
+                            break;
+
+                        case DaysOfWeek.Workdays:
+                            openingTimes.AddRegularOpening(DayOfWeek.Monday,     begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Tuesday,    begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Wednesday,  begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Thursday,   begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Friday,     begin, end);
+                            break;
+
+                        case DaysOfWeek.Weekend:
+                            openingTimes.AddRegularOpening(DayOfWeek.Saturday,   begin, end);
+                            openingTimes.AddRegularOpening(DayOfWeek.Sunday,     begin, end);
+                            break;
+
+                        case DaysOfWeek.Monday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Monday,     begin, end);
+                            break;
+
+                        case DaysOfWeek.Tuesday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Tuesday,    begin, end);
+                            break;
+
+                        case DaysOfWeek.Wednesday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Wednesday,  begin, end);
+                            break;
+
+                        case DaysOfWeek.Thursday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Thursday,   begin, end);
+                            break;
+
+                        case DaysOfWeek.Friday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Friday,     begin, end);
+                            break;
+
+                        case DaysOfWeek.Saturday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Saturday,   begin, end);
+                            break;
+
+                        case DaysOfWeek.Sunday:
+                            openingTimes.AddRegularOpening(DayOfWeek.Sunday,     begin, end);
+                            break;
+
+                        default:
+                            return default;
+
+                    };
+
+                }
+            }
+
+            return openingTimes;
+
+        }
+
+        #endregion
+
+        #region ToOICP(this OpeningTimes)
+
+        public static IEnumerable<OpeningTime> ToOICP(this OpeningTimes OpeningTimes)
+        {
+
+            var openingTimes          = new List<OpeningTime>();
+            var regularOpeningGroups  = OpeningTimes.RegularOpenings.GroupBy(kvp => kvp.Key);
+
+            foreach (var regularOpeningGroup in OpeningTimes.RegularOpenings)
+            {
+                openingTimes.Add(new OpeningTime(regularOpeningGroup.Value.Select(period => new Period(period.PeriodBegin.ToOICP(),
+                                                                                                       period.PeriodEnd.  ToOICP())),
+                                                 regularOpeningGroup.Key.  ToOICP()));
+            }
+
+            return openingTimes;
+
+        }
+
+        #endregion
+
+
+        #region ToWWCP(this HourMinute)
+
+        public static HourMin ToWWCP(this HourMinute HourMinute)
+
+            => new (HourMinute.Hour,
+                    HourMinute.Minute);
+
+        #endregion
+
+        #region ToOICP(this HourMin)
+
+        public static HourMinute ToOICP(this HourMin HourMin)
+
+            => new (HourMin.Hour,
+                    HourMin.Minute);
+
+        #endregion
+
+
+        //#region ToWWCP(DaysOfWeek)
+
+        //public static DayOfWeek ToWWCP(this DaysOfWeek DaysOfWeek)
+        //{
+
+        //    throw new NotImplementedException();
+
+        //}
+
+        //#endregion
+
+        #region ToOICP(this DayOfWeek)
+
+        public static DaysOfWeek ToOICP(this DayOfWeek DayOfWeek)
+
+            => DayOfWeek switch {
+                   DayOfWeek.Monday     => DaysOfWeek.Monday,
+                   DayOfWeek.Tuesday    => DaysOfWeek.Tuesday,
+                   DayOfWeek.Wednesday  => DaysOfWeek.Wednesday,
+                   DayOfWeek.Thursday   => DaysOfWeek.Thursday,
+                   DayOfWeek.Friday     => DaysOfWeek.Friday,
+                   DayOfWeek.Saturday   => DaysOfWeek.Saturday,
+                   _                    => DaysOfWeek.Sunday
+               };
 
         #endregion
 

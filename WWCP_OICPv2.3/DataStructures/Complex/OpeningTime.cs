@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -31,7 +29,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// An opening time.
     /// </summary>
-    public readonly struct OpeningTime : IEquatable<OpeningTime>
+    public class OpeningTime : IEquatable<OpeningTime>
     {
 
         #region Properties
@@ -40,25 +38,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The periods of the opening time.
         /// </summary>
         [Mandatory]
-        public readonly IEnumerable<Period>  Periods             { get; }
+        public IEnumerable<Period>  Periods                    { get; }
 
         /// <summary>
         /// The day of the weeks of the opening time.
         /// </summary>
         [Mandatory]
-        public readonly DaysOfWeek           On                  { get; }
+        public DaysOfWeek           On                         { get; }
 
         /// <summary>
         /// Optional unstructured information about the opening time.
         /// </summary>
         [Optional]
-        public readonly String?              UnstructuredText    { get; }
+        public String?              UnstructuredOpeningTime    { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public readonly JObject?             CustomData          { get; }
+        public JObject?             CustomData                 { get; }
 
         #endregion
 
@@ -73,8 +71,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public OpeningTime(IEnumerable<Period>  Periods,
                            DaysOfWeek           On,
-                           String?              UnstructuredText,
-                           JObject?             CustomData  = null)
+                           String?              UnstructuredText   = null,
+                           JObject?             CustomData         = null)
         {
 
             if (Periods.IsNullOrEmpty())
@@ -82,7 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Periods           = Periods;
             this.On                = On;
-            this.UnstructuredText  = UnstructuredText;
+            this.UnstructuredOpeningTime  = UnstructuredText;
             this.CustomData        = CustomData;
 
         }
@@ -114,13 +112,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime Parse(JObject                                    JSON,
-                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
+        public static OpeningTime? Parse(JObject                                    JSON,
+                                         CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(JSON,
-                         out OpeningTime  openingTime,
-                         out String?      errorResponse,
+                         out OpeningTime?  openingTime,
+                         out String?       errorResponse,
                          CustomOpeningTimesParser))
             {
                 return openingTime;
@@ -139,13 +137,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">The text to parse.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime Parse(String                                     Text,
-                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
+        public static OpeningTime? Parse(String                                     Text,
+                                         CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(Text,
-                         out OpeningTime  openingTime,
-                         out String?      errorResponse,
+                         out OpeningTime?  openingTime,
+                         out String?       errorResponse,
                          CustomOpeningTimesParser))
             {
                 return openingTime;
@@ -169,14 +167,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out OpeningTime openingTime,
+                         out OpeningTime? openingTime,
                          out _,
                          CustomOpeningTimesParser))
             {
                 return openingTime;
             }
 
-            return null;
+            return default;
 
         }
 
@@ -194,14 +192,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out OpeningTime openingTime,
+                         out OpeningTime? openingTime,
                          out _,
                          CustomOpeningTimesParser))
             {
                 return openingTime;
             }
 
-            return null;
+            return default;
 
         }
 
@@ -217,9 +215,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OpeningTimes">The parsed opening time.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject          JSON,
-                                       out OpeningTime  OpeningTimes,
-                                       out String?      ErrorResponse)
+        public static Boolean TryParse(JObject           JSON,
+                                       out OpeningTime?  OpeningTimes,
+                                       out String?       ErrorResponse)
 
             => TryParse(JSON,
                         out OpeningTimes,
@@ -235,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static Boolean TryParse(JObject                                    JSON,
-                                       out OpeningTime                            OpeningTimes,
+                                       out OpeningTime?                           OpeningTimes,
                                        out String?                                ErrorResponse,
                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
         {
@@ -323,7 +321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static Boolean TryParse(String                                     Text,
-                                       out OpeningTime                            OpeningTimes,
+                                       out OpeningTime?                           OpeningTimes,
                                        out String?                                ErrorResponse,
                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
         {
@@ -365,8 +363,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            new JProperty("on",  On.AsString()),
 
-                           UnstructuredText.IsNotNullOrEmpty()
-                               ? new JProperty("unstructuredOpeningTime",  UnstructuredText)
+                           UnstructuredOpeningTime.IsNotNullOrEmpty()
+                               ? new JProperty("unstructuredOpeningTime",  UnstructuredOpeningTime)
                                : null
 
                        );
@@ -388,8 +386,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (Periods.SafeSelect(period => period.Clone).ToArray(),
                     On,
-                    UnstructuredText != null ? new String(UnstructuredText.ToCharArray())                          : null,
-                    CustomData       != null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+                    UnstructuredOpeningTime is not null
+                        ? new String(UnstructuredOpeningTime.ToCharArray())
+                        : null,
+                    CustomData is not null
+                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                        : null);
 
         #endregion
 
@@ -406,8 +408,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public static Boolean operator == (OpeningTime OpeningTimes1,
                                            OpeningTime OpeningTimes2)
+        {
 
-            => OpeningTimes1.Equals(OpeningTimes2);
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(OpeningTimes1, OpeningTimes2))
+                return true;
+
+            if (OpeningTimes1 is null || OpeningTimes2 is null)
+                return false;
+
+            return OpeningTimes1.Equals(OpeningTimes2);
+
+        }
 
         #endregion
 
@@ -422,7 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (OpeningTime OpeningTimes1,
                                            OpeningTime OpeningTimes2)
 
-            => !OpeningTimes1.Equals(OpeningTimes2);
+            => !(OpeningTimes1 == OpeningTimes2);
 
         #endregion
 
@@ -451,15 +463,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpeningTimes">An opening time to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(OpeningTime OpeningTimes)
+        public Boolean Equals(OpeningTime? OpeningTimes)
 
-            => Periods.Count().Equals(OpeningTimes.Periods.Count()) &&
+            => OpeningTimes is not null &&
+
+               Periods.Count().Equals(OpeningTimes.Periods.Count()) &&
                Periods.All(period => OpeningTimes.Periods.Contains(period)) &&
 
                On.Equals(OpeningTimes.On) &&
 
-            ((!UnstructuredText.IsNullOrEmpty() && !OpeningTimes.UnstructuredText.IsNullOrEmpty()) ||
-              (UnstructuredText.IsNullOrEmpty() &&  OpeningTimes.UnstructuredText.IsNullOrEmpty() && UnstructuredText.Equals(OpeningTimes.UnstructuredText)));
+             ((UnstructuredOpeningTime is     null && OpeningTimes.UnstructuredOpeningTime is     null) ||
+              (UnstructuredOpeningTime is not null && OpeningTimes.UnstructuredOpeningTime is not null && UnstructuredOpeningTime.Equals(OpeningTimes.UnstructuredOpeningTime)));
 
         #endregion
 
@@ -479,8 +493,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return Periods.Aggregate(0, (hashCode, period) => hashCode ^ period.GetHashCode()) ^
                        On.     GetHashCode() * 3 ^
 
-                       (UnstructuredText is not null && UnstructuredText.IsNullOrEmpty()
-                           ? UnstructuredText.GetHashCode()
+                       (UnstructuredOpeningTime is not null && UnstructuredOpeningTime.IsNullOrEmpty()
+                           ? UnstructuredOpeningTime.GetHashCode()
                            : 0);
 
             }
@@ -498,8 +512,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => String.Concat(Periods.AggregateWith(", "),
                              " -> ",
                              On.AsString(),
-                             UnstructuredText.IsNotNullOrEmpty()
-                                 ? "; " + UnstructuredText
+                             UnstructuredOpeningTime.IsNotNullOrEmpty()
+                                 ? "; " + UnstructuredOpeningTime
                                  : "");
 
         #endregion

@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
@@ -177,17 +171,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Everyday
         /// </summary>
-        Everyday    = Workdays & Weekend,
+        Everyday    = Workdays | Weekend,
 
         /// <summary>
         /// Workdays
         /// </summary>
-        Workdays    = Monday & Tuesday & Wednesday & Thursday & Friday,
+        Workdays    = Monday | Tuesday | Wednesday | Thursday | Friday,
 
         /// <summary>
         /// Weekend
         /// </summary>
-        Weekend     = Saturday & Sunday,
+        Weekend     = Saturday | Sunday,
 
         /// <summary>
         /// Monday
