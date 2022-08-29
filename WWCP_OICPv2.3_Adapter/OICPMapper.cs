@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 using WWCP = org.GraphDefined.WWCP;
@@ -291,7 +289,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         Accessibility:                     accessibility.Value,
                                                         HotlinePhoneNumber:                Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.FirstText()),
                                                         IsOpen24Hours:                     EVSE.ChargingStation.OpeningTimes is not null
-                                                                                               ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
+                                                                                               ? EVSE.ChargingStation.OpeningTimes?.ToOICP()?.Any() == true  // OpeningTimes == false AND an empty list is invalid at Hubject!
+                                                                                                     ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
+                                                                                                     : true
                                                                                                : true,
                                                         IsHubjectCompatible:               EVSE.ChargingStation.IsHubjectCompatible,
                                                         DynamicInfoAvailable:              EVSE.ChargingStation.DynamicInfoAvailable
@@ -327,7 +327,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         CustomData:                        EVSE.CustomData,
                                                         InternalData:                      internalData);
 
-                return EVSE2EVSEDataRecord != null
+                return EVSE2EVSEDataRecord is not null
                            ? EVSE2EVSEDataRecord(EVSE, evseDataRecord)
                            : evseDataRecord;
 
@@ -1282,6 +1282,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToWWCP(this OpeningTime, IsOpen24Hours)
 
+        /// <summary>
+        /// Convert the given OICP opening time enumeration and 24/7 open information into an WWCP opening time.
+        /// </summary>
+        /// <param name="OpeningTimes">An OICP opening time enumeration.</param>
         public static OpeningTimes? ToWWCP(this IEnumerable<OpeningTime>  OpeningTime,
                                            Boolean                        IsOpen24Hours)
         {
@@ -1366,7 +1370,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this OpeningTimes)
 
-        public static IEnumerable<OpeningTime> ToOICP(this OpeningTimes OpeningTimes)
+        /// <summary>
+        /// Convert the given WWCP opening times into an OICP opening time enumeration.
+        /// </summary>
+        /// <param name="OpeningTimes">A WWCP opening times object.</param>
+        public static IEnumerable<OpeningTime>? ToOICP(this OpeningTimes OpeningTimes)
         {
 
             var openingTimes          = new List<OpeningTime>();
@@ -1379,7 +1387,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  regularOpeningGroup.Key.  ToOICP()));
             }
 
-            return openingTimes;
+            return openingTimes.Any()
+                       ? openingTimes
+                       : null;
 
         }
 
@@ -1388,6 +1398,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToWWCP(this HourMinute)
 
+        /// <summary>
+        /// Convert the given OICP HourMinute object into a WWCP HourMin object.
+        /// </summary>
+        /// <param name="HourMinute">An OICP HourMinute object.</param>
         public static HourMin ToWWCP(this HourMinute HourMinute)
 
             => new (HourMinute.Hour,
@@ -1397,6 +1411,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this HourMin)
 
+        /// <summary>
+        /// Convert the given WWCP HourMin object into an OICP HourMinute object.
+        /// </summary>
+        /// <param name="HourMin">A WWCP HourMin object.</param>
         public static HourMinute ToOICP(this HourMin HourMin)
 
             => new (HourMin.Hour,
@@ -1418,6 +1436,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this DayOfWeek)
 
+        /// <summary>
+        /// Convert the given WWCP DayOfWeek object into an OICP DaysOfWeek object.
+        /// </summary>
+        /// <param name="DayOfWeek">A WWCP DayOfWeek object.</param>
         public static DaysOfWeek ToOICP(this DayOfWeek DayOfWeek)
 
             => DayOfWeek switch {
@@ -1436,7 +1458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region ToWWCP(this ChargeDetailRecord, ChargeDetailRecord2WWCPChargeDetailRecord = null)
 
         /// <summary>
-        /// Convert an OICP charge detail record into a corresponding WWCP charge detail record.
+        /// Convert the given OICP charge detail record into a corresponding WWCP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecord">An OICP charge detail record.</param>
         /// <param name="ChargeDetailRecord2WWCPChargeDetailRecord">A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.</param>
@@ -1531,7 +1553,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region ToOICP(this ChargeDetailRecord, WWCPChargeDetailRecord2ChargeDetailRecord = null)
 
         /// <summary>
-        /// Convert a WWCP charge detail record into a corresponding OICP charge detail record.
+        /// Convert the given WWCP charge detail record into a corresponding OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecord">A WWCP charge detail record.</param>
         /// <param name="WWCPChargeDetailRecord2ChargeDetailRecord">A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.</param>
