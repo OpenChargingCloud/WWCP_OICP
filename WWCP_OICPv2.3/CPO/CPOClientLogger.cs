@@ -63,6 +63,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+
+        #region RegisterDefaultDiscLogTarget(this APIClientRequestLogger,  Logger)
+
+        /// <summary>
+        /// Register the default console logger.
+        /// </summary>
+        /// <param name="APIClientRequestLogger">A request logger.</param>
+        /// <param name="Logger">A logger.</param>
+        public static APIClientRequestLogger  RegisterDefaultDiscLogTarget(this APIClientRequestLogger  APIClientRequestLogger,
+                                                                           ALogger                      Logger)
+
+            => APIClientRequestLogger.RegisterLogTarget(LogTargets.Disc,
+                                                        Logger.Default_LogRequest_toDisc);
+
+        #endregion
+
+        #region RegisterDefaultDiscLogTarget(this APIClientResponseLogger, Logger)
+
+        /// <summary>
+        /// Register the default console logger.
+        /// </summary>
+        /// <param name="APIClientResponseLogger">A response logger.</param>
+        /// <param name="Logger">A logger.</param>
+        public static APIClientResponseLogger RegisterDefaultDiscLogTarget(this APIClientResponseLogger  APIClientResponseLogger,
+                                                                           ALogger                       Logger)
+
+            => APIClientResponseLogger.RegisterLogTarget(LogTargets.Disc,
+                                                         Logger.Default_LogResponse_toDisc);
+
+        #endregion
+
     }
 
 
@@ -248,6 +279,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  String? Request)
         {
 
+            if (Request is null)
+                return Task.CompletedTask;
+
             lock (LockObject)
             {
 
@@ -296,6 +330,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                   String?   Response,
                                                   TimeSpan  Runtime)
         {
+
+            if (Response is null)
+                return Task.CompletedTask;
 
             lock (LockObject)
             {
@@ -353,8 +390,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public async Task Default_LogRequest_toDisc(String  LoggingPath,
                                                     String  Context,
                                                     String  LogEventName,
-                                                    String  Request)
+                                                    String? Request)
         {
+
+            if (Request is null)
+                return;
 
             //ToDo: Can we have a lock per logfile?
             var LockTaken = await LogRequest_toDisc_Lock.WaitAsync(MaxWaitingForALock);
@@ -443,10 +483,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public async Task Default_LogResponse_toDisc(String    LoggingPath,
                                                      String    Context,
                                                      String    LogEventName,
-                                                     String    Request,
-                                                     String    Response,
+                                                     String?   Request,
+                                                     String?   Response,
                                                      TimeSpan  Runtime)
         {
+
+            if (Response is null)
+                return;
 
             //ToDo: Can we have a lock per logfile?
             var LockTaken = await LogResponse_toDisc_Lock.WaitAsync(MaxWaitingForALock);
@@ -1474,33 +1517,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 #region AuthorizeStart/Stop
 
                 RegisterRequestEvent("AuthorizeStartRequest",
-                                     handler => CPOClient.OnAuthorizeStartRequest += (timestamp, sender, request) => handler(timestamp, sender, CPOClient?.AuthorizeStartRequestConverter(timestamp, sender, request)),
-                                     handler => CPOClient.OnAuthorizeStartRequest -= (timestamp, sender, request) => handler(timestamp, sender, CPOClient?.AuthorizeStartRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnAuthorizeStartRequest   += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.AuthorizeStartRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnAuthorizeStartRequest   -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.AuthorizeStartRequestConverter(timestamp, sender, request)),
                                      "authorizeStart", "authorize", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this);
-                //  RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 RegisterResponseEvent("AuthorizeStartResponse",
                                       handler => CPOClient.OnAuthorizeStartResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.AuthorizeStartRequestConverter(timestamp, sender, request), CPOClient?.AuthorizationStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
                                       handler => CPOClient.OnAuthorizeStartResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.AuthorizeStartRequestConverter(timestamp, sender, request), CPOClient?.AuthorizationStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
                                       "authorizeStart", "authorize", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this);
-                //    RegisterDefaultDiscLogTarget(this);
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
 
-                //RegisterEvent("AuthorizeStopHTTPRequest",
-                //              handler => CPOClient.OnAuthorizeStopHTTPRequest += handler,
-                //              handler => CPOClient.OnAuthorizeStopHTTPRequest -= handler,
-                //              "authorizeStop", "authorize", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterRequestEvent("AuthorizeStopRequest",
+                                     handler => CPOClient.OnAuthorizeStopRequest    += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.AuthorizeStopRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnAuthorizeStopRequest    -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.AuthorizeStopRequestConverter(timestamp, sender, request)),
+                                     "authorizeStop", "authorize", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("AuthorizeStopHTTPResponse",
-                //              handler => CPOClient.OnAuthorizeStopHTTPResponse += handler,
-                //              handler => CPOClient.OnAuthorizeStopHTTPResponse -= handler,
-                //              "authorizeStop", "authorize", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterResponseEvent("AuthorizeStopResponse",
+                                      handler => CPOClient.OnAuthorizeStopResponse  += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.AuthorizeStopRequestConverter(timestamp, sender, request), CPOClient?.AuthorizationStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOClient.OnAuthorizeStopResponse  -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.AuthorizeStopRequestConverter(timestamp, sender, request), CPOClient?.AuthorizationStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "authorizeStop", "authorize", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 

@@ -288,6 +288,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             = (timestamp, sender, authorizeStartRequest, authorizationStartResponse, runtime)
             => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId, " => ", authorizationStartResponse.Response?.AuthorizationStatus.ToString() ?? "failed!");
 
+
+        public Func<DateTime, Object, AuthorizeStopRequest, String>                                                     AuthorizeStopRequestConverter          { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest)
+            => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStopRequest, OICPResult<AuthorizationStopResponse>, TimeSpan, String>    AuthorizationStopResponseConverter     { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest, authorizationStopResponse, runtime)
+            => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId, " => ", authorizationStopResponse.Response?.AuthorizationStatus.ToString() ?? "failed!");
+
         #endregion
 
         #region Events
