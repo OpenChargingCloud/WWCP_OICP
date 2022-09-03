@@ -552,10 +552,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             this.Counters    = new APICounters();
 
             this.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext ?? DefaultLoggingContext,
-                                                LogfileCreator)
+                                   ? new HTTP_Logger(this,
+                                                     LoggingPath,
+                                                     LoggingContext ?? DefaultLoggingContext,
+                                                     LogfileCreator)
                                    : null;
 
             RegisterURLTemplates();

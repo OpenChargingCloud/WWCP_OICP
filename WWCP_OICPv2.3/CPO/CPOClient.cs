@@ -160,17 +160,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new Logger HTTPLogger
-        {
-            get
-            {
-                return base.HTTPLogger as Logger;
-            }
-            set
-            {
-                base.HTTPLogger = value;
-            }
-        }
+        public new HTTP_Logger HTTPLogger
+#pragma warning disable CS8603 // Possible null reference return.
+            => base.HTTPLogger as HTTP_Logger;
+#pragma warning restore CS8603 // Possible null reference return.
+
+        /// <summary>
+        /// The attached client logger.
+        /// </summary>
+        public API_Logger?                 Logger        { get; }
 
         public APICounters                 Counters      { get; }
 
@@ -275,6 +273,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public CustomJObjectSerializerDelegate<SignedMeteringValue>?                  CustomSignedMeteringValueSerializer                    { get; set; }
 
         public CustomJObjectSerializerDelegate<CalibrationLawVerification>?           CustomCalibrationLawVerificationSerializer             { get; set; }
+
+        #endregion
+
+        #region Custom request/response converters
+
+        public Func<DateTime, Object, AuthorizeStartRequest, String>                                                    AuthorizeStartRequestConverter         { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest)
+            => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStartRequest, OICPResult<AuthorizationStartResponse>, TimeSpan, String>  AuthorizationStartResponseConverter    { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest, authorizationStartResponse, runtime)
+            => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId, " => ", authorizationStartResponse.Response?.AuthorizationStatus.ToString() ?? "failed!");
 
         #endregion
 
@@ -608,7 +620,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          Boolean                               DisableLogging               = false,
                          String?                               LoggingPath                  = null,
-                         String                                LoggingContext               = Logger.DefaultContext,
+                         String                                LoggingContext               = HTTP_Logger.DefaultContext,
                          LogfileCreatorDelegate?               LogfileCreator               = null,
                          DNSClient?                            DNSClient                    = null)
 
@@ -635,10 +647,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
             base.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext,
-                                                LogfileCreator)
+                                   ? new HTTP_Logger(this,
+                                                     LoggingPath,
+                                                     LoggingContext,
+                                                     LogfileCreator)
+                                   : null;
+
+            this.Logger   = DisableLogging == false
+                                   ? new API_Logger(this,
+                                                    LoggingPath,
+                                                    LoggingContext,
+                                                    LogfileCreator)
                                    : null;
 
         }
