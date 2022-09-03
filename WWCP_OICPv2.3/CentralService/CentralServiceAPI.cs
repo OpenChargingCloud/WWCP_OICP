@@ -138,9 +138,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                  ThreadPriority?                       ServerThreadPriority               = null,
                                  Boolean?                              ServerThreadIsBackground           = null,
                                  ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
-                                 ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
-                                 ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
-                                 Boolean?                              ConnectionThreadsAreBackground     = null,
+                                 //ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
+                                 //ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
+                                 //Boolean?                              ConnectionThreadsAreBackground     = null,
                                  TimeSpan?                             ConnectionTimeout                  = null,
                                  UInt32?                               MaxClientConnections               = null,
 
@@ -186,9 +186,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                   ServerThreadIsBackground,
 
                                   ConnectionIdBuilder,
-                                  ConnectionThreadsNameBuilder,
-                                  ConnectionThreadsPriorityBuilder,
-                                  ConnectionThreadsAreBackground,
+                                  //ConnectionThreadsNameBuilder,
+                                  //ConnectionThreadsPriorityBuilder,
+                                  //ConnectionThreadsAreBackground,
                                   ConnectionTimeout,
                                   MaxClientConnections,
 
