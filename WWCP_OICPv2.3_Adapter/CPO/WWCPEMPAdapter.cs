@@ -90,13 +90,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// The CPO client HTTP logger.
         /// </summary>
         public CPOClient.HTTP_Logger ClientHTTPLogger
-            => CPORoaming?.CPOClient?.HTTPLogger as CPOClient.HTTP_Logger;
+            => CPORoaming?.CPOClient?.HTTPLogger;
 
         /// <summary>
         /// The CPO client logger.
         /// </summary>
         public CPOClient.CPOClientLogger ClientLogger
-            => CPORoaming?.CPOClient?.Logger as CPOClient.CPOClientLogger;
+            => CPORoaming?.CPOClient?.Logger;
 
 
         /// <summary>
@@ -109,7 +109,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// The CPO server HTTP logger.
         /// </summary>
         public CPOServerAPI.HTTP_Logger ServerHTTPLogger
-            => CPORoaming?.CPOServer?.HTTPLogger as CPOServerAPI.HTTP_Logger;
+            => CPORoaming?.CPOServer?.HTTPLogger;
+
+        /// <summary>
+        /// The CPO server logger.
+        /// </summary>
+        public CPOServerAPI.ServerAPILogger ServerAPILogger
+            => CPORoaming?.CPOServer?.Logger;
 
 
         /// <summary>

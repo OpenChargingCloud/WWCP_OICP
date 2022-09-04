@@ -116,7 +116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached Server API logger.
         /// </summary>
-        public ServerAPILogger?         Logger            { get; }
+        public ServerAPILogger?            Logger            { get; }
 
 
         public APICounters                 Counters          { get; }
@@ -526,9 +526,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="ServerThreadPriority">The optional priority of the TCP server thread.</param>
         /// <param name="ServerThreadIsBackground">Whether the TCP server thread is a background thread or not.</param>
         /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
-        /// <param name="ConnectionThreadsNameBuilder">An optional delegate to set the name of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsPriorityBuilder">An optional delegate to set the priority of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsAreBackground">Whether the TCP connection threads are background threads or not (default: yes).</param>
         /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
         /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
         /// 
@@ -569,9 +566,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             ThreadPriority?                       ServerThreadPriority               = null,
                             Boolean?                              ServerThreadIsBackground           = null,
                             ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
-                            //ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
-                            //ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
-                            //Boolean?                              ConnectionThreadsAreBackground     = null,
                             TimeSpan?                             ConnectionTimeout                  = null,
                             UInt32?                               MaxClientConnections               = null,
 
@@ -615,9 +609,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    ServerThreadPriority,
                    ServerThreadIsBackground,
                    ConnectionIdBuilder,
-                   //ConnectionThreadsNameBuilder,
-                   //ConnectionThreadsPriorityBuilder,
-                   //ConnectionThreadsAreBackground,
                    ConnectionTimeout,
                    MaxClientConnections,
 

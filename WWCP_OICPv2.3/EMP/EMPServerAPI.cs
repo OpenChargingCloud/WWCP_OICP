@@ -127,7 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The attached Server API logger.
         /// </summary>
-        public ServerAPILogger?         Logger            { get; }
+        public ServerAPILogger?            Logger            { get; }
 
 
         public APICounters                 Counters          { get; }
@@ -162,6 +162,138 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
 
         public CustomJObjectSerializerDelegate<Identification>?                   CustomIdentificationSerializer                     { get; set; }
+
+        #endregion
+
+        #region Custom request/response logging converters
+
+        #region AuthorizeStart              (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStartRequest, String>
+            AuthorizeStartRequestConverter                     { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest)
+            => String.Concat(authorizeStartRequest.Identification.ToString(), " at ", authorizeStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStartRequest, AuthorizationStartResponse, TimeSpan, String>
+            AuthorizeStartResponseConverter                    { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest, authorizationStartResponse, runtime)
+            => String.Concat(authorizeStartRequest.Identification.ToString(), " at ", authorizeStartRequest.EVSEId,
+                             " => ",
+                             authorizationStartResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeStop               (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStopRequest, String>
+            AuthorizeStopRequestConverter                     { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest)
+            => String.Concat(authorizeStopRequest.Identification.ToString(), " at ", authorizeStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStopRequest, AuthorizationStopResponse, TimeSpan, String>
+            AuthorizeStopResponseConverter                    { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest, authorizationStopResponse, runtime)
+            => String.Concat(authorizeStopRequest.Identification.ToString(), " at ", authorizeStopRequest.EVSEId,
+                             " => ",
+                             authorizationStopResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region ChargingStartNotification   (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, String>
+            ChargingStartNotificationRequestConverter                     { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest)
+            => String.Concat(chargingStartNotificationRequest.Identification.ToString(), " at ", chargingStartNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, Acknowledgement<ChargingStartNotificationRequest>, TimeSpan, String>
+            ChargingStartNotificationResponseConverter                    { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest, chargingStartNotificationResponse, runtime)
+            => String.Concat(chargingStartNotificationRequest.Identification.ToString(), " at ", chargingStartNotificationRequest.EVSEId,
+                             " => ",
+                             chargingStartNotificationResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingProgressNotification(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, String>
+            ChargingProgressNotificationRequestConverter                     { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest)
+            => String.Concat(chargingProgressNotificationRequest.Identification.ToString(), " at ", chargingProgressNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, Acknowledgement<ChargingProgressNotificationRequest>, TimeSpan, String>
+            ChargingProgressNotificationResponseConverter                    { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest, chargingProgressNotificationResponse, runtime)
+            => String.Concat(chargingProgressNotificationRequest.Identification.ToString(), " at ", chargingProgressNotificationRequest.EVSEId,
+                             " => ",
+                             chargingProgressNotificationResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingEndNotification     (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, String>
+            ChargingEndNotificationRequestConverter                     { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest)
+            => String.Concat(chargingEndNotificationRequest.Identification.ToString(), " at ", chargingEndNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, Acknowledgement<ChargingEndNotificationRequest>, TimeSpan, String>
+            ChargingEndNotificationResponseConverter                    { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest, chargingEndNotificationResponse, runtime)
+            => String.Concat(chargingEndNotificationRequest.Identification.ToString(), " at ", chargingEndNotificationRequest.EVSEId,
+                             " => ",
+                             chargingEndNotificationResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingErrorNotification   (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, String>
+            ChargingErrorNotificationRequestConverter                     { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest)
+            => String.Concat(chargingErrorNotificationRequest.Identification.ToString(), " at ", chargingErrorNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, Acknowledgement<ChargingErrorNotificationRequest>, TimeSpan, String>
+            ChargingErrorNotificationResponseConverter                    { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest, chargingErrorNotificationResponse, runtime)
+            => String.Concat(chargingErrorNotificationRequest.Identification.ToString(), " at ", chargingErrorNotificationRequest.EVSEId,
+                             " => ",
+                             chargingErrorNotificationResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region ChargeDetailRecord          (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, String>
+            ChargeDetailRecordRequestConverter                     { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification.ToString(), " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId);
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, Acknowledgement<ChargeDetailRecordRequest>, TimeSpan, String>
+            ChargeDetailRecordResponseConverter                    { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest, chargeDetailRecordResponse, runtime)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification.ToString(), " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId,
+                             " => ",
+                             chargeDetailRecordResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
 
         #endregion
 
@@ -471,9 +603,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="ServerThreadPriority">The optional priority of the TCP server thread.</param>
         /// <param name="ServerThreadIsBackground">Whether the TCP server thread is a background thread or not.</param>
         /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
-        /// <param name="ConnectionThreadsNameBuilder">An optional delegate to set the name of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsPriorityBuilder">An optional delegate to set the priority of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsAreBackground">Whether the TCP connection threads are background threads or not (default: yes).</param>
         /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
         /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
         /// 
@@ -514,9 +643,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             ThreadPriority?                       ServerThreadPriority               = null,
                             Boolean?                              ServerThreadIsBackground           = null,
                             ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
-                            //ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
-                            //ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
-                            //Boolean?                              ConnectionThreadsAreBackground     = null,
                             TimeSpan?                             ConnectionTimeout                  = null,
                             UInt32?                               MaxClientConnections               = null,
 
@@ -560,9 +686,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    ServerThreadPriority,
                    ServerThreadIsBackground,
                    ConnectionIdBuilder,
-                   //ConnectionThreadsNameBuilder,
-                   //ConnectionThreadsPriorityBuilder,
-                   //ConnectionThreadsAreBackground,
                    ConnectionTimeout,
                    MaxClientConnections,
 
@@ -774,6 +897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeStartRequest,
                                                                                               authorizationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -964,6 +1088,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeStopRequest,
                                                                                               authorizationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1162,6 +1287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingStartNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingStartNotificationRequest,
                                                                                                           chargingStartNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1297,6 +1423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingProgressNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingProgressNotificationRequest,
                                                                                                           chargingProgressNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1432,6 +1559,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingEndNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingEndNotificationRequest,
                                                                                                           chargingEndNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1567,6 +1695,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingErrorNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingErrorNotificationRequest,
                                                                                                           chargingErrorNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1810,6 +1939,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnChargeDetailRecordResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              chargeDetailRecordRequest,
                                                                                               chargeDetailRecordResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);

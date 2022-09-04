@@ -156,70 +156,115 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region AuthorizeStart/-Stop
 
-                //RegisterEvent2("AuthorizeStartRequest",
-                //               handler => EMPServerAPI.OnAuthorizeStartHTTPRequest += handler,
-                //               handler => EMPServerAPI.OnAuthorizeStartHTTPRequest -= handler,
-                //               "AuthorizeStart", "authorize", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizeStartRequest",
+                              handler => EMPServerAPI.OnAuthorizeStartRequest += (timestamp, sender, request)                     => handler(timestamp, sender, EMPServerAPI?.AuthorizeStartRequestConverter(timestamp, sender, request)),
+                              handler => EMPServerAPI.OnAuthorizeStartRequest -= (timestamp, sender, request)                     => handler(timestamp, sender, EMPServerAPI?.AuthorizeStartRequestConverter(timestamp, sender, request)),
+                              "AuthorizeStart", "authorize", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent2("AuthorizationStartResponse",
-                //               handler => EMPServerAPI.OnAuthorizationStartHTTPResponse += handler,
-                //               handler => EMPServerAPI.OnAuthorizationStartHTTPResponse -= handler,
-                //               "AuthorizeStart", "authorize", "authorization", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizationStartResponse",
+                              handler => EMPServerAPI.OnAuthorizeStartResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPServerAPI?.AuthorizeStartRequestConverter(timestamp, sender, request), EMPServerAPI?.AuthorizeStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => EMPServerAPI.OnAuthorizeStartResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPServerAPI?.AuthorizeStartRequestConverter(timestamp, sender, request), EMPServerAPI?.AuthorizeStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "AuthorizeStart", "authorize", "authorization", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
 
-                //RegisterEvent2("AuthorizeStopRequest",
-                //               handler => EMPServerAPI.OnAuthorizeStopHTTPRequest += handler,
-                //               handler => EMPServerAPI.OnAuthorizeStopHTTPRequest -= handler,
-                //               "AuthorizeStop", "authorize", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizeStopRequest",
+                              handler => EMPServerAPI.OnAuthorizeStopRequest += (timestamp, sender, request)                      => handler(timestamp, sender, EMPServerAPI?.AuthorizeStopRequestConverter(timestamp, sender, request)),
+                              handler => EMPServerAPI.OnAuthorizeStopRequest -= (timestamp, sender, request)                      => handler(timestamp, sender, EMPServerAPI?.AuthorizeStopRequestConverter(timestamp, sender, request)),
+                              "AuthorizeStop", "authorize", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent2("AuthorizationStopResponse",
-                //               handler => EMPServerAPI.OnAuthorizationStopHTTPResponse += handler,
-                //               handler => EMPServerAPI.OnAuthorizationStopHTTPResponse -= handler,
-                //               "AuthorizeStop", "authorize", "authorization", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("AuthorizationStopResponse",
+                              handler => EMPServerAPI.OnAuthorizeStopResponse += (timestamp, sender, request, response, runtime)  => handler(timestamp, sender, EMPServerAPI?.AuthorizeStopRequestConverter(timestamp, sender, request), EMPServerAPI?.AuthorizeStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => EMPServerAPI.OnAuthorizeStopResponse -= (timestamp, sender, request, response, runtime)  => handler(timestamp, sender, EMPServerAPI?.AuthorizeStopRequestConverter(timestamp, sender, request), EMPServerAPI?.AuthorizeStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "AuthorizeStop", "authorize", "authorization", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
-                #region ChargingNotification
+                #region ChargingNotifications
 
-                //RegisterEvent2("ChargingNotificationRequest",
-                //               handler => EMPServerAPI.OnChargingNotificationsHTTPRequest += handler,
-                //               handler => EMPServerAPI.OnChargingNotificationsHTTPRequest -= handler,
-                //               "ChargingNotification", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("ChargingStartNotificationRequest",
+                              handler => EMPServerAPI.OnChargingStartNotificationRequest += (timestamp, sender, request)                        => handler(timestamp, sender, EMPServerAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request)),
+                              handler => EMPServerAPI.OnChargingStartNotificationRequest -= (timestamp, sender, request)                        => handler(timestamp, sender, EMPServerAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingStartNotification", "ChargingNotification", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent2("ChargingNotificationResponse",
-                //               handler => EMPServerAPI.OnChargingNotificationsHTTPResponse += handler,
-                //               handler => EMPServerAPI.OnChargingNotificationsHTTPResponse -= handler,
-                //               "ChargingNotification", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("ChargingStartNotificationResponse",
+                              handler => EMPServerAPI.OnChargingStartNotificationResponse += (timestamp, sender, request, response, runtime)    => handler(timestamp, sender, EMPServerAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingStartNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => EMPServerAPI.OnChargingStartNotificationResponse -= (timestamp, sender, request, response, runtime)    => handler(timestamp, sender, EMPServerAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingStartNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingStartNotification", "ChargingNotification", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingProgressNotificationRequest",
+                              handler => EMPServerAPI.OnChargingProgressNotificationRequest += (timestamp, sender, request)                     => handler(timestamp, sender, EMPServerAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request)),
+                              handler => EMPServerAPI.OnChargingProgressNotificationRequest -= (timestamp, sender, request)                     => handler(timestamp, sender, EMPServerAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingProgressNotification", "ChargingNotification", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingProgressNotificationResponse",
+                              handler => EMPServerAPI.OnChargingProgressNotificationResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPServerAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingProgressNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => EMPServerAPI.OnChargingProgressNotificationResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPServerAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingProgressNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingProgressNotification", "ChargingNotification", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingEndNotificationRequest",
+                              handler => EMPServerAPI.OnChargingEndNotificationRequest += (timestamp, sender, request)                          => handler(timestamp, sender, EMPServerAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request)),
+                              handler => EMPServerAPI.OnChargingEndNotificationRequest -= (timestamp, sender, request)                          => handler(timestamp, sender, EMPServerAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingEndNotification", "ChargingNotification", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingEndNotificationResponse",
+                              handler => EMPServerAPI.OnChargingEndNotificationResponse += (timestamp, sender, request, response, runtime)      => handler(timestamp, sender, EMPServerAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingEndNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => EMPServerAPI.OnChargingEndNotificationResponse -= (timestamp, sender, request, response, runtime)      => handler(timestamp, sender, EMPServerAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingEndNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingEndNotification", "ChargingNotification", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingErrorNotificationRequest",
+                              handler => EMPServerAPI.OnChargingErrorNotificationRequest += (timestamp, sender, request)                        => handler(timestamp, sender, EMPServerAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request)),
+                              handler => EMPServerAPI.OnChargingErrorNotificationRequest -= (timestamp, sender, request)                        => handler(timestamp, sender, EMPServerAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingErrorNotification", "ChargingNotification", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingErrorNotificationResponse",
+                              handler => EMPServerAPI.OnChargingErrorNotificationResponse += (timestamp, sender, request, response, runtime)    => handler(timestamp, sender, EMPServerAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingErrorNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => EMPServerAPI.OnChargingErrorNotificationResponse -= (timestamp, sender, request, response, runtime)    => handler(timestamp, sender, EMPServerAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargingErrorNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingErrorNotification", "ChargingNotification", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region Charge Detail Record
 
-                //RegisterEvent2("ChargeDetailRecordRequest",
-                //               handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest += handler,
-                //               handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest -= handler,
-                //               "ChargeDetailRecord", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("ChargeDetailRecordRequest",
+                              handler => EMPServerAPI.OnChargeDetailRecordRequest += (timestamp, sender, request)                     => handler(timestamp, sender, EMPServerAPI?.ChargeDetailRecordRequestConverter(timestamp, sender, request)),
+                              handler => EMPServerAPI.OnChargeDetailRecordRequest -= (timestamp, sender, request)                     => handler(timestamp, sender, EMPServerAPI?.ChargeDetailRecordRequestConverter(timestamp, sender, request)),
+                              "ChargeDetailRecord", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent2("ChargeDetailRecordResponse",
-                //               handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse += handler,
-                //               handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse -= handler,
-                //               "ChargeDetailRecord", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("ChargeDetailRecordResponse",
+                              handler => EMPServerAPI.OnChargeDetailRecordResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPServerAPI?.ChargeDetailRecordRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargeDetailRecordResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => EMPServerAPI.OnChargeDetailRecordResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPServerAPI?.ChargeDetailRecordRequestConverter(timestamp, sender, request), EMPServerAPI?.ChargeDetailRecordResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargeDetailRecord", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
