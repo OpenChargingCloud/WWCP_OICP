@@ -1549,82 +1549,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region ChargingNotifications
 
-                //RegisterEvent("ChargingStartNotificationHTTPRequest",
-                //              handler => CPOClient.OnChargingStartNotificationHTTPRequest += handler,
-                //              handler => CPOClient.OnChargingStartNotificationHTTPRequest -= handler,
-                //              "chargingStartNotification", "chargingNotifications", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterRequestEvent("ChargingStartNotificationRequest",
+                                     handler => CPOClient.OnChargingStartNotificationRequest      += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingStartNotificationRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnChargingStartNotificationRequest      -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingStartNotificationRequestConverter(timestamp, sender, request)),
+                                     "chargingStartNotification", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("ChargingStartNotificationHTTPResponse",
-                //              handler => CPOClient.OnChargingStartNotificationHTTPResponse += handler,
-                //              handler => CPOClient.OnChargingStartNotificationHTTPResponse -= handler,
-                //              "chargingStartNotification", "chargingNotifications", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
-
-
-                //RegisterEvent("ChargingProgressNotificationHTTPRequest",
-                //              handler => CPOClient.OnChargingProgressNotificationHTTPRequest += handler,
-                //              handler => CPOClient.OnChargingProgressNotificationHTTPRequest -= handler,
-                //              "chargingProgressNotification", "chargingNotifications", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
-
-                //RegisterEvent("ChargingProgressNotificationHTTPResponse",
-                //              handler => CPOClient.OnChargingProgressNotificationHTTPResponse += handler,
-                //              handler => CPOClient.OnChargingProgressNotificationHTTPResponse -= handler,
-                //              "chargingProgressNotification", "chargingNotifications", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterResponseEvent("ChargingStartNotificationResponse",
+                                      handler => CPOClient.OnChargingStartNotificationResponse    += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingStartNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingStartNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOClient.OnChargingStartNotificationResponse    -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingStartNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingStartNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "chargingStartNotification", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
 
-                //RegisterEvent("ChargingEndNotificationHTTPRequest",
-                //              handler => CPOClient.OnChargingEndNotificationHTTPRequest += handler,
-                //              handler => CPOClient.OnChargingEndNotificationHTTPRequest -= handler,
-                //              "chargingEndNotification", "chargingNotifications", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterRequestEvent("ChargingProgressNotificationRequest",
+                                     handler => CPOClient.OnChargingProgressNotificationRequest   += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingProgressNotificationRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnChargingProgressNotificationRequest   -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingProgressNotificationRequestConverter(timestamp, sender, request)),
+                                     "chargingProgressNotification", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("ChargingEndNotificationHTTPResponse",
-                //              handler => CPOClient.OnChargingEndNotificationHTTPResponse += handler,
-                //              handler => CPOClient.OnChargingEndNotificationHTTPResponse -= handler,
-                //              "chargingEndNotification", "chargingNotifications", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterResponseEvent("ChargingProgressNotificationResponse",
+                                      handler => CPOClient.OnChargingProgressNotificationResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingProgressNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingProgressNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOClient.OnChargingProgressNotificationResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingProgressNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingProgressNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "chargingProgressNotification", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
 
-                //RegisterEvent("ChargingErrorNotificationHTTPRequest",
-                //              handler => CPOClient.OnChargingErrorNotificationHTTPRequest += handler,
-                //              handler => CPOClient.OnChargingErrorNotificationHTTPRequest -= handler,
-                //              "authorizeStop", "chargingNotifications", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterRequestEvent("ChargingEndNotificationRequest",
+                                     handler => CPOClient.OnChargingEndNotificationRequest        += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingEndNotificationRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnChargingEndNotificationRequest        -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingEndNotificationRequestConverter(timestamp, sender, request)),
+                                     "chargingEndNotification", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("ChargingErrorNotificationHTTPResponse",
-                //              handler => CPOClient.OnChargingErrorNotificationHTTPResponse += handler,
-                //              handler => CPOClient.OnChargingErrorNotificationHTTPResponse -= handler,
-                //              "chargingErrorNotification", "chargingNotifications", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterResponseEvent("ChargingEndNotificationResponse",
+                                      handler => CPOClient.OnChargingEndNotificationResponse      += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingEndNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingEndNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOClient.OnChargingEndNotificationResponse      -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingEndNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingEndNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "chargingEndNotification", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterRequestEvent("ChargingErrorNotificationRequest",
+                                     handler => CPOClient.OnChargingErrorNotificationRequest      += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingErrorNotificationRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnChargingErrorNotificationRequest      -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.ChargingErrorNotificationRequestConverter(timestamp, sender, request)),
+                                     "authorizeStop", "chargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterResponseEvent("ChargingErrorNotificationResponse",
+                                      handler => CPOClient.OnChargingErrorNotificationResponse    += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingErrorNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingErrorNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOClient.OnChargingErrorNotificationResponse    -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.ChargingErrorNotificationRequestConverter(timestamp, sender, request), CPOClient?.ChargingErrorNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "chargingErrorNotification", "chargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region SendChargeDetailRecord
 
-                //RegisterEvent("SendChargeDetailRecordHTTPRequest",
-                //              handler => CPOClient.OnSendChargeDetailRecordHTTPRequest += handler,
-                //              handler => CPOClient.OnSendChargeDetailRecordHTTPRequest -= handler,
-                //              "sendChargeDetailRecord", "cdr", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterRequestEvent("SendChargeDetailRecordRequest",
+                                     handler => CPOClient.OnSendChargeDetailRecordRequest         += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.SendChargeDetailRecordRequestConverter(timestamp, sender, request)),
+                                     handler => CPOClient.OnSendChargeDetailRecordRequest         -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClient?.SendChargeDetailRecordRequestConverter(timestamp, sender, request)),
+                                     "sendChargeDetailRecord", "cdr", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("SendChargeDetailRecordHTTPResponse",
-                //              handler => CPOClient.OnSendChargeDetailRecordHTTPResponse += handler,
-                //              handler => CPOClient.OnSendChargeDetailRecordHTTPResponse -= handler,
-                //              "sendChargeDetailRecord", "cdr", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterResponseEvent("SendChargeDetailRecordResponse",
+                                      handler => CPOClient.OnSendChargeDetailRecordResponse       += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.SendChargeDetailRecordRequestConverter(timestamp, sender, request), CPOClient?.SendChargeDetailRecordResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOClient.OnSendChargeDetailRecordResponse       -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClient?.SendChargeDetailRecordRequestConverter(timestamp, sender, request), CPOClient?.SendChargeDetailRecordResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "sendChargeDetailRecord", "cdr", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 

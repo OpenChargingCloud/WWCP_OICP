@@ -278,26 +278,119 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Custom request/response converters
 
-        public Func<DateTime, Object, AuthorizeStartRequest, String>                                                    AuthorizeStartRequestConverter         { get; set; }
+        #region AuthorizeStart(Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStartRequest, String>
+            AuthorizeStartRequestConverter                   { get; set; }
 
             = (timestamp, sender, authorizeStartRequest)
             => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeStartRequest, OICPResult<AuthorizationStartResponse>, TimeSpan, String>  AuthorizationStartResponseConverter    { get; set; }
+        public Func<DateTime, Object, AuthorizeStartRequest, OICPResult<AuthorizationStartResponse>, TimeSpan, String>
+            AuthorizationStartResponseConverter              { get; set; }
 
             = (timestamp, sender, authorizeStartRequest, authorizationStartResponse, runtime)
             => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId, " => ", authorizationStartResponse.Response?.AuthorizationStatus.ToString() ?? "failed!");
 
+        #endregion
 
-        public Func<DateTime, Object, AuthorizeStopRequest, String>                                                     AuthorizeStopRequestConverter          { get; set; }
+        #region AuthorizeStop(Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStopRequest, String>
+            AuthorizeStopRequestConverter                    { get; set; }
 
             = (timestamp, sender, authorizeStopRequest)
             => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeStopRequest, OICPResult<AuthorizationStopResponse>, TimeSpan, String>    AuthorizationStopResponseConverter     { get; set; }
+        public Func<DateTime, Object, AuthorizeStopRequest, OICPResult<AuthorizationStopResponse>, TimeSpan, String>
+            AuthorizationStopResponseConverter               { get; set; }
 
             = (timestamp, sender, authorizeStopRequest, authorizationStopResponse, runtime)
             => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId, " => ", authorizationStopResponse.Response?.AuthorizationStatus.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region ChargingStartNotification(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, String>
+            ChargingStartNotificationRequestConverter        { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest)
+            => String.Concat(chargingStartNotificationRequest.Identification, " at ", chargingStartNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, OICPResult<Acknowledgement<ChargingStartNotificationRequest>>, TimeSpan, String>
+            ChargingStartNotificationResponseConverter       { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest, chargingStartNotificationResponse, runtime)
+            => String.Concat(chargingStartNotificationRequest.Identification, " at ", chargingStartNotificationRequest.EVSEId, " => ", chargingStartNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingProgressNotification(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, String>
+            ChargingProgressNotificationRequestConverter     { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest)
+            => String.Concat(chargingProgressNotificationRequest.Identification, " at ", chargingProgressNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>, TimeSpan, String>
+            ChargingProgressNotificationResponseConverter    { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest, chargingProgressNotificationResponse, runtime)
+            => String.Concat(chargingProgressNotificationRequest.Identification, " at ", chargingProgressNotificationRequest.EVSEId, " => ", chargingProgressNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingEndNotification(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, String>
+            ChargingEndNotificationRequestConverter          { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest)
+            => String.Concat(chargingEndNotificationRequest.Identification, " at ", chargingEndNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, OICPResult<Acknowledgement<ChargingEndNotificationRequest>>, TimeSpan, String>
+            ChargingEndNotificationResponseConverter         { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest, chargingEndNotificationResponse, runtime)
+            => String.Concat(chargingEndNotificationRequest.Identification, " at ", chargingEndNotificationRequest.EVSEId, " => ", chargingEndNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingErrorNotification(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, String>
+            ChargingErrorNotificationRequestConverter        { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest)
+            => String.Concat(chargingErrorNotificationRequest.Identification, " at ", chargingErrorNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>, TimeSpan, String>
+            ChargingErrorNotificationResponseConverter       { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest, chargingErrorNotificationResponse, runtime)
+            => String.Concat(chargingErrorNotificationRequest.Identification, " at ", chargingErrorNotificationRequest.EVSEId, " => ", chargingErrorNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region SendChargeDetailRecord(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, String>
+            SendChargeDetailRecordRequestConverter           { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification, " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId, " (", chargeDetailRecordRequest.ChargeDetailRecord.SessionId, ")");
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, OICPResult<Acknowledgement<ChargeDetailRecordRequest>>, TimeSpan, String>
+            SendChargeDetailRecordResponseConverter          { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest, chargeDetailRecordResponse, runtime)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification, " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId, " (", chargeDetailRecordRequest.ChargeDetailRecord.SessionId, ") => ", chargeDetailRecordResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
 
         #endregion
 
