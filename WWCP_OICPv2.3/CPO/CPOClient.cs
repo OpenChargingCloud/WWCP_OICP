@@ -278,7 +278,73 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Custom request/response converters
 
-        #region AuthorizeStart(Request/Response)Converter
+        #region PushEVSEData                (Request/Response)Converter
+
+        public Func<DateTime, Object, PushEVSEDataRequest, String>
+            PushEVSEDataRequestConverter                     { get; set; }
+
+            = (timestamp, sender, pushEVSEDataRequest)
+            => String.Concat(pushEVSEDataRequest.Action, " of ", pushEVSEDataRequest.EVSEDataRecords.Count(), " evse(s)");
+
+        public Func<DateTime, Object, PushEVSEDataRequest, OICPResult<Acknowledgement<PushEVSEDataRequest>>, TimeSpan, String>
+            PushEVSEDataResponseConverter                    { get; set; }
+
+            = (timestamp, sender, pushEVSEDataRequest, pushEVSEDataResponse, runtime)
+            => String.Concat(pushEVSEDataRequest.Action, " of ", pushEVSEDataRequest.EVSEDataRecords.Count(), " evse(s) => ", pushEVSEDataResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region PushEVSEStatus              (Request/Response)Converter
+
+        public Func<DateTime, Object, PushEVSEStatusRequest, String>
+            PushEVSEStatusRequestConverter                   { get; set; }
+
+            = (timestamp, sender, pushEVSEStatusRequest)
+            => String.Concat(pushEVSEStatusRequest.Action, " of ", pushEVSEStatusRequest.EVSEStatusRecords.Count(), " evse status");
+
+        public Func<DateTime, Object, PushEVSEStatusRequest, OICPResult<Acknowledgement<PushEVSEStatusRequest>>, TimeSpan, String>
+            PushEVSEStatusResponseConverter                  { get; set; }
+
+            = (timestamp, sender, pushEVSEStatusRequest, pushEVSEStatusResponse, runtime)
+            => String.Concat(pushEVSEStatusRequest.Action, " of ", pushEVSEStatusRequest.EVSEStatusRecords.Count(), " evse status => ", pushEVSEStatusResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region PushPricingProductData      (Request/Response)Converter
+
+        public Func<DateTime, Object, PushPricingProductDataRequest, String>
+            PushPricingProductDataRequestConverter                     { get; set; }
+
+            = (timestamp, sender, pushPricingProductDataRequest)
+            => String.Concat(pushPricingProductDataRequest.Action, " of ", pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count(), " pricing product data record(s)");
+
+        public Func<DateTime, Object, PushPricingProductDataRequest, OICPResult<Acknowledgement<PushPricingProductDataRequest>>, TimeSpan, String>
+            PushPricingProductDataResponseConverter                    { get; set; }
+
+            = (timestamp, sender, pushPricingProductDataRequest, pushPricingProductDataResponse, runtime)
+            => String.Concat(pushPricingProductDataRequest.Action, " of ", pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count(), " pricing product data record(s) => ", pushPricingProductDataResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region PushEVSEPricing             (Request/Response)Converter
+
+        public Func<DateTime, Object, PushEVSEPricingRequest, String>
+            PushEVSEPricingRequestConverter                   { get; set; }
+
+            = (timestamp, sender, pushEVSEPricingRequest)
+            => String.Concat(pushEVSEPricingRequest.Action, " of ", pushEVSEPricingRequest.EVSEPricing.Count(), " evse pricing record(s)");
+
+        public Func<DateTime, Object, PushEVSEPricingRequest, OICPResult<Acknowledgement<PushEVSEPricingRequest>>, TimeSpan, String>
+            PushEVSEPricingResponseConverter                  { get; set; }
+
+            = (timestamp, sender, pushEVSEPricingRequest, pushEVSEPricingResponse, runtime)
+            => String.Concat(pushEVSEPricingRequest.Action, " of ", pushEVSEPricingRequest.EVSEPricing.Count(), " evse pricing record(s) => ", pushEVSEPricingResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region AuthorizeStart              (Request/Response)Converter
 
         public Func<DateTime, Object, AuthorizeStartRequest, String>
             AuthorizeStartRequestConverter                   { get; set; }
@@ -294,7 +360,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AuthorizeStop(Request/Response)Converter
+        #region AuthorizeStop               (Request/Response)Converter
 
         public Func<DateTime, Object, AuthorizeStopRequest, String>
             AuthorizeStopRequestConverter                    { get; set; }
@@ -311,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region ChargingStartNotification(Request/Response)Converter
+        #region ChargingStartNotification   (Request/Response)Converter
 
         public Func<DateTime, Object, ChargingStartNotificationRequest, String>
             ChargingStartNotificationRequestConverter        { get; set; }
@@ -343,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region ChargingEndNotification(Request/Response)Converter
+        #region ChargingEndNotification     (Request/Response)Converter
 
         public Func<DateTime, Object, ChargingEndNotificationRequest, String>
             ChargingEndNotificationRequestConverter          { get; set; }
@@ -359,7 +425,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region ChargingErrorNotification(Request/Response)Converter
+        #region ChargingErrorNotification   (Request/Response)Converter
 
         public Func<DateTime, Object, ChargingErrorNotificationRequest, String>
             ChargingErrorNotificationRequestConverter        { get; set; }
@@ -376,7 +442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region SendChargeDetailRecord(Request/Response)Converter
+        #region SendChargeDetailRecord      (Request/Response)Converter
 
         public Func<DateTime, Object, ChargeDetailRecordRequest, String>
             SendChargeDetailRecordRequestConverter           { get; set; }
