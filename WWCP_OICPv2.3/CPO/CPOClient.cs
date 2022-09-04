@@ -169,11 +169,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached client logger.
         /// </summary>
-        public CPOClientLogger?            Logger        { get; }
+        public CPOClientLogger?            Logger            { get; }
 
-        public APICounters                 Counters      { get; }
+        public APICounters                 Counters          { get; }
 
-        public Newtonsoft.Json.Formatting  JSONFormat    { get; set; }
+        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
 
         #endregion
 
@@ -813,23 +813,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.Counters    = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.JSONFormat  = Newtonsoft.Json.Formatting.None;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger  = DisableLogging == false
-                                   ? new HTTP_Logger(this,
-                                                     LoggingPath,
-                                                     LoggingContext,
-                                                     LogfileCreator)
-                                   : null;
-
-            this.Logger      = DisableLogging == false
-                                   ? new CPOClientLogger(this,
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
                                                          LoggingPath,
                                                          LoggingContext,
                                                          LogfileCreator)
-                                   : null;
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new CPOClientLogger(this,
+                                                             LoggingPath,
+                                                             LoggingContext,
+                                                             LogfileCreator)
+                                       : null;
 
         }
 
@@ -946,7 +946,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                         CustomEnergySourceSerializer,
                                                                                                                                         CustomEnvironmentalImpactSerializer,
                                                                                                                                         CustomOpeningTimesSerializer).
-                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToString(JSONFormatting).
                                                                                                                                  ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
@@ -1456,7 +1456,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEStatusRequestSerializer,
                                                                                                                                         CustomOperatorEVSEStatusSerializer,
                                                                                                                                         CustomEVSEStatusRecordSerializer).
-                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToString(JSONFormatting).
                                                                                                                                  ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
@@ -1964,7 +1964,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushPricingProductDataRequestSerializer,
                                                                                                                                         CustomPricingProductDataSerializer,
                                                                                                                                         CustomPricingProductDataRecordSerializer).
-                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToString(JSONFormatting).
                                                                                                                                  ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
@@ -2473,7 +2473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                            requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEPricingRequestSerializer,
                                                                                                                                         CustomEVSEPricingSerializer).
-                                                                                                                                 ToString(JSONFormat).
+                                                                                                                                 ToString(JSONFormatting).
                                                                                                                                  ToUTF8Bytes();
                                                                                            requestbuilder.Connection   = "close";
                                                                                        }),
@@ -2963,7 +2963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                          requestbuilder.Content      = Request.ToJSON(CustomPullAuthenticationDataRequestSerializer).
-                                                                                                                               ToString(JSONFormat).
+                                                                                                                               ToString(JSONFormatting).
                                                                                                                                ToUTF8Bytes();
                                                                                          requestbuilder.Connection   = "close";
                                                                                      }),
@@ -3516,7 +3516,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStartRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -3914,7 +3914,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStopRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -4336,7 +4336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToString(JSONFormatting).
                                                                                                                                 ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
@@ -4805,7 +4805,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToString(JSONFormatting).
                                                                                                                                 ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
@@ -5274,7 +5274,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToString(JSONFormatting).
                                                                                                                                 ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
@@ -5743,7 +5743,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormat).
+                                                                                                                                ToString(JSONFormatting).
                                                                                                                                 ToUTF8Bytes();
                                                                                           requestbuilder.Connection   = "close";
                                                                                       }),
@@ -6284,7 +6284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                     CustomIdentificationSerializer,
                                                                                                                                     CustomSignedMeteringValueSerializer,
                                                                                                                                     CustomCalibrationLawVerificationSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),

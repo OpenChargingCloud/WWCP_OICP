@@ -36,7 +36,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
     /// <summary>
-    /// The CPO HTTP Server API.
+    /// The CPO Server API.
     /// </summary>
     public partial class CPOServerAPI : HTTPAPI
     {
@@ -104,6 +104,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// The attached HTTP logger.
+        /// </summary>
+        public new HTTP_Logger             HTTPLogger
+#pragma warning disable CS8603 // Possible null reference return.
+            => base.HTTPLogger as HTTP_Logger;
+#pragma warning restore CS8603 // Possible null reference return.
+
+        /// <summary>
+        /// The attached Server API logger.
+        /// </summary>
+        public ServerAPILogger?         Logger            { get; }
+
 
         public APICounters                 Counters          { get; }
 
@@ -550,14 +564,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.Counters    = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.HTTPLogger  = DisableLogging == false
-                                   ? new HTTP_Logger(this,
-                                                     LoggingPath,
-                                                     LoggingContext ?? DefaultLoggingContext,
-                                                     LogfileCreator)
-                                   : null;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
+                                                         LoggingPath,
+                                                         LoggingContext ?? DefaultLoggingContext,
+                                                         LogfileCreator)
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new ServerAPILogger(this,
+                                                             LoggingPath,
+                                                             LoggingContext ?? DefaultLoggingContext,
+                                                             LogfileCreator)
+                                       : null;
 
             RegisterURLTemplates();
 

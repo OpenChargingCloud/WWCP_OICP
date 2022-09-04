@@ -162,11 +162,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The attached client logger.
         /// </summary>
-        public EMPClientLogger?            Logger        { get; }
+        public EMPClientLogger?            Logger            { get; }
 
-        public APICounters                 Counters      { get; }
+        public APICounters                 Counters          { get; }
 
-        public Newtonsoft.Json.Formatting  JSONFormat    { get; set; }
+        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
 
         #endregion
 
@@ -825,23 +825,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.Counters    = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.JSONFormat  = Newtonsoft.Json.Formatting.None;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger  = DisableLogging == false
-                                   ? new HTTP_Logger(this,
-                                                     LoggingPath,
-                                                     LoggingContext,
-                                                     LogfileCreator)
-                                   : null;
-
-            this.Logger      = DisableLogging == false
-                                   ? new EMPClientLogger(this,
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
                                                          LoggingPath,
                                                          LoggingContext,
                                                          LogfileCreator)
-                                   : null;
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new EMPClientLogger(this,
+                                                             LoggingPath,
+                                                             LoggingContext,
+                                                             LogfileCreator)
+                                       : null;
 
         }
 
@@ -949,7 +949,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEDataRequestSerializer,
                                                                                                                                     CustomGeoCoordinatesSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -1325,7 +1325,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEStatusRequestSerializer,
                                                                                                                                     CustomGeoCoordinatesSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -1716,7 +1716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEStatusByIdRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -2092,7 +2092,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEStatusByOperatorIdRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -2487,7 +2487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullPricingProductDataRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -2954,7 +2954,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEPricingRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -3406,7 +3406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPushAuthenticationDataRequestSerializer,
                                                                                                                                     CustomProviderAuthenticationDataSerializer,
                                                                                                                                     CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -3977,7 +3977,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStartRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -4377,7 +4377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStopRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -4777,7 +4777,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStartRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -5177,7 +5177,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStopRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),
@@ -5596,7 +5596,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomGetChargeDetailRecordsRequestSerializer).
-                                                                                                                             ToString(JSONFormat).
+                                                                                                                             ToString(JSONFormatting).
                                                                                                                              ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                    }),

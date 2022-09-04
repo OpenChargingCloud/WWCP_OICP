@@ -17,16 +17,10 @@
 
 #region Usings
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+
 using WWCP = org.GraphDefined.WWCP;
 
 #endregion
@@ -133,7 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The wrapped EMP roaming object.
         /// </summary>
-        public EMPRoaming EMPRoaming { get; }
+        public EMPRoaming  EMPRoaming     { get; }
 
 
         /// <summary>
@@ -143,10 +137,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => EMPRoaming.EMPClient;
 
         /// <summary>
+        /// The EMP HTTP client logger.
+        /// </summary>
+        public EMPClient.HTTP_Logger HTTPClientLogger
+            => EMPRoaming.EMPClient.HTTPLogger;
+
+        /// <summary>
         /// The EMP client logger.
         /// </summary>
-        public EMPClient.HTTP_Logger ClientLogger
-            => EMPRoaming.EMPClient.HTTPLogger;
+        public EMPClient.EMPClientLogger? ClientLogger
+            => EMPRoaming.EMPClient.Logger;
 
 
         /// <summary>
@@ -156,10 +156,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => EMPRoaming.EMPServer;
 
         /// <summary>
+        /// The EMP HTTP server logger.
+        /// </summary>
+        public EMPServerAPI.HTTP_Logger HTTPServerLogger
+            => EMPRoaming.EMPServer.HTTPLogger;
+
+        /// <summary>
         /// The EMP server logger.
         /// </summary>
-        public EMPServerAPI.Logger ServerLogger
-            => EMPRoaming.EMPServer.HTTPLogger as EMPServerAPI.Logger;
+        public EMPServerAPI.ServerAPILogger? ServerLogger
+            => EMPRoaming.EMPServer.Logger;
 
 
         /// <summary>

@@ -22,17 +22,17 @@ using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.CPO
+namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
     /// <summary>
-    /// The CPO Server API.
+    /// The EMP HTTP Server API.
     /// </summary>
-    public partial class CPOServerAPI
+    public partial class EMPServerAPI
     {
 
         /// <summary>
-        /// A CPO HTTP Server API logger.
+        /// A EMP HTTP Server API logger.
         /// </summary>
         public class HTTP_Logger : HTTPServerLogger
         {
@@ -42,36 +42,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <summary>
             /// The default context of this logger.
             /// </summary>
-            public const String DefaultContext = "CPOServerAPI";
+            public const String DefaultContext = "EMPServerAPI";
 
             #endregion
 
             #region Properties
 
             /// <summary>
-            /// The linked CPO Server API.
+            /// The linked EMP Server API.
             /// </summary>
-            public CPOServerAPI  CPOServerAPI    { get; }
+            public EMPServerAPI  EMPServerAPI    { get; }
 
             #endregion
 
             #region Constructor(s)
 
-            #region HTTP_Logger(CPOServerAPI, Context = DefaultContext, LogfileCreator = null)
+            #region HTTP_Logger(EMPServerAPI, Context = DefaultContext, LogfileCreator = null)
 
             /// <summary>
-            /// Create a new CPO Server API logger using the default logging delegates.
+            /// Create a new EMP Server API logger using the default logging delegates.
             /// </summary>
-            /// <param name="CPOServerAPI">An CPO Server API.</param>
+            /// <param name="EMPServerAPI">An EMP Server API.</param>
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public HTTP_Logger(CPOServerAPI             CPOServerAPI,
+            public HTTP_Logger(EMPServerAPI             EMPServerAPI,
                                String                   LoggingPath,
                                String                   Context         = DefaultContext,
                                LogfileCreatorDelegate?  LogfileCreator  = null)
 
-                : this(CPOServerAPI,
+                : this(EMPServerAPI,
                        LoggingPath,
                        Context,
                        null,
@@ -84,12 +84,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region HTTP_Logger(CPOServerAPI, Context, ... Logging delegates ...)
+            #region HTTP_Logger(EMPServerAPI, Context, ... Logging delegates ...)
 
             /// <summary>
-            /// Create a new CPO Server API logger using the given logging delegates.
+            /// Create a new EMP Server API logger using the given logging delegates.
             /// </summary>
-            /// <param name="CPOServerAPI">An CPO Server API.</param>
+            /// <param name="EMPServerAPI">An EMP Server API.</param>
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
@@ -109,7 +109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public HTTP_Logger(CPOServerAPI                 CPOServerAPI,
+            public HTTP_Logger(EMPServerAPI                 EMPServerAPI,
                                String                       LoggingPath,
                                String                       Context,
 
@@ -130,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                LogfileCreatorDelegate?      LogfileCreator              = null)
 
-                : base(CPOServerAPI.HTTPServer,
+                : base(EMPServerAPI.HTTPServer,
                        LoggingPath,
                        Context,
 
@@ -153,69 +153,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             {
 
-                this.CPOServerAPI = CPOServerAPI ?? throw new ArgumentNullException(nameof(CPOServerAPI), "The given CPO Server API must not be null!");
+                this.EMPServerAPI = EMPServerAPI ?? throw new ArgumentNullException(nameof(EMPServerAPI), "The given EMP Server API must not be null!");
 
-                #region AuthorizeRemoteReservationStart/-Stop
+                #region AuthorizeStart/-Stop
 
-                RegisterEvent2("AuthorizeRemoteReservationStartRequest",
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPRequest += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPRequest -= handler,
-                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "requests", "all").
+                RegisterEvent2("AuthorizeStartRequest",
+                               handler => EMPServerAPI.OnAuthorizeStartHTTPRequest += handler,
+                               handler => EMPServerAPI.OnAuthorizeStartHTTPRequest -= handler,
+                               "AuthorizeStart", "authorize", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("AuthorizeRemoteReservationStartResponse",
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
-                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "reservations", "responses", "all").
+                RegisterEvent2("AuthorizationStartResponse",
+                               handler => EMPServerAPI.OnAuthorizationStartHTTPResponse += handler,
+                               handler => EMPServerAPI.OnAuthorizationStartHTTPResponse -= handler,
+                               "AuthorizeStart", "authorize", "authorization", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent2("AuthorizeRemoteReservationStopRequest",
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPRequest += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPRequest -= handler,
-                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "requests", "all").
+                RegisterEvent2("AuthorizeStopRequest",
+                               handler => EMPServerAPI.OnAuthorizeStopHTTPRequest += handler,
+                               handler => EMPServerAPI.OnAuthorizeStopHTTPRequest -= handler,
+                               "AuthorizeStop", "authorize", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("AuthorizeRemoteReservationStopResponse",
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPResponse += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteReservationStopHTTPResponse -= handler,
-                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "reservations", "responses", "all").
+                RegisterEvent2("AuthorizationStopResponse",
+                               handler => EMPServerAPI.OnAuthorizationStopHTTPResponse += handler,
+                               handler => EMPServerAPI.OnAuthorizationStopHTTPResponse -= handler,
+                               "AuthorizeStop", "authorize", "authorization", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
-                #region AuthorizeRemoteStart/-Stop
+                #region ChargingNotification
 
-                RegisterEvent2("AuthorizeRemoteStartRequest",
-                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPRequest -= handler,
-                               "AuthorizeRemoteStart", "AuthorizeRemote", "requests", "all").
+                RegisterEvent2("ChargingNotificationRequest",
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPRequest += handler,
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPRequest -= handler,
+                               "ChargingNotification", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("AuthorizeRemoteStartResponse",
-                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteStartHTTPResponse -= handler,
-                               "AuthorizeRemoteStart", "AuthorizeRemote", "authorization", "responses", "all").
+                RegisterEvent2("ChargingNotificationResponse",
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPResponse += handler,
+                               handler => EMPServerAPI.OnChargingNotificationsHTTPResponse -= handler,
+                               "ChargingNotification", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
+                #endregion
 
-                RegisterEvent2("AuthorizeRemoteStopRequest",
-                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPRequest -= handler,
-                               "AuthorizeRemoteStop", "AuthorizeRemote", "requests", "all").
+                #region Charge Detail Record
+
+                RegisterEvent2("ChargeDetailRecordRequest",
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest += handler,
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPRequest -= handler,
+                               "ChargeDetailRecord", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("AuthorizeRemoteStopResponse",
-                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse += handler,
-                               handler => CPOServerAPI.OnAuthorizeRemoteStopHTTPResponse -= handler,
-                               "AuthorizeRemoteStop", "AuthorizeRemote", "authorization", "responses", "all").
+                RegisterEvent2("ChargeDetailRecordResponse",
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse += handler,
+                               handler => EMPServerAPI.OnChargeDetailRecordHTTPResponse -= handler,
+                               "ChargeDetailRecord", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
