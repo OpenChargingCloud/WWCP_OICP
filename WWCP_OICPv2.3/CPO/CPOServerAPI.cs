@@ -146,6 +146,82 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #region Custom request/response logging converters
+
+        #region AuthorizeRemoteReservationStart(Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, String>
+            AuthorizeRemoteReservationStartRequestConverter                     { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStartRequest)
+            => String.Concat(authorizeRemoteReservationStartRequest.Identification.ToString(), " at ", authorizeRemoteReservationStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, Acknowledgement<AuthorizeRemoteReservationStartRequest>, TimeSpan, String>
+            AuthorizeRemoteReservationStartResponseConverter                    { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStartRequest, authorizeRemoteReservationStartResponse, runtime)
+            => String.Concat(authorizeRemoteReservationStartRequest.Identification.ToString(), " at ", authorizeRemoteReservationStartRequest.EVSEId,
+                             " => ",
+                             authorizeRemoteReservationStartResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteReservationStop (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, String>
+            AuthorizeRemoteReservationStopRequestConverter                     { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStopRequest)
+            => String.Concat(authorizeRemoteReservationStopRequest.SessionId.ToString(), " at ", authorizeRemoteReservationStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, Acknowledgement<AuthorizeRemoteReservationStopRequest>, TimeSpan, String>
+            AuthorizeRemoteReservationStopResponseConverter                    { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStopRequest, authorizeRemoteReservationStopResponse, runtime)
+            => String.Concat(authorizeRemoteReservationStopRequest.SessionId.ToString(), " at ", authorizeRemoteReservationStopRequest.EVSEId,
+                             " => ",
+                             authorizeRemoteReservationStopResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteStart           (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteStartRequest, String>
+            AuthorizeRemoteStartRequestConverter                     { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStartRequest)
+            => String.Concat(authorizeRemoteStartRequest.Identification.ToString(), " at ", authorizeRemoteStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteStartRequest, Acknowledgement<AuthorizeRemoteStartRequest>, TimeSpan, String>
+            AuthorizeRemoteStartResponseConverter                    { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime)
+            => String.Concat(authorizeRemoteStartRequest.Identification.ToString(), " at ", authorizeRemoteStartRequest.EVSEId,
+                             " => ",
+                             authorizeRemoteStartResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteStop            (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteStopRequest, String>
+            AuthorizeRemoteStopRequestConverter                     { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStopRequest)
+            => String.Concat(authorizeRemoteStopRequest.SessionId.ToString(), " at ", authorizeRemoteStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteStopRequest, Acknowledgement<AuthorizeRemoteStopRequest>, TimeSpan, String>
+            AuthorizeRemoteStopResponseConverter                    { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime)
+            => String.Concat(authorizeRemoteStopRequest.SessionId.ToString(), " at ", authorizeRemoteStopRequest.EVSEId,
+                             " => ",
+                             authorizeRemoteStopResponse.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #endregion
+
         #region Events
 
         #region (protected internal) OnAuthorizeRemoteReservationStartHTTPRequest
@@ -776,6 +852,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteReservationStartRequest,
                                                                                               authorizeRemoteReservationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -990,6 +1067,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteReservationStopRequest,
                                                                                               authorizeRemoteReservationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1206,6 +1284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteStartRequest,
                                                                                               authorizeRemoteStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1421,6 +1500,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteStopRequest,
                                                                                               authorizeRemoteStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);

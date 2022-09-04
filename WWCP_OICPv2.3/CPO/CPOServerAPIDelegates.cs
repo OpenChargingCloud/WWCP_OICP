@@ -15,13 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-using System.Threading.Tasks;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
@@ -57,6 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                   Timestamp,
                                                           CPOServerAPI                                               Sender,
+                                                          AuthorizeRemoteReservationStartRequest                     Request,
                                                           Acknowledgement<AuthorizeRemoteReservationStartRequest>    Response,
                                                           TimeSpan                                                   Runtime);
 
@@ -94,6 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeRemoteReservationStopResponseDelegate(DateTime                                                  Timestamp,
                                                          CPOServerAPI                                              Sender,
+                                                         AuthorizeRemoteReservationStopRequest                     Request,
                                                          Acknowledgement<AuthorizeRemoteReservationStopRequest>    Response,
                                                          TimeSpan                                                  Runtime);
 
@@ -132,6 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeRemoteStartResponseDelegate(DateTime                                        Timestamp,
                                                CPOServerAPI                                    Sender,
+                                               AuthorizeRemoteStartRequest                     Request,
                                                Acknowledgement<AuthorizeRemoteStartRequest>    Response,
                                                TimeSpan                                        Runtime);
 
@@ -169,6 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeRemoteStopResponseDelegate(DateTime                                       Timestamp,
                                               CPOServerAPI                                   Sender,
+                                              AuthorizeRemoteStopRequest                     Request,
                                               Acknowledgement<AuthorizeRemoteStopRequest>    Response,
                                               TimeSpan                                       Runtime);
 
