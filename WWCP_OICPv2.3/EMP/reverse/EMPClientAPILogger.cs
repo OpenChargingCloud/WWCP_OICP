@@ -18,6 +18,7 @@
 #region Usings
 
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -56,7 +57,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Constructor(s)
 
-            #region Logger(EMPClientAPI, Context = DefaultContext, LogFileCreator = null)
+            #region Logger(EMPClientAPI, Context = DefaultContext, LogfileCreator = null)
 
             /// <summary>
             /// Create a new EMP Client API logger using the default logging delegates.
@@ -64,11 +65,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="EMPClientAPI">An EMP Client API.</param>
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
-            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(EMPClientAPI             EMPClientAPI,
                           String                   LoggingPath,
                           String                   Context         = DefaultContext,
-                          LogfileCreatorDelegate?  LogFileCreator  = null)
+                          LogfileCreatorDelegate?  LogfileCreator  = null)
 
                 : this(EMPClientAPI,
                        LoggingPath,
@@ -77,7 +78,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                        null,
                        null,
                        null,
-                       LogFileCreator: LogFileCreator)
+                       LogfileCreator: LogfileCreator)
 
             { }
 
@@ -107,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
             /// 
-            /// <param name="LogFileCreator">A delegate to create a log file from the given context and log file name.</param>
+            /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public Logger(EMPClientAPI                 EMPClientAPI,
                           String                       LoggingPath,
                           String                       Context,
@@ -127,7 +128,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           HTTPResponseLoggerDelegate?  LogHTTPError_toNetwork      = null,
                           HTTPResponseLoggerDelegate?  LogHTTPError_toHTTPSSE      = null,
 
-                          LogfileCreatorDelegate?      LogFileCreator              = null)
+                          LogfileCreatorDelegate?      LogfileCreator              = null)
 
                 : base(EMPClientAPI.HTTPServer,
                        LoggingPath,
@@ -148,7 +149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                        LogHTTPError_toNetwork,
                        LogHTTPError_toHTTPSSE,
 
-                       LogFileCreator)
+                       LogfileCreator)
 
             {
 
