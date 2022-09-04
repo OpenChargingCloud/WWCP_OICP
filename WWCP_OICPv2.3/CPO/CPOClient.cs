@@ -276,7 +276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region Custom request/response converters
+        #region Custom request/response logging converters
 
         #region PushEVSEData                (Request/Response)Converter
 

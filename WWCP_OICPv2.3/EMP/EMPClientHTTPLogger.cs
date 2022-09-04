@@ -254,32 +254,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region PushAuthenticationData
 
-                //RegisterEvent("PushAuthenticationDataRequest",
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPRequest += handler,
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPRequest -= handler,
-                //              "PushAuthenticationData", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("PushAuthenticationDataHTTPRequest",
+                              handler => EMPClient.OnPushAuthenticationDataHTTPRequest += handler,
+                              handler => EMPClient.OnPushAuthenticationDataHTTPRequest -= handler,
+                              "PushAuthenticationData", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("PushAuthenticationDataResponse",
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPResponse += handler,
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPResponse -= handler,
-                //              "PushAuthenticationData", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                RegisterEvent("PushAuthenticationDataHTTPResponse",
+                              handler => EMPClient.OnPushAuthenticationDataHTTPResponse += handler,
+                              handler => EMPClient.OnPushAuthenticationDataHTTPResponse -= handler,
+                              "PushAuthenticationData", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region AuthorizeRemoteReservationStart/Stop
 
-                RegisterEvent("AuthorizeRemoteReservationStartRequest",
+                RegisterEvent("AuthorizeRemoteReservationStartHTTPRequest",
                               handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest += handler,
                               handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest -= handler,
                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteReservationStartResponse",
+                RegisterEvent("AuthorizeRemoteReservationStartHTTPResponse",
                               handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
                               handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
                               "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "responses", "all").
@@ -287,14 +287,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("AuthorizeRemoteReservationStopRequest",
+                RegisterEvent("AuthorizeRemoteReservationStopHTTPRequest",
                               handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest += handler,
                               handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest -= handler,
                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteReservationStopResponse",
+                RegisterEvent("AuthorizeRemoteReservationStopHTTPResponse",
                               handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse += handler,
                               handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse -= handler,
                               "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "responses", "all").
@@ -305,14 +305,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region AuthorizeRemoteStart/Stop
 
-                RegisterEvent("AuthorizeRemoteStartRequest",
+                RegisterEvent("AuthorizeRemoteStartHTTPRequest",
                               handler => EMPClient.OnAuthorizeRemoteStartHTTPRequest += handler,
                               handler => EMPClient.OnAuthorizeRemoteStartHTTPRequest -= handler,
                               "AuthorizeRemoteStart", "AuthorizeRemote", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteStartResponse",
+                RegisterEvent("AuthorizeRemoteStartHTTPResponse",
                               handler => EMPClient.OnAuthorizeRemoteStartHTTPResponse  += handler,
                               handler => EMPClient.OnAuthorizeRemoteStartHTTPResponse  -= handler,
                               "AuthorizeRemoteStart", "AuthorizeRemote", "responses", "all").
@@ -320,14 +320,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("AuthorizeRemoteStopRequest",
+                RegisterEvent("AuthorizeRemoteStopHTTPRequest",
                               handler => EMPClient.OnAuthorizeRemoteStopHTTPRequest += handler,
                               handler => EMPClient.OnAuthorizeRemoteStopHTTPRequest -= handler,
                               "AuthorizeRemoteStop", "AuthorizeRemote", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteStopResponse",
+                RegisterEvent("AuthorizeRemoteStopHTTPResponse",
                               handler => EMPClient.OnAuthorizeRemoteStopHTTPResponse += handler,
                               handler => EMPClient.OnAuthorizeRemoteStopHTTPResponse -= handler,
                               "AuthorizeRemoteStop", "AuthorizeRemote", "responses", "all").
@@ -338,14 +338,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region GetChargeDetailRecords
 
-                RegisterEvent("GetChargeDetailRecordsRequest",
+                RegisterEvent("GetChargeDetailRecordsHTTPRequest",
                               handler => EMPClient.OnGetChargeDetailRecordsHTTPRequest += handler,
                               handler => EMPClient.OnGetChargeDetailRecordsHTTPRequest -= handler,
                               "GetChargeDetailRecords", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("GetChargeDetailRecordsResponse",
+                RegisterEvent("GetChargeDetailRecordsHTTPResponse",
                               handler => EMPClient.OnGetChargeDetailRecordsHTTPResponse += handler,
                               handler => EMPClient.OnGetChargeDetailRecordsHTTPResponse -= handler,
                               "GetChargeDetailRecords", "responses", "all").

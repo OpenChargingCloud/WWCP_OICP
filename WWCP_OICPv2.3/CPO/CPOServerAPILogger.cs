@@ -56,7 +56,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Constructor(s)
 
-            #region CPOServerAPILogger(CPOServerAPI, Context = DefaultContext, LogFileCreator = null)
+            #region Logger(CPOServerAPI, Context = DefaultContext, LogFileCreator = null)
 
             /// <summary>
             /// Create a new CPO Server API logger using the default logging delegates.
@@ -83,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region CPOServerAPILogger(CPOServerAPI, Context, ... Logging delegates ...)
+            #region Logger(CPOServerAPI, Context, ... Logging delegates ...)
 
             /// <summary>
             /// Create a new CPO Server API logger using the given logging delegates.
