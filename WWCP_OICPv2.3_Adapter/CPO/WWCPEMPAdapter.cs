@@ -95,8 +95,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClient.API_Logger ClientLogger
-            => CPORoaming?.CPOClient?.Logger as CPOClient.API_Logger;
+        public CPOClient.CPOClientLogger ClientLogger
+            => CPORoaming?.CPOClient?.Logger as CPOClient.CPOClientLogger;
 
 
         /// <summary>

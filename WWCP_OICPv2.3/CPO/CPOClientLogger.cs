@@ -33,9 +33,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     {
 
         /// <summary>
-        /// The CPO client (HTTP client) logger.
+        /// The CPO client logger.
         /// </summary>
-        public class API_Logger : AClientLogger
+        public class CPOClientLogger : AClientLogger
         {
 
             #region Data
@@ -58,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Constructor(s)
 
-            #region Logger(CPOClient, Context = DefaultContext, LogfileCreator = null)
+            #region CPOClientLogger(CPOClient, Context = DefaultContext, LogfileCreator = null)
 
             /// <summary>
             /// Create a new CPO client logger using the default logging delegates.
@@ -67,10 +67,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public API_Logger(CPOClient                CPOClient,
-                              String                   LoggingPath,
-                              String                   Context         = DefaultContext,
-                              LogfileCreatorDelegate?  LogfileCreator  = null)
+            public CPOClientLogger(CPOClient                CPOClient,
+                                   String                   LoggingPath,
+                                   String                   Context         = DefaultContext,
+                                   LogfileCreatorDelegate?  LogfileCreator  = null)
 
                 : this(CPOClient,
                        LoggingPath,
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region Logger(CPOClient, Context, ... Logging delegates ...)
+            #region CPOClientLogger(CPOClient, Context, ... Logging delegates ...)
 
             /// <summary>
             /// Create a new CPO client logger using the given logging delegates.
@@ -111,26 +111,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public API_Logger(CPOClient                CPOClient,
-                              String                   LoggingPath,
-                              String                   Context,
+            public CPOClientLogger(CPOClient                CPOClient,
+                                   String                   LoggingPath,
+                                   String                   Context,
 
-                              RequestLoggerDelegate?   LogRequest_toConsole    = null,
-                              ResponseLoggerDelegate?  LogResponse_toConsole   = null,
-                              RequestLoggerDelegate?   LogRequest_toDisc       = null,
-                              ResponseLoggerDelegate?  LogResponse_toDisc      = null,
+                                   RequestLoggerDelegate?   LogRequest_toConsole    = null,
+                                   ResponseLoggerDelegate?  LogResponse_toConsole   = null,
+                                   RequestLoggerDelegate?   LogRequest_toDisc       = null,
+                                   ResponseLoggerDelegate?  LogResponse_toDisc      = null,
 
-                              RequestLoggerDelegate?   LogRequest_toNetwork    = null,
-                              ResponseLoggerDelegate?  LogResponse_toNetwork   = null,
-                              RequestLoggerDelegate?   LogRequest_toHTTPSSE    = null,
-                              ResponseLoggerDelegate?  LogResponse_toHTTPSSE   = null,
+                                   RequestLoggerDelegate?   LogRequest_toNetwork    = null,
+                                   ResponseLoggerDelegate?  LogResponse_toNetwork   = null,
+                                   RequestLoggerDelegate?   LogRequest_toHTTPSSE    = null,
+                                   ResponseLoggerDelegate?  LogResponse_toHTTPSSE   = null,
 
-                              ResponseLoggerDelegate?  LogError_toConsole      = null,
-                              ResponseLoggerDelegate?  LogError_toDisc         = null,
-                              ResponseLoggerDelegate?  LogError_toNetwork      = null,
-                              ResponseLoggerDelegate?  LogError_toHTTPSSE      = null,
+                                   ResponseLoggerDelegate?  LogError_toConsole      = null,
+                                   ResponseLoggerDelegate?  LogError_toDisc         = null,
+                                   ResponseLoggerDelegate?  LogError_toNetwork      = null,
+                                   ResponseLoggerDelegate?  LogError_toHTTPSSE      = null,
 
-                              LogfileCreatorDelegate?  LogfileCreator          = null)
+                                   LogfileCreatorDelegate?  LogfileCreator          = null)
 
                 : base(CPOClient,
                        LoggingPath,

@@ -160,7 +160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new HTTP_Logger HTTPLogger
+        public new HTTP_Logger             HTTPLogger
 #pragma warning disable CS8603 // Possible null reference return.
             => base.HTTPLogger as HTTP_Logger;
 #pragma warning restore CS8603 // Possible null reference return.
@@ -168,7 +168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached client logger.
         /// </summary>
-        public API_Logger?                 Logger        { get; }
+        public CPOClientLogger?            Logger        { get; }
 
         public APICounters                 Counters      { get; }
 
@@ -790,7 +790,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          Boolean                               DisableLogging               = false,
                          String?                               LoggingPath                  = null,
-                         String                                LoggingContext               = HTTP_Logger.DefaultContext,
+                         String                                LoggingContext               = CPOClientLogger.DefaultContext,
                          LogfileCreatorDelegate?               LogfileCreator               = null,
                          DNSClient?                            DNSClient                    = null)
 
@@ -823,11 +823,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      LogfileCreator)
                                    : null;
 
-            this.Logger   = DisableLogging == false
-                                   ? new API_Logger(this,
-                                                    LoggingPath,
-                                                    LoggingContext,
-                                                    LogfileCreator)
+            this.Logger      = DisableLogging == false
+                                   ? new CPOClientLogger(this,
+                                                         LoggingPath,
+                                                         LoggingContext,
+                                                         LogfileCreator)
                                    : null;
 
         }

@@ -150,24 +150,62 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Properties
 
-        public APICounters Counters    { get; }
-
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new Logger HTTPLogger
-        {
-            get
-            {
-                return base.HTTPLogger as Logger;
-            }
-            set
-            {
-                base.HTTPLogger = value;
-            }
-        }
+        public new HTTP_Logger             HTTPLogger
+#pragma warning disable CS8603 // Possible null reference return.
+            => base.HTTPLogger as HTTP_Logger;
+#pragma warning restore CS8603 // Possible null reference return.
+
+        /// <summary>
+        /// The attached client logger.
+        /// </summary>
+        public EMPClientLogger?            Logger        { get; }
+
+        public APICounters                 Counters      { get; }
 
         public Newtonsoft.Json.Formatting  JSONFormat    { get; set; }
+
+        #endregion
+
+        #region Custom request/response converters
+
+        #region PullEVSEData                (Request/Response)Converter
+
+        public Func<DateTime, Object, PullEVSEDataRequest, String>
+            PullEVSEDataRequestConverter                     { get; set; }
+
+            = (timestamp, sender, pullEVSEDataRequest)
+            => String.Concat(pullEVSEDataRequest.ProviderId, pullEVSEDataRequest.LastCall.HasValue ? ", last call: " + pullEVSEDataRequest.LastCall.Value.ToLocalTime().ToString() : "");
+
+        public Func<DateTime, Object, PullEVSEDataRequest, OICPResult<PullEVSEDataResponse>, TimeSpan, String>
+            PullEVSEDataResponseConverter                    { get; set; }
+
+            = (timestamp, sender, pullEVSEDataRequest, pullEVSEDataResponse, runtime)
+            => String.Concat(pullEVSEDataRequest.ProviderId, pullEVSEDataRequest.LastCall.HasValue ? ", last call: " + pullEVSEDataRequest.LastCall.Value.ToLocalTime().ToString() : "",
+                             " => ",
+                             pullEVSEDataResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullEVSEDataResponse.Response?.NumberOfElements ?? 0, " evse data record(s)");
+
+        #endregion
+
+        #region PullEVSEStatus              (Request/Response)Converter
+
+        public Func<DateTime, Object, PullEVSEStatusRequest, String>
+            PullEVSEStatusRequestConverter                   { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusRequest)
+            => String.Concat(pullEVSEStatusRequest.ProviderId, pullEVSEStatusRequest.EVSEStatusFilter.HasValue ? ", status filter: " + pullEVSEStatusRequest.EVSEStatusFilter.Value.ToString() : "");
+
+        public Func<DateTime, Object, PullEVSEStatusRequest, OICPResult<PullEVSEStatusResponse>, TimeSpan, String>
+            PullEVSEStatusResponseConverter                  { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusRequest, pullEVSEStatusResponse, runtime)
+            => String.Concat(pullEVSEStatusRequest.ProviderId, pullEVSEStatusRequest.EVSEStatusFilter.HasValue ? ", status filter: " + pullEVSEStatusRequest.EVSEStatusFilter.Value.ToString() : "",
+                             " => ",
+                             pullEVSEStatusResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullEVSEStatusResponse.Response?.OperatorEVSEStatus.Count() ?? 0, " evse status record(s)");
+
+        #endregion
 
         #endregion
 
@@ -568,7 +606,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                          Boolean                               DisableLogging               = false,
                          String?                               LoggingPath                  = null,
-                         String                                LoggingContext               = Logger.DefaultContext,
+                         String                                LoggingContext               = EMPClientLogger.DefaultContext,
                          LogfileCreatorDelegate?               LogfileCreator               = null,
                          DNSClient?                            DNSClient                    = null)
 
@@ -595,10 +633,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.JSONFormat  = Newtonsoft.Json.Formatting.None;
 
             base.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext,
-                                                LogfileCreator)
+                                   ? new HTTP_Logger(this,
+                                                     LoggingPath,
+                                                     LoggingContext,
+                                                     LogfileCreator)
+                                   : null;
+
+            this.Logger      = DisableLogging == false
+                                   ? new EMPClientLogger(this,
+                                                         LoggingPath,
+                                                         LoggingContext,
+                                                         LogfileCreator)
                                    : null;
 
         }

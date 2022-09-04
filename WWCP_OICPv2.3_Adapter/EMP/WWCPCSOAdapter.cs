@@ -145,7 +145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP client logger.
         /// </summary>
-        public EMPClient.Logger ClientLogger
+        public EMPClient.HTTP_Logger ClientLogger
             => EMPRoaming.EMPClient.HTTPLogger;
 
 

@@ -19,6 +19,7 @@
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -32,9 +33,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     {
 
         /// <summary>
-        /// The EMP client (HTTP client) logger.
+        /// The EMP client logger.
         /// </summary>
-        public class Logger : HTTPClientLogger
+        public class EMPClientLogger : AClientLogger
         {
 
             #region Data
@@ -57,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Constructor(s)
 
-            #region Logger(EMPClient, Context = DefaultContext, LogfileCreator = null)
+            #region EMPClientLogger(EMPClient, Context = DefaultContext, LogfileCreator = null)
 
             /// <summary>
             /// Create a new EMP client logger using the default logging delegates.
@@ -66,10 +67,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(EMPClient                EMPClient,
-                          String                   LoggingPath,
-                          String                   Context         = DefaultContext,
-                          LogfileCreatorDelegate?  LogfileCreator  = null)
+            public EMPClientLogger(EMPClient                EMPClient,
+                                   String                   LoggingPath,
+                                   String                   Context         = DefaultContext,
+                                   LogfileCreatorDelegate?  LogfileCreator  = null)
 
                 : this(EMPClient,
                        LoggingPath,
@@ -85,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #endregion
 
-            #region Logger(EMPClient, Context, ... Logging delegates ...)
+            #region EMPClientLogger(EMPClient, Context, ... Logging delegates ...)
 
             /// <summary>
             /// Create a new EMP client logger using the given logging delegates.
@@ -110,26 +111,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(EMPClient                    EMPClient,
-                          String                       LoggingPath,
-                          String                       Context,
+            public EMPClientLogger(EMPClient                EMPClient,
+                                   String                   LoggingPath,
+                                   String                   Context,
 
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toDisc       = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toDisc      = null,
+                                   RequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
+                                   ResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,
+                                   RequestLoggerDelegate?   LogHTTPRequest_toDisc       = null,
+                                   ResponseLoggerDelegate?  LogHTTPResponse_toDisc      = null,
 
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toNetwork    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toNetwork   = null,
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toHTTPSSE    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toHTTPSSE   = null,
+                                   RequestLoggerDelegate?   LogHTTPRequest_toNetwork    = null,
+                                   ResponseLoggerDelegate?  LogHTTPResponse_toNetwork   = null,
+                                   RequestLoggerDelegate?   LogHTTPRequest_toHTTPSSE    = null,
+                                   ResponseLoggerDelegate?  LogHTTPResponse_toHTTPSSE   = null,
 
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toConsole      = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toDisc         = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toNetwork      = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toHTTPSSE      = null,
+                                   ResponseLoggerDelegate?  LogHTTPError_toConsole      = null,
+                                   ResponseLoggerDelegate?  LogHTTPError_toDisc         = null,
+                                   ResponseLoggerDelegate?  LogHTTPError_toNetwork      = null,
+                                   ResponseLoggerDelegate?  LogHTTPError_toHTTPSSE      = null,
 
-                          LogfileCreatorDelegate?      LogfileCreator              = null)
+                                   LogfileCreatorDelegate?  LogfileCreator              = null)
 
                 : base(EMPClient,
                        LoggingPath,
@@ -158,199 +159,199 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region PullEVSEData/Status
 
-                RegisterEvent("PullEVSEDataHTTPRequest",
-                              handler => EMPClient.OnPullEVSEDataHTTPRequest += handler,
-                              handler => EMPClient.OnPullEVSEDataHTTPRequest -= handler,
-                              "PullEVSEData", "pull", "requests", "all").
+                RegisterRequestEvent("PullEVSEDataRequest",
+                                     handler => EMPClient.OnPullEVSEDataRequest     += (timestamp, sender, request)                    => handler(timestamp, sender, EMPClient?.PullEVSEDataRequestConverter(timestamp, sender, request)),
+                                     handler => EMPClient.OnPullEVSEDataRequest     -= (timestamp, sender, request)                    => handler(timestamp, sender, EMPClient?.PullEVSEDataRequestConverter(timestamp, sender, request)),
+                                     "PullEVSEData", "pull", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("PullEVSEDataHTTPResponse",
-                              handler => EMPClient.OnPullEVSEDataHTTPResponse += handler,
-                              handler => EMPClient.OnPullEVSEDataHTTPResponse -= handler,
-                              "PullEVSEData", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
-
-
-                RegisterEvent("PullEVSEStatusHTTPRequest",
-                              handler => EMPClient.OnPullEVSEStatusHTTPRequest += handler,
-                              handler => EMPClient.OnPullEVSEStatusHTTPRequest -= handler,
-                              "PullEVSEStatus", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
-
-                RegisterEvent("PullEVSEStatusHTTPResponse",
-                              handler => EMPClient.OnPullEVSEStatusHTTPResponse += handler,
-                              handler => EMPClient.OnPullEVSEStatusHTTPResponse -= handler,
-                              "PullEVSEStatus", "pull", "responses", "all").
+                RegisterResponseEvent("PullEVSEDataResponse",
+                                      handler => EMPClient.OnPullEVSEDataResponse   += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPClient?.PullEVSEDataRequestConverter(timestamp, sender, request), EMPClient?.PullEVSEDataResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => EMPClient.OnPullEVSEDataResponse   -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPClient?.PullEVSEDataRequestConverter(timestamp, sender, request), EMPClient?.PullEVSEDataResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "PullEVSEData", "pull", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("PullEVSEStatusByIdHTTPRequest",
-                              handler => EMPClient.OnPullEVSEStatusByIdHTTPRequest += handler,
-                              handler => EMPClient.OnPullEVSEStatusByIdHTTPRequest -= handler,
-                              "PullEVSEStatusById", "pull", "requests", "all").
+                RegisterRequestEvent("PullEVSEStatusRequest",
+                                     handler => EMPClient.OnPullEVSEStatusRequest   += (timestamp, sender, request)                    => handler(timestamp, sender, EMPClient?.PullEVSEStatusRequestConverter(timestamp, sender, request)),
+                                     handler => EMPClient.OnPullEVSEStatusRequest   -= (timestamp, sender, request)                    => handler(timestamp, sender, EMPClient?.PullEVSEStatusRequestConverter(timestamp, sender, request)),
+                                     "PullEVSEStatus", "pull", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("PullEVSEStatusByIdHTTPResponse",
-                              handler => EMPClient.OnPullEVSEStatusByIdHTTPResponse += handler,
-                              handler => EMPClient.OnPullEVSEStatusByIdHTTPResponse -= handler,
-                              "PullEVSEStatusById", "pull", "responses", "all").
+                RegisterResponseEvent("PullEVSEStatusResponse",
+                                      handler => EMPClient.OnPullEVSEStatusResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPClient?.PullEVSEStatusRequestConverter(timestamp, sender, request), EMPClient?.PullEVSEStatusResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => EMPClient.OnPullEVSEStatusResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, EMPClient?.PullEVSEStatusRequestConverter(timestamp, sender, request), EMPClient?.PullEVSEStatusResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "PullEVSEStatus", "pull", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("PullEVSEStatusByOperatorIdHTTPRequest",
-                              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest += handler,
-                              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest -= handler,
-                              "PullEVSEStatusByOperatorId", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("PullEVSEStatusByIdHTTPRequest",
+                //              handler => EMPClient.OnPullEVSEStatusByIdHTTPRequest += handler,
+                //              handler => EMPClient.OnPullEVSEStatusByIdHTTPRequest -= handler,
+                //              "PullEVSEStatusById", "pull", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("PullEVSEStatusByOperatorIdHTTPResponse",
-                              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse += handler,
-                              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse -= handler,
-                              "PullEVSEStatusByOperatorId", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("PullEVSEStatusByIdHTTPResponse",
+                //              handler => EMPClient.OnPullEVSEStatusByIdHTTPResponse += handler,
+                //              handler => EMPClient.OnPullEVSEStatusByIdHTTPResponse -= handler,
+                //              "PullEVSEStatusById", "pull", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
+
+
+                //RegisterEvent("PullEVSEStatusByOperatorIdHTTPRequest",
+                //              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest += handler,
+                //              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPRequest -= handler,
+                //              "PullEVSEStatusByOperatorId", "pull", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
+
+                //RegisterEvent("PullEVSEStatusByOperatorIdHTTPResponse",
+                //              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse += handler,
+                //              handler => EMPClient.OnPullEVSEStatusByOperatorIdHTTPResponse -= handler,
+                //              "PullEVSEStatusByOperatorId", "pull", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region PullPricingProductData/EVSEPricing
 
-                RegisterEvent("PullPricingProductDataHTTPRequest",
-                              handler => EMPClient.OnPullPricingProductDataHTTPRequest += handler,
-                              handler => EMPClient.OnPullPricingProductDataHTTPRequest -= handler,
-                              "PullPricingProductData", "PullPricing", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("PullPricingProductDataHTTPRequest",
+                //              handler => EMPClient.OnPullPricingProductDataHTTPRequest += handler,
+                //              handler => EMPClient.OnPullPricingProductDataHTTPRequest -= handler,
+                //              "PullPricingProductData", "PullPricing", "pull", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("PullPricingProductDataHTTPResponse",
-                              handler => EMPClient.OnPullPricingProductDataHTTPResponse += handler,
-                              handler => EMPClient.OnPullPricingProductDataHTTPResponse -= handler,
-                              "PullPricingProductData", "PullPricing", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("PullPricingProductDataHTTPResponse",
+                //              handler => EMPClient.OnPullPricingProductDataHTTPResponse += handler,
+                //              handler => EMPClient.OnPullPricingProductDataHTTPResponse -= handler,
+                //              "PullPricingProductData", "PullPricing", "pull", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("PullEVSEPricingHTTPRequest",
-                              handler => EMPClient.OnPullEVSEPricingHTTPRequest += handler,
-                              handler => EMPClient.OnPullEVSEPricingHTTPRequest -= handler,
-                              "PullEVSEPricing", "PullPricing", "pull", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("PullEVSEPricingHTTPRequest",
+                //              handler => EMPClient.OnPullEVSEPricingHTTPRequest += handler,
+                //              handler => EMPClient.OnPullEVSEPricingHTTPRequest -= handler,
+                //              "PullEVSEPricing", "PullPricing", "pull", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("PullEVSEPricingHTTPResponse",
-                              handler => EMPClient.OnPullEVSEPricingHTTPResponse += handler,
-                              handler => EMPClient.OnPullEVSEPricingHTTPResponse -= handler,
-                              "PullEVSEPricing", "PullPricing", "pull", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("PullEVSEPricingHTTPResponse",
+                //              handler => EMPClient.OnPullEVSEPricingHTTPResponse += handler,
+                //              handler => EMPClient.OnPullEVSEPricingHTTPResponse -= handler,
+                //              "PullEVSEPricing", "PullPricing", "pull", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region PushAuthenticationData
 
-                //RegisterEvent("PushAuthenticationDataRequest",
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPRequest += handler,
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPRequest -= handler,
-                //              "PushAuthenticationData", "requests", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                ////RegisterEvent("PushAuthenticationDataRequest",
+                ////              handler => EMPClient.OnPushAuthenticationDataHTTPRequest += handler,
+                ////              handler => EMPClient.OnPushAuthenticationDataHTTPRequest -= handler,
+                ////              "PushAuthenticationData", "requests", "all").
+                ////    RegisterDefaultConsoleLogTarget(this).
+                ////    RegisterDefaultDiscLogTarget(this);
 
-                //RegisterEvent("PushAuthenticationDataResponse",
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPResponse += handler,
-                //              handler => EMPClient.OnPushAuthenticationDataHTTPResponse -= handler,
-                //              "PushAuthenticationData", "responses", "all").
-                //    RegisterDefaultConsoleLogTarget(this).
-                //    RegisterDefaultDiscLogTarget(this);
+                ////RegisterEvent("PushAuthenticationDataResponse",
+                ////              handler => EMPClient.OnPushAuthenticationDataHTTPResponse += handler,
+                ////              handler => EMPClient.OnPushAuthenticationDataHTTPResponse -= handler,
+                ////              "PushAuthenticationData", "responses", "all").
+                ////    RegisterDefaultConsoleLogTarget(this).
+                ////    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region AuthorizeRemoteReservationStart/Stop
 
-                RegisterEvent("AuthorizeRemoteReservationStartRequest",
-                              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest += handler,
-                              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest -= handler,
-                              "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteReservationStartRequest",
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPRequest -= handler,
+                //              "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteReservationStartResponse",
-                              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
-                              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
-                              "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteReservationStartResponse",
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
+                //              "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("AuthorizeRemoteReservationStopRequest",
-                              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest += handler,
-                              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest -= handler,
-                              "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteReservationStopRequest",
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPRequest -= handler,
+                //              "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteReservationStopResponse",
-                              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse += handler,
-                              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse -= handler,
-                              "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteReservationStopResponse",
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteReservationStopHTTPResponse -= handler,
+                //              "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region AuthorizeRemoteStart/Stop
 
-                RegisterEvent("AuthorizeRemoteStartRequest",
-                              handler => EMPClient.OnAuthorizeRemoteStartHTTPRequest += handler,
-                              handler => EMPClient.OnAuthorizeRemoteStartHTTPRequest -= handler,
-                              "AuthorizeRemoteStart", "AuthorizeRemote", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteStartRequest",
+                //              handler => EMPClient.OnAuthorizeRemoteStartHTTPRequest += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteStartHTTPRequest -= handler,
+                //              "AuthorizeRemoteStart", "AuthorizeRemote", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteStartResponse",
-                              handler => EMPClient.OnAuthorizeRemoteStartHTTPResponse  += handler,
-                              handler => EMPClient.OnAuthorizeRemoteStartHTTPResponse  -= handler,
-                              "AuthorizeRemoteStart", "AuthorizeRemote", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteStartResponse",
+                //              handler => EMPClient.OnAuthorizeRemoteStartHTTPResponse  += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteStartHTTPResponse  -= handler,
+                //              "AuthorizeRemoteStart", "AuthorizeRemote", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("AuthorizeRemoteStopRequest",
-                              handler => EMPClient.OnAuthorizeRemoteStopHTTPRequest += handler,
-                              handler => EMPClient.OnAuthorizeRemoteStopHTTPRequest -= handler,
-                              "AuthorizeRemoteStop", "AuthorizeRemote", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteStopRequest",
+                //              handler => EMPClient.OnAuthorizeRemoteStopHTTPRequest += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteStopHTTPRequest -= handler,
+                //              "AuthorizeRemoteStop", "AuthorizeRemote", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteStopResponse",
-                              handler => EMPClient.OnAuthorizeRemoteStopHTTPResponse += handler,
-                              handler => EMPClient.OnAuthorizeRemoteStopHTTPResponse -= handler,
-                              "AuthorizeRemoteStop", "AuthorizeRemote", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("AuthorizeRemoteStopResponse",
+                //              handler => EMPClient.OnAuthorizeRemoteStopHTTPResponse += handler,
+                //              handler => EMPClient.OnAuthorizeRemoteStopHTTPResponse -= handler,
+                //              "AuthorizeRemoteStop", "AuthorizeRemote", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
                 #region GetChargeDetailRecords
 
-                RegisterEvent("GetChargeDetailRecordsRequest",
-                              handler => EMPClient.OnGetChargeDetailRecordsHTTPRequest += handler,
-                              handler => EMPClient.OnGetChargeDetailRecordsHTTPRequest -= handler,
-                              "GetChargeDetailRecords", "requests", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("GetChargeDetailRecordsRequest",
+                //              handler => EMPClient.OnGetChargeDetailRecordsHTTPRequest += handler,
+                //              handler => EMPClient.OnGetChargeDetailRecordsHTTPRequest -= handler,
+                //              "GetChargeDetailRecords", "requests", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("GetChargeDetailRecordsResponse",
-                              handler => EMPClient.OnGetChargeDetailRecordsHTTPResponse += handler,
-                              handler => EMPClient.OnGetChargeDetailRecordsHTTPResponse -= handler,
-                              "GetChargeDetailRecords", "responses", "all").
-                    RegisterDefaultConsoleLogTarget(this).
-                    RegisterDefaultDiscLogTarget(this);
+                //RegisterEvent("GetChargeDetailRecordsResponse",
+                //              handler => EMPClient.OnGetChargeDetailRecordsHTTPResponse += handler,
+                //              handler => EMPClient.OnGetChargeDetailRecordsHTTPResponse -= handler,
+                //              "GetChargeDetailRecords", "responses", "all").
+                //    RegisterDefaultConsoleLogTarget(this).
+                //    RegisterDefaultDiscLogTarget(this);
 
                 #endregion
 
