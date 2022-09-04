@@ -19,7 +19,7 @@
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Loggers;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
