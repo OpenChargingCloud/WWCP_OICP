@@ -17,7 +17,6 @@
 
 #region Usings
 
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
@@ -34,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// A CPO HTTP Client API logger.
         /// </summary>
-        public class Logger : HTTPServerLogger
+        public class CPOClientAPILogger : AServerLogger
         {
 
             #region Data
@@ -57,7 +56,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Constructor(s)
 
-            #region Logger(CPOClientAPI, Context = DefaultContext, LogfileCreator = null)
+            #region CPOClientAPILogger(CPOClientAPI, Context = DefaultContext, LogfileCreator = null)
 
             /// <summary>
             /// Create a new CPO Client API logger using the default logging delegates.
@@ -66,10 +65,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(CPOClientAPI             CPOClientAPI,
-                          String                   LoggingPath,
-                          String                   Context         = DefaultContext,
-                          LogfileCreatorDelegate?  LogfileCreator  = null)
+            public CPOClientAPILogger(CPOClientAPI             CPOClientAPI,
+                                      String                   LoggingPath,
+                                      String                   Context         = DefaultContext,
+                                      LogfileCreatorDelegate?  LogfileCreator  = null)
 
                 : this(CPOClientAPI,
                        LoggingPath,
@@ -84,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region Logger(CPOClientAPI, Context, ... Logging delegates ...)
+            #region CPOClientAPILogger(CPOClientAPI, Context, ... Logging delegates ...)
 
             /// <summary>
             /// Create a new CPO Client API logger using the given logging delegates.
@@ -93,61 +92,61 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
-            /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
-            /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
-            /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
-            /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
+            /// <param name="LogRequest_toConsole">A delegate to log incoming requests to console.</param>
+            /// <param name="LogResponse_toConsole">A delegate to log requests/responses to console.</param>
+            /// <param name="LogRequest_toDisc">A delegate to log incoming requests to disc.</param>
+            /// <param name="LogResponse_toDisc">A delegate to log requests/responses to disc.</param>
             /// 
-            /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
-            /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
-            /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP server sent events source.</param>
-            /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP server sent events source.</param>
+            /// <param name="LogRequest_toNetwork">A delegate to log incoming requests to a network target.</param>
+            /// <param name="LogResponse_toNetwork">A delegate to log requests/responses to a network target.</param>
+            /// <param name="LogRequest_toHTTPSSE">A delegate to log incoming requests to a server sent events source.</param>
+            /// <param name="LogResponse_toHTTPSSE">A delegate to log requests/responses to a server sent events source.</param>
             /// 
-            /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
-            /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
-            /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
-            /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP server sent events source.</param>
+            /// <param name="LogError_toConsole">A delegate to log errors to console.</param>
+            /// <param name="LogError_toDisc">A delegate to log errors to disc.</param>
+            /// <param name="LogError_toNetwork">A delegate to log errors to a network target.</param>
+            /// <param name="LogError_toHTTPSSE">A delegate to log errors to a server sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(CPOClientAPI                 CPOClientAPI,
-                          String                       LoggingPath,
-                          String                       Context,
+            public CPOClientAPILogger(CPOClientAPI             CPOClientAPI,
+                                      String                   LoggingPath,
+                                      String                   Context,
 
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toDisc       = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toDisc      = null,
+                                      RequestLoggerDelegate?   LogRequest_toConsole    = null,
+                                      ResponseLoggerDelegate?  LogResponse_toConsole   = null,
+                                      RequestLoggerDelegate?   LogRequest_toDisc       = null,
+                                      ResponseLoggerDelegate?  LogResponse_toDisc      = null,
 
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toNetwork    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toNetwork   = null,
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toHTTPSSE    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toHTTPSSE   = null,
+                                      RequestLoggerDelegate?   LogRequest_toNetwork    = null,
+                                      ResponseLoggerDelegate?  LogResponse_toNetwork   = null,
+                                      RequestLoggerDelegate?   LogRequest_toHTTPSSE    = null,
+                                      ResponseLoggerDelegate?  LogResponse_toHTTPSSE   = null,
 
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toConsole      = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toDisc         = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toNetwork      = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toHTTPSSE      = null,
+                                      ResponseLoggerDelegate?  LogError_toConsole      = null,
+                                      ResponseLoggerDelegate?  LogError_toDisc         = null,
+                                      ResponseLoggerDelegate?  LogError_toNetwork      = null,
+                                      ResponseLoggerDelegate?  LogError_toHTTPSSE      = null,
 
-                          LogfileCreatorDelegate?      LogfileCreator              = null)
+                                      LogfileCreatorDelegate?  LogfileCreator          = null)
 
                 : base(CPOClientAPI.HTTPServer,
                        LoggingPath,
                        Context,
 
-                       LogHTTPRequest_toConsole,
-                       LogHTTPResponse_toConsole,
-                       LogHTTPRequest_toDisc,
-                       LogHTTPResponse_toDisc,
+                       LogRequest_toConsole,
+                       LogResponse_toConsole,
+                       LogRequest_toDisc,
+                       LogResponse_toDisc,
 
-                       LogHTTPRequest_toNetwork,
-                       LogHTTPResponse_toNetwork,
-                       LogHTTPRequest_toHTTPSSE,
-                       LogHTTPResponse_toHTTPSSE,
+                       LogRequest_toNetwork,
+                       LogResponse_toNetwork,
+                       LogRequest_toHTTPSSE,
+                       LogResponse_toHTTPSSE,
 
-                       LogHTTPError_toConsole,
-                       LogHTTPError_toDisc,
-                       LogHTTPError_toNetwork,
-                       LogHTTPError_toHTTPSSE,
+                       LogError_toConsole,
+                       LogError_toDisc,
+                       LogError_toNetwork,
+                       LogError_toHTTPSSE,
 
                        LogfileCreator)
 
@@ -157,32 +156,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region PushEVSEData/-Status
 
-                RegisterEvent2("PushEVSEDataRequest",
-                               handler => CPOClientAPI.OnPushEVSEDataHTTPRequest += handler,
-                               handler => CPOClientAPI.OnPushEVSEDataHTTPRequest -= handler,
-                               "PushEVSEData", "push", "requests", "all").
+                RegisterEvent("PushEVSEDataRequest",
+                              handler => CPOClientAPI.OnPushEVSEDataRequest    += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEDataRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnPushEVSEDataRequest    -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEDataRequestConverter(timestamp, sender, request)),
+                              "PushEVSEData", "push", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("PushEVSEDataResponse",
-                               handler => CPOClientAPI.OnPushEVSEDataHTTPResponse += handler,
-                               handler => CPOClientAPI.OnPushEVSEDataHTTPResponse -= handler,
-                               "PushEVSEData", "push", "responses", "all").
+                RegisterEvent("PushEVSEDataResponse",
+                              handler => CPOClientAPI.OnPushEVSEDataResponse   += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEDataRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEDataResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnPushEVSEDataResponse   -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEDataRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEDataResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "PushEVSEData", "push", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent2("PushEVSEStatusRequest",
-                               handler => CPOClientAPI.OnPushEVSEStatusHTTPRequest += handler,
-                               handler => CPOClientAPI.OnPushEVSEStatusHTTPRequest -= handler,
-                               "PushEVSEStatus", "push", "requests", "all").
+                RegisterEvent("PushEVSEPricingRequest",
+                              handler => CPOClientAPI.OnPushEVSEPricingRequest  += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnPushEVSEPricingRequest  -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request)),
+                              "PushEVSEPricing", "push", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("PushEVSEStatusResponse",
-                               handler => CPOClientAPI.OnPushEVSEStatusHTTPResponse += handler,
-                               handler => CPOClientAPI.OnPushEVSEStatusHTTPResponse -= handler,
-                               "PushEVSEStatus", "push", "responses", "all").
+                RegisterEvent("PushEVSEPricingResponse",
+                              handler => CPOClientAPI.OnPushEVSEPricingResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEPricingResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnPushEVSEPricingResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEPricingResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "PushEVSEPricing", "push", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -190,32 +189,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region PushPricingProductData/-EVSEPricing
 
-                RegisterEvent2("PushPricingProductDataRequest",
-                               handler => CPOClientAPI.OnPushPricingProductDataHTTPRequest += handler,
-                               handler => CPOClientAPI.OnPushPricingProductDataHTTPRequest -= handler,
-                               "PushPricingProductData", "PushPricing", "push", "requests", "all").
+                RegisterEvent("PushPricingProductDataRequest",
+                              handler => CPOClientAPI.OnPushPricingProductDataRequest  += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushPricingProductDataRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnPushPricingProductDataRequest  -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushPricingProductDataRequestConverter(timestamp, sender, request)),
+                              "PushPricingProductData", "PushPricing", "push", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("PushPricingProductDataResponse",
-                               handler => CPOClientAPI.OnPushPricingProductDataHTTPResponse += handler,
-                               handler => CPOClientAPI.OnPushPricingProductDataHTTPResponse -= handler,
-                               "PushPricingProductData", "PushPricing", "push", "responses", "all").
+                RegisterEvent("PushPricingProductDataResponse",
+                              handler => CPOClientAPI.OnPushPricingProductDataResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushPricingProductDataRequestConverter(timestamp, sender, request), CPOClientAPI?.PushPricingProductDataResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnPushPricingProductDataResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushPricingProductDataRequestConverter(timestamp, sender, request), CPOClientAPI?.PushPricingProductDataResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "PushPricingProductData", "PushPricing", "push", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent2("PushEVSEPricingRequest",
-                               handler => CPOClientAPI.OnPushEVSEPricingHTTPRequest += handler,
-                               handler => CPOClientAPI.OnPushEVSEPricingHTTPRequest -= handler,
-                               "PushEVSEPricing", "PushPricing", "push", "requests", "all").
+                RegisterEvent("PushEVSEPricingRequest",
+                              handler => CPOClientAPI.OnPushEVSEPricingRequest         += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnPushEVSEPricingRequest         -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request)),
+                              "PushEVSEPricing", "PushPricing", "push", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("PushEVSEPricingResponse",
-                               handler => CPOClientAPI.OnPushEVSEPricingHTTPResponse += handler,
-                               handler => CPOClientAPI.OnPushEVSEPricingHTTPResponse -= handler,
-                               "PushEVSEPricing", "PushPricing", "push", "responses", "all").
+                RegisterEvent("PushEVSEPricingResponse",
+                              handler => CPOClientAPI.OnPushEVSEPricingResponse        += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEPricingResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnPushEVSEPricingResponse        -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEPricingResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "PushEVSEPricing", "PushPricing", "push", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -223,32 +222,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region AuthorizeStart/-Stop
 
-                RegisterEvent2("AuthorizeStartRequest",
-                               handler => CPOClientAPI.OnAuthorizeStartHTTPRequest += handler,
-                               handler => CPOClientAPI.OnAuthorizeStartHTTPRequest -= handler,
-                               "AuthorizeStart", "authorize", "requests", "all").
+                RegisterEvent("AuthorizeStartRequest",
+                              handler => CPOClientAPI.OnAuthorizeStartRequest  += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.AuthorizeStartRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnAuthorizeStartRequest  -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.AuthorizeStartRequestConverter(timestamp, sender, request)),
+                              "AuthorizeStart", "authorize", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("AuthorizationStartResponse",
-                               handler => CPOClientAPI.OnAuthorizationStartHTTPResponse += handler,
-                               handler => CPOClientAPI.OnAuthorizationStartHTTPResponse -= handler,
-                               "AuthorizeStart", "authorize", "authorization", "responses", "all").
+                RegisterEvent("AuthorizationStartResponse",
+                              handler => CPOClientAPI.OnAuthorizeStartResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.AuthorizeStartRequestConverter(timestamp, sender, request), CPOClientAPI?.AuthorizationStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnAuthorizeStartResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.AuthorizeStartRequestConverter(timestamp, sender, request), CPOClientAPI?.AuthorizationStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "AuthorizeStart", "authorize", "authorization", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent2("AuthorizeStopRequest",
-                               handler => CPOClientAPI.OnAuthorizeStopHTTPRequest += handler,
-                               handler => CPOClientAPI.OnAuthorizeStopHTTPRequest -= handler,
-                               "AuthorizeStop", "authorize", "requests", "all").
+                RegisterEvent("AuthorizeStopRequest",
+                              handler => CPOClientAPI.OnAuthorizeStopRequest   += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.AuthorizeStopRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnAuthorizeStopRequest   -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.AuthorizeStopRequestConverter(timestamp, sender, request)),
+                              "AuthorizeStop", "authorize", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("AuthorizationStopResponse",
-                               handler => CPOClientAPI.OnAuthorizationStopHTTPResponse += handler,
-                               handler => CPOClientAPI.OnAuthorizationStopHTTPResponse -= handler,
-                               "AuthorizeStop", "authorize", "authorization", "responses", "all").
+                RegisterEvent("AuthorizationStopResponse",
+                              handler => CPOClientAPI.OnAuthorizeStopResponse  += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.AuthorizeStopRequestConverter(timestamp, sender, request), CPOClientAPI?.AuthorizationStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnAuthorizeStopResponse  -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.AuthorizeStopRequestConverter(timestamp, sender, request), CPOClientAPI?.AuthorizationStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "AuthorizeStop", "authorize", "authorization", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -256,17 +255,62 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region ChargingNotification
 
-                RegisterEvent2("ChargingNotificationRequest",
-                               handler => CPOClientAPI.OnChargingNotificationHTTPRequest += handler,
-                               handler => CPOClientAPI.OnChargingNotificationHTTPRequest -= handler,
-                               "ChargingNotification", "requests", "all").
+                RegisterEvent("ChargingStartNotificationRequest",
+                              handler => CPOClientAPI.OnChargingStartNotificationRequest     += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnChargingStartNotificationRequest     -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingStartNotification", "ChargingNotifications", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("ChargingNotificationResponse",
-                               handler => CPOClientAPI.OnChargingNotificationHTTPResponse += handler,
-                               handler => CPOClientAPI.OnChargingNotificationHTTPResponse -= handler,
-                               "ChargingNotification", "responses", "all").
+                RegisterEvent("ChargingStartNotificationResponse",
+                              handler => CPOClientAPI.OnChargingStartNotificationResponse    += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingStartNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnChargingStartNotificationResponse    -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingStartNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingStartNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingStartNotification", "ChargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingProgressNotificationRequest",
+                              handler => CPOClientAPI.OnChargingProgressNotificationRequest  += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnChargingProgressNotificationRequest  -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingProgressNotification", "ChargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingProgressNotificationResponse",
+                              handler => CPOClientAPI.OnChargingProgressNotificationResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingProgressNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnChargingProgressNotificationResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingProgressNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingProgressNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingProgressNotification", "ChargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingEndNotificationRequest",
+                              handler => CPOClientAPI.OnChargingEndNotificationRequest       += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnChargingEndNotificationRequest       -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingEndNotification", "ChargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingEndNotificationResponse",
+                              handler => CPOClientAPI.OnChargingEndNotificationResponse      += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingEndNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnChargingEndNotificationResponse      -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingEndNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingEndNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingEndNotification", "ChargingNotifications", "responses", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+
+                RegisterEvent("ChargingErrorNotificationRequest",
+                              handler => CPOClientAPI.OnChargingErrorNotificationRequest     += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnChargingErrorNotificationRequest     -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request)),
+                              "ChargingErrorNotification", "ChargingNotifications", "requests", "all").
+                    RegisterDefaultConsoleLogTarget(this).
+                    RegisterDefaultDiscLogTarget(this);
+
+                RegisterEvent("ChargingErrorNotificationResponse",
+                              handler => CPOClientAPI.OnChargingErrorNotificationResponse    += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingErrorNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnChargingErrorNotificationResponse    -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.ChargingErrorNotificationRequestConverter(timestamp, sender, request), CPOClientAPI?.ChargingErrorNotificationResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargingErrorNotification", "ChargingNotifications", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -274,17 +318,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region ChargeDetailRecord
 
-                RegisterEvent2("ChargeDetailRecordRequest",
-                               handler => CPOClientAPI.OnChargeDetailRecordHTTPRequest += handler,
-                               handler => CPOClientAPI.OnChargeDetailRecordHTTPRequest -= handler,
-                               "ChargeDetailRecord", "requests", "all").
+                RegisterEvent("ChargeDetailRecordRequest",
+                              handler => CPOClientAPI.OnChargeDetailRecordRequest  += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.SendChargeDetailRecordRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnChargeDetailRecordRequest  -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.SendChargeDetailRecordRequestConverter(timestamp, sender, request)),
+                              "ChargeDetailRecord", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent2("ChargeDetailRecordResponse",
-                               handler => CPOClientAPI.OnChargeDetailRecordHTTPResponse += handler,
-                               handler => CPOClientAPI.OnChargeDetailRecordHTTPResponse -= handler,
-                               "ChargeDetailRecord", "responses", "all").
+                RegisterEvent("ChargeDetailRecordResponse",
+                              handler => CPOClientAPI.OnChargeDetailRecordResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.SendChargeDetailRecordRequestConverter(timestamp, sender, request), CPOClientAPI?.SendChargeDetailRecordResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnChargeDetailRecordResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.SendChargeDetailRecordRequestConverter(timestamp, sender, request), CPOClientAPI?.SendChargeDetailRecordResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "ChargeDetailRecord", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 

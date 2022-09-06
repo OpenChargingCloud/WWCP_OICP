@@ -226,6 +226,242 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
+        #region Custom request/response logging converters
+
+        #region PullEVSEData                   (Request/Response)Converter
+
+        public Func<DateTime, Object, PullEVSEDataRequest, String>
+            PullEVSEDataRequestConverter                     { get; set; }
+
+            = (timestamp, sender, pullEVSEDataRequest)
+            => String.Concat(pullEVSEDataRequest.ProviderId, pullEVSEDataRequest.LastCall.HasValue ? ", last call: " + pullEVSEDataRequest.LastCall.Value.ToLocalTime().ToString() : "");
+
+        public Func<DateTime, Object, PullEVSEDataRequest, OICPResult<PullEVSEDataResponse>, TimeSpan, String>
+            PullEVSEDataResponseConverter                    { get; set; }
+
+            = (timestamp, sender, pullEVSEDataRequest, pullEVSEDataResponse, runtime)
+            => String.Concat(pullEVSEDataRequest.ProviderId, pullEVSEDataRequest.LastCall.HasValue ? ", last call: " + pullEVSEDataRequest.LastCall.Value.ToLocalTime().ToString() : "",
+                             " => ",
+                             pullEVSEDataResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullEVSEDataResponse.Response?.NumberOfElements ?? 0, " evse data record(s)");
+
+        #endregion
+
+        #region PullEVSEStatus                 (Request/Response)Converter
+
+        public Func<DateTime, Object, PullEVSEStatusRequest, String>
+            PullEVSEStatusRequestConverter                   { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusRequest)
+            => String.Concat(pullEVSEStatusRequest.ProviderId, pullEVSEStatusRequest.EVSEStatusFilter.HasValue ? ", status filter: " + pullEVSEStatusRequest.EVSEStatusFilter.Value.ToString() : "");
+
+        public Func<DateTime, Object, PullEVSEStatusRequest, OICPResult<PullEVSEStatusResponse>, TimeSpan, String>
+            PullEVSEStatusResponseConverter                  { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusRequest, pullEVSEStatusResponse, runtime)
+            => String.Concat(pullEVSEStatusRequest.ProviderId, pullEVSEStatusRequest.EVSEStatusFilter.HasValue ? ", status filter: " + pullEVSEStatusRequest.EVSEStatusFilter.Value.ToString() : "",
+                             " => ",
+                             pullEVSEStatusResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullEVSEStatusResponse.Response?.OperatorEVSEStatus.Count() ?? 0, " evse status record(s)");
+
+        #endregion
+
+        #region PullEVSEStatusById             (Request/Response)Converter
+
+        public Func<DateTime, Object, PullEVSEStatusByIdRequest, String>
+            PullEVSEStatusByIdRequestConverter               { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusByIdRequest)
+            => String.Concat(pullEVSEStatusByIdRequest.ProviderId, ", ids: " + pullEVSEStatusByIdRequest.EVSEIds.Count());
+
+        public Func<DateTime, Object, PullEVSEStatusByIdRequest, OICPResult<PullEVSEStatusByIdResponse>, TimeSpan, String>
+            PullEVSEStatusByIdResponseConverter              { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusByIdRequest, pullEVSEStatusByIdResponse, runtime)
+            => String.Concat(pullEVSEStatusByIdRequest.ProviderId, ", ids: " + pullEVSEStatusByIdRequest.EVSEIds.Count(),
+                             " => ",
+                             pullEVSEStatusByIdResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullEVSEStatusByIdResponse.Response?.EVSEStatusRecords.Count() ?? 0, " evse status record(s)");
+
+        #endregion
+
+        #region PullEVSEStatusByOperatorId     (Request/Response)Converter
+
+        public Func<DateTime, Object, PullEVSEStatusByOperatorIdRequest, String>
+            PullEVSEStatusByOperatorIdRequestConverter       { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusByOperatorIdRequest)
+            => String.Concat(pullEVSEStatusByOperatorIdRequest.ProviderId, ", operator ids: " + pullEVSEStatusByOperatorIdRequest.OperatorIds.Count());
+
+        public Func<DateTime, Object, PullEVSEStatusByOperatorIdRequest, OICPResult<PullEVSEStatusByOperatorIdResponse>, TimeSpan, String>
+            PullEVSEStatusByOperatorIdResponseConverter      { get; set; }
+
+            = (timestamp, sender, pullEVSEStatusByOperatorIdRequest, pullEVSEStatusByOperatorIdResponse, runtime)
+            => String.Concat(pullEVSEStatusByOperatorIdRequest.ProviderId, ", operator ids: " + pullEVSEStatusByOperatorIdRequest.OperatorIds.Count(),
+                             " => ",
+                             pullEVSEStatusByOperatorIdResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullEVSEStatusByOperatorIdResponse.Response?.OperatorEVSEStatus.Count() ?? 0, " operator evse status record(s), ", pullEVSEStatusByOperatorIdResponse.Response?.OperatorEVSEStatus.Sum(cc => cc.EVSEStatusRecords.Count()) ?? 0, " evse status record(s)");
+
+        #endregion
+
+
+        #region PullPricingProductData         (Request/Response)Converter
+
+        public Func<DateTime, Object, PullPricingProductDataRequest, String>
+            PullPricingProductDataRequestConverter           { get; set; }
+
+            = (timestamp, sender, pullPricingProductDataRequest)
+            => String.Concat(pullPricingProductDataRequest.ProviderId, pullPricingProductDataRequest.LastCall.HasValue ? ", last call: " + pullPricingProductDataRequest.LastCall.Value.ToLocalTime().ToString() : "");
+
+        public Func<DateTime, Object, PullPricingProductDataRequest, OICPResult<PullPricingProductDataResponse>, TimeSpan, String>
+            PullPricingProductDataResponseConverter          { get; set; }
+
+            = (timestamp, sender, pullPricingProductDataRequest, pullPricingProductDataResponse, runtime)
+            => String.Concat(pullPricingProductDataRequest.ProviderId, pullPricingProductDataRequest.LastCall.HasValue ? ", last call: " + pullPricingProductDataRequest.LastCall.Value.ToLocalTime().ToString() : "",
+                             " => ",
+                             pullPricingProductDataResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullPricingProductDataResponse.Response?.NumberOfElements ?? 0, " pricing product data record(s)");
+
+        #endregion
+
+        #region PullEVSEPricing                (Request/Response)Converter
+
+        public Func<DateTime, Object, PullEVSEPricingRequest, String>
+            PullEVSEPricingRequestConverter                  { get; set; }
+
+            = (timestamp, sender, pullEVSEPricingRequest)
+            => String.Concat(pullEVSEPricingRequest.ProviderId, pullEVSEPricingRequest.LastCall.HasValue ? ", last call: " + pullEVSEPricingRequest.LastCall.Value.ToLocalTime().ToString() : "");
+
+        public Func<DateTime, Object, PullEVSEPricingRequest, OICPResult<PullEVSEPricingResponse>, TimeSpan, String>
+            PullEVSEPricingResponseConverter                 { get; set; }
+
+            = (timestamp, sender, pullEVSEPricingRequest, pullEVSEPricingResponse, runtime)
+            => String.Concat(pullEVSEPricingRequest.ProviderId, pullEVSEPricingRequest.LastCall.HasValue ? ", last call: " + pullEVSEPricingRequest.LastCall.Value.ToLocalTime().ToString() : "",
+                             " => ",
+                             pullEVSEPricingResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", pullEVSEPricingResponse.Response?.NumberOfElements ?? 0, " evse data record(s)");
+
+        #endregion
+
+
+        #region PushAuthenticationData         (Request/Response)Converter
+
+        public Func<DateTime, Object, PushAuthenticationDataRequest, String>
+            PushAuthenticationDataRequestConverter           { get; set; }
+
+            = (timestamp, sender, pushAuthenticationDataRequest)
+            => String.Concat(pushAuthenticationDataRequest.Action, " of ", pushAuthenticationDataRequest.ProviderAuthenticationData.Identifications.Count(), " identifications(s)");
+
+        public Func<DateTime, Object, PushAuthenticationDataRequest, OICPResult<Acknowledgement<PushAuthenticationDataRequest>>, TimeSpan, String>
+            PushAuthenticationDataResponseConverter          { get; set; }
+
+            = (timestamp, sender, pushAuthenticationDataRequest, pushAuthenticationDataResponse, runtime)
+            => String.Concat(pushAuthenticationDataRequest.Action, " of ", pushAuthenticationDataRequest.ProviderAuthenticationData.Identifications.Count(), " identifications(s)",
+                             " => ",
+                             pushAuthenticationDataResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region AuthorizeRemoteReservationStart(Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, String>
+            AuthorizeRemoteReservationStartRequestConverter           { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStartRequest)
+            => String.Concat(authorizeRemoteReservationStartRequest.Identification, " at ", authorizeRemoteReservationStartRequest.EVSEId,
+                                                                                            authorizeRemoteReservationStartRequest.PartnerProductId.HasValue
+                                                                                                ? " (" + authorizeRemoteReservationStartRequest.PartnerProductId.Value.ToString() + ")"
+                                                                                                : "");
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>, TimeSpan, String>
+            AuthorizeRemoteReservationStartResponseConverter          { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStartRequest, authorizeRemoteReservationStartResponse, runtime)
+            => String.Concat(authorizeRemoteReservationStartRequest.Identification, " at ", authorizeRemoteReservationStartRequest.EVSEId,
+                                                                                            authorizeRemoteReservationStartRequest.PartnerProductId.HasValue
+                                                                                                ? " (" + authorizeRemoteReservationStartRequest.PartnerProductId.Value.ToString() + ")"
+                                                                                                : "",
+                             " => ",
+                             authorizeRemoteReservationStartResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteReservationStop (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, String>
+            AuthorizeRemoteReservationStopRequestConverter           { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStopRequest)
+            => String.Concat(authorizeRemoteReservationStopRequest.SessionId, " at ", authorizeRemoteReservationStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>, TimeSpan, String>
+            AuthorizeRemoteReservationStopResponseConverter          { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStopRequest, authorizeRemoteReservationStopResponse, runtime)
+            => String.Concat(authorizeRemoteReservationStopRequest.SessionId, " at ", authorizeRemoteReservationStopRequest.EVSEId,
+                             " => ",
+                             authorizeRemoteReservationStopResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteStart           (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteStartRequest, String>
+            AuthorizeRemoteStartRequestConverter           { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStartRequest)
+            => String.Concat(authorizeRemoteStartRequest.Identification, " at ", authorizeRemoteStartRequest.EVSEId,
+                                                                                            authorizeRemoteStartRequest.PartnerProductId.HasValue
+                                                                                                ? " (" + authorizeRemoteStartRequest.PartnerProductId.Value.ToString() + ")"
+                                                                                                : "");
+
+        public Func<DateTime, Object, AuthorizeRemoteStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>, TimeSpan, String>
+            AuthorizeRemoteStartResponseConverter          { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime)
+            => String.Concat(authorizeRemoteStartRequest.Identification, " at ", authorizeRemoteStartRequest.EVSEId,
+                                                                                            authorizeRemoteStartRequest.PartnerProductId.HasValue
+                                                                                                ? " (" + authorizeRemoteStartRequest.PartnerProductId.Value.ToString() + ")"
+                                                                                                : "",
+                             " => ",
+                             authorizeRemoteStartResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteStop            (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteStopRequest, String>
+            AuthorizeRemoteStopRequestConverter           { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStopRequest)
+            => String.Concat(authorizeRemoteStopRequest.SessionId, " at ", authorizeRemoteStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>, TimeSpan, String>
+            AuthorizeRemoteStopResponseConverter          { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime)
+            => String.Concat(authorizeRemoteStopRequest.SessionId, " at ", authorizeRemoteStopRequest.EVSEId,
+                             " => ",
+                             authorizeRemoteStopResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region GetChargeDetailRecords         (Request/Response)Converter
+
+        public Func<DateTime, Object, GetChargeDetailRecordsRequest, String>
+            GetChargeDetailRecordsRequestConverter                     { get; set; }
+
+            = (timestamp, sender, getChargeDetailRecordsRequest)
+            => String.Concat(getChargeDetailRecordsRequest.ProviderId, " from ", getChargeDetailRecordsRequest.From.ToLocalTime().ToString(), " to " + getChargeDetailRecordsRequest.To.ToLocalTime().ToString());
+
+        public Func<DateTime, Object, GetChargeDetailRecordsRequest, OICPResult<GetChargeDetailRecordsResponse>, TimeSpan, String>
+            GetChargeDetailRecordsResponseConverter                    { get; set; }
+
+            = (timestamp, sender, getChargeDetailRecordsRequest, getChargeDetailRecordsResponse, runtime)
+            => String.Concat(getChargeDetailRecordsRequest.ProviderId, " from ", getChargeDetailRecordsRequest.From.ToLocalTime().ToString(), " to " + getChargeDetailRecordsRequest.To.ToLocalTime().ToString(),
+                             " => ",
+                             getChargeDetailRecordsResponse.Response?.StatusCode?.ToString() ?? "failed!", " ", getChargeDetailRecordsResponse.Response?.NumberOfElements ?? 0, " charge detail record(s)");
+
+        #endregion
+
+        #endregion
+
         #region Events
 
         #region (protected internal) OnPullEVSEDataHTTPRequest

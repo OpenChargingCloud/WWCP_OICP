@@ -50,6 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnPushEVSEDataAPIResponseDelegate(DateTime                                            Timestamp,
                                           CPOClientAPI                                        Sender,
+                                          PushEVSEDataRequest                                 Request,
                                           OICPResult<Acknowledgement<PushEVSEDataRequest>>    Response,
                                           TimeSpan                                            Runtime);
 
@@ -87,6 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnPushEVSEStatusAPIResponseDelegate(DateTime                                              Timestamp,
                                             CPOClientAPI                                          Sender,
+                                            PushEVSEStatusRequest                                 Request,
                                             OICPResult<Acknowledgement<PushEVSEStatusRequest>>    Response,
                                             TimeSpan                                              Runtime);
 
@@ -125,6 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnPushPricingProductDataAPIResponseDelegate(DateTime                                                      Timestamp,
                                                     CPOClientAPI                                                  Sender,
+                                                    PushPricingProductDataRequest                                 Request,
                                                     OICPResult<Acknowledgement<PushPricingProductDataRequest>>    Response,
                                                     TimeSpan                                                      Runtime);
 
@@ -162,6 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnPushEVSEPricingAPIResponseDelegate(DateTime                                               Timestamp,
                                              CPOClientAPI                                           Sender,
+                                             PushEVSEPricingRequest                                 Request,
                                              OICPResult<Acknowledgement<PushEVSEPricingRequest>>    Response,
                                              TimeSpan                                               Runtime);
 
@@ -200,6 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnPullAuthenticationDataAPIResponseDelegate(DateTime                                      Timestamp,
                                                     CPOClientAPI                                  Sender,
+                                                    PullAuthenticationDataRequest                 Request,
                                                     OICPResult<PullAuthenticationDataResponse>    Response,
                                                     TimeSpan                                      Runtime);
 
@@ -238,6 +243,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeStartAPIResponseDelegate(DateTime                                  Timestamp,
                                             CPOClientAPI                              Sender,
+                                            AuthorizeStartRequest                     Request,
                                             OICPResult<AuthorizationStartResponse>    Response,
                                             TimeSpan                                  Runtime);
 
@@ -275,6 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeStopAPIResponseDelegate(DateTime                                 Timestamp,
                                            CPOClientAPI                             Sender,
+                                           AuthorizeStopRequest                     Request,
                                            OICPResult<AuthorizationStopResponse>    Response,
                                            TimeSpan                                 Runtime);
 
@@ -313,6 +320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnChargingStartNotificationAPIResponseDelegate(DateTime                                                         Timestamp,
                                                        CPOClientAPI                                                     Sender,
+                                                       ChargingStartNotificationRequest                                 Request,
                                                        OICPResult<Acknowledgement<ChargingStartNotificationRequest>>    Response,
                                                        TimeSpan                                                         Runtime);
 
@@ -350,6 +358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnChargingProgressNotificationAPIResponseDelegate(DateTime                                                            Timestamp,
                                                           CPOClientAPI                                                        Sender,
+                                                          ChargingProgressNotificationRequest                                 Request,
                                                           OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>    Response,
                                                           TimeSpan                                                            Runtime);
 
@@ -387,6 +396,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnChargingEndNotificationAPIResponseDelegate(DateTime                                                       Timestamp,
                                                      CPOClientAPI                                                   Sender,
+                                                     ChargingEndNotificationRequest                                 Request,
                                                      OICPResult<Acknowledgement<ChargingEndNotificationRequest>>    Response,
                                                      TimeSpan                                                       Runtime);
 
@@ -424,6 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnChargingErrorNotificationAPIResponseDelegate(DateTime                                                         Timestamp,
                                                        CPOClientAPI                                                     Sender,
+                                                       ChargingErrorNotificationRequest                                 Request,
                                                        OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>    Response,
                                                        TimeSpan                                                         Runtime);
 
@@ -462,6 +473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnChargeDetailRecordAPIResponseDelegate(DateTime                                                  Timestamp,
                                                 CPOClientAPI                                              Sender,
+                                                ChargeDetailRecordRequest                                 Request,
                                                 OICPResult<Acknowledgement<ChargeDetailRecordRequest>>    Response,
                                                 TimeSpan                                                  Runtime);
 

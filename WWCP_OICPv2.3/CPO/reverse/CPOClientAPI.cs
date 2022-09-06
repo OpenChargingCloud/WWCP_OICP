@@ -163,6 +163,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public new HTTPPath                URLPathPrefix     { get; }
 
         /// <summary>
+        /// The attached HTTP logger.
+        /// </summary>
+        public new HTTP_Logger             HTTPLogger
+#pragma warning disable CS8603 // Possible null reference return.
+            => base.HTTPLogger as HTTP_Logger;
+#pragma warning restore CS8603 // Possible null reference return.
+
+        /// <summary>
+        /// The attached Client API logger.
+        /// </summary>
+        public CPOClientAPILogger?         Logger            { get; }
+
+        /// <summary>
         /// CPO Client API counters.
         /// </summary>
         public APICounters                 Counters          { get; }
@@ -172,38 +185,222 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
         #region Custom JSON parsers
-        public CustomJObjectParserDelegate<PushEVSEDataRequest>?                     CustomPushEVSEDataRequestParser                    { get; set; }
-        public CustomJObjectParserDelegate<PushEVSEStatusRequest>?                   CustomPushEVSEStatusRequestParser                  { get; set; }
+        public CustomJObjectParserDelegate<PushEVSEDataRequest>?                  CustomPushEVSEDataRequestParser                    { get; set; }
+        public CustomJObjectParserDelegate<PushEVSEStatusRequest>?                CustomPushEVSEStatusRequestParser                  { get; set; }
 
 
-        public CustomJObjectParserDelegate<PushPricingProductDataRequest>?           CustomPushPricingProductDataRequestParser          { get; set; }
-        public CustomJObjectParserDelegate<PushEVSEPricingRequest>?                  CustomPushEVSEPricingRequestParser                 { get; set; }
+        public CustomJObjectParserDelegate<PushPricingProductDataRequest>?        CustomPushPricingProductDataRequestParser          { get; set; }
+        public CustomJObjectParserDelegate<PushEVSEPricingRequest>?               CustomPushEVSEPricingRequestParser                 { get; set; }
 
-        public CustomJObjectParserDelegate<PullAuthenticationDataRequest>?           CustomPullAuthenticationDataRequestParser          { get; set; }
+        public CustomJObjectParserDelegate<PullAuthenticationDataRequest>?        CustomPullAuthenticationDataRequestParser          { get; set; }
 
-        public CustomJObjectParserDelegate<AuthorizeStartRequest>?                   CustomAuthorizeStartRequestParser                  { get; set; }
-        public CustomJObjectParserDelegate<AuthorizeStopRequest>?                    CustomAuthorizeStopRequestParser                   { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeStartRequest>?                CustomAuthorizeStartRequestParser                  { get; set; }
+        public CustomJObjectParserDelegate<AuthorizeStopRequest>?                 CustomAuthorizeStopRequestParser                   { get; set; }
 
 
-        public CustomJObjectParserDelegate<ChargingStartNotificationRequest>?        CustomChargingStartNotificationRequestParser       { get; set; }
-        public CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?     CustomChargingProgressNotificationRequestParser    { get; set; }
-        public CustomJObjectParserDelegate<ChargingEndNotificationRequest>?          CustomChargingEndNotificationRequestParser         { get; set; }
-        public CustomJObjectParserDelegate<ChargingErrorNotificationRequest>?        CustomChargingErrorNotificationRequestParser       { get; set; }
+        public CustomJObjectParserDelegate<ChargingStartNotificationRequest>?     CustomChargingStartNotificationRequestParser       { get; set; }
+        public CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser    { get; set; }
+        public CustomJObjectParserDelegate<ChargingEndNotificationRequest>?       CustomChargingEndNotificationRequestParser         { get; set; }
+        public CustomJObjectParserDelegate<ChargingErrorNotificationRequest>?     CustomChargingErrorNotificationRequestParser       { get; set; }
 
-        public CustomJObjectParserDelegate<ChargeDetailRecordRequest>?               CustomChargeDetailRecordRequestParser              { get; set; }
+        public CustomJObjectParserDelegate<ChargeDetailRecordRequest>?            CustomChargeDetailRecordRequestParser              { get; set; }
 
         #endregion
 
         #region Custom JSON serializers
-        public CustomJObjectSerializerDelegate<Acknowledgement>?                     CustomAcknowledgementSerializer                    { get; set; }
-        public CustomJObjectSerializerDelegate<StatusCode>?                          CustomStatusCodeSerializer                         { get; set; }
+        public CustomJObjectSerializerDelegate<Acknowledgement>?                  CustomAcknowledgementSerializer                    { get; set; }
+        public CustomJObjectSerializerDelegate<StatusCode>?                       CustomStatusCodeSerializer                         { get; set; }
 
-        public CustomJObjectSerializerDelegate<PullAuthenticationDataResponse>?      CustomPullAuthenticationDataResponseSerializer     { get; set; }
-        public CustomJObjectSerializerDelegate<ProviderAuthenticationData>?          CustomProviderAuthenticationDataSerializer         { get; set; }
+        public CustomJObjectSerializerDelegate<PullAuthenticationDataResponse>?   CustomPullAuthenticationDataResponseSerializer     { get; set; }
+        public CustomJObjectSerializerDelegate<ProviderAuthenticationData>?       CustomProviderAuthenticationDataSerializer         { get; set; }
 
-        public CustomJObjectSerializerDelegate<AuthorizationStartResponse>?          CustomAuthorizationStartSerializer                 { get; set; }
-        public CustomJObjectSerializerDelegate<Identification>?                      CustomIdentificationSerializer                     { get; set; }
-        public CustomJObjectSerializerDelegate<AuthorizationStopResponse>?           CustomAuthorizationStopSerializer                  { get; set; }
+        public CustomJObjectSerializerDelegate<AuthorizationStartResponse>?       CustomAuthorizationStartSerializer                 { get; set; }
+        public CustomJObjectSerializerDelegate<Identification>?                   CustomIdentificationSerializer                     { get; set; }
+        public CustomJObjectSerializerDelegate<AuthorizationStopResponse>?        CustomAuthorizationStopSerializer                  { get; set; }
+
+        #endregion
+
+        #region Custom request/response logging converters
+
+        #region PushEVSEData                (Request/Response)Converter
+
+        public Func<DateTime, Object, PushEVSEDataRequest, String>
+            PushEVSEDataRequestConverter                     { get; set; }
+
+            = (timestamp, sender, pushEVSEDataRequest)
+            => String.Concat(pushEVSEDataRequest.Action, " of ", pushEVSEDataRequest.EVSEDataRecords.Count(), " evse(s)");
+
+        public Func<DateTime, Object, PushEVSEDataRequest, OICPResult<Acknowledgement<PushEVSEDataRequest>>, TimeSpan, String>
+            PushEVSEDataResponseConverter                    { get; set; }
+
+            = (timestamp, sender, pushEVSEDataRequest, pushEVSEDataResponse, runtime)
+            => String.Concat(pushEVSEDataRequest.Action, " of ", pushEVSEDataRequest.EVSEDataRecords.Count(), " evse(s) => ", pushEVSEDataResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region PushEVSEStatus              (Request/Response)Converter
+
+        public Func<DateTime, Object, PushEVSEStatusRequest, String>
+            PushEVSEStatusRequestConverter                   { get; set; }
+
+            = (timestamp, sender, pushEVSEStatusRequest)
+            => String.Concat(pushEVSEStatusRequest.Action, " of ", pushEVSEStatusRequest.EVSEStatusRecords.Count(), " evse status");
+
+        public Func<DateTime, Object, PushEVSEStatusRequest, OICPResult<Acknowledgement<PushEVSEStatusRequest>>, TimeSpan, String>
+            PushEVSEStatusResponseConverter                  { get; set; }
+
+            = (timestamp, sender, pushEVSEStatusRequest, pushEVSEStatusResponse, runtime)
+            => String.Concat(pushEVSEStatusRequest.Action, " of ", pushEVSEStatusRequest.EVSEStatusRecords.Count(), " evse status => ", pushEVSEStatusResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region PushPricingProductData      (Request/Response)Converter
+
+        public Func<DateTime, Object, PushPricingProductDataRequest, String>
+            PushPricingProductDataRequestConverter                     { get; set; }
+
+            = (timestamp, sender, pushPricingProductDataRequest)
+            => String.Concat(pushPricingProductDataRequest.Action, " of ", pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count(), " pricing product data record(s)");
+
+        public Func<DateTime, Object, PushPricingProductDataRequest, OICPResult<Acknowledgement<PushPricingProductDataRequest>>, TimeSpan, String>
+            PushPricingProductDataResponseConverter                    { get; set; }
+
+            = (timestamp, sender, pushPricingProductDataRequest, pushPricingProductDataResponse, runtime)
+            => String.Concat(pushPricingProductDataRequest.Action, " of ", pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count(), " pricing product data record(s) => ", pushPricingProductDataResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region PushEVSEPricing             (Request/Response)Converter
+
+        public Func<DateTime, Object, PushEVSEPricingRequest, String>
+            PushEVSEPricingRequestConverter                   { get; set; }
+
+            = (timestamp, sender, pushEVSEPricingRequest)
+            => String.Concat(pushEVSEPricingRequest.Action, " of ", pushEVSEPricingRequest.EVSEPricing.Count(), " evse pricing record(s)");
+
+        public Func<DateTime, Object, PushEVSEPricingRequest, OICPResult<Acknowledgement<PushEVSEPricingRequest>>, TimeSpan, String>
+            PushEVSEPricingResponseConverter                  { get; set; }
+
+            = (timestamp, sender, pushEVSEPricingRequest, pushEVSEPricingResponse, runtime)
+            => String.Concat(pushEVSEPricingRequest.Action, " of ", pushEVSEPricingRequest.EVSEPricing.Count(), " evse pricing record(s) => ", pushEVSEPricingResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region AuthorizeStart              (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStartRequest, String>
+            AuthorizeStartRequestConverter                   { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest)
+            => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStartRequest, OICPResult<AuthorizationStartResponse>, TimeSpan, String>
+            AuthorizationStartResponseConverter              { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest, authorizationStartResponse, runtime)
+            => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId, " => ", authorizationStartResponse.Response?.AuthorizationStatus.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeStop               (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStopRequest, String>
+            AuthorizeStopRequestConverter                    { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest)
+            => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStopRequest, OICPResult<AuthorizationStopResponse>, TimeSpan, String>
+            AuthorizationStopResponseConverter               { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest, authorizationStopResponse, runtime)
+            => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId, " => ", authorizationStopResponse.Response?.AuthorizationStatus.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region ChargingStartNotification   (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, String>
+            ChargingStartNotificationRequestConverter        { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest)
+            => String.Concat(chargingStartNotificationRequest.Identification, " at ", chargingStartNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, OICPResult<Acknowledgement<ChargingStartNotificationRequest>>, TimeSpan, String>
+            ChargingStartNotificationResponseConverter       { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest, chargingStartNotificationResponse, runtime)
+            => String.Concat(chargingStartNotificationRequest.Identification, " at ", chargingStartNotificationRequest.EVSEId, " => ", chargingStartNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingProgressNotification(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, String>
+            ChargingProgressNotificationRequestConverter     { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest)
+            => String.Concat(chargingProgressNotificationRequest.Identification, " at ", chargingProgressNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>, TimeSpan, String>
+            ChargingProgressNotificationResponseConverter    { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest, chargingProgressNotificationResponse, runtime)
+            => String.Concat(chargingProgressNotificationRequest.Identification, " at ", chargingProgressNotificationRequest.EVSEId, " => ", chargingProgressNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingEndNotification     (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, String>
+            ChargingEndNotificationRequestConverter          { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest)
+            => String.Concat(chargingEndNotificationRequest.Identification, " at ", chargingEndNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, OICPResult<Acknowledgement<ChargingEndNotificationRequest>>, TimeSpan, String>
+            ChargingEndNotificationResponseConverter         { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest, chargingEndNotificationResponse, runtime)
+            => String.Concat(chargingEndNotificationRequest.Identification, " at ", chargingEndNotificationRequest.EVSEId, " => ", chargingEndNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingErrorNotification   (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, String>
+            ChargingErrorNotificationRequestConverter        { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest)
+            => String.Concat(chargingErrorNotificationRequest.Identification, " at ", chargingErrorNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>, TimeSpan, String>
+            ChargingErrorNotificationResponseConverter       { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest, chargingErrorNotificationResponse, runtime)
+            => String.Concat(chargingErrorNotificationRequest.Identification, " at ", chargingErrorNotificationRequest.EVSEId, " => ", chargingErrorNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region SendChargeDetailRecord      (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, String>
+            SendChargeDetailRecordRequestConverter           { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification, " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId, " (", chargeDetailRecordRequest.ChargeDetailRecord.SessionId, ")");
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, OICPResult<Acknowledgement<ChargeDetailRecordRequest>>, TimeSpan, String>
+            SendChargeDetailRecordResponseConverter          { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest, chargeDetailRecordResponse, runtime)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification, " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId, " (", chargeDetailRecordRequest.ChargeDetailRecord.SessionId, ") => ", chargeDetailRecordResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
 
         #endregion
 
@@ -897,27 +1094,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region CPOClientAPI(HTTPAPI, URLPathPrefix = null, ...)
 
-        public CPOClientAPI(HTTPAPI    HTTPAPI,
-                            HTTPPath?  URLPathPrefix    = null,
+        public CPOClientAPI(HTTPAPI                  HTTPAPI,
+                            HTTPPath?                URLPathPrefix    = null,
 
-                            String     LoggingPath      = DefaultHTTPAPI_LoggingPath,
-                            String     LoggingContext   = DefaultLoggingContext,
-                            String     LogfileName      = DefaultHTTPAPI_LogfileName)
+                            String                   LoggingPath      = DefaultHTTPAPI_LoggingPath,
+                            String                   LoggingContext   = DefaultLoggingContext,
+                            LogfileCreatorDelegate?  LogfileCreator   = null)
 
             : base(HTTPAPI)
 
         {
 
-            this.URLPathPrefix  = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
+            this.URLPathPrefix   = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
 
-            this.Counters       = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.HTTPLogger     = DisableLogging == false
-                                      ? new Logger(this,
-                                                   LoggingPath,
-                                                   LoggingContext ?? DefaultLoggingContext,
-                                                   LogfileCreator)
-                                      : null;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
+                                                         LoggingPath,
+                                                         LoggingContext ?? DefaultLoggingContext,
+                                                         LogfileCreator)
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new CPOClientAPILogger(this,
+                                                                LoggingPath,
+                                                                LoggingContext ?? DefaultLoggingContext,
+                                                                LogfileCreator)
+                                       : null;
 
             RegisterURLTemplates(false);
 
@@ -949,9 +1155,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="ServerThreadPriority">The optional priority of the TCP server thread.</param>
         /// <param name="ServerThreadIsBackground">Whether the TCP server thread is a background thread or not.</param>
         /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
-        /// <param name="ConnectionThreadsNameBuilder">An optional delegate to set the name of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsPriorityBuilder">An optional delegate to set the priority of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsAreBackground">Whether the TCP connection threads are background threads or not (default: yes).</param>
         /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
         /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
         /// 
@@ -993,9 +1196,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             ThreadPriority?                       ServerThreadPriority               = null,
                             Boolean?                              ServerThreadIsBackground           = null,
                             ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
-                            //ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
-                            //ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
-                            //Boolean?                              ConnectionThreadsAreBackground     = null,
                             TimeSpan?                             ConnectionTimeout                  = null,
                             UInt32?                               MaxClientConnections               = null,
 
@@ -1039,9 +1239,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    ServerThreadPriority,
                    ServerThreadIsBackground,
                    ConnectionIdBuilder,
-                   //ConnectionThreadsNameBuilder,
-                   //ConnectionThreadsPriorityBuilder,
-                   //ConnectionThreadsAreBackground,
                    ConnectionTimeout,
                    MaxClientConnections,
 
@@ -1064,16 +1261,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.URLPathPrefix  = base.URLPathPrefix;
+            this.URLPathPrefix   =  base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
 
-            this.Counters       = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.HTTPLogger     = DisableLogging == false
-                                      ? new Logger(this,
-                                                   LoggingPath,
-                                                   LoggingContext ?? DefaultLoggingContext,
-                                                   LogfileCreator)
-                                      : null;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
+                                                         LoggingPath,
+                                                         LoggingContext ?? DefaultLoggingContext,
+                                                         LogfileCreator)
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new CPOClientAPILogger(this,
+                                                                LoggingPath,
+                                                                LoggingContext ?? DefaultLoggingContext,
+                                                                LogfileCreator)
+                                       : null;
 
             RegisterURLTemplates(RegisterRootService);
 
@@ -1278,6 +1484,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushEVSEDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEDataRequest,
                                                                                               pullEVSEDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1517,6 +1724,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushEVSEStatusAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEStatusRequest,
                                                                                               pullEVSEStatusResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1757,6 +1965,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushPricingProductDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEDataRequest,
                                                                                               pushPricingProductDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1996,6 +2205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushEVSEPricingAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEDataRequest,
                                                                                               pushEVSEPricingResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2239,6 +2449,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPullAuthenticationDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullAuthenticationDataRequest,
                                                                                               pullAuthenticationDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2370,7 +2581,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                          operatorId,
-                                                                                         out AuthorizeStartRequest?          pullEVSEDataRequest,
+                                                                                         out AuthorizeStartRequest?          authorizeStartRequest,
                                                                                          out String?                         errorResponse,
                                                                                          ProcessId:                          processId,
 
@@ -2394,7 +2605,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeStartAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              authorizeStartRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -2417,7 +2628,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                     Cast<OnAuthorizeStartAPIDelegate>().
                                                                                                                                     Select(e => e(Timestamp.Now,
                                                                                                                                                   this,
-                                                                                                                                                  pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                  authorizeStartRequest!))))?.FirstOrDefault();
 
                                                              Counters.AuthorizeStart.IncResponses_OK();
 
@@ -2430,7 +2641,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
                                                                                               this,
                                                                                               AuthorizationStartResponse.DataError(
-                                                                                                  pullEVSEDataRequest,
+                                                                                                  authorizeStartRequest,
                                                                                                   e.Message,
                                                                                                   e.StackTrace,
                                                                                                   ResponseTimestamp:  Timestamp.Now,
@@ -2451,7 +2662,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
                                                                                           this,
                                                                                           AuthorizationStartResponse.SystemError(
-                                                                                              pullEVSEDataRequest,
+                                                                                              authorizeStartRequest,
                                                                                               "Could not process the received AuthorizeStart request!",
                                                                                               ResponseTimestamp:  Timestamp.Now,
                                                                                               EventTrackingId:    Request.EventTrackingId,
@@ -2474,6 +2685,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeStartAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeStartRequest,
                                                                                               authorizationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2495,7 +2707,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
                                                                                       this,
                                                                                       AuthorizationStartResponse.DataError(
-                                                                                          pullEVSEDataRequest,
+                                                                                          authorizeStartRequest,
                                                                                           "We could not parse the given AuthorizeStart request!",
                                                                                           errorResponse,
                                                                                           ResponseTimestamp:  Timestamp.Now,
@@ -2596,7 +2808,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                         operatorId,
-                                                                                        out AuthorizeStopRequest?          pullEVSEDataRequest,
+                                                                                        out AuthorizeStopRequest?          authorizeStopRequest,
                                                                                         out String?                        errorResponse,
                                                                                         ProcessId:                         processId,
 
@@ -2620,7 +2832,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeStopAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              authorizeStopRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -2643,7 +2855,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                                   Cast<OnAuthorizeStopAPIDelegate>().
                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                 this,
-                                                                                                                                                pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                authorizeStopRequest!))))?.FirstOrDefault();
 
                                                              Counters.AuthorizeStop.IncResponses_OK();
 
@@ -2656,7 +2868,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                              this,
                                                                                              AuthorizationStopResponse.DataError(
-                                                                                                 pullEVSEDataRequest,
+                                                                                                 authorizeStopRequest,
                                                                                                  e.Message,
                                                                                                  e.StackTrace,
                                                                                                  ResponseTimestamp:  Timestamp.Now,
@@ -2677,7 +2889,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                          authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                          this,
                                                                                          AuthorizationStopResponse.SystemError(
-                                                                                             pullEVSEDataRequest,
+                                                                                             authorizeStopRequest,
                                                                                              "Could not process the received AuthorizeStop request!",
                                                                                              ResponseTimestamp: Timestamp.Now,
                                                                                              EventTrackingId: Request.EventTrackingId,
@@ -2700,6 +2912,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeStopAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeStopRequest,
                                                                                               authorizationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2721,7 +2934,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                      this,
                                                                                      AuthorizationStopResponse.DataError(
-                                                                                         pullEVSEDataRequest,
+                                                                                         authorizeStopRequest,
                                                                                          "We could not parse the given AuthorizeStop request!",
                                                                                          errorResponse,
                                                                                          ResponseTimestamp:  Timestamp.Now,
@@ -2931,6 +3144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingStartNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingStartNotificationRequest,
                                                                                                           chargingStartNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3101,6 +3315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingProgressNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingProgressNotificationRequest,
                                                                                                           chargingProgressNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3271,6 +3486,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingEndNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingEndNotificationRequest,
                                                                                                           chargingEndNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3441,6 +3657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingErrorNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
+                                                                                                          chargingErrorNotificationRequest,
                                                                                                           chargingErrorNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3743,6 +3960,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnChargeDetailRecordAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              chargeDetailRecordRequest,
                                                                                               chargeDetailRecordResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);

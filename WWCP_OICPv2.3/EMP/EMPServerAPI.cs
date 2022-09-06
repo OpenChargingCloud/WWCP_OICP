@@ -117,6 +117,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Properties
 
         /// <summary>
+        /// The optional URL path prefix, used when defining URL templates.
+        /// </summary>
+        public new HTTPPath                URLPathPrefix     { get; }
+
+        /// <summary>
         /// The attached HTTP logger.
         /// </summary>
         public new HTTP_Logger             HTTPLogger
@@ -707,6 +712,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    false) //Autostart)
 
         {
+
+            this.URLPathPrefix   = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
 
             this.Counters        = new APICounters();
 

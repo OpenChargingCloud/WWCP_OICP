@@ -95,20 +95,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
-            /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
-            /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
-            /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
-            /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
+            /// <param name="LogRequest_toConsole">A delegate to log incoming requests to console.</param>
+            /// <param name="LogResponse_toConsole">A delegate to log requests/responses to console.</param>
+            /// <param name="LogRequest_toDisc">A delegate to log incoming requests to disc.</param>
+            /// <param name="LogResponse_toDisc">A delegate to log requests/responses to disc.</param>
             /// 
-            /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
-            /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
-            /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP client sent events source.</param>
-            /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP client sent events source.</param>
+            /// <param name="LogRequest_toNetwork">A delegate to log incoming requests to a network target.</param>
+            /// <param name="LogResponse_toNetwork">A delegate to log requests/responses to a network target.</param>
+            /// <param name="LogRequest_toHTTPSSE">A delegate to log incoming requests to a client sent events source.</param>
+            /// <param name="LogResponse_toHTTPSSE">A delegate to log requests/responses to a client sent events source.</param>
             /// 
-            /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
-            /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
-            /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
-            /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
+            /// <param name="LogError_toConsole">A delegate to log errors to console.</param>
+            /// <param name="LogError_toDisc">A delegate to log errors to disc.</param>
+            /// <param name="LogError_toNetwork">A delegate to log errors to a network target.</param>
+            /// <param name="LogError_toHTTPSSE">A delegate to log errors to a client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public CPOClientLogger(CPOClient                CPOClient,

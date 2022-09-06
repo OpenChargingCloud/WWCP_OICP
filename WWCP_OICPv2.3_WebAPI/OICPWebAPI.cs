@@ -1093,206 +1093,206 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             #region OnPushEVSEData
 
-            CPOClientAPI.OnPushEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPushEVSEDataHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushEVSEDataHTTPRequest",    httpRequest);
 
-            CPOClientAPI.OnPushEVSEDataRequest       += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnPushEVSEDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
-                                                                                                                                                                               //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                               ));
+            CPOClientAPI.OnPushEVSEDataRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushEVSEDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
+                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                      ));
 
-            CPOClientAPI.OnPushEVSEDataResponse      += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPushEVSEDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
-                                                                                                                                                                                                                   //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                   ),
-                                                                                                                                                                                response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                          CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnPushEVSEDataResponse      += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPushEVSEDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
+                                                                                                                                                                                                          //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                          ),
+                                                                                                                                                                       response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                 CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushEVSEDataHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPushEVSEStatus
 
-            CPOClientAPI.OnPushEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPRequest",    httpRequest);
 
-            CPOClientAPI.OnPushEVSEStatusRequest       += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnPushEVSEStatusRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEStatusRequestSerializer,
-                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                   ));
+            CPOClientAPI.OnPushEVSEStatusRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushEVSEStatusRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEStatusRequestSerializer,
+                                                                                                                                                                                          //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                          ));
 
-            CPOClientAPI.OnPushEVSEStatusResponse      += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPushEVSEStatusResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEStatusRequestSerializer
-                                                                                                                                                                                                                       //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                       ),
-                                                                                                                                                                                    response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                              CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnPushEVSEStatusResponse      += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPushEVSEStatusResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEStatusRequestSerializer
+                                                                                                                                                                                                                              //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                              ),
+                                                                                                                                                                                           response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                     CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushEVSEStatusHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnPushPricingProductData
 
-            CPOClientAPI.OnPushPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPRequest",    httpRequest);
 
-            CPOClientAPI.OnPushPricingProductDataRequest       += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnPushPricingProductDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushPricingProductDataRequestSerializer,
-                                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                   ));
+            CPOClientAPI.OnPushPricingProductDataRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushPricingProductDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushPricingProductDataRequestSerializer,
+                                                                                                                                                                                                          //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                          ));
 
-            CPOClientAPI.OnPushPricingProductDataResponse      += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPushPricingProductDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushPricingProductDataRequestSerializer
-                                                                                                                                                                                                                                       //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                       ),
-                                                                                                                                                                                                    response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                              CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnPushPricingProductDataResponse      += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPushPricingProductDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushPricingProductDataRequestSerializer
+                                                                                                                                                                                                                              //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                              ),
+                                                                                                                                                                                           response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                     CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushPricingProductDataHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPushEVSEPricing
 
-            CPOClientAPI.OnPushEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPushEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPRequest",    httpRequest);
 
-            CPOClientAPI.OnPushEVSEPricingRequest       += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnPushEVSEPricingRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEPricingRequestSerializer,
-                                                                                                                                                                                     //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                     ));
+            CPOClientAPI.OnPushEVSEPricingRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPushEVSEPricingRequest",        request.ToJSON(//CPOServerAPI.CustomPushEVSEPricingRequestSerializer,
+                                                                                                                                                                                            //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                            ));
 
-            CPOClientAPI.OnPushEVSEPricingResponse      += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPushEVSEPricingResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEPricingRequestSerializer
-                                                                                                                                                                                                                         //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                         ),
-                                                                                                                                                                                      response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnPushEVSEPricingResponse      += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPushEVSEPricingResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEPricingRequestSerializer
+                                                                                                                                                                                                                //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                ),
+                                                                                                                                                                             response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                       CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPushEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPushEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushEVSEPricingHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnPullAuthenticationData
 
-            CPOClientAPI.OnPullAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPRequest",    httpRequest);
+            CPOClientAPI.OnPullAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPRequest",    httpRequest);
 
-            CPOClientAPI.OnPullAuthenticationDataRequest       += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnPullAuthenticationDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullAuthenticationDataRequestSerializer,
-                                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                   ));
+            CPOClientAPI.OnPullAuthenticationDataRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnPullAuthenticationDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullAuthenticationDataRequestSerializer,
+                                                                                                                                                                                                          //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                          ));
 
-            CPOClientAPI.OnPullAuthenticationDataResponse      += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPullAuthenticationDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPullAuthenticationDataRequestSerializer
-                                                                                                                                                                                                                                       //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                       ),
-                                                                                                                                                                                                    response.Response?.ToJSON(CPOClientAPI.CustomPullAuthenticationDataResponseSerializer,
-                                                                                                                                                                                                                              CPOClientAPI.CustomProviderAuthenticationDataSerializer,
-                                                                                                                                                                                                                              CPOClientAPI.CustomIdentificationSerializer,
-                                                                                                                                                                                                                              CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnPullAuthenticationDataResponse      += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPullAuthenticationDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPullAuthenticationDataRequestSerializer
+                                                                                                                                                                                                                              //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                              ),
+                                                                                                                                                                                           response.Response?.ToJSON(CPOClientAPI.CustomPullAuthenticationDataResponseSerializer,
+                                                                                                                                                                                                                     CPOClientAPI.CustomProviderAuthenticationDataSerializer,
+                                                                                                                                                                                                                     CPOClientAPI.CustomIdentificationSerializer,
+                                                                                                                                                                                                                     CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnPullAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpResponse);
+            CPOClientAPI.OnPullAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullAuthenticationDataHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnAuthorizeStart
 
-            CPOClientAPI.OnAuthorizeStartHTTPRequest      += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeStartHTTPRequest",    httpRequest);
+            CPOClientAPI.OnAuthorizeStartHTTPRequest      += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeStartHTTPRequest",    httpRequest);
 
-            CPOClientAPI.OnAuthorizeStartRequest          += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnAuthorizeStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeStartRequestSerializer,
-                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                      ));
+            CPOClientAPI.OnAuthorizeStartRequest          += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeStartRequestSerializer,
+                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                             ));
 
-            CPOClientAPI.OnAuthorizeStartResponse         += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnAuthorizeStartResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomAuthorizeStartRequestSerializer
-                                                                                                                                                                                                                          //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                          ),
-                                                                                                                                                                                       response.Response?.ToJSON(CPOClientAPI.CustomAuthorizationStartSerializer,
-                                                                                                                                                                                                                 CPOClientAPI.CustomStatusCodeSerializer,
-                                                                                                                                                                                                                 CPOClientAPI.CustomIdentificationSerializer)));
+            CPOClientAPI.OnAuthorizeStartResponse         += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnAuthorizeStartResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomAuthorizeStartRequestSerializer
+                                                                                                                                                                                                                 //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                 ),
+                                                                                                                                                                              response.Response?.ToJSON(CPOClientAPI.CustomAuthorizationStartSerializer,
+                                                                                                                                                                                                        CPOClientAPI.CustomStatusCodeSerializer,
+                                                                                                                                                                                                        CPOClientAPI.CustomIdentificationSerializer)));
 
-            CPOClientAPI.OnAuthorizationStartHTTPResponse += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpResponse);
+            CPOClientAPI.OnAuthorizationStartHTTPResponse += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeStartHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnAuthorizeStop
 
-            CPOClientAPI.OnAuthorizeStopHTTPRequest       += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeStopHTTPRequest",     httpRequest);
+            CPOClientAPI.OnAuthorizeStopHTTPRequest       += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeStopHTTPRequest",     httpRequest);
 
-            CPOClientAPI.OnAuthorizeStopRequest           += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnAuthorizeStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeStopRequestSerializer,
-                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                      ));
+            CPOClientAPI.OnAuthorizeStopRequest           += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeStopRequestSerializer,
+                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                             ));
 
-            CPOClientAPI.OnAuthorizeStopResponse          += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnAuthorizeStopResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomAuthorizeStopRequestSerializer
-                                                                                                                                                                                                                          //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                          ),
-                                                                                                                                                                                       response.Response?.ToJSON(CPOClientAPI.CustomAuthorizationStopSerializer,
-                                                                                                                                                                                                                 CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnAuthorizeStopResponse          += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnAuthorizeStopResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomAuthorizeStopRequestSerializer
+                                                                                                                                                                                                                 //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                 ),
+                                                                                                                                                                              response.Response?.ToJSON(CPOClientAPI.CustomAuthorizationStopSerializer,
+                                                                                                                                                                                                        CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnAuthorizationStopHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpResponse);
+            CPOClientAPI.OnAuthorizationStopHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeStopHTTPResponse",    httpResponse);
 
             #endregion
 
 
-            #region OnPushEVSEData
+            #region OnChargingNotifications
 
-            CPOClientAPI.OnChargingNotificationHTTPRequest      += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnChargingNotificationHTTPRequest",        httpRequest);
+            CPOClientAPI.OnChargingNotificationHTTPRequest      += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnChargingNotificationHTTPRequest",        httpRequest);
 
 
-            CPOClientAPI.OnChargingStartNotificationRequest     += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnChargingStartNotificationRequest",       request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
+            CPOClientAPI.OnChargingStartNotificationRequest     += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnChargingStartNotificationRequest",       request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
+                                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                             ));
+
+            CPOClientAPI.OnChargingStartNotificationResponse    += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnChargingStartNotificationResponse",      response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
+                                                                                                                                                                                                                                 //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                                 ),
+                                                                                                                                                                                              response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                        CPOClientAPI.CustomStatusCodeSerializer)));
+
+
+            CPOClientAPI.OnChargingProgressNotificationRequest  += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnChargingProgressNotificationRequest",    request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
                                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
                                                                                                                                                                                                       ));
 
-            CPOClientAPI.OnChargingStartNotificationResponse    += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnChargingStartNotificationResponse",      response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
-                                                                                                                                                                                                                                          //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                          ),
-                                                                                                                                                                                                       response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                                 CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnChargingProgressNotificationResponse += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnChargingProgressNotificationResponse",   response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
+                                                                                                                                                                                                                                 //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                                 ),
+                                                                                                                                                                                              response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                        CPOClientAPI.CustomStatusCodeSerializer)));
 
 
-            CPOClientAPI.OnChargingProgressNotificationRequest  += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnChargingProgressNotificationRequest",    request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
+            CPOClientAPI.OnChargingEndNotificationRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnChargingEndNotificationRequest",         request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
                                                                                                                                                                                                       //CPOServerAPI.CustomIdentificationSerializer
                                                                                                                                                                                                       ));
 
-            CPOClientAPI.OnChargingProgressNotificationResponse += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnChargingProgressNotificationResponse",   response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
-                                                                                                                                                                                                                                          //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                          ),
-                                                                                                                                                                                                       response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                                 CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnChargingEndNotificationResponse      += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnChargingEndNotificationResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
+                                                                                                                                                                                                                                 //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                                 ),
+                                                                                                                                                                                              response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                        CPOClientAPI.CustomStatusCodeSerializer)));
 
 
-            CPOClientAPI.OnChargingEndNotificationRequest       += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnChargingEndNotificationRequest",         request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
-                                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                      ));
+            CPOClientAPI.OnChargingErrorNotificationRequest  += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnChargingErrorNotificationRequest",          request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
+                                                                                                                                                                                                             //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                             ));
 
-            CPOClientAPI.OnChargingEndNotificationResponse      += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnChargingEndNotificationResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
-                                                                                                                                                                                                                                          //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                          ),
-                                                                                                                                                                                                       response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                                 CPOClientAPI.CustomStatusCodeSerializer)));
-
-
-            CPOClientAPI.OnChargingErrorNotificationRequest  += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnChargingErrorNotificationRequest",          request.ToJSON(//CPOServerAPI.CustomPushEVSEDataRequestSerializer,
-                                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                      ));
-
-            CPOClientAPI.OnChargingErrorNotificationResponse += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnChargingErrorNotificationResponse",         response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
-                                                                                                                                                                                                                                          //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                          ),
-                                                                                                                                                                                                       response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                                 CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnChargingErrorNotificationResponse += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnChargingErrorNotificationResponse",         response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomPushEVSEDataRequestSerializer
+                                                                                                                                                                                                                                 //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                                 ),
+                                                                                                                                                                                              response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                        CPOClientAPI.CustomStatusCodeSerializer)));
 
 
-            CPOClientAPI.OnChargingNotificationHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnChargingNotificationHTTPResponse",          httpResponse);
+            CPOClientAPI.OnChargingNotificationHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnChargingNotificationHTTPResponse",          httpResponse);
 
             #endregion
 
 
             #region OnChargeDetailRecord
 
-            CPOClientAPI.OnChargeDetailRecordHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPRequest",    httpRequest);
+            CPOClientAPI.OnChargeDetailRecordHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPRequest",    httpRequest);
 
-            CPOClientAPI.OnChargeDetailRecordRequest       += (timestamp, cpoClientAPI, request)              => DebugLog.SubmitEvent("OnChargeDetailRecordRequest",        request.ToJSON(//CPOServerAPI.CustomChargeDetailRecordRequestSerializer,
-                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                           ));
+            CPOClientAPI.OnChargeDetailRecordRequest       += (timestamp, cpoClientAPI, request)                     => DebugLog.SubmitEvent("OnChargeDetailRecordRequest",        request.ToJSON(//CPOServerAPI.CustomChargeDetailRecordRequestSerializer,
+                                                                                                                                                                                                  //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                  ));
 
-            CPOClientAPI.OnChargeDetailRecordResponse      += (timestamp, cpoClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnChargeDetailRecordResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomChargeDetailRecordRequestSerializer
-                                                                                                                                                                                                                               //CPOClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                               ),
-                                                                                                                                                                                            response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                      CPOClientAPI.CustomStatusCodeSerializer)));
+            CPOClientAPI.OnChargeDetailRecordResponse      += (timestamp, cpoClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnChargeDetailRecordResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CPOClientAPI.CustomChargeDetailRecordRequestSerializer
+                                                                                                                                                                                                                      //CPOClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                      ),
+                                                                                                                                                                                   response.Response?.ToJSON(CPOClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                             CPOClientAPI.CustomStatusCodeSerializer)));
 
-            CPOClientAPI.OnChargeDetailRecordHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPResponse",   httpResponse);
+            CPOClientAPI.OnChargeDetailRecordHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnChargeDetailRecordHTTPResponse",   httpResponse);
 
             #endregion
 
