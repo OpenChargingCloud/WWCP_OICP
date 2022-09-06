@@ -154,7 +154,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public new HTTPPath                URLPathPrefix     { get; }
 
         /// <summary>
-        /// CPO Client API counters.
+        /// The attached HTTP logger.
+        /// </summary>
+        public new HTTP_Logger             HTTPLogger
+#pragma warning disable CS8603 // Possible null reference return.
+            => base.HTTPLogger as HTTP_Logger;
+#pragma warning restore CS8603 // Possible null reference return.
+
+        /// <summary>
+        /// The attached Client API logger.
+        /// </summary>
+        public EMPClientAPILogger?         Logger            { get; }
+
+        /// <summary>
+        /// EMP Client API counters.
         /// </summary>
         public APICounters                 Counters          { get; }
 
@@ -1301,27 +1314,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region EMPClientAPI(HTTPAPI, ...)
 
-        public EMPClientAPI(HTTPAPI    HTTPAPI,
-                            HTTPPath?  URLPathPrefix    = null,
+        public EMPClientAPI(HTTPAPI                  HTTPAPI,
+                            HTTPPath?                URLPathPrefix    = null,
 
-                            String     LoggingPath      = DefaultHTTPAPI_LoggingPath,
-                            String     LoggingContext   = DefaultLoggingContext,
-                            String     LogfileName      = DefaultHTTPAPI_LogfileName)
+                            String                   LoggingPath      = DefaultHTTPAPI_LoggingPath,
+                            String                   LoggingContext   = DefaultLoggingContext,
+                            LogfileCreatorDelegate?  LogfileCreator   = null)
 
             : base(HTTPAPI)
 
         {
 
-            this.URLPathPrefix  = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
+            this.URLPathPrefix   = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
 
-            this.Counters       = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.HTTPLogger     = DisableLogging == false
-                                      ? new Logger(this,
-                                                   LoggingPath,
-                                                   LoggingContext ?? DefaultLoggingContext,
-                                                   LogfileCreator)
-                                      : null;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
+                                                         LoggingPath,
+                                                         LoggingContext ?? DefaultLoggingContext,
+                                                         LogfileCreator)
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new EMPClientAPILogger(this,
+                                                                LoggingPath,
+                                                                LoggingContext ?? DefaultLoggingContext,
+                                                                LogfileCreator)
+                                       : null;
 
             RegisterURLTemplates(false);
 
@@ -1353,9 +1375,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="ServerThreadPriority">The optional priority of the TCP server thread.</param>
         /// <param name="ServerThreadIsBackground">Whether the TCP server thread is a background thread or not.</param>
         /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
-        /// <param name="ConnectionThreadsNameBuilder">An optional delegate to set the name of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsPriorityBuilder">An optional delegate to set the priority of the TCP connection threads.</param>
-        /// <param name="ConnectionThreadsAreBackground">Whether the TCP connection threads are background threads or not (default: yes).</param>
         /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
         /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
         /// 
@@ -1397,9 +1416,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             ThreadPriority?                       ServerThreadPriority               = null,
                             Boolean?                              ServerThreadIsBackground           = null,
                             ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
-                            //ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
-                            //ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
-                            //Boolean?                              ConnectionThreadsAreBackground     = null,
                             TimeSpan?                             ConnectionTimeout                  = null,
                             UInt32?                               MaxClientConnections               = null,
 
@@ -1443,9 +1459,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    ServerThreadPriority,
                    ServerThreadIsBackground,
                    ConnectionIdBuilder,
-                   //ConnectionThreadsNameBuilder,
-                   //ConnectionThreadsPriorityBuilder,
-                   //ConnectionThreadsAreBackground,
                    ConnectionTimeout,
                    MaxClientConnections,
 
@@ -1468,16 +1481,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.URLPathPrefix  = base.URLPathPrefix;
+            this.URLPathPrefix   =  base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
 
-            this.Counters       = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.HTTPLogger     = DisableLogging == false
-                                      ? new Logger(this,
-                                                   LoggingPath,
-                                                   LoggingContext ?? DefaultLoggingContext,
-                                                   LogfileCreator)
-                                      : null;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
+                                                         LoggingPath,
+                                                         LoggingContext ?? DefaultLoggingContext,
+                                                         LogfileCreator)
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new EMPClientAPILogger(this,
+                                                                LoggingPath,
+                                                                LoggingContext ?? DefaultLoggingContext,
+                                                                LogfileCreator)
+                                       : null;
 
             RegisterURLTemplates(RegisterRootService);
 
@@ -1689,6 +1711,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEDataRequest,
                                                                                               pullEVSEDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1940,6 +1963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEStatusAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEStatusRequest,
                                                                                               pullEVSEStatusResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2186,6 +2210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEStatusByIdAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEStatusByIdRequest,
                                                                                               pullEVSEStatusByIdResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2431,6 +2456,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEStatusByOperatorIdAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEStatusByOperatorIdRequest,
                                                                                               pullEVSEStatusByOperatorIdResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2569,7 +2595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (PullPricingProductDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                                  providerId,
-                                                                                                 out PullPricingProductDataRequest?          pullEVSEDataRequest,
+                                                                                                 out PullPricingProductDataRequest?          pullPricingProductDataRequest,
                                                                                                  out String?                                 errorResponse,
                                                                                                  ProcessId:                                  processId,
                                                                                                  Page:                                       page,
@@ -2596,7 +2622,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullPricingProductDataAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              pullPricingProductDataRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -2619,7 +2645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                 Cast<OnPullPricingProductDataAPIDelegate>().
                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                               this,
-                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                              pullPricingProductDataRequest!))))?.FirstOrDefault();
 
                                                              Counters.PullPricingProductData.IncResponses_OK();
 
@@ -2637,7 +2663,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                       processId,
                                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                                       Array.Empty<PricingProductData>(),
-                                                                                                      pullEVSEDataRequest,
+                                                                                                      pullPricingProductDataRequest,
                                                                                                       StatusCode: new StatusCode(
                                                                                                                       StatusCodes.DataError,
                                                                                                                       e.Message,
@@ -2662,7 +2688,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                   processId,
                                                                                                   Timestamp.Now - Request.Timestamp,
                                                                                                   Array.Empty<PricingProductData>(),
-                                                                                                  pullEVSEDataRequest,
+                                                                                                  pullPricingProductDataRequest,
                                                                                                   StatusCode: new StatusCode(
                                                                                                                   StatusCodes.SystemError,
                                                                                                                   "Could not process the received PullPricingProductData request!"
@@ -2684,6 +2710,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullPricingProductDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullPricingProductDataRequest,
                                                                                               pullPricingProductDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2710,7 +2737,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                               processId,
                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                               Array.Empty<PricingProductData>(),
-                                                                                              pullEVSEDataRequest,
+                                                                                              pullPricingProductDataRequest,
                                                                                               StatusCode: new StatusCode(
                                                                                                               StatusCodes.DataError,
                                                                                                               "We could not parse the given PullPricingProductData request!",
@@ -2821,7 +2848,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (PullEVSEPricingRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                           //     providerId ????
-                                                                                          out PullEVSEPricingRequest?          pullEVSEDataRequest,
+                                                                                          out PullEVSEPricingRequest?          pullEVSEPricingRequest,
                                                                                           out String?                          errorResponse,
                                                                                           ProcessId:                           processId,
                                                                                           Page:                                page,
@@ -2848,7 +2875,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEPricingAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              pullEVSEPricingRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -2871,7 +2898,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                   Cast<OnPullEVSEPricingAPIDelegate>().
                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                 this,
-                                                                                                                                                pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                pullEVSEPricingRequest!))))?.FirstOrDefault();
 
                                                              Counters.PullEVSEPricing.IncResponses_OK();
 
@@ -2889,7 +2916,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                processId,
                                                                                                Timestamp.Now - Request.Timestamp,
                                                                                                Array.Empty<OperatorEVSEPricing>(),
-                                                                                               pullEVSEDataRequest,
+                                                                                               pullEVSEPricingRequest,
                                                                                                StatusCode: new StatusCode(
                                                                                                                StatusCodes.DataError,
                                                                                                                e.Message,
@@ -2914,7 +2941,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            processId,
                                                                                            Timestamp.Now - Request.Timestamp,
                                                                                            Array.Empty<OperatorEVSEPricing>(),
-                                                                                           pullEVSEDataRequest,
+                                                                                           pullEVSEPricingRequest,
                                                                                            StatusCode: new StatusCode(
                                                                                                            StatusCodes.SystemError,
                                                                                                            "Could not process the received PullEVSEPricing request!"
@@ -2936,6 +2963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEPricingAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pullEVSEPricingRequest,
                                                                                               pullEVSEPricingResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2962,7 +2990,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        processId,
                                                                                        Timestamp.Now - Request.Timestamp,
                                                                                        Array.Empty<OperatorEVSEPricing>(),
-                                                                                       pullEVSEDataRequest,
+                                                                                       pullEVSEPricingRequest,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.DataError,
                                                                                                        "We could not parse the given PullEVSEPricing request!",
@@ -3070,7 +3098,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (PushAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                                  //     providerId ????
-                                                                                                 out PushAuthenticationDataRequest?          pullEVSEDataRequest,
+                                                                                                 out PushAuthenticationDataRequest?          pushAuthenticationDataRequest,
                                                                                                  out String?                                 errorResponse,
 
                                                                                                  Timestamp:                                  Request.Timestamp,
@@ -3093,7 +3121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPushAuthenticationDataAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              pushAuthenticationDataRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -3116,7 +3144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                 Cast<OnPushAuthenticationDataAPIDelegate>().
                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                               this,
-                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                              pushAuthenticationDataRequest!))))?.FirstOrDefault();
 
                                                              Counters.PushAuthenticationData.IncResponses_OK();
 
@@ -3175,6 +3203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPushAuthenticationDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              pushAuthenticationDataRequest,
                                                                                               pushAuthenticationDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3304,7 +3333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                                           providerId,
-                                                                                                          out AuthorizeRemoteReservationStartRequest?          pullEVSEDataRequest,
+                                                                                                          out AuthorizeRemoteReservationStartRequest?          authorizeRemoteReservationStartRequest,
                                                                                                           out String?                                          errorResponse,
                                                                                                           ProcessId:                                           processId,
 
@@ -3328,7 +3357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteReservationStartAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              authorizeRemoteReservationStartRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -3351,7 +3380,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                                   Cast<OnAuthorizeRemoteReservationStartAPIDelegate>().
                                                                                                                                                                   Select(e => e(Timestamp.Now,
                                                                                                                                                                                 this,
-                                                                                                                                                                                pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                                                authorizeRemoteReservationStartRequest!))))?.FirstOrDefault();
 
                                                              Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
 
@@ -3412,6 +3441,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteReservationStartAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteReservationStartRequest,
                                                                                               authorizeRemoteReservationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3540,7 +3570,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                                          providerId,
-                                                                                                         out AuthorizeRemoteReservationStopRequest?          pullEVSEDataRequest,
+                                                                                                         out AuthorizeRemoteReservationStopRequest?          authorizeRemoteReservationStopRequest,
                                                                                                          out String?                                         errorResponse,
                                                                                                          ProcessId:                                          processId,
 
@@ -3564,7 +3594,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteReservationStopAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              authorizeRemoteReservationStopRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -3587,7 +3617,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                                 Cast<OnAuthorizeRemoteReservationStopAPIDelegate>().
                                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                                               this,
-                                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                                              authorizeRemoteReservationStopRequest!))))?.FirstOrDefault();
 
                                                              Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
 
@@ -3648,6 +3678,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteReservationStopAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteReservationStopRequest,
                                                                                               authorizeRemoteReservationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3776,7 +3807,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (AuthorizeRemoteStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                                providerId,
-                                                                                               out AuthorizeRemoteStartRequest?          pullEVSEDataRequest,
+                                                                                               out AuthorizeRemoteStartRequest?          authorizeRemoteStartRequest,
                                                                                                out String?                               errorResponse,
                                                                                                ProcessId:                                processId,
 
@@ -3800,7 +3831,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteStartAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              authorizeRemoteStartRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -3823,7 +3854,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                             Cast<OnAuthorizeRemoteStartAPIDelegate>().
                                                                                                                                             Select(e => e(Timestamp.Now,
                                                                                                                                                           this,
-                                                                                                                                                          pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                          authorizeRemoteStartRequest!))))?.FirstOrDefault();
 
                                                              Counters.AuthorizeRemoteStart.IncResponses_OK();
 
@@ -3884,6 +3915,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteStartAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteStartRequest,
                                                                                               authorizeRemoteStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -4012,7 +4044,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (AuthorizeRemoteStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                               providerId,
-                                                                                              out AuthorizeRemoteStopRequest?          pullEVSEDataRequest,
+                                                                                              out AuthorizeRemoteStopRequest?          authorizeRemoteStopRequest,
                                                                                               out String?                              errorResponse,
                                                                                               ProcessId:                               processId,
 
@@ -4036,7 +4068,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteStopAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              authorizeRemoteStopRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -4059,7 +4091,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                           Cast<OnAuthorizeRemoteStopAPIDelegate>().
                                                                                                                                           Select(e => e(Timestamp.Now,
                                                                                                                                                         this,
-                                                                                                                                                        pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                        authorizeRemoteStopRequest!))))?.FirstOrDefault();
 
                                                              Counters.AuthorizeRemoteStop.IncResponses_OK();
 
@@ -4120,6 +4152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteStopAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              authorizeRemoteStopRequest,
                                                                                               authorizeRemoteStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -4253,7 +4286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                                  else if (GetChargeDetailRecordsRequest.TryParse(Request.HTTPBody.ToUTF8String(),
                                                                                                  //     providerId ????
-                                                                                                 out GetChargeDetailRecordsRequest?          pullEVSEDataRequest,
+                                                                                                 out GetChargeDetailRecordsRequest?          getChargeDetailRecordsRequest,
                                                                                                  out String?                                 errorResponse,
                                                                                                  ProcessId:                                  processId,
                                                                                                  Page:                                       page,
@@ -4280,7 +4313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnGetChargeDetailRecordsAPIRequestDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest!))).
+                                                                                              getChargeDetailRecordsRequest!))).
                                                                                 ConfigureAwait(false);
 
                                                      }
@@ -4303,7 +4336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                                                 Cast<OnGetChargeDetailRecordsAPIDelegate>().
                                                                                                                                                 Select(e => e(Timestamp.Now,
                                                                                                                                                               this,
-                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                                                                                                                              getChargeDetailRecordsRequest!))))?.FirstOrDefault();
 
                                                              Counters.GetChargeDetailRecords.IncResponses_OK();
 
@@ -4321,7 +4354,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                       processId,
                                                                                                       Timestamp.Now - Request.Timestamp,
                                                                                                       Array.Empty<ChargeDetailRecord>(),
-                                                                                                      pullEVSEDataRequest,
+                                                                                                      getChargeDetailRecordsRequest,
                                                                                                       StatusCode: new StatusCode(
                                                                                                                       StatusCodes.DataError,
                                                                                                                       e.Message,
@@ -4346,7 +4379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                   processId,
                                                                                                   Timestamp.Now - Request.Timestamp,
                                                                                                   Array.Empty<ChargeDetailRecord>(),
-                                                                                                  pullEVSEDataRequest,
+                                                                                                  getChargeDetailRecordsRequest,
                                                                                                   StatusCode: new StatusCode(
                                                                                                                   StatusCodes.SystemError,
                                                                                                                   "Could not process the received GetChargeDetailRecords request!"
@@ -4368,6 +4401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnGetChargeDetailRecordsAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
+                                                                                              getChargeDetailRecordsRequest,
                                                                                               getChargeDetailRecordsResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -4394,7 +4428,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                               processId,
                                                                                               Timestamp.Now - Request.Timestamp,
                                                                                               Array.Empty<ChargeDetailRecord>(),
-                                                                                              pullEVSEDataRequest,
+                                                                                              getChargeDetailRecordsRequest,
                                                                                               StatusCode: new StatusCode(
                                                                                                               StatusCodes.DataError,
                                                                                                               "We could not parse the given GetChargeDetailRecords request!",

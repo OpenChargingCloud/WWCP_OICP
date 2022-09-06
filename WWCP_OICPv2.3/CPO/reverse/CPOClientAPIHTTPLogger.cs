@@ -62,7 +62,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <summary>
             /// Create a new CPO Client API HTTP logger using the default logging delegates.
             /// </summary>
-            /// <param name="CPOClientAPI">An CPO Client API.</param>
+            /// <param name="CPOClientAPI">The CPO Client API.</param>
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>

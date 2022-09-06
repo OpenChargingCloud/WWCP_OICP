@@ -848,241 +848,241 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
 
             #region OnPullEVSEData
 
-            EMPClientAPI.OnPullEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEDataHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEDataHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnPullEVSEDataRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnPullEVSEDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEDataRequestSerializer,
-                                                                                                                                                                               //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                               ));
+            EMPClientAPI.OnPullEVSEDataRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEDataRequestSerializer,
+                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                      ));
 
-            EMPClientAPI.OnPullEVSEDataResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPullEVSEDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//EMPClientAPI.CustomPullEVSEDataRequestSerializer
-                                                                                                                                                                                                                   //EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                   ),
-                                                                                                                                                                                response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEDataResponseSerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomEVSEDataRecordSerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomAddressSerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomChargingFacilitySerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomGeoCoordinatesSerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomEnergySourceSerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomEnvironmentalImpactSerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomOpeningTimesSerializer,
-                                                                                                                                                                                                          EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnPullEVSEDataResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPullEVSEDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//EMPClientAPI.CustomPullEVSEDataRequestSerializer
+                                                                                                                                                                                                          //EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                          ),
+                                                                                                                                                                       response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEDataResponseSerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomEVSEDataRecordSerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomAddressSerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomChargingFacilitySerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomGeoCoordinatesSerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomEnergySourceSerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomEnvironmentalImpactSerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomOpeningTimesSerializer,
+                                                                                                                                                                                                 EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEDataHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPullEVSEStatus
 
-            EMPClientAPI.OnPullEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEStatusHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnPullEVSEStatusRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnPullEVSEStatusRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusRequestSerializer,
-                                                                                                                                                                               //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                               ));
+            EMPClientAPI.OnPullEVSEStatusRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEStatusRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusRequestSerializer,
+                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                      ));
 
-            EMPClientAPI.OnPullEVSEStatusResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPullEVSEStatusResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEStatusRequestSerializer
-                                                                                                                                                                                                                       //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                       ),
-                                                                                                                                                                                    response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEStatusResponseSerializer,
-                                                                                                                                                                                                              EMPClientAPI.CustomOperatorEVSEStatusSerializer,
-                                                                                                                                                                                                              EMPClientAPI.CustomEVSEStatusRecordSerializer,
-                                                                                                                                                                                                              EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnPullEVSEStatusResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPullEVSEStatusResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEStatusRequestSerializer
+                                                                                                                                                                                                              //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                              ),
+                                                                                                                                                                           response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEStatusResponseSerializer,
+                                                                                                                                                                                                     EMPClientAPI.CustomOperatorEVSEStatusSerializer,
+                                                                                                                                                                                                     EMPClientAPI.CustomEVSEStatusRecordSerializer,
+                                                                                                                                                                                                     EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEStatusHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEStatusHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPullEVSEStatusById
 
-            EMPClientAPI.OnPullEVSEStatusByIdHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEStatusByIdHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnPullEVSEStatusByIdRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnPullEVSEStatusByIdRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusByIdRequestSerializer,
-                                                                                                                                                                               //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                               ));
+            EMPClientAPI.OnPullEVSEStatusByIdRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEStatusByIdRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusByIdRequestSerializer,
+                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                      ));
 
-            EMPClientAPI.OnPullEVSEStatusByIdResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPullEVSEStatusByIdResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEStatusByIdRequestSerializer
-                                                                                                                                                                                                                               //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                               ),
-                                                                                                                                                                                            response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEStatusByIdResponseSerializer,
-                                                                                                                                                                                                                      EMPClientAPI.CustomEVSEStatusRecordSerializer)));
+            EMPClientAPI.OnPullEVSEStatusByIdResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPullEVSEStatusByIdResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEStatusByIdRequestSerializer
+                                                                                                                                                                                                                      //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                      ),
+                                                                                                                                                                                   response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEStatusByIdResponseSerializer,
+                                                                                                                                                                                                             EMPClientAPI.CustomEVSEStatusRecordSerializer)));
 
-            EMPClientAPI.OnPullEVSEStatusByIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEStatusByIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEStatusByIdHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPullEVSEStatusByOperatorId
 
-            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnPullEVSEStatusByOperatorIdRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusByOperatorIdRequestSerializer,
-                                                                                                                                                                                                           //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                           ));
+            EMPClientAPI.OnPullEVSEStatusByOperatorIdRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEStatusByOperatorIdRequestSerializer,
+                                                                                                                                                                                                                  //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                  ));
 
-            EMPClientAPI.OnPullEVSEStatusByOperatorIdResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEStatusByOperatorIdRequestSerializer
-                                                                                                                                                                                                                                               //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                               ),
-                                                                                                                                                                                                            response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEStatusByOperatorIdResponseSerializer,
-                                                                                                                                                                                                                                      EMPClientAPI.CustomOperatorEVSEStatusSerializer,
-                                                                                                                                                                                                                                      EMPClientAPI.CustomEVSEStatusRecordSerializer,
-                                                                                                                                                                                                                                      EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnPullEVSEStatusByOperatorIdResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEStatusByOperatorIdRequestSerializer
+                                                                                                                                                                                                                                      //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                                      ),
+                                                                                                                                                                                                   response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEStatusByOperatorIdResponseSerializer,
+                                                                                                                                                                                                                             EMPClientAPI.CustomOperatorEVSEStatusSerializer,
+                                                                                                                                                                                                                             EMPClientAPI.CustomEVSEStatusRecordSerializer,
+                                                                                                                                                                                                                             EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEStatusByOperatorIdHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEStatusByOperatorIdHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnPullPricingProductData
 
-            EMPClientAPI.OnPullPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullPricingProductDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnPullPricingProductDataRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnPullPricingProductDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullPricingProductDataRequestSerializer,
-                                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                   ));
+            EMPClientAPI.OnPullPricingProductDataRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullPricingProductDataRequest",        request.ToJSON(//CPOServerAPI.CustomPullPricingProductDataRequestSerializer,
+                                                                                                                                                                                                          //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                          ));
 
-            EMPClientAPI.OnPullPricingProductDataResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPullPricingProductDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullPricingProductDataRequestSerializer
-                                                                                                                                                                                                                                       //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                       ),
-                                                                                                                                                                                                    response.Response?.ToJSON(EMPClientAPI.CustomPullPricingProductDataResponseSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomPricingProductDataSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomPricingProductDataRecordSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnPullPricingProductDataResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPullPricingProductDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullPricingProductDataRequestSerializer
+                                                                                                                                                                                                                              //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                              ),
+                                                                                                                                                                                           response.Response?.ToJSON(EMPClientAPI.CustomPullPricingProductDataResponseSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomPricingProductDataSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomPricingProductDataRecordSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullPricingProductDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullPricingProductDataHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnPullEVSEPricing
 
-            EMPClientAPI.OnPullEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPullEVSEPricingHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnPullEVSEPricingRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnPullEVSEPricingRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEPricingRequestSerializer,
-                                                                                                                                                                                     //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                     ));
+            EMPClientAPI.OnPullEVSEPricingRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPullEVSEPricingRequest",        request.ToJSON(//CPOServerAPI.CustomPullEVSEPricingRequestSerializer,
+                                                                                                                                                                                            //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                            ));
 
-            EMPClientAPI.OnPullEVSEPricingResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPullEVSEPricingResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEPricingRequestSerializer
-                                                                                                                                                                                                                         //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                         ),
-                                                                                                                                                                                      response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEPricingResponseSerializer,
-                                                                                                                                                                                                                EMPClientAPI.CustomOperatorEVSEPricingSerializer,
-                                                                                                                                                                                                                EMPClientAPI.CustomEVSEPricingSerializer,
-                                                                                                                                                                                                                EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnPullEVSEPricingResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPullEVSEPricingResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPullEVSEPricingRequestSerializer
+                                                                                                                                                                                                                //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                ),
+                                                                                                                                                                             response.Response?.ToJSON(EMPClientAPI.CustomPullEVSEPricingResponseSerializer,
+                                                                                                                                                                                                       EMPClientAPI.CustomOperatorEVSEPricingSerializer,
+                                                                                                                                                                                                       EMPClientAPI.CustomEVSEPricingSerializer,
+                                                                                                                                                                                                       EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPullEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPullEVSEPricingHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPullEVSEPricingHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnPushAuthenticationData
 
-            EMPClientAPI.OnPushAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPRequest",    httpRequest);
+            EMPClientAPI.OnPushAuthenticationDataHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnPushAuthenticationDataRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnPushAuthenticationDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushAuthenticationDataRequestSerializer,
-                                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                   ));
+            EMPClientAPI.OnPushAuthenticationDataRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnPushAuthenticationDataRequest",        request.ToJSON(//CPOServerAPI.CustomPushAuthenticationDataRequestSerializer,
+                                                                                                                                                                                                          //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                          ));
 
-            EMPClientAPI.OnPushAuthenticationDataResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnPushAuthenticationDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPushAuthenticationDataRequestSerializer
-                                                                                                                                                                                                                                       //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                       ),
-                                                                                                                                                                                                    response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnPushAuthenticationDataResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnPushAuthenticationDataResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomPushAuthenticationDataRequestSerializer
+                                                                                                                                                                                                                              //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                              ),
+                                                                                                                                                                                           response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnPushAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpResponse);
+            EMPClientAPI.OnPushAuthenticationDataHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnPushAuthenticationDataHTTPResponse",   httpResponse);
 
             #endregion
 
 
             #region OnAuthorizeRemoteReservationStart
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPRequest",    httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStartRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteReservationStartRequestSerializer,
-                                                                                                                                                                                                                     //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                     ));
+            EMPClientAPI.OnAuthorizeRemoteReservationStartRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteReservationStartRequestSerializer,
+                                                                                                                                                                                                                            //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                            ));
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStartResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteReservationStartRequestSerializer
-                                                                                                                                                                                                                                                         //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                                         ),
-                                                                                                                                                                                                                      response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                                                EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnAuthorizeRemoteReservationStartResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteReservationStartRequestSerializer
+                                                                                                                                                                                                                                                //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                                                ),
+                                                                                                                                                                                                             response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                                       EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteReservationStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStartHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnAuthorizeRemoteReservationStop
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPRequest    += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPRequest",     httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPRequest    += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPRequest",     httpRequest);
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStopRequest        += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteReservationStopRequestSerializer,
-                                                                                                                                                                                                                     //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                     ));
+            EMPClientAPI.OnAuthorizeRemoteReservationStopRequest        += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteReservationStopRequestSerializer,
+                                                                                                                                                                                                                            //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                            ));
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStopResponse       += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteReservationStopRequestSerializer
-                                                                                                                                                                                                                                                         //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                                         ),
-                                                                                                                                                                                                                      response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                                                EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnAuthorizeRemoteReservationStopResponse       += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteReservationStopRequestSerializer
+                                                                                                                                                                                                                                                //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                                                ),
+                                                                                                                                                                                                             response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                                       EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",    httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteReservationStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteReservationStopHTTPResponse",    httpResponse);
 
             #endregion
 
             #region OnAuthorizeRemoteStart
 
-            EMPClientAPI.OnAuthorizeRemoteStartHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPRequest",    httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteStartHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnAuthorizeRemoteStartRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnAuthorizeRemoteStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteStartRequestSerializer,
-                                                                                                                                                                                               //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                               ));
+            EMPClientAPI.OnAuthorizeRemoteStartRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteStartRequest",        request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteStartRequestSerializer,
+                                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                      ));
 
-            EMPClientAPI.OnAuthorizeRemoteStartResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnAuthorizeRemoteStartResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteStartRequestSerializer
-                                                                                                                                                                                                                                   //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                   ),
-                                                                                                                                                                                                response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                          EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnAuthorizeRemoteStartResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnAuthorizeRemoteStartResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteStartRequestSerializer
+                                                                                                                                                                                                                          //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                          ),
+                                                                                                                                                                                       response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                 EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteStartHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteStartHTTPResponse",   httpResponse);
 
             #endregion
 
             #region OnAuthorizeRemoteStop
 
-            EMPClientAPI.OnAuthorizeRemoteStopHTTPRequest    += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPRequest",     httpRequest);
+            EMPClientAPI.OnAuthorizeRemoteStopHTTPRequest    += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPRequest",     httpRequest);
 
-            EMPClientAPI.OnAuthorizeRemoteStopRequest        += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnAuthorizeRemoteStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteStopRequestSerializer,
-                                                                                                                                                                                               //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                               ));
+            EMPClientAPI.OnAuthorizeRemoteStopRequest        += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnAuthorizeRemoteStopRequest",         request.ToJSON(//CPOServerAPI.CustomAuthorizeRemoteStopRequestSerializer,
+                                                                                                                                                                                                      //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                      ));
 
-            EMPClientAPI.OnAuthorizeRemoteStopResponse       += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnAuthorizeRemoteStopResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteStopRequestSerializer
-                                                                                                                                                                                                                                   //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                   ),
-                                                                                                                                                                                                response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
-                                                                                                                                                                                                                          EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnAuthorizeRemoteStopResponse       += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnAuthorizeRemoteStopResponse",        response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomAuthorizeRemoteStopRequestSerializer
+                                                                                                                                                                                                                          //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                          ),
+                                                                                                                                                                                       response.Response?.ToJSON(EMPClientAPI.CustomAcknowledgementSerializer,
+                                                                                                                                                                                                                 EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnAuthorizeRemoteStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",    httpResponse);
+            EMPClientAPI.OnAuthorizeRemoteStopHTTPResponse   += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnAuthorizeRemoteStopHTTPResponse",    httpResponse);
 
             #endregion
 
 
             #region OnGetChargeDetailRecords
 
-            EMPClientAPI.OnGetChargeDetailRecordsHTTPRequest   += (timestamp, httpAPI, httpRequest)               => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPRequest",    httpRequest);
+            EMPClientAPI.OnGetChargeDetailRecordsHTTPRequest   += (timestamp, httpAPI, httpRequest)                      => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPRequest",    httpRequest);
 
-            EMPClientAPI.OnGetChargeDetailRecordsRequest       += (timestamp, empClientAPI, request)              => DebugLog.SubmitEvent("OnGetChargeDetailRecordsRequest",        request.ToJSON(//CPOServerAPI.CustomGetChargeDetailRecordsRequestSerializer,
-                                                                                                                                                                                                   //CPOServerAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                   ));
+            EMPClientAPI.OnGetChargeDetailRecordsRequest       += (timestamp, empClientAPI, request)                     => DebugLog.SubmitEvent("OnGetChargeDetailRecordsRequest",        request.ToJSON(//CPOServerAPI.CustomGetChargeDetailRecordsRequestSerializer,
+                                                                                                                                                                                                          //CPOServerAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                          ));
 
-            EMPClientAPI.OnGetChargeDetailRecordsResponse      += (timestamp, empClientAPI, response, runtime)    => DebugLog.SubmitEvent("OnGetChargeDetailRecordsResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomGetChargeDetailRecordsRequestSerializer
-                                                                                                                                                                                                                                       //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
-                                                                                                                                                                                                                                       ),
-                                                                                                                                                                                                    response.Response?.ToJSON(EMPClientAPI.CustomGetChargeDetailRecordsResponseSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomIPagedResponseSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomChargeDetailRecordSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomIdentificationSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomSignedMeteringValueSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomCalibrationLawVerificationSerializer,
-                                                                                                                                                                                                                              EMPClientAPI.CustomStatusCodeSerializer)));
+            EMPClientAPI.OnGetChargeDetailRecordsResponse      += (timestamp, empClientAPI, request, response, runtime)  => DebugLog.SubmitEvent("OnGetChargeDetailRecordsResponse",       response.ToJSON(response.Response?.Request?.ToJSON(//CentralServiceAPI.EMPClientAPI.CustomGetChargeDetailRecordsRequestSerializer
+                                                                                                                                                                                                                              //CentralServiceAPI.EMPClientAPI.CustomIdentificationSerializer
+                                                                                                                                                                                                                              ),
+                                                                                                                                                                                           response.Response?.ToJSON(EMPClientAPI.CustomGetChargeDetailRecordsResponseSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomIPagedResponseSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomChargeDetailRecordSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomIdentificationSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomSignedMeteringValueSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomCalibrationLawVerificationSerializer,
+                                                                                                                                                                                                                     EMPClientAPI.CustomStatusCodeSerializer)));
 
-            EMPClientAPI.OnGetChargeDetailRecordsHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse) => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpResponse);
+            EMPClientAPI.OnGetChargeDetailRecordsHTTPResponse  += (timestamp, httpAPI, httpRequest, httpResponse)        => DebugLog.SubmitEvent("OnGetChargeDetailRecordsHTTPResponse",   httpResponse);
 
             #endregion
 

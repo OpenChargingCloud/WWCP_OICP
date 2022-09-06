@@ -50,6 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnPullEVSEDataAPIResponseDelegate(DateTime                            Timestamp,
                                           EMPClientAPI                        Sender,
+                                          PullEVSEDataRequest                 Request,
                                           OICPResult<PullEVSEDataResponse>    Response,
                                           TimeSpan                            Runtime);
 
@@ -87,6 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnPullEVSEStatusAPIResponseDelegate(DateTime                              Timestamp,
                                             EMPClientAPI                          Sender,
+                                            PullEVSEStatusRequest                 Request,
                                             OICPResult<PullEVSEStatusResponse>    Response,
                                             TimeSpan                              Runtime);
 
@@ -124,6 +126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnPullEVSEStatusByIdAPIResponseDelegate(DateTime                                  Timestamp,
                                                 EMPClientAPI                              Sender,
+                                                PullEVSEStatusByIdRequest                 Request,
                                                 OICPResult<PullEVSEStatusByIdResponse>    Response,
                                                 TimeSpan                                  Runtime);
 
@@ -161,6 +164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnPullEVSEStatusByOperatorIdAPIResponseDelegate(DateTime                                          Timestamp,
                                                         EMPClientAPI                                      Sender,
+                                                        PullEVSEStatusByOperatorIdRequest                 Request,
                                                         OICPResult<PullEVSEStatusByOperatorIdResponse>    Response,
                                                         TimeSpan                                          Runtime);
 
@@ -199,6 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnPullPricingProductDataAPIResponseDelegate(DateTime                                      Timestamp,
                                                     EMPClientAPI                                  Sender,
+                                                    PullPricingProductDataRequest                 Request,
                                                     OICPResult<PullPricingProductDataResponse>    Response,
                                                     TimeSpan                                      Runtime);
 
@@ -236,6 +241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnPullEVSEPricingAPIResponseDelegate(DateTime                               Timestamp,
                                              EMPClientAPI                           Sender,
+                                             PullEVSEPricingRequest                 Request,
                                              OICPResult<PullEVSEPricingResponse>    Response,
                                              TimeSpan                               Runtime);
 
@@ -274,6 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnPushAuthenticationDataAPIResponseDelegate(DateTime                                                      Timestamp,
                                                     EMPClientAPI                                                  Sender,
+                                                    PushAuthenticationDataRequest                                 Request,
                                                     OICPResult<Acknowledgement<PushAuthenticationDataRequest>>    Response,
                                                     TimeSpan                                                      Runtime);
 
@@ -312,6 +319,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnAuthorizeRemoteReservationStartAPIResponseDelegate(DateTime                                                               Timestamp,
                                                              EMPClientAPI                                                           Sender,
+                                                             AuthorizeRemoteReservationStartRequest                                 Request,
                                                              OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>    Response,
                                                              TimeSpan                                                               Runtime);
 
@@ -349,6 +357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnAuthorizeRemoteReservationStopAPIResponseDelegate(DateTime                                                              Timestamp,
                                                             EMPClientAPI                                                          Sender,
+                                                            AuthorizeRemoteReservationStopRequest                                 Request,
                                                             OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>    Response,
                                                             TimeSpan                                                              Runtime);
 
@@ -386,6 +395,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnAuthorizeRemoteStartAPIResponseDelegate(DateTime                                                    Timestamp,
                                                   EMPClientAPI                                                Sender,
+                                                  AuthorizeRemoteStartRequest                                 Request,
                                                   OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>    Response,
                                                   TimeSpan                                                    Runtime);
 
@@ -423,6 +433,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnAuthorizeRemoteStopAPIResponseDelegate(DateTime                                                   Timestamp,
                                                  EMPClientAPI                                               Sender,
+                                                 AuthorizeRemoteStopRequest                                 Request,
                                                  OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>    Response,
                                                  TimeSpan                                                   Runtime);
 
@@ -461,6 +472,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnGetChargeDetailRecordsAPIResponseDelegate(DateTime                                      Timestamp,
                                                     EMPClientAPI                                  Sender,
+                                                    GetChargeDetailRecordsRequest                 Request,
                                                     OICPResult<GetChargeDetailRecordsResponse>    Response,
                                                     TimeSpan                                      Runtime);
 
