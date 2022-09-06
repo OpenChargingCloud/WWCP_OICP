@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
@@ -56,6 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnAuthorizeStartClientResponseDelegate(DateTime                                  Timestamp,
                                                EMPServerAPIClient                        Sender,
+                                               AuthorizeStartRequest                     Request,
                                                OICPResult<AuthorizationStartResponse>    Response,
                                                TimeSpan                                  Runtime);
 
@@ -93,6 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnAuthorizeStopClientResponseDelegate(DateTime                                 Timestamp,
                                               EMPServerAPIClient                       Sender,
+                                              AuthorizeStopRequest                     Request,
                                               OICPResult<AuthorizationStopResponse>    Response,
                                               TimeSpan                                 Runtime);
 
@@ -131,6 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnChargingStartNotificationClientResponseDelegate(DateTime                                                         Timestamp,
                                                           EMPServerAPIClient                                               Sender,
+                                                          ChargingStartNotificationRequest                                 Request,
                                                           OICPResult<Acknowledgement<ChargingStartNotificationRequest>>    Response,
                                                           TimeSpan                                                         Runtime);
 
@@ -168,6 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnChargingProgressNotificationClientResponseDelegate(DateTime                                                            Timestamp,
                                                              EMPServerAPIClient                                                  Sender,
+                                                             ChargingProgressNotificationRequest                                 Request,
                                                              OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>    Response,
                                                              TimeSpan                                                            Runtime);
 
@@ -205,6 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnChargingEndNotificationClientResponseDelegate(DateTime                                                       Timestamp,
                                                         EMPServerAPIClient                                             Sender,
+                                                        ChargingEndNotificationRequest                                 Request,
                                                         OICPResult<Acknowledgement<ChargingEndNotificationRequest>>    Response,
                                                         TimeSpan                                                       Runtime);
 
@@ -242,6 +241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnChargingErrorNotificationClientResponseDelegate(DateTime                                                         Timestamp,
                                                           EMPServerAPIClient                                               Sender,
+                                                          ChargingErrorNotificationRequest                                 Request,
                                                           OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>    Response,
                                                           TimeSpan                                                         Runtime);
 
@@ -280,6 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         OnChargeDetailRecordClientResponseDelegate(DateTime                                                  Timestamp,
                                                    EMPServerAPIClient                                        Sender,
+                                                   ChargeDetailRecordRequest                                 Request,
                                                    OICPResult<Acknowledgement<ChargeDetailRecordRequest>>    Response,
                                                    TimeSpan                                                  Runtime);
 

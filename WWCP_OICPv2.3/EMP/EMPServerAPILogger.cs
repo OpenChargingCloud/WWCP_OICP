@@ -99,13 +99,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// 
             /// <param name="LogRequest_toNetwork">A delegate to log incoming requests to a network target.</param>
             /// <param name="LogResponse_toNetwork">A delegate to log requests/responses to a network target.</param>
-            /// <param name="LogRequest_toHTTPSSE">A delegate to log incoming requests to a HTTP server sent events source.</param>
-            /// <param name="LogResponse_toHTTPSSE">A delegate to log requests/responses to a HTTP server sent events source.</param>
+            /// <param name="LogRequest_toHTTPSSE">A delegate to log incoming requests to a server sent events source.</param>
+            /// <param name="LogResponse_toHTTPSSE">A delegate to log requests/responses to a server sent events source.</param>
             /// 
             /// <param name="LogError_toConsole">A delegate to log errors to console.</param>
             /// <param name="LogError_toDisc">A delegate to log errors to disc.</param>
             /// <param name="LogError_toNetwork">A delegate to log errors to a network target.</param>
-            /// <param name="LogError_toHTTPSSE">A delegate to log errors to a HTTP server sent events source.</param>
+            /// <param name="LogError_toHTTPSSE">A delegate to log errors to a server sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public ServerAPILogger(EMPServerAPI             EMPServerAPI,

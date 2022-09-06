@@ -126,26 +126,182 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region Properties
+        #region Custom JSON parsers
 
-        public APICounters  Counters    { get; }
+        public CustomJObjectParserDelegate<AuthorizationStartResponse>?                            CustomAuthorizationStartResponseParser                            { get; set; }
+
+        public CustomJObjectParserDelegate<AuthorizationStopResponse>?                             CustomAuthorizationStopResponseParser                             { get; set; }
+
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingStartNotificationRequest>>?     CustomChargingStartNotificationRequestAcknowledgementParser       { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingProgressNotificationRequest>>?  CustomChargingProgressNotificationRequestAcknowledgementParser    { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingEndNotificationRequest>>?       CustomChargingEndNotificationRequestAcknowledgementParser         { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargingErrorNotificationRequest>>?     CustomChargingErrorNotificationRequestAcknowledgementParser       { get; set; }
+
+
+        public CustomJObjectParserDelegate<Acknowledgement<ChargeDetailRecordRequest>>?            CustomChargeDetailRecordRequestAcknowledgementParser              { get; set; }
+
+        #endregion
+
+        #region Custom JSON serializers
+
+        public CustomJObjectSerializerDelegate<AuthorizeStartRequest>?                CustomAuthorizeStartRequestSerializer                  { get; set; }
+
+        public CustomJObjectSerializerDelegate<AuthorizeStopRequest>?                 CustomAuthorizeStopRequestSerializer                   { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargingStartNotificationRequest>?     CustomChargingStartNotificationRequestSerializer       { get; set; }
+        public CustomJObjectSerializerDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestSerializer    { get; set; }
+        public CustomJObjectSerializerDelegate<ChargingEndNotificationRequest>?       CustomChargingEndNotificationRequestSerializer         { get; set; }
+        public CustomJObjectSerializerDelegate<ChargingErrorNotificationRequest>?     CustomChargingErrorNotificationRequestSerializer       { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargeDetailRecordRequest>?            CustomChargeDetailRecordRequestSerializer              { get; set; }
+
+        public CustomJObjectSerializerDelegate<ChargeDetailRecord>?                   CustomChargeDetailRecordSerializer                     { get; set; }
+        public CustomJObjectSerializerDelegate<Identification>?                       CustomIdentificationSerializer                         { get; set; }
+        public CustomJObjectSerializerDelegate<SignedMeteringValue>?                  CustomSignedMeteringValueSerializer                    { get; set; }
+        public CustomJObjectSerializerDelegate<CalibrationLawVerification>?           CustomCalibrationLawVerificationSerializer             { get; set; }
+
+        #endregion
+
+        #region Custom request/response logging converters
+
+        #region AuthorizeStart              (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStartRequest, String>
+            AuthorizeStartRequestConverter         { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest)
+            => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStartRequest, OICPResult<AuthorizationStartResponse>, TimeSpan, String>
+            AuthorizeStartResponseConverter        { get; set; }
+
+            = (timestamp, sender, authorizeStartRequest, authorizeStartResponse, runtime)
+            => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId, " => ", authorizeStartResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeStop               (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeStopRequest, String>
+            AuthorizeStopRequestConverter         { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest)
+            => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeStopRequest, OICPResult<AuthorizationStopResponse>, TimeSpan, String>
+            AuthorizeStopResponseConverter        { get; set; }
+
+            = (timestamp, sender, authorizeStopRequest, authorizeStopResponse, runtime)
+            => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId, " => ", authorizeStopResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region ChargingStartNotification   (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, String>
+            ChargingStartNotificationRequestConverter         { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest)
+            => String.Concat(chargingStartNotificationRequest.Identification, " at ", chargingStartNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingStartNotificationRequest, OICPResult<Acknowledgement<ChargingStartNotificationRequest>>, TimeSpan, String>
+            ChargingStartNotificationResponseConverter        { get; set; }
+
+            = (timestamp, sender, chargingStartNotificationRequest, chargingStartNotificationResponse, runtime)
+            => String.Concat(chargingStartNotificationRequest.Identification, " at ", chargingStartNotificationRequest.EVSEId, " => ", chargingStartNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingProgressNotification(Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, String>
+            ChargingProgressNotificationRequestConverter         { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest)
+            => String.Concat(chargingProgressNotificationRequest.Identification, " at ", chargingProgressNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingProgressNotificationRequest, OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>, TimeSpan, String>
+            ChargingProgressNotificationResponseConverter        { get; set; }
+
+            = (timestamp, sender, chargingProgressNotificationRequest, chargingProgressNotificationResponse, runtime)
+            => String.Concat(chargingProgressNotificationRequest.Identification, " at ", chargingProgressNotificationRequest.EVSEId, " => ", chargingProgressNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingEndNotification     (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, String>
+            ChargingEndNotificationRequestConverter         { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest)
+            => String.Concat(chargingEndNotificationRequest.Identification, " at ", chargingEndNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingEndNotificationRequest, OICPResult<Acknowledgement<ChargingEndNotificationRequest>>, TimeSpan, String>
+            ChargingEndNotificationResponseConverter        { get; set; }
+
+            = (timestamp, sender, chargingEndNotificationRequest, chargingEndNotificationResponse, runtime)
+            => String.Concat(chargingEndNotificationRequest.Identification, " at ", chargingEndNotificationRequest.EVSEId, " => ", chargingEndNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region ChargingErrorNotification   (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, String>
+            ChargingErrorNotificationRequestConverter         { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest)
+            => String.Concat(chargingErrorNotificationRequest.Identification, " at ", chargingErrorNotificationRequest.EVSEId);
+
+        public Func<DateTime, Object, ChargingErrorNotificationRequest, OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>, TimeSpan, String>
+            ChargingErrorNotificationResponseConverter        { get; set; }
+
+            = (timestamp, sender, chargingErrorNotificationRequest, chargingErrorNotificationResponse, runtime)
+            => String.Concat(chargingErrorNotificationRequest.Identification, " at ", chargingErrorNotificationRequest.EVSEId, " => ", chargingErrorNotificationResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region ChargingStartNotification   (Request/Response)Converter
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, String>
+            ChargeDetailRecordRequestConverter         { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification, " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId);
+
+        public Func<DateTime, Object, ChargeDetailRecordRequest, OICPResult<Acknowledgement<ChargeDetailRecordRequest>>, TimeSpan, String>
+            ChargeDetailRecordResponseConverter        { get; set; }
+
+            = (timestamp, sender, chargeDetailRecordRequest, chargeDetailRecordResponse, runtime)
+            => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification, " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId, " => ", chargeDetailRecordResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new Logger HTTPLogger
-        {
-            get
-            {
-                return base.HTTPLogger as Logger;
-            }
-            set
-            {
-                base.HTTPLogger = value;
-            }
-        }
+        public new HTTP_Logger             HTTPLogger
+#pragma warning disable CS8603 // Possible null reference return.
+            => base.HTTPLogger as HTTP_Logger;
+#pragma warning restore CS8603 // Possible null reference return.
 
-        public Newtonsoft.Json.Formatting  JSONFormat    { get; set; }
+        /// <summary>
+        /// The attached client logger.
+        /// </summary>
+        public EMPServerAPIClientLogger?   Logger            { get; }
+
+        public APICounters                 Counters          { get; }
+
+        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
 
         #endregion
 
@@ -357,7 +513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                   UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                                   Boolean                               DisableLogging               = false,
                                   String?                               LoggingPath                  = null,
-                                  String                                LoggingContext               = Logger.DefaultContext,
+                                  String                                LoggingContext               = HTTP_Logger.DefaultContext,
                                   LogfileCreatorDelegate?               LogfileCreator               = null,
                                   DNSClient?                            DNSClient                    = null)
 
@@ -379,16 +535,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         {
 
-            this.Counters    = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.JSONFormat  = Newtonsoft.Json.Formatting.None;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext,
-                                                LogfileCreator)
-                                   : null;
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
+                                                         LoggingPath,
+                                                         LoggingContext,
+                                                         LogfileCreator)
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new EMPServerAPIClientLogger(this,
+                                                                      LoggingPath,
+                                                                      LoggingContext,
+                                                                      LogfileCreator)
+                                       : null;
 
         }
 
@@ -468,7 +631,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStartRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
@@ -499,14 +665,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (AuthorizationStartResponse.TryParse(Request,
-                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                         out AuthorizationStartResponse?  authorizeStartResponse,
                                                                         out String?                      ErrorResponse,
                                                                         HTTPResponse.Timestamp,
                                                                         HTTPResponse.EventTrackingId,
                                                                         HTTPResponse.Runtime,
                                                                         processId,
-                                                                        HTTPResponse))
+                                                                        HTTPResponse,
+                                                                        CustomAuthorizationStartResponseParser))
                                 {
 
                                     Counters.AuthorizeStart.IncResponses_OK();
@@ -588,14 +755,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
 
                                 result = OICPResult<AuthorizationStartResponse>.BadRequest(Request,
-                                                                                                             validationErrorList,
-                                                                                                             processId);
+                                                                                           validationErrorList,
+                                                                                           processId);
 
                             }
 
@@ -642,7 +809,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -666,6 +834,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -764,6 +933,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Cast<OnAuthorizeStartClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -855,7 +1025,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStopRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
@@ -886,14 +1059,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (AuthorizationStopResponse.TryParse(Request,
-                                                                       JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                       JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                        out AuthorizationStopResponse?  authorizeStopResponse,
                                                                        out String?                     ErrorResponse,
                                                                        HTTPResponse.Timestamp,
                                                                        HTTPResponse.EventTrackingId,
                                                                        HTTPResponse.Runtime,
                                                                        processId,
-                                                                       HTTPResponse))
+                                                                       HTTPResponse,
+                                                                       CustomAuthorizationStopResponseParser))
                                 {
 
                                     Counters.AuthorizeStop.IncResponses_OK();
@@ -975,14 +1149,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
 
                                 result = OICPResult<AuthorizationStopResponse>.BadRequest(Request,
-                                                                                                             validationErrorList,
-                                                                                                             processId);
+                                                                                          validationErrorList,
+                                                                                          processId);
 
                             }
 
@@ -1029,7 +1203,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -1053,6 +1228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -1151,6 +1327,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Cast<OnAuthorizeStopClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -1243,13 +1420,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
 
-                                                      RequestLogDelegate:   OnChargeDetailRecordHTTPRequest,
-                                                      ResponseLogDelegate:  OnChargeDetailRecordHTTPResponse,
+                                                      RequestLogDelegate:   OnChargingStartNotificationHTTPRequest,
+                                                      ResponseLogDelegate:  OnChargingStartNotificationHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
                                                       RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -1274,14 +1454,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
-                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                               JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                out Acknowledgement<ChargingStartNotificationRequest>?  chargingStartNotificationResponse,
                                                                                                out String?                                             ErrorResponse,
                                                                                                HTTPResponse,
                                                                                                HTTPResponse.Timestamp,
                                                                                                HTTPResponse.EventTrackingId,
                                                                                                HTTPResponse.Runtime,
-                                                                                               processId))
+                                                                                               processId,
+                                                                                               CustomChargingStartNotificationRequestAcknowledgementParser))
                                 {
 
                                     Counters.SendChargingStartNotification.IncResponses_OK();
@@ -1362,7 +1543,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -1416,7 +1597,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -1424,8 +1606,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
                                                                                                                   Acknowledgement<ChargingStartNotificationRequest>.DataError(
                                                                                                                       Request,
-                                                                                                                      statusCode.Description,
-                                                                                                                      statusCode.AdditionalInfo,
+                                                                                                                      statusCode?.Description,
+                                                                                                                      statusCode?.AdditionalInfo,
                                                                                                                       null, // Request.SessionId,
                                                                                                                       null, // Request.CPOPartnerSessionId,
                                                                                                                       null, // Request.EMPPartnerSessionId,
@@ -1439,6 +1621,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                   processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -1534,6 +1717,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Cast<OnChargingStartNotificationClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -1625,13 +1809,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
 
-                                                      RequestLogDelegate:   OnChargeDetailRecordHTTPRequest,
-                                                      ResponseLogDelegate:  OnChargeDetailRecordHTTPResponse,
+                                                      RequestLogDelegate:   OnChargingProgressNotificationHTTPRequest,
+                                                      ResponseLogDelegate:  OnChargingProgressNotificationHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
                                                       RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -1656,14 +1843,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<ChargingProgressNotificationRequest>.TryParse(Request,
-                                                                                                  JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                  JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                   out Acknowledgement<ChargingProgressNotificationRequest>?  chargingProgressNotificationResponse,
                                                                                                   out String?                                                ErrorResponse,
                                                                                                   HTTPResponse,
                                                                                                   HTTPResponse.Timestamp,
                                                                                                   HTTPResponse.EventTrackingId,
                                                                                                   HTTPResponse.Runtime,
-                                                                                                  processId))
+                                                                                                  processId,
+                                                                                                  CustomChargingProgressNotificationRequestAcknowledgementParser))
                                 {
 
                                     Counters.SendChargingProgressNotification.IncResponses_OK();
@@ -1744,7 +1932,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -1798,7 +1986,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -1806,8 +1995,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
                                                                                                                      Acknowledgement<ChargingProgressNotificationRequest>.DataError(
                                                                                                                          Request,
-                                                                                                                         statusCode.Description,
-                                                                                                                         statusCode.AdditionalInfo,
+                                                                                                                         statusCode?.Description,
+                                                                                                                         statusCode?.AdditionalInfo,
                                                                                                                          null, // Request.SessionId,
                                                                                                                          null, // Request.CPOPartnerSessionId,
                                                                                                                          null, // Request.EMPPartnerSessionId,
@@ -1821,6 +2010,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                      processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -1916,6 +2106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Cast<OnChargingProgressNotificationClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -2007,13 +2198,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
 
-                                                      RequestLogDelegate:   OnChargeDetailRecordHTTPRequest,
-                                                      ResponseLogDelegate:  OnChargeDetailRecordHTTPResponse,
+                                                      RequestLogDelegate:   OnChargingEndNotificationHTTPRequest,
+                                                      ResponseLogDelegate:  OnChargingEndNotificationHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
                                                       RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -2038,14 +2232,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
-                                                                                             JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                             JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                              out Acknowledgement<ChargingEndNotificationRequest>?  chargingEndNotificationResponse,
                                                                                              out String?                                           ErrorResponse,
                                                                                              HTTPResponse,
                                                                                              HTTPResponse.Timestamp,
                                                                                              HTTPResponse.EventTrackingId,
                                                                                              HTTPResponse.Runtime,
-                                                                                             processId))
+                                                                                             processId,
+                                                                                             CustomChargingEndNotificationRequestAcknowledgementParser))
                                 {
 
                                     Counters.SendChargingEndNotification.IncResponses_OK();
@@ -2126,7 +2321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -2180,7 +2375,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -2188,8 +2384,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
                                                                                                                 Acknowledgement<ChargingEndNotificationRequest>.DataError(
                                                                                                                     Request,
-                                                                                                                    statusCode.Description,
-                                                                                                                    statusCode.AdditionalInfo,
+                                                                                                                    statusCode?.Description,
+                                                                                                                    statusCode?.AdditionalInfo,
                                                                                                                     null, // Request.SessionId,
                                                                                                                     null, // Request.CPOPartnerSessionId,
                                                                                                                     null, // Request.EMPPartnerSessionId,
@@ -2203,6 +2399,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                 processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -2298,6 +2495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Cast<OnChargingEndNotificationClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -2389,13 +2587,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
 
-                                                      RequestLogDelegate:   OnChargeDetailRecordHTTPRequest,
-                                                      ResponseLogDelegate:  OnChargeDetailRecordHTTPResponse,
+                                                      RequestLogDelegate:   OnChargingErrorNotificationHTTPRequest,
+                                                      ResponseLogDelegate:  OnChargingErrorNotificationHTTPResponse,
                                                       CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
                                                       RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
@@ -2420,14 +2621,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
-                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                               JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                out Acknowledgement<ChargingErrorNotificationRequest>?  chargingErrorNotificationResponse,
                                                                                                out String?                                             ErrorResponse,
                                                                                                HTTPResponse,
                                                                                                HTTPResponse.Timestamp,
                                                                                                HTTPResponse.EventTrackingId,
                                                                                                HTTPResponse.Runtime,
-                                                                                               processId))
+                                                                                               processId,
+                                                                                               CustomChargingErrorNotificationRequestAcknowledgementParser))
                                 {
 
                                     Counters.SendChargingErrorNotification.IncResponses_OK();
@@ -2508,7 +2710,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -2562,7 +2764,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -2570,8 +2773,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
                                                                                                                   Acknowledgement<ChargingErrorNotificationRequest>.DataError(
                                                                                                                       Request,
-                                                                                                                      statusCode.Description,
-                                                                                                                      statusCode.AdditionalInfo,
+                                                                                                                      statusCode?.Description,
+                                                                                                                      statusCode?.AdditionalInfo,
                                                                                                                       null, // Request.SessionId,
                                                                                                                       null, // Request.CPOPartnerSessionId,
                                                                                                                       null, // Request.EMPPartnerSessionId,
@@ -2585,6 +2788,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                   processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -2680,6 +2884,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Cast<OnChargingErrorNotificationClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -2772,7 +2977,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
+                                                                                                                                    CustomChargeDetailRecordSerializer,
+                                                                                                                                    CustomIdentificationSerializer,
+                                                                                                                                    CustomSignedMeteringValueSerializer,
+                                                                                                                                    CustomCalibrationLawVerificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
@@ -2803,14 +3014,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
-                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                         out Acknowledgement<ChargeDetailRecordRequest>?  chargeDetailRecordResponse,
                                                                                         out String?                                      ErrorResponse,
                                                                                         HTTPResponse,
                                                                                         HTTPResponse.Timestamp,
                                                                                         HTTPResponse.EventTrackingId,
                                                                                         HTTPResponse.Runtime,
-                                                                                        processId))
+                                                                                        processId,
+                                                                                        CustomChargeDetailRecordRequestAcknowledgementParser))
                                 {
 
                                     Counters.SendChargeDetailRecord.IncResponses_OK();
@@ -2891,7 +3103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -2945,29 +3157,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(Request,
-                                                                                           Acknowledgement<ChargeDetailRecordRequest>.DataError(
-                                                                                               Request,
-                                                                                               statusCode.Description,
-                                                                                               statusCode.AdditionalInfo,
-                                                                                               null, // Request.SessionId,
-                                                                                               null, // Request.CPOPartnerSessionId,
-                                                                                               null, // Request.EMPPartnerSessionId,
-                                                                                               HTTPResponse.Timestamp,
-                                                                                               HTTPResponse.EventTrackingId,
-                                                                                               HTTPResponse.Runtime,
-                                                                                               processId,
-                                                                                               HTTPResponse,
-                                                                                               Request.CustomData
-                                                                                           ),
-                                                                                           processId);
+                                                                                                           Acknowledgement<ChargeDetailRecordRequest>.DataError(
+                                                                                                               Request,
+                                                                                                               statusCode?.Description,
+                                                                                                               statusCode?.AdditionalInfo,
+                                                                                                               null, // Request.SessionId,
+                                                                                                               null, // Request.CPOPartnerSessionId,
+                                                                                                               null, // Request.EMPPartnerSessionId,
+                                                                                                               HTTPResponse.Timestamp,
+                                                                                                               HTTPResponse.EventTrackingId,
+                                                                                                               HTTPResponse.Runtime,
+                                                                                                               processId,
+                                                                                                               HTTPResponse,
+                                                                                                               Request.CustomData
+                                                                                                           ),
+                                                                                                           processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -3063,6 +3277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        Cast<OnChargeDetailRecordClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
