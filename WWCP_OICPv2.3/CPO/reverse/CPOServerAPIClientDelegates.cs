@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.CPO
 {
 
@@ -56,6 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeRemoteReservationStartClientResponseDelegate(DateTime                                                               Timestamp,
                                                                 CPOServerAPIClient                                                     Sender,
+                                                                AuthorizeRemoteReservationStartRequest                                 Request,
                                                                 OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>    Response,
                                                                 TimeSpan                                                               Runtime);
 
@@ -93,6 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         OnAuthorizeRemoteReservationStopClientResponseDelegate(DateTime                                                              Timestamp,
                                                                CPOServerAPIClient                                                    Sender,
+                                                               AuthorizeRemoteReservationStopRequest                                 Request,
                                                                OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>    Response,
                                                                TimeSpan                                                              Runtime);
 
@@ -106,9 +102,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStartClientRequestDelegate (DateTime                                                               Timestamp,
-                                                                CPOServerAPIClient                                                     Sender,
-                                                                AuthorizeRemoteStartRequest                                 Request);
+        OnAuthorizeRemoteStartClientRequestDelegate (DateTime                                                    Timestamp,
+                                                     CPOServerAPIClient                                          Sender,
+                                                     AuthorizeRemoteStartRequest                                 Request);
 
 
     /// <summary>
@@ -119,9 +115,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<AuthorizationStartResponse>>
 
-        OnAuthorizeRemoteStartClientDelegate        (DateTime                                                               Timestamp,
-                                                                CPOServerAPIClient                                                     Sender,
-                                                                AuthorizeRemoteStartRequest                                 Request);
+        OnAuthorizeRemoteStartClientDelegate        (DateTime                                                    Timestamp,
+                                                     CPOServerAPIClient                                          Sender,
+                                                     AuthorizeRemoteStartRequest                                 Request);
 
 
     /// <summary>
@@ -129,10 +125,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStartClientResponseDelegate(DateTime                                                               Timestamp,
-                                                                CPOServerAPIClient                                                     Sender,
-                                                                OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>    Response,
-                                                                TimeSpan                                                               Runtime);
+        OnAuthorizeRemoteStartClientResponseDelegate(DateTime                                                    Timestamp,
+                                                     CPOServerAPIClient                                          Sender,
+                                                     AuthorizeRemoteStartRequest                                 Request,
+                                                     OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>    Response,
+                                                     TimeSpan                                                    Runtime);
 
     #endregion
 
@@ -143,9 +140,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStopClientRequestDelegate (DateTime                                                              Timestamp,
-                                                               CPOServerAPIClient                                                    Sender,
-                                                               AuthorizeRemoteStopRequest                                 Request);
+        OnAuthorizeRemoteStopClientRequestDelegate (DateTime                                                   Timestamp,
+                                                    CPOServerAPIClient                                         Sender,
+                                                    AuthorizeRemoteStopRequest                                 Request);
 
 
     /// <summary>
@@ -156,9 +153,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<AuthorizationStopResponse>>
 
-        OnAuthorizeRemoteStopClientDelegate        (DateTime                                                              Timestamp,
-                                                               CPOServerAPIClient                                                    Sender,
-                                                               AuthorizeRemoteStopRequest                                 Request);
+        OnAuthorizeRemoteStopClientDelegate        (DateTime                                                   Timestamp,
+                                                    CPOServerAPIClient                                         Sender,
+                                                    AuthorizeRemoteStopRequest                                 Request);
 
 
     /// <summary>
@@ -166,10 +163,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStopClientResponseDelegate(DateTime                                                              Timestamp,
-                                                               CPOServerAPIClient                                                    Sender,
-                                                               OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>    Response,
-                                                               TimeSpan                                                              Runtime);
+        OnAuthorizeRemoteStopClientResponseDelegate(DateTime                                                   Timestamp,
+                                                    CPOServerAPIClient                                         Sender,
+                                                    AuthorizeRemoteStopRequest                                 Request,
+                                                    OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>    Response,
+                                                    TimeSpan                                                   Runtime);
 
     #endregion
 

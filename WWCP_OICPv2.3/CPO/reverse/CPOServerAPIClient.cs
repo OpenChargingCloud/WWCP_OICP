@@ -101,26 +101,117 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region Properties
+        #region Custom JSON parsers
 
-        public APICounters  Counters    { get; }
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteReservationStartRequest>>?  CustomAuthorizeRemoteReservationStartAcknowledgementParser    { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteReservationStopRequest>>?   CustomAuthorizeRemoteReservationStopAcknowledgementParser     { get; set; }
+
+
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteStartRequest>>?             CustomAuthorizeRemoteStartAcknowledgementParser               { get; set; }
+
+        public CustomJObjectParserDelegate<Acknowledgement<AuthorizeRemoteStopRequest>>?              CustomAuthorizeRemoteStopAcknowledgementParser                { get; set; }
+
+        #endregion
+
+        #region Custom JSON serializers
+        public CustomJObjectSerializerDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestSerializer     { get; set; }
+        public CustomJObjectSerializerDelegate<AuthorizeRemoteReservationStopRequest>?   CustomAuthorizeRemoteReservationStopRequestSerializer      { get; set; }
+
+        public CustomJObjectSerializerDelegate<AuthorizeRemoteStartRequest>?             CustomAuthorizeRemoteStartRequestSerializer                { get; set; }
+        public CustomJObjectSerializerDelegate<AuthorizeRemoteStopRequest>?              CustomAuthorizeRemoteStopRequestSerializer                 { get; set; }
+
+        public CustomJObjectSerializerDelegate<Identification>?                          CustomIdentificationSerializer                             { get; set; }
+
+        #endregion
+
+        #region Custom request/response logging converters
+
+        #region AuthorizeRemoteReservationStart(Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, String>
+            AuthorizeRemoteReservationStartRequestConverter         { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStartRequest)
+            => String.Concat(authorizeRemoteReservationStartRequest.Identification, " at ", authorizeRemoteReservationStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>, TimeSpan, String>
+            AuthorizeRemoteReservationStartResponseConverter        { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStartRequest, authorizeRemoteReservationStartResponse, runtime)
+            => String.Concat(authorizeRemoteReservationStartRequest.Identification, " at ", authorizeRemoteReservationStartRequest.EVSEId, " => ", authorizeRemoteReservationStartResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteReservationStop (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, String>
+            AuthorizeRemoteReservationStopRequestConverter         { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStopRequest)
+            => String.Concat(authorizeRemoteReservationStopRequest.SessionId, " at ", authorizeRemoteReservationStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>, TimeSpan, String>
+            AuthorizeRemoteReservationStopResponseConverter        { get; set; }
+
+            = (timestamp, sender, authorizeRemoteReservationStopRequest, authorizeRemoteReservationStopResponse, runtime)
+            => String.Concat(authorizeRemoteReservationStopRequest.SessionId, " at ", authorizeRemoteReservationStopRequest.EVSEId, " => ", authorizeRemoteReservationStopResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+
+        #region AuthorizeRemoteStart           (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteStartRequest, String>
+            AuthorizeRemoteStartRequestConverter         { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStartRequest)
+            => String.Concat(authorizeRemoteStartRequest.Identification, " at ", authorizeRemoteStartRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>, TimeSpan, String>
+            AuthorizeRemoteStartResponseConverter        { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime)
+            => String.Concat(authorizeRemoteStartRequest.Identification, " at ", authorizeRemoteStartRequest.EVSEId, " => ", authorizeRemoteStartResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #region AuthorizeRemoteStop            (Request/Response)Converter
+
+        public Func<DateTime, Object, AuthorizeRemoteStopRequest, String>
+            AuthorizeRemoteStopRequestConverter         { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStopRequest)
+            => String.Concat(authorizeRemoteStopRequest.SessionId, " at ", authorizeRemoteStopRequest.EVSEId);
+
+        public Func<DateTime, Object, AuthorizeRemoteStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>, TimeSpan, String>
+            AuthorizeRemoteStopResponseConverter        { get; set; }
+
+            = (timestamp, sender, authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime)
+            => String.Concat(authorizeRemoteStopRequest.SessionId, " at ", authorizeRemoteStopRequest.EVSEId, " => ", authorizeRemoteStopResponse.Response?.StatusCode.ToString() ?? "failed!");
+
+        #endregion
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new Logger HTTPLogger
-        {
-            get
-            {
-                return base.HTTPLogger as Logger;
-            }
-            set
-            {
-                base.HTTPLogger = value;
-            }
-        }
+        public new HTTP_Logger             HTTPLogger
+#pragma warning disable CS8603 // Possible null reference return.
+            => base.HTTPLogger as HTTP_Logger;
+#pragma warning restore CS8603 // Possible null reference return.
 
-        public Newtonsoft.Json.Formatting  JSONFormat    { get; set; }
+        /// <summary>
+        /// The attached client logger.
+        /// </summary>
+        public CPOServerAPIClientLogger?   Logger            { get; }
+
+        public APICounters                 Counters          { get; }
+
+        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
 
         #endregion
 
@@ -131,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationStart request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteReservationStartClientRequestDelegate?   OnAuthorizeRemoteReservationStart;
+        public event OnAuthorizeRemoteReservationStartClientRequestDelegate?   OnAuthorizeRemoteReservationStartRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationStart HTTP request will be send.
@@ -155,7 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationStop request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteReservationStopClientRequestDelegate?   OnAuthorizeRemoteReservationStop;
+        public event OnAuthorizeRemoteReservationStopClientRequestDelegate?   OnAuthorizeRemoteReservationStopRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteReservationStop HTTP request will be send.
@@ -180,7 +271,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStart request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStartClientRequestDelegate?   OnAuthorizeRemoteStart;
+        public event OnAuthorizeRemoteStartClientRequestDelegate?   OnAuthorizeRemoteStartRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStart HTTP request will be send.
@@ -204,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStop request will be send.
         /// </summary>
-        public event OnAuthorizeRemoteStopClientRequestDelegate?   OnAuthorizeRemoteStop;
+        public event OnAuthorizeRemoteStopClientRequestDelegate?   OnAuthorizeRemoteStopRequest;
 
         /// <summary>
         /// An event fired whenever an AuthorizeRemoteStop HTTP request will be send.
@@ -259,7 +350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
                                   Boolean                               DisableLogging               = false,
                                   String?                               LoggingPath                  = null,
-                                  String                                LoggingContext               = Logger.DefaultContext,
+                                  String                                LoggingContext               = HTTP_Logger.DefaultContext,
                                   LogfileCreatorDelegate?               LogfileCreator               = null,
                                   DNSClient?                            DNSClient                    = null)
 
@@ -281,16 +372,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.Counters    = new APICounters();
+            this.Counters        = new APICounters();
 
-            this.JSONFormat  = Newtonsoft.Json.Formatting.None;
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger  = DisableLogging == false
-                                   ? new Logger(this,
-                                                LoggingPath,
-                                                LoggingContext,
-                                                LogfileCreator)
-                                   : null;
+            base.HTTPLogger      = DisableLogging == false
+                                       ? new HTTP_Logger(this,
+                                                         LoggingPath,
+                                                         LoggingContext,
+                                                         LogfileCreator)
+                                       : null;
+
+            this.Logger          = DisableLogging == false
+                                       ? new CPOServerAPIClientLogger(this,
+                                                                      LoggingPath,
+                                                                      LoggingContext,
+                                                                      LogfileCreator)
+                                       : null;
 
         }
 
@@ -316,7 +414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region Send OnAuthorizeRemoteReservationStartClientRequest event
+            #region Send OnAuthorizeRemoteReservationStartRequest event
 
             var startTime = Timestamp.Now;
 
@@ -325,8 +423,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                if (OnAuthorizeRemoteReservationStart is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteReservationStart.GetInvocationList().
+                if (OnAuthorizeRemoteReservationStartRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStartClientRequestDelegate>().
                                        Select(e => e(startTime,
                                                      this,
@@ -336,7 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteReservationStart));
+                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
             }
 
             #endregion
@@ -370,7 +468,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStartRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
@@ -401,14 +502,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStartRequest>.TryParse(Request,
-                                                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                     JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                      out Acknowledgement<AuthorizeRemoteReservationStartRequest>?  authorizeRemoteReservationStartResponse,
                                                                                                      out String?                                                   ErrorResponse,
                                                                                                      HTTPResponse,
                                                                                                      HTTPResponse.Timestamp,
                                                                                                      HTTPResponse.EventTrackingId,
                                                                                                      HTTPResponse.Runtime,
-                                                                                                     processId))
+                                                                                                     processId,
+                                                                                                     CustomAuthorizeRemoteReservationStartAcknowledgementParser))
                                 {
 
                                     Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
@@ -489,7 +591,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -543,7 +645,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -566,6 +669,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                         processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -649,18 +753,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
 
 
-            #region Send OnAuthorizeRemoteReservationStartClientResponse event
+            #region Send OnAuthorizeRemoteReservationStartResponse event
 
             var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeRemoteReservationStartResponse != null)
+                if (OnAuthorizeRemoteReservationStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStartClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -698,7 +803,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region Send OnAuthorizeRemoteReservationStopClientRequest event
+            #region Send OnAuthorizeRemoteReservationStopRequest event
 
             var startTime = Timestamp.Now;
 
@@ -707,8 +812,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                if (OnAuthorizeRemoteReservationStop is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteReservationStop.GetInvocationList().
+                if (OnAuthorizeRemoteReservationStopRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStopClientRequestDelegate>().
                                        Select(e => e(startTime,
                                                      this,
@@ -718,7 +823,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteReservationStop));
+                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
             }
 
             #endregion
@@ -752,7 +857,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStopRequestSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
@@ -783,14 +890,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStopRequest>.TryParse(Request,
-                                                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                    JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                     out Acknowledgement<AuthorizeRemoteReservationStopRequest>?  authorizeRemoteReservationStopResponse,
                                                                                                     out String?                                                  ErrorResponse,
                                                                                                     HTTPResponse,
                                                                                                     HTTPResponse.Timestamp,
                                                                                                     HTTPResponse.EventTrackingId,
                                                                                                     HTTPResponse.Runtime,
-                                                                                                    processId))
+                                                                                                    processId,
+                                                                                                    CustomAuthorizeRemoteReservationStopAcknowledgementParser))
                                 {
 
                                     Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
@@ -871,7 +979,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -925,7 +1033,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -948,6 +1057,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                        processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -1031,18 +1141,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
 
 
-            #region Send OnAuthorizeRemoteReservationStopClientResponse event
+            #region Send OnAuthorizeRemoteReservationStopResponse event
 
             var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeRemoteReservationStopResponse != null)
+                if (OnAuthorizeRemoteReservationStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteReservationStopClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -1081,28 +1192,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region Send OnAuthorizeRemoteStartClientRequest event
+            #region Send OnAuthorizeRemoteStartRequest event
 
             var startTime = Timestamp.Now;
 
             Counters.AuthorizeRemoteStart.IncRequests_OK();
 
-            //try
-            //{
+            try
+            {
 
-            //    if (OnAuthorizeRemoteStart is not null)
-            //        await Task.WhenAll(OnAuthorizeRemoteStart.GetInvocationList().
-            //                           Cast<OnAuthorizeRemoteStartClientRequestDelegate>().
-            //                           Select(e => e(startTime,
-            //                                         this,
-            //                                         Request))).
-            //                           ConfigureAwait(false);
+                if (OnAuthorizeRemoteStartRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
+                                       Cast<OnAuthorizeRemoteStartClientRequestDelegate>().
+                                       Select(e => e(startTime,
+                                                     this,
+                                                     Request))).
+                                       ConfigureAwait(false);
 
-            //}
-            //catch (Exception e)
-            //{
-            //    DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteStart));
-            //}
+            }
+            catch (Exception e)
+            {
+                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteStartRequest));
+            }
 
             #endregion
 
@@ -1135,14 +1246,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStartRequestSerializer,
+                                                                                                                                    CustomIdentificationSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
 
-                                                      //RequestLogDelegate:   OnAuthorizeRemoteStartHTTPRequest,
-                                                      //ResponseLogDelegate:  OnAuthorizeRemoteStartHTTPResponse,
-                                                      //CancellationToken:    Request.CancellationToken,
+                                                      RequestLogDelegate:   OnAuthorizeRemoteStartHTTPRequest,
+                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartHTTPResponse,
+                                                      CancellationToken:    Request.CancellationToken,
                                                       EventTrackingId:      Request.EventTrackingId,
                                                       RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
 
@@ -1166,14 +1280,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStartRequest>.TryParse(Request,
-                                                                                          JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                          JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                           out Acknowledgement<AuthorizeRemoteStartRequest>?  authorizeRemoteStartResponse,
                                                                                           out String?                                        ErrorResponse,
                                                                                           HTTPResponse,
                                                                                           HTTPResponse.Timestamp,
                                                                                           HTTPResponse.EventTrackingId,
                                                                                           HTTPResponse.Runtime,
-                                                                                          processId))
+                                                                                          processId,
+                                                                                          CustomAuthorizeRemoteStartAcknowledgementParser))
                                 {
 
                                     Counters.AuthorizeRemoteStart.IncResponses_OK();
@@ -1254,14 +1369,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.BadRequest(Request,
-                                                                                                                        validationErrorList,
-                                                                                                                        processId);
+                                                                                                             validationErrorList,
+                                                                                                             processId);
 
                             }
 
@@ -1308,29 +1423,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.Failed(Request,
-                                                                                                                        Acknowledgement<AuthorizeRemoteStartRequest>.DataError(
-                                                                                                                            Request,
-                                                                                                                            statusCode!.Description,
-                                                                                                                            statusCode!.AdditionalInfo,
-                                                                                                                            Request.SessionId,
-                                                                                                                            Request.CPOPartnerSessionId,
-                                                                                                                            Request.EMPPartnerSessionId,
-                                                                                                                            HTTPResponse.Timestamp,
-                                                                                                                            HTTPResponse.EventTrackingId,
-                                                                                                                            HTTPResponse.Runtime,
-                                                                                                                            processId,
-                                                                                                                            HTTPResponse,
-                                                                                                                            Request.CustomData
-                                                                                                                        ),
-                                                                                                                        processId);
+                                                                                                             Acknowledgement<AuthorizeRemoteStartRequest>.DataError(
+                                                                                                                 Request,
+                                                                                                                 statusCode!.Description,
+                                                                                                                 statusCode!.AdditionalInfo,
+                                                                                                                 Request.SessionId,
+                                                                                                                 Request.CPOPartnerSessionId,
+                                                                                                                 Request.EMPPartnerSessionId,
+                                                                                                                 HTTPResponse.Timestamp,
+                                                                                                                 HTTPResponse.EventTrackingId,
+                                                                                                                 HTTPResponse.Runtime,
+                                                                                                                 processId,
+                                                                                                                 HTTPResponse,
+                                                                                                                 Request.CustomData
+                                                                                                             ),
+                                                                                                             processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -1421,11 +1538,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                if (OnAuthorizeRemoteStartResponse != null)
+                if (OnAuthorizeRemoteStartResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStartClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);
@@ -1463,7 +1581,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region Send OnAuthorizeRemoteStopClientRequest event
+            #region Send OnAuthorizeRemoteStopRequest event
 
             var startTime = Timestamp.Now;
 
@@ -1472,8 +1590,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                if (OnAuthorizeRemoteStop is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteStop.GetInvocationList().
+                if (OnAuthorizeRemoteStopRequest is not null)
+                    await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStopClientRequestDelegate>().
                                        Select(e => e(startTime,
                                                      this,
@@ -1483,7 +1601,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteStop));
+                DebugX.LogException(e, nameof(CPOServerAPIClient) + "." + nameof(OnAuthorizeRemoteStopRequest));
             }
 
             #endregion
@@ -1517,7 +1635,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    requestbuilder => {
                                                                                        requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON().ToString(JSONFormat).ToUTF8Bytes();
+                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStopRequestSerializer).
+                                                                                                                             ToString(JSONFormatting).
+                                                                                                                             ToUTF8Bytes();
                                                                                        requestbuilder.Connection   = "close";
                                                                                        requestbuilder.Set("Process-ID", processId.ToString());
                                                                                    }),
@@ -1548,14 +1668,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStopRequest>.TryParse(Request,
-                                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                         JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                          out Acknowledgement<AuthorizeRemoteStopRequest>?  authorizeRemoteStopResponse,
                                                                                          out String?                                       ErrorResponse,
                                                                                          HTTPResponse,
                                                                                          HTTPResponse.Timestamp,
                                                                                          HTTPResponse.EventTrackingId,
                                                                                          HTTPResponse.Runtime,
-                                                                                         processId))
+                                                                                         processId,
+                                                                                         CustomAuthorizeRemoteStopAcknowledgementParser))
                                 {
 
                                     Counters.AuthorizeRemoteStop.IncResponses_OK();
@@ -1636,14 +1757,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.BadRequest(Request,
-                                                                                                                       validationErrorList,
-                                                                                                                       processId);
+                                                                                                            validationErrorList,
+                                                                                                            processId);
 
                             }
 
@@ -1690,29 +1811,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+#pragma warning disable CS8604 // Possible null reference argument.
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.Failed(Request,
-                                                                                                                       Acknowledgement<AuthorizeRemoteStopRequest>.DataError(
-                                                                                                                           Request,
-                                                                                                                           statusCode!.Description,
-                                                                                                                           statusCode!.AdditionalInfo,
-                                                                                                                           Request.SessionId,
-                                                                                                                           Request.CPOPartnerSessionId,
-                                                                                                                           Request.EMPPartnerSessionId,
-                                                                                                                           HTTPResponse.Timestamp,
-                                                                                                                           HTTPResponse.EventTrackingId,
-                                                                                                                           HTTPResponse.Runtime,
-                                                                                                                           processId,
-                                                                                                                           HTTPResponse,
-                                                                                                                           Request.CustomData
-                                                                                                                       ),
-                                                                                                                       processId);
+                                                                                                            Acknowledgement<AuthorizeRemoteStopRequest>.DataError(
+                                                                                                                Request,
+                                                                                                                statusCode!.Description,
+                                                                                                                statusCode!.AdditionalInfo,
+                                                                                                                Request.SessionId,
+                                                                                                                Request.CPOPartnerSessionId,
+                                                                                                                Request.EMPPartnerSessionId,
+                                                                                                                HTTPResponse.Timestamp,
+                                                                                                                HTTPResponse.EventTrackingId,
+                                                                                                                HTTPResponse.Runtime,
+                                                                                                                processId,
+                                                                                                                HTTPResponse,
+                                                                                                                Request.CustomData
+                                                                                                            ),
+                                                                                                            processId);
 
                                 }
+#pragma warning restore CS8604 // Possible null reference argument.
 
                             }
                             catch (Exception e)
@@ -1796,18 +1919,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 Counters.AuthorizeRemoteStop.IncResponses_Error();
 
 
-            #region Send OnAuthorizeRemoteStopClientResponse event
+            #region Send OnAuthorizeRemoteStopResponse event
 
             var endtime = Timestamp.Now;
 
             try
             {
 
-                if (OnAuthorizeRemoteStopResponse != null)
+                if (OnAuthorizeRemoteStopResponse is not null)
                     await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
                                        Cast<OnAuthorizeRemoteStopClientResponseDelegate>().
                                        Select(e => e(endtime,
                                                      this,
+                                                     Request,
                                                      result,
                                                      result.Runtime ?? TimeSpan.Zero))).
                                        ConfigureAwait(false);

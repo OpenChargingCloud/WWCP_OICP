@@ -35,7 +35,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The CPO server API client (HTTP client) logger.
         /// </summary>
-        public class Logger : HTTPClientLogger
+        public class CPOServerAPIClientLogger : AClientLogger
         {
 
             #region Data
@@ -58,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Constructor(s)
 
-            #region Logger(CPOServerAPIClient, Context = DefaultContext, LogfileCreator = null)
+            #region CPOServerAPIClientLogger(CPOServerAPIClient, Context = DefaultContext, LogfileCreator = null)
 
             /// <summary>
             /// Create a new CPO server API client logger using the default logging delegates.
@@ -67,10 +67,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(CPOServerAPIClient       CPOServerAPIClient,
-                          String?                  LoggingPath,
-                          String                   Context          = DefaultContext,
-                          LogfileCreatorDelegate?  LogfileCreator   = null)
+            public CPOServerAPIClientLogger(CPOServerAPIClient       CPOServerAPIClient,
+                                            String?                  LoggingPath,
+                                            String                   Context          = DefaultContext,
+                                            LogfileCreatorDelegate?  LogfileCreator   = null)
 
                 : this(CPOServerAPIClient,
                        LoggingPath,
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            #region Logger(CPOServerAPIClient, Context, ... Logging delegates ...)
+            #region CPOServerAPIClientLogger(CPOServerAPIClient, Context, ... Logging delegates ...)
 
             /// <summary>
             /// Create a new CPO server API client logger using the given logging delegates.
@@ -95,61 +95,61 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LoggingPath">The logging path.</param>
             /// <param name="Context">A context of this API.</param>
             /// 
-            /// <param name="LogHTTPRequest_toConsole">A delegate to log incoming HTTP requests to console.</param>
-            /// <param name="LogHTTPResponse_toConsole">A delegate to log HTTP requests/responses to console.</param>
-            /// <param name="LogHTTPRequest_toDisc">A delegate to log incoming HTTP requests to disc.</param>
-            /// <param name="LogHTTPResponse_toDisc">A delegate to log HTTP requests/responses to disc.</param>
+            /// <param name="LogRequest_toConsole">A delegate to log incoming requests to console.</param>
+            /// <param name="LogResponse_toConsole">A delegate to log requests/responses to console.</param>
+            /// <param name="LogRequest_toDisc">A delegate to log incoming requests to disc.</param>
+            /// <param name="LogResponse_toDisc">A delegate to log requests/responses to disc.</param>
             /// 
-            /// <param name="LogHTTPRequest_toNetwork">A delegate to log incoming HTTP requests to a network target.</param>
-            /// <param name="LogHTTPResponse_toNetwork">A delegate to log HTTP requests/responses to a network target.</param>
-            /// <param name="LogHTTPRequest_toHTTPSSE">A delegate to log incoming HTTP requests to a HTTP client sent events source.</param>
-            /// <param name="LogHTTPResponse_toHTTPSSE">A delegate to log HTTP requests/responses to a HTTP client sent events source.</param>
+            /// <param name="LogRequest_toNetwork">A delegate to log incoming requests to a network target.</param>
+            /// <param name="LogResponse_toNetwork">A delegate to log requests/responses to a network target.</param>
+            /// <param name="LogRequest_toHTTPSSE">A delegate to log incoming requests to a HTTP client sent events source.</param>
+            /// <param name="LogResponse_toHTTPSSE">A delegate to log requests/responses to a HTTP client sent events source.</param>
             /// 
-            /// <param name="LogHTTPError_toConsole">A delegate to log HTTP errors to console.</param>
-            /// <param name="LogHTTPError_toDisc">A delegate to log HTTP errors to disc.</param>
-            /// <param name="LogHTTPError_toNetwork">A delegate to log HTTP errors to a network target.</param>
-            /// <param name="LogHTTPError_toHTTPSSE">A delegate to log HTTP errors to a HTTP client sent events source.</param>
+            /// <param name="LogError_toConsole">A delegate to log errors to console.</param>
+            /// <param name="LogError_toDisc">A delegate to log errors to disc.</param>
+            /// <param name="LogError_toNetwork">A delegate to log errors to a network target.</param>
+            /// <param name="LogError_toHTTPSSE">A delegate to log errors to a HTTP client sent events source.</param>
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
-            public Logger(CPOServerAPIClient           CPOServerAPIClient,
-                          String?                      LoggingPath,
-                          String                       Context,
+            public CPOServerAPIClientLogger(CPOServerAPIClient       CPOServerAPIClient,
+                                            String?                  LoggingPath,
+                                            String                   Context,
 
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toDisc       = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toDisc      = null,
+                                            RequestLoggerDelegate?   LogRequest_toConsole    = null,
+                                            ResponseLoggerDelegate?  LogResponse_toConsole   = null,
+                                            RequestLoggerDelegate?   LogRequest_toDisc       = null,
+                                            ResponseLoggerDelegate?  LogResponse_toDisc      = null,
 
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toNetwork    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toNetwork   = null,
-                          HTTPRequestLoggerDelegate?   LogHTTPRequest_toHTTPSSE    = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPResponse_toHTTPSSE   = null,
+                                            RequestLoggerDelegate?   LogRequest_toNetwork    = null,
+                                            ResponseLoggerDelegate?  LogResponse_toNetwork   = null,
+                                            RequestLoggerDelegate?   LogRequest_toHTTPSSE    = null,
+                                            ResponseLoggerDelegate?  LogResponse_toHTTPSSE   = null,
 
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toConsole      = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toDisc         = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toNetwork      = null,
-                          HTTPResponseLoggerDelegate?  LogHTTPError_toHTTPSSE      = null,
+                                            ResponseLoggerDelegate?  LogError_toConsole      = null,
+                                            ResponseLoggerDelegate?  LogError_toDisc         = null,
+                                            ResponseLoggerDelegate?  LogError_toNetwork      = null,
+                                            ResponseLoggerDelegate?  LogError_toHTTPSSE      = null,
 
-                          LogfileCreatorDelegate?      LogfileCreator              = null)
+                                            LogfileCreatorDelegate?  LogfileCreator          = null)
 
                 : base(CPOServerAPIClient,
                        LoggingPath,
                        Context.IsNotNullOrEmpty() ? Context : DefaultContext,
 
-                       LogHTTPRequest_toConsole,
-                       LogHTTPResponse_toConsole,
-                       LogHTTPRequest_toDisc,
-                       LogHTTPResponse_toDisc,
+                       LogRequest_toConsole,
+                       LogResponse_toConsole,
+                       LogRequest_toDisc,
+                       LogResponse_toDisc,
 
-                       LogHTTPRequest_toNetwork,
-                       LogHTTPResponse_toNetwork,
-                       LogHTTPRequest_toHTTPSSE,
-                       LogHTTPResponse_toHTTPSSE,
+                       LogRequest_toNetwork,
+                       LogResponse_toNetwork,
+                       LogRequest_toHTTPSSE,
+                       LogResponse_toHTTPSSE,
 
-                       LogHTTPError_toConsole,
-                       LogHTTPError_toDisc,
-                       LogHTTPError_toNetwork,
-                       LogHTTPError_toHTTPSSE,
+                       LogError_toConsole,
+                       LogError_toDisc,
+                       LogError_toNetwork,
+                       LogError_toHTTPSSE,
 
                        LogfileCreator)
 
@@ -159,32 +159,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region AuthorizeRemoteReservationStart/Stop
 
-                RegisterEvent("AuthorizeRemoteReservationStartRequest",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartHTTPRequest += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartHTTPRequest -= handler,
-                              "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "requests", "all").
+                RegisterRequestEvent("AuthorizeRemoteReservationStartRequest",
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartRequest   += (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStartRequestConverter(timestamp, sender, request)),
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartRequest   -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStartRequestConverter(timestamp, sender, request)),
+                                     "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteReservationStartResponse",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartHTTPResponse += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartHTTPResponse -= handler,
-                              "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "responses", "all").
+                RegisterResponseEvent("AuthorizeRemoteReservationStartResponse",
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStartRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteReservationStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStartResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStartRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteReservationStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "AuthorizeRemoteReservationStart", "AuthorizeRemoteReservation", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("AuthorizeRemoteReservationStopRequest",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopHTTPRequest += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopHTTPRequest -= handler,
-                              "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "requests", "all").
+                RegisterRequestEvent("AuthorizeRemoteReservationStopRequest",
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopRequest    += (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStopRequestConverter(timestamp, sender, request)),
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopRequest    -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStopRequestConverter(timestamp, sender, request)),
+                                     "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteReservationStopResponse",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopHTTPResponse += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopHTTPResponse -= handler,
-                              "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "responses", "all").
+                RegisterResponseEvent("AuthorizeRemoteReservationStopResponse",
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopResponse  += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStopRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteReservationStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteReservationStopResponse  -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteReservationStopRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteReservationStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "AuthorizeRemoteReservationStop", "AuthorizeRemoteReservation", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
@@ -192,32 +192,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region AuthorizeRemoteStart/Stop
 
-                RegisterEvent("AuthorizeRemoteStartRequest",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStartHTTPRequest += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStartHTTPRequest -= handler,
-                              "AuthorizeRemoteStart", "AuthorizeRemote", "requests", "all").
+                RegisterRequestEvent("AuthorizeRemoteStartRequest",
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteStartRequest   += (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStartRequestConverter(timestamp, sender, request)),
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteStartRequest   -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStartRequestConverter(timestamp, sender, request)),
+                                     "AuthorizeRemoteStart", "AuthorizeRemote", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteStartResponse",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStartHTTPResponse += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStartHTTPResponse -= handler,
-                              "AuthorizeRemoteStart", "AuthorizeRemote", "responses", "all").
+                RegisterResponseEvent("AuthorizeRemoteStartResponse",
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteStartResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStartRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteStartResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStartRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteStartResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "AuthorizeRemoteStart", "AuthorizeRemote", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("AuthorizeRemoteStopRequest",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStopHTTPRequest += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStopHTTPRequest -= handler,
-                              "AuthorizeRemoteStop", "AuthorizeRemote", "requests", "all").
+                RegisterRequestEvent("AuthorizeRemoteStopRequest",
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteStopRequest    += (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStopRequestConverter(timestamp, sender, request)),
+                                     handler => CPOServerAPIClient.OnAuthorizeRemoteStopRequest    -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStopRequestConverter(timestamp, sender, request)),
+                                     "AuthorizeRemoteStop", "AuthorizeRemote", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("AuthorizeRemoteStopResponse",
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStopHTTPResponse += handler,
-                              handler => CPOServerAPIClient.OnAuthorizeRemoteStopHTTPResponse -= handler,
-                              "AuthorizeRemoteStop", "AuthorizeRemote", "responses", "all").
+                RegisterResponseEvent("AuthorizeRemoteStopResponse",
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteStopResponse  += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStopRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      handler => CPOServerAPIClient.OnAuthorizeRemoteStopResponse  -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOServerAPIClient?.AuthorizeRemoteStopRequestConverter(timestamp, sender, request), CPOServerAPIClient?.AuthorizeRemoteStopResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                                      "AuthorizeRemoteStop", "AuthorizeRemote", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
