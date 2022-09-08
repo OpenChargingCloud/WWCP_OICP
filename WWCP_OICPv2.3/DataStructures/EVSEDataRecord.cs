@@ -1097,13 +1097,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 out I18NText AdditionalInfo,
                                                 out ErrorResponse))
                 {
-                    if (ErrorResponse is not null)
+                    // Allow "[]", because of Hubject data quality issues!
+                    if (ErrorResponse is not null &&
+                        JSON[nameof(AdditionalInfo)] is JArray array &&
+                        array.Count == 0)
                     {
-
-                        // Allow "[]", because of Hubject data quality issues!
-                        return JSON[nameof(AdditionalInfo)] is JArray array &&
-                               array.Count == 0;
-
+                        AdditionalInfo = I18NText.Empty;
                     }
                 }
 

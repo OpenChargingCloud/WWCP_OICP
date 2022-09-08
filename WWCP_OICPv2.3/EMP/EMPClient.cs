@@ -978,7 +978,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (PullEVSEDataResponse.TryParse(Request,
-                                                                  JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                  JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                   HTTPResponse.Timestamp,
                                                                   HTTPResponse.EventTrackingId,
                                                                   HTTPResponse.Runtime,
@@ -1065,7 +1065,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -1117,7 +1117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -1354,7 +1354,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (PullEVSEStatusResponse.TryParse(Request,
-                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                    JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                     HTTPResponse.Timestamp,
                                                                     HTTPResponse.EventTrackingId,
                                                                     HTTPResponse.Runtime,
@@ -1441,7 +1441,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -1510,7 +1510,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -1745,7 +1745,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (PullEVSEStatusByIdResponse.TryParse(Request,
-                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                         HTTPResponse.Timestamp,
                                                                         HTTPResponse.EventTrackingId,
                                                                         HTTPResponse.Runtime,
@@ -1832,7 +1832,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -1886,7 +1886,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -2121,7 +2121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (PullEVSEStatusByOperatorIdResponse.TryParse(Request,
-                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                 HTTPResponse.Timestamp,
                                                                                 HTTPResponse.EventTrackingId,
                                                                                 HTTPResponse.Runtime,
@@ -2208,7 +2208,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -2262,7 +2262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -2516,7 +2516,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (PullPricingProductDataResponse.TryParse(Request,
-                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                            JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                             HTTPResponse.Timestamp,
                                                                             HTTPResponse.EventTrackingId,
                                                                             HTTPResponse.Runtime,
@@ -2603,7 +2603,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -2652,7 +2652,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -2730,7 +2730,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -2983,7 +2983,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (PullEVSEPricingResponse.TryParse(Request,
-                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                     JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                      HTTPResponse.Timestamp,
                                                                      HTTPResponse.EventTrackingId,
                                                                      HTTPResponse.Runtime,
@@ -3070,7 +3070,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -3119,7 +3119,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -3197,7 +3197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -3435,7 +3435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<PushAuthenticationDataRequest>.TryParse(Request,
-                                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                            JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                             out Acknowledgement<PushAuthenticationDataRequest>?  pushAuthenticationDataResponse,
                                                                                             out String?                                          ErrorResponse,
                                                                                             HTTPResponse,
@@ -3527,7 +3527,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -3573,7 +3573,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -3662,7 +3662,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -3750,7 +3750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -4006,7 +4006,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStartRequest>.TryParse(Request,
-                                                                                                     JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                     JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                      out Acknowledgement<AuthorizeRemoteReservationStartRequest>?  authorizeRemoteReservationStartResponse,
                                                                                                      out String?                                                   ErrorResponse,
                                                                                                      HTTPResponse,
@@ -4098,7 +4098,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -4152,7 +4152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -4406,7 +4406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStopRequest>.TryParse(Request,
-                                                                                                    JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                    JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                     out Acknowledgement<AuthorizeRemoteReservationStopRequest>?  authorizeRemoteReservationStopResponse,
                                                                                                     out String?                                                  ErrorResponse,
                                                                                                     HTTPResponse,
@@ -4498,7 +4498,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -4552,7 +4552,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -4806,7 +4806,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStartRequest>.TryParse(Request,
-                                                                                          JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                          JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                           out Acknowledgement<AuthorizeRemoteStartRequest>?  authorizeRemoteStartResponse,
                                                                                           out String?                                        ErrorResponse,
                                                                                           HTTPResponse,
@@ -4898,7 +4898,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -4952,7 +4952,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -5206,7 +5206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStopRequest>.TryParse(Request,
-                                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                         JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                          out Acknowledgement<AuthorizeRemoteStopRequest>?  authorizeRemoteStopResponse,
                                                                                          out String?                                       ErrorResponse,
                                                                                          HTTPResponse,
@@ -5298,7 +5298,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -5352,7 +5352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
@@ -5625,7 +5625,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             {
 
                                 if (GetChargeDetailRecordsResponse.TryParse(Request,
-                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                            JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                             HTTPResponse.Timestamp,
                                                                             HTTPResponse.EventTrackingId,
                                                                             HTTPResponse.Runtime,
@@ -5712,7 +5712,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrorList,
                                                              out String?               errorResponse))
                             {
@@ -5766,7 +5766,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse,
                                                         CustomStatusCodeParser))
