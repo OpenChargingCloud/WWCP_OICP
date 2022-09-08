@@ -171,17 +171,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     RegisterDefaultDiscLogTarget(this);
 
 
-                RegisterEvent("PushEVSEPricingRequest",
-                              handler => CPOClientAPI.OnPushEVSEPricingRequest  += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request)),
-                              handler => CPOClientAPI.OnPushEVSEPricingRequest  -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request)),
-                              "PushEVSEPricing", "push", "requests", "all").
+                RegisterEvent("PushEVSEStatusRequest",
+                              handler => CPOClientAPI.OnPushEVSEStatusRequest  += (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEStatusRequestConverter(timestamp, sender, request)),
+                              handler => CPOClientAPI.OnPushEVSEStatusRequest  -= (timestamp, sender, request)                    => handler(timestamp, sender, CPOClientAPI?.PushEVSEStatusRequestConverter(timestamp, sender, request)),
+                              "PushEVSEStatus", "push", "requests", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
-                RegisterEvent("PushEVSEPricingResponse",
-                              handler => CPOClientAPI.OnPushEVSEPricingResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEPricingResponseConverter(timestamp, sender, request, response, runtime), runtime),
-                              handler => CPOClientAPI.OnPushEVSEPricingResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEPricingRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEPricingResponseConverter(timestamp, sender, request, response, runtime), runtime),
-                              "PushEVSEPricing", "push", "responses", "all").
+                RegisterEvent("PushEVSEStatusResponse",
+                              handler => CPOClientAPI.OnPushEVSEStatusResponse += (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEStatusRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEStatusResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              handler => CPOClientAPI.OnPushEVSEStatusResponse -= (timestamp, sender, request, response, runtime) => handler(timestamp, sender, CPOClientAPI?.PushEVSEStatusRequestConverter(timestamp, sender, request), CPOClientAPI?.PushEVSEStatusResponseConverter(timestamp, sender, request, response, runtime), runtime),
+                              "PushEVSEStatus", "push", "responses", "all").
                     RegisterDefaultConsoleLogTarget(this).
                     RegisterDefaultDiscLogTarget(this);
 
