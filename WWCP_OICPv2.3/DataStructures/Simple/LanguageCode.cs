@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -150,13 +148,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out LanguageCode LanguageCode)
         {
 
-            Text = Text?.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    LanguageCode = new LanguageCode(Text);
+                    LanguageCode = new LanguageCode(Text.Trim());
                     return true;
                 }
                 catch
@@ -177,7 +173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public LanguageCode Clone
 
-            => new LanguageCode(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

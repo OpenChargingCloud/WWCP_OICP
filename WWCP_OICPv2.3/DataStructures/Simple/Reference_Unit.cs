@@ -151,13 +151,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Reference_Unit ReferenceUnit)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    ReferenceUnit = new Reference_Unit(Text);
+                    ReferenceUnit = new Reference_Unit(Text.Trim());
                     return true;
                 }
                 catch
@@ -178,7 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Reference_Unit Clone
 
-            => new Reference_Unit(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

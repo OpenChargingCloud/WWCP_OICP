@@ -61,9 +61,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //ToDo: Implement proper charging pool id format!
         // ([A-Za-z]{2}\*?[A-Za-z0-9]{3}\*?P[A-Za-z0-9\*]{1,30})
 
-        //ToDo: Replace with better randomness!
-        private static readonly Random _Random = new Random();
-
         /// <summary>
         /// The internal identification.
         /// </summary>
@@ -161,9 +158,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Mapper">A delegate to modify the newly generated charging pool identification.</param>
         public static ChargingPool_Id Random(Func<String, String>? Mapper = null)
 
-            => new ChargingPool_Id(Mapper is not null
-                                       ? Mapper(_Random.RandomString(50))
-                                       :        _Random.RandomString(50));
+            => new (Mapper is not null
+                        ? Mapper(RandomExtensions.RandomString(50))
+                        :        RandomExtensions.RandomString(50));
 
         #endregion
 
@@ -214,13 +211,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out ChargingPool_Id ChargingPoolId)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    ChargingPoolId = new ChargingPool_Id(Text);
+                    ChargingPoolId = new ChargingPool_Id(Text.Trim());
                     return true;
                 }
                 catch
@@ -241,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ChargingPool_Id Clone
 
-            => new ChargingPool_Id(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -63,16 +62,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Official regular expression: ^(([A-Za-z]{2}\*?[A-Za-z0-9]{3})|(\+?[0-9]{1,3}\*[0-9]{3}))$
         /// </summary>
         /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#OperatorIDType</remarks>
-        public static readonly Regex  OperatorId_RegEx          = new Regex(@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
-                                                                            @"^\+?([0-9]{1,3})\*([0-9]{3})$",
-                                                                            RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex  OperatorId_RegEx          = new (@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
+                                                                       @"^\+?([0-9]{1,3})\*([0-9]{3})$",
+                                                                       RegexOptions.IgnorePatternWhitespace);
 
         /// <summary>
         /// The regular expression for parsing a country alpha-2 code.
         /// Official regular expression: ^[A-Za-z]{2}$
         /// </summary>
-        public static readonly Regex  CountryAlpha2Codes_RegEx  = new Regex(@"^[A-Za-z]{2}$",
-                                                                            RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex  CountryAlpha2Codes_RegEx  = new (@"^[A-Za-z]{2}$",
+                                                                       RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -191,10 +190,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (CountryCode == null)
+            if (CountryCode is null)
                 throw new ArgumentNullException(nameof(CountryCode),  "The given country must not be null!");
-
-            Suffix = Suffix?.Trim();
 
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix),       "The given charging station operator identification suffix must not be null or empty!");
@@ -240,11 +237,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of a charging station operator identification.</param>
         /// <param name="OperatorId">The parsed charging station operator identification.</param>
-        public static Boolean TryParse(String Text,
-                                       out Operator_Id OperatorId)
+        public static Boolean TryParse(String           Text,
+                                       out Operator_Id  OperatorId)
         {
-
-            Text = Text?.Trim();
 
             if (Text.IsNotNullOrEmpty())
             {
@@ -252,51 +247,58 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 try
                 {
 
-                    var MatchCollection = OperatorId_RegEx.Matches(Text);
+                    var matchCollection = OperatorId_RegEx.Matches(Text.Trim());
 
-                    if (MatchCollection.Count == 1)
+                    if (matchCollection.Count == 1)
                     {
 
                         // DE...
-                        if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country countryCode))
+                        if (Country.TryParseAlpha2Code(matchCollection[0].Groups[1].Value, out Country country))
                         {
 
                             OperatorId = new Operator_Id(
-                                             countryCode,
-                                             MatchCollection[0].Groups[3].Value,
-                                             MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
+                                             country,
+                                             matchCollection[0].Groups[3].Value,
+                                             matchCollection[0].Groups[2].Value == "*"
+                                                 ? OperatorIdFormats.ISO_STAR
+                                                 : OperatorIdFormats.ISO
+                                         );
 
                             return true;
 
                         }
 
                         // +49*...
-                        if (Country.TryParseTelefonCode(MatchCollection[0].Groups[4].Value, out countryCode))
+                        if (Country.TryParseTelefonCode(matchCollection[0].Groups[4].Value, out country))
                         {
 
                             OperatorId = new Operator_Id(
-                                             countryCode,
-                                             MatchCollection[0].Groups[5].Value,
-                                             OperatorIdFormats.DIN);
+                                             country,
+                                             matchCollection[0].Groups[5].Value,
+                                             OperatorIdFormats.DIN
+                                         );
 
                             return true;
 
                         }
 
                         // An unknown/unassigned alpha-2 country code, like e.g. "DT"...
-                        if (CountryAlpha2Codes_RegEx.IsMatch(MatchCollection[0].Groups[1].Value))
+                        if (CountryAlpha2Codes_RegEx.IsMatch(matchCollection[0].Groups[1].Value))
                         {
 
                             OperatorId = new Operator_Id(
                                              new Country(
-                                                 I18NString.Create(Languages.en, MatchCollection[0].Groups[1].Value),
-                                                 MatchCollection[0].Groups[1].Value,
-                                                 MatchCollection[0].Groups[1].Value + "X",
+                                                 I18NString.Create(Languages.en, matchCollection[0].Groups[1].Value),
+                                                 matchCollection[0].Groups[1].Value,
+                                                 matchCollection[0].Groups[1].Value + "X",
                                                  0,
                                                  0
                                              ),
-                                             MatchCollection[0].Groups[3].Value,
-                                             MatchCollection[0].Groups[2].Value == "*" ? OperatorIdFormats.ISO_STAR : OperatorIdFormats.ISO);
+                                             matchCollection[0].Groups[3].Value,
+                                             matchCollection[0].Groups[2].Value == "*"
+                                                 ? OperatorIdFormats.ISO_STAR
+                                                 : OperatorIdFormats.ISO
+                                         );
 
                             return true;
 
@@ -333,9 +335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        OperatorIdFormats  IdFormat = OperatorIdFormats.ISO_STAR)
         {
 
-            Suffix = Suffix?.Trim();
-
-            if (!(CountryCode is null) || Suffix.IsNullOrEmpty())
+            if (CountryCode is not null && Suffix.IsNeitherNullNorEmpty())
             {
                 return IdFormat switch {
 
@@ -366,9 +366,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="NewFormat">The new charging station operator identification format.</param>
         public Operator_Id ChangeFormat(OperatorIdFormats NewFormat)
 
-            => new Operator_Id(CountryCode,
-                               Suffix,
-                               NewFormat);
+            => new (CountryCode,
+                    Suffix,
+                    NewFormat);
 
         #endregion
 
@@ -379,9 +379,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Operator_Id Clone
 
-            => new Operator_Id(CountryCode,
-                               new String(Suffix.ToCharArray()),
-                               Format);
+            => new (CountryCode,
+                    new String(Suffix.ToCharArray()),
+                    Format);
 
         #endregion
 

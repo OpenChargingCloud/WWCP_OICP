@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -170,13 +168,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out EMPPartnerSession_Id SessionId)
         {
 
-            Text = Text?.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    SessionId = new EMPPartnerSession_Id(Text.SubstringMax(250));
+                    SessionId = new EMPPartnerSession_Id(Text.Trim().SubstringMax(250));
                     return true;
                 }
                 catch
@@ -197,7 +193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EMPPartnerSession_Id Clone
 
-            => new EMPPartnerSession_Id(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

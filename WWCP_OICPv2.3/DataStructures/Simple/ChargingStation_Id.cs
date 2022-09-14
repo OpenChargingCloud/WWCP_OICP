@@ -163,9 +163,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Mapper">A delegate to modify the newly generated charging station identification.</param>
         public static ChargingStation_Id Random(Func<String, String>? Mapper = null)
 
-            => new ChargingStation_Id(Mapper is not null
-                                          ? Mapper(_Random.RandomString(50))
-                                          :        _Random.RandomString(50));
+            => new (Mapper is not null
+                        ? Mapper(RandomExtensions.RandomString(50))
+                        :        RandomExtensions.RandomString(50));
 
         #endregion
 
@@ -216,13 +216,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out ChargingStation_Id ChargingStationId)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    ChargingStationId = new ChargingStation_Id(Text);
+                    ChargingStationId = new ChargingStation_Id(Text.Trim());
                     return true;
                 }
                 catch
@@ -243,7 +241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ChargingStation_Id Clone
 
-            => new ChargingStation_Id(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

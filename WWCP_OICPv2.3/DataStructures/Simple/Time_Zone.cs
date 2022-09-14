@@ -154,16 +154,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Time_Zone TimeZone)
         {
 
-            if (!Text.IsNullOrEmpty() &&
-                TimeZone_RegEx.IsMatch(Text))
+            if (!Text.IsNullOrEmpty())
             {
-                try
+
+                Text = Text.Trim();
+
+                if (TimeZone_RegEx.IsMatch(Text))
                 {
-                    TimeZone = new Time_Zone(Text);
-                    return true;
+                    try
+                    {
+                        TimeZone = new Time_Zone(Text);
+                        return true;
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
+
             }
 
             TimeZone = default;

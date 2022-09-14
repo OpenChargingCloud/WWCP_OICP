@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -154,18 +153,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out PIN PIN)
         {
 
-            Text = Text?.Trim()?.ToUpper();
-
-            if (!Text.IsNullOrEmpty() &&
-                PIN_RegEx.IsMatch(Text))
+            if (!Text.IsNullOrEmpty())
             {
-                try
+
+                Text = Text.Trim();
+
+                if (PIN_RegEx.IsMatch(Text))
                 {
-                    PIN = new PIN(Text);
-                    return true;
+                    try
+                    {
+                        PIN = new PIN(Text);
+                        return true;
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
+
             }
 
             PIN = default;
@@ -182,7 +185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public PIN Clone
 
-            => new PIN(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

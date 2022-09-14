@@ -17,10 +17,7 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
-
-using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -68,8 +65,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The regular expression for parsing a charging session identification (which is basically a GUID).
         /// </summary>
-        public static readonly Regex SessionId_RegEx  = new Regex("^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
-                                                                  RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex SessionId_RegEx  = new ("^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$",
+                                                             RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -156,17 +153,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JToken)
-
-        /// <summary>
-        /// Try to parse the given JSON token as a charging session identification.
-        /// </summary>
-        /// <param name="JToken">A JSON token representation of a charging session identification.</param>
-        public static Session_Id? TryParse(JToken JToken)
-            => TryParse(JToken?.Value<String>());
-
-        #endregion
-
         #region (static) TryParse(Text, out SessionId)
 
         /// <summary>
@@ -177,18 +163,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Session_Id SessionId)
         {
 
-            Text = Text?.Trim();
-
-            if (!Text.IsNullOrEmpty() &&
-                SessionId_RegEx.IsMatch(Text))
+            if (!Text.IsNullOrEmpty())
             {
-                try
+
+                Text = Text.Trim();
+
+                if (SessionId_RegEx.IsMatch(Text))
                 {
-                    SessionId = new Session_Id(Text);
-                    return true;
+                    try
+                    {
+                        SessionId = new Session_Id(Text);
+                        return true;
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
+
             }
 
             SessionId = default;
@@ -205,7 +195,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Session_Id Clone
 
-            => new Session_Id(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

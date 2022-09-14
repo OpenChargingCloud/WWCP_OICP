@@ -145,13 +145,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out PartnerProduct_Id PartnerProductId)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    PartnerProductId = new PartnerProduct_Id(Text);
+                    PartnerProductId = new PartnerProduct_Id(Text.Trim());
                     return true;
                 }
                 catch

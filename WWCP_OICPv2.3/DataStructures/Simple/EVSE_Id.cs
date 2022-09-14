@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
@@ -65,11 +64,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Official regular expression: ^(([A-Za-z]{2}\*?[A-Za-z0-9]{3}\*?E[A-Za-z0-9\*]{1,30})|(\+?[0-9]{1,3}\*[0-9]{3}\*[0-9\*]{1,32}))$
         /// </summary>
         /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#EvseIDType</remarks>
-        public static readonly Regex EVSEId_RegEx = new Regex(@"^([A-Za-z]{2}\*?[A-Za-z0-9]{3})\*?E([A-Za-z0-9\*]{1,30})$ |" +
-                                                              @"^(\+?[0-9]{1,3}\*[0-9]{3})\*([0-9\*]{1,32})$",
-                                                              RegexOptions.IgnorePatternWhitespace);
-
-        private static readonly Random random = new Random();
+        public static readonly Regex EVSEId_RegEx = new (@"^([A-Za-z]{2}\*?[A-Za-z0-9]{3})\*?E([A-Za-z0-9\*]{1,30})$ |" +
+                                                         @"^(\+?[0-9]{1,3}\*[0-9]{3})\*([0-9\*]{1,32})$",
+                                                         RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -161,15 +158,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId">The unique identification of a charging station operator.</param>
         /// <param name="Length">The expected length of the EVSE identification suffix</param>
         /// <param name="Mapper">A delegate to modify the newly generated EVSE identification.</param>
-        public static EVSE_Id Random(Operator_Id           OperatorId,
-                                     Byte                  Length  = 12,
-                                     Func<String, String>  Mapper  = null)
+        public static EVSE_Id Random(Operator_Id            OperatorId,
+                                     Byte                   Length  = 12,
+                                     Func<String, String>?  Mapper  = null)
 
 
-            => new EVSE_Id(OperatorId,
-                           Mapper != null
-                               ? Mapper(random.RandomString(Length))
-                               :        random.RandomString(Length));
+            => new (OperatorId,
+                    Mapper is not null
+                        ? Mapper(RandomExtensions.RandomString(Length))
+                        :        RandomExtensions.RandomString(Length));
 
         #endregion
 
@@ -270,15 +267,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out EVSE_Id EVSEId)
         {
 
-            Text = Text?.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
 
                 try
                 {
 
-                    var MatchCollection = EVSEId_RegEx.Matches(Text);
+                    var MatchCollection = EVSEId_RegEx.Matches(Text.Trim());
 
                     if (MatchCollection.Count == 1)
                     {
@@ -327,8 +322,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public EVSE_Id Clone
 
-            => new EVSE_Id(OperatorId.Clone,
-                           new String(Suffix.ToCharArray()));
+            => new (OperatorId.Clone,
+                    new String(Suffix.ToCharArray()));
 
         #endregion
 

@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -146,13 +144,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out ClearingHouse_Id ClearingHouseId)
         {
 
-            Text = Text?.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    ClearingHouseId = new ClearingHouse_Id(Text);
+                    ClearingHouseId = new ClearingHouse_Id(Text.Trim());
                     return true;
                 }
                 catch
@@ -173,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public ClearingHouse_Id Clone
 
-            => new ClearingHouse_Id(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

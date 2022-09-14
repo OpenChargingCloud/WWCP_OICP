@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -61,8 +60,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The regular expression for parsing an Alpha-2-CountryCode and an e-mobility provider identification.
         /// </summary>
-        public static readonly Regex  ProviderId_RegEx = new Regex(@"^([A-Za-z]{2})([\*|\-]?)([A-Za-z0-9]{3})$",
-                                                                   RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex  ProviderId_RegEx = new (@"^([A-Za-z]{2})([\*|\-]?)([A-Za-z0-9]{3})$",
+                                                              RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -185,10 +184,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (CountryCode == null)
+            if (CountryCode is null)
                 throw new ArgumentNullException(nameof(CountryCode),  "The given country must not be null!");
-
-            Suffix = Suffix?.Trim();
 
             if (Suffix.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Suffix),       "The given e-mobility provider identification suffix must not be null or empty!");
@@ -238,11 +235,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
         /// <param name="ProviderId">The parsed e-mobility provider identification.</param>
-        public static Boolean TryParse(String Text,
-                                       out Provider_Id ProviderId)
+        public static Boolean TryParse(String           Text,
+                                       out Provider_Id  ProviderId)
         {
-
-            Text = Text?.Trim();
 
             if (Text.IsNotNullOrEmpty())
             {
@@ -250,16 +245,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 try
                 {
 
-                    var MatchCollection = ProviderId_RegEx.Matches(Text);
+                    var matchCollection = ProviderId_RegEx.Matches(Text.Trim());
 
-                    if (MatchCollection.Count == 1)
+                    if (matchCollection.Count == 1)
                     {
-                        if (Country.TryParseAlpha2Code(MatchCollection[0].Groups[1].Value, out Country _CountryCode))
+                        if (Country.TryParseAlpha2Code(matchCollection[0].Groups[1].Value, out Country country))
                         {
 
-                            ProviderId = new Provider_Id(_CountryCode,
-                                                         MatchCollection[0].Groups[3].Value,
-                                                         MatchCollection[0].Groups[2].Value switch {
+                            ProviderId = new Provider_Id(country,
+                                                         matchCollection[0].Groups[3].Value,
+                                                         matchCollection[0].Groups[2].Value switch {
                                                              "-" => ProviderIdFormats.ISO_HYPHEN,
                                                              "*" => ProviderIdFormats.DIN_STAR,
                                                              _ => ProviderIdFormats.ISO,
@@ -298,9 +293,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        ProviderIdFormats  IdFormat = ProviderIdFormats.ISO_HYPHEN)
         {
 
-            Suffix = Suffix?.Trim();
-
-            if (!(CountryCode is null) || Suffix.IsNullOrEmpty())
+            if (CountryCode is not null && Suffix.IsNeitherNullNorEmpty())
             {
                 return IdFormat switch {
 
@@ -337,9 +330,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="NewFormat">The new e-mobility provider identification format.</param>
         public Provider_Id ChangeFormat(ProviderIdFormats NewFormat)
 
-            => new Provider_Id(CountryCode,
-                               Suffix,
-                               NewFormat);
+            => new (CountryCode,
+                    Suffix,
+                    NewFormat);
 
         #endregion
 
@@ -350,9 +343,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Provider_Id Clone
 
-            => new Provider_Id(CountryCode,
-                               new String(Suffix.ToCharArray()),
-                               Format);
+            => new (CountryCode,
+                    new String(Suffix.ToCharArray()),
+                    Format);
 
         #endregion
 

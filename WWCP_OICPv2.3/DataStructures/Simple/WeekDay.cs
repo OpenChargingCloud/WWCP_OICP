@@ -151,13 +151,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out WeekDay WeekDay)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    WeekDay = new WeekDay(Text);
+                    WeekDay = new WeekDay(Text.Trim());
                     return true;
                 }
                 catch
@@ -178,42 +176,112 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public WeekDay Clone
 
-            => new WeekDay(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 
         #endregion
 
 
+        #region (static) Everyday
+
+        /// <summary>
+        /// Everyday
+        /// </summary>
         public static WeekDay Everyday
             => new ("Everyday");
 
+        #endregion
+
+        #region (static) Workdays
+
+        /// <summary>
+        /// Workdays
+        /// </summary>
         public static WeekDay Workdays
             => new ("Workdays");
 
+        #endregion
+
+        #region (static) Weekend
+
+        /// <summary>
+        /// Weekend
+        /// </summary>
         public static WeekDay Weekend
             => new ("Weekend");
 
+        #endregion
+
+        #region (static) Monday
+
+        /// <summary>
+        /// Monday
+        /// </summary>
         public static WeekDay Monday
             => new ("Monday");
 
+        #endregion
+
+        #region (static) Tuesday
+
+        /// <summary>
+        /// Tuesday
+        /// </summary>
         public static WeekDay Tuesday
             => new ("Tuesday");
 
+        #endregion
+
+        #region (static) Wednesday
+
+        /// <summary>
+        /// Wednesday
+        /// </summary>
         public static WeekDay Wednesday
             => new ("Wednesday");
 
+        #endregion
+
+        #region (static) Thursday
+
+        /// <summary>
+        /// Thursday
+        /// </summary>
         public static WeekDay Thursday
             => new ("Thursday");
 
+        #endregion
+
+        #region (static) Friday
+
+        /// <summary>
+        /// Friday
+        /// </summary>
         public static WeekDay Friday
             => new ("Friday");
 
+        #endregion
+
+        #region (static) Saturday
+
+        /// <summary>
+        /// Saturday
+        /// </summary>
         public static WeekDay Saturday
             => new ("Saturday");
 
+        #endregion
+
+        #region (static) Sunday
+
+        /// <summary>
+        /// Sunday
+        /// </summary>
         public static WeekDay Sunday
             => new ("Sunday");
+
+        #endregion
 
 
         #region Operator overloading

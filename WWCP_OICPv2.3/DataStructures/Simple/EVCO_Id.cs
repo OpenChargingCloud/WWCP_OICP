@@ -223,15 +223,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out EVCO_Id EVCOId)
         {
 
-            Text = Text?.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
 
                 try
                 {
 
-                    var matchCollection = EVCOId_RegEx.Matches(Text);
+                    var matchCollection = EVCOId_RegEx.Matches(Text.Trim());
 
                     if (matchCollection.Count == 1)
                     {

@@ -170,13 +170,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out CPOPartnerSession_Id SessionId)
         {
 
-            Text = Text?.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    SessionId = new CPOPartnerSession_Id(Text.SubstringMax(250));
+                    SessionId = new CPOPartnerSession_Id(Text.Trim().SubstringMax(250));
                     return true;
                 }
                 catch
@@ -197,7 +195,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public CPOPartnerSession_Id Clone
 
-            => new CPOPartnerSession_Id(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

@@ -154,18 +154,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Phone_Number PhoneNumber)
         {
 
-            Text = Text?.Trim();
-
-            if (!Text.IsNullOrEmpty() &&
-                Phone_Number_RegEx.IsMatch(Text))
+            if (!Text.IsNullOrEmpty())
             {
-                try
+
+                Text = Text.Trim();
+
+                if (Phone_Number_RegEx.IsMatch(Text))
                 {
-                    PhoneNumber = new Phone_Number(Text);
-                    return true;
+                    try
+                    {
+                        PhoneNumber = new Phone_Number(Text);
+                        return true;
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
+
             }
 
             PhoneNumber = default;
@@ -182,7 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Phone_Number Clone
 
-            => new Phone_Number(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

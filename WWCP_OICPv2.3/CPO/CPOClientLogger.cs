@@ -69,8 +69,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public CPOClientLogger(CPOClient                CPOClient,
                                    String                   LoggingPath,
-                                   String                   Context         = DefaultContext,
-                                   LogfileCreatorDelegate?  LogfileCreator  = null)
+                                   String                   Context          = DefaultContext,
+                                   LogfileCreatorDelegate?  LogfileCreator   = null)
 
                 : this(CPOClient,
                        LoggingPath,

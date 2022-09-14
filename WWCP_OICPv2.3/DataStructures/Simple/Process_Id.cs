@@ -154,13 +154,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Process_Id ProcessId)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    ProcessId = new Process_Id(Text);
+                    ProcessId = new Process_Id(Text.Trim());
                     return true;
                 }
                 catch
@@ -181,7 +179,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Process_Id Clone
 
-            => new (new String(InternalId?.ToCharArray()));
+            => new (
+                   new String(InternalId?.ToCharArray())
+               );
 
         #endregion
 

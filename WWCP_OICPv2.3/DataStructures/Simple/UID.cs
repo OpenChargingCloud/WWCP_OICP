@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -108,6 +107,40 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region (static) NewRandom4
+
+        /// <summary>
+        /// Create a new random 4-byte UID.
+        /// </summary>
+        public static UID NewRandom4
+
+            => Parse(RandomExtensions.RandomHexString(8));
+
+        #endregion
+
+        #region (static) NewRandom7
+
+        /// <summary>
+        /// Create a new random 7-byte UID.
+        /// </summary>
+        public static UID NewRandom7
+
+            => Parse(RandomExtensions.RandomHexString(14));
+
+        #endregion
+
+        #region (static) NewRandom10
+
+        /// <summary>
+        /// Create a new random 10-byte UID.
+        /// </summary>
+        public static UID NewRandom10
+
+            => Parse(RandomExtensions.RandomHexString(20));
+
+        #endregion
+
+
         #region (static) Parse   (Text)
 
         /// <summary>
@@ -155,18 +188,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out UID UID)
         {
 
-            Text = Text?.Trim();
-
-            if (!Text.IsNullOrEmpty() &&
-                UID_RegEx.IsMatch(Text))
+            if (!Text.IsNullOrEmpty())
             {
-                try
+
+                Text = Text.Trim();
+
+                if (UID_RegEx.IsMatch(Text))
                 {
-                    UID = new UID(Text);
-                    return true;
+                    try
+                    {
+                        UID = new UID(Text);
+                        return true;
+                    }
+                    catch
+                    { }
                 }
-                catch
-                { }
+
             }
 
             UID = default;
@@ -183,7 +220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public UID Clone
 
-            => new UID(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

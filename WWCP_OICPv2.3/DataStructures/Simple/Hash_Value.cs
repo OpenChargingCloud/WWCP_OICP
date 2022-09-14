@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -150,13 +148,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Hash_Value HashValue)
         {
 
-            Text = Text?.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    HashValue = new Hash_Value(Text);
+                    HashValue = new Hash_Value(Text.Trim());
                     return true;
                 }
                 catch
@@ -177,7 +173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Hash_Value Clone
 
-            => new Hash_Value(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 

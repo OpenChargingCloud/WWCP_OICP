@@ -174,13 +174,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Currency_Id CurrencyId)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    CurrencyId = new Currency_Id(AlphabeticCode: Text,
+                    CurrencyId = new Currency_Id(AlphabeticCode: Text.Trim(),
                                                  NumericCode:    null,
                                                  MinorUnit:      null,
                                                  Currency:       null,

@@ -151,13 +151,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out Additional_Reference AdditionalReference)
         {
 
-            Text = Text.Trim();
-
             if (Text.IsNotNullOrEmpty())
             {
                 try
                 {
-                    AdditionalReference = new Additional_Reference(Text);
+                    AdditionalReference = new Additional_Reference(Text.Trim());
                     return true;
                 }
                 catch
@@ -178,7 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public Additional_Reference Clone
 
-            => new Additional_Reference(
+            => new (
                    new String(InternalId?.ToCharArray())
                );
 
