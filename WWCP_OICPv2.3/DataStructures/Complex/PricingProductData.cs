@@ -82,12 +82,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Mandatory]
         public IEnumerable<PricingProductDataRecord>  PricingProductDataRecords         { get; }
 
-        /// <summary>
-        /// Optional custom data, e.g. in combination with custom parsers and serializers.
-        /// </summary>
-        [Optional]
-        public JObject?                               CustomData                        { get; }
-
         #endregion
 
         #region Constructor(s)
@@ -118,7 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   JObject?                               CustomData     = null,
                                   Dictionary<String, Object>?            InternalData   = null)
 
-            : base(null,
+            : base(CustomData,
                    InternalData)
 
         {
@@ -131,8 +125,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.PricingProductDataRecords    = PricingProductDataRecords.Distinct();
 
             this.OperatorName                 = OperatorName;
-
-            this.CustomData                   = CustomData;
 
         }
 

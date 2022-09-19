@@ -246,17 +246,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JToken)
-
-        /// <summary>
-        /// Try to parse the given JSON token as an EVSE identification.
-        /// </summary>
-        /// <param name="JToken">A JSON token representation of an EVSE identification.</param>
-        public static EVSE_Id? TryParse(JToken JToken)
-            => TryParse(JToken?.Value<String>());
-
-        #endregion
-
         #region (static) TryParse(Text, out EVSEId)
 
         /// <summary>

@@ -116,10 +116,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryFromLatLng(Latitude. Value,
                               Longitude.Value,
-                              out GeoCoordinates geoCoordinates,
-                              out String         ErrorResponse))
+                              out GeoCoordinates? geoCoordinates,
+                              out String?         ErrorResponse))
             {
-                return geoCoordinates;
+                return geoCoordinates!.Value;
             }
 
             throw new ArgumentException("Invalid geo coordinates: '" + ErrorResponse + "'!");
@@ -135,8 +135,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Longitude">The longitude ("Längengrad": West -180° to East +180°).</param>
         /// <param name="Latitude">The latitude ("Breitengrad": South -90° to Nord +90°).</param>
-        public static GeoCoordinates FromLngLat(Double?  Longitude,
-                                                Double?  Latitude)
+        public static GeoCoordinates? FromLngLat(Double?  Longitude,
+                                                 Double?  Latitude)
 
             => FromLatLng(Latitude,
                           Longitude);
@@ -158,7 +158,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 Longitude.HasValue &&
                 TryFromLatLng(Latitude. Value,
                               Longitude.Value,
-                              out GeoCoordinates geoCoordinates,
+                              out GeoCoordinates? geoCoordinates,
                               out _))
             {
                 return geoCoordinates;
@@ -194,10 +194,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Longitude">The longitude ("Längengrad": West -180° to East +180°).</param>
         /// <param name="GeoCoordinate">The parsed geo coordinate.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryFromLatLng(Double              Latitude,
-                                            Double              Longitude,
-                                            out GeoCoordinates  GeoCoordinate,
-                                            out String          ErrorResponse)
+        public static Boolean TryFromLatLng(Double               Latitude,
+                                            Double               Longitude,
+                                            out GeoCoordinates?  GeoCoordinate,
+                                            out String?          ErrorResponse)
         {
 
             GeoCoordinate  = default;
@@ -233,10 +233,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Latitude">The latitude ("Breitengrad": South -90° to Nord +90°).</param>
         /// <param name="GeoCoordinate">The parsed geo coordinate.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParseLngLat(Double              Longitude,
-                                             Double              Latitude,
-                                             out GeoCoordinates  GeoCoordinate,
-                                             out String          ErrorResponse)
+        public static Boolean TryParseLngLat(Double               Longitude,
+                                             Double               Latitude,
+                                             out GeoCoordinates?  GeoCoordinate,
+                                             out String?          ErrorResponse)
 
             => TryFromLatLng(Latitude,
                              Longitude,
@@ -530,10 +530,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (elements.Length == 2)
             {
 
-                if (TryParseLatLng(elements[0], elements[1], out GeoCoordinates, out ErrorResponse))
+                var element0 = elements[0];
+                var element1 = elements[1];
+
+                if (element0 is not null &&
+                    element1 is not null &&
+                    TryParseLatLng(element0,
+                                   element1,
+                                   out GeoCoordinates,
+                                   out ErrorResponse))
                     return true;
 
-                if (TryParseLngLat(elements[0], elements[1], out GeoCoordinates, out ErrorResponse))
+                if (element0 is not null &&
+                    element1 is not null &&
+                    TryParseLngLat(element0,
+                                   element1,
+                                   out GeoCoordinates,
+                                   out ErrorResponse))
                     return true;
 
             }
@@ -763,8 +776,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
 
             return CustomGeoCoordinatesSerializer is not null
-                       ? CustomGeoCoordinatesSerializer(this, JSON)
-                       : JSON;
+                       ? CustomGeoCoordinatesSerializer(this, JSON ?? new JObject())
+                       : JSON ?? new JObject();
 
         }
 

@@ -336,7 +336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?          errorResponse,
                          CustomIdentificationParser))
             {
-                return identification;
+                return identification!;
             }
 
             throw new ArgumentException("The given JSON representation of an identification is invalid: " + errorResponse, nameof(JSON));
@@ -361,7 +361,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?          errorResponse,
                          CustomIdentificationParser))
             {
-                return identification;
+                return identification!;
             }
 
             throw new ArgumentException("The given text representation of an identification is invalid: " + errorResponse, nameof(Text));

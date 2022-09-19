@@ -626,7 +626,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
                     ProcessId         ?? Process_Id.NewRandom,
-                    Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                    Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
                         StatusCodes.DataError,
@@ -678,7 +678,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
                     ProcessId         ?? Process_Id.NewRandom,
-                    Runtime           ?? (Timestamp.Now - Request.Timestamp),
+                    Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
                         StatusCodes.SystemError,
@@ -805,7 +805,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
         public static AuthorizationStopResponse Parse(AuthorizeStopRequest                                     Request,
-                                                      String?                                                  Text,
+                                                      String                                                   Text,
                                                       DateTime?                                                ResponseTimestamp                       = null,
                                                       EventTracking_Id?                                        EventTrackingId                         = null,
                                                       TimeSpan?                                                Runtime                                 = null,
@@ -890,7 +890,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSON2("StatusCode",
                                               "status code",
                                               OICPv2_3.StatusCode.TryParse,
-                                              out StatusCode StatusCode,
+                                              out StatusCode? StatusCode,
                                               out ErrorResponse))
                 {
                     return false;
@@ -966,7 +966,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                            ProcessId         ?? Process_Id.NewRandom,
                                                                            Runtime           ?? Timestamp.Now - Request.Timestamp,
                                                                            AuthorizationStatus,
-                                                                           StatusCode,
+                                                                           StatusCode!,
                                                                            Request,
                                                                            SessionId,
                                                                            CPOPartnerSessionId,

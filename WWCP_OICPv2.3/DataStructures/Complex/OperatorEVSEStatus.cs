@@ -126,7 +126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?              errorResponse,
                          CustomOperatorEVSEStatusParser))
             {
-                return operatorEVSEStatus;
+                return operatorEVSEStatus!;
             }
 
             throw new ArgumentException("The given JSON representation of operator EVSE status is invalid: " + errorResponse, nameof(JSON));
@@ -151,7 +151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?              errorResponse,
                          CustomOperatorEVSEStatusParser))
             {
-                return operatorEVSEStatus;
+                return operatorEVSEStatus!;
             }
 
             throw new ArgumentException("The given text representation of operator EVSE status is invalid: " + errorResponse, nameof(Text));

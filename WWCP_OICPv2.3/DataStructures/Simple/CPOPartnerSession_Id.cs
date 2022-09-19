@@ -149,17 +149,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JToken)
-
-        /// <summary>
-        /// Try to parse the given JSON token as a charging session identification.
-        /// </summary>
-        /// <param name="JToken">A JSON token representation of a charging session identification.</param>
-        public static CPOPartnerSession_Id? TryParse(JToken JToken)
-            => TryParse(JToken?.Value<String>());
-
-        #endregion
-
         #region (static) TryParse(Text, out SessionId)
 
         /// <summary>

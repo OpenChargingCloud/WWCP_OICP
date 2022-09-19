@@ -205,10 +205,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             if (authenticationDataRecordJObject.ParseMandatoryJSON2("Identification",
                                                                                     "user identification data record",
                                                                                     Identification.TryParse,
-                                                                                    out Identification identification,
+                                                                                    out Identification? identification,
                                                                                     out ErrorResponse))
                             {
-                                Identifications.Add(identification);
+                                Identifications.Add(identification!);
                             }
                             else
                             {

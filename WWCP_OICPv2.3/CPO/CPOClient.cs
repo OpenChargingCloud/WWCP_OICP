@@ -995,7 +995,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEDataRequest>.TryParse(Request,
-                                                                                      JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                      JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                       out Acknowledgement<PushEVSEDataRequest>?  acknowledgement,
                                                                                       out String?                                ErrorResponse,
                                                                                       HTTPResponse,
@@ -1082,7 +1082,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
                                                                  out ValidationErrorList?  validationErrors,
                                                                  out String?               errorResponse))
                                 {
@@ -1150,9 +1150,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -1224,9 +1228,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -1505,7 +1513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEStatusRequest>.TryParse(Request,
-                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                         out Acknowledgement<PushEVSEStatusRequest>?  acknowledgement,
                                                                                         out String?                                  ErrorResponse,
                                                                                         HTTPResponse,
@@ -1591,7 +1599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
                                                                  out ValidationErrorList?  validationErrors,
                                                                  out String?               errorResponse))
                                 {
@@ -1651,15 +1659,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -1725,15 +1737,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -2013,7 +2029,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushPricingProductDataRequest>.TryParse(Request,
-                                                                                                JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                                JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                                 out Acknowledgement<PushPricingProductDataRequest>?  acknowledgement,
                                                                                                 out String?                                          ErrorResponse,
                                                                                                 HTTPResponse,
@@ -2100,7 +2116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
                                                                  out ValidationErrorList?  validationErrors,
                                                                  out String?               errorResponse))
                                 {
@@ -2168,9 +2184,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -2242,9 +2262,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -2522,7 +2546,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEPricingRequest>.TryParse(Request,
-                                                                                         JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                         JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                          out Acknowledgement<PushEVSEPricingRequest>?  acknowledgement,
                                                                                          out String?                                   ErrorResponse,
                                                                                          HTTPResponse,
@@ -2609,7 +2633,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
                                                                  out ValidationErrorList?  validationErrors,
                                                                  out String?               errorResponse))
                                 {
@@ -2677,9 +2701,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -2751,9 +2779,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                            out StatusCode?  statusCode,
-                                                            out String?      ErrorResponse,
+                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                    if (json is not null &&
+                                        json["StatusCode"] is JObject JSONObject &&
+                                        StatusCode.TryParse(JSONObject,
+                                                            out StatusCode? statusCode,
+                                                            out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
 
@@ -3012,7 +3044,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (PullAuthenticationDataResponse.TryParse(Request,
-                                                                            JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String() ?? ""),
+                                                                            JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                             HTTPResponse.Timestamp,
                                                                             HTTPResponse.EventTrackingId,
                                                                             HTTPResponse.Runtime,
@@ -3098,7 +3130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String() ?? "",
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -3158,9 +3190,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3235,9 +3271,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3310,9 +3350,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3592,7 +3636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // 102 (RFID Authentication failed – invalid UID)  => No positive authorization from any EMP!
 
                                 if (AuthorizationStartResponse.TryParse(Request,
-                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                         out AuthorizationStartResponse?  authorizationStartResponse,
                                                                         out String?                      ErrorResponse,
                                                                         HTTPResponse.Timestamp,
@@ -3674,7 +3718,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -3726,16 +3770,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<AuthorizationStartResponse>.Failed(Request,
                                                                                            AuthorizationStartResponse.NotAuthorized(
                                                                                                Request,
-                                                                                               statusCode,
+                                                                                               statusCode!,
                                                                                                ProcessId: processId
                                                                                            ),
                                                                                            processId);
@@ -3943,7 +3991,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (AuthorizationStopResponse.TryParse(Request,
-                                                                       JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                       JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                        out AuthorizationStopResponse?  authorizationStopResponse,
                                                                        out String?                     ErrorResponse,
                                                                        HTTPResponse.Timestamp,
@@ -4026,7 +4074,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -4078,16 +4126,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode statusCode,
-                                                        out String     ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<AuthorizationStopResponse>.Failed(Request,
                                                                                           AuthorizationStopResponse.NotAuthorized(
                                                                                               Request,
-                                                                                              statusCode,
+                                                                                              statusCode!,
                                                                                               ProcessId: processId
                                                                                           ),
                                                                                           processId);
@@ -4147,16 +4199,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode statusCode,
-                                                        out String     ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<AuthorizationStopResponse>.Failed(Request,
                                                                                           AuthorizationStopResponse.NotAuthorized(
                                                                                               Request,
-                                                                                              statusCode,
+                                                                                              statusCode!,
                                                                                               ProcessId: processId
                                                                                           ),
                                                                                           processId);
@@ -4385,7 +4441,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
-                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                               JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                out Acknowledgement<ChargingStartNotificationRequest>?  acknowledgement,
                                                                                                out String?                                             ErrorResponse,
                                                                                                HTTPResponse,
@@ -4471,7 +4527,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -4523,9 +4579,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4535,7 +4595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                       HTTPResponse.EventTrackingId,
                                                                                                                       processId,
                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                      statusCode,
+                                                                                                                      statusCode!,
                                                                                                                       Request
                                                                                                                   ),
                                                                                                                   processId);
@@ -4597,9 +4657,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4609,7 +4673,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                       HTTPResponse.EventTrackingId,
                                                                                                                       processId,
                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                      statusCode,
+                                                                                                                      statusCode!,
                                                                                                                       Request
                                                                                                                   ),
                                                                                                                   processId);
@@ -4854,7 +4918,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingProgressNotificationRequest>.TryParse(Request,
-                                                                                                  JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                                  JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                   out Acknowledgement<ChargingProgressNotificationRequest>?  acknowledgement,
                                                                                                   out String?                                                ErrorResponse,
                                                                                                   HTTPResponse,
@@ -4940,7 +5004,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -4992,9 +5056,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5004,7 +5072,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                          HTTPResponse.EventTrackingId,
                                                                                                                          processId,
                                                                                                                          HTTPResponse.Runtime,
-                                                                                                                         statusCode,
+                                                                                                                         statusCode!,
                                                                                                                          Request
                                                                                                                      ),
                                                                                                                      processId);
@@ -5066,9 +5134,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5078,7 +5150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                          HTTPResponse.EventTrackingId,
                                                                                                                          processId,
                                                                                                                          HTTPResponse.Runtime,
-                                                                                                                         statusCode,
+                                                                                                                         statusCode!,
                                                                                                                          Request
                                                                                                                      ),
                                                                                                                      processId);
@@ -5323,7 +5395,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
-                                                                                             JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                             JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                              out Acknowledgement<ChargingEndNotificationRequest>?  acknowledgement,
                                                                                              out String?                                           ErrorResponse,
                                                                                              HTTPResponse,
@@ -5409,7 +5481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -5461,9 +5533,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5473,7 +5549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                     HTTPResponse.EventTrackingId,
                                                                                                                     processId,
                                                                                                                     HTTPResponse.Runtime,
-                                                                                                                    statusCode,
+                                                                                                                    statusCode!,
                                                                                                                     Request
                                                                                                                 ),
                                                                                                                 processId);
@@ -5535,9 +5611,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5547,7 +5627,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                     HTTPResponse.EventTrackingId,
                                                                                                                     processId,
                                                                                                                     HTTPResponse.Runtime,
-                                                                                                                    statusCode,
+                                                                                                                    statusCode!,
                                                                                                                     Request
                                                                                                                 ),
                                                                                                                 processId);
@@ -5792,7 +5872,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
-                                                                                               JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                               JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                                out Acknowledgement<ChargingErrorNotificationRequest>?  acknowledgement,
                                                                                                out String?                                             ErrorResponse,
                                                                                                HTTPResponse,
@@ -5878,7 +5958,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -5930,9 +6010,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      errorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5942,7 +6026,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                       HTTPResponse.EventTrackingId,
                                                                                                                       processId,
                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                      statusCode,
+                                                                                                                      statusCode!,
                                                                                                                       Request
                                                                                                                   ),
                                                                                                                   processId);
@@ -6004,9 +6088,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
@@ -6015,7 +6104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                       HTTPResponse.EventTrackingId,
                                                                                                                       processId,
                                                                                                                       HTTPResponse.Runtime, 
-                                                                                                                      statusCode,
+                                                                                                                      statusCode!,
                                                                                                                       Request
                                                                                                                   ),
                                                                                                                   processId);
@@ -6075,9 +6164,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      errorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String?     ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -6087,7 +6180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                       HTTPResponse.EventTrackingId,
                                                                                                                       processId,
                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                      statusCode,
+                                                                                                                      statusCode!,
                                                                                                                       Request
                                                                                                                   ),
                                                                                                                   processId);
@@ -6313,7 +6406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             {
 
                                 if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
-                                                                                        JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String()),
+                                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
                                                                                         out Acknowledgement<ChargeDetailRecordRequest>?  acknowledgement,
                                                                                         out String?                                      ErrorResponse,
                                                                                         HTTPResponse,
@@ -6400,7 +6493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody?.ToUTF8String(),
+                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
                                                              out ValidationErrorList?  validationErrors,
                                                              out String?               errorResponse))
                             {
@@ -6470,9 +6563,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody?.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse))
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
+                                                        CustomStatusCodeParser))
                                 {
 
                                     result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(Request,
@@ -6481,7 +6579,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                HTTPResponse.EventTrackingId,
                                                                                                                processId,
                                                                                                                HTTPResponse.Runtime,
-                                                                                                               statusCode,
+                                                                                                               statusCode!,
                                                                                                                Request
                                                                                                            ),
                                                                                                            processId);

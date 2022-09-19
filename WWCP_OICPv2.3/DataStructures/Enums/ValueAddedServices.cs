@@ -135,7 +135,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    ValueAddedServices.PredictiveChargePointUsage  => "PredictiveChargePointUsage",
                    ValueAddedServices.ChargingPlans               => "ChargingPlans",
                    ValueAddedServices.RoofProvided                => "RoofProvided",
-                   ValueAddedServices.None                        => "None"
+                   ValueAddedServices.None                        => "None",
+                   _                                              => "None"
                };
 
         #endregion

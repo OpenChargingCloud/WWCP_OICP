@@ -71,7 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// An optional event tracking identification for correlating this request with other events.
         /// </summary>
-        public EventTracking_Id?         EventTrackingId            { get; }
+        public EventTracking_Id          EventTrackingId            { get; }
 
         /// <summary>
         /// An optional timeout for this request.

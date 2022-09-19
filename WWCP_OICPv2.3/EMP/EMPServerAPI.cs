@@ -904,7 +904,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeStartRequest,
+                                                                                              authorizeStartRequest!,
                                                                                               authorizationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1095,7 +1095,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeStopRequest,
+                                                                                              authorizeStopRequest!,
                                                                                               authorizationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1294,7 +1294,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingStartNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingStartNotificationRequest,
+                                                                                                          chargingStartNotificationRequest!,
                                                                                                           chargingStartNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1356,7 +1356,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingProgressNotificationRequestDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingProgressNotificationRequest))).
+                                                                                                          chargingProgressNotificationRequest!))).
                                                                                             ConfigureAwait(false);
 
                                                                  }
@@ -1430,7 +1430,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingProgressNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingProgressNotificationRequest,
+                                                                                                          chargingProgressNotificationRequest!,
                                                                                                           chargingProgressNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1492,7 +1492,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingEndNotificationRequestDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingEndNotificationRequest))).
+                                                                                                          chargingEndNotificationRequest!))).
                                                                                             ConfigureAwait(false);
 
                                                                  }
@@ -1566,7 +1566,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingEndNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingEndNotificationRequest,
+                                                                                                          chargingEndNotificationRequest!,
                                                                                                           chargingEndNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1702,7 +1702,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             Cast<OnChargingErrorNotificationResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingErrorNotificationRequest,
+                                                                                                          chargingErrorNotificationRequest!,
                                                                                                           chargingErrorNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -1946,7 +1946,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnChargeDetailRecordResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              chargeDetailRecordRequest,
+                                                                                              chargeDetailRecordRequest!,
                                                                                               chargeDetailRecordResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);

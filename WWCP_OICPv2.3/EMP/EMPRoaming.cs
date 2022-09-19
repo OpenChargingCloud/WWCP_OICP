@@ -1728,7 +1728,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Shutdown(Message = null, Wait = true)
 
-        public void Shutdown(String Message = null, Boolean Wait = true)
+        public void Shutdown(String? Message = null, Boolean Wait = true)
         {
             EMPServer.Shutdown(Message, Wait);
         }

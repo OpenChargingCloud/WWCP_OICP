@@ -108,26 +108,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Returns the length of the operator identification.
         /// </summary>
         public UInt64 Length
-        {
-            get
-            {
 
-                switch (Format)
-                {
-
-                    case OperatorIdFormats.DIN:
-                        return (UInt64) (CountryCode.TelefonCode.ToString().Length + 1 + Suffix?.Length);
-
-                    case OperatorIdFormats.ISO_STAR:
-                        return (UInt64) (CountryCode.Alpha2Code.Length             + 1 + Suffix?.Length);
-
-                    default:  // ISO
-                        return (UInt64) (CountryCode.Alpha2Code.Length                 + Suffix?.Length);
-
-                }
-
-            }
-        }
+            => Format switch {
+                   OperatorIdFormats.DIN       => (UInt64) (CountryCode.TelefonCode.ToString().Length + 1 + (Suffix?.Length ?? 0)),
+                   OperatorIdFormats.ISO_STAR  => (UInt64) (CountryCode.Alpha2Code.Length +             1 + (Suffix?.Length ?? 0)),
+                   _                           => (UInt64) (CountryCode.Alpha2Code.Length +                 (Suffix?.Length ?? 0)), // ISO
+               };
 
         #endregion
 

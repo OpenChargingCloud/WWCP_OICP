@@ -86,13 +86,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public IEnumerable<AdditionalReferences>?     AdditionalReferences                   { get; }
 
-
-        /// <summary>
-        /// Optional custom data, e.g. in combination with custom parsers and serializers.
-        /// </summary>
-        [Optional]
-        public JObject?                               CustomData                             { get; }
-
         #endregion
 
         #region Constructor(s)
@@ -125,7 +118,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         JObject?                               CustomData             = null,
                                         Dictionary<String, Object>?            InternalData           = null)
 
-            : base(null,
+            : base(CustomData,
                    InternalData)
 
         {
@@ -139,8 +132,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ProductAvailabilityTimes     = ProductAvailabilityTimes;
 
             this.AdditionalReferences         = AdditionalReferences?.Distinct();
-
-            this.CustomData                   = CustomData;
 
         }
 

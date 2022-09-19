@@ -917,7 +917,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSON2("StatusCode",
                                               "status code",
                                               OICPv2_3.StatusCode.TryParse,
-                                              out StatusCode StatusCode,
+                                              out StatusCode? StatusCode,
                                               out ErrorResponse))
                 {
                     return false;
@@ -1003,11 +1003,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 AuthorizationStartResponse = new AuthorizationStartResponse(ResponseTimestamp ?? Timestamp.Now,
-                                                                            EventTrackingId   ?? Request.EventTrackingId ?? EventTracking_Id.New,
+                                                                            EventTrackingId   ?? Request.EventTrackingId,
                                                                             ProcessId         ?? Process_Id.NewRandom,
                                                                             Runtime           ?? Timestamp.Now - Request.Timestamp,
                                                                             AuthorizationStatus,
-                                                                            StatusCode,
+                                                                            StatusCode!,
                                                                             Request,
                                                                             SessionId,
                                                                             CPOPartnerSessionId,

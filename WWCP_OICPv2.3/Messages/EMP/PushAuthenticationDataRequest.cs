@@ -244,7 +244,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSON2("ProviderAuthenticationData",
                                               "provider authentication data",
                                               OICPv2_3.ProviderAuthenticationData.TryParse,
-                                              out ProviderAuthenticationData ProviderAuthenticationData,
+                                              out ProviderAuthenticationData? ProviderAuthenticationData,
                                               out ErrorResponse))
                 {
                     return false;
@@ -259,7 +259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PushAuthenticationDataRequest = new PushAuthenticationDataRequest(ProviderAuthenticationData,
+                PushAuthenticationDataRequest = new PushAuthenticationDataRequest(ProviderAuthenticationData!,
                                                                                   ActionType,
                                                                                   ProcessId,
                                                                                   customData,

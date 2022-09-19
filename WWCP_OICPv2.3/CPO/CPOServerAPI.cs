@@ -850,7 +850,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteReservationStartRequest,
+                                                                                              authorizeRemoteReservationStartRequest!,
                                                                                               authorizeRemoteReservationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1065,7 +1065,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteReservationStopRequest,
+                                                                                              authorizeRemoteReservationStopRequest!,
                                                                                               authorizeRemoteReservationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1282,7 +1282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteStartResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteStartRequest,
+                                                                                              authorizeRemoteStartRequest!,
                                                                                               authorizeRemoteStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1498,7 +1498,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeRemoteStopResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteStopRequest,
+                                                                                              authorizeRemoteStopRequest!,
                                                                                               authorizeRemoteStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);

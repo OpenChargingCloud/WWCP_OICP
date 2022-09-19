@@ -1484,7 +1484,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushEVSEDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest,
+                                                                                              pullEVSEDataRequest!,
                                                                                               pullEVSEDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1724,7 +1724,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushEVSEStatusAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEStatusRequest,
+                                                                                              pullEVSEStatusRequest!,
                                                                                               pullEVSEStatusResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1965,7 +1965,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushPricingProductDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest,
+                                                                                              pullEVSEDataRequest!,
                                                                                               pushPricingProductDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2205,7 +2205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPushEVSEPricingAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest,
+                                                                                              pullEVSEDataRequest!,
                                                                                               pushEVSEPricingResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2449,7 +2449,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnPullAuthenticationDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullAuthenticationDataRequest,
+                                                                                              pullAuthenticationDataRequest!,
                                                                                               pullAuthenticationDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2685,7 +2685,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeStartAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeStartRequest,
+                                                                                              authorizeStartRequest!,
                                                                                               authorizationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2912,7 +2912,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnAuthorizeStopAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeStopRequest,
+                                                                                              authorizeStopRequest!,
                                                                                               authorizationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3144,7 +3144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingStartNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingStartNotificationRequest,
+                                                                                                          chargingStartNotificationRequest!,
                                                                                                           chargingStartNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3315,7 +3315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingProgressNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingProgressNotificationRequest,
+                                                                                                          chargingProgressNotificationRequest!,
                                                                                                           chargingProgressNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3486,7 +3486,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingEndNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingEndNotificationRequest,
+                                                                                                          chargingEndNotificationRequest!,
                                                                                                           chargingEndNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3657,7 +3657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                             Cast<OnChargingErrorNotificationAPIResponseDelegate>().
                                                                                             Select(e => e(Timestamp.Now,
                                                                                                           this,
-                                                                                                          chargingErrorNotificationRequest,
+                                                                                                          chargingErrorNotificationRequest!,
                                                                                                           chargingErrorNotificationResponse,
                                                                                                           Timestamp.Now - startTime))).
                                                                                             ConfigureAwait(false);
@@ -3960,7 +3960,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                 Cast<OnChargeDetailRecordAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              chargeDetailRecordRequest,
+                                                                                              chargeDetailRecordRequest!,
                                                                                               chargeDetailRecordResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);

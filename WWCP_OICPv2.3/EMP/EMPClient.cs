@@ -1117,9 +1117,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -1510,9 +1514,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -1886,9 +1894,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -2262,9 +2274,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -2652,9 +2668,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -2730,9 +2750,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3119,9 +3143,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3197,9 +3225,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3573,9 +3605,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3662,9 +3698,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -3750,9 +3790,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4152,9 +4196,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4164,7 +4212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                             HTTPResponse.EventTrackingId,
                                                                                                                             processId,
                                                                                                                             HTTPResponse.Runtime,
-                                                                                                                            statusCode,
+                                                                                                                            statusCode!,
                                                                                                                             Request,
                                                                                                                             HTTPResponse,
                                                                                                                             false,
@@ -4552,9 +4600,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4564,7 +4616,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                            HTTPResponse.EventTrackingId,
                                                                                                                            processId,
                                                                                                                            HTTPResponse.Runtime,
-                                                                                                                           statusCode,
+                                                                                                                           statusCode!,
                                                                                                                            Request,
                                                                                                                            HTTPResponse,
                                                                                                                            false,
@@ -4952,9 +5004,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4964,7 +5020,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                  HTTPResponse.EventTrackingId,
                                                                                                                  processId,
                                                                                                                  HTTPResponse.Runtime,
-                                                                                                                 statusCode,
+                                                                                                                 statusCode!,
                                                                                                                  Request,
                                                                                                                  HTTPResponse,
                                                                                                                  false,
@@ -5352,9 +5408,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5364,7 +5424,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                 HTTPResponse.EventTrackingId,
                                                                                                                 processId,
                                                                                                                 HTTPResponse.Runtime,
-                                                                                                                statusCode,
+                                                                                                                statusCode!,
                                                                                                                 Request,
                                                                                                                 HTTPResponse,
                                                                                                                 false,
@@ -5766,9 +5826,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
-                                                        out StatusCode?  statusCode,
-                                                        out String?      ErrorResponse,
+                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+
+                                if (json is not null &&
+                                    json["StatusCode"] is JObject JSONObject &&
+                                    StatusCode.TryParse(JSONObject,
+                                                        out StatusCode? statusCode,
+                                                        out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
 

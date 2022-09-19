@@ -148,12 +148,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public Provider_Id?                       HubProviderId                      { get; }
 
-        /// <summary>
-        /// Optional custom data, e.g. in combination with custom parsers and serializers.
-        /// </summary>
-        [Optional]
-        public JObject?                           CustomData                         { get; }
-
         #endregion
 
         #region Constructor(s)
@@ -206,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   JObject?                           CustomData                       = null,
                                   Dictionary<String, Object>?        InternalData                     = null)
 
-                : base(null,
+                : base(CustomData,
                        InternalData)
 
         {
@@ -230,8 +224,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.CalibrationLawVerificationInfo  = CalibrationLawVerificationInfo;
             this.HubOperatorId                   = HubOperatorId;
             this.HubProviderId                   = HubProviderId;
-
-            this.CustomData                      = CustomData;
 
         }
 
@@ -430,7 +422,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSON2("Identification",
                                               "identification",
                                               OICPv2_3.Identification.TryParse,
-                                              out Identification Identification,
+                                              out Identification? Identification,
                                               out ErrorResponse))
                 {
                     return false;

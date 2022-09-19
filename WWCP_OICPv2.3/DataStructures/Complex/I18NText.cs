@@ -267,8 +267,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
 
-                if (I18NTexts.TryGetValue(Language, out String Text))
-                    return Text;
+                if (I18NTexts.TryGetValue(Language, out String? Text))
+                    return Text!;
 
                 return String.Empty;
 
@@ -315,10 +315,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static I18NText Parse(String Text)
         {
 
-            if (TryParse(Text, out I18NText I18NText, out String ErrorResponse))
-                return I18NText;
+            if (TryParse(Text,
+                         out I18NText? I18NText,
+                         out String?   errorResponse))
+            {
+                return I18NText!;
+            }
 
-            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + errorResponse, nameof(Text));
 
         }
 
@@ -329,10 +333,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static I18NText Parse(JArray JSONArray)
         {
 
-            if (TryParse(JSONArray, out I18NText i18NText, out String ErrorResponse))
-                return i18NText;
+            if (TryParse(JSONArray,
+                         out I18NText? i18NText,
+                         out String?   errorResponse))
+            {
+                return i18NText!;
+            }
 
-            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + ErrorResponse,
+            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + errorResponse,
                                         nameof(JSONArray));
 
         }
@@ -347,9 +355,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Text">The text to parse.</param>
         /// <param name="I18NText">The parsed internationalized (I18N) multi-language text.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(String        Text,
-                                       out I18NText  I18NText,
-                                       out String?   ErrorResponse)
+        public static Boolean TryParse(String         Text,
+                                       out I18NText?  I18NText,
+                                       out String?    ErrorResponse)
         {
 
             #region Initial checks
@@ -390,9 +398,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="I18NText">The parsed internationalized (I18N) multi-language text.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JArray        JSON,
-                                       out I18NText  I18NText,
-                                       out String    ErrorResponse)
+        public static Boolean TryParse(JArray         JSON,
+                                       out I18NText?  I18NText,
+                                       out String?    ErrorResponse)
         {
 
             #region Initial checks
@@ -585,7 +593,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
+        public override Boolean Equals(Object? Object)
 
             => Object is I18NText i18NText &&
                    Equals(i18NText);
@@ -599,7 +607,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="I18NText">An I18NText to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(I18NText I18NText)
+        public Boolean Equals(I18NText? I18NText)
         {
 
             if (I18NText is null)

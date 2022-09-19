@@ -341,7 +341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSON2("Identification",
                                               "identification",
                                               OICPv2_3.Identification.TryParse,
-                                              out Identification Identification,
+                                              out Identification? Identification,
                                               out ErrorResponse))
                 {
                     return false;
@@ -427,7 +427,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 AuthorizeStartRequest = new AuthorizeStartRequest(OperatorId,
-                                                                  Identification,
+                                                                  Identification!,
                                                                   EVSEId,
                                                                   PartnerProductId,
                                                                   SessionId,

@@ -1711,7 +1711,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEDataRequest,
+                                                                                              pullEVSEDataRequest!,
                                                                                               pullEVSEDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -1963,7 +1963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEStatusAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEStatusRequest,
+                                                                                              pullEVSEStatusRequest!,
                                                                                               pullEVSEStatusResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2210,7 +2210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEStatusByIdAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEStatusByIdRequest,
+                                                                                              pullEVSEStatusByIdRequest!,
                                                                                               pullEVSEStatusByIdResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2456,7 +2456,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEStatusByOperatorIdAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEStatusByOperatorIdRequest,
+                                                                                              pullEVSEStatusByOperatorIdRequest!,
                                                                                               pullEVSEStatusByOperatorIdResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2710,7 +2710,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullPricingProductDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullPricingProductDataRequest,
+                                                                                              pullPricingProductDataRequest!,
                                                                                               pullPricingProductDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -2963,7 +2963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPullEVSEPricingAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pullEVSEPricingRequest,
+                                                                                              pullEVSEPricingRequest!,
                                                                                               pullEVSEPricingResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3203,7 +3203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnPushAuthenticationDataAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              pushAuthenticationDataRequest,
+                                                                                              pushAuthenticationDataRequest!,
                                                                                               pushAuthenticationDataResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3441,7 +3441,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteReservationStartAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteReservationStartRequest,
+                                                                                              authorizeRemoteReservationStartRequest!,
                                                                                               authorizeRemoteReservationStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3678,7 +3678,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteReservationStopAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteReservationStopRequest,
+                                                                                              authorizeRemoteReservationStopRequest!,
                                                                                               authorizeRemoteReservationStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -3915,7 +3915,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteStartAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteStartRequest,
+                                                                                              authorizeRemoteStartRequest!,
                                                                                               authorizeRemoteStartResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -4152,7 +4152,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnAuthorizeRemoteStopAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              authorizeRemoteStopRequest,
+                                                                                              authorizeRemoteStopRequest!,
                                                                                               authorizeRemoteStopResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
@@ -4401,7 +4401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Cast<OnGetChargeDetailRecordsAPIResponseDelegate>().
                                                                                 Select(e => e(Timestamp.Now,
                                                                                               this,
-                                                                                              getChargeDetailRecordsRequest,
+                                                                                              getChargeDetailRecordsRequest!,
                                                                                               getChargeDetailRecordsResponse,
                                                                                               Timestamp.Now - startTime))).
                                                                                 ConfigureAwait(false);
