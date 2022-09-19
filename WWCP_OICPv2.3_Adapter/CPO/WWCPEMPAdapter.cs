@@ -71,9 +71,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         IId WWCP.ISendChargeDetailRecords.Id
             => Id;
 
-        IEnumerable<IId> WWCP.ISendChargeDetailRecords.Ids
-            => Ids.Cast<IId>();
-
         /// <summary>
         /// The wrapped CPO roaming object.
         /// </summary>

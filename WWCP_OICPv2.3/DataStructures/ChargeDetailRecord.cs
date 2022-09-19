@@ -206,7 +206,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   JObject?                           CustomData                       = null,
                                   Dictionary<String, Object>?        InternalData                     = null)
 
-                : base(InternalData)
+                : base(null,
+                       InternalData)
 
         {
 
@@ -1226,7 +1227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     HubProviderId,
 
                     CustomData,
-                    internalData);
+                    InternalData);
 
         #endregion
 

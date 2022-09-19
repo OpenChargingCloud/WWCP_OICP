@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?   errorResponse,
                          CustomAddressParser))
             {
-                return address;
+                return address!;
             }
 
             throw new ArgumentException("The given JSON representation of an address is invalid: " + errorResponse, nameof(JSON));
@@ -213,7 +213,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out String?   errorResponse,
                          CustomAddressParser))
             {
-                return address;
+                return address!;
             }
 
             throw new ArgumentException("The given text representation of an address is invalid: " + errorResponse, nameof(Text));
@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(JSON, ..., out Address, out ErrorResponse, CustomAddressParser = null)
+        #region (static) TryParse(JSON, out Address, out ErrorResponse, CustomAddressParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
