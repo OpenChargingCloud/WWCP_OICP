@@ -451,7 +451,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     null,
                     null,
                     null,
-                    Time_Zone.Parse(WWCPAddress.TimeZone.ToString()));
+                    WWCPAddress.TimeZone.HasValue
+                        ? Time_Zone.Parse(WWCPAddress.TimeZone.Value.ToString())
+                        : null);
 
         #endregion
 
