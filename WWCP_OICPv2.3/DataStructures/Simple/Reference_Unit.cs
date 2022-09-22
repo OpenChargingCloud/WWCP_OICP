@@ -58,9 +58,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //ToDo: Implement proper reference unit id format!
         // ([A-Za-z]{2}\*?[A-Za-z0-9]{3}\*?P[A-Za-z0-9\*]{1,30})
 
-        //ToDo: Replace with better randomness!
-        private static readonly Random _Random = new Random();
-
         /// <summary>
         /// The internal identification.
         /// </summary>
@@ -187,10 +184,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => new ("HOUR");
 
         public static Reference_Unit KILOWATT_HOUR
-            => new("KILOWATT_HOUR");
+            => new ("KILOWATT_HOUR");
 
         public static Reference_Unit MINUTE
-            => new("MINUTE");
+            => new ("MINUTE");
 
 
         #region Operator overloading

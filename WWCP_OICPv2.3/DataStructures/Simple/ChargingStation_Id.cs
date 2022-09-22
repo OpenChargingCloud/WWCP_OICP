@@ -60,9 +60,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Data
 
-        //ToDo: Replace with better randomness!
-        private static readonly Random _Random = new Random();
-
         /// <summary>
         /// The internal identification.
         /// </summary>

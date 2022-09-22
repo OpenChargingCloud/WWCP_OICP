@@ -58,9 +58,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //ToDo: Implement proper charging pool id format!
         // ([A-Za-z]{2}\*?[A-Za-z0-9]{3}\*?P[A-Za-z0-9\*]{1,30})
 
-        //ToDo: Replace with better randomness!
-        private static readonly Random _Random = new Random();
-
         /// <summary>
         /// The internal identification.
         /// </summary>
@@ -197,28 +194,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// When used, the value set in the field "PricePerReferenceUnit" for the main base price of respective pricing product SHOULD be set to zero.
         /// </summary>
         public static Additional_Reference FixedFee
-            => new("FIXED FEE");
+            => new ("FIXED FEE");
 
         /// <summary>
         /// Can be used in case sessions are to be charged for both parking and charging. When used, it needs to be specified in the corresponding service offer on the HBS Portal
         /// when parking applies (e.g. from session start to charging start and charging end to session end or for the entire session duration, or x-minutes after charging end, etc)
         /// </summary>
         public static Additional_Reference ParkingFee
-            => new("PARKING FEE");
+            => new ("PARKING FEE");
 
         /// <summary>
         /// Can be used in case there is a minimum fee to be paid for all charging sessions. When used, this implies that the eventual price to be paid cannot be less than this
         /// minimum fee but can however be a price above/greater than the minimum fee.
         /// </summary>
         public static Additional_Reference MinimumFee
-            => new("MINIMUM FEE");
+            => new ("MINIMUM FEE");
 
         /// <summary>
         /// Can be used in case there is a maximum fee to be charged for all charging sessions. When used, this implies that the eventual price to be paid cannot be more than
         /// this maximum fee but can however be a price below/lower than the maximum fee.
         /// </summary>
         public static Additional_Reference MaximumFee
-            => new("MAXIMUM FEE");
+            => new ("MAXIMUM FEE");
 
 
         #region Operator overloading
