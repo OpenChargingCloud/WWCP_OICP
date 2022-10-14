@@ -17,18 +17,15 @@
 
 #region Usings
 
-using System;
-
 using Org.BouncyCastle.Crypto.Parameters;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Hermod.DNS;
 
 using OICPv2_3 = cloud.charging.open.protocols.OICPv2_3;
 
 #endregion
 
-namespace org.GraphDefined.WWCP
+namespace cloud.charging.open.protocols.WWCP
 {
 
     /// <summary>

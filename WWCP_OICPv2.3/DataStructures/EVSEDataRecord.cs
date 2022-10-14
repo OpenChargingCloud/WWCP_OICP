@@ -261,13 +261,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Mandatory]
         public FalseTrueAuto                        DynamicInfoAvailable                   { get; }
 
-
-        /// <summary>
-        /// Optional custom data, e.g. in combination with custom parsers and serializers.
-        /// </summary>
-        [Optional]
-        public JObject?                             CustomData                             { get; }
-
         #endregion
 
         #region Constructor(s)
@@ -356,9 +349,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               ClearingHouse_Id?                 ClearingHouseId                    = null,
 
                               JObject?                          CustomData                         = null,
-                              Dictionary<String, Object>?       InternalData                       = null)
+                              UserDefinedDictionary?            InternalData                       = null)
 
-            : base(null,
+            : base(CustomData,
                    InternalData)
 
         {
@@ -423,8 +416,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.OpeningTimes                      = OpeningTimes;
             this.HubOperatorId                     = HubOperatorId;
             this.ClearingHouseId                   = ClearingHouseId;
-
-            this.CustomData                        = CustomData;
 
         }
 
@@ -1964,13 +1955,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             [Mandatory]
             public FalseTrueAuto?                     DynamicInfoAvailable                { get; set; }
 
-
-            /// <summary>
-            /// Optional custom data, e.g. in combination with custom parsers and serializers.
-            /// </summary>
-            [Optional]
-            public JObject?                           CustomData                          { get; set; }
-
             #endregion
 
             #region Constructor(s)
@@ -2059,9 +2043,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            ClearingHouse_Id?                  ClearingHouseId                    = null,
 
                            JObject?                           CustomData                         = null,
-                           Dictionary<String, Object>?        InternalData                       = null)
+                           UserDefinedDictionary?             InternalData                       = null)
 
-                : base(InternalData)
+                : base(CustomData,
+                       InternalData)
 
             {
 
@@ -2103,8 +2088,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.OpeningTimes                      = OpeningTimes        is not null && OpeningTimes.       Any() ? new HashSet<OpeningTime>        (OpeningTimes.       Distinct()) : new HashSet<OpeningTime>();
                 this.HubOperatorId                     = HubOperatorId;
                 this.ClearingHouseId                   = ClearingHouseId;
-
-                this.CustomData                        = CustomData;
 
             }
 
@@ -2204,7 +2187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           ClearingHouseId,
 
                                           CustomData,
-                                          internalData);
+                                          InternalData);
 
             }
 

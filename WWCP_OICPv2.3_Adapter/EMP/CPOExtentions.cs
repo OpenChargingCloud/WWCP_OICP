@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 
@@ -26,7 +24,7 @@ using OICPv2_3 = cloud.charging.open.protocols.OICPv2_3;
 
 #endregion
 
-namespace org.GraphDefined.WWCP
+namespace cloud.charging.open.protocols.WWCP
 {
 
     /// <summary>

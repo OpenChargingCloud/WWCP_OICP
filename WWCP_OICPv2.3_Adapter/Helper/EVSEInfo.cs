@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Aegir;
 
-using WWCP = org.GraphDefined.WWCP;
+using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 

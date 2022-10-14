@@ -21,7 +21,7 @@ using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 
-using WWCP = org.GraphDefined.WWCP;
+using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -74,7 +74,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A WWCP wrapper for the OICP EMP roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPCSOAdapter : WWCP.ACryptoEMobilityEntity<WWCP.CSORoamingProvider_Id>,
+    public class WWCPCSOAdapter : WWCP.ACryptoEMobilityEntity<WWCP.CSORoamingProvider_Id,
+                                                              WWCP.CSORoamingProviderAdminStatusTypes,
+                                                              WWCP.CSORoamingProviderStatusTypes>,
                                   //WWCP.ACSORoamingProvider,//<ChargeDetailRecord>,
                                   WWCP.ICSORoamingProvider
                                   //IEquatable<WWCPEMPAdapter>,
@@ -116,13 +118,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// An optional (multi-language) description.
-        /// </summary>
-        [Optional]
-        public I18NString  Description    { get; }
-
 
         /// <summary>
         /// The wrapped EMP roaming object.
@@ -515,12 +510,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                               UInt64?                                        DefaultDistanceKM                                   = null)
 
             : base(Id,
+                   RoamingNetwork,
                    Name,
-                   RoamingNetwork)
+                   Description)
 
         {
-
-            this.Description                                        = Description;
 
             this.EMPRoaming                                         = EMPRoaming                              ?? throw new ArgumentNullException(nameof(EMPRoaming),  "The given EMP roaming object must not be null!");
             this.EVSEDataRecord2EVSE                                = EVSEDataRecord2EVSE;

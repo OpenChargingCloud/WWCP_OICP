@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   Provider_Id?                       HubProviderId                    = null,
 
                                   JObject?                           CustomData                       = null,
-                                  Dictionary<String, Object>?        InternalData                     = null)
+                                  UserDefinedDictionary?             InternalData                     = null)
 
                 : base(CustomData,
                        InternalData)
@@ -731,7 +731,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
-        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord JSON elements.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
         /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>
@@ -1343,12 +1343,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             [Optional]
             public Provider_Id?                      HubProviderId                      { get; set; }
 
-            /// <summary>
-            /// Optional custom data, e.g. in combination with custom parsers and serializers.
-            /// </summary>
-            [Optional]
-            public JObject?                          CustomData                         { get; set; }
-
             #endregion
 
             #region Constructor(s)
@@ -1399,9 +1393,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            Provider_Id?                       HubProviderId                    = null,
 
                            JObject?                           CustomData                       = null,
-                           Dictionary<String, Object>?        InternalData                     = null)
+                           UserDefinedDictionary?             InternalData                     = null)
 
-                : base(InternalData)
+                : base(CustomData,
+                       InternalData)
 
             {
 
@@ -1428,8 +1423,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.CalibrationLawVerificationInfo  = CalibrationLawVerificationInfo;
                 this.HubOperatorId                   = HubOperatorId;
                 this.HubProviderId                   = HubProviderId;
-
-                this.CustomData                      = CustomData;
 
             }
 
@@ -1501,7 +1494,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               HubProviderId,
 
                                               CustomData,
-                                              internalData);
+                                              InternalData);
 
             }
 

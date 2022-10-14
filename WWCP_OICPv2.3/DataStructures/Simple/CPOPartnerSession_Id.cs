@@ -328,9 +328,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object? Object)
 
-            => Object is CPOPartnerSession_Id sessionId
-                   ? Equals(sessionId)
-                   : false;
+            => Object is CPOPartnerSession_Id sessionId &&
+                   Equals(sessionId);
 
         #endregion
 

@@ -21,7 +21,7 @@
 //using System.Linq;
 //using System.Collections.Generic;
 
-//using WWCP = org.GraphDefined.WWCP;
+//using WWCP = cloud.charging.open.protocols.WWCP;
 
 //#endregion
 

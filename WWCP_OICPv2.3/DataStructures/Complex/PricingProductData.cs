@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   String?                                OperatorName   = null,
 
                                   JObject?                               CustomData     = null,
-                                  Dictionary<String, Object>?            InternalData   = null)
+                                  UserDefinedDictionary?                 InternalData   = null)
 
             : base(CustomData,
                    InternalData)

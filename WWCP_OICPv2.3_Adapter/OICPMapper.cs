@@ -19,7 +19,7 @@
 
 using org.GraphDefined.Vanaheimr.Illias;
 
-using WWCP = org.GraphDefined.WWCP;
+using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -149,10 +149,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         WWCP.ChargingStationAdminStatusTypes  InitialChargingStationAdminStatus       = WWCP.ChargingStationAdminStatusTypes.OutOfService,
                                         WWCP.EVSEStatusTypes                  InitialEVSEStatus                       = WWCP.EVSEStatusTypes.OutOfService,
                                         WWCP.ChargingStationStatusTypes       InitialChargingStationStatus            = WWCP.ChargingStationStatusTypes.OutOfService,
-                                        UInt16                                MaxEVSEAdminStatusListSize              = WWCP.EVSE.DefaultMaxAdminStatusListSize,
-                                        UInt16                                MaxChargingStationAdminStatusListSize   = WWCP.EVSE.DefaultMaxAdminStatusListSize,
-                                        UInt16                                MaxEVSEStatusListSize                   = WWCP.EVSE.DefaultMaxEVSEStatusListSize,
-                                        UInt16                                MaxChargingStationStatusListSize        = WWCP.EVSE.DefaultMaxEVSEStatusListSize,
+                                        UInt16                                MaxEVSEAdminStatusListSize              = WWCP.EVSE.           DefaultMaxEVSEAdminStatusScheduleSize,
+                                        UInt16                                MaxChargingStationAdminStatusListSize   = WWCP.ChargingStation.DefaultMaxChargingStationAdminStatusScheduleSize,
+                                        UInt16                                MaxEVSEStatusListSize                   = WWCP.EVSE.           DefaultMaxEVSEStatusScheduleSize,
+                                        UInt16                                MaxChargingStationStatusListSize        = WWCP.ChargingStation.DefaultMaxChargingStationStatusScheduleSize,
 
                                         String?                               DataSource                              = null,
                                         EVSEDataRecord2EVSEDelegate?          CustomConverter                         = null)
@@ -173,6 +173,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 evse = new WWCP.EVSE(evseId.Value,
                                      new WWCP.ChargingStation(chargingStationId,
+                                                              null,
+                                                              null,
                                                               station => {
                                                                   station.DataSource   = DataSource;
                                                                   station.Address      = EVSEDataRecord.Address.ToWWCP();
@@ -186,6 +188,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               InitialChargingStationStatus,
                                                               MaxChargingStationAdminStatusListSize,
                                                               MaxChargingStationStatusListSize),
+                                     null,
+                                     null,
                                      _evse => {
                                          _evse.DataSource  = DataSource;
                                      },
@@ -194,10 +198,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      InitialEVSEStatus,
                                      MaxEVSEAdminStatusListSize,
                                      MaxEVSEStatusListSize,
+                                     null,
+                                     null,
                                      EVSEDataRecord.CustomData,
-                                     new Dictionary<String, Object> {
+                                     new UserDefinedDictionary(new Dictionary<String, Object?> {
                                          { OICP_EVSEDataRecord, EVSEDataRecord }
-                                     });
+                                     }));
 
 
                 //evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
@@ -260,13 +266,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Copy custom data and add WWCP EVSE as "WWCP.EVSE"...
 
-                var internalData = new Dictionary<String, Object>();
-                EVSE.InternalData.ForEach(kvp => internalData.Add(kvp.Key, kvp.Value));
+                var internalData = new UserDefinedDictionary();
+                EVSE.InternalData.ForEach(kvp => internalData.Set(kvp.Key, kvp.Value));
 
-                if (!internalData.ContainsKey("WWCP.EVSE"))
-                    internalData.Add("WWCP.EVSE", EVSE);
-                else
-                    internalData["WWCP.EVSE"] = EVSE;
+                internalData.Set("WWCP.EVSE", EVSE);
 
                 #endregion
 
@@ -1467,30 +1470,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       ChargeDetailRecord2WWCPChargeDetailRecordDelegate?  ChargeDetailRecord2WWCPChargeDetailRecord   = null)
         {
 
-            var customData = new Dictionary<String, Object> {
-                                 { OICP_CDR, ChargeDetailRecord }
-                             };
+            var internalData = new UserDefinedDictionary(
+                                   new Dictionary<String, Object?> {
+                                       { OICP_CDR, ChargeDetailRecord }
+                                   }
+                               );
 
             if (ChargeDetailRecord.CPOPartnerSessionId.HasValue)
-                customData.Add(OICP_CPOPartnerSessionId,             ChargeDetailRecord.CPOPartnerSessionId. Value.ToString());
+                internalData.Set(OICP_CPOPartnerSessionId,             ChargeDetailRecord.CPOPartnerSessionId. Value.ToString());
 
             if (ChargeDetailRecord.EMPPartnerSessionId.HasValue)
-                customData.Add(OICP_EMPPartnerSessionId,             ChargeDetailRecord.EMPPartnerSessionId. Value.ToString());
+                internalData.Set(OICP_EMPPartnerSessionId,             ChargeDetailRecord.EMPPartnerSessionId. Value.ToString());
 
             if (ChargeDetailRecord.MeterValuesInBetween           is not null && ChargeDetailRecord.MeterValuesInBetween.Any())
-                customData.Add(OICP_MeterValuesInBetween,            ChargeDetailRecord.MeterValuesInBetween.ToArray());
+                internalData.Set(OICP_MeterValuesInBetween,            ChargeDetailRecord.MeterValuesInBetween.ToArray());
 
             if (ChargeDetailRecord.SignedMeteringValues           is not null && ChargeDetailRecord.SignedMeteringValues.Any())
-                customData.Add(OICP_SignedMeteringValues,            JSONArray.Create(ChargeDetailRecord.SignedMeteringValues.Select(signedMeteringValue => signedMeteringValue.ToJSON())));
+                internalData.Set(OICP_SignedMeteringValues,            JSONArray.Create(ChargeDetailRecord.SignedMeteringValues.Select(signedMeteringValue => signedMeteringValue.ToJSON())));
 
             if (ChargeDetailRecord.CalibrationLawVerificationInfo is not null)
-                customData.Add(OICP_CalibrationLawVerificationInfo,  ChargeDetailRecord.CalibrationLawVerificationInfo.ToJSON());
+                internalData.Set(OICP_CalibrationLawVerificationInfo,  ChargeDetailRecord.CalibrationLawVerificationInfo.ToJSON());
 
             if (ChargeDetailRecord.HubOperatorId.HasValue)
-                customData.Add(OICP_HubOperatorId,                   ChargeDetailRecord.HubOperatorId.       Value.ToString());
+                internalData.Set(OICP_HubOperatorId,                   ChargeDetailRecord.HubOperatorId.       Value.ToString());
 
             if (ChargeDetailRecord.HubProviderId.HasValue)
-                customData.Add(OICP_HubProviderId,                   ChargeDetailRecord.HubProviderId.       Value.ToString());
+                internalData.Set(OICP_HubProviderId,                   ChargeDetailRecord.HubProviderId.       Value.ToString());
 
 
             var sessionId = ChargeDetailRecord.SessionId.ToWWCP();
@@ -1538,7 +1543,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                           //Signatures:            new String[] { ChargeDetailRecord.MeteringSignature },
 
-                          CustomData:            customData
+                          CustomData:            ChargeDetailRecord.CustomData,
+                          InternalData:          internalData
 
                       );
 
@@ -1593,9 +1599,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           //MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
                           HubOperatorId:         ChargeDetailRecord.GetInternalDataAs<Operator_Id?>(OICP_HubOperatorId),
                           HubProviderId:         ChargeDetailRecord.GetInternalDataAs<Provider_Id?>(OICP_HubProviderId),
-                          InternalData:          new Dictionary<String, Object>() {
-                                                     { WWCP_CDR, ChargeDetailRecord }
-                                                 }
+                          InternalData:          new UserDefinedDictionary(
+                                                     new Dictionary<String, Object?>() {
+                                                         { WWCP_CDR, ChargeDetailRecord }
+                                                     }
+                                                 )
                       );
 
             if (WWCPChargeDetailRecord2ChargeDetailRecord is not null)

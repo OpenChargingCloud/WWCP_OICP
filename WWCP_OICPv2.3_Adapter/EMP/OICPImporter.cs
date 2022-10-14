@@ -33,7 +33,7 @@
 
 //#endregion
 
-//namespace org.GraphDefined.WWCP.OICPv2_2.EMP
+//namespace cloud.charging.open.protocols.WWCP.OICPv2_2.EMP
 //{
 
 //    /// <summary>

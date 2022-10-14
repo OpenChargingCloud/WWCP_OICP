@@ -17,7 +17,7 @@
 
 #region Usings
 
-using WWCP = org.GraphDefined.WWCP;
+using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 

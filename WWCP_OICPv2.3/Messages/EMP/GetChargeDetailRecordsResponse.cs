@@ -480,7 +480,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CustomGetChargeDetailRecordsResponseSerializer">A delegate to customize the serialization of GetChargeDetailRecordsResponse responses.</param>
         /// <param name="CustomIPagedResponseSerializer">A delegate to customize the serialization of paged responses.</param>
-        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord XML elements.</param>
+        /// <param name="CustomChargeDetailRecordSerializer">A delegate to serialize custom ChargeDetailRecord JSON elements.</param>
         /// <param name="CustomIdentificationSerializer">A delegate to serialize custom Identification JSON elements.</param>
         /// <param name="CustomSignedMeteringValueSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomCalibrationLawVerificationSerializer">A delegate to serialize custom calibration law verification JSON objects.</param>

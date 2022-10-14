@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
@@ -26,7 +25,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
-using WWCP = org.GraphDefined.WWCP;
+using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -280,9 +279,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                               WWCP.PublicKeyCertificates                         PublicKeyCertificates                           = null)
 
             : base(Id,
+                   RoamingNetwork,
                    Name,
                    Description,
-                   RoamingNetwork,
 
                    IncludeEVSEIds,
                    IncludeEVSEs,
@@ -316,7 +315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             this.DefaultOperator                                  = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given charging station operator must not be null!");
             this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
             this.OperatorNameSelector                             = OperatorNameSelector;
-            this.DefaultOperatorName                              = (this.OperatorNameSelector != null
+            this.DefaultOperatorName                              = (this.OperatorNameSelector is not null
                                                                          ? this.OperatorNameSelector  (DefaultOperator.Name)
                                                                          : DefaultOperatorNameSelector(DefaultOperator.Name))?.Trim();
 
