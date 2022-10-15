@@ -3059,12 +3059,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                         if (currentEVSEId.    HasValue &&
                                             currentEVSEStatus.HasValue &&
-                                            WWCPChargingStationOperator.TryGetEVSEbyId(currentEVSEId, out WWCP.EVSE CurrentEVSE) &&
-                                            CurrentEVSE?.Status.Value != currentEVSEStatus.Value)
+                                            WWCPChargingStationOperator.TryGetEVSEbyId(currentEVSEId, out var currentEVSE) &&
+                                            currentEVSE?.Status.Value != currentEVSEStatus.Value)
                                         {
 
                                             // Update via events!
-                                            CurrentEVSE.Status = currentEVSEStatus.Value;
+                                            currentEVSE.Status = currentEVSEStatus.Value;
                                             newStatusList.Add(new WWCP.EVSEStatus(currentEVSEId.Value, new Timestamped<WWCP.EVSEStatusTypes>(DownloadTime, currentEVSEStatus.Value)));
                                             EVSEsUpdated++;
 
@@ -3113,7 +3113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             try
                             {
 
-                                if (OnPullEVSEStatus != null)
+                                if (OnPullEVSEStatus is not null)
                                     await Task.WhenAll(OnPullEVSEStatus.GetInvocationList().
                                                        Cast<OnPullEVSEStatusDelegate>().
                                                        Select(e => e(StartTime,
@@ -3132,22 +3132,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                             #region Send OnEVSEStatusChanges event
 
-                            try
+                            if (newStatusList.Any())
                             {
+                                try
+                                {
 
-                                if (OnEVSEStatusChanges != null)
-                                    await Task.WhenAll(OnEVSEStatusChanges.GetInvocationList().
-                                                       Cast<OnEVSEStatusChangesDelegate>().
-                                                       Select(e => e(StartTime,
-                                                                     this,
-                                                                     nameof(OICPv2_3) + "." + nameof(WWCPCSOAdapter),
-                                                                     newStatusList))).
-                                                       ConfigureAwait(false);
+                                    if (OnEVSEStatusChanges is not null)
+                                        await Task.WhenAll(OnEVSEStatusChanges.GetInvocationList().
+                                                           Cast<OnEVSEStatusChangesDelegate>().
+                                                           Select(e => e(StartTime,
+                                                                         this,
+                                                                         nameof(OICPv2_3) + "." + nameof(WWCPCSOAdapter),
+                                                                         newStatusList))).
+                                                           ConfigureAwait(false);
 
-                            }
-                            catch (Exception e)
-                            {
-                                DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnEVSEStatusChanges));
+                                }
+                                catch (Exception e)
+                                {
+                                    DebugX.LogException(e, nameof(WWCPCSOAdapter) + "." + nameof(OnEVSEStatusChanges));
+                                }
                             }
 
                             #endregion
