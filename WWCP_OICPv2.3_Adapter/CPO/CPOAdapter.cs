@@ -20,12 +20,11 @@
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
+
 using Org.BouncyCastle.Crypto.Parameters;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-
-using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -36,29 +35,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class WWCPEMPAdapter : WWCP.AWWCPEMPAdapter<ChargeDetailRecord>,
-                                  WWCP.IEMPRoamingProvider,
-                                  IEquatable <WWCPEMPAdapter>,
-                                  IComparable<WWCPEMPAdapter>,
-                                  IComparable
+    public class CPOAdapter : WWCP.AWWCPEMPAdapter<ChargeDetailRecord>,
+                              WWCP.IEMPRoamingProvider,
+                              IEquatable <CPOAdapter>,
+                              IComparable<CPOAdapter>,
+                              IComparable
     {
 
         #region Data
 
-        private        readonly  WWCP.ChargingStationOperatorNameSelectorDelegate     OperatorNameSelector;
+        private static readonly  Regex                                             pattern                             = new (@"\s=\s");
 
-        private        readonly  EVSE2EVSEDataRecordDelegate                          _EVSE2EVSEDataRecordConverter;
+        public  static readonly  WWCP.ChargingStationOperatorNameSelectorDelegate  DefaultOperatorNameSelector         = I18N => I18N.FirstText();
 
-        private        readonly  EVSEStatusUpdate2EVSEStatusRecordDelegate            _EVSEStatusUpdate2EVSEStatusRecord;
-
-        private        readonly  WWCPChargeDetailRecord2ChargeDetailRecordDelegate    _WWCPChargeDetailRecord2OICPChargeDetailRecord;
-
-
-        private static readonly  Regex                                                pattern                             = new (@"\s=\s");
-
-        public  static readonly  WWCP.ChargingStationOperatorNameSelectorDelegate     DefaultOperatorNameSelector         = I18N => I18N.FirstText();
-
-        private readonly         HashSet<WWCP.EVSE_Id>                                SuccessfullyUploadedEVSEs           = new();
+        private readonly         HashSet<WWCP.EVSE_Id>                             SuccessfullyUploadedEVSEs           = new();
 
         #endregion
 
@@ -117,18 +107,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An optional default charging station operator.
         /// </summary>
-        public WWCP.ChargingStationOperator  DefaultOperator     { get; }
+        public WWCP.ChargingStationOperator                        DefaultOperator                                  { get; }
 
+        public WWCP.OperatorIdFormats                              DefaultOperatorIdFormat                          { get; }
 
-        public WWCP.OperatorIdFormats DefaultOperatorIdFormat { get; }
+        public WWCP.ChargingStationOperatorNameSelectorDelegate?   OperatorNameSelector                             { get; }
+
+        public EVSE2EVSEDataRecordDelegate?                        EVSE2EVSEDataRecord                              { get; }
+
+        public EVSEStatusUpdate2EVSEStatusRecordDelegate?          EVSEStatusUpdate2EVSEStatusRecord                { get; }
+
+        public WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2OICPChargeDetailRecord    { get; }
+
 
         /// <summary>
         /// An optional default charging station operator name.
         /// </summary>
-        public String       DefaultOperatorName   { get; }
-
-
-        //protected readonly WWCP.CustomEVSEIdMapperDelegate CustomEVSEIdMapper;
+        public String                                              DefaultOperatorName                              { get; }
 
         #endregion
 
@@ -141,12 +136,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever new EVSE data will be send upstream.
         /// </summary>
-        public event OnPushEVSEDataWWCPRequestDelegate   OnPushEVSEDataWWCPRequest;
+        public event OnPushEVSEDataWWCPRequestDelegate?   OnPushEVSEDataWWCPRequest;
 
         /// <summary>
         /// An event fired whenever new EVSE data had been sent upstream.
         /// </summary>
-        public event OnPushEVSEDataWWCPResponseDelegate  OnPushEVSEDataWWCPResponse;
+        public event OnPushEVSEDataWWCPResponseDelegate?  OnPushEVSEDataWWCPResponse;
 
         #endregion
 
@@ -155,12 +150,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever new EVSE status will be send upstream.
         /// </summary>
-        public event OnPushEVSEStatusWWCPRequestDelegate   OnPushEVSEStatusWWCPRequest;
+        public event OnPushEVSEStatusWWCPRequestDelegate?   OnPushEVSEStatusWWCPRequest;
 
         /// <summary>
         /// An event fired whenever new EVSE status had been sent upstream.
         /// </summary>
-        public event OnPushEVSEStatusWWCPResponseDelegate  OnPushEVSEStatusWWCPResponse;
+        public event OnPushEVSEStatusWWCPResponseDelegate?  OnPushEVSEStatusWWCPResponse;
 
         #endregion
 
@@ -170,12 +165,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an authentication token will be verified for charging.
         /// </summary>
-        public event WWCP.OnAuthorizeStartRequestDelegate   OnAuthorizeStartRequest;
+        public event WWCP.OnAuthorizeStartRequestDelegate?   OnAuthorizeStartRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified for charging.
         /// </summary>
-        public event WWCP.OnAuthorizeStartResponseDelegate  OnAuthorizeStartResponse;
+        public event WWCP.OnAuthorizeStartResponseDelegate?  OnAuthorizeStartResponse;
 
         #endregion
 
@@ -184,12 +179,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever an authentication token will be verified to stop a charging process.
         /// </summary>
-        public event WWCP.OnAuthorizeStopRequestDelegate   OnAuthorizeStopRequest;
+        public event WWCP.OnAuthorizeStopRequestDelegate?   OnAuthorizeStopRequest;
 
         /// <summary>
         /// An event fired whenever an authentication token had been verified to stop a charging process.
         /// </summary>
-        public event WWCP.OnAuthorizeStopResponseDelegate  OnAuthorizeStopResponse;
+        public event WWCP.OnAuthorizeStopResponseDelegate?  OnAuthorizeStopResponse;
 
         #endregion
 
@@ -198,17 +193,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever a charge detail record was enqueued for later sending upstream.
         /// </summary>
-        public event WWCP.OnSendCDRsRequestDelegate   OnEnqueueSendCDRsRequest;
+        public event WWCP.OnSendCDRsRequestDelegate?   OnEnqueueSendCDRsRequest;
 
         /// <summary>
         /// An event fired whenever a charge detail record will be send upstream.
         /// </summary>
-        public event WWCP.OnSendCDRsRequestDelegate   OnSendCDRsRequest;
+        public event WWCP.OnSendCDRsRequestDelegate?   OnSendCDRsRequest;
 
         /// <summary>
         /// An event fired whenever a charge detail record had been sent upstream.
         /// </summary>
-        public event WWCP.OnSendCDRsResponseDelegate  OnSendCDRsResponse;
+        public event WWCP.OnSendCDRsResponseDelegate?  OnSendCDRsResponse;
 
         #endregion
 
@@ -226,14 +221,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// 
         /// <param name="CPORoaming">A OICP CPO roaming object to be mapped to WWCP.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
-        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
         /// <param name="DefaultOperator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP HTTP request.</param>
         /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP HTTP request.</param>
         /// 
         /// <param name="IncludeEVSEIds">Only include the EVSE matching the given delegate.</param>
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
-        /// <param name="CustomEVSEIdMapper">A delegate to customize the mapping of EVSE identifications.</param>
+        /// <param name="ChargeDetailRecordFilter"></param>
         /// 
         /// <param name="ServiceCheckEvery">The service check intervall.</param>
         /// <param name="StatusCheckEvery">The status check intervall.</param>
@@ -245,38 +239,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">The attached DNS service.</param>
-        public WWCPEMPAdapter(WWCP.EMPRoamingProvider_Id                         Id,
-                              I18NString                                         Name,
-                              I18NString                                         Description,
-                              WWCP.RoamingNetwork                                RoamingNetwork,
-                              CPORoaming                                         CPORoaming,
+        public CPOAdapter(WWCP.EMPRoamingProvider_Id                          Id,
+                          I18NString                                          Name,
+                          I18NString                                          Description,
+                          WWCP.RoamingNetwork                                 RoamingNetwork,
+                          CPORoaming                                          CPORoaming,
 
-                              EVSE2EVSEDataRecordDelegate                        EVSE2EVSEDataRecord                             = null,
-                              EVSEStatusUpdate2EVSEStatusRecordDelegate          EVSEStatusUpdate2EVSEStatusRecord               = null,
-                              WWCPChargeDetailRecord2ChargeDetailRecordDelegate  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
+                          EVSE2EVSEDataRecordDelegate?                        EVSE2EVSEDataRecord                             = null,
+                          EVSEStatusUpdate2EVSEStatusRecordDelegate?          EVSEStatusUpdate2EVSEStatusRecord               = null,
+                          WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
 
-                              WWCP.ChargingStationOperator                       DefaultOperator                                 = null,
-                              WWCP.OperatorIdFormats                             DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
-                              WWCP.ChargingStationOperatorNameSelectorDelegate   OperatorNameSelector                            = null,
+                          WWCP.ChargingStationOperator?                       DefaultOperator                                 = null,
+                          WWCP.OperatorIdFormats                              DefaultOperatorIdFormat                         = WWCP.OperatorIdFormats.ISO_STAR,
+                          WWCP.ChargingStationOperatorNameSelectorDelegate?   OperatorNameSelector                            = null,
 
-                              WWCP.IncludeEVSEIdDelegate                         IncludeEVSEIds                                  = null,
-                              WWCP.IncludeEVSEDelegate                           IncludeEVSEs                                    = null,
-                              WWCP.ChargeDetailRecordFilterDelegate              ChargeDetailRecordFilter                        = null,
+                          WWCP.IncludeEVSEIdDelegate?                         IncludeEVSEIds                                  = null,
+                          WWCP.IncludeEVSEDelegate?                           IncludeEVSEs                                    = null,
+                          WWCP.ChargeDetailRecordFilterDelegate?              ChargeDetailRecordFilter                        = null,
 
-                              //WWCP.CustomEVSEIdMapperDelegate                    CustomEVSEIdMapper                              = null,
+                          TimeSpan?                                           ServiceCheckEvery                               = null,
+                          TimeSpan?                                           StatusCheckEvery                                = null,
+                          TimeSpan?                                           CDRCheckEvery                                   = null,
 
-                              TimeSpan?                                          ServiceCheckEvery                               = null,
-                              TimeSpan?                                          StatusCheckEvery                                = null,
-                              TimeSpan?                                          CDRCheckEvery                                   = null,
+                          Boolean                                             DisablePushData                                 = false,
+                          Boolean                                             DisablePushStatus                               = false,
+                          Boolean                                             DisableAuthentication                           = false,
+                          Boolean                                             DisableSendChargeDetailRecords                  = false,
 
-                              Boolean                                            DisablePushData                                 = false,
-                              Boolean                                            DisablePushStatus                               = false,
-                              Boolean                                            DisableAuthentication                           = false,
-                              Boolean                                            DisableSendChargeDetailRecords                  = false,
-
-                              String                                             EllipticCurve                                   = "P-256",
-                              ECPrivateKeyParameters                             PrivateKey                                      = null,
-                              WWCP.PublicKeyCertificates                         PublicKeyCertificates                           = null)
+                          String                                              EllipticCurve                                   = "P-256",
+                          ECPrivateKeyParameters?                             PrivateKey                                      = null,
+                          WWCP.PublicKeyCertificates?                         PublicKeyCertificates                           = null)
 
             : base(Id,
                    RoamingNetwork,
@@ -290,7 +282,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    null,
                    null,
                    ChargeDetailRecordFilter,
-                   //CustomEVSEIdMapper,
 
                    ServiceCheckEvery,
                    StatusCheckEvery,
@@ -307,22 +298,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.CPORoaming                                       = CPORoaming      ?? throw new ArgumentNullException(nameof(CPORoaming),      "The given CPO roaming object must not be null!");
-            this._EVSE2EVSEDataRecordConverter                             = EVSE2EVSEDataRecord;
-            this._EVSEStatusUpdate2EVSEStatusRecord               = EVSEStatusUpdate2EVSEStatusRecord;
-            this._WWCPChargeDetailRecord2OICPChargeDetailRecord   = WWCPChargeDetailRecord2OICPChargeDetailRecord;
+            this.CPORoaming                                     = CPORoaming      ?? throw new ArgumentNullException(nameof(CPORoaming),      "The given CPO roaming object must not be null!");
+            this.EVSE2EVSEDataRecord                            = EVSE2EVSEDataRecord;
+            this.EVSEStatusUpdate2EVSEStatusRecord              = EVSEStatusUpdate2EVSEStatusRecord;
+            this.WWCPChargeDetailRecord2OICPChargeDetailRecord  = WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-            this.DefaultOperator                                  = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given charging station operator must not be null!");
-            this.DefaultOperatorIdFormat                          = DefaultOperatorIdFormat;
-            this.OperatorNameSelector                             = OperatorNameSelector;
-            this.DefaultOperatorName                              = (this.OperatorNameSelector is not null
-                                                                         ? this.OperatorNameSelector  (DefaultOperator.Name)
-                                                                         : DefaultOperatorNameSelector(DefaultOperator.Name))?.Trim();
+            this.DefaultOperator                                = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given charging station operator must not be null!");
+            this.DefaultOperatorIdFormat                        = DefaultOperatorIdFormat;
+            this.OperatorNameSelector                           = OperatorNameSelector;
+            this.DefaultOperatorName                            = (this.OperatorNameSelector is not null
+                                                                       ? this.OperatorNameSelector  (DefaultOperator.Name)
+                                                                       : DefaultOperatorNameSelector(DefaultOperator.Name)).Trim();
 
             if (DefaultOperatorName.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(DefaultOperator), "The given default charging station operator name must not be null!");
-
-            //this.CustomEVSEIdMapper                               = CustomEVSEIdMapper;
 
 
             // Link incoming OICP events...
@@ -794,7 +783,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                           SessionId:             sessionId.Value,
                                                           ReservationHandling:   WWCP.ReservationHandling.Close,
                                                           ProviderId:            Request.ProviderId.ToWWCP(),
-                                                          RemoteAuthentication:  null,
+                                                          //RemoteAuthentication:  null,
 
                                                           Timestamp:             Request.Timestamp,
                                                           CancellationToken:     Request.CancellationToken,
@@ -983,7 +972,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (IncludeEVSEs(evse) && IncludeEVSEIds(evse.Id))
                         // WWCP EVSE will be added as internal data "WWCP.EVSE"...
                         EVSEDataRecords.Add(evse.ToOICP(evse.Operator.Name.FirstText(),
-                                                        _EVSE2EVSEDataRecordConverter));
+                                                        EVSE2EVSEDataRecord));
 
                     else
                         DebugX.Log(evse.Id + " was filtered!");
@@ -1022,7 +1011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
             }
 
             #endregion
@@ -1108,7 +1097,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             {
 
                                                                 return evse.ToOICP(evse.Operator.Name.FirstText(),
-                                                                                   _EVSE2EVSEDataRecordConverter);
+                                                                                   EVSE2EVSEDataRecord);
 
                                                             }
                                                             catch (Exception e)
@@ -1267,7 +1256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
             }
 
             #endregion
@@ -1393,7 +1382,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPRequest));
             }
 
             #endregion
@@ -1498,7 +1487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEStatusWWCPResponse));
             }
 
             #endregion
@@ -4490,7 +4479,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartRequest));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStartRequest));
             }
 
             #endregion
@@ -4622,7 +4611,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStartResponse));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStartResponse));
             }
 
             #endregion
@@ -4707,7 +4696,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopRequest));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStopRequest));
             }
 
             #endregion
@@ -4837,7 +4826,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnAuthorizeStopResponse));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnAuthorizeStopResponse));
             }
 
             #endregion
@@ -4937,7 +4926,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnSendCDRsRequest));
             }
 
             #endregion
@@ -4996,7 +4985,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             }
                             catch (Exception e)
                             {
-                                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsRequest));
+                                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnSendCDRsRequest));
                             }
 
                             #endregion
@@ -5007,7 +4996,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    ChargeDetailRecordsQueue.Add(ChargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord));
+                                    ChargeDetailRecordsQueue.Add(ChargeDetailRecord.ToOICP(WWCPChargeDetailRecord2OICPChargeDetailRecord));
                                     SendCDRsResults.Add(WWCP.SendCDRResult.Enqueued(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                                                     ChargeDetailRecord));
 
@@ -5050,7 +5039,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 try
                                 {
 
-                                    response = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord.ToOICP(_WWCPChargeDetailRecord2OICPChargeDetailRecord),
+                                    response = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord.ToOICP(WWCPChargeDetailRecord2OICPChargeDetailRecord),
                                                                                        DefaultOperator.Id.ToOICP().Value,
                                                                                        null,
 
@@ -5173,7 +5162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(WWCPEMPAdapter) + "." + nameof(OnSendCDRsResponse));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnSendCDRsResponse));
             }
 
             #endregion
@@ -5308,7 +5297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         SendOnWarnings(Timestamp.Now,
-                                       nameof(WWCPEMPAdapter) + Id,
+                                       nameof(CPOAdapter) + Id,
                                        nameof(EVSEsToAddTask),
                                        EVSEsToAddTask.Warnings);
 
@@ -5346,7 +5335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             SendOnWarnings(Timestamp.Now,
-                                           nameof(WWCPEMPAdapter) + Id,
+                                           nameof(CPOAdapter) + Id,
                                            nameof(EVSEsToUpdateResult),
                                            EVSEsToUpdateResult.Warnings);
 
@@ -5383,7 +5372,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         SendOnWarnings(Timestamp.Now,
-                                       nameof(WWCPEMPAdapter) + Id,
+                                       nameof(CPOAdapter) + Id,
                                        nameof(PushEVSEStatusTask),
                                        PushEVSEStatusTask.Warnings);
 
@@ -5419,7 +5408,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             SendOnWarnings(Timestamp.Now,
-                                           nameof(WWCPEMPAdapter) + Id,
+                                           nameof(CPOAdapter) + Id,
                                            nameof(EVSEsToRemoveTask),
                                            EVSEsToRemoveTask.Warnings);
 
@@ -5504,7 +5493,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         SendOnWarnings(Timestamp.Now,
-                                       nameof(WWCPEMPAdapter) + Id,
+                                       nameof(CPOAdapter) + Id,
                                        nameof(pushEVSEStatusFastTask),
                                        pushEVSEStatusFastTask.Warnings);
 
@@ -5612,8 +5601,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
         /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (WWCPEMPAdapter WWCPEMPAdapter1,
-                                           WWCPEMPAdapter WWCPEMPAdapter2)
+        public static Boolean operator == (CPOAdapter WWCPEMPAdapter1,
+                                           CPOAdapter WWCPEMPAdapter2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -5638,8 +5627,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
         /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (WWCPEMPAdapter WWCPEMPAdapter1,
-                                           WWCPEMPAdapter WWCPEMPAdapter2)
+        public static Boolean operator != (CPOAdapter WWCPEMPAdapter1,
+                                           CPOAdapter WWCPEMPAdapter2)
 
             => !(WWCPEMPAdapter1 == WWCPEMPAdapter2);
 
@@ -5653,8 +5642,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
         /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (WWCPEMPAdapter  WWCPEMPAdapter1,
-                                          WWCPEMPAdapter  WWCPEMPAdapter2)
+        public static Boolean operator < (CPOAdapter  WWCPEMPAdapter1,
+                                          CPOAdapter  WWCPEMPAdapter2)
         {
 
             if (WWCPEMPAdapter1 is null)
@@ -5674,8 +5663,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
         /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (WWCPEMPAdapter WWCPEMPAdapter1,
-                                           WWCPEMPAdapter WWCPEMPAdapter2)
+        public static Boolean operator <= (CPOAdapter WWCPEMPAdapter1,
+                                           CPOAdapter WWCPEMPAdapter2)
 
             => !(WWCPEMPAdapter1 > WWCPEMPAdapter2);
 
@@ -5689,8 +5678,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
         /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (WWCPEMPAdapter WWCPEMPAdapter1,
-                                          WWCPEMPAdapter WWCPEMPAdapter2)
+        public static Boolean operator > (CPOAdapter WWCPEMPAdapter1,
+                                          CPOAdapter WWCPEMPAdapter2)
         {
 
             if (WWCPEMPAdapter1 is null)
@@ -5710,8 +5699,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
         /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (WWCPEMPAdapter WWCPEMPAdapter1,
-                                           WWCPEMPAdapter WWCPEMPAdapter2)
+        public static Boolean operator >= (CPOAdapter WWCPEMPAdapter1,
+                                           CPOAdapter WWCPEMPAdapter2)
 
             => !(WWCPEMPAdapter1 < WWCPEMPAdapter2);
 
@@ -5730,7 +5719,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public override Int32 CompareTo(Object? Object)
         {
 
-            if (Object is WWCPEMPAdapter wwcpEMPAdapter)
+            if (Object is CPOAdapter wwcpEMPAdapter)
                 return CompareTo(wwcpEMPAdapter);
 
             throw new ArgumentException("The given object is not an WWCPEMPAdapter!", nameof(Object));
@@ -5745,7 +5734,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter object to compare with.</param>
-        public Int32 CompareTo(WWCPEMPAdapter WWCPEMPAdapter)
+        public Int32 CompareTo(CPOAdapter WWCPEMPAdapter)
         {
 
             if (WWCPEMPAdapter is null)
@@ -5770,7 +5759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <returns>true|false</returns>
         public override Boolean Equals(Object? Object)
 
-            => Object is WWCPEMPAdapter WWCPEMPAdapter &&
+            => Object is CPOAdapter WWCPEMPAdapter &&
                    Equals(WWCPEMPAdapter);
 
         #endregion
@@ -5782,7 +5771,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(WWCPEMPAdapter? WWCPEMPAdapter)
+        public Boolean Equals(CPOAdapter? WWCPEMPAdapter)
 
             => WWCPEMPAdapter is not null &&
                    Id.Equals(WWCPEMPAdapter.Id);

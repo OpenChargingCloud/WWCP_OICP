@@ -15,12 +15,6 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using WWCP = cloud.charging.open.protocols.WWCP;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
 {
 
@@ -47,5 +41,58 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="EVSEStatus">A WWCP charge detail record.</param>
     public delegate WWCP.ChargeDetailRecord  ChargeDetailRecord2WWCPChargeDetailRecordDelegate(ChargeDetailRecord       ChargeDetailRecord,
                                                                                                WWCP.ChargeDetailRecord  WWCPChargeDetailRecord);
+
+
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSEStatusRecords had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEDataDelegate          (DateTime                       Timestamp,
+                                                          EMPAdapter                     Sender,
+                                                          String                         SenderDescription,
+                                                          IEnumerable<EVSEDataRecord>    EVSEDataRecords);
+
+    /// <summary>
+    /// A delegate called whenever new OperatorInfos had been fetched.
+    /// </summary>
+    public delegate Task OnPullOperatorInfosDelegate     (DateTime                       Timestamp,
+                                                          EMPAdapter                     Sender,
+                                                          String                         SenderDescription,
+                                                          IEnumerable<OperatorInfo>      OperatorInfos);
+
+    /// <summary>
+    /// A delegate called whenever new EVSEStatusRecords had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEStatusDelegate        (DateTime                       Timestamp,
+                                                          EMPAdapter                     Sender,
+                                                          String                         SenderDescription,
+                                                          IEnumerable<EVSEStatusRecord>  EVSEStatusRecords);
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status changes had been received.
+    /// </summary>
+    public delegate Task OnEVSEStatusChangesDelegate     (DateTime                       Timestamp,
+                                                          EMPAdapter                     Sender,
+                                                          String                         SenderDescription,
+                                                          IEnumerable<WWCP.EVSEStatus>   EVSEStatusChanges);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSE status had been received.
+    /// </summary>
+    public delegate Task OnNewEVSEStatusDelegate         (DateTime                       Timestamp,
+                                                          EMPAdapter                     Sender,
+                                                          String                         SenderDescription,
+                                                          IEnumerable<WWCP.EVSEStatus>   NewEVSEStatus);
+
+
+    /// <summary>
+    /// A delegate called whenever new EVSEStatusRecords had been received.
+    /// </summary>
+    public delegate Task OnGetChargeDetailRecordsDelegate(DateTime                         Timestamp,
+                                                          EMPAdapter                       Sender,
+                                                          String                           SenderDescription,
+                                                          IEnumerable<ChargeDetailRecord>  ChargeDetailRecords);
 
 }
