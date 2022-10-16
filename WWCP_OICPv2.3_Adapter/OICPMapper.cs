@@ -277,7 +277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var evseDataRecord = new EVSEDataRecord(Id:                                EVSEId.Value,
                                                         OperatorId:                        EVSEId.Value.OperatorId,
                                                         OperatorName:                      OperatorName,
-                                                        ChargingStationName:               EVSE.ChargingStation.Name.   ToOICP(),
+                                                        ChargingStationName:               EVSE.ChargingStation.Name.   ToOICP(MaxLength: 150),
                                                         Address:                           EVSE.ChargingStation.Address.ToOICP(),
                                                         GeoCoordinates:                    geoLocation.Value,
                                                         PlugTypes:                         EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug.ToOICP()),
@@ -345,9 +345,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        public static I18NText ToOICP(this I18NString MLText)
-            => new (MLText.Select(text => new KeyValuePair<LanguageCode, String>(LanguageCode.Parse(text.Language.ToString()),
-                                                                                 text.Text)));
+        #region ToOICP(this I18NString, MaxLength = null)
+
+        public static I18NText ToOICP(this I18NString  I18NString,
+                                      UInt16?          MaxLength   = null)
+
+            => new (I18NString.Select(text => new KeyValuePair<LanguageCode, String>(LanguageCode.Parse(text.Language.ToString()),
+                                                                                     MaxLength.HasValue
+                                                                                         ? text.Text.SubstringMax(150)
+                                                                                         : text.Text)));
+
+        #endregion
 
 
         #region ToWWCP(this EVSEStatusType)
