@@ -4926,7 +4926,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (ChargeDetailRecords == null)
+            if (ChargeDetailRecords is null)
                 throw new ArgumentNullException(nameof(ChargeDetailRecords),  "The given enumeration of charge detail records must not be null!");
 
 
@@ -4936,32 +4936,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
 
 
-            DateTime             Endtime;
-            TimeSpan             Runtime;
+            DateTime             endtime;
+            TimeSpan             runtime;
             WWCP.SendCDRsResult  results;
 
             #endregion
 
             #region Filter charge detail records
 
-            var ForwardedCDRs  = new List<WWCP.ChargeDetailRecord>();
-            var FilteredCDRs   = new List<WWCP.SendCDRResult>();
+            var forwardedCDRs  = new List<WWCP.ChargeDetailRecord>();
+            var filteredCDRs   = new List<WWCP.SendCDRResult>();
 
             foreach (var cdr in ChargeDetailRecords)
             {
 
                 if (ChargeDetailRecordFilter(cdr) == WWCP.ChargeDetailRecordFilters.forward)
-                    ForwardedCDRs.Add(cdr);
+                    forwardedCDRs.Add(cdr);
 
                 else
-                    FilteredCDRs.Add(WWCP.SendCDRResult.Filtered(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                    filteredCDRs.Add(WWCP.SendCDRResult.Filtered(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                                  cdr,
                                                                  Warning.Create(I18NString.Create(Languages.en, "This charge detail record was filtered!"))));
 
@@ -4971,12 +4970,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnSendCDRsRequest event
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnSendCDRsRequest?.Invoke(StartTime,
+                OnSendCDRsRequest?.Invoke(startTime,
                                           Timestamp.Value,
                                           this,
                                           Id.ToString(),
@@ -4999,13 +4998,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (DisableSendChargeDetailRecords)
             {
 
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
                 results  = WWCP.SendCDRsResult.AdminDown(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                          Id,
                                                          this,
                                                          ChargeDetailRecords,
-                                                         Runtime: Runtime);
+                                                         Runtime: runtime);
 
             }
 
@@ -5072,15 +5071,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             }
 
-                            Endtime      = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                            Runtime      = Endtime - StartTime;
+                            endtime      = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                            runtime      = endtime - startTime;
                             results      = WWCP.SendCDRsResult.Enqueued(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                                         Id,
                                                                         this,
                                                                         ChargeDetailRecords,
                                                                         I18NString.Create(Languages.en, "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!"),
                                                                         //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
-                                                                        Runtime: Runtime);
+                                                                        Runtime: runtime);
                             invokeTimer  = true;
 
                         }
@@ -5148,15 +5147,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             }
 
-                            Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                            Runtime  = Endtime - StartTime;
+                            endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                            runtime  = endtime - startTime;
 
                             if (SendCDRsResults.All(cdrresult => cdrresult.Result == WWCP.SendCDRResultTypes.Success))
                                 results = WWCP.SendCDRsResult.Success(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                                       Id,
                                                                       this,
                                                                       ChargeDetailRecords,
-                                                                      Runtime: Runtime);
+                                                                      Runtime: runtime);
 
                             else
                                 results = WWCP.SendCDRsResult.Error(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
@@ -5165,7 +5164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                     SendCDRsResults.
                                                                         Where (cdrresult => cdrresult.Result != WWCP.SendCDRResultTypes.Success).
                                                                         Select(cdrresult => cdrresult.ChargeDetailRecord),
-                                                                    Runtime: Runtime);
+                                                                    Runtime: runtime);
 
                         }
 
@@ -5178,15 +5177,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     else
                     {
 
-                        Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                        Runtime  = Endtime - StartTime;
+                        endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                        runtime  = endtime - startTime;
                         results  = WWCP.SendCDRsResult.Timeout(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                                Id,
                                                                this,
                                                                ChargeDetailRecords,
                                                                I18NString.Create(Languages.en, "Could not " + (TransmissionType == WWCP.TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!"),
                                                                //ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
-                                                               Runtime: Runtime);
+                                                               Runtime: runtime);
 
                     }
 
@@ -5210,7 +5209,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                OnSendCDRsResponse?.Invoke(Endtime,
+                OnSendCDRsResponse?.Invoke(endtime,
                                            Timestamp.Value,
                                            this,
                                            Id.ToString(),
@@ -5219,7 +5218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            ChargeDetailRecords,
                                            RequestTimeout,
                                            results,
-                                           Runtime);
+                                           runtime);
 
             }
             catch (Exception e)
