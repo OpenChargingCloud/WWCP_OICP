@@ -903,8 +903,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        // RN -> External service requests...
-
         #region PushEVSEData/-Status directly...
 
         #region (private) PushEVSEData  (EVSEs,             ServerAction, ...)
@@ -4400,6 +4398,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+        // PushPricingProductData
+
+        // PushEVSEPricing
+
+
         #region AuthorizeStart(           LocalAuthentication, ChargingLocation = null, ChargingProduct = null, SessionId = null, OperatorId = null, ...)
 
         /// <summary>
@@ -4419,22 +4422,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public async Task<WWCP.AuthStartResult>
 
             AuthorizeStart(WWCP.LocalAuthentication          LocalAuthentication,
-                           WWCP.ChargingLocation             ChargingLocation      = null,
-                           WWCP.ChargingProduct              ChargingProduct       = null,   // [maxlength: 100]
+                           WWCP.ChargingLocation?            ChargingLocation      = null,
+                           WWCP.ChargingProduct?             ChargingProduct       = null,   // [maxlength: 100]
                            WWCP.ChargingSession_Id?          SessionId             = null,
                            WWCP.ChargingSession_Id?          CPOPartnerSessionId   = null,
                            WWCP.ChargingStationOperator_Id?  OperatorId            = null,
 
                            DateTime?                         Timestamp             = null,
                            CancellationToken?                CancellationToken     = null,
-                           EventTracking_Id                  EventTrackingId       = null,
+                           EventTracking_Id?                 EventTrackingId       = null,
                            TimeSpan?                         RequestTimeout        = null)
 
         {
 
             #region Initial checks
 
-            if (LocalAuthentication == null)
+            if (LocalAuthentication is null)
                 throw new ArgumentNullException(nameof(LocalAuthentication),  "The given authentication token must not be null!");
 
 
@@ -4444,8 +4447,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
@@ -4454,12 +4456,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartRequest event
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnAuthorizeStartRequest?.Invoke(StartTime,
+                OnAuthorizeStartRequest?.Invoke(startTime,
                                                 Timestamp.Value,
                                                 this,
                                                 Id.ToString(),
@@ -4485,48 +4487,53 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
 
-            DateTime              Endtime;
-            TimeSpan              Runtime;
-            WWCP.AuthStartResult  result;
+            DateTime               endtime;
+            TimeSpan               runtime;
+            WWCP.AuthStartResult?  result = null;
 
-            var operatorId  = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            var evseId      = ChargingLocation?.EVSEId?.ToOICP();
+            var operatorId      = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            var evseId          = ChargingLocation?.EVSEId?.ToOICP();
+            var identification  = LocalAuthentication.ToOICP();
 
             if (!operatorId.HasValue)
             {
-
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
                 result   = WWCP.AuthStartResult.AdminDown(Id,
                                                           this,
                                                           SessionId,
-                                                          Runtime: Runtime);
-
+                                                          Runtime: runtime);
             }
 
             // An optional EVSE Id is given, but it is invalid!
             else if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
             {
-
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
                 result   = WWCP.AuthStartResult.UnknownLocation(Id,
                                                                 this,
                                                                 SessionId,
-                                                                Runtime: Runtime);
+                                                                Runtime: runtime);
+            }
 
+            else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
+            {
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
+                result   = WWCP.AuthStartResult.InvalidToken(Id,
+                                                             this,
+                                                             SessionId,
+                                                             Runtime: runtime);
             }
 
             else if (DisableAuthentication)
             {
-
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
                 result   = WWCP.AuthStartResult.AdminDown(Id,
                                                           this,
                                                           SessionId,
-                                                          Runtime: Runtime);
-
+                                                          Runtime: runtime);
             }
 
             else
@@ -4535,14 +4542,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 var response  = await CPORoaming.AuthorizeStart(
                                       new AuthorizeStartRequest(
                                            operatorId.Value,
-                                           LocalAuthentication.    ToOICP(),
-                                           ChargingLocation.EVSEId.ToOICP(),
-                                           ChargingProduct?.       ToOICP(),
-                                           SessionId.              ToOICP(),
-                                           null,
-                                           null,
+                                           identification,
+                                           evseId,
+                                           ChargingProduct?.ToOICP(),
+                                           SessionId.       ToOICP(),
+                                           CPOPartnerSessionId.HasValue
+                                               ? CPOPartnerSession_Id.Parse(CPOPartnerSessionId.Value.ToString())
+                                               : null,
+                                           null, // EMPPartnerSessionId
                                            null, // ProcessId
-                                           null,
+
+                                           null, // CustomData
 
                                            Timestamp,
                                            CancellationToken,
@@ -4550,36 +4560,57 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            RequestTimeout));
 
 
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
 
-                if (response.IsSuccess() &&
+                if (response.IsSuccess()          &&
+                    response.Response is not null &&
                     response.Response.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
                 {
 
-                    result = WWCP.AuthStartResult.Authorized(
-                                 Id,
-                                 this,
-                                 response.Response.SessionId.ToWWCP().Value,
-                                 ProviderId:      response.Response.ProviderId.ToWWCP(),
-                                 Description:     response.Response.StatusCode.Description.   ToI18NString(),
-                                 AdditionalInfo:  response.Response.StatusCode.AdditionalInfo.ToI18NString(),
-                                 //NumberOfRetries: response.NumberOfRetries,
-                                 Runtime:         Runtime
-                             );
+                    var responseSessionId = response.Response.SessionId.ToWWCP();
+
+                    if (responseSessionId is not null)
+                        result = WWCP.AuthStartResult.Authorized(
+                                     Id,
+                                     this,
+                                     responseSessionId.Value,
+                                     response.Response.EMPPartnerSessionId.ToWWCP(),
+                                     null,      // ContractId
+                                     null,      // PrintedNumber
+                                     null,      // ExpiryDate
+                                     null,      // MaxkW
+                                     null,      // MaxkWh
+                                     null,      // MaxDuration
+                                     null,      // ChargingTariffs
+                                     null,      // ListOfAuthStopTokens
+                                     null,      // ListOfAuthStopPINs
+                                     response.Response.ProviderId.ToWWCP(),
+                                     response.Response.StatusCode?.Description    is not null
+                                         ? response.Response.StatusCode.Description.   ToI18NString()
+                                         : I18NString.Empty,
+                                     response.Response.StatusCode?.AdditionalInfo is not null
+                                         ? response.Response.StatusCode.AdditionalInfo.ToI18NString()
+                                         : I18NString.Empty,
+                                     0,         // NumberOfRetries
+                                     runtime
+                                 );;
 
                 }
 
-                else
-                    result = WWCP.AuthStartResult.NotAuthorized(
-                                 Id,
-                                 this,
-                                 SessionId,
-                                 response.Response.ProviderId.ToWWCP(),
-                                 response.Response.StatusCode.Description.   ToI18NString(),
-                                 response.Response.StatusCode.AdditionalInfo.ToI18NString(),
-                                 Runtime
-                             );
+                result ??= WWCP.AuthStartResult.NotAuthorized(
+                               Id,
+                               this,
+                               SessionId,
+                               response?.Response?.ProviderId.ToWWCP(),
+                               response?.Response?.StatusCode?.Description is not null
+                                   ? response.Response.StatusCode.Description.ToI18NString()
+                                   : I18NString.Empty,
+                               response?.Response?.StatusCode?.AdditionalInfo is not null
+                                   ? response.Response.StatusCode.AdditionalInfo.ToI18NString()
+                                   : I18NString.Empty,
+                               runtime
+                           );
 
             }
 
@@ -4589,7 +4620,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                OnAuthorizeStartResponse?.Invoke(Endtime,
+                OnAuthorizeStartResponse?.Invoke(endtime,
                                                  Timestamp.Value,
                                                  this,
                                                  Id.ToString(),
@@ -4606,7 +4637,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Array.Empty<WWCP.ISendAuthorizeStartStop>(),
                                                  RequestTimeout,
                                                  result,
-                                                 Runtime);
+                                                 runtime);
 
             }
             catch (Exception e)
@@ -4628,7 +4659,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Create an authorize stop request at the given charging location.
         /// </summary>
         /// <param name="SessionId">The session identification from the AuthorizeStart request.</param>
-        /// <param name="AuthToken">A (RFID) user identification.</param>
+        /// <param name="LocalAuthentication">A local user identification.</param>
         /// <param name="ChargingLocation">The charging location.</param>
         /// <param name="CPOPartnerSessionId">An optional session identification of the CPO.</param>
         /// <param name="OperatorId">An optional charging station operator identification.</param>
@@ -4641,19 +4672,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             AuthorizeStop(WWCP.ChargingSession_Id           SessionId,
                           WWCP.LocalAuthentication          LocalAuthentication,
-                          WWCP.ChargingLocation             ChargingLocation      = null,
+                          WWCP.ChargingLocation?            ChargingLocation      = null,
                           WWCP.ChargingSession_Id?          CPOPartnerSessionId   = null,
                           WWCP.ChargingStationOperator_Id?  OperatorId            = null,
 
                           DateTime?                         Timestamp             = null,
                           CancellationToken?                CancellationToken     = null,
-                          EventTracking_Id                  EventTrackingId       = null,
+                          EventTracking_Id?                 EventTrackingId       = null,
                           TimeSpan?                         RequestTimeout        = null)
         {
 
             #region Initial checks
 
-            if (LocalAuthentication  == null)
+            if (LocalAuthentication is null)
                 throw new ArgumentNullException(nameof(LocalAuthentication), "The given authentication token must not be null!");
 
 
@@ -4663,8 +4694,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
@@ -4673,12 +4703,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopRequest event
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnAuthorizeStopRequest?.Invoke(StartTime,
+                OnAuthorizeStopRequest?.Invoke(startTime,
                                                Timestamp.Value,
                                                this,
                                                Id.ToString(),
@@ -4702,45 +4732,64 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
 
-            DateTime             Endtime;
-            TimeSpan             Runtime;
+            DateTime             endtime;
+            TimeSpan             runtime;
             WWCP.AuthStopResult  result;
 
-            var operatorId  = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            var sessionId   = SessionId.ToOICP();
+            var operatorId      = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
+            var sessionId       = SessionId.ToOICP();
+            var evseId          = ChargingLocation?.EVSEId?.ToOICP();
+            var identification  = LocalAuthentication.ToOICP();
 
-            if (DisableAuthentication)
+            if (!operatorId.HasValue)
             {
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
                 result   = WWCP.AuthStopResult.AdminDown(Id,
                                                          this,
                                                          SessionId,
-                                                         Runtime: Runtime);
-            }
-
-            else if (!operatorId.HasValue)
-            {
-
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
-                result   = WWCP.AuthStopResult.AdminDown(Id,
-                                                         this,
-                                                         SessionId,
-                                                         Runtime: Runtime);
-
+                                                         Runtime: runtime);
             }
 
             else if (!sessionId.HasValue)
             {
-
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
                 result   = WWCP.AuthStopResult.InvalidSessionId(Id,
                                                                 this,
                                                                 SessionId,
-                                                                Runtime: Runtime);
+                                                                Runtime: runtime);
+            }
 
+            // An optional EVSE Id is given, but it is invalid!
+            else if (ChargingLocation?.EVSEId.HasValue == true && !evseId.HasValue)
+            {
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
+                result   = WWCP.AuthStopResult.UnknownLocation(Id,
+                                                               this,
+                                                               SessionId,
+                                                               Runtime: runtime);
+            }
+
+            else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
+            {
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
+                result   = WWCP.AuthStopResult.InvalidToken(Id,
+                                                            this,
+                                                            SessionId,
+                                                            Runtime: runtime);
+            }
+
+            else if (DisableAuthentication)
+            {
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
+                result   = WWCP.AuthStopResult.AdminDown(Id,
+                                                         this,
+                                                         SessionId,
+                                                         Runtime: runtime);
             }
 
             else
@@ -4750,12 +4799,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                       new AuthorizeStopRequest(
                                           operatorId.Value,
                                           sessionId. Value,
-                                          LocalAuthentication.          ToOICP(),
-                                          ChargingLocation.EVSEId.Value.ToOICP(),
-                                          null,
-                                          null,
+                                          identification,
+                                          evseId,
+                                          CPOPartnerSessionId.HasValue
+                                               ? CPOPartnerSession_Id.Parse(CPOPartnerSessionId.Value.ToString())
+                                               : null,
+                                          null, // EMPPartnerSessionId
                                           null, // ProcessId
-                                          null,
+
+                                          null, // CustomData
 
                                           Timestamp,
                                           CancellationToken,
@@ -4763,11 +4815,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                           RequestTimeout));
 
 
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
 
-                if (response.IsSuccess() &&
-                    response?.Response.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
+                if (response.IsSuccess()          &&
+                    response.Response is not null &&
+                    response.Response.AuthorizationStatus == AuthorizationStatusTypes.Authorized)
                 {
 
                     result = WWCP.AuthStopResult.Authorized(
@@ -4775,12 +4828,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  this,
                                  SessionId,
                                  response.Response?.ProviderId?.ToWWCP(),
-                                 response.Response.StatusCode.HasResult
-                                     ? response.Response.StatusCode.Description.ToI18NString()
-                                     : null,
-                                 response.Response.StatusCode.HasResult
+                                 response.Response?.StatusCode?.Description     is not null
+                                     ? response.Response.StatusCode.Description.   ToI18NString()
+                                     : I18NString.Empty,
+                                 response?.Response?.StatusCode?.AdditionalInfo is not null
                                      ? response.Response.StatusCode.AdditionalInfo.ToI18NString()
-                                     : null
+                                     : I18NString.Empty
                              );
 
                 }
@@ -4789,13 +4842,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Id,
                                  this,
                                  SessionId,
-                                 response.Response?.ProviderId?.ToWWCP(),
-                                 response.Response.StatusCode.HasResult
-                                     ? response.Response.StatusCode.Description.ToI18NString()
+                                 response?.Response?.ProviderId?.ToWWCP(),
+                                 response?.Response?.StatusCode?.Description    is not null
+                                     ? response.Response.StatusCode.Description.   ToI18NString()
                                      : I18NString.Empty,
-                                 response.Response.StatusCode.HasResult
+                                 response?.Response?.StatusCode?.AdditionalInfo is not null
                                      ? response.Response.StatusCode.AdditionalInfo.ToI18NString()
-                                     : null
+                                     : I18NString.Empty
                              );
 
             }
@@ -4806,7 +4859,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                OnAuthorizeStopResponse?.Invoke(Endtime,
+                OnAuthorizeStopResponse?.Invoke(endtime,
                                                 Timestamp.Value,
                                                 this,
                                                 Id.ToString(),
@@ -4821,7 +4874,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 LocalAuthentication,
                                                 RequestTimeout,
                                                 result,
-                                                Runtime);
+                                                runtime);
 
             }
             catch (Exception e)
@@ -4836,6 +4889,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         }
 
         #endregion
+
+
+        // SendChargingStartNotification
+
+        // SendChargingProgressNotification
+
+        // SendChargingEndNotification
+
+        // SendChargingErrorNotification
 
 
         #region SendChargeDetailRecords(ChargeDetailRecords, TransmissionType = Enqueue, ...)

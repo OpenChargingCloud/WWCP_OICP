@@ -378,7 +378,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEStatusType.HasValue
                    ? EVSEStatusType.Value.ToWWCP()
-                   : new WWCP.EVSEStatusTypes?();
+                   : null;
 
         #endregion
 
@@ -410,7 +410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEStatusType.HasValue
                    ? EVSEStatusType.Value.ToOICP()
-                   : new EVSEStatusTypes?();
+                   : null;
 
         #endregion
 
@@ -430,7 +430,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return new EVSEStatusRecord(evseId.Value,
                                             status.Value);
 
-            return new EVSEStatusRecord?();
+            return null;
 
         }
 
@@ -482,14 +482,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         public static GeoCoordinates ToOICP(this org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate GeoLocation)
 
-            => new GeoCoordinates(GeoLocation.Latitude. Value,
-                                  GeoLocation.Longitude.Value);
+            => new (GeoLocation.Latitude. Value,
+                    GeoLocation.Longitude.Value);
 
         public static GeoCoordinates? ToOICP(this org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate? GeoLocation)
 
             => GeoLocation.HasValue
                    ? GeoLocation.Value.ToOICP()
-                   : new GeoCoordinates?();
+                   : null;
 
         #endregion
 
@@ -497,14 +497,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         public static org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate ToWWCP(this GeoCoordinates GeoLocation)
 
-            => new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(GeoLocation.Latitude),
-                                                                  org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(GeoLocation.Longitude));
+            => new (org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(GeoLocation.Latitude),
+                    org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(GeoLocation.Longitude));
 
         public static org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate? ToWWCP(this GeoCoordinates? GeoLocation)
 
             => GeoLocation.HasValue
                    ? GeoLocation.Value.ToWWCP()
-                   : new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate?();
+                   : null;
 
         #endregion
 
@@ -521,7 +521,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => OperatorId.HasValue
                    ? OperatorId.Value.ToOICP()
-                   : new Operator_Id?();
+                   : null;
 
         #endregion
 
@@ -535,7 +535,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => OperatorId.HasValue
                    ? OperatorId.Value.ToWWCP()
-                   : new WWCP.ChargingStationOperator_Id?();
+                   : null;
 
         #endregion
 
@@ -550,7 +550,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ProviderId.HasValue
                    ? ProviderId.Value.ToOICP()
-                   : new Provider_Id?();
+                   : null;
 
         #endregion
 
@@ -564,7 +564,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ProviderId.HasValue
                    ? ProviderId.Value.ToWWCP()
-                   : new WWCP.eMobilityProvider_Id?();
+                   : null;
 
         #endregion
 
@@ -580,7 +580,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEId.HasValue
                    ? EVSEId.Value.ToOICP()
-                   : new EVSE_Id?();
+                   : null;
 
         #endregion
 
@@ -595,7 +595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EVSEId.HasValue
                    ? EVSEId.Value.ToWWCP()
-                   : new WWCP.EVSE_Id?();
+                   : null;
 
         #endregion
 
@@ -611,7 +611,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingStationId.HasValue
                    ? ChargingStationId.Value.ToOICP()
-                   : new ChargingStation_Id?();
+                   : null;
 
         #endregion
 
@@ -625,7 +625,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingStationId.HasValue
                    ? ChargingStationId.Value.ToWWCP()
-                   : new WWCP.ChargingStation_Id?();
+                   : null;
 
         #endregion
 
@@ -641,7 +641,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingPoolId.HasValue
                    ? ChargingPoolId.Value.ToOICP()
-                   : new ChargingPool_Id?();
+                   : null;
 
         #endregion
 
@@ -655,7 +655,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingPoolId.HasValue
                    ? ChargingPoolId.Value.ToWWCP()
-                   : new WWCP.ChargingPool_Id?();
+                   : null;
 
         #endregion
 
@@ -670,7 +670,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => SessionId.HasValue
                    ? SessionId.Value.ToOICP()
-                   : new Session_Id?();
+                   : null;
 
         #endregion
 
@@ -684,7 +684,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => SessionId.HasValue
                    ? SessionId.Value.ToWWCP()
-                   : new WWCP.ChargingSession_Id?();
+                   : null;
 
         #endregion
 
@@ -699,7 +699,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => EMPPartnerSessionId.HasValue
                    ? EMPPartnerSessionId.Value.ToWWCP()
-                   : new WWCP.ChargingSession_Id?();
+                   : null;
 
         #endregion
 
@@ -713,7 +713,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => CPOPartnerSessionId.HasValue
                    ? CPOPartnerSessionId.Value.ToWWCP()
-                   : new WWCP.ChargingSession_Id?();
+                   : null;
 
         #endregion
 
@@ -728,7 +728,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingReservationId.HasValue
                    ? ChargingReservationId.Value.ToOICP()
-                   : new Session_Id?();
+                   : null;
 
         #endregion
 
@@ -751,7 +751,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => ChargingProductId.HasValue
                    ? ChargingProductId.Value.ToOICP()
-                   : new PartnerProduct_Id?();
+                   : null;
 
         public static PartnerProduct_Id? ToOICP(this WWCP.ChargingProduct ChargingProduct)
 
@@ -771,7 +771,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => PartnerProductId.HasValue
                    ? PartnerProductId.Value.ToWWCP()
-                   : new WWCP.ChargingProduct_Id?();
+                   : null;
 
         #endregion
 
@@ -793,13 +793,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         public static EVCO_Id? ToOICP(this WWCP.eMobilityAccount_Id? eMAId)
             => eMAId.HasValue
-                   ? EVCO_Id.Parse(eMAId.ToString())
-                   : new EVCO_Id?();
+                   ? EVCO_Id.Parse(eMAId.Value.ToString())
+                   : null;
 
         public static WWCP.eMobilityAccount_Id? ToWWCP(this EVCO_Id? EVCOId)
             => EVCOId.HasValue
-                   ? WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString())
-                   : new WWCP.eMobilityAccount_Id?();
+                   ? WWCP.eMobilityAccount_Id.Parse(EVCOId.Value.ToString())
+                   : null;
 
 
 
@@ -813,8 +813,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static UID? ToOICP(this WWCP.Auth_Token? AuthToken)
 
             => AuthToken.HasValue
-                   ? UID.Parse(AuthToken.ToString().ToUpper())
-                   : new UID?();
+                   ? UID.Parse(AuthToken.Value.ToString().ToUpper())
+                   : null;
 
 
         public static WWCP.Auth_Token ToWWCP(this UID UID)
@@ -826,13 +826,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToWWCP(this Identification)
 
-        public static WWCP.RemoteAuthentication ToWWCP(this Identification Identification)
+        public static WWCP.RemoteAuthentication? ToWWCP(this Identification Identification)
         {
 
             if (Identification.RFIDId.HasValue)
-                return WWCP.RemoteAuthentication.FromAuthToken(WWCP.Auth_Token.Parse (Identification.RFIDId.ToString()));
+                return WWCP.RemoteAuthentication.FromAuthToken(WWCP.Auth_Token.Parse (Identification.RFIDId.Value.ToString()));
 
-            if (Identification.RFIDIdentification != null)
+            if (Identification.RFIDIdentification is not null)
                 return WWCP.RemoteAuthentication.FromAuthToken(WWCP.Auth_Token.Parse (Identification.RFIDIdentification.         UID.   ToString()));
 
             if (Identification.QRCodeIdentification.HasValue && Identification.QRCodeIdentification.Value.PIN.HasValue)
@@ -857,11 +857,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this Authentication)
 
-        public static Identification ToOICP(this WWCP.AAuthentication Authentication)
+        public static Identification? ToOICP(this WWCP.AAuthentication Authentication)
         {
 
             if (Authentication.AuthToken.                  HasValue)
-                return Identification.FromUID                        (UID.Parse(Authentication.AuthToken.ToString().ToUpper()));
+                return Identification.FromUID                        (UID.Parse(Authentication.AuthToken.Value.ToString().ToUpper()));
 
             if (Authentication.QRCodeIdentification.       HasValue)
                 return Identification.FromQRCodeIdentification       (          Authentication.QRCodeIdentification.Value.eMAId.ToOICP(),
@@ -873,7 +873,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (Authentication.RemoteIdentification.       HasValue)
                 return Identification.FromRemoteIdentification       (Authentication.RemoteIdentification.       Value.ToOICP());
 
-            throw new ArgumentException("Invalid AuthInfo!", nameof(Authentication));
+            return null;
 
         }
 
