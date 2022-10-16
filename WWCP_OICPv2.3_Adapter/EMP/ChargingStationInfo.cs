@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         private Regex MappedCharactersRegEx  = new Regex("[_/\\-]");
         private Regex InvalidCharactersRegEx = new Regex("[^A-Z0-9\\*]");
 
-        private readonly Dictionary<EVSE_Id, EVSEDataRecord> _EVSEs;
+        private readonly Dictionary<EVSE_Id, EVSEDataRecord> EVSEs;
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public GeoCoordinates?              GeoCoordinates    { get; }
 
         public IEnumerable<EVSEDataRecord>  EVSEDataRecords
-            => _EVSEs.Values;
+            => EVSEs.Values;
 
         #endregion
 
@@ -71,7 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Address         = Address        ?? throw new ArgumentNullException(nameof(Address),         "The given address must not be null!");
             this.GeoCoordinates  = GeoCoordinates ?? throw new ArgumentNullException(nameof(GeoCoordinates),  "The given geo coordinates must not be null!");
 
-            this._EVSEs          = EVSEs != null
+            this.EVSEs           = EVSEs is not null
                                        ? EVSEs.ToDictionary(evse => evse.Id)
                                        : new Dictionary<EVSE_Id, EVSEDataRecord>();
 
@@ -80,16 +80,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region AddOrUpdateEVSE(CurrentEVSEDataRecord)
+        #region AddOrUpdateEVSE(EVSE)
 
-        public void AddOrUpdateEVSE(EVSEDataRecord CurrentEVSEDataRecord)
+        public void AddOrUpdateEVSE(EVSEDataRecord EVSE)
         {
 
-            if (!_EVSEs.ContainsKey(CurrentEVSEDataRecord.Id))
-                _EVSEs.Add(CurrentEVSEDataRecord.Id, CurrentEVSEDataRecord);
+            if (!EVSEs.ContainsKey(EVSE.Id))
+                EVSEs.Add(EVSE.Id, EVSE);
 
             else
-                DebugX.Log("Duplicate EVSE identification: '" + CurrentEVSEDataRecord.Id + "'!");
+                DebugX.Log("Duplicate EVSE identification: '" + EVSE.Id + "'!");
 
         }
 
@@ -201,28 +201,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON()
 
             => JSONObject.Create(
-                   new JProperty("stationId",       StationId.           ToString()),
-                   new JProperty("address",         Address.             ToJSON()),
-                   new JProperty("geoCoordinates",  GeoCoordinates.Value.ToJSON()),
-                   new JProperty("evses",           JSONArray.Create(
-                       EVSEDataRecords.Select(evseDataRecord => evseDataRecord.ToJSON()))
-                   )
+
+                   new JProperty("stationId",             StationId.           ToString()),
+                   new JProperty("address",               Address.             ToJSON()),
+
+                   GeoCoordinates is not null
+                       ? new JProperty("geoCoordinates",  GeoCoordinates.Value.ToJSON())
+                       : null,
+
+                   new JProperty("evses",                 JSONArray.Create(
+                                                              EVSEDataRecords.Select(evseDataRecord => evseDataRecord.ToJSON()))
+                                                          )
+
                );
 
         #endregion
 
 
-        #region IEnumerable<EVSE_Id> Members
+        #region IEnumerable<EVSEDataRecord> Members
 
         public IEnumerator<EVSEDataRecord> GetEnumerator()
-            => _EVSEs.Values.GetEnumerator();
+            => EVSEs.Values.GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => _EVSEs.Values.GetEnumerator();
+            => EVSEs.Values.GetEnumerator();
 
         #endregion
 
-        #region IEquatable<CSInfo> Members
+        #region IEquatable<ChargingStationInfo> Members
 
         #region Equals(Object)
 
@@ -231,39 +237,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
-        {
+        public override Boolean Equals(Object? Object)
 
-            if (Object == null)
-                return false;
-
-            // Check if the given object is an CSInfo.
-            var CSInfo = Object as ChargingStationInfo;
-            if ((Object) CSInfo == null)
-                return false;
-
-            return this.Equals(CSInfo);
-
-        }
+            => Object is ChargingStationInfo chargingStationInfo &&
+                   Equals(chargingStationInfo);
 
         #endregion
 
         #region Equals(ChargingStationInfo)
 
         /// <summary>
-        /// Compares two CSInfos for equality.
+        /// Compares two ChargingStationInfos for equality.
         /// </summary>
-        /// <param name="ChargingStationInfo">A CSInfo to compare with.</param>
+        /// <param name="ChargingStationInfo">A ChargingStationInfo to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ChargingStationInfo ChargingStationInfo)
-        {
+        public Boolean Equals(ChargingStationInfo? ChargingStationInfo)
 
-            if ((Object) ChargingStationInfo == null)
-                return false;
-
-            return ChargingStationInfo.StationId.Equals(StationId);
-
-        }
+            => ChargingStationInfo is not null &&
+               StationId.Equals(ChargingStationInfo.StationId);
 
         #endregion
 
@@ -293,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
-            => String.Concat("'", StationId, "' / '", StationId, "' => ", _EVSEs.Count, " EVSEs");
+            => String.Concat("'", StationId, "' / '", StationId, "' => ", EVSEs.Count, " EVSEs");
 
         #endregion
 

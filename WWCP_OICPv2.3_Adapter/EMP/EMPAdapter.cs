@@ -2532,7 +2532,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                         operatorInfo = new OperatorInfo(evseDataRecordGroup.Key,
                                                                         evseDataRecordGroup.FirstOrDefault()?.OperatorName);
 
-                                        operatorInfos.Add(operatorInfo.OperatorId, operatorInfo);
+                                        operatorInfos.Add(operatorInfo.OperatorId,
+                                                          operatorInfo);
 
                                     }
 
@@ -2550,7 +2551,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                 DebugX.Log("OICP.WWCPCSOAdapter.PullOperatorInfos operatorInfo.OperatorName '" + operatorInfo.OperatorName + "' != '" + currentEVSEDataRecord.OperatorName + "'!");
                                             }
 
-                                            operatorInfo.AddOrUpdateChargingPool(currentEVSEDataRecord);
+                                            operatorInfo.AddOrUpdateEVSE(currentEVSEDataRecord);
 
                                         } catch (Exception e)
                                         {

@@ -34,7 +34,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Data
 
-        private readonly Dictionary<ChargingStation_Id, ChargingStationInfo> _ChargingStations;
+        private readonly Dictionary<ChargingStation_Id, ChargingStationInfo> chargingStations;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public GeoCoordinates?                   GeoCoordinates    { get; }
 
         public IEnumerable<ChargingStationInfo>  ChargingStations
-            => _ChargingStations.Values;
+            => chargingStations.Values;
 
         #endregion
 
@@ -70,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Address            = Address        ?? throw new ArgumentNullException(nameof(Address),         "The given address must not be null!");
             this.GeoCoordinates     = GeoCoordinates ?? throw new ArgumentNullException(nameof(GeoCoordinates),  "The given geo coordinates must not be null!");
 
-            this._ChargingStations  = ChargingStationInfos != null
+            this.chargingStations  = ChargingStationInfos != null
                                           ? ChargingStationInfos.ToDictionary(station => station.StationId)
                                           : new Dictionary<ChargingStation_Id, ChargingStationInfo>();
 
@@ -79,31 +79,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region AddOrUpdateChargingStation(CurrentEVSEDataRecord)
+        #region AddOrUpdateEVSE(EVSE)
 
-        public void AddOrUpdateChargingStation(EVSEDataRecord CurrentEVSEDataRecord)
+        public void AddOrUpdateEVSE(EVSEDataRecord EVSE)
         {
 
-            var chargingStationId = CurrentEVSEDataRecord.ChargingStationId
-                                        ?? ChargingStation_Id.Generate(CurrentEVSEDataRecord.OperatorId,
-                                                                       CurrentEVSEDataRecord.Address,
-                                                                       CurrentEVSEDataRecord.GeoCoordinates,
-                                                                       CurrentEVSEDataRecord.SubOperatorName,
-                                                                       CurrentEVSEDataRecord.ChargingStationName);
+            var chargingStationId = EVSE.ChargingStationId
+                                        ?? ChargingStation_Id.Generate(EVSE.OperatorId,
+                                                                       EVSE.Address,
+                                                                       EVSE.GeoCoordinates,
+                                                                       EVSE.SubOperatorName,
+                                                                       EVSE.ChargingStationName);
 
-            if (!_ChargingStations.TryGetValue(chargingStationId, out ChargingStationInfo chargingStationInfo))
+            if (!chargingStations.TryGetValue(chargingStationId, out var chargingStationInfo))
             {
 
                 chargingStationInfo = new ChargingStationInfo(this,
                                                               chargingStationId,
-                                                              CurrentEVSEDataRecord.Address,
-                                                              CurrentEVSEDataRecord.GeoCoordinates);
+                                                              EVSE.Address,
+                                                              EVSE.GeoCoordinates);
 
-                _ChargingStations.Add(chargingStationInfo.StationId, chargingStationInfo);
+                chargingStations.Add(chargingStationInfo.StationId,
+                                     chargingStationInfo);
 
             }
 
-            chargingStationInfo.AddOrUpdateEVSE(CurrentEVSEDataRecord);
+            chargingStationInfo.AddOrUpdateEVSE(EVSE);
 
         }
 
@@ -242,14 +243,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region IEnumerable<ChargeStationInfo> Members
 
         public IEnumerator<ChargingStationInfo> GetEnumerator()
-            => _ChargingStations.Values.GetEnumerator();
+            => chargingStations.Values.GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => _ChargingStations.Values.GetEnumerator();
+            => chargingStations.Values.GetEnumerator();
 
         #endregion
 
-        #region IEquatable<CPInfo> Members
+        #region IEquatable<ChargingPoolInfo> Members
 
         #region Equals(Object)
 
@@ -258,39 +259,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         /// <returns>true|false</returns>
-        public override Boolean Equals(Object Object)
-        {
+        public override Boolean Equals(Object? Object)
 
-            if (Object == null)
-                return false;
-
-            // Check if the given object is an CPInfo.
-            var CPInfo = Object as ChargingPoolInfo;
-            if ((Object) CPInfo == null)
-                return false;
-
-            return this.Equals(CPInfo);
-
-        }
+            => Object is ChargingPoolInfo chargingPoolInfo &&
+                   Equals(chargingPoolInfo);
 
         #endregion
 
-        #region Equals(ChargePoolInfo)
+        #region Equals(ChargingPoolInfo)
 
         /// <summary>
-        /// Compares two CPInfos for equality.
+        /// Compares two ChargingPoolInfos for equality.
         /// </summary>
-        /// <param name="ChargePoolInfo">A CPInfo to compare with.</param>
+        /// <param name="ChargingPoolInfo">A ChargingPoolInfo to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(ChargingPoolInfo ChargePoolInfo)
-        {
+        public Boolean Equals(ChargingPoolInfo? ChargingPoolInfo)
 
-            if ((Object) ChargePoolInfo == null)
-                return false;
-
-            return ChargePoolInfo.PoolId.Equals(PoolId);
-
-        }
+            => ChargingPoolInfo is not null &&
+               PoolId.Equals(ChargingPoolInfo.PoolId);
 
         #endregion
 
@@ -322,9 +308,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat("'", PoolId, "' => ",
-                             _ChargingStations.Count,
+                             chargingStations.Count,
                              " charging stations, ",
-                             _ChargingStations.SelectMany(v => v.Value.EVSEDataRecords).Count(),
+                             chargingStations.SelectMany(v => v.Value.EVSEDataRecords).Count(),
                              " EVSEs");
 
         #endregion

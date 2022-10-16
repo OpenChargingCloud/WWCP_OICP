@@ -17,17 +17,11 @@
 
 #region Usings
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using org.GraphDefined.Vanaheimr.Aegir;
-
-using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -56,13 +50,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public String?      OperatorName    { get; }
 
 
-        private readonly Dictionary<ChargingPool_Id, ChargingPoolInfo> _ChargingPools;
+        private readonly Dictionary<ChargingPool_Id, ChargingPoolInfo> chargingPools;
 
         /// <summary>
         /// All charging pools.
         /// </summary>
         public IEnumerable<ChargingPoolInfo> ChargingPools
-            => _ChargingPools.Select(v => v.Value);
+            => chargingPools.Select(v => v.Value);
 
         #endregion
 
@@ -76,41 +70,42 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (OperatorId.IsNullOrEmpty)
                 throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
 
-            this.OperatorId      = OperatorId;
-            this.OperatorName    = OperatorName;
-            this._ChargingPools  = ChargingPools != null
-                                       ? ChargingPools.ToDictionary(pool => pool.PoolId)
-                                       : new Dictionary<ChargingPool_Id, ChargingPoolInfo>();
+            this.OperatorId     = OperatorId;
+            this.OperatorName   = OperatorName;
+            this.chargingPools  = ChargingPools is not null
+                                      ? ChargingPools.ToDictionary(pool => pool.PoolId)
+                                      : new Dictionary<ChargingPool_Id, ChargingPoolInfo>();
 
         }
 
         #endregion
 
 
-        #region AddOrUpdateChargingPool(CurrentEVSEDataRecord)
+        #region AddOrUpdateEVSE(EVSE)
 
-        public void AddOrUpdateChargingPool(EVSEDataRecord CurrentEVSEDataRecord)
+        public void AddOrUpdateEVSE(EVSEDataRecord EVSE)
         {
 
-            var chargingPoolId = CurrentEVSEDataRecord.ChargingPoolId
+            var chargingPoolId = EVSE.ChargingPoolId
                                      ?? ChargingPool_Id.Generate(OperatorId,
-                                                                 CurrentEVSEDataRecord.Address,
-                                                                 CurrentEVSEDataRecord.GeoCoordinates,
-                                                                 CurrentEVSEDataRecord.SubOperatorName);
+                                                                 EVSE.Address,
+                                                                 EVSE.GeoCoordinates,
+                                                                 EVSE.SubOperatorName);
 
-            if (!_ChargingPools.TryGetValue(chargingPoolId, out ChargingPoolInfo chargingPoolInfo))
+            if (!chargingPools.TryGetValue(chargingPoolId, out var chargingPoolInfo))
             {
 
                 chargingPoolInfo = new ChargingPoolInfo(this,
                                                         chargingPoolId,
-                                                        CurrentEVSEDataRecord.Address,
-                                                        CurrentEVSEDataRecord.GeoCoordinates);
+                                                        EVSE.Address,
+                                                        EVSE.GeoCoordinates);
 
-                _ChargingPools.Add(chargingPoolInfo.PoolId, chargingPoolInfo);
+                chargingPools.Add(chargingPoolInfo.PoolId,
+                                  chargingPoolInfo);
 
             }
 
-            chargingPoolInfo.AddOrUpdateChargingStation(CurrentEVSEDataRecord);
+            chargingPoolInfo.AddOrUpdateEVSE(EVSE);
 
         }
 
@@ -326,10 +321,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region IEnumerable<ChargingPoolInfo> Members
 
         public IEnumerator<ChargingPoolInfo> GetEnumerator()
-            => _ChargingPools.Values.GetEnumerator();
+            => chargingPools.Values.GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            => _ChargingPools.Values.GetEnumerator();
+            => chargingPools.Values.GetEnumerator();
 
         #endregion
 
@@ -341,9 +336,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat(OperatorName, " (", OperatorId.ToString(), ") ", " => ",
-                             _ChargingPools.Values.                                                                                           Count(), " charging pools, ",
-                             _ChargingPools.Values.SelectMany(pool => pool.ChargingStations).                                                 Count(), " charging stations, ",
-                             _ChargingPools.Values.SelectMany(pool => pool.ChargingStations.SelectMany(stations => stations.EVSEDataRecords)).Count(), " EVSEs.");
+                             chargingPools.Values.                                                                                           Count(), " charging pools, ",
+                             chargingPools.Values.SelectMany(pool => pool.ChargingStations).                                                 Count(), " charging stations, ",
+                             chargingPools.Values.SelectMany(pool => pool.ChargingStations.SelectMany(stations => stations.EVSEDataRecords)).Count(), " EVSEs.");
 
         #endregion
 
