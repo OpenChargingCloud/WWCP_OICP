@@ -21,8 +21,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 using org.GraphDefined.Vanaheimr.Illias;
 
-using OICPv2_3 = cloud.charging.open.protocols.OICPv2_3;
-
 #endregion
 
 namespace cloud.charging.open.protocols.WWCP
@@ -45,7 +43,6 @@ namespace cloud.charging.open.protocols.WWCP
         /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
         /// 
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to the roaming provider.</param>
-        /// <param name="EVSEDataRecord2XML">A delegate to process the XML representation of an EVSE data record, e.g. before pushing it to the roaming provider.</param>
         /// 
         /// <param name="DefaultOperator">An optional Charging Station Operator, which will be copied into the main OperatorID-section of the OICP SOAP request.</param>
         /// <param name="OperatorNameSelector">An optional delegate to select an Charging Station Operator name, which will be copied into the OperatorName-section of the OICP SOAP request.</param>
@@ -60,10 +57,6 @@ namespace cloud.charging.open.protocols.WWCP
         /// 
         /// <param name="OICPConfigurator">An optional delegate to configure the new OICP roaming provider after its creation.</param>
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
-        /// 
-        /// <param name="PublicKeyRing">The public key ring of the entity.</param>
-        /// <param name="SecretKeyRing">The secrect key ring of the entity.</param>
-        /// <param name="DNSClient">An optional DNS client to use.</param>
         public static OICPv2_3.CPO.CPOAdapter?
 
             CreateOICPv2_3_CPOAdapter(this RoamingNetwork                                          RoamingNetwork,
@@ -135,7 +128,6 @@ namespace cloud.charging.open.protocols.WWCP
                                                                  IncludeEVSEIds,
                                                                  IncludeEVSEs,
                                                                  ChargeDetailRecordFilter,
-                                                                 //CustomEVSEIdMapper,
 
                                                                  ServiceCheckEvery,
                                                                  StatusCheckEvery,

@@ -5708,7 +5708,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region IComparable<WWCPEMPAdapter> Members
+        #region IComparable<CPOAdapter> Members
 
         #region CompareTo(Object)
 
@@ -5717,14 +5717,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
         public override Int32 CompareTo(Object? Object)
-        {
 
-            if (Object is CPOAdapter wwcpEMPAdapter)
-                return CompareTo(wwcpEMPAdapter);
-
-            throw new ArgumentException("The given object is not an WWCPEMPAdapter!", nameof(Object));
-
-        }
+            => Object is CPOAdapter cpoAdapter
+                   ? CompareTo(cpoAdapter)
+                   : throw new ArgumentException("The given object is not a CPO adapter!",
+                                                 nameof(Object));
 
         #endregion
 
@@ -5733,14 +5730,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter object to compare with.</param>
-        public Int32 CompareTo(CPOAdapter WWCPEMPAdapter)
+        /// <param name="CPOAdapter">A CPO adapter object to compare with.</param>
+        public Int32 CompareTo(CPOAdapter? CPOAdapter)
         {
 
-            if (WWCPEMPAdapter is null)
-                throw new ArgumentNullException(nameof(WWCPEMPAdapter), "The given WWCPEMPAdapter must not be null!");
+            if (CPOAdapter is null)
+                throw new ArgumentNullException(nameof(CPOAdapter), "The given CPO adapter must not be null!");
 
-            return Id.CompareTo(WWCPEMPAdapter.Id);
+            return Id.CompareTo(CPOAdapter.Id);
 
         }
 
@@ -5748,7 +5745,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region IEquatable<WWCPEMPAdapter> Members
+        #region IEquatable<CPOAdapter> Members
 
         #region Equals(Object)
 
@@ -5759,22 +5756,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <returns>true|false</returns>
         public override Boolean Equals(Object? Object)
 
-            => Object is CPOAdapter WWCPEMPAdapter &&
-                   Equals(WWCPEMPAdapter);
+            => Object is CPOAdapter cpoAdapter &&
+                   Equals(cpoAdapter);
 
         #endregion
 
-        #region Equals(WWCPEMPAdapter)
+        #region Equals(CPOAdapter)
 
         /// <summary>
-        /// Compares two WWCPEMPAdapter for equality.
+        /// Compares two CPO adapters for equality.
         /// </summary>
-        /// <param name="WWCPEMPAdapter">An WWCPEMPAdapter to compare with.</param>
+        /// <param name="CPOAdapter">A CPO adapter to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(CPOAdapter? WWCPEMPAdapter)
+        public Boolean Equals(CPOAdapter? CPOAdapter)
 
-            => WWCPEMPAdapter is not null &&
-                   Id.Equals(WWCPEMPAdapter.Id);
+            => CPOAdapter is not null &&
+               Id.Equals(CPOAdapter.Id);
 
         #endregion
 

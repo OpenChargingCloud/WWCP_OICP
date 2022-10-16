@@ -22,6 +22,7 @@ using Newtonsoft.Json.Linq;
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using cloud.charging.open.protocols.OICPv2_3.CPO;
 
 #endregion
 
@@ -3476,7 +3477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region IComparable<WWCPCSOAdapter> Members
+        #region IComparable<EMPAdapter> Members
 
         #region CompareTo(Object)
 
@@ -3484,31 +3485,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        public override Int32 CompareTo(Object Object)
-        {
+        public override Int32 CompareTo(Object? Object)
 
-            if (Object is EMPAdapter WWCPCSOAdapter)
-                return CompareTo(WWCPCSOAdapter);
-
-            throw new ArgumentException("The given object is not an WWCPCSOAdapter!", nameof(Object));
-
-        }
+            => Object is EMPAdapter empAdapter
+                   ? CompareTo(empAdapter)
+                   : throw new ArgumentException("The given object is not an EMP adapter!",
+                                                 nameof(Object));
 
         #endregion
 
-        #region CompareTo(WWCPCSOAdapter)
+        #region CompareTo(EMPAdapter)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPCSOAdapter">An WWCPCSOAdapter object to compare with.</param>
-        public Int32 CompareTo(EMPAdapter WWCPCSOAdapter)
+        /// <param name="EMPAdapter">An EMP adapter object to compare with.</param>
+        public Int32 CompareTo(EMPAdapter? EMPAdapter)
         {
 
-            if (WWCPCSOAdapter is null)
-                throw new ArgumentNullException(nameof(WWCPCSOAdapter), "The given WWCPCSOAdapter must not be null!");
+            if (EMPAdapter is null)
+                throw new ArgumentNullException(nameof(EMPAdapter), "The given EMP adapter must not be null!");
 
-            return Id.CompareTo(WWCPCSOAdapter.Id);
+            return Id.CompareTo(EMPAdapter.Id);
 
         }
 
@@ -3516,7 +3514,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region IEquatable<WWCPCSOAdapter> Members
+        #region IEquatable<EMPAdapter> Members
 
         #region Equals(Object)
 
@@ -3527,23 +3525,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <returns>true|false</returns>
         public override Boolean Equals(Object? Object)
 
-            => Object is EMPAdapter WWCPCSOAdapter &&
-                   Equals(WWCPCSOAdapter);
+            => Object is EMPAdapter empAdapter &&
+                   Equals(empAdapter);
 
         #endregion
 
-        #region Equals(WWCPCSOAdapter)
+        #region Equals(EMPAdapter)
 
         /// <summary>
-        /// Compares two WWCPCSOAdapter for equality.
+        /// Compares two EMP adapters for equality.
         /// </summary>
-        /// <param name="WWCPCSOAdapter">An WWCPCSOAdapter to compare with.</param>
+        /// <param name="EMPAdapter">An EMP adapter to compare with.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public Boolean Equals(EMPAdapter WWCPCSOAdapter)
+        public Boolean Equals(EMPAdapter? EMPAdapter)
 
-            => WWCPCSOAdapter is null
-                   ? false
-                   : Id.Equals(WWCPCSOAdapter.Id);
+            => EMPAdapter is not null &&
+               Id.Equals(EMPAdapter.Id);
 
         #endregion
 
