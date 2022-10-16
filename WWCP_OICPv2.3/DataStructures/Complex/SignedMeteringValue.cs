@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -337,8 +335,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (SignedMeteringValue SignedMeteringValue1,
-                                           SignedMeteringValue SignedMeteringValue2)
+        public static Boolean operator == (SignedMeteringValue? SignedMeteringValue1,
+                                           SignedMeteringValue? SignedMeteringValue2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -363,8 +361,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (SignedMeteringValue SignedMeteringValue1,
-                                           SignedMeteringValue SignedMeteringValue2)
+        public static Boolean operator != (SignedMeteringValue? SignedMeteringValue1,
+                                           SignedMeteringValue? SignedMeteringValue2)
 
             => !(SignedMeteringValue1 == SignedMeteringValue2);
 
@@ -378,8 +376,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (SignedMeteringValue SignedMeteringValue1,
-                                          SignedMeteringValue SignedMeteringValue2)
+        public static Boolean operator < (SignedMeteringValue? SignedMeteringValue1,
+                                          SignedMeteringValue? SignedMeteringValue2)
         {
 
             if (SignedMeteringValue1 is null)
@@ -399,8 +397,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (SignedMeteringValue SignedMeteringValue1,
-                                           SignedMeteringValue SignedMeteringValue2)
+        public static Boolean operator <= (SignedMeteringValue? SignedMeteringValue1,
+                                           SignedMeteringValue? SignedMeteringValue2)
 
             => !(SignedMeteringValue1 > SignedMeteringValue2);
 
@@ -414,8 +412,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (SignedMeteringValue SignedMeteringValue1,
-                                          SignedMeteringValue SignedMeteringValue2)
+        public static Boolean operator > (SignedMeteringValue? SignedMeteringValue1,
+                                          SignedMeteringValue? SignedMeteringValue2)
         {
 
             if (SignedMeteringValue1 is null)
@@ -435,8 +433,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (SignedMeteringValue SignedMeteringValue1,
-                                           SignedMeteringValue SignedMeteringValue2)
+        public static Boolean operator >= (SignedMeteringValue? SignedMeteringValue1,
+                                           SignedMeteringValue? SignedMeteringValue2)
 
             => !(SignedMeteringValue1 < SignedMeteringValue2);
 

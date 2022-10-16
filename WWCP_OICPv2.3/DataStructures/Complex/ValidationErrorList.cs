@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -208,12 +206,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region ToJSON()
+
+        /// <summary>
+        /// Return a JSON representation of this object.
+        /// </summary>
         public JObject ToJSON()
 
             => JSONObject.Create(
                    new JProperty("message",           Message),
                    new JProperty("validationErrors",  new JArray(ValidationErrors.Select(validationError => validationError.ToJSON())))
                );
+
+        #endregion
 
         #region Clone
 

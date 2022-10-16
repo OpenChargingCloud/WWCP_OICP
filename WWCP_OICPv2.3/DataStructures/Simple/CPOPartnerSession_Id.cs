@@ -17,10 +17,6 @@
 
 #region Usings
 
-using System;
-
-using Newtonsoft.Json.Linq;
-
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion

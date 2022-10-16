@@ -502,8 +502,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PricingProductData1">An pricing product data object.</param>
         /// <param name="PricingProductData2">Another pricing product data object.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (PricingProductData PricingProductData1,
-                                           PricingProductData PricingProductData2)
+        public static Boolean operator == (PricingProductData? PricingProductData1,
+                                           PricingProductData? PricingProductData2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -528,8 +528,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PricingProductData1">An pricing product data object.</param>
         /// <param name="PricingProductData2">Another pricing product data object.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (PricingProductData PricingProductData1,
-                                           PricingProductData PricingProductData2)
+        public static Boolean operator != (PricingProductData? PricingProductData1,
+                                           PricingProductData? PricingProductData2)
 
             => !(PricingProductData1 == PricingProductData2);
 
@@ -710,7 +710,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              " => ", PricingProductDataRecords.Count(), " pricing product data record(s)");
 
         #endregion
-
 
     }
 

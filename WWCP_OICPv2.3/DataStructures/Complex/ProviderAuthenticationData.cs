@@ -359,8 +359,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
         /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (ProviderAuthenticationData ProviderAuthenticationData1,
-                                           ProviderAuthenticationData ProviderAuthenticationData2)
+        public static Boolean operator == (ProviderAuthenticationData? ProviderAuthenticationData1,
+                                           ProviderAuthenticationData? ProviderAuthenticationData2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -385,8 +385,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
         /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (ProviderAuthenticationData ProviderAuthenticationData1,
-                                           ProviderAuthenticationData ProviderAuthenticationData2)
+        public static Boolean operator != (ProviderAuthenticationData? ProviderAuthenticationData1,
+                                           ProviderAuthenticationData? ProviderAuthenticationData2)
 
             => !(ProviderAuthenticationData1 == ProviderAuthenticationData2);
 
@@ -400,8 +400,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
         /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (ProviderAuthenticationData ProviderAuthenticationData1,
-                                          ProviderAuthenticationData ProviderAuthenticationData2)
+        public static Boolean operator < (ProviderAuthenticationData? ProviderAuthenticationData1,
+                                          ProviderAuthenticationData? ProviderAuthenticationData2)
         {
 
             if (ProviderAuthenticationData1 is null)
@@ -421,8 +421,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
         /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (ProviderAuthenticationData ProviderAuthenticationData1,
-                                           ProviderAuthenticationData ProviderAuthenticationData2)
+        public static Boolean operator <= (ProviderAuthenticationData? ProviderAuthenticationData1,
+                                           ProviderAuthenticationData? ProviderAuthenticationData2)
 
             => !(ProviderAuthenticationData1 > ProviderAuthenticationData2);
 
@@ -436,8 +436,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
         /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (ProviderAuthenticationData ProviderAuthenticationData1,
-                                          ProviderAuthenticationData ProviderAuthenticationData2)
+        public static Boolean operator > (ProviderAuthenticationData? ProviderAuthenticationData1,
+                                          ProviderAuthenticationData? ProviderAuthenticationData2)
         {
 
             if (ProviderAuthenticationData1 is null)
@@ -457,8 +457,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
         /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (ProviderAuthenticationData ProviderAuthenticationData1,
-                                           ProviderAuthenticationData ProviderAuthenticationData2)
+        public static Boolean operator >= (ProviderAuthenticationData? ProviderAuthenticationData1,
+                                           ProviderAuthenticationData? ProviderAuthenticationData2)
 
             => !(ProviderAuthenticationData1 < ProviderAuthenticationData2);
 

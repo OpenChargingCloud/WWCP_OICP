@@ -549,8 +549,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="I18NText1">A I18N-string.</param>
         /// <param name="I18NText2">Another I18N-string.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (I18NText I18NText1,
-                                           I18NText I18NText2)
+        public static Boolean operator == (I18NText? I18NText1,
+                                           I18NText? I18NText2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -575,8 +575,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="I18NText1">A I18N-string.</param>
         /// <param name="I18NText2">Another I18N-string.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (I18NText I18NText1,
-                                           I18NText I18NText2)
+        public static Boolean operator != (I18NText? I18NText1,
+                                           I18NText? I18NText2)
 
             => !(I18NText1 == I18NText2);
 

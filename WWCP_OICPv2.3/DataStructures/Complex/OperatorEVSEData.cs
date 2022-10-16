@@ -386,8 +386,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (OperatorEVSEData OperatorEVSEData1,
-                                           OperatorEVSEData OperatorEVSEData2)
+        public static Boolean operator == (OperatorEVSEData? OperatorEVSEData1,
+                                           OperatorEVSEData? OperatorEVSEData2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -412,8 +412,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (OperatorEVSEData OperatorEVSEData1,
-                                           OperatorEVSEData OperatorEVSEData2)
+        public static Boolean operator != (OperatorEVSEData?OperatorEVSEData1,
+                                           OperatorEVSEData?OperatorEVSEData2)
 
             => !(OperatorEVSEData1 == OperatorEVSEData2);
 
@@ -427,8 +427,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (OperatorEVSEData OperatorEVSEData1,
-                                          OperatorEVSEData OperatorEVSEData2)
+        public static Boolean operator < (OperatorEVSEData? OperatorEVSEData1,
+                                          OperatorEVSEData? OperatorEVSEData2)
         {
 
             if (OperatorEVSEData1 is null)
@@ -448,8 +448,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (OperatorEVSEData OperatorEVSEData1,
-                                           OperatorEVSEData OperatorEVSEData2)
+        public static Boolean operator <= (OperatorEVSEData? OperatorEVSEData1,
+                                           OperatorEVSEData? OperatorEVSEData2)
 
             => !(OperatorEVSEData1 > OperatorEVSEData2);
 
@@ -463,8 +463,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (OperatorEVSEData OperatorEVSEData1,
-                                          OperatorEVSEData OperatorEVSEData2)
+        public static Boolean operator > (OperatorEVSEData? OperatorEVSEData1,
+                                          OperatorEVSEData? OperatorEVSEData2)
         {
 
             if (OperatorEVSEData1 is null)
@@ -484,8 +484,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (OperatorEVSEData OperatorEVSEData1,
-                                           OperatorEVSEData OperatorEVSEData2)
+        public static Boolean operator >= (OperatorEVSEData? OperatorEVSEData1,
+                                           OperatorEVSEData? OperatorEVSEData2)
 
             => !(OperatorEVSEData1 < OperatorEVSEData2);
 

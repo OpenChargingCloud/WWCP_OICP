@@ -366,8 +366,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (OperatorEVSEStatus OperatorEVSEStatus1,
-                                           OperatorEVSEStatus OperatorEVSEStatus2)
+        public static Boolean operator == (OperatorEVSEStatus? OperatorEVSEStatus1,
+                                           OperatorEVSEStatus? OperatorEVSEStatus2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -392,8 +392,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (OperatorEVSEStatus OperatorEVSEStatus1,
-                                           OperatorEVSEStatus OperatorEVSEStatus2)
+        public static Boolean operator != (OperatorEVSEStatus? OperatorEVSEStatus1,
+                                           OperatorEVSEStatus? OperatorEVSEStatus2)
 
             => !(OperatorEVSEStatus1 == OperatorEVSEStatus2);
 
@@ -407,8 +407,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (OperatorEVSEStatus OperatorEVSEStatus1,
-                                          OperatorEVSEStatus OperatorEVSEStatus2)
+        public static Boolean operator < (OperatorEVSEStatus? OperatorEVSEStatus1,
+                                          OperatorEVSEStatus? OperatorEVSEStatus2)
         {
 
             if (OperatorEVSEStatus1 is null)
@@ -428,8 +428,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (OperatorEVSEStatus OperatorEVSEStatus1,
-                                           OperatorEVSEStatus OperatorEVSEStatus2)
+        public static Boolean operator <= (OperatorEVSEStatus? OperatorEVSEStatus1,
+                                           OperatorEVSEStatus? OperatorEVSEStatus2)
 
             => !(OperatorEVSEStatus1 > OperatorEVSEStatus2);
 
@@ -443,8 +443,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (OperatorEVSEStatus OperatorEVSEStatus1,
-                                          OperatorEVSEStatus OperatorEVSEStatus2)
+        public static Boolean operator > (OperatorEVSEStatus? OperatorEVSEStatus1,
+                                          OperatorEVSEStatus? OperatorEVSEStatus2)
         {
 
             if (OperatorEVSEStatus1 is null)
@@ -464,8 +464,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (OperatorEVSEStatus OperatorEVSEStatus1,
-                                           OperatorEVSEStatus OperatorEVSEStatus2)
+        public static Boolean operator >= (OperatorEVSEStatus? OperatorEVSEStatus1,
+                                           OperatorEVSEStatus? OperatorEVSEStatus2)
 
             => !(OperatorEVSEStatus1 < OperatorEVSEStatus2);
 

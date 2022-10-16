@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -666,8 +664,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Identification Identification1,
-                                           Identification Identification2)
+        public static Boolean operator == (Identification? Identification1,
+                                           Identification? Identification2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -692,8 +690,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Identification Identification1,
-                                           Identification Identification2)
+        public static Boolean operator != (Identification? Identification1,
+                                           Identification? Identification2)
 
             => !Identification1.Equals(Identification2);
 
@@ -707,8 +705,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Identification Identification1,
-                                          Identification Identification2)
+        public static Boolean operator < (Identification? Identification1,
+                                          Identification? Identification2)
         {
 
             if (Identification1 is null)
@@ -728,8 +726,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Identification Identification1,
-                                           Identification Identification2)
+        public static Boolean operator <= (Identification? Identification1,
+                                           Identification? Identification2)
 
             => !(Identification1 > Identification2);
 
@@ -743,8 +741,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Identification Identification1,
-                                          Identification Identification2)
+        public static Boolean operator > (Identification? Identification1,
+                                          Identification? Identification2)
         {
 
             if (Identification1 is null)
@@ -764,8 +762,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Identification Identification1,
-                                           Identification Identification2)
+        public static Boolean operator >= (Identification? Identification1,
+                                           Identification? Identification2)
 
             => !(Identification1 < Identification2);
 

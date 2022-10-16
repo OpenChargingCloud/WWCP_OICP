@@ -364,8 +364,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (OperatorEVSEPricing OperatorEVSEPricing1,
-                                           OperatorEVSEPricing OperatorEVSEPricing2)
+        public static Boolean operator == (OperatorEVSEPricing? OperatorEVSEPricing1,
+                                           OperatorEVSEPricing? OperatorEVSEPricing2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -390,8 +390,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (OperatorEVSEPricing OperatorEVSEPricing1,
-                                           OperatorEVSEPricing OperatorEVSEPricing2)
+        public static Boolean operator != (OperatorEVSEPricing? OperatorEVSEPricing1,
+                                           OperatorEVSEPricing? OperatorEVSEPricing2)
 
             => !(OperatorEVSEPricing1 == OperatorEVSEPricing2);
 
@@ -405,8 +405,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (OperatorEVSEPricing OperatorEVSEPricing1,
-                                          OperatorEVSEPricing OperatorEVSEPricing2)
+        public static Boolean operator < (OperatorEVSEPricing? OperatorEVSEPricing1,
+                                          OperatorEVSEPricing? OperatorEVSEPricing2)
         {
 
             if (OperatorEVSEPricing1 is null)
@@ -426,8 +426,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (OperatorEVSEPricing OperatorEVSEPricing1,
-                                           OperatorEVSEPricing OperatorEVSEPricing2)
+        public static Boolean operator <= (OperatorEVSEPricing? OperatorEVSEPricing1,
+                                           OperatorEVSEPricing? OperatorEVSEPricing2)
 
             => !(OperatorEVSEPricing1 > OperatorEVSEPricing2);
 
@@ -441,8 +441,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (OperatorEVSEPricing OperatorEVSEPricing1,
-                                          OperatorEVSEPricing OperatorEVSEPricing2)
+        public static Boolean operator > (OperatorEVSEPricing? OperatorEVSEPricing1,
+                                          OperatorEVSEPricing? OperatorEVSEPricing2)
         {
 
             if (OperatorEVSEPricing1 is null)
@@ -462,8 +462,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (OperatorEVSEPricing OperatorEVSEPricing1,
-                                           OperatorEVSEPricing OperatorEVSEPricing2)
+        public static Boolean operator >= (OperatorEVSEPricing? OperatorEVSEPricing1,
+                                           OperatorEVSEPricing? OperatorEVSEPricing2)
 
             => !(OperatorEVSEPricing1 < OperatorEVSEPricing2);
 

@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -425,8 +423,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification1">A calibration law verification.</param>
         /// <param name="CalibrationLawVerification2">Another calibration law verification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (CalibrationLawVerification CalibrationLawVerification1,
-                                           CalibrationLawVerification CalibrationLawVerification2)
+        public static Boolean operator == (CalibrationLawVerification? CalibrationLawVerification1,
+                                           CalibrationLawVerification? CalibrationLawVerification2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -451,8 +449,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification1">A calibration law verification.</param>
         /// <param name="CalibrationLawVerification2">Another calibration law verification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (CalibrationLawVerification CalibrationLawVerification1,
-                                           CalibrationLawVerification CalibrationLawVerification2)
+        public static Boolean operator != (CalibrationLawVerification? CalibrationLawVerification1,
+                                           CalibrationLawVerification? CalibrationLawVerification2)
 
             => !(CalibrationLawVerification1 == CalibrationLawVerification2);
 
@@ -466,8 +464,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification1">A calibration law verification.</param>
         /// <param name="CalibrationLawVerification2">Another calibration law verification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (CalibrationLawVerification CalibrationLawVerification1,
-                                          CalibrationLawVerification CalibrationLawVerification2)
+        public static Boolean operator < (CalibrationLawVerification? CalibrationLawVerification1,
+                                          CalibrationLawVerification? CalibrationLawVerification2)
         {
 
             if (CalibrationLawVerification1 is null)
@@ -487,8 +485,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification1">A calibration law verification.</param>
         /// <param name="CalibrationLawVerification2">Another calibration law verification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (CalibrationLawVerification CalibrationLawVerification1,
-                                           CalibrationLawVerification CalibrationLawVerification2)
+        public static Boolean operator <= (CalibrationLawVerification? CalibrationLawVerification1,
+                                           CalibrationLawVerification? CalibrationLawVerification2)
 
             => !(CalibrationLawVerification1 > CalibrationLawVerification2);
 
@@ -502,8 +500,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification1">A calibration law verification.</param>
         /// <param name="CalibrationLawVerification2">Another calibration law verification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (CalibrationLawVerification CalibrationLawVerification1,
-                                          CalibrationLawVerification CalibrationLawVerification2)
+        public static Boolean operator > (CalibrationLawVerification? CalibrationLawVerification1,
+                                          CalibrationLawVerification? CalibrationLawVerification2)
         {
 
             if (CalibrationLawVerification1 is null)
@@ -523,8 +521,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CalibrationLawVerification1">A calibration law verification.</param>
         /// <param name="CalibrationLawVerification2">Another calibration law verification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (CalibrationLawVerification CalibrationLawVerification1,
-                                           CalibrationLawVerification CalibrationLawVerification2)
+        public static Boolean operator >= (CalibrationLawVerification? CalibrationLawVerification1,
+                                           CalibrationLawVerification? CalibrationLawVerification2)
 
             => !(CalibrationLawVerification1 < CalibrationLawVerification2);
 

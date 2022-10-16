@@ -413,8 +413,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEPricing1">An EVSE pricing information.</param>
         /// <param name="EVSEPricing2">Another EVSE pricing information.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (EVSEPricing EVSEPricing1,
-                                           EVSEPricing EVSEPricing2)
+        public static Boolean operator == (EVSEPricing? EVSEPricing1,
+                                           EVSEPricing? EVSEPricing2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -439,8 +439,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEPricing1">An EVSE pricing information.</param>
         /// <param name="EVSEPricing2">Another EVSE pricing information.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (EVSEPricing EVSEPricing1,
-                                           EVSEPricing EVSEPricing2)
+        public static Boolean operator != (EVSEPricing? EVSEPricing1,
+                                           EVSEPricing? EVSEPricing2)
 
             => !(EVSEPricing1 == EVSEPricing2);
 
@@ -454,8 +454,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEPricing1">An EVSE pricing information.</param>
         /// <param name="EVSEPricing2">Another EVSE pricing information.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (EVSEPricing EVSEPricing1,
-                                          EVSEPricing EVSEPricing2)
+        public static Boolean operator < (EVSEPricing? EVSEPricing1,
+                                          EVSEPricing? EVSEPricing2)
         {
 
             if (EVSEPricing1 is null)
@@ -475,8 +475,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEPricing1">An EVSE pricing information.</param>
         /// <param name="EVSEPricing2">Another EVSE pricing information.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (EVSEPricing EVSEPricing1,
-                                           EVSEPricing EVSEPricing2)
+        public static Boolean operator <= (EVSEPricing? EVSEPricing1,
+                                           EVSEPricing? EVSEPricing2)
 
             => !(EVSEPricing1 > EVSEPricing2);
 
@@ -490,8 +490,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEPricing1">An EVSE pricing information.</param>
         /// <param name="EVSEPricing2">Another EVSE pricing information.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (EVSEPricing EVSEPricing1,
-                                          EVSEPricing EVSEPricing2)
+        public static Boolean operator > (EVSEPricing? EVSEPricing1,
+                                          EVSEPricing? EVSEPricing2)
         {
 
             if (EVSEPricing1 is null)
@@ -511,8 +511,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEPricing1">An EVSE pricing information.</param>
         /// <param name="EVSEPricing2">Another EVSE pricing information.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (EVSEPricing EVSEPricing1,
-                                           EVSEPricing EVSEPricing2)
+        public static Boolean operator >= (EVSEPricing? EVSEPricing1,
+                                           EVSEPricing? EVSEPricing2)
 
             => !(EVSEPricing1 < EVSEPricing2);
 

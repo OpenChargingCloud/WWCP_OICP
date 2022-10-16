@@ -406,8 +406,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OpeningTimes1">An opening time.</param>
         /// <param name="OpeningTimes2">Another opening time.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (OpeningTime OpeningTimes1,
-                                           OpeningTime OpeningTimes2)
+        public static Boolean operator == (OpeningTime? OpeningTimes1,
+                                           OpeningTime? OpeningTimes2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -431,8 +431,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OpeningTimes1">An opening time.</param>
         /// <param name="OpeningTimes2">Another opening time.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (OpeningTime OpeningTimes1,
-                                           OpeningTime OpeningTimes2)
+        public static Boolean operator != (OpeningTime? OpeningTimes1,
+                                           OpeningTime? OpeningTimes2)
 
             => !(OpeningTimes1 == OpeningTimes2);
 

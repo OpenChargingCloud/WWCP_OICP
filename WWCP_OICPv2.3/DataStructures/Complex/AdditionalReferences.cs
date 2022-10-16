@@ -379,10 +379,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="AdditionalReferences1">An energy source.</param>
         /// <param name="AdditionalReferences2">Another energy source.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (AdditionalReferences AdditionalReferences1,
-                                           AdditionalReferences AdditionalReferences2)
+        public static Boolean operator == (AdditionalReferences? AdditionalReferences1,
+                                           AdditionalReferences? AdditionalReferences2)
+        {
 
-            => AdditionalReferences1.Equals(AdditionalReferences2);
+            // If both are null, or both are same instance, return true.
+            if (Object.ReferenceEquals(AdditionalReferences1, AdditionalReferences2))
+                return true;
+
+            // If one is null, but not both, return false.
+            if (AdditionalReferences1 is null || AdditionalReferences2 is null)
+                return false;
+
+            return AdditionalReferences1.Equals(AdditionalReferences2);
+
+        }
 
         #endregion
 
@@ -394,10 +405,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="AdditionalReferences1">An energy source.</param>
         /// <param name="AdditionalReferences2">Another energy source.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (AdditionalReferences AdditionalReferences1,
-                                           AdditionalReferences AdditionalReferences2)
+        public static Boolean operator != (AdditionalReferences? AdditionalReferences1,
+                                           AdditionalReferences? AdditionalReferences2)
 
-            => !AdditionalReferences1.Equals(AdditionalReferences2);
+            => !(AdditionalReferences1 == AdditionalReferences2);
 
         #endregion
 

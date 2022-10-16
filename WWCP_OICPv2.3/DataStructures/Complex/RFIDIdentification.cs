@@ -412,8 +412,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (RFIDIdentification RFIDIdentification1,
-                                           RFIDIdentification RFIDIdentification2)
+        public static Boolean operator == (RFIDIdentification? RFIDIdentification1,
+                                           RFIDIdentification? RFIDIdentification2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -438,8 +438,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (RFIDIdentification RFIDIdentification1,
-                                           RFIDIdentification RFIDIdentification2)
+        public static Boolean operator != (RFIDIdentification? RFIDIdentification1,
+                                           RFIDIdentification? RFIDIdentification2)
 
             => !(RFIDIdentification1 == RFIDIdentification2);
 
@@ -453,8 +453,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (RFIDIdentification RFIDIdentification1,
-                                          RFIDIdentification RFIDIdentification2)
+        public static Boolean operator < (RFIDIdentification? RFIDIdentification1,
+                                          RFIDIdentification? RFIDIdentification2)
         {
 
             if (RFIDIdentification1 is null)
@@ -474,8 +474,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (RFIDIdentification RFIDIdentification1,
-                                           RFIDIdentification RFIDIdentification2)
+        public static Boolean operator <= (RFIDIdentification? RFIDIdentification1,
+                                           RFIDIdentification? RFIDIdentification2)
 
             => !(RFIDIdentification1 > RFIDIdentification2);
 
@@ -489,8 +489,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (RFIDIdentification RFIDIdentification1,
-                                          RFIDIdentification RFIDIdentification2)
+        public static Boolean operator > (RFIDIdentification? RFIDIdentification1,
+                                          RFIDIdentification? RFIDIdentification2)
         {
 
             if (RFIDIdentification1 is null)
@@ -510,8 +510,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (RFIDIdentification RFIDIdentification1,
-                                           RFIDIdentification RFIDIdentification2)
+        public static Boolean operator >= (RFIDIdentification? RFIDIdentification1,
+                                           RFIDIdentification? RFIDIdentification2)
 
             => !(RFIDIdentification1 < RFIDIdentification2);
 

@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -323,8 +321,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode1">A status code.</param>
         /// <param name="StatusCode2">Another status code.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (StatusCode StatusCode1,
-                                           StatusCode StatusCode2)
+        public static Boolean operator == (StatusCode? StatusCode1,
+                                           StatusCode? StatusCode2)
         {
 
             // If both are null, or both are same instance, return true.
@@ -349,8 +347,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode1">A status code.</param>
         /// <param name="StatusCode2">Another status code.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (StatusCode StatusCode1,
-                                           StatusCode StatusCode2)
+        public static Boolean operator != (StatusCode? StatusCode1,
+                                           StatusCode? StatusCode2)
 
             => !(StatusCode1 == StatusCode2);
 
