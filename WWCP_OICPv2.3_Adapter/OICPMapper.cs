@@ -1284,17 +1284,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToWWCP(this OpeningTime, IsOpen24Hours)
+        #region ToWWCP(this OpeningTime)
 
         /// <summary>
         /// Convert the given OICP opening time enumeration and 24/7 open information into an WWCP opening time.
         /// </summary>
         /// <param name="OpeningTimes">An OICP opening time enumeration.</param>
-        public static OpeningTimes? ToWWCP(this IEnumerable<OpeningTime>  OpeningTime,
-                                           Boolean                        IsOpen24Hours)
+        public static OpeningTimes? ToWWCP(this IEnumerable<OpeningTime>  OpeningTime)
         {
 
-            var openingTimes = new OpeningTimes(IsOpen24Hours);
+            var openingTimes = OpeningTimes.Open24Hours;
 
             foreach (var openingTime in OpeningTime)
             {
