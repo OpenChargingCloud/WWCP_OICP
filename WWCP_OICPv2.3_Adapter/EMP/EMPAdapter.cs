@@ -88,7 +88,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP HTTP client logger.
         /// </summary>
-        public EMPClient.HTTP_Logger HTTPClientLogger
+        public EMPClient.HTTP_Logger? HTTPClientLogger
             => EMPRoaming.EMPClient.HTTPLogger;
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP HTTP server logger.
         /// </summary>
-        public EMPServerAPI.HTTP_Logger HTTPServerLogger
+        public EMPServerAPI.HTTP_Logger? HTTPServerLogger
             => EMPRoaming.EMPServer.HTTPLogger;
 
         /// <summary>

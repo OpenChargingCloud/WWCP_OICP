@@ -53,7 +53,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       I18NString                                               Description,
                                       OICPv2_3.EMP.EMPRoaming                                  EMPRoaming,
 
-                                      OICPv2_3.EMP.EVSEDataRecord2EVSEDelegate                 EVSEDataRecord2EVSE                                 = null,
+                                      OICPv2_3.EMP.EVSEDataRecord2EVSEDelegate?                EVSEDataRecord2EVSE                                 = null,
 
                                       Boolean                                                  PullEVSEData_IsDisabled                             = false,
                                       TimeSpan?                                                PullEVSEData_InitialDelay                           = null,

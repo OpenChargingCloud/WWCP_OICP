@@ -124,10 +124,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The attached HTTP logger.
         /// </summary>
-        public new HTTP_Logger             HTTPLogger
-#pragma warning disable CS8603 // Possible null reference return.
+        public new HTTP_Logger?            HTTPLogger
             => base.HTTPLogger as HTTP_Logger;
-#pragma warning restore CS8603 // Possible null reference return.
 
         /// <summary>
         /// The attached Server API logger.

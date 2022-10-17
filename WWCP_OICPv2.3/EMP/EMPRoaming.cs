@@ -1528,14 +1528,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// Create a new EMP roaming.
         /// </summary>
         /// <param name="EMPClient">An EMP client.</param>
-        /// <param name="EMPServer">An EMP Server.</param>
-        public EMPRoaming(EMPClient     EMPClient,
-                          EMPServerAPI  EMPServer)
+        /// <param name="EMPServer">An optional EMP Server.</param>
+        public EMPRoaming(EMPClient      EMPClient,
+                          EMPServerAPI?  EMPServer   = null)
         {
-
             this.EMPClient  = EMPClient;
-            this.EMPServer  = EMPServer;
-
+            this.EMPServer  = EMPServer ?? new EMPServerAPI(Autostart: false);
         }
 
         #endregion
