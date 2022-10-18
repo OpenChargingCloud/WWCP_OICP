@@ -250,15 +250,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #region Verifications
 
                 var EVSEId = EVSE.Id.ToOICP();
-
                 if (!EVSEId.HasValue)
                     throw new InvalidEVSEIdentificationException(EVSE.Id.ToString());
 
-                var geoLocation    = (EVSE.ChargingStation.GeoLocation ?? EVSE.ChargingPool.GeoLocation).ToOICP();
+                if (EVSE.ChargingStation is null)
+                    throw new ArgumentNullException("ChargingStation", "Within OICP v2.3 some charging station information is mandatory!");
+
+                var geoLocation    = (EVSE.ChargingStation.GeoLocation ?? EVSE.ChargingPool?.GeoLocation)?.ToOICP();
                 if (!geoLocation.HasValue)
                     throw new ArgumentNullException("GeoCoordinates",  "Within OICP v2.3 the geo coordinates of an EVSE are mandatory!");
 
-                var accessibility  = EVSE.ChargingStation.Accessibility.ToOICP();
+                var accessibility  = EVSE.ChargingStation.Accessibility?.ToOICP();
                 if (!accessibility.HasValue)
                     throw new ArgumentNullException("Accessibility",   "Within OICP v2.3 the accessibility of an EVSE is mandatory!");
 
@@ -277,8 +279,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 var evseDataRecord = new EVSEDataRecord(Id:                                EVSEId.Value,
                                                         OperatorId:                        EVSEId.Value.OperatorId,
                                                         OperatorName:                      OperatorName,
-                                                        ChargingStationName:               EVSE.ChargingStation.Name.   ToOICP(MaxLength: 150),
-                                                        Address:                           EVSE.ChargingStation.Address.ToOICP(),
+                                                        ChargingStationName:               EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
+                                                        Address:                           (EVSE.ChargingStation.Address ?? EVSE.ChargingPool.Address).ToOICP(),
                                                         GeoCoordinates:                    geoLocation.Value,
                                                         PlugTypes:                         EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug.ToOICP()),
                                                         ChargingFacilities:                EVSE.AsChargingFacilities(),
