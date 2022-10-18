@@ -191,6 +191,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public Boolean                                         PullEVSEData_UpdateRoamingNetwork                    { get; }
 
+        public Boolean                                         PullEVSEStatus_UpdateRoamingNetwork                  { get; }
+
         #endregion
 
         #region PullStatusService
@@ -478,6 +480,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           TimeSpan?                                       PullEVSEStatus_Every                                = null,
                           TimeSpan?                                       PullEVSEStatus_RequestTimeout                       = null,
 
+                          Boolean                                         PullEVSEStatus_UpdateRoamingNetwork                 = false,
+
                           Boolean                                         GetChargeDetailRecords_IsDisabled                   = false,
                           TimeSpan?                                       GetChargeDetailRecords_InitialDelay                 = null,
                           TimeSpan?                                       GetChargeDetailRecords_Every                        = null,
@@ -507,7 +511,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.PullEVSEData_RequestTimeout                        = PullEVSEData_RequestTimeout                   ?? Default_PullEVSEData_RequestTimeout;
             this.PullEVSEData_Timer                                 = new Timer(PullEVSEDataService,
                                                                                 null,
-                                                                                PullEVSEData_InitialDelay           ?? TimeSpan.FromSeconds(10), this.PullEVSEData_Every);
+                                                                                PullEVSEData_InitialDelay           ?? TimeSpan.FromSeconds(10),
+                                                                                this.PullEVSEData_Every);
 
             this.PullEVSEData_OperatorIdFilter                      = PullEVSEData_OperatorIdFilter;
             this.PullEVSEData_CountryCodeFilter                     = PullEVSEData_CountryCodeFilter;
@@ -518,13 +523,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.PullEVSEData_IsHubjectCompatibleFilter             = PullEVSEData_IsHubjectCompatibleFilter;
             this.PullEVSEData_IsOpen24HoursFilter                   = PullEVSEData_IsOpen24HoursFilter;
 
+            this.PullEVSEData_UpdateRoamingNetwork                  = PullEVSEData_UpdateRoamingNetwork;
+
             this.PullEVSEStatus_IsDisabled                          = PullEVSEStatus_IsDisabled;
             this.PullEVSEStatus_Every                               = PullEVSEStatus_Every                          ?? Default_PullEVSEStatus_Every;
             this.PullEVSEStatus_RequestTimeout                      = PullEVSEStatus_RequestTimeout                 ?? Default_PullEVSEStatus_RequestTimeout;
             this.PullEVSEStatus_Timer                               = new Timer(PullStatusService,
                                                                                 null,
-                                                                                PullEVSEStatus_InitialDelay         ?? this.PullEVSEStatus_Every,
+                                                                                PullEVSEStatus_InitialDelay         ?? TimeSpan.FromSeconds(30),
                                                                                 this.PullEVSEStatus_Every);
+
+            this.PullEVSEStatus_UpdateRoamingNetwork                = PullEVSEStatus_UpdateRoamingNetwork;
 
             this.GetChargeDetailRecords_IsDisabled                  = GetChargeDetailRecords_IsDisabled;
             this.GetChargeDetailRecords_Every                       = GetChargeDetailRecords_Every                  ?? Default_GetChargeDetailRecords_Every;
@@ -2802,6 +2811,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 }
             }
 
+            else
+                DebugX.Log(nameof(EMPAdapter) + ".PullEVSEData(State) could not acquire PullEVSEDataLock after waiting " + SemaphoreSlimTimeout.TotalSeconds + " seconds!");
+
         }
 
         #endregion
@@ -2819,8 +2831,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             DebugX.LogT("[" + Id + "] 'Pull status service', as every " + PullEVSEStatus_Every.TotalSeconds + " seconds!");
 
-            if (await PullEVSEDataLock.WaitAsync(SemaphoreSlimTimeout))
-            {
+            //if (await PullEVSEDataLock.WaitAsync(SemaphoreSlimTimeout))
+            //{
                 if (await PullEVSEStatusLock.WaitAsync(SemaphoreSlimTimeout))
                 {
 
@@ -2850,125 +2862,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         #region Everything is ok!
 
-                        if (pullEVSEStatusResult.IsSuccessful         &&
-                            pullEVSEStatusResult.Response is not null &&
-                            pullEVSEStatusResult.Response.OperatorEVSEStatus.Any())
+                        if (pullEVSEStatusResult.IsSuccessful                      &&
+                            pullEVSEStatusResult.Response is not null              &&
+                            pullEVSEStatusResult.Response.OperatorEVSEStatus.Any() &&
+                            pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Any())
                         {
 
-                            DebugX.Log("Imported " + pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Count() + " EVSEStatusRecords!");
+                            DebugX.Log("Imported " + pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Count() + " EVSE status records!");
 
-                            var illegalOperatorsIds  = new HashSet<Operator_Id>();
-                            var operatorsSkipped     = new HashSet<Operator_Id>();
-                            var totalEVSEsUpdated    = 0UL;
-                            var totalEVSEsSkipped    = 0UL;
-                            var newStatusList        = new List<WWCP.EVSEStatus>();
-                            var allStatusList        = new List<WWCP.EVSEStatus>();
-
-                            foreach (var CurrentOperatorEVSEStatus in pullEVSEStatusResult.Response.OperatorEVSEStatus.OrderBy(evseOperator => evseOperator.OperatorName))
-                            {
-
-                                if (IncludeEVSEOperatorId(CurrentOperatorEVSEStatus.OperatorId))
-                                {
-
-                                    DebugX.Log(String.Concat("Importing EVSE operator '", CurrentOperatorEVSEStatus.OperatorName, "' (", CurrentOperatorEVSEStatus.OperatorId, ") with ", CurrentOperatorEVSEStatus.EVSEStatusRecords.Count(), " EVSE status records"));
-
-                                    var WWCPChargingStationOperatorId = CurrentOperatorEVSEStatus.OperatorId.ToWWCP();
-                                    if (WWCPChargingStationOperatorId.HasValue)
-                                    {
-
-                                        if (!RoamingNetwork.TryGetChargingStationOperatorById(WWCPChargingStationOperatorId, out var wwcpChargingStationOperator))
-                                            wwcpChargingStationOperator = RoamingNetwork.CreateChargingStationOperator(WWCPChargingStationOperatorId.Value,
-                                                                                                                       I18NString.Create(Languages.unknown,
-                                                                                                                                         CurrentOperatorEVSEStatus.OperatorName));
-
-                                        else
-                                        {
-                                            // Existing charging station operator
-                                            if (wwcpChargingStationOperator.Name.FirstText() != CurrentOperatorEVSEStatus.OperatorName)
-                                            {
-                                                // Update name (via events)!
-                                                wwcpChargingStationOperator.Name.Set(Languages.unknown,
-                                                                                     CurrentOperatorEVSEStatus.OperatorName);
-                                            }
-                                        }
-
-                                        var EVSEsUpdated = 0UL;
-                                        var EVSEsSkipped = 0UL;
-
-                                        foreach (var currentEVSEDataRecord in CurrentOperatorEVSEStatus.EVSEStatusRecords)
-                                        {
-
-                                            var currentEVSEId = currentEVSEDataRecord.Id.ToWWCP();
-                                            var currentEVSEStatus = currentEVSEDataRecord.Status.ToWWCP();
-
-                                            if (currentEVSEId.HasValue &&
-                                                currentEVSEStatus.HasValue)
-                                            {
-
-                                                var newStatus = new WWCP.EVSEStatus(currentEVSEId.Value,
-                                                                                    new Timestamped<WWCP.EVSEStatusTypes>(downloadTime,
-                                                                                                                          currentEVSEStatus.Value));
-
-                                                allStatusList.Add(newStatus);
-
-                                                if (wwcpChargingStationOperator.TryGetEVSEbyId(currentEVSEId, out var currentEVSE) &&
-                                                    currentEVSE is not null &&
-                                                    currentEVSE.Status.Value != currentEVSEStatus.Value)
-                                                {
-                                                    // Update via events!
-                                                    currentEVSE.Status = currentEVSEStatus.Value;
-                                                    newStatusList.Add(newStatus);
-                                                    EVSEsUpdated++;
-                                                }
-
-                                            }
-
-                                            else
-                                                EVSEsSkipped++;
-
-                                        }
-
-                                        DebugX.Log(EVSEsUpdated + " EVSE status updated, " + EVSEsSkipped + " EVSEs skipped");
-
-                                        totalEVSEsUpdated += EVSEsUpdated;
-                                        totalEVSEsSkipped += EVSEsSkipped;
-
-                                    }
-
-                                    #region Invalid charging station operator identification...
-
-                                    else
-                                    {
-                                        DebugX.Log("Invalid charging station operator identification: '" + CurrentOperatorEVSEStatus.OperatorId + "'!");
-                                        illegalOperatorsIds.Add(CurrentOperatorEVSEStatus.OperatorId);
-                                        totalEVSEsSkipped += (UInt64)CurrentOperatorEVSEStatus.EVSEStatusRecords.LongCount();
-                                    }
-
-                                    #endregion
-
-                                }
-                                else
-                                    operatorsSkipped.Add(CurrentOperatorEVSEStatus.OperatorId);
-
-                            }
-
-                            if (operatorsSkipped.   Any())
-                                DebugX.Log(operatorsSkipped.Count    + " EVSE operators skipped");
-
-                            if (illegalOperatorsIds.Any())
-                                DebugX.Log(illegalOperatorsIds.Count + " invalid EVSE operator identifications");
-
-                            if (allStatusList.      Any())
-                                DebugX.Log(allStatusList.Count       + " EVSE status received");
-
-                            if (totalEVSEsUpdated   > 0)
-                                DebugX.Log(totalEVSEsUpdated         + " EVSEs updated");
-
-                            if (totalEVSEsSkipped   > 0)
-                                DebugX.Log(totalEVSEsSkipped         + " EVSEs skipped");
-
-
-                            #region Send OnPullEVSEStatus    event
+                            #region Send OnPullEVSEStatus event
 
                             try
                             {
@@ -2990,55 +2892,65 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                             #endregion
 
-                            #region Send OnNewEVSEStatus     event
-
-                            if (allStatusList.Any())
+                            if (PullEVSEStatus_UpdateRoamingNetwork)
                             {
-                                try
-                                {
 
-                                    if (OnNewEVSEStatus is not null)
-                                        await Task.WhenAll(OnNewEVSEStatus.GetInvocationList().
-                                                           Cast<OnNewEVSEStatusDelegate>().
-                                                           Select(e => e(startTime,
-                                                                         this,
-                                                                         nameof(OICPv2_3) + "." + nameof(EMPAdapter),
-                                                                         allStatusList))).
-                                                           ConfigureAwait(false);
+                                var update = await UpdateRoamingNetwork(RoamingNetwork,
+                                                                        downloadTime,
+                                                                        pullEVSEStatusResult.Response.OperatorEVSEStatus,
+                                                                        IncludeEVSEOperatorId);
 
-                                }
-                                catch (Exception e)
+                                #region Send OnNewEVSEStatus     event
+
+                                if (update.ValidStatusList.Any())
                                 {
-                                    DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnNewEVSEStatus));
+                                    try
+                                    {
+
+                                        if (OnNewEVSEStatus is not null)
+                                            await Task.WhenAll(OnNewEVSEStatus.GetInvocationList().
+                                                               Cast<OnNewEVSEStatusDelegate>().
+                                                               Select(e => e(startTime,
+                                                                             this,
+                                                                             nameof(OICPv2_3) + "." + nameof(EMPAdapter),
+                                                                             update.ValidStatusList))).
+                                                               ConfigureAwait(false);
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnNewEVSEStatus));
+                                    }
                                 }
+
+                                #endregion
+
+                                #region Send OnEVSEStatusChanges event
+
+                                if (update.NewStatusList.Any())
+                                {
+                                    try
+                                    {
+
+                                        if (OnEVSEStatusChanges is not null)
+                                            await Task.WhenAll(OnEVSEStatusChanges.GetInvocationList().
+                                                               Cast<OnEVSEStatusChangesDelegate>().
+                                                               Select(e => e(startTime,
+                                                                             this,
+                                                                             nameof(OICPv2_3) + "." + nameof(EMPAdapter),
+                                                                             update.NewStatusList))).
+                                                               ConfigureAwait(false);
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnEVSEStatusChanges));
+                                    }
+                                }
+
+                                #endregion
+
                             }
-
-                            #endregion
-
-                            #region Send OnEVSEStatusChanges event
-
-                            if (newStatusList.Any())
-                            {
-                                try
-                                {
-
-                                    if (OnEVSEStatusChanges is not null)
-                                        await Task.WhenAll(OnEVSEStatusChanges.GetInvocationList().
-                                                           Cast<OnEVSEStatusChangesDelegate>().
-                                                           Select(e => e(startTime,
-                                                                         this,
-                                                                         nameof(OICPv2_3) + "." + nameof(EMPAdapter),
-                                                                         newStatusList))).
-                                                           ConfigureAwait(false);
-
-                                }
-                                catch (Exception e)
-                                {
-                                    DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnEVSEStatusChanges));
-                                }
-                            }
-
-                            #endregion
 
                         }
 
@@ -3070,7 +2982,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         try
                         {
                             PullEVSEStatusLock.Release();
-                            PullEVSEDataLock.  Release();
+                        //    PullEVSEDataLock.  Release();
                         }
                         catch
                         { }
@@ -3081,15 +2993,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
                     try
                     {
-                        DebugX.Log(nameof(EMPAdapter) + ".PullStatus(State) could not acquire PullEVSEStatusLock!");
-                        PullEVSEDataLock.Release();
+                        DebugX.Log(nameof(EMPAdapter) + ".PullStatus(State) could not acquire PullEVSEStatusLock after waiting " + SemaphoreSlimTimeout.TotalSeconds + " seconds!");
+                        //PullEVSEDataLock.Release();
                     }
                     catch
                     { }
                 }
-            }
-            else
-                DebugX.Log(nameof(EMPAdapter) + ".PullStatus(State) could not acquire PullEVSEDataLock!");
+            //}
+            //else
+            //    DebugX.Log(nameof(EMPAdapter) + ".PullStatus(State) could not acquire PullEVSEDataLock after waiting " + SemaphoreSlimTimeout.TotalSeconds + " seconds!");
 
         }
 
@@ -3212,6 +3124,146 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         // -----------------------------------------------------------------------------------------------------
 
+
+        #region UpdateRoamingNetwork(RoamingNetwork, OperatorInfos)
+
+        public class StatusUpdate
+        {
+            public List<WWCP.EVSEStatus> ValidStatusList { get; set; }
+            public List<WWCP.EVSEStatus> NewStatusList   { get; set; }
+
+        }
+
+        public static async Task<StatusUpdate> UpdateRoamingNetwork(WWCP.IRoamingNetwork             RoamingNetwork,
+                                                                    DateTime                         DownloadTime,
+                                                                    IEnumerable<OperatorEVSEStatus>  OperatorEVSEStatus,
+                                                                    IncludeEVSEOperatorIdDelegate?   IncludeEVSEOperatorId = null)
+        {
+
+            var illegalOperatorsIds  = new HashSet<Operator_Id>();
+            var operatorsSkipped     = new HashSet<Operator_Id>();
+            var totalEVSEsUpdated    = 0UL;
+            var totalEVSEsSkipped    = 0UL;
+            var newStatusList        = new List<WWCP.EVSEStatus>();
+            var validStatusList      = new List<WWCP.EVSEStatus>();
+
+            IncludeEVSEOperatorId  ??= (evseOperatorId => true);
+
+            foreach (var CurrentOperatorEVSEStatus in OperatorEVSEStatus.OrderBy(evseOperator => evseOperator.OperatorName))
+            {
+
+                if (IncludeEVSEOperatorId(CurrentOperatorEVSEStatus.OperatorId))
+                {
+
+                    DebugX.Log(String.Concat("Importing EVSE operator '", CurrentOperatorEVSEStatus.OperatorName, "' (", CurrentOperatorEVSEStatus.OperatorId, ") with ", CurrentOperatorEVSEStatus.EVSEStatusRecords.Count(), " EVSE status records"));
+
+                    var WWCPChargingStationOperatorId = CurrentOperatorEVSEStatus.OperatorId.ToWWCP();
+                    if (WWCPChargingStationOperatorId.HasValue)
+                    {
+
+                        if (!RoamingNetwork.TryGetChargingStationOperatorById(WWCPChargingStationOperatorId, out var wwcpChargingStationOperator))
+                            wwcpChargingStationOperator = RoamingNetwork.CreateChargingStationOperator(WWCPChargingStationOperatorId.Value,
+                                                                                                       I18NString.Create(Languages.unknown,
+                                                                                                                         CurrentOperatorEVSEStatus.OperatorName));
+
+                        else
+                        {
+                            // An existing charging station operator: Update name (via events)!
+                            if (wwcpChargingStationOperator is not null)
+                                wwcpChargingStationOperator.Name.Set(Languages.unknown,
+                                                                     CurrentOperatorEVSEStatus.OperatorName);
+                        }
+
+                        if (wwcpChargingStationOperator is not null)
+                        {
+
+                            var EVSEsUpdated = 0UL;
+                            var EVSEsSkipped = 0UL;
+
+                            foreach (var currentEVSEDataRecord in CurrentOperatorEVSEStatus.EVSEStatusRecords)
+                            {
+
+                                var currentEVSEId      = currentEVSEDataRecord.Id.    ToWWCP();
+                                var currentEVSEStatus  = currentEVSEDataRecord.Status.ToWWCP();
+
+                                if (currentEVSEId.    HasValue &&
+                                    currentEVSEStatus.HasValue)
+                                {
+
+                                    var newStatus = new WWCP.EVSEStatus(currentEVSEId.Value,
+                                                                        new Timestamped<WWCP.EVSEStatusTypes>(DownloadTime,
+                                                                                                              currentEVSEStatus.Value));
+
+                                    validStatusList.Add(newStatus);
+
+                                    if (wwcpChargingStationOperator.TryGetEVSEbyId(currentEVSEId, out var currentEVSE) &&
+                                        currentEVSE is not null &&
+                                        currentEVSE.Status.Value != currentEVSEStatus.Value)
+                                    {
+                                        // Update via events!
+                                        currentEVSE.Status = currentEVSEStatus.Value;
+                                        newStatusList.Add(newStatus);
+                                        EVSEsUpdated++;
+                                    }
+
+                                }
+
+                                else
+                                    EVSEsSkipped++;
+
+                            }
+
+                            DebugX.Log(EVSEsUpdated + " EVSE status updated, " + EVSEsSkipped + " EVSEs skipped");
+
+                            totalEVSEsUpdated += EVSEsUpdated;
+                            totalEVSEsSkipped += EVSEsSkipped;
+
+                        }
+
+                    }
+
+                    #region Invalid charging station operator identification...
+
+                    else
+                    {
+                        DebugX.Log("Invalid charging station operator identification: '" + CurrentOperatorEVSEStatus.OperatorId + "'!");
+                        illegalOperatorsIds.Add(CurrentOperatorEVSEStatus.OperatorId);
+                        totalEVSEsSkipped += (UInt64) CurrentOperatorEVSEStatus.EVSEStatusRecords.LongCount();
+                    }
+
+                    #endregion
+
+                }
+                else
+                    operatorsSkipped.Add(CurrentOperatorEVSEStatus.OperatorId);
+
+            }
+
+
+            if (operatorsSkipped.   Any())
+                DebugX.Log(operatorsSkipped.Count    + " EVSE operators skipped");
+
+            if (illegalOperatorsIds.Any())
+                DebugX.Log(illegalOperatorsIds.Count + " invalid EVSE operator identifications");
+
+            if (validStatusList.      Any())
+                DebugX.Log(validStatusList.Count     + " EVSE status received");
+
+            if (totalEVSEsUpdated   > 0)
+                DebugX.Log(totalEVSEsUpdated         + " EVSEs updated");
+
+            if (totalEVSEsSkipped   > 0)
+                DebugX.Log(totalEVSEsSkipped         + " EVSEs skipped");
+
+
+            return new StatusUpdate() {
+                       ValidStatusList = validStatusList,
+                       NewStatusList   = newStatusList
+                   };
+
+        }
+
+        #endregion
 
         #region UpdateRoamingNetwork(RoamingNetwork, OperatorInfos)
 

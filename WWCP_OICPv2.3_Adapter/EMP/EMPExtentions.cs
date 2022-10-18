@@ -77,6 +77,8 @@ namespace cloud.charging.open.protocols.WWCP
                                       TimeSpan?                                                PullEVSEStatus_Every                                = null,
                                       TimeSpan?                                                PullEVSEStatus_RequestTimeout                       = null,
 
+                                      Boolean                                                  PullEVSEStatus_UpdateRoamingNetwork                 = false,
+
                                       Boolean                                                  GetChargeDetailRecords_IsDisabled                   = false,
                                       TimeSpan?                                                GetChargeDetailRecords_InitialDelay                 = null,
                                       TimeSpan?                                                GetChargeDetailRecords_Every                        = null,
@@ -135,6 +137,8 @@ namespace cloud.charging.open.protocols.WWCP
                                                                  PullEVSEStatus_InitialDelay,
                                                                  PullEVSEStatus_Every,
                                                                  PullEVSEStatus_RequestTimeout,
+
+                                                                 PullEVSEStatus_UpdateRoamingNetwork,
 
                                                                  GetChargeDetailRecords_IsDisabled,
                                                                  GetChargeDetailRecords_InitialDelay,
