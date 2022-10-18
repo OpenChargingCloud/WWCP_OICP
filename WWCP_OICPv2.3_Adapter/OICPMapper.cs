@@ -304,11 +304,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                         DeltaType:                         DeltaType,
                                                         LastUpdate:                        LastUpdate,
 
-                                                        ChargingStationId:                 ChargingStation_Id.Parse(EVSE.ChargingStation.Id.ToString()),
-                                                        ChargingPoolId:                    ChargingPool_Id.   Parse(EVSE.ChargingPool.   Id.ToString()),
+                                                        ChargingStationId:                 ChargingStation_Id.TryParse(EVSE.ChargingStation.Id.ToString()),
+                                                        ChargingPoolId:                    ChargingPool_Id.   TryParse(EVSE.ChargingPool?.  Id.ToString()),
                                                         HardwareManufacturer:              null,
                                                         ChargingStationImageURL:           null,
-                                                        SubOperatorName:                   EVSE.ChargingStation.ChargingPool?.SubOperator?.Name?.FirstText(),
+                                                        SubOperatorName:                   EVSE.ChargingPool?.SubOperator?.Name?.FirstText(),
                                                         DynamicPowerLevel:                 null,
                                                         EnergySources:                     null,
                                                         EnvironmentalImpact:               null,
@@ -322,7 +322,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                      )
                                                                                                : null,
                                                         ChargingStationLocationReference:  null,
-                                                        GeoChargingPointEntrance:          EVSE.ChargingStation.ChargingPool?.EntranceLocation.ToOICP(),
+                                                        GeoChargingPointEntrance:          EVSE.ChargingPool?.EntranceLocation.ToOICP(),
                                                         OpeningTimes:                      EVSE.ChargingStation.OpeningTimes?.ToOICP(),
                                                         HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     (OICP_HubOperatorId),
                                                         ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>(OICP_ClearingHouseId),
