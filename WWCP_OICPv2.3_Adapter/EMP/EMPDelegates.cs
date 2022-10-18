@@ -51,6 +51,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     public delegate Task OnPullEVSEDataDelegate          (DateTime                       Timestamp,
                                                           EMPAdapter                     Sender,
                                                           String                         SenderDescription,
+                                                          String                         CorrelationId,
+                                                          Boolean                        IsFullLoad,
+                                                          IEnumerable<EVSEDataRecord>    EVSEDataRecords);
+
+    /// <summary>
+    /// A delegate called whenever new page of EVSEStatusRecords had been received.
+    /// </summary>
+    public delegate Task OnPullEVSEDataPageDelegate      (DateTime                       Timestamp,
+                                                          EMPAdapter                     Sender,
+                                                          String                         SenderDescription,
+                                                          String                         CorrelationId,
+                                                          Boolean                        IsFullLoad,
+                                                          UInt64                         Page,
+                                                          UInt64                         TotalPages,
                                                           IEnumerable<EVSEDataRecord>    EVSEDataRecords);
 
     /// <summary>
@@ -59,6 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     public delegate Task OnPullOperatorInfosDelegate     (DateTime                       Timestamp,
                                                           EMPAdapter                     Sender,
                                                           String                         SenderDescription,
+                                                          String                         CorrelationId,
                                                           IEnumerable<OperatorInfo>      OperatorInfos);
 
     /// <summary>

@@ -70,6 +70,8 @@ namespace cloud.charging.open.protocols.WWCP
                                       Boolean?                                                 PullEVSEData_IsHubjectCompatibleFilter              = null,
                                       Boolean?                                                 PullEVSEData_IsOpen24HoursFilter                    = null,
 
+                                      Boolean                                                  PullEVSEData_UpdateRoamingNetwork                   = false,
+
                                       Boolean                                                  PullEVSEStatus_IsDisabled                           = false,
                                       TimeSpan?                                                PullEVSEStatus_InitialDelay                         = null,
                                       TimeSpan?                                                PullEVSEStatus_Every                                = null,
@@ -126,6 +128,8 @@ namespace cloud.charging.open.protocols.WWCP
                                                                  PullEVSEData_RenewableEnergyFilter,
                                                                  PullEVSEData_IsHubjectCompatibleFilter,
                                                                  PullEVSEData_IsOpen24HoursFilter,
+
+                                                                 PullEVSEData_UpdateRoamingNetwork,
 
                                                                  PullEVSEStatus_IsDisabled,
                                                                  PullEVSEStatus_InitialDelay,
