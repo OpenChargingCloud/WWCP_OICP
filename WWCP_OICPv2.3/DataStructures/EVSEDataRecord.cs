@@ -1643,7 +1643,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Boolean Equals(EVSEDataRecord? EVSEDataRecord)
 
             => EVSEDataRecord is not null &&
-                 Id.Equals(EVSEDataRecord.Id);
+               Id.Equals(EVSEDataRecord.Id);
 
         #endregion
 

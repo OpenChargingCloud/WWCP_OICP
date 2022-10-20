@@ -433,8 +433,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSEStatusRecord? ToOICP(this WWCP.EVSEStatus EVSEStatus)
         {
 
-            var evseId  = EVSEStatus?.Id.          ToOICP();
-            var status  = EVSEStatus?.Status.Value.ToOICP();
+            var evseId  = EVSEStatus?.Id.    ToOICP();
+            var status  = EVSEStatus?.Status.ToOICP();
 
             if (evseId.HasValue && status.HasValue)
                 return new EVSEStatusRecord(evseId.Value,
