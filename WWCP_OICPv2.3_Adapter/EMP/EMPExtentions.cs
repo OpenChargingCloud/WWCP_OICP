@@ -85,8 +85,8 @@ namespace cloud.charging.open.protocols.WWCP
                                       DateTime?                                                GetChargeDetailRecords_LastRunTimestamp             = null,
                                       TimeSpan?                                                GetChargeDetailRecords_RequestTimeout               = null,
 
-                                      eMobilityProvider?                                       DefaultProvider                                     = null,
-                                      eMobilityProvider_Id?                                    DefaultProviderId                                   = null,
+                                      EMobilityProvider?                                       DefaultProvider                                     = null,
+                                      EMobilityProvider_Id?                                    DefaultProviderId                                   = null,
                                       GeoCoordinate?                                           DefaultSearchCenter                                 = null,
                                       UInt64?                                                  DefaultDistanceKM                                   = null,
 

@@ -552,11 +552,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this ProviderId)
 
-        public static Provider_Id? ToOICP(this WWCP.eMobilityProvider_Id ProviderId)
+        public static Provider_Id? ToOICP(this WWCP.EMobilityProvider_Id ProviderId)
 
             => Provider_Id.TryParse(ProviderId.ToString());
 
-        public static Provider_Id? ToOICP(this WWCP.eMobilityProvider_Id? ProviderId)
+        public static Provider_Id? ToOICP(this WWCP.EMobilityProvider_Id? ProviderId)
 
             => ProviderId.HasValue
                    ? ProviderId.Value.ToOICP()
@@ -566,11 +566,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToWWCP(this ProviderId)
 
-        public static WWCP.eMobilityProvider_Id? ToWWCP(this Provider_Id ProviderId)
+        public static WWCP.EMobilityProvider_Id? ToWWCP(this Provider_Id ProviderId)
 
-            => WWCP.eMobilityProvider_Id.TryParse(ProviderId.ToString());
+            => WWCP.EMobilityProvider_Id.TryParse(ProviderId.ToString());
 
-        public static WWCP.eMobilityProvider_Id? ToWWCP(this Provider_Id? ProviderId)
+        public static WWCP.EMobilityProvider_Id? ToWWCP(this Provider_Id? ProviderId)
 
             => ProviderId.HasValue
                    ? ProviderId.Value.ToWWCP()
@@ -1520,7 +1520,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           SessionId:             sessionId.Value,
                           EVSEId:                evseId.   Value,
                           ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue
-                                                     ? new WWCP.eMobilityProvider_Id?(WWCP.eMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString() ?? ""))
+                                                     ? new WWCP.EMobilityProvider_Id?(WWCP.EMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString() ?? ""))
                                                      : null,
 
                           ChargingProduct:       ChargeDetailRecord.PartnerProductId.HasValue
