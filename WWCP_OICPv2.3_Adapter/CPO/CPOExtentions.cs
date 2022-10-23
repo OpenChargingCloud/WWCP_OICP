@@ -69,7 +69,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       OICPv2_3.EVSEStatusUpdate2EVSEStatusRecordDelegate?          EVSEStatusUpdate2EVSEStatusRecord               = null,
                                       OICPv2_3.WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
 
-                                      ChargingStationOperator?                                     DefaultOperator                                 = null,
+                                      IChargingStationOperator?                                    DefaultOperator                                 = null,
                                       OperatorIdFormats                                            DefaultOperatorIdFormat                         = OperatorIdFormats.ISO_STAR,
                                       ChargingStationOperatorNameSelectorDelegate?                 OperatorNameSelector                            = null,
 

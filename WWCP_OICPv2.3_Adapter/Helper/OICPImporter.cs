@@ -318,7 +318,7 @@
 
 //                                                              #region Update matching EVSE... or create a new one!
 
-//                                                              if (_ChargingStation.TryGetEVSEbyId(EvseDataRecord.Id.ToWWCP().Value, out _EVSE))
+//                                                              if (_ChargingStation.TryGetEVSEById(EvseDataRecord.Id.ToWWCP().Value, out _EVSE))
 //                                                              {
 
 //                                                                  // Update via events!

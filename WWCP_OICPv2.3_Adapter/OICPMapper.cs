@@ -145,10 +145,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomConverter">A delegate to process an EVSE data record, e.g. before importing it into a roaming network.</param>
         public static WWCP.EVSE? ToWWCP(this EVSEDataRecord                    EVSEDataRecord,
 
-                                        WWCP.EVSEAdminStatusTypes              InitialEVSEAdminStatus                  = WWCP.EVSEAdminStatusTypes.OutOfService,
+                                        WWCP.EVSEAdminStatusTypes?             InitialEVSEAdminStatus                  = null,
                                         WWCP.ChargingStationAdminStatusTypes?  InitialChargingStationAdminStatus       = null,
-                                        WWCP.EVSEStatusTypes                   InitialEVSEStatus                       = WWCP.EVSEStatusTypes.OutOfService,
-                                        WWCP.ChargingStationStatusTypes        InitialChargingStationStatus            = WWCP.ChargingStationStatusTypes.OutOfService,
+                                        WWCP.EVSEStatusTypes?                  InitialEVSEStatus                       = null,
+                                        WWCP.ChargingStationStatusTypes?       InitialChargingStationStatus            = null,
                                         UInt16                                 MaxEVSEAdminStatusListSize              = WWCP.EVSE.           DefaultMaxEVSEAdminStatusScheduleSize,
                                         UInt16                                 MaxChargingStationAdminStatusListSize   = WWCP.ChargingStation.DefaultMaxChargingStationAdminStatusScheduleSize,
                                         UInt16                                 MaxEVSEStatusListSize                   = WWCP.EVSE.           DefaultMaxEVSEStatusScheduleSize,
@@ -194,8 +194,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          _evse.DataSource  = DataSource;
                                      },
                                      null,
-                                     InitialEVSEAdminStatus,
-                                     InitialEVSEStatus,
+                                     InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusTypes.OutOfService,
+                                     InitialEVSEStatus      ?? WWCP.EVSEStatusTypes.OutOfService,
                                      MaxEVSEAdminStatusListSize,
                                      MaxEVSEStatusListSize,
                                      null,
@@ -374,7 +374,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    EVSEStatusTypes.Reserved      => WWCP.EVSEStatusTypes.Reserved,
                    EVSEStatusTypes.Occupied      => WWCP.EVSEStatusTypes.Charging,
                    EVSEStatusTypes.OutOfService  => WWCP.EVSEStatusTypes.OutOfService,
-                   EVSEStatusTypes.EVSENotFound  => WWCP.EVSEStatusTypes.UnknownEVSE,
+                 //  EVSEStatusTypes.EVSENotFound  => WWCP.EVSEStatusTypes.UnknownEVSE,
                    _                             => WWCP.EVSEStatusTypes.OutOfService,
                };
 
@@ -400,15 +400,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEStatusType">An WWCP EVSE status.</param>
         /// <returns>The corresponding OICP EVSE status.</returns>
         public static EVSEStatusTypes? ToOICP(this WWCP.EVSEStatusTypes EVSEStatusType)
+        {
 
-            => EVSEStatusType switch {
-                   WWCP.EVSEStatusTypes.Available     => EVSEStatusTypes.Available,
-                   WWCP.EVSEStatusTypes.Reserved      => EVSEStatusTypes.Reserved,
-                   WWCP.EVSEStatusTypes.Charging      => EVSEStatusTypes.Occupied,
-                   WWCP.EVSEStatusTypes.OutOfService  => EVSEStatusTypes.OutOfService,
-                   WWCP.EVSEStatusTypes.UnknownEVSE   => EVSEStatusTypes.EVSENotFound,
-                   _                                  => EVSEStatusTypes.OutOfService,
-               };
+            if      (EVSEStatusType == WWCP.EVSEStatusTypes.Available)
+                return EVSEStatusTypes.Available;
+
+            else if (EVSEStatusType == WWCP.EVSEStatusTypes.Reserved)
+                return EVSEStatusTypes.Reserved;
+
+            else if (EVSEStatusType == WWCP.EVSEStatusTypes.Charging)
+                return EVSEStatusTypes.Occupied;
+
+            else if (EVSEStatusType == WWCP.EVSEStatusTypes.OutOfService)
+                return EVSEStatusTypes.OutOfService;
+
+            else
+                return EVSEStatusTypes.OutOfService;
+
+        }
 
 
         /// <summary>

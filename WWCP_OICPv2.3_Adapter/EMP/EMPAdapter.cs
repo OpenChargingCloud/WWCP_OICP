@@ -1527,14 +1527,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region Reserve(EVSEId, ChargingProduct = null, ReservationId = null, SessionId = null, ProviderId = null, RemoteAuthentication = null, ...)
 
         /// <summary>
-        /// Reserve the possibility to charge at the given EVSE.
+        /// Reserve the possibility to charge at the given charging location.
         /// </summary>
-        /// <param name="EVSEId">The unique identification of the EVSE to be reserved.</param>
+        /// <param name="ChargingLocation">A charging location.</param>
+        /// <param name="ReservationLevel">The level of the reservation to create (EVSE, charging station, ...).</param>
         /// <param name="ReservationStartTime">The starting time of the reservation.</param>
         /// <param name="Duration">The duration of the reservation.</param>
         /// <param name="ReservationId">An optional unique identification of the reservation. Mandatory for updates.</param>
-        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
-        /// <param name="eMAId">An optional unique identification of e-Mobility account/customer requesting this reservation.</param>
+        /// <param name="LinkedReservationId">An existing linked charging reservation identification.</param>
+        /// <param name="ProviderId">An optional unique identification of e-Mobility service provider.</param>
+        /// <param name="RemoteAuthentication">An optional unique identification of e-Mobility account/customer requesting this reservation.</param>
         /// <param name="ChargingProduct">The charging product to be reserved.</param>
         /// <param name="AuthTokens">A list of authentication tokens, who can use this reservation.</param>
         /// <param name="eMAIds">A list of eMobility account identifications, who can use this reservation.</param>
@@ -1546,22 +1548,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.ReservationResult>
 
-            WWCP.IReserveRemoteStartStop.Reserve(WWCP.ChargingLocation                  ChargingLocation,
-                                                 WWCP.ChargingReservationLevel          ReservationLevel,
-                                                 DateTime?                              ReservationStartTime,
-                                                 TimeSpan?                              Duration,
-                                                 WWCP.ChargingReservation_Id?           ReservationId,
-                                                 WWCP.EMobilityProvider_Id?             ProviderId,
-                                                 WWCP.RemoteAuthentication              RemoteAuthentication,
-                                                 WWCP.ChargingProduct                   ChargingProduct,
-                                                 IEnumerable<WWCP.Auth_Token>           AuthTokens,
-                                                 IEnumerable<WWCP.eMobilityAccount_Id>  eMAIds,
-                                                 IEnumerable<UInt32>                    PINs,
+            WWCP.IReserveRemoteStartStop.Reserve(WWCP.ChargingLocation                   ChargingLocation,
+                                                 WWCP.ChargingReservationLevel           ReservationLevel,
+                                                 DateTime?                               ReservationStartTime,
+                                                 TimeSpan?                               Duration,
+                                                 WWCP.ChargingReservation_Id?            ReservationId,
+                                                 WWCP.ChargingReservation_Id?            LinkedReservationId,
+                                                 WWCP.EMobilityProvider_Id?              ProviderId,
+                                                 WWCP.RemoteAuthentication?              RemoteAuthentication,
+                                                 WWCP.ChargingProduct?                   ChargingProduct,
+                                                 IEnumerable<WWCP.Auth_Token>?           AuthTokens,
+                                                 IEnumerable<WWCP.eMobilityAccount_Id>?  eMAIds,
+                                                 IEnumerable<UInt32>?                    PINs,
 
-                                                 DateTime?                              Timestamp,
-                                                 CancellationToken?                     CancellationToken,
-                                                 EventTracking_Id                       EventTrackingId,
-                                                 TimeSpan?                              RequestTimeout)
+                                                 DateTime?                               Timestamp,
+                                                 CancellationToken?                      CancellationToken,
+                                                 EventTracking_Id?                        EventTrackingId,
+                                                 TimeSpan?                               RequestTimeout)
 
         {
 
@@ -1573,40 +1576,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
 
 
-            WWCP.ReservationResult result = null;
+            WWCP.ReservationResult? result = null;
 
             #endregion
 
             #region Send OnReserveRequest event
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnReserveRequest?.Invoke(StartTime,
-                                             Timestamp.Value,
-                                             this,
-                                             EventTrackingId,
-                                             RoamingNetwork.Id,
-                                             ReservationId,
-                                             ChargingLocation,
-                                             ReservationStartTime,
-                                             Duration,
-                                             ProviderId,
-                                             RemoteAuthentication,
-                                             ChargingProduct,
-                                             AuthTokens,
-                                             eMAIds,
-                                             PINs,
-                                             RequestTimeout);
+                OnReserveRequest?.Invoke(startTime,
+                                         Timestamp.Value,
+                                         this,
+                                         EventTrackingId,
+                                         RoamingNetwork.Id,
+                                         ReservationId,
+                                         LinkedReservationId,
+                                         ChargingLocation,
+                                         ReservationStartTime,
+                                         Duration,
+                                         ProviderId,
+                                         RemoteAuthentication,
+                                         ChargingProduct,
+                                         AuthTokens,
+                                         eMAIds,
+                                         PINs,
+                                         RequestTimeout);
 
             }
             catch (Exception e)
@@ -1740,17 +1743,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnReserveResponse event
 
-            var EndTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnReserveResponse?.Invoke(EndTime,
+                OnReserveResponse?.Invoke(endTime,
                                           Timestamp.Value,
                                           this,
                                           EventTrackingId,
                                           RoamingNetwork.Id,
                                           ReservationId,
+                                          LinkedReservationId,
                                           ChargingLocation,
                                           ReservationStartTime,
                                           Duration,
@@ -1761,7 +1765,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                           eMAIds,
                                           PINs,
                                           result,
-                                          EndTime - StartTime,
+                                          endTime - startTime,
                                           RequestTimeout);
 
             }
@@ -1785,8 +1789,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         /// <param name="ReservationId">The unique charging reservation identification.</param>
         /// <param name="Reason">A reason for this cancellation.</param>
-        /// <param name="ProviderId">An optional unique identification of e-mobility service provider.</param>
-        /// <param name="EVSEId">An optional identification of the EVSE.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -1796,12 +1798,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             WWCP.IReserveRemoteStartStop.CancelReservation(WWCP.ChargingReservation_Id                 ReservationId,
                                                            WWCP.ChargingReservationCancellationReason  Reason,
-                                                           //eMobilityProvider_Id?                       ProviderId,  // = null,
-                                                           //WWCP.EVSE_Id?                               EVSEId,      // = null,
 
                                                            DateTime?                                   Timestamp,
                                                            CancellationToken?                          CancellationToken,
-                                                           EventTracking_Id                            EventTrackingId,
+                                                           EventTracking_Id?                           EventTrackingId,
                                                            TimeSpan?                                   RequestTimeout)
 
         {
@@ -1814,8 +1814,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
@@ -1824,12 +1823,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnCancelReservationRequest event
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnCancelReservationRequest?.Invoke(StartTime,
+                OnCancelReservationRequest?.Invoke(startTime,
                                                    Timestamp.Value,
                                                    this,
                                                    EventTrackingId,
@@ -1906,22 +1905,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         async Task<WWCP.RemoteStartResult>
 
             WWCP.IReserveRemoteStartStop.RemoteStart(WWCP.ChargingLocation         ChargingLocation,
-                                                     WWCP.ChargingProduct          ChargingProduct,       // = null,
+                                                     WWCP.ChargingProduct?         ChargingProduct,       // = null,
                                                      WWCP.ChargingReservation_Id?  ReservationId,         // = null,
                                                      WWCP.ChargingSession_Id?      SessionId,             // = null,
                                                      WWCP.EMobilityProvider_Id?    ProviderId,            // = null,
-                                                     WWCP.RemoteAuthentication     RemoteAuthentication,  // = null,
+                                                     WWCP.RemoteAuthentication?    RemoteAuthentication,  // = null,
 
                                                      DateTime?                     Timestamp,
                                                      CancellationToken?            CancellationToken,
-                                                     EventTracking_Id              EventTrackingId,
+                                                     EventTracking_Id?             EventTrackingId,
                                                      TimeSpan?                     RequestTimeout)
 
         {
 
             #region Initial checks
 
-            if (RemoteAuthentication == null || !RemoteAuthentication.RemoteIdentification.HasValue)
+            if (RemoteAuthentication is null || !RemoteAuthentication.RemoteIdentification.HasValue)
                 throw new ArgumentNullException(nameof(RemoteAuthentication),  "The e-mobility account identification is mandatory in OICP!");
 
 
@@ -1931,25 +1930,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
 
 
-            WWCP.RemoteStartResult result = null;
+            WWCP.RemoteStartResult? result = null;
 
             #endregion
 
             #region Send OnRemoteStartRequest event
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnRemoteStartRequest?.Invoke(StartTime,
+                OnRemoteStartRequest?.Invoke(startTime,
                                              Timestamp.Value,
                                              this,
                                              EventTrackingId,
@@ -2093,12 +2091,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnRemoteStartResponse event
 
-            var EndTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnRemoteStartResponse?.Invoke(EndTime,
+                OnRemoteStartResponse?.Invoke(endTime,
                                               Timestamp.Value,
                                               this,
                                               EventTrackingId,
@@ -2113,7 +2111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               RemoteAuthentication,
                                               RequestTimeout,
                                               result,
-                                              EndTime - StartTime);
+                                              endTime - startTime);
 
             }
             catch (Exception e)
@@ -2146,14 +2144,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         async Task<WWCP.RemoteStopResult>
 
             WWCP.IReserveRemoteStartStop.RemoteStop(WWCP.ChargingSession_Id     SessionId,
-                                                    WWCP.ReservationHandling?   ReservationHandling    = null,
-                                                    WWCP.EMobilityProvider_Id?  ProviderId             = null,
-                                                    WWCP.RemoteAuthentication   RemoteAuthentication   = null,
+                                                    WWCP.ReservationHandling?   ReservationHandling,
+                                                    WWCP.EMobilityProvider_Id?  ProviderId,
+                                                    WWCP.RemoteAuthentication?  RemoteAuthentication,
 
-                                                    DateTime?                   Timestamp              = null,
-                                                    CancellationToken?          CancellationToken      = null,
-                                                    EventTracking_Id            EventTrackingId        = null,
-                                                    TimeSpan?                   RequestTimeout         = null)
+                                                    DateTime?                   Timestamp,
+                                                    CancellationToken?          CancellationToken,
+                                                    EventTracking_Id?           EventTrackingId,
+                                                    TimeSpan?                   RequestTimeout)
 
         {
 
@@ -2165,25 +2163,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId == null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = EMPClient?.RequestTimeout;
 
 
-            WWCP.RemoteStopResult result = null;
+            WWCP.RemoteStopResult? result = null;
 
             #endregion
 
             #region Send OnRemoteStopRequest event
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnRemoteStopRequest?.Invoke(StartTime,
+                OnRemoteStopRequest?.Invoke(startTime,
                                             Timestamp.Value,
                                             this,
                                             EventTrackingId,
@@ -2236,17 +2233,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             else
                 result = WWCP.RemoteStopResult.Error(SessionId,
                                                      remoteStopResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
-                                                     Runtime: org.GraphDefined.Vanaheimr.Illias.Timestamp.Now - StartTime);
+                                                     Runtime: org.GraphDefined.Vanaheimr.Illias.Timestamp.Now - startTime);
 
 
             #region Send OnRemoteStopResponse event
 
-            var EndTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnRemoteStopResponse?.Invoke(EndTime,
+                OnRemoteStopResponse?.Invoke(endTime,
                                              Timestamp.Value,
                                              this,
                                              EventTrackingId,
@@ -2259,7 +2256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              RemoteAuthentication,
                                              RequestTimeout,
                                              result,
-                                             EndTime - StartTime);
+                                             endTime - startTime);
 
             }
             catch (Exception e)
@@ -3196,7 +3193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     validStatusList.Add(newStatus);
 
-                                    if (wwcpChargingStationOperator.TryGetEVSEbyId(currentEVSEId, out var currentEVSE) &&
+                                    if (wwcpChargingStationOperator.TryGetEVSEById(currentEVSEId.Value, out var currentEVSE) &&
                                         currentEVSE is not null &&
                                         currentEVSE.Status.Value != currentEVSEStatus.Value)
                                     {
@@ -3775,7 +3772,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => "OICP" + Version.Number + " EMP Adapter " + Id;
 
         #endregion
-
 
     }
 
