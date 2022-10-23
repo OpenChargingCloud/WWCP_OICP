@@ -31,7 +31,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     /// <param name="EVSE">A WWCP EVSE.</param>
     /// <param name="EVSEDataRecord">An EVSE data record.</param>
-    public delegate EVSEDataRecord      EVSE2EVSEDataRecordDelegate                      (WWCP.EVSE                EVSE,
+    public delegate EVSEDataRecord      EVSE2EVSEDataRecordDelegate                      (WWCP.IEVSE               EVSE,
                                                                                           EVSEDataRecord           EVSEDataRecord);
 
     /// <summary>
@@ -65,8 +65,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
     /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
-    public delegate ChargeDetailRecord  WWCPChargeDetailRecord2ChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
-                                                                                          ChargeDetailRecord       OCIPChargeDetailRecord);
+    public delegate ChargeDetailRecord  WWCPChargeDetailRecord2ChargeDetailRecordDelegate     (WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
+                                                                                               ChargeDetailRecord       OCIPChargeDetailRecord);
 
     /// <summary>
     /// A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.
@@ -143,19 +143,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord">An EVSE data record.</param>
         /// 
         /// <param name="CustomConverter">A delegate to process an EVSE data record, e.g. before importing it into a roaming network.</param>
-        public static WWCP.EVSE? ToWWCP(this EVSEDataRecord                   EVSEDataRecord,
+        public static WWCP.EVSE? ToWWCP(this EVSEDataRecord                    EVSEDataRecord,
 
-                                        WWCP.EVSEAdminStatusTypes             InitialEVSEAdminStatus                  = WWCP.EVSEAdminStatusTypes.OutOfService,
-                                        WWCP.ChargingStationAdminStatusTypes  InitialChargingStationAdminStatus       = WWCP.ChargingStationAdminStatusTypes.OutOfService,
-                                        WWCP.EVSEStatusTypes                  InitialEVSEStatus                       = WWCP.EVSEStatusTypes.OutOfService,
-                                        WWCP.ChargingStationStatusTypes       InitialChargingStationStatus            = WWCP.ChargingStationStatusTypes.OutOfService,
-                                        UInt16                                MaxEVSEAdminStatusListSize              = WWCP.EVSE.           DefaultMaxEVSEAdminStatusScheduleSize,
-                                        UInt16                                MaxChargingStationAdminStatusListSize   = WWCP.ChargingStation.DefaultMaxChargingStationAdminStatusScheduleSize,
-                                        UInt16                                MaxEVSEStatusListSize                   = WWCP.EVSE.           DefaultMaxEVSEStatusScheduleSize,
-                                        UInt16                                MaxChargingStationStatusListSize        = WWCP.ChargingStation.DefaultMaxChargingStationStatusScheduleSize,
+                                        WWCP.EVSEAdminStatusTypes              InitialEVSEAdminStatus                  = WWCP.EVSEAdminStatusTypes.OutOfService,
+                                        WWCP.ChargingStationAdminStatusTypes?  InitialChargingStationAdminStatus       = null,
+                                        WWCP.EVSEStatusTypes                   InitialEVSEStatus                       = WWCP.EVSEStatusTypes.OutOfService,
+                                        WWCP.ChargingStationStatusTypes        InitialChargingStationStatus            = WWCP.ChargingStationStatusTypes.OutOfService,
+                                        UInt16                                 MaxEVSEAdminStatusListSize              = WWCP.EVSE.           DefaultMaxEVSEAdminStatusScheduleSize,
+                                        UInt16                                 MaxChargingStationAdminStatusListSize   = WWCP.ChargingStation.DefaultMaxChargingStationAdminStatusScheduleSize,
+                                        UInt16                                 MaxEVSEStatusListSize                   = WWCP.EVSE.           DefaultMaxEVSEStatusScheduleSize,
+                                        UInt16                                 MaxChargingStationStatusListSize        = WWCP.ChargingStation.DefaultMaxChargingStationStatusScheduleSize,
 
-                                        String?                               DataSource                              = null,
-                                        EVSEDataRecord2EVSEDelegate?          CustomConverter                         = null)
+                                        String?                                DataSource                              = null,
+                                        EVSEDataRecord2EVSEDelegate?           CustomConverter                         = null)
 
         {
 
@@ -236,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
         /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord ToOICP(this WWCP.EVSE                EVSE,
+        public static EVSEDataRecord ToOICP(this WWCP.IEVSE               EVSE,
                                             String                        OperatorName,
 
                                             EVSE2EVSEDataRecordDelegate?  EVSE2EVSEDataRecord   = null,
@@ -1164,7 +1164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Maps a WWCP EVSE to an OICP charging facility.
         /// </summary>
         /// <param name="EVSE">An WWCP EVSE.</param>
-        public static ChargingFacility AsChargingFacility(this WWCP.EVSE EVSE)
+        public static ChargingFacility AsChargingFacility(this WWCP.IEVSE EVSE)
         {
 
             if (!EVSE.CurrentType.HasValue &&
@@ -1219,7 +1219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Maps a WWCP EVSE to an enumeration of charging facilities.
         /// </summary>
         /// <param name="EVSE">An WWCP EVSE.</param>
-        public static IEnumerable<ChargingFacility> AsChargingFacilities(this WWCP.EVSE EVSE)
+        public static IEnumerable<ChargingFacility> AsChargingFacilities(this WWCP.IEVSE EVSE)
         {
 
             if (!EVSE.CurrentType.HasValue &&

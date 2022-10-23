@@ -919,14 +919,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         private async Task<WWCP.PushEVSEDataResult>
 
-            PushEVSEData(IEnumerable<WWCP.EVSE>  EVSEs,
-                         ActionTypes             ServerAction,
-                         JObject?                CustomData          = null,
+            PushEVSEData(IEnumerable<WWCP.IEVSE>  EVSEs,
+                         ActionTypes              ServerAction,
+                         JObject?                 CustomData          = null,
 
-                         DateTime?               Timestamp           = null,
-                         CancellationToken?      CancellationToken   = null,
-                         EventTracking_Id?       EventTrackingId     = null,
-                         TimeSpan?               RequestTimeout      = null)
+                         DateTime?                Timestamp           = null,
+                         CancellationToken?       CancellationToken   = null,
+                         EventTracking_Id?        EventTrackingId     = null,
+                         TimeSpan?                RequestTimeout      = null)
 
         {
 
@@ -1513,12 +1513,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.SetStaticData(WWCP.EVSE                EVSE,
+            WWCP.ISendPOIData.SetStaticData(WWCP.IEVSE               EVSE,
                                             WWCP.TransmissionTypes   TransmissionType,
 
                                             DateTime?                Timestamp,
                                             CancellationToken?       CancellationToken,
-                                            EventTracking_Id         EventTrackingId,
+                                            EventTracking_Id?        EventTrackingId,
                                             TimeSpan?                RequestTimeout)
 
         {
@@ -1584,7 +1584,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            return await PushEVSEData(new WWCP.EVSE[] { EVSE },
+            return await PushEVSEData(new WWCP.IEVSE[] { EVSE },
                                       ActionTypes.FullLoad,
                                       null,
 
@@ -1611,12 +1611,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.AddStaticData(WWCP.EVSE                EVSE,
+            WWCP.ISendPOIData.AddStaticData(WWCP.IEVSE               EVSE,
                                             WWCP.TransmissionTypes   TransmissionType,
 
                                             DateTime?                Timestamp,
                                             CancellationToken?       CancellationToken,
-                                            EventTracking_Id         EventTrackingId,
+                                            EventTracking_Id?        EventTrackingId,
                                             TimeSpan?                RequestTimeout)
 
         {
@@ -1682,7 +1682,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            return await PushEVSEData(new WWCP.EVSE[] { EVSE },
+            return await PushEVSEData(new WWCP.IEVSE[] { EVSE },
                                       ActionTypes.Insert,
                                       null,
 
@@ -1713,15 +1713,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.UpdateStaticData(WWCP.EVSE                EVSE,
-                                               String                   PropertyName,
-                                               Object                   OldValue,
-                                               Object                   NewValue,
+            WWCP.ISendPOIData.UpdateStaticData(WWCP.IEVSE               EVSE,
+                                               String?                  PropertyName,
+                                               Object?                  OldValue,
+                                               Object?                  NewValue,
                                                WWCP.TransmissionTypes   TransmissionType,
 
                                                DateTime?                Timestamp,
                                                CancellationToken?       CancellationToken,
-                                               EventTracking_Id         EventTrackingId,
+                                               EventTracking_Id?        EventTrackingId,
                                                TimeSpan?                RequestTimeout)
 
         {
@@ -1803,7 +1803,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            return await PushEVSEData(new WWCP.EVSE[] { EVSE },
+            return await PushEVSEData(new WWCP.IEVSE[] { EVSE },
                                       ActionTypes.Update,
                                       null,
 
@@ -1830,12 +1830,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.DeleteStaticData(WWCP.EVSE                EVSE,
+            WWCP.ISendPOIData.DeleteStaticData(WWCP.IEVSE               EVSE,
                                                WWCP.TransmissionTypes   TransmissionType,
 
                                                DateTime?                Timestamp,
                                                CancellationToken?       CancellationToken,
-                                               EventTracking_Id         EventTrackingId,
+                                               EventTracking_Id?        EventTrackingId,
                                                TimeSpan?                RequestTimeout)
 
         {
@@ -1901,7 +1901,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            return await PushEVSEData(new WWCP.EVSE[] { EVSE },
+            return await PushEVSEData(new WWCP.IEVSE[] { EVSE },
                                       ActionTypes.Delete,
                                       null,
 
@@ -1929,12 +1929,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.SetStaticData(IEnumerable<WWCP.EVSE>   EVSEs,
+            WWCP.ISendPOIData.SetStaticData(IEnumerable<WWCP.IEVSE>  EVSEs,
                                             WWCP.TransmissionTypes   TransmissionType,
 
                                             DateTime?                Timestamp,
                                             CancellationToken?       CancellationToken,
-                                            EventTracking_Id         EventTrackingId,
+                                            EventTracking_Id?        EventTrackingId,
                                             TimeSpan?                RequestTimeout)
 
         {
@@ -2039,12 +2039,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.AddStaticData(IEnumerable<WWCP.EVSE>   EVSEs,
+            WWCP.ISendPOIData.AddStaticData(IEnumerable<WWCP.IEVSE>  EVSEs,
                                             WWCP.TransmissionTypes   TransmissionType,
 
                                             DateTime?                Timestamp,
                                             CancellationToken?       CancellationToken,
-                                            EventTracking_Id         EventTrackingId,
+                                            EventTracking_Id?        EventTrackingId,
                                             TimeSpan?                RequestTimeout)
 
         {
@@ -2148,12 +2148,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.UpdateStaticData(IEnumerable<WWCP.EVSE>   EVSEs,
+            WWCP.ISendPOIData.UpdateStaticData(IEnumerable<WWCP.IEVSE>  EVSEs,
                                                WWCP.TransmissionTypes   TransmissionType,
 
                                                DateTime?                Timestamp,
                                                CancellationToken?       CancellationToken,
-                                               EventTracking_Id         EventTrackingId,
+                                               EventTracking_Id?        EventTrackingId,
                                                TimeSpan?                RequestTimeout)
 
         {
@@ -2257,12 +2257,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.DeleteStaticData(IEnumerable<WWCP.EVSE>   EVSEs,
+            WWCP.ISendPOIData.DeleteStaticData(IEnumerable<WWCP.IEVSE>  EVSEs,
                                                WWCP.TransmissionTypes   TransmissionType,
 
                                                DateTime?                Timestamp,
                                                CancellationToken?       CancellationToken,
-                                               EventTracking_Id         EventTrackingId,
+                                               EventTracking_Id?        EventTrackingId,
                                                TimeSpan?                RequestTimeout)
 
         {
@@ -2527,12 +2527,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.SetStaticData(WWCP.ChargingStation     ChargingStation,
+            WWCP.ISendPOIData.SetStaticData(WWCP.IChargingStation    ChargingStation,
                                             WWCP.TransmissionTypes   TransmissionType,
 
                                             DateTime?                Timestamp,
                                             CancellationToken?       CancellationToken,
-                                            EventTracking_Id         EventTrackingId,
+                                            EventTracking_Id?        EventTrackingId,
                                             TimeSpan?                RequestTimeout)
 
         {
@@ -2635,12 +2635,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.AddStaticData(WWCP.ChargingStation     ChargingStation,
+            WWCP.ISendPOIData.AddStaticData(WWCP.IChargingStation    ChargingStation,
                                             WWCP.TransmissionTypes   TransmissionType,
 
                                             DateTime?                Timestamp,
                                             CancellationToken?       CancellationToken,
-                                            EventTracking_Id         EventTrackingId,
+                                            EventTracking_Id?        EventTrackingId,
                                             TimeSpan?                RequestTimeout)
 
         {
@@ -2748,15 +2748,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.UpdateStaticData(WWCP.ChargingStation     ChargingStation,
-                                               String                   PropertyName,
-                                               Object                   OldValue,
-                                               Object                   NewValue,
+            WWCP.ISendPOIData.UpdateStaticData(WWCP.IChargingStation    ChargingStation,
+                                               String?                  PropertyName,
+                                               Object?                  OldValue,
+                                               Object?                  NewValue,
                                                WWCP.TransmissionTypes   TransmissionType,
 
                                                DateTime?                Timestamp,
                                                CancellationToken?       CancellationToken,
-                                               EventTracking_Id         EventTrackingId,
+                                               EventTracking_Id?        EventTrackingId,
                                                TimeSpan?                RequestTimeout)
 
         {
@@ -2876,12 +2876,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.DeleteStaticData(WWCP.ChargingStation     ChargingStation,
+            WWCP.ISendPOIData.DeleteStaticData(WWCP.IChargingStation    ChargingStation,
                                                WWCP.TransmissionTypes   TransmissionType,
 
                                                DateTime?                Timestamp,
                                                CancellationToken?       CancellationToken,
-                                               EventTracking_Id         EventTrackingId,
+                                               EventTracking_Id?        EventTrackingId,
                                                TimeSpan?                RequestTimeout)
 
         {
@@ -2921,13 +2921,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.SetStaticData(IEnumerable<WWCP.ChargingStation>  ChargingStations,
-                                            WWCP.TransmissionTypes             TransmissionType,
+            WWCP.ISendPOIData.SetStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
+                                            WWCP.TransmissionTypes              TransmissionType,
 
-                                            DateTime?                          Timestamp,
-                                            CancellationToken?                 CancellationToken,
-                                            EventTracking_Id                   EventTrackingId,
-                                            TimeSpan?                          RequestTimeout)
+                                            DateTime?                           Timestamp,
+                                            CancellationToken?                  CancellationToken,
+                                            EventTracking_Id?                   EventTrackingId,
+                                            TimeSpan?                           RequestTimeout)
 
         {
 
@@ -2965,14 +2965,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.AddStaticData(IEnumerable<WWCP.ChargingStation>  ChargingStations,
-                                            WWCP.TransmissionTypes             TransmissionType,
+            WWCP.ISendPOIData.AddStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
+                                            WWCP.TransmissionTypes              TransmissionType,
 
 
-                                            DateTime?                          Timestamp,
-                                            CancellationToken?                 CancellationToken,
-                                            EventTracking_Id                   EventTrackingId,
-                                            TimeSpan?                          RequestTimeout)
+                                            DateTime?                           Timestamp,
+                                            CancellationToken?                  CancellationToken,
+                                            EventTracking_Id?                   EventTrackingId,
+                                            TimeSpan?                           RequestTimeout)
 
         {
 
@@ -3010,13 +3010,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.UpdateStaticData(IEnumerable<WWCP.ChargingStation>  ChargingStations,
-                                               WWCP.TransmissionTypes             TransmissionType,
+            WWCP.ISendPOIData.UpdateStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
+                                               WWCP.TransmissionTypes              TransmissionType,
 
-                                               DateTime?                          Timestamp,
-                                               CancellationToken?                 CancellationToken,
-                                               EventTracking_Id                   EventTrackingId,
-                                               TimeSpan?                          RequestTimeout)
+                                               DateTime?                           Timestamp,
+                                               CancellationToken?                  CancellationToken,
+                                               EventTracking_Id?                   EventTrackingId,
+                                               TimeSpan?                           RequestTimeout)
 
         {
 
@@ -3054,13 +3054,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         Task<WWCP.PushEVSEDataResult>
 
-            WWCP.ISendPOIData.DeleteStaticData(IEnumerable<WWCP.ChargingStation>  ChargingStations,
-                                               WWCP.TransmissionTypes             TransmissionType,
+            WWCP.ISendPOIData.DeleteStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
+                                               WWCP.TransmissionTypes              TransmissionType,
 
-                                               DateTime?                          Timestamp,
-                                               CancellationToken?                 CancellationToken,
-                                               EventTracking_Id                   EventTrackingId,
-                                               TimeSpan?                          RequestTimeout)
+                                               DateTime?                           Timestamp,
+                                               CancellationToken?                  CancellationToken,
+                                               EventTracking_Id?                   EventTrackingId,
+                                               TimeSpan?                           RequestTimeout)
 
         {
 
@@ -5252,13 +5252,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Get a copy of all current EVSE data and delayed status
 
-            var EVSEsToAddQueueCopy                = new HashSet<WWCP.EVSE>();
-            var EVSEsToUpdateQueueCopy             = new HashSet<WWCP.EVSE>();
+            var EVSEsToAddQueueCopy                = new HashSet<WWCP.IEVSE>();
+            var EVSEsToUpdateQueueCopy             = new HashSet<WWCP.IEVSE>();
             var EVSEStatusChangesDelayedQueueCopy  = new List<WWCP.EVSEStatusUpdate>();
-            var EVSEsToRemoveQueueCopy             = new HashSet<WWCP.EVSE>();
-            var EVSEsUpdateLogCopy                 = new Dictionary<WWCP.EVSE,            PropertyUpdateInfos[]>();
-            var ChargingStationsUpdateLogCopy      = new Dictionary<WWCP.ChargingStation, PropertyUpdateInfos[]>();
-            var ChargingPoolsUpdateLogCopy         = new Dictionary<WWCP.ChargingPool,    PropertyUpdateInfos[]>();
+            var EVSEsToRemoveQueueCopy             = new HashSet<WWCP.IEVSE>();
+            var EVSEsUpdateLogCopy                 = new Dictionary<WWCP.IEVSE,            PropertyUpdateInfos[]>();
+            var ChargingStationsUpdateLogCopy      = new Dictionary<WWCP.IChargingStation, PropertyUpdateInfos[]>();
+            var ChargingPoolsUpdateLogCopy         = new Dictionary<WWCP.ChargingPool,     PropertyUpdateInfos[]>();
 
             var LockTaken = await DataAndStatusLock.WaitAsync(0);
 
@@ -5269,11 +5269,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 {
 
                     // Copy 'EVSEs to add', remove originals...
-                    EVSEsToAddQueueCopy                      = new HashSet<WWCP.EVSE>                (EVSEsToAddQueue);
+                    EVSEsToAddQueueCopy                      = new HashSet<WWCP.IEVSE>                (EVSEsToAddQueue);
                     EVSEsToAddQueue.Clear();
 
                     // Copy 'EVSEs to update', remove originals...
-                    EVSEsToUpdateQueueCopy                   = new HashSet<WWCP.EVSE>                (EVSEsToUpdateQueue);
+                    EVSEsToUpdateQueueCopy                   = new HashSet<WWCP.IEVSE>                (EVSEsToUpdateQueue);
                     EVSEsToUpdateQueue.Clear();
 
                     // Copy 'EVSE status changes', remove originals...
@@ -5282,7 +5282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     EVSEStatusChangesDelayedQueue.Clear();
 
                     // Copy 'EVSEs to remove', remove originals...
-                    EVSEsToRemoveQueueCopy                   = new HashSet<WWCP.EVSE>                (EVSEsToRemoveQueue);
+                    EVSEsToRemoveQueueCopy                   = new HashSet<WWCP.IEVSE>                (EVSEsToRemoveQueue);
                     EVSEsToRemoveQueue.Clear();
 
                     // Copy EVSE property updates

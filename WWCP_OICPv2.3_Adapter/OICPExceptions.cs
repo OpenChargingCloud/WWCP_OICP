@@ -29,9 +29,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public class EVSEToOICPException : OICPException
     {
 
-        public EVSE  EVSE   { get; }
+        public IEVSE  EVSE    { get; }
 
-        public EVSEToOICPException(EVSE       EVSE,
+        public EVSEToOICPException(IEVSE      EVSE,
                                    Exception  InnerException)
 
             : base("Could not convert EVSE '" + EVSE.Id + "' to an OICP " + Version.Number + " EVSEDataRecord!",
