@@ -525,9 +525,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE pricing informations.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A EVSE pricing information to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is EVSEPricing evsePricing
@@ -540,9 +540,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(EVSEPricing)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE pricing informations.
         /// </summary>
-        /// <param name="EVSEPricing">An object to compare with.</param>
+        /// <param name="EVSEPricing">A EVSE pricing information to compare with.</param>
         public Int32 CompareTo(EVSEPricing? EVSEPricing)
         {
 
@@ -585,10 +585,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE pricing informations for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A EVSE pricing information to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is EVSEPricing evsePricing &&
@@ -602,7 +601,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two EVSE pricing informations for equality.
         /// </summary>
         /// <param name="EVSEPricing">A EVSE pricing information to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EVSEPricing? EVSEPricing)
 
             => EVSEPricing is not null &&
