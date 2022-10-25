@@ -238,6 +238,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public IEnumerable<WWCP.ChargingSession>     ChargingSessions
             => throw new NotImplementedException();
 
+        public TimeSpan MaxReservationDuration { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         #endregion
 
         #region Events

@@ -125,12 +125,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
     {
 
         /// <summary>
-        /// AC_1_PHASE
+        /// AC 1 phase
         /// </summary>
         AC_1_PHASE,
 
         /// <summary>
-        /// AC_3_PHASE
+        /// AC 3 phases
         /// </summary>
         AC_3_PHASE,
 

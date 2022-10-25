@@ -1176,47 +1176,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingFacility AsChargingFacility(this WWCP.IEVSE EVSE)
         {
 
-            if (!EVSE.CurrentType.HasValue &&
-                !EVSE.MaxPower.   HasValue)
-            {
+            if (!EVSE.MaxPower.HasValue)
                 throw new ArgumentException("AsOICPChargingFacility failed!");
-            }
 
+            var powerType = EVSE.CurrentType switch {
+                WWCP.CurrentTypes.AC_OnePhase     => PowerTypes.AC_1_PHASE,
+                WWCP.CurrentTypes.AC_ThreePhases  => PowerTypes.AC_3_PHASE,
+                WWCP.CurrentTypes.DC              => PowerTypes.DC,
+                WWCP.CurrentTypes.Unspecified     => PowerTypes.Unspecified,
+                _                                 => throw new ArgumentException("Invalid current type!"),
+            };
 
-            var powerType = PowerTypes.AC_1_PHASE;
-
-            if (EVSE.CurrentType.HasValue)
-            {
-                switch (EVSE.CurrentType)
-                {
-
-                    case WWCP.CurrentTypes.AC_OnePhase:
-                        powerType = PowerTypes.AC_1_PHASE;
-                        break;
-
-                    case WWCP.CurrentTypes.AC_ThreePhases:
-                        powerType = PowerTypes.AC_3_PHASE;
-                        break;
-
-                    case WWCP.CurrentTypes.DC:
-                        powerType = PowerTypes.DC;
-                        break;
-
-                    case WWCP.CurrentTypes.Unspecified:
-                        powerType = PowerTypes.Unspecified;
-                        break;
-
-                    default:
-                        throw new ArgumentException("Invalid current type!");
-
-                }
-            }
-
-            return new ChargingFacility(powerType,
-                                        Convert.ToUInt32(EVSE.MaxPower.Value),
-                                        EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage)) : null,
-                                        EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent))     : null,
-                                        EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP()));
+            return new ChargingFacility(
+                       powerType,
+                       Convert.ToUInt32(EVSE.MaxPower),
+                       EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage)) : null,
+                       EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent))     : null,
+                       EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
+                   );
 
         }
 
@@ -1231,45 +1208,41 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static IEnumerable<ChargingFacility> AsChargingFacilities(this WWCP.IEVSE EVSE)
         {
 
-            if (!EVSE.CurrentType.HasValue &&
-                !EVSE.MaxPower.   HasValue)
-            {
-                return new ChargingFacility[0];
-            }
+            if (!EVSE.MaxPower.HasValue)
+                return Array.Empty<ChargingFacility>();
 
 
             var powerType = PowerTypes.AC_1_PHASE;
 
-            if (EVSE.CurrentType.HasValue)
+            switch (EVSE.CurrentType)
             {
-                switch (EVSE.CurrentType)
-                {
 
-                    case WWCP.CurrentTypes.AC_OnePhase:
-                        powerType = PowerTypes.AC_1_PHASE;
-                        break;
+                case WWCP.CurrentTypes.AC_OnePhase:
+                    powerType = PowerTypes.AC_1_PHASE;
+                    break;
 
-                    case WWCP.CurrentTypes.AC_ThreePhases:
-                        powerType = PowerTypes.AC_3_PHASE;
-                        break;
+                case WWCP.CurrentTypes.AC_ThreePhases:
+                    powerType = PowerTypes.AC_3_PHASE;
+                    break;
 
-                    case WWCP.CurrentTypes.DC:
-                        powerType = PowerTypes.DC;
-                        break;
+                case WWCP.CurrentTypes.DC:
+                    powerType = PowerTypes.DC;
+                    break;
 
-                    case WWCP.CurrentTypes.Unspecified:
-                        powerType = PowerTypes.Unspecified;
-                        break;
+                case WWCP.CurrentTypes.Unspecified:
+                    powerType = PowerTypes.Unspecified;
+                    break;
 
-                }
             }
 
             return new ChargingFacility[] {
-                       new ChargingFacility(powerType,
-                                            Convert.ToUInt32(EVSE.MaxPower.Value),
-                                            EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage)) : null,
-                                            EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent))     : null,
-                                            EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP()))
+                       new ChargingFacility(
+                           powerType,
+                           Convert.ToUInt32(EVSE.MaxPower.Value),
+                           EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage)) : null,
+                           EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent))     : null,
+                           EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
+                       )
                    };
 
         }
@@ -1444,17 +1417,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-
-        //#region ToWWCP(DaysOfWeek)
-
-        //public static DayOfWeek ToWWCP(this DaysOfWeek DaysOfWeek)
-        //{
-
-        //    throw new NotImplementedException();
-
-        //}
-
-        //#endregion
 
         #region ToOICP(this DayOfWeek)
 
