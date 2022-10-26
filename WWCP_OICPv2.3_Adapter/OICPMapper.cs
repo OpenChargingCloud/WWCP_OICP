@@ -165,58 +165,81 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 var evseId             = EVSEDataRecord.Id.ToWWCP();
-
                 if (!evseId.HasValue)
                     return null;
 
                 var chargingStationId  = WWCP.ChargingStation_Id.Create(evseId.Value);
 
-                evse = new WWCP.EVSE(evseId.Value,
-                                     new WWCP.ChargingStation(chargingStationId,
-                                                              null,
-                                                              null,
-                                                              station => {
-                                                                  station.DataSource   = DataSource;
-                                                                  station.Address      = EVSEDataRecord.Address.ToWWCP();
-                                                                  station.GeoLocation  = new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
-                                                                                             org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
-                                                                                             org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
-                                                                                         );
-                                                              },
-                                                              null,
-                                                              InitialChargingStationAdminStatus,
-                                                              InitialChargingStationStatus,
-                                                              MaxChargingStationAdminStatusListSize,
-                                                              MaxChargingStationStatusListSize),
-                                     null,
-                                     null,
-                                     _evse => {
-                                         _evse.DataSource  = DataSource;
-                                     },
-                                     null,
-                                     InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusTypes.OutOfService,
-                                     InitialEVSEStatus      ?? WWCP.EVSEStatusTypes.OutOfService,
-                                     MaxEVSEAdminStatusListSize,
-                                     MaxEVSEStatusListSize,
-                                     null,
-                                     null,
-                                     EVSEDataRecord.CustomData,
-                                     new UserDefinedDictionary(new Dictionary<String, Object?> {
-                                         { OICP_EVSEDataRecord, EVSEDataRecord }
-                                     }));
+                evse                   = new WWCP.EVSE(
+                                             evseId.Value,
+                                             new WWCP.ChargingStation(
+                                                 chargingStationId,
+                                                 null,
+                                                 null,
+                                                 station => {
+                                                     station.DataSource   = DataSource;
+                                                     station.Address      = EVSEDataRecord.Address.ToWWCP();
+                                                     station.GeoLocation  = new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
+                                                                                org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
+                                                                                org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
+                                                                            );
+                                                 },
+                                                 null,
+                                                 InitialChargingStationAdminStatus,
+                                                 InitialChargingStationStatus,
+                                                 MaxChargingStationAdminStatusListSize,
+                                                 MaxChargingStationStatusListSize
+                                             ),
+                                             InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusTypes.OutOfService,
+                                             InitialEVSEStatus      ?? WWCP.EVSEStatusTypes.OutOfService,
+                                             MaxEVSEAdminStatusListSize,
+                                             MaxEVSEStatusListSize,
 
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
+                                             null,
 
-                //evse.Description     = CurrentEVSEDataRecord.AdditionalInfo;
-                //evse.ChargingModes   = new ReactiveSet<WWCP.ChargingModes>(CurrentEVSEDataRecord.ChargingModes.ToEnumeration().SafeSelect(mode => OICPMapper.AsWWCPChargingMode(mode)));
-                //OICPMapper.ApplyChargingFacilities(evse, CurrentEVSEDataRecord.ChargingFacilities);
-                //evse.MaxCapacity     = CurrentEVSEDataRecord.MaxCapacity;
-                //evse.SocketOutlets   = new ReactiveSet<SocketOutlet>(CurrentEVSEDataRecord.Plugs.ToEnumeration().SafeSelect(Plug => new SocketOutlet(Plug.AsWWCPPlugTypes())));
+                                             null,
+                                             null,
+                                             DataSource,
+                                             null,
 
+                                             _evse => {
+
+                                             },
+                                             null,
+
+                                             EVSEDataRecord.CustomData,
+                                             new UserDefinedDictionary(new Dictionary<String, Object?> {
+                                                 { OICP_EVSEDataRecord, EVSEDataRecord }
+                                             })
+                                         );
 
             }
             catch (Exception e)
             {
-                DebugX.Log("Could not convert OICP EVSEDataRecord '" + EVSEDataRecord.Id + "' into a WWCP EVSE: " + e.Message + Environment.NewLine + e.StackTrace);
+                DebugX.Log(String.Concat("Could not convert OICP EVSEDataRecord '", EVSEDataRecord.Id, "' into a WWCP EVSE: ", e.Message + Environment.NewLine + e.StackTrace));
                 return null;
             }
 
@@ -249,8 +272,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Verifications
 
-                var EVSEId = EVSE.Id.ToOICP();
-                if (!EVSEId.HasValue)
+                var evseId = EVSE.Id.ToOICP();
+                if (!evseId.HasValue)
                     throw new InvalidEVSEIdentificationException(EVSE.Id.ToString());
 
                 if (EVSE.ChargingStation is null)
@@ -276,11 +299,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                var evseDataRecord = new EVSEDataRecord(Id:                                EVSEId.Value,
-                                                        OperatorId:                        EVSEId.Value.OperatorId,
+                var evseDataRecord = new EVSEDataRecord(Id:                                evseId.Value,
+                                                        OperatorId:                        evseId.Value.OperatorId,
                                                         OperatorName:                      OperatorName,
                                                         ChargingStationName:               EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
-                                                        Address:                           (EVSE.ChargingStation.Address ?? EVSE.ChargingPool.Address).ToOICP(),
+                                                        Address:                           (EVSE.ChargingStation.Address ??
+                                                                                            EVSE.ChargingPool.   Address).ToOICP(),
                                                         GeoCoordinates:                    geoLocation.Value,
                                                         PlugTypes:                         EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug.ToOICP()),
                                                         ChargingFacilities:                EVSE.AsChargingFacilities(),
