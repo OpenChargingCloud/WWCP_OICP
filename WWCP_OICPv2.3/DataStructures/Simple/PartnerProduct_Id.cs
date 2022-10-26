@@ -317,9 +317,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two partner product identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A partner product identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is PartnerProduct_Id partnerProductId
@@ -332,9 +332,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(PartnerProductId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two partner product identifications.
         /// </summary>
-        /// <param name="PartnerProductId">An object to compare with.</param>
+        /// <param name="PartnerProductId">A partner product identification to compare with.</param>
         public Int32 CompareTo(PartnerProduct_Id PartnerProductId)
 
             => String.Compare(InternalId,
@@ -350,25 +350,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two partner product identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="PartnerProductId">A partner product identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is PartnerProduct_Id partnerProductId
-                   ? Equals(partnerProductId)
-                   : false;
+                   && Equals(partnerProductId);
 
         #endregion
 
         #region Equals(PartnerProductId)
 
         /// <summary>
-        /// Compares two PartnerProductIds for equality.
+        /// Compares two partner product identifications for equality.
         /// </summary>
         /// <param name="PartnerProductId">A partner product identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(PartnerProduct_Id PartnerProductId)
 
             => String.Equals(InternalId,

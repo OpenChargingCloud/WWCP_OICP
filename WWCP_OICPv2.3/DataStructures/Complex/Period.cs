@@ -441,9 +441,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two time periods.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A time period to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Period period
@@ -456,9 +456,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Period)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two time periods.
         /// </summary>
-        /// <param name="Period">An object to compare with.</param>
+        /// <param name="Period">A time period to compare with.</param>
         public Int32 CompareTo(Period Period)
         {
 
@@ -480,10 +480,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two time periods for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Period">A time period to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Period period &&
@@ -497,7 +496,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two time periods for equality.
         /// </summary>
         /// <param name="Period">A time period to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Period Period)
 
             => Begin.Equals(Period.Begin) &&
