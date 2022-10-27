@@ -65,6 +65,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       I18NString                                                   Description,
                                       OICPv2_3.CPO.CPORoaming                                      CPORoaming,
 
+                                      Func<EVSE_Id, OICPv2_3.EVSE_Id>?                             CustomEVSEIdConverter                           = null,
                                       OICPv2_3.EVSE2EVSEDataRecordDelegate?                        EVSE2EVSEDataRecord                             = null,
                                       OICPv2_3.EVSEStatusUpdate2EVSEStatusRecordDelegate?          EVSEStatusUpdate2EVSEStatusRecord               = null,
                                       OICPv2_3.WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
@@ -117,6 +118,7 @@ namespace cloud.charging.open.protocols.WWCP
                                                                  RoamingNetwork,
                                                                  CPORoaming,
 
+                                                                 CustomEVSEIdConverter,
                                                                  EVSE2EVSEDataRecord,
                                                                  EVSEStatusUpdate2EVSEStatusRecord,
                                                                  WWCPChargeDetailRecord2OICPChargeDetailRecord,

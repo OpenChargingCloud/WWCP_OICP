@@ -104,6 +104,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             => CPORoaming?.CPOServer?.Logger;
 
 
+
+        public Func<WWCP.EVSE_Id, EVSE_Id>?                        CustomEVSEIdConverter                            { get; }
+
         /// <summary>
         /// An optional default charging station operator.
         /// </summary>
@@ -245,6 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.RoamingNetwork                                 RoamingNetwork,
                           CPORoaming                                          CPORoaming,
 
+                          Func<WWCP.EVSE_Id, EVSE_Id>?                        CustomEVSEIdConverter                           = null,
                           EVSE2EVSEDataRecordDelegate?                        EVSE2EVSEDataRecord                             = null,
                           EVSEStatusUpdate2EVSEStatusRecordDelegate?          EVSEStatusUpdate2EVSEStatusRecord               = null,
                           WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
@@ -299,6 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         {
 
             this.CPORoaming                                     = CPORoaming      ?? throw new ArgumentNullException(nameof(CPORoaming),      "The given CPO roaming object must not be null!");
+            this.CustomEVSEIdConverter                          = CustomEVSEIdConverter;
             this.EVSE2EVSEDataRecord                            = EVSE2EVSEDataRecord;
             this.EVSEStatusUpdate2EVSEStatusRecord              = EVSEStatusUpdate2EVSEStatusRecord;
             this.WWCPChargeDetailRecord2OICPChargeDetailRecord  = WWCPChargeDetailRecord2OICPChargeDetailRecord;
@@ -4490,7 +4495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             WWCP.AuthStartResult?  result = null;
 
             var operatorId      = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
-            var evseId          = ChargingLocation?.EVSEId?.ToOICP();
+            var evseId          = ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
             var identification  = LocalAuthentication.ToOICP();
 
             if (!operatorId.HasValue)
@@ -4736,7 +4741,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var operatorId      = (OperatorId ?? DefaultOperator.Id).ToOICP(DefaultOperatorIdFormat);
             var sessionId       = SessionId.ToOICP();
-            var evseId          = ChargingLocation?.EVSEId?.ToOICP();
+            var evseId          = ChargingLocation?.EVSEId?.ToOICP(CustomEVSEIdConverter);
             var identification  = LocalAuthentication.ToOICP();
 
             if (!operatorId.HasValue)

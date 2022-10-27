@@ -19,8 +19,6 @@
 
 using org.GraphDefined.Vanaheimr.Illias;
 
-using WWCP = cloud.charging.open.protocols.WWCP;
-
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3
@@ -612,17 +610,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region ToOICP(this EVSEId)
+        #region ToOICP(this EVSEId, CustomConverter = null)
 
-        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id EVSEId)
+        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id             EVSEId,
+                                      Func<WWCP.EVSE_Id, EVSE_Id>?  CustomConverter   = null)
 
-            => EVSE_Id.TryParse(EVSEId.ToString());
+            => CustomConverter is not null
+                   ? CustomConverter(EVSEId)
+                   : EVSE_Id.TryParse(EVSEId.ToString());
 
 
-        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id? EVSEId)
+        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id?            EVSEId,
+                                      Func<WWCP.EVSE_Id, EVSE_Id>?  CustomConverter   = null)
 
             => EVSEId.HasValue
-                   ? EVSEId.Value.ToOICP()
+                   ? EVSEId.Value.ToOICP(CustomConverter)
                    : null;
 
         #endregion

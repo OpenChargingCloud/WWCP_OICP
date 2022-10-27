@@ -52,7 +52,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
     /// <summary>
-    /// The unique identification of an Electric Vehicle Supply Equipment (EVSE).
+    /// The unique identification of an electric vehicle supply equipment (EVSE).
     /// </summary>
     public readonly struct EVSE_Id : IId<EVSE_Id>
     {
@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Random  (OperatorId, Length = 12, Mapper = null)
+        #region (static) NewRandom(OperatorId, Length = 12, Mapper = null)
 
         /// <summary>
         /// Generate a new unique identification of an EVSE.
@@ -158,9 +158,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId">The unique identification of a charging station operator.</param>
         /// <param name="Length">The expected length of the EVSE identification suffix</param>
         /// <param name="Mapper">A delegate to modify the newly generated EVSE identification.</param>
-        public static EVSE_Id Random(Operator_Id            OperatorId,
-                                     Byte                   Length  = 12,
-                                     Func<String, String>?  Mapper  = null)
+        public static EVSE_Id NewRandom(Operator_Id            OperatorId,
+                                        Byte                   Length   = 12,
+                                        Func<String, String>?  Mapper   = null)
 
 
             => new (OperatorId,
@@ -179,10 +179,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSE_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out EVSE_Id EVSEId))
-                return EVSEId;
+            if (TryParse(Text, out EVSE_Id evseId))
+                return evseId;
 
-            throw new ArgumentException("Invalid text-representation of an e-mobility provider identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text-representation of an electric vehicle supply equipment (EVSE) identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
@@ -202,7 +202,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Suffix != null)
+            if (Suffix is not null)
                 Suffix = Suffix.Trim();
 
             if (Suffix.IsNullOrEmpty())
@@ -237,8 +237,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSE_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EVSE_Id EVSEId))
-                return EVSEId;
+            if (TryParse(Text, out EVSE_Id evseId))
+                return evseId;
 
             return null;
 
@@ -262,28 +262,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 try
                 {
 
-                    var MatchCollection = EVSEId_RegEx.Matches(Text.Trim());
+                    var matchCollection = EVSEId_RegEx.Matches(Text.Trim());
 
-                    if (MatchCollection.Count == 1)
+                    if (matchCollection.Count == 1)
                     {
 
                         // New format...
-                        if (Operator_Id.TryParse(MatchCollection[0].Groups[1].Value, out Operator_Id operatorId))
+                        if (Operator_Id.TryParse(matchCollection[0].Groups[1].Value, out var operatorId))
                         {
 
                             EVSEId = new EVSE_Id(operatorId,
-                                                 MatchCollection[0].Groups[2].Value);
+                                                 matchCollection[0].Groups[2].Value);
 
                             return true;
 
                         }
 
                         // Old format...
-                        if (Operator_Id.TryParse(MatchCollection[0].Groups[3].Value, out operatorId))
+                        if (Operator_Id.TryParse(matchCollection[0].Groups[3].Value, out operatorId))
                         {
 
                             EVSEId = new EVSE_Id(operatorId,
-                                                 MatchCollection[0].Groups[4].Value);
+                                                 matchCollection[0].Groups[4].Value);
 
                             return true;
 
