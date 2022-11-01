@@ -997,59 +997,59 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (ChargeDetailRecord is null)
                 throw new ArgumentNullException(nameof(ChargeDetailRecord), "The given charge detail record must not be null!");
 
-            var result = SessionId.     CompareTo(ChargeDetailRecord.SessionId);
+            var c = SessionId.     CompareTo(ChargeDetailRecord.SessionId);
 
-            if (result == 0)
-                result = EVSEId.        CompareTo(ChargeDetailRecord.EVSEId);
+            if (c == 0)
+                c = EVSEId.        CompareTo(ChargeDetailRecord.EVSEId);
 
-            if (result == 0)
-                result = Identification.CompareTo(ChargeDetailRecord.Identification);
+            if (c == 0)
+                c = Identification.CompareTo(ChargeDetailRecord.Identification);
 
-            if (result == 0)
-                result = SessionStart.  CompareTo(ChargeDetailRecord.SessionStart);
+            if (c == 0)
+                c = SessionStart.  CompareTo(ChargeDetailRecord.SessionStart);
 
-            if (result == 0)
-                result = SessionEnd.    CompareTo(ChargeDetailRecord.SessionEnd);
+            if (c == 0)
+                c = SessionEnd.    CompareTo(ChargeDetailRecord.SessionEnd);
 
-            if (result == 0)
-                result = ChargingStart. CompareTo(ChargeDetailRecord.ChargingStart);
+            if (c == 0)
+                c = ChargingStart. CompareTo(ChargeDetailRecord.ChargingStart);
 
-            if (result == 0)
-                result = ChargingEnd.   CompareTo(ChargeDetailRecord.ChargingEnd);
+            if (c == 0)
+                c = ChargingEnd.   CompareTo(ChargeDetailRecord.ChargingEnd);
 
-            if (result == 0)
-                result = ConsumedEnergy.CompareTo(ChargeDetailRecord.ConsumedEnergy);
+            if (c == 0)
+                c = ConsumedEnergy.CompareTo(ChargeDetailRecord.ConsumedEnergy);
 
 
-            if (result == 0 && PartnerProductId.   HasValue && ChargeDetailRecord.PartnerProductId.   HasValue)
-                result = PartnerProductId.   Value.CompareTo(ChargeDetailRecord.PartnerProductId.   Value);
+            if (c == 0 && PartnerProductId.   HasValue && ChargeDetailRecord.PartnerProductId.   HasValue)
+                c = PartnerProductId.   Value.CompareTo(ChargeDetailRecord.PartnerProductId.   Value);
 
-            if (result == 0 && CPOPartnerSessionId.HasValue && ChargeDetailRecord.CPOPartnerSessionId.HasValue)
-                result = CPOPartnerSessionId.Value.CompareTo(ChargeDetailRecord.CPOPartnerSessionId.Value);
+            if (c == 0 && CPOPartnerSessionId.HasValue && ChargeDetailRecord.CPOPartnerSessionId.HasValue)
+                c = CPOPartnerSessionId.Value.CompareTo(ChargeDetailRecord.CPOPartnerSessionId.Value);
 
-            if (result == 0 && EMPPartnerSessionId.HasValue && ChargeDetailRecord.EMPPartnerSessionId.HasValue)
-                result = EMPPartnerSessionId.Value.CompareTo(ChargeDetailRecord.EMPPartnerSessionId.Value);
+            if (c == 0 && EMPPartnerSessionId.HasValue && ChargeDetailRecord.EMPPartnerSessionId.HasValue)
+                c = EMPPartnerSessionId.Value.CompareTo(ChargeDetailRecord.EMPPartnerSessionId.Value);
 
-            if (result == 0 && MeterValueStart.    HasValue && ChargeDetailRecord.MeterValueStart.    HasValue)
-                result = MeterValueStart.    Value.CompareTo(ChargeDetailRecord.MeterValueStart.    Value);
+            if (c == 0 && MeterValueStart.    HasValue && ChargeDetailRecord.MeterValueStart.    HasValue)
+                c = MeterValueStart.    Value.CompareTo(ChargeDetailRecord.MeterValueStart.    Value);
 
-            if (result == 0 && MeterValueEnd.      HasValue && ChargeDetailRecord.MeterValueEnd.      HasValue)
-                result = MeterValueEnd.      Value.CompareTo(ChargeDetailRecord.MeterValueEnd.      Value);
+            if (c == 0 && MeterValueEnd.      HasValue && ChargeDetailRecord.MeterValueEnd.      HasValue)
+                c = MeterValueEnd.      Value.CompareTo(ChargeDetailRecord.MeterValueEnd.      Value);
 
             // MeterValuesInBetween
 
             // SignedMeteringValues
 
-            if (result == 0 && CalibrationLawVerificationInfo is not null && ChargeDetailRecord.CalibrationLawVerificationInfo is not null)
-                result = CalibrationLawVerificationInfo.CompareTo(ChargeDetailRecord.CalibrationLawVerificationInfo);
+            if (c == 0 && CalibrationLawVerificationInfo is not null && ChargeDetailRecord.CalibrationLawVerificationInfo is not null)
+                c = CalibrationLawVerificationInfo.CompareTo(ChargeDetailRecord.CalibrationLawVerificationInfo);
 
-            if (result == 0 && HubOperatorId.HasValue && ChargeDetailRecord.HubOperatorId.HasValue)
-                result = HubOperatorId.Value.CompareTo(ChargeDetailRecord.HubOperatorId.Value);
+            if (c == 0 && HubOperatorId.HasValue && ChargeDetailRecord.HubOperatorId.HasValue)
+                c = HubOperatorId.Value.CompareTo(ChargeDetailRecord.HubOperatorId.Value);
 
-            if (result == 0 && HubProviderId.HasValue && ChargeDetailRecord.HubProviderId.HasValue)
-                result = HubProviderId.Value.CompareTo(ChargeDetailRecord.HubProviderId.Value);
+            if (c == 0 && HubProviderId.HasValue && ChargeDetailRecord.HubProviderId.HasValue)
+                c = HubProviderId.Value.CompareTo(ChargeDetailRecord.HubProviderId.Value);
 
-            return result;
+            return c;
 
         }
 

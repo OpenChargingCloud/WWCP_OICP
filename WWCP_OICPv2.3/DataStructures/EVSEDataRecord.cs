@@ -1607,9 +1607,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (EVSEDataRecord is null)
-                throw new ArgumentNullException(nameof(EVSEDataRecord), "The given EVSE data record must not be null!");
+                throw new ArgumentNullException(nameof(EVSEDataRecord),
+                                                "The given EVSE data record must not be null!");
 
             return Id.CompareTo(EVSEDataRecord.Id);
+
+            //ToDo: Compare more properties!
 
         }
 
@@ -1643,7 +1646,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Boolean Equals(EVSEDataRecord? EVSEDataRecord)
 
             => EVSEDataRecord is not null &&
-               Id.Equals(EVSEDataRecord.Id);
+                   Id.Equals(EVSEDataRecord.Id);
+
+        //ToDo: Compare more properties!
 
         #endregion
 

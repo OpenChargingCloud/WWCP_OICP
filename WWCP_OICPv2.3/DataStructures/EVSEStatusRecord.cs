@@ -437,11 +437,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(EVSEStatusRecord EVSEStatusRecord)
         {
 
-            var result = Id.CompareTo(EVSEStatusRecord.Id);
+            var c = Id.CompareTo(EVSEStatusRecord.Id);
 
-            return result == 0
-                       ? Status.CompareTo(EVSEStatusRecord.Status)
-                       : result;
+            if (c == 0)
+                c = Status.CompareTo(EVSEStatusRecord.Status);
+
+            return c;
 
         }
 
