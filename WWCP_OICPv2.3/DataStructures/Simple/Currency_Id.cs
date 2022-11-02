@@ -703,9 +703,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two currency identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A currency identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Currency_Id currencyId
@@ -718,9 +718,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(CurrencyId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two currency identifications.
         /// </summary>
-        /// <param name="CurrencyId">An object to compare with.</param>
+        /// <param name="CurrencyId">A currency identification to compare with.</param>
         public Int32 CompareTo(Currency_Id CurrencyId)
 
             => String.Compare(InternalId,
@@ -736,10 +736,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two currency identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A currency identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Currency_Id currencyId &&
@@ -750,10 +749,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(CurrencyId)
 
         /// <summary>
-        /// Compares two CurrencyIds for equality.
+        /// Compares two currency identifications for equality.
         /// </summary>
         /// <param name="CurrencyId">A currency identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Currency_Id CurrencyId)
 
             => String.Equals(InternalId,
