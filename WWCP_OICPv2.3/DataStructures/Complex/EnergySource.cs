@@ -95,39 +95,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EnergySource  energySource,
-                         out String?       errorResponse,
+                         out var energySource,
+                         out var errorResponse,
                          CustomEnergySourceParser))
             {
                 return energySource;
             }
 
-            throw new ArgumentException("The given JSON representation of an energy source is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomEnergySourceParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an energy source.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomEnergySourceParser">A delegate to parse custom energy sources JSON objects.</param>
-        public static EnergySource Parse(String                                      Text,
-                                         CustomJObjectParserDelegate<EnergySource>?  CustomEnergySourceParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out EnergySource  energySource,
-                         out String?       errorResponse,
-                         CustomEnergySourceParser))
-            {
-                return energySource;
-            }
-
-            throw new ArgumentException("The given text representation of an energy source is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an energy source is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -145,33 +121,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EnergySource energySource,
-                         out _,
-                         CustomEnergySourceParser))
-            {
-                return energySource;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, CustomEnergySourceParser = null)
-
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
-        /// <summary>
-        /// Try to parse the given text representation of an energy source.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomEnergySourceParser">A delegate to parse custom energy sources JSON objects.</param>
-        public static EnergySource? TryParse(String                                      Text,
-                                             CustomJObjectParserDelegate<EnergySource>?  CustomEnergySourceParser   = null)
-        {
-
-            if (TryParse(Text,
                          out EnergySource energySource,
                          out _,
                          CustomEnergySourceParser))
@@ -270,41 +219,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 EnergySource   = default;
                 ErrorResponse  = "The given JSON representation of an energy source is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out EnergySource, out ErrorResponse, CustomEnergySourceParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an energy source.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="EnergySource">The parsed energy source.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomEnergySourceParser">A delegate to parse custom energy sources JSON objects.</param>
-        public static Boolean TryParse(String                                      Text,
-                                       out EnergySource                            EnergySource,
-                                       out String?                                 ErrorResponse,
-                                       CustomJObjectParserDelegate<EnergySource>?  CustomEnergySourceParser = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out EnergySource,
-                                out ErrorResponse,
-                                CustomEnergySourceParser);
-
-            }
-            catch (Exception e)
-            {
-                EnergySource   = default;
-                ErrorResponse  = "The given text representation of an energy source is invalid: " + e.Message;
                 return false;
             }
 

@@ -122,39 +122,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out OperatorEVSEData?  operatorEVSEData,
-                         out String?            errorResponse,
+                         out var operatorEVSEData,
+                         out var errorResponse,
                          CustomOperatorEVSEDataParser))
             {
                 return operatorEVSEData!;
             }
 
-            throw new ArgumentException("The given JSON representation of operator EVSE data is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomOperatorEVSEDataParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of operator EVSE data.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom operator EVSE datas JSON objects.</param>
-        public static OperatorEVSEData Parse(String                                          Text,
-                                             CustomJObjectParserDelegate<OperatorEVSEData>?  CustomOperatorEVSEDataParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out OperatorEVSEData?  operatorEVSEData,
-                         out String?            errorResponse,
-                         CustomOperatorEVSEDataParser))
-            {
-                return operatorEVSEData!;
-            }
-
-            throw new ArgumentException("The given text representation of operator EVSE data is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of operator EVSE data is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -268,41 +244,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 OperatorEVSEData  = default;
                 ErrorResponse     = "The given JSON representation of operator EVSE data is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out OperatorEVSEData, out ErrorResponse, CustomOperatorEVSEDataParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of operator EVSE data.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorEVSEData">The parsed operator EVSE data.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom operator EVSE datas JSON objects.</param>
-        public static Boolean TryParse(String                                          Text,
-                                       out OperatorEVSEData?                           OperatorEVSEData,
-                                       out String?                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<OperatorEVSEData>?  CustomOperatorEVSEDataParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out OperatorEVSEData,
-                                out ErrorResponse,
-                                CustomOperatorEVSEDataParser);
-
-            }
-            catch (Exception e)
-            {
-                OperatorEVSEData  = default;
-                ErrorResponse     = "The given text representation of operator EVSE data is invalid: " + e.Message;
                 return false;
             }
 

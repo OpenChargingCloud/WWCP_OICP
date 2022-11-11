@@ -186,39 +186,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PricingProductData?  pricingProductData,
-                         out String?              errorResponse,
+                         out var pricingProductData,
+                         out var errorResponse,
                          CustomPricingProductDataParser))
             {
                 return pricingProductData!;
             }
 
-            throw new ArgumentException("The given JSON representation of pricing product data object is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomPricingProductDataParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of pricing product data object.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomPricingProductDataParser">A delegate to parse custom pricing product data objects JSON objects.</param>
-        public static PricingProductData Parse(String                                            Text,
-                                               CustomJObjectParserDelegate<PricingProductData>?  CustomPricingProductDataParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out PricingProductData?  pricingProductData,
-                         out String?              errorResponse,
-                         CustomPricingProductDataParser))
-            {
-                return pricingProductData!;
-            }
-
-            throw new ArgumentException("The given text representation of pricing product data object is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of pricing product data object is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -382,41 +358,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PricingProductData  = default;
                 ErrorResponse       = "The given JSON representation of pricing product data object is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PricingProductData, out ErrorResponse, CustomPricingProductDataParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of pricing product data object.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PricingProductData">The parsed pricing product data object.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomPricingProductDataParser">A delegate to parse custom pricing product data objects JSON objects.</param>
-        public static Boolean TryParse(String                                            Text,
-                                       out PricingProductData?                           PricingProductData,
-                                       out String?                                       ErrorResponse,
-                                       CustomJObjectParserDelegate<PricingProductData>?  CustomPricingProductDataParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out PricingProductData,
-                                out ErrorResponse,
-                                CustomPricingProductDataParser);
-
-            }
-            catch (Exception e)
-            {
-                PricingProductData  = default;
-                ErrorResponse       = "The given text representation of pricing product data object is invalid: " + e.Message;
                 return false;
             }
 

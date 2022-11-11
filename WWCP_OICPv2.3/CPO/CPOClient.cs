@@ -1082,9 +1082,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
-                                                                 out ValidationErrorList?  validationErrors,
-                                                                 out String?               errorResponse))
+                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                 out var validationErrors,
+                                                                 out var errorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.BadRequest(Request,
@@ -1599,9 +1599,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
-                                                                 out ValidationErrorList?  validationErrors,
-                                                                 out String?               errorResponse))
+                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                 out var validationErrors,
+                                                                 out var errorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.BadRequest(Request,
@@ -2116,9 +2116,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
-                                                                 out ValidationErrorList?  validationErrors,
-                                                                 out String?               errorResponse))
+                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                 out var validationErrors,
+                                                                 out var errorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.BadRequest(Request,
@@ -2633,9 +2633,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
-                                                                 out ValidationErrorList?  validationErrors,
-                                                                 out String?               errorResponse))
+                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                 out var validationErrors,
+                                                                 out var errorResponse))
                                 {
 
                                     result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.BadRequest(Request,
@@ -3130,9 +3130,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String() ?? "",
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<PullAuthenticationDataResponse>.BadRequest(Request,
@@ -3718,9 +3718,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<AuthorizationStartResponse>.BadRequest(Request,
@@ -4074,9 +4074,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<AuthorizationStopResponse>.BadRequest(Request,
@@ -4527,9 +4527,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.BadRequest(Request,
@@ -5004,9 +5004,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.BadRequest(Request,
@@ -5481,9 +5481,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.BadRequest(Request,
@@ -5958,9 +5958,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.BadRequest(Request,
@@ -6493,9 +6493,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrors,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrors,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.BadRequest(Request,

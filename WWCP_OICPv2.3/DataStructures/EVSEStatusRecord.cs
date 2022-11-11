@@ -115,31 +115,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomEVSEStatusRecordParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a EVSE status record.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static EVSEStatusRecord Parse(String                                          Text,
-                                             CustomJObjectParserDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out EVSEStatusRecord evseStatusRecord,
-                         out String           ErrorResponse,
-                         CustomEVSEStatusRecordParser))
-            {
-                return evseStatusRecord;
-            }
-
-            throw new ArgumentException("The given text representation of a EVSE status record is invalid: " + ErrorResponse, nameof(Text));
-
-        }
-
-        #endregion
-
         #region (static) TryParse(JSON, out EVSEStatusRecord, out ErrorResponse, CustomEVSEStatusRecordParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
@@ -232,41 +207,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 EVSEStatusRecord  = default;
                 ErrorResponse     = "The given JSON representation of a EVSE status record is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out EVSEStatusRecord, out ErrorResponse, CustomEVSEStatusRecordParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a EVSE status record.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
-        public static Boolean TryParse(String                                          Text,
-                                       out EVSEStatusRecord                            EVSEStatusRecord,
-                                       out String                                      ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out EVSEStatusRecord,
-                                out ErrorResponse,
-                                CustomEVSEStatusRecordParser);
-
-            }
-            catch (Exception e)
-            {
-                EVSEStatusRecord  = default;
-                ErrorResponse     = "The given text representation of a EVSE status record is invalid: " + e.Message;
                 return false;
             }
 

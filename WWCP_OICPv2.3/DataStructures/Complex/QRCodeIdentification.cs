@@ -150,39 +150,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out QRCodeIdentification  qrCodeIdentification,
-                         out String?               errorResponse,
+                         out var qrCodeIdentification,
+                         out var errorResponse,
                          CustomQRCodeIdentificationParser))
             {
                 return qrCodeIdentification;
             }
 
-            throw new ArgumentException("The given JSON representation of a QR code identification is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomQRCodeIdentificationParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a QR code identification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
-        public static QRCodeIdentification Parse(String                                              Text,
-                                                 CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out QRCodeIdentification  qrCodeIdentification,
-                         out String?               errorResponse,
-                         CustomQRCodeIdentificationParser))
-            {
-                return qrCodeIdentification;
-            }
-
-            throw new ArgumentException("The given text representation of a QR code identification is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a QR code identification is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -200,31 +176,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out QRCodeIdentification qrCodeIdentification,
-                         out _,
-                         CustomQRCodeIdentificationParser))
-            {
-                return qrCodeIdentification;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomQRCodeIdentificationParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a QR code identification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
-        public static QRCodeIdentification? TryParse(String                                              Text,
-                                                     CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser   = null)
-        {
-
-            if (TryParse(Text,
                          out QRCodeIdentification qrCodeIdentification,
                          out _,
                          CustomQRCodeIdentificationParser))
@@ -339,41 +290,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 QRCodeIdentification  = default;
                 ErrorResponse         = "The given JSON representation of a QR code identification is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out QRCodeIdentification, out ErrorResponse, CustomQRCodeIdentificationParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a QR code identification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="QRCodeIdentification">The parsed QR code identification.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
-        public static Boolean TryParse(String                                              Text,
-                                       out QRCodeIdentification                            QRCodeIdentification,
-                                       out String?                                         ErrorResponse,
-                                       CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out QRCodeIdentification,
-                                out ErrorResponse,
-                                CustomQRCodeIdentificationParser);
-
-            }
-            catch (Exception e)
-            {
-                QRCodeIdentification  = default;
-                ErrorResponse         = "The given text representation of a QR code identification is invalid: " + e.Message;
                 return false;
             }
 

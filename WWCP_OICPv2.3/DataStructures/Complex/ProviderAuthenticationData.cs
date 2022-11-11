@@ -110,39 +110,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ProviderAuthenticationData?  providerAuthenticationData,
-                         out String?                      errorResponse,
+                         out var providerAuthenticationData,
+                         out var errorResponse,
                          CustomProviderAuthenticationDataParser))
             {
                 return providerAuthenticationData!;
             }
 
-            throw new ArgumentException("The given JSON representation of provider user identification data is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomProviderAuthenticationDataParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of provider user identification data.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom provider user identification datas JSON objects.</param>
-        public static ProviderAuthenticationData Parse(String                                                    Text,
-                                                       CustomJObjectParserDelegate<ProviderAuthenticationData>?  CustomProviderAuthenticationDataParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out ProviderAuthenticationData?  providerAuthenticationData,
-                         out String?                      errorResponse,
-                         CustomProviderAuthenticationDataParser))
-            {
-                return providerAuthenticationData!;
-            }
-
-            throw new ArgumentException("The given text representation of provider user identification data is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of provider user identification data is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -256,41 +232,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 ProviderAuthenticationData  = default;
                 ErrorResponse     = "The given JSON representation of provider user identification data is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out ProviderAuthenticationData, out ErrorResponse, CustomProviderAuthenticationDataParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of provider user identification data.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderAuthenticationData">The parsed provider user identification data.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom provider user identification datas JSON objects.</param>
-        public static Boolean TryParse(String                                                    Text,
-                                       out ProviderAuthenticationData?                           ProviderAuthenticationData,
-                                       out String?                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<ProviderAuthenticationData>?  CustomProviderAuthenticationDataParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out ProviderAuthenticationData,
-                                out ErrorResponse,
-                                CustomProviderAuthenticationDataParser);
-
-            }
-            catch (Exception e)
-            {
-                ProviderAuthenticationData  = default;
-                ErrorResponse               = "The given text representation of provider user identification data is invalid: " + e.Message;
                 return false;
             }
 

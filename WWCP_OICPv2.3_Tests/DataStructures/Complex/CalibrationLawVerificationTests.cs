@@ -224,7 +224,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
         public void CalibrationLawVerification_ParseJSONText_Test1()
         {
 
-            var calibrationLawVerification1 = CalibrationLawVerification.Parse(@"{ ""CalibrationLawCertificateID"": null, ""PublicKey"": null, ""MeteringSignatureUrl"": null, ""MeteringSignatureEncodingFormat"": ""OCMF"", ""SignedMeteringValuesVerificationInstruction"": null }");
+            var calibrationLawVerification1 = CalibrationLawVerification.Parse(JObject.Parse(@"{ ""CalibrationLawCertificateID"": null, ""PublicKey"": null, ""MeteringSignatureUrl"": null, ""MeteringSignatureEncodingFormat"": ""OCMF"", ""SignedMeteringValuesVerificationInstruction"": null }"));
 
             Assert.IsNotNull(calibrationLawVerification1);
             Assert.IsNull(calibrationLawVerification1.CalibrationLawCertificateId);

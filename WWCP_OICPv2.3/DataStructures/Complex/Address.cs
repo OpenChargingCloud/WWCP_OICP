@@ -182,39 +182,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out Address?  address,
-                         out String?   errorResponse,
+                         out var address,
+                         out var errorResponse,
                          CustomAddressParser))
             {
                 return address!;
             }
 
-            throw new ArgumentException("The given JSON representation of an address is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomAddressParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an address.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomAddressParser">A delegate to parse custom address JSON objects.</param>
-        public static Address Parse(String                                 Text,
-                                    CustomJObjectParserDelegate<Address>?  CustomAddressParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out Address?  address,
-                         out String?   errorResponse,
-                         CustomAddressParser))
-            {
-                return address!;
-            }
-
-            throw new ArgumentException("The given text representation of an address is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an address is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -423,41 +399,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 Address        = default;
                 ErrorResponse  = "The given JSON representation of an address is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out Address, out ErrorResponse, CustomAddressParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a address.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="Address">The parsed address.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAddressParser">A delegate to parse custom addresss JSON objects.</param>
-        public static Boolean TryParse(String                                 Text,
-                                       out Address?                           Address,
-                                       out String?                            ErrorResponse,
-                                       CustomJObjectParserDelegate<Address>?  CustomAddressParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out Address,
-                                out ErrorResponse,
-                                CustomAddressParser);
-
-            }
-            catch (Exception e)
-            {
-                Address        = default;
-                ErrorResponse  = "The given text representation of an address is invalid: " + e.Message;
                 return false;
             }
 

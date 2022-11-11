@@ -81,24 +81,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) Parse   (Text)
-
-        /// <summary>
-        /// Parse the given string as a validation error.
-        /// </summary>
-        /// <param name="Text">A text representation of a validation error.</param>
-        public static ValidationError Parse(String Text)
-        {
-
-            if (TryParse(Text, out ValidationError validationError))
-                return validationError;
-
-            throw new ArgumentException("The given text representation of a validation error is invalid!", nameof(Text));
-
-        }
-
-        #endregion
-
         #region (static) Parse   (JSON)
 
         /// <summary>
@@ -108,28 +90,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ValidationError Parse(JObject JSON)
         {
 
-            if (TryParse(JSON, out ValidationError validationError))
+            if (TryParse(JSON,
+                         out var validationError,
+                         out var errorResponse))
+            {
                 return validationError;
+            }
 
-            throw new ArgumentException("The given JSON representation of a validation error is invalid!", nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text)
-
-        /// <summary>
-        /// Try to parse the given text as a validation error.
-        /// </summary>
-        /// <param name="Text">A text representation of a validation error.</param>
-        public static ValidationError? TryParse(String Text)
-        {
-
-            if (TryParse(Text, out ValidationError validationError))
-                return validationError;
-
-            return null;
+            throw new ArgumentException("The given JSON representation of a validation error is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -144,8 +113,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ValidationError? TryParse(JObject JSON)
         {
 
-            if (TryParse(JSON, out ValidationError validationError))
+            if (TryParse(JSON,
+                         out var validationError,
+                         out _))
+            {
                 return validationError;
+            }
 
             return null;
 
@@ -153,38 +126,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out ValidationError)
+        #region (static) TryParse(JSON, out ValidationError, out ErrorResponse)
 
-        public static Boolean TryParse(String Text, out ValidationError ValidationError)
+        public static Boolean TryParse(JObject              JSON,
+                                       out ValidationError  ValidationError,
+                                       out String?          ErrorResponse)
         {
 
-            ValidationError = default;
-
-            if (Text?.Trim().IsNotNullOrEmpty() == true)
-            {
-                try
-                {
-
-                    if (TryParse(JObject.Parse(Text), out ValidationError))
-                        return true;
-
-                }
-                catch (Exception)
-                { }
-            }
-
-            return false;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(JSON, out ValidationError)
-
-        public static Boolean TryParse(JObject JSON, out ValidationError ValidationError)
-        {
-
-            ValidationError = default;
+            ErrorResponse    = default;
+            ValidationError  = default;
 
             if (JSON is not null)
             {
@@ -196,7 +146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (!JSON.ParseMandatoryText("fieldReference",
                                                  "field reference",
                                                  out String FieldReference,
-                                                 out String ErrorResponse))
+                                                 out ErrorResponse))
                     {
                         return false;
                     }
@@ -208,7 +158,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (!JSON.ParseMandatoryText("errorMessage",
                                                  "error message",
                                                  out String ErrorMessage,
-                                                 out        ErrorResponse))
+                                                 out ErrorResponse))
                     {
                         return false;
                     }

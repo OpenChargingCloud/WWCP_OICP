@@ -107,39 +107,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ProductAvailabilityTimes  productAvailabilityTimes,
-                         out String?                   errorResponse,
+                         out var productAvailabilityTimes,
+                         out var errorResponse,
                          CustomProductAvailabilityTimesParser))
             {
                 return productAvailabilityTimes;
             }
 
-            throw new ArgumentException("The given JSON representation of a product availability times object is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomProductAvailabilityTimesParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a product availability times object.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomProductAvailabilityTimesParser">A delegate to parse custom energy sources JSON objects.</param>
-        public static ProductAvailabilityTimes Parse(String                                                  Text,
-                                                     CustomJObjectParserDelegate<ProductAvailabilityTimes>?  CustomProductAvailabilityTimesParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out ProductAvailabilityTimes  productAvailabilityTimes,
-                         out String?                   errorResponse,
-                         CustomProductAvailabilityTimesParser))
-            {
-                return productAvailabilityTimes;
-            }
-
-            throw new ArgumentException("The given text representation of a product availability times object is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a product availability times object is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -157,33 +133,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ProductAvailabilityTimes productAvailabilityTimes,
-                         out _,
-                         CustomProductAvailabilityTimesParser))
-            {
-                return productAvailabilityTimes;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, CustomProductAvailabilityTimesParser = null)
-
-        // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
-
-        /// <summary>
-        /// Try to parse the given text representation of a product availability times object.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomProductAvailabilityTimesParser">A delegate to parse custom energy sources JSON objects.</param>
-        public static ProductAvailabilityTimes? TryParse(String                                                  Text,
-                                                         CustomJObjectParserDelegate<ProductAvailabilityTimes>?  CustomProductAvailabilityTimesParser   = null)
-        {
-
-            if (TryParse(Text,
                          out ProductAvailabilityTimes productAvailabilityTimes,
                          out _,
                          CustomProductAvailabilityTimesParser))
@@ -283,41 +232,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 ProductAvailabilityTimes  = default;
                 ErrorResponse             = "The given JSON representation of a product availability times object is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out ProductAvailabilityTimes, out ErrorResponse, CustomProductAvailabilityTimesParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a product availability times object.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProductAvailabilityTimes">The parsed energy source.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomProductAvailabilityTimesParser">A delegate to parse custom energy sources JSON objects.</param>
-        public static Boolean TryParse(String                                                  Text,
-                                       out ProductAvailabilityTimes                            ProductAvailabilityTimes,
-                                       out String?                                             ErrorResponse,
-                                       CustomJObjectParserDelegate<ProductAvailabilityTimes>?  CustomProductAvailabilityTimesParser = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out ProductAvailabilityTimes,
-                                out ErrorResponse,
-                                CustomProductAvailabilityTimesParser);
-
-            }
-            catch (Exception e)
-            {
-                ProductAvailabilityTimes  = default;
-                ErrorResponse             = "The given text representation of a product availability times object is invalid: " + e.Message;
                 return false;
             }
 

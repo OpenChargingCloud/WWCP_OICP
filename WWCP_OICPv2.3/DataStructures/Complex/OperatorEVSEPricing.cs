@@ -122,39 +122,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out OperatorEVSEPricing?  operatorEVSEPricing,
-                         out String?               errorResponse,
+                         out var operatorEVSEPricing,
+                         out var errorResponse,
                          CustomOperatorEVSEPricingParser))
             {
                 return operatorEVSEPricing!;
             }
 
-            throw new ArgumentException("The given JSON representation of operator EVSE pricing is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomOperatorEVSEPricingParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of operator EVSE pricing.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomOperatorEVSEPricingParser">A delegate to parse custom operator EVSE pricings JSON objects.</param>
-        public static OperatorEVSEPricing Parse(String                                             Text,
-                                                CustomJObjectParserDelegate<OperatorEVSEPricing>?  CustomOperatorEVSEPricingParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out OperatorEVSEPricing?  operatorEVSEPricing,
-                         out String?               errorResponse,
-                         CustomOperatorEVSEPricingParser))
-            {
-                return operatorEVSEPricing!;
-            }
-
-            throw new ArgumentException("The given text representation of operator EVSE pricing is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of operator EVSE pricing is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -262,41 +238,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 OperatorEVSEPricing  = default;
                 ErrorResponse        = "The given JSON representation of operator EVSE pricing is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out OperatorEVSEPricing, out ErrorResponse, CustomOperatorEVSEPricingParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of operator EVSE pricing.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorEVSEPricing">The parsed operator EVSE pricing.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomOperatorEVSEPricingParser">A delegate to parse custom operator EVSE pricings JSON objects.</param>
-        public static Boolean TryParse(String                                             Text,
-                                       out OperatorEVSEPricing?                           OperatorEVSEPricing,
-                                       out String?                                        ErrorResponse,
-                                       CustomJObjectParserDelegate<OperatorEVSEPricing>?  CustomOperatorEVSEPricingParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out OperatorEVSEPricing,
-                                out ErrorResponse,
-                                CustomOperatorEVSEPricingParser);
-
-            }
-            catch (Exception e)
-            {
-                OperatorEVSEPricing  = default;
-                ErrorResponse        = "The given text representation of operator EVSE pricing is invalid: " + e.Message;
                 return false;
             }
 

@@ -97,39 +97,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out HashedPIN  hashedPIN,
-                         out String?    errorResponse,
+                         out var hashedPIN,
+                         out var errorResponse,
                          CustomHashedPINParser))
             {
                 return hashedPIN;
             }
 
-            throw new ArgumentException("The given JSON representation of a hashed PIN is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomHashedPINParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a hashed PIN.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
-        public static HashedPIN Parse(String                                   Text,
-                                      CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out HashedPIN  hashedPIN,
-                         out String?    errorResponse,
-                         CustomHashedPINParser))
-            {
-                return hashedPIN;
-            }
-
-            throw new ArgumentException("The given text representation of a hashed PIN is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a hashed PIN is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -147,31 +123,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out HashedPIN hashedPIN,
-                         out _,
-                         CustomHashedPINParser))
-            {
-                return hashedPIN;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, CustomHashedPINParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a hashed PIN.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
-        public static HashedPIN? TryParse(String                                   Text,
-                                          CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser   = null)
-        {
-
-            if (TryParse(Text,
                          out HashedPIN hashedPIN,
                          out _,
                          CustomHashedPINParser))
@@ -270,41 +221,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 HashedPIN      = default;
                 ErrorResponse  = "The given JSON representation of a hashed PIN is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out HashedPIN, out ErrorResponse, CustomHashedPINParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a hashed PIN.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="HashedPIN">The parsed hashed PIN.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
-        public static Boolean TryParse(String                                   Text,
-                                       out HashedPIN                            HashedPIN,
-                                       out String?                              ErrorResponse,
-                                       CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out HashedPIN,
-                                out ErrorResponse,
-                                CustomHashedPINParser);
-
-            }
-            catch (Exception e)
-            {
-                HashedPIN      = default;
-                ErrorResponse  = "The given text representation of a hashed PIN is invalid: " + e.Message;
                 return false;
             }
 

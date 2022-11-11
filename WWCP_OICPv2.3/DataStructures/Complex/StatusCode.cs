@@ -106,39 +106,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out StatusCode?  statusCode,
-                         out String?      errorResponse,
+                         out var statusCode,
+                         out var errorResponse,
                          CustomStatusCodeParser))
             {
                 return statusCode!;
             }
 
-            throw new ArgumentException("The given JSON representation of a status code is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomStatusCodeParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a status code.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomStatusCodeParser">A delegate to parse custom status codes JSON objects.</param>
-        public static StatusCode Parse(String                                    Text,
-                                       CustomJObjectParserDelegate<StatusCode>?  CustomStatusCodeParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out StatusCode?  statusCode,
-                         out String?      errorResponse,
-                         CustomStatusCodeParser))
-            {
-                return statusCode!;
-            }
-
-            throw new ArgumentException("The given text representation of a status code is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a status code is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -223,41 +199,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 StatusCode     = default;
                 ErrorResponse  = "The given JSON representation of a status code is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out StatusCode, out ErrorResponse, CustomStatusCodeParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a status code.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="StatusCode">The parsed status code.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomStatusCodeParser">A delegate to parse custom status codes JSON objects.</param>
-        public static Boolean TryParse(String                                    Text,
-                                       out StatusCode?                           StatusCode,
-                                       out String?                               ErrorResponse,
-                                       CustomJObjectParserDelegate<StatusCode>?  CustomStatusCodeParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out StatusCode,
-                                out ErrorResponse,
-                                CustomStatusCodeParser);
-
-            }
-            catch (Exception e)
-            {
-                StatusCode     = default;
-                ErrorResponse  = "The given text representation of a status code is invalid: " + e.Message;
                 return false;
             }
 

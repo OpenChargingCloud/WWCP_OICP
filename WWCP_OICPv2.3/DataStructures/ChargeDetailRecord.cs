@@ -322,31 +322,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomChargeDetailRecordParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a charge detail record.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
-        public static ChargeDetailRecord Parse(String                                            Text,
-                                               CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out ChargeDetailRecord?  chargeDetailRecord,
-                         out String?              errorResponse,
-                         CustomChargeDetailRecordParser))
-            {
-                return chargeDetailRecord!;
-            }
-
-            throw new ArgumentException("The given text representation of a charge detail record is invalid: " + errorResponse, nameof(Text));
-
-        }
-
-        #endregion
-
         #region (static) TryParse(JSON, out ChargeDetailRecord, out ErrorResponse, CustomChargeDetailRecordParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
@@ -684,41 +659,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 ChargeDetailRecord  = default;
                 ErrorResponse       = "The given JSON representation of a charge detail record is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out ChargeDetailRecord, out ErrorResponse, CustomChargeDetailRecordParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a charge detail record.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
-        public static Boolean TryParse(String                                            Text,
-                                       out ChargeDetailRecord?                           ChargeDetailRecord,
-                                       out String?                                       ErrorResponse,
-                                       CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out ChargeDetailRecord,
-                                out ErrorResponse,
-                                CustomChargeDetailRecordParser);
-
-            }
-            catch (Exception e)
-            {
-                ChargeDetailRecord  = default;
-                ErrorResponse       = "The given text representation of a charge detail record is invalid: " + e.Message;
                 return false;
             }
 

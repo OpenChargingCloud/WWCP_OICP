@@ -131,39 +131,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out RFIDIdentification?  calibrationLawVerification,
-                         out String?              errorResponse,
+                         out var calibrationLawVerification,
+                         out var errorResponse,
                          CustomRFIDIdentificationParser))
             {
                 return calibrationLawVerification!;
             }
 
-            throw new ArgumentException("The given JSON representation of a RFID identification is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomRFIDIdentificationParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a RFID identification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
-        public static RFIDIdentification Parse(String                                            Text,
-                                               CustomJObjectParserDelegate<RFIDIdentification>?  CustomRFIDIdentificationParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out RFIDIdentification?  calibrationLawVerification,
-                         out String?              errorResponse,
-                         CustomRFIDIdentificationParser))
-            {
-                return calibrationLawVerification!;
-            }
-
-            throw new ArgumentException("The given text representation of a RFID identification is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a RFID identification is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -298,41 +274,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 RFIDIdentification  = default;
                 ErrorResponse       = "The given JSON representation of a RFID identification is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out RFIDIdentification, out ErrorResponse, CustomRFIDIdentificationParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a RFID identification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="RFIDIdentification">The parsed RFID identification.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
-        public static Boolean TryParse(String                                            Text,
-                                       out RFIDIdentification?                           RFIDIdentification,
-                                       out String?                                       ErrorResponse,
-                                       CustomJObjectParserDelegate<RFIDIdentification>?  CustomRFIDIdentificationParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out RFIDIdentification,
-                                out ErrorResponse,
-                                CustomRFIDIdentificationParser);
-
-            }
-            catch (Exception e)
-            {
-                RFIDIdentification  = default;
-                ErrorResponse       = "The given text representation of a RFID identification is invalid: " + e.Message;
                 return false;
             }
 

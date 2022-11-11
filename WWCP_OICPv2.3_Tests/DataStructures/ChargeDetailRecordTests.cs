@@ -93,7 +93,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
         public void ChargeDetailRecord_ParseJSONText_Test1()
         {
 
-            var chargeDetailRecord = ChargeDetailRecord.Parse(@"{
+            var chargeDetailRecord = ChargeDetailRecord.Parse(JObject.Parse(@"{
                                          ""SessionID"":              ""759a8d7e-e668-4d36-912f-4AF396a57001"",
                                          ""CPOPartnerSessionID"":    ""8942-AFAEB4E2-B21C-4450-9D33-CE99E14FF5F3"",
                                          ""EMPPartnerSessionID"":    ""2455-G93666E2-A2CA-2451-2554-ABCC3678ACFA"",
@@ -131,7 +131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          ""ConsumedEnergy"": 20.614,
                                          ""HubOperatorID"": ""DE*GEF"",
                                          ""HubProviderID"": ""DE-GDF""
-                                     }");
+                                     }"));
 
             Assert.IsNotNull(chargeDetailRecord);
             Assert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
@@ -147,7 +147,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
         public void ChargeDetailRecord_ParseJSONText_Test2()
         {
 
-            var chargeDetailRecord = ChargeDetailRecord.Parse(@"{
+            var chargeDetailRecord = ChargeDetailRecord.Parse(JObject.Parse(@"{
                                          ""SessionID"":             ""0c00b73c-2f99-453f-974b-461794220d8a"",
                                          ""CPOPartnerSessionID"":   ""800570-92EA34BC-05E3-44AF-9DDF-5F931C730B4A"",
                                          ""EMPPartnerSessionID"":   ""A36D60-D237A7BD-D134-34C1-CD12-5493125DEB1F"",
@@ -182,7 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          ""ConsumedEnergy"":          31.072,
                                          ""HubOperatorID"":         ""DE*GEF"",
                                          ""HubProviderID"":         ""DE-GDF""
-                                     }");
+                                     }"));
 
             Assert.IsNotNull(chargeDetailRecord);
             Assert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);

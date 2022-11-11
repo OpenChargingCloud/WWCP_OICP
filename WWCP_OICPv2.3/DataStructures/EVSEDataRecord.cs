@@ -571,32 +571,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return evseDataRecord!;
             }
 
-            throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomEVSEDataRecordParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an EVSE data record.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
-        public static EVSEDataRecord Parse(String                                        Text,
-                                           CustomJObjectParserDelegate<EVSEDataRecord>?  CustomEVSEDataRecordParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out EVSEDataRecord?  evseDataRecord,
-                         out String?          errorResponse,
-                         CustomEVSEDataRecordParser))
-            {
-                return evseDataRecord!;
-            }
-
-            throw new ArgumentException("The given text representation of an EVSE data record is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -1231,41 +1207,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 EVSEDataRecord  = default;
                 ErrorResponse   = "The given JSON representation of an EVSE data record is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out EVSEDataRecord, out ErrorResponse, CustomEVSEDataRecordParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an EVSE data record.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
-        public static Boolean TryParse(String                                        Text,
-                                       out EVSEDataRecord?                           EVSEDataRecord,
-                                       out String?                                   ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEDataRecord>?  CustomEVSEDataRecordParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out EVSEDataRecord,
-                                out ErrorResponse,
-                                CustomEVSEDataRecordParser);
-
-            }
-            catch (Exception e)
-            {
-                EVSEDataRecord  = default;
-                ErrorResponse   = "The given text representation of an EVSE data record is invalid: " + e.Message;
                 return false;
             }
 

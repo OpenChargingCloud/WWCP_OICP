@@ -330,39 +330,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out Identification?  identification,
-                         out String?          errorResponse,
+                         out var identification,
+                         out var errorResponse,
                          CustomIdentificationParser))
             {
                 return identification!;
             }
 
-            throw new ArgumentException("The given JSON representation of an identification is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomIdentificationParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an identification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom identification JSON objects.</param>
-        public static Identification Parse(String                                        Text,
-                                           CustomJObjectParserDelegate<Identification>?  CustomIdentificationParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out Identification?  identification,
-                         out String?          errorResponse,
-                         CustomIdentificationParser))
-            {
-                return identification!;
-            }
-
-            throw new ArgumentException("The given text representation of an identification is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an identification is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -543,41 +519,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 Identification  = default;
                 ErrorResponse   = "The given JSON representation of an identification is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out Identification, out ErrorResponse, CustomIdentificationParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an identification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="Identification">The parsed identification.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomIdentificationParser">A delegate to parse custom identification JSON objects.</param>
-        public static Boolean TryParse(String                                        Text,
-                                       out Identification?                           Identification,
-                                       out String?                                   ErrorResponse,
-                                       CustomJObjectParserDelegate<Identification>?  CustomIdentificationParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out Identification,
-                                out ErrorResponse,
-                                CustomIdentificationParser);
-
-            }
-            catch (Exception e)
-            {
-                Identification  = default;
-                ErrorResponse   = "The given text representation of an identification is invalid: " + e.Message;
                 return false;
             }
 

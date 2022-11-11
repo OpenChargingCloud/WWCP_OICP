@@ -112,44 +112,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime? Parse(JObject                                    JSON,
-                                         CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
+        public static OpeningTime Parse(JObject                                    JSON,
+                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
         {
 
             if (TryParse(JSON,
-                         out OpeningTime?  openingTime,
-                         out String?       errorResponse,
+                         out var openingTime,
+                         out var errorResponse,
                          CustomOpeningTimesParser))
             {
-                return openingTime;
+                return openingTime!;
             }
 
-            throw new ArgumentException("The given JSON representation of an opening time is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomOpeningTimesParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an opening time.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime? Parse(String                                     Text,
-                                         CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out OpeningTime?  openingTime,
-                         out String?       errorResponse,
-                         CustomOpeningTimesParser))
-            {
-                return openingTime;
-            }
-
-            throw new ArgumentException("The given text representation of an opening time is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an opening time is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -167,32 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out OpeningTime? openingTime,
-                         out _,
-                         CustomOpeningTimesParser))
-            {
-                return openingTime;
-            }
-
-            return default;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, CustomOpeningTimesParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an opening time.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime? TryParse(String                                     Text,
-                                            CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out OpeningTime? openingTime,
+                         out var openingTime,
                          out _,
                          CustomOpeningTimesParser))
             {
@@ -304,41 +255,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 OpeningTimes   = default;
                 ErrorResponse  = "The given JSON representation of an opening time is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out OpeningTimes, out ErrorResponse, CustomOpeningTimesParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an opening time.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="OpeningTimes">The parsed opening time.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static Boolean TryParse(String                                     Text,
-                                       out OpeningTime?                           OpeningTimes,
-                                       out String?                                ErrorResponse,
-                                       CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out OpeningTimes,
-                                out ErrorResponse,
-                                CustomOpeningTimesParser);
-
-            }
-            catch (Exception e)
-            {
-                OpeningTimes   = default;
-                ErrorResponse  = "The given text representation of an opening time is invalid: " + e.Message;
                 return false;
             }
 

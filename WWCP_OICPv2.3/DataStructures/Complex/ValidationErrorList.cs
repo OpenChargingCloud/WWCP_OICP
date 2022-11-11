@@ -76,74 +76,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given string as a validation error.
+        /// Parse the given JSON as a validation error.
         /// </summary>
-        /// <param name="Text">A text representation of a validation error.</param>
-        public static ValidationErrorList Parse(String Text)
+        /// <param name="JSON">A JSON representation of a validation error.</param>
+        public static ValidationErrorList Parse(JObject JSON)
         {
 
-            if (TryParse(Text,
-                         out ValidationErrorList?  validationErrorList,
-                         out String?               errorResponse))
+            if (TryParse(JSON,
+                         out var validationErrorList,
+                         out var errorResponse))
             { 
                 return validationErrorList!;
             }
 
-            throw new ArgumentException("The given JSON representation of a validation error list is invalid: " + errorResponse, nameof(Text));
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text)
-
-        /// <summary>
-        /// Try to parse the given text as a validation error.
-        /// </summary>
-        /// <param name="Text">A text representation of a validation error.</param>
-        public static ValidationErrorList? TryParse(String Text)
-        {
-
-            if (TryParse(Text,
-                         out ValidationErrorList? validationErrorList,
-                         out _))
-            { 
-                return validationErrorList;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out ValidationErrorList, out ErrorResponse)
-
-        public static Boolean TryParse(String                    Text,
-                                       out ValidationErrorList?  ValidationErrorList,
-                                       out String?               ErrorResponse)
-        {
-
-            if (Text.Trim().IsNotNullOrEmpty() == true)
-            {
-                try
-                {
-
-                    if (TryParse(JObject.Parse(Text),
-                                 out ValidationErrorList,
-                                 out ErrorResponse))
-                    {
-                        return true;
-                    }
-
-                }
-                catch (Exception)
-                { }
-            }
-
-            ValidationErrorList  = default;
-            ErrorResponse        = default;
-            return false;
+            throw new ArgumentException("The given JSON representation of a validation error list is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 

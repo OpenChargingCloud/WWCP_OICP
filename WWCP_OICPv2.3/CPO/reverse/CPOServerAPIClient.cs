@@ -591,9 +591,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrorList,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrorList,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>.BadRequest(Request,
@@ -979,9 +979,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrorList,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrorList,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>.BadRequest(Request,
@@ -1369,9 +1369,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrorList,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrorList,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>.BadRequest(Request,
@@ -1757,9 +1757,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(HTTPResponse.HTTPBody.ToUTF8String(),
-                                                             out ValidationErrorList?  validationErrorList,
-                                                             out String?               errorResponse))
+                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                             out var validationErrorList,
+                                                             out var errorResponse))
                             {
 
                                 result = OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>.BadRequest(Request,

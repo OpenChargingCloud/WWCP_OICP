@@ -140,39 +140,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ChargingFacility  chargingFacility,
-                         out String?           errorResponse,
+                         out var chargingFacility,
+                         out var errorResponse,
                          CustomChargingFacilityParser))
             {
                 return chargingFacility;
             }
 
-            throw new ArgumentException("The given JSON representation of a charging facility is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomChargingFacilityParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a charging facility.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
-        public static ChargingFacility Parse(String                                          Text,
-                                             CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out ChargingFacility  chargingFacility,
-                         out String?           errorResponse,
-                         CustomChargingFacilityParser))
-            {
-                return chargingFacility;
-            }
-
-            throw new ArgumentException("The given text representation of a charging facility is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a charging facility is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -190,31 +166,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ChargingFacility chargingFacility,
-                         out _,
-                         CustomChargingFacilityParser))
-            {
-                return chargingFacility;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, CustomChargingFacilityParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a charging facility.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
-        public static ChargingFacility? TryParse(String                                          Text,
-                                                 CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser   = null)
-        {
-
-            if (TryParse(Text,
                          out ChargingFacility chargingFacility,
                          out _,
                          CustomChargingFacilityParser))
@@ -362,41 +313,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 ChargingFacility  = default;
                 ErrorResponse     = "The given JSON representation of a charging facility is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out ChargingFacility, out ErrorResponse, CustomChargingFacilityParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a charging facility.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ChargingFacility">The parsed charging facility.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
-        public static Boolean TryParse(String                                          Text,
-                                       out ChargingFacility                            ChargingFacility,
-                                       out String?                                     ErrorResponse,
-                                       CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out ChargingFacility,
-                                out ErrorResponse,
-                                CustomChargingFacilityParser);
-
-            }
-            catch (Exception e)
-            {
-                ChargingFacility  = default;
-                ErrorResponse     = "The given text representation of a charging facility is invalid: " + e.Message;
                 return false;
             }
 

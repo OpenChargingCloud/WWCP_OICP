@@ -137,39 +137,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out CalibrationLawVerification?  calibrationLawVerification,
-                         out String?                      errorResponse,
+                         out var calibrationLawVerification,
+                         out var errorResponse,
                          CustomCalibrationLawVerificationParser))
             {
                 return calibrationLawVerification!;
             }
 
-            throw new ArgumentException("The given JSON representation of a calibration law verification is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomCalibrationLawVerificationParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a calibration law verification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
-        public static CalibrationLawVerification Parse(String                                                    Text,
-                                                       CustomJObjectParserDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out CalibrationLawVerification?  calibrationLawVerification,
-                         out String?                      errorResponse,
-                         CustomCalibrationLawVerificationParser))
-            {
-                return calibrationLawVerification!;
-            }
-
-            throw new ArgumentException("The given text representation of a calibration law verification is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a calibration law verification is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -305,41 +281,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 CalibrationLawVerification  = default;
                 ErrorResponse               = "The given JSON representation of a calibration law verification is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out CalibrationLawVerification, out ErrorResponse, CustomCalibrationLawVerificationParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a calibration law verification.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
-        public static Boolean TryParse(String                                                    Text,
-                                       out CalibrationLawVerification?                           CalibrationLawVerification,
-                                       out String?                                               ErrorResponse,
-                                       CustomJObjectParserDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out CalibrationLawVerification,
-                                out ErrorResponse,
-                                CustomCalibrationLawVerificationParser);
-
-            }
-            catch (Exception e)
-            {
-                CalibrationLawVerification  = default;
-                ErrorResponse               = "The given text representation of a calibration law verification is invalid: " + e.Message;
                 return false;
             }
 

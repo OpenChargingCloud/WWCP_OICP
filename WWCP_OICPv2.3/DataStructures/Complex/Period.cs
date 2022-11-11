@@ -92,39 +92,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out Period   period,
-                         out String?  errorResponse,
+                         out var period,
+                         out var errorResponse,
                          CustomPeriodParser))
             {
                 return period;
             }
 
-            throw new ArgumentException("The given JSON representation of a time period is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomPeriodParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a time period.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
-        public static Period Parse(String                                Text,
-                                   CustomJObjectParserDelegate<Period>?  CustomPeriodParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out Period   period,
-                         out String?  errorResponse,
-                         CustomPeriodParser))
-            {
-                return period;
-            }
-
-            throw new ArgumentException("The given text representation of a time period is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a time period is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -142,32 +118,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out Period period,
-                         out _,
-                         CustomPeriodParser))
-            {
-                return period;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, CustomPeriodParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a time period.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
-        public static Period? TryParse(String                                Text,
-                                       CustomJObjectParserDelegate<Period>?  CustomPeriodParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out Period period,
+                         out var period,
                          out _,
                          CustomPeriodParser))
             {
@@ -265,41 +216,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 Period         = default;
                 ErrorResponse  = "The given JSON representation of a time period is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out Period, out ErrorResponse, CustomPeriodParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a time period.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="Period">The parsed time period.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
-        public static Boolean TryParse(String                                Text,
-                                       out Period                            Period,
-                                       out String?                           ErrorResponse,
-                                       CustomJObjectParserDelegate<Period>?  CustomPeriodParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out Period,
-                                out ErrorResponse,
-                                CustomPeriodParser);
-
-            }
-            catch (Exception e)
-            {
-                Period         = default;
-                ErrorResponse  = "The given text representation of a time period is invalid: " + e.Message;
                 return false;
             }
 

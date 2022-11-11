@@ -145,39 +145,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EVSEPricing?  evsePricing,
-                         out String?       errorResponse,
+                         out var evsePricing,
+                         out var errorResponse,
                          CustomEVSEPricingParser))
             {
                 return evsePricing!;
             }
 
-            throw new ArgumentException("The given JSON representation of EVSE pricing information is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomEVSEPricingParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of EVSE pricing information.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomEVSEPricingParser">A delegate to parse custom EVSE pricing information JSON objects.</param>
-        public static EVSEPricing Parse(String                                     Text,
-                                        CustomJObjectParserDelegate<EVSEPricing>?  CustomEVSEPricingParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out EVSEPricing?  evsePricing,
-                         out String?       errorResponse,
-                         CustomEVSEPricingParser))
-            {
-                return evsePricing!;
-            }
-
-            throw new ArgumentException("The given text representation of EVSE pricing information is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of EVSE pricing information is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -306,41 +282,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 EVSEPricing    = default;
                 ErrorResponse  = "The given JSON representation of EVSE pricing information is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out EVSEPricing, out ErrorResponse, CustomEVSEPricingParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of EVSE pricing information.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="EVSEPricing">The parsed EVSE pricing information.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomEVSEPricingParser">A delegate to parse custom EVSE pricing information JSON objects.</param>
-        public static Boolean TryParse(String                                     Text,
-                                       out EVSEPricing?                           EVSEPricing,
-                                       out String?                                ErrorResponse,
-                                       CustomJObjectParserDelegate<EVSEPricing>?  CustomEVSEPricingParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out EVSEPricing,
-                                out ErrorResponse,
-                                CustomEVSEPricingParser);
-
-            }
-            catch (Exception e)
-            {
-                EVSEPricing    = default;
-                ErrorResponse  = "The given text representation of EVSE pricing information is invalid: " + e.Message;
                 return false;
             }
 

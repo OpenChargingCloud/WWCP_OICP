@@ -90,39 +90,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EnvironmentalImpact  environmentalImpact,
-                         out String?              errorResponse,
+                         out var environmentalImpact,
+                         out var errorResponse,
                          CustomEnvironmentalImpactParser))
             {
                 return environmentalImpact;
             }
 
-            throw new ArgumentException("The given JSON representation of an environmental impact is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomEnvironmentalImpactParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an environmental impact.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
-        public static EnvironmentalImpact Parse(String                                             Text,
-                                                CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out EnvironmentalImpact  environmentalImpact,
-                         out String?              errorResponse,
-                         CustomEnvironmentalImpactParser))
-            {
-                return environmentalImpact;
-            }
-
-            throw new ArgumentException("The given text representation of an environmental impact is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an environmental impact is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -140,31 +116,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EnvironmentalImpact environmentalImpact,
-                         out _,
-                         CustomEnvironmentalImpactParser))
-            {
-                return environmentalImpact;
-            }
-
-            return null;
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, CustomEnvironmentalImpactParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an environmental impact.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
-        public static EnvironmentalImpact? TryParse(String                                             Text,
-                                                    CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser   = null)
-        {
-
-            if (TryParse(Text,
                          out EnvironmentalImpact environmentalImpact,
                          out _,
                          CustomEnvironmentalImpactParser))
@@ -257,41 +208,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 EnvironmentalImpact  = default;
                 ErrorResponse        = "The given JSON representation of an environmental impact is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out EnvironmentalImpact, out ErrorResponse, CustomEnvironmentalImpactParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an environmental impact.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="EnvironmentalImpact">The parsed environmental impact.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
-        public static Boolean TryParse(String                                             Text,
-                                       out EnvironmentalImpact                            EnvironmentalImpact,
-                                       out String?                                        ErrorResponse,
-                                       CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out EnvironmentalImpact,
-                                out ErrorResponse,
-                                CustomEnvironmentalImpactParser);
-
-            }
-            catch (Exception e)
-            {
-                EnvironmentalImpact  = default;
-                ErrorResponse        = "The given text representation of an environmental impact is invalid: " + e.Message;
                 return false;
             }
 

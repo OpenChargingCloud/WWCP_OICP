@@ -107,39 +107,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out SignedMeteringValue?  signedMeteringValue,
-                         out String?               errorResponse,
+                         out var signedMeteringValue,
+                         out var errorResponse,
                          CustomSignedMeteringValueParser))
             {
                 return signedMeteringValue!;
             }
 
-            throw new ArgumentException("The given JSON representation of a signed metering value is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomSignedMeteringValueParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a signed metering value.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
-        public static SignedMeteringValue Parse(String                                             Text,
-                                                CustomJObjectParserDelegate<SignedMeteringValue>?  CustomSignedMeteringValueParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out SignedMeteringValue?  signedMeteringValue,
-                         out String?               errorResponse,
-                         CustomSignedMeteringValueParser))
-            {
-                return signedMeteringValue!;
-            }
-
-            throw new ArgumentException("The given text representation of a signed metering value is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a signed metering value is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -236,41 +212,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 SignedMeteringValue  = default;
                 ErrorResponse        = "The given JSON representation of a signed metering value is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out SignedMeteringValue, out ErrorResponse, CustomSignedMeteringValueParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a signed metering value.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
-        public static Boolean TryParse(String                                             Text,
-                                       out SignedMeteringValue?                           SignedMeteringValue,
-                                       out String?                                        ErrorResponse,
-                                       CustomJObjectParserDelegate<SignedMeteringValue>?  CustomSignedMeteringValueParser)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out SignedMeteringValue,
-                                out ErrorResponse,
-                                CustomSignedMeteringValueParser);
-
-            }
-            catch (Exception e)
-            {
-                SignedMeteringValue  = default;
-                ErrorResponse        = "The given text representation of a signed metering value is invalid: " + e.Message;
                 return false;
             }
 
