@@ -665,7 +665,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!JSON.ParseMandatoryJSONArray("ChargingStationNames",
                                                   "multi-language charging station name",
                                                   I18NText.TryParse,
-                                                  out I18NText ChargingStationName,
+                                                  out I18NText? ChargingStationName,
                                                   out ErrorResponse))
                 {
 
@@ -1157,7 +1157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 EVSEDataRecord = new EVSEDataRecord(EVSEId,
                                                     OperatorId,
                                                     OperatorName,
-                                                    ChargingStationName,
+                                                    ChargingStationName!,
                                                     Address!,
                                                     GeoCoordinates,
                                                     PlugTypes,
