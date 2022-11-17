@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Provider Authentication data.
+    /// Provider authentication data.
     /// </summary>
     public class ProviderAuthenticationData : IEquatable<ProviderAuthenticationData>,
                                               IComparable<ProviderAuthenticationData>,
@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new provider authentication data object.
+        /// Create new provider authentication data.
         /// </summary>
         /// <param name="Identifications">An enumeration of user identification data records.</param>
         /// <param name="ProviderId">The unqiue identification of the e-mobility provider maintaining the given user identification data records.</param>
@@ -297,8 +297,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two results for equality.
         /// </summary>
-        /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
-        /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
+        /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
+        /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
         /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (ProviderAuthenticationData? ProviderAuthenticationData1,
                                            ProviderAuthenticationData? ProviderAuthenticationData2)
@@ -323,8 +323,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two results for inequality.
         /// </summary>
-        /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
-        /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
+        /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
+        /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
         /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (ProviderAuthenticationData? ProviderAuthenticationData1,
                                            ProviderAuthenticationData? ProviderAuthenticationData2)
@@ -338,8 +338,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
-        /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
+        /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
+        /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
         /// <returns>true|false</returns>
         public static Boolean operator < (ProviderAuthenticationData? ProviderAuthenticationData1,
                                           ProviderAuthenticationData? ProviderAuthenticationData2)
@@ -359,8 +359,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
-        /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
+        /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
+        /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
         /// <returns>true|false</returns>
         public static Boolean operator <= (ProviderAuthenticationData? ProviderAuthenticationData1,
                                            ProviderAuthenticationData? ProviderAuthenticationData2)
@@ -374,8 +374,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
-        /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
+        /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
+        /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
         /// <returns>true|false</returns>
         public static Boolean operator > (ProviderAuthenticationData? ProviderAuthenticationData1,
                                           ProviderAuthenticationData? ProviderAuthenticationData2)
@@ -395,8 +395,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="ProviderAuthenticationData1">An provider user identification data.</param>
-        /// <param name="ProviderAuthenticationData2">Another provider user identification data.</param>
+        /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
+        /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
         /// <returns>true|false</returns>
         public static Boolean operator >= (ProviderAuthenticationData? ProviderAuthenticationData1,
                                            ProviderAuthenticationData? ProviderAuthenticationData2)

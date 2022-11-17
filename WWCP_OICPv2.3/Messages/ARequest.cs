@@ -27,7 +27,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// An abstract generic request.
+    /// An abstract generic OICP request.
     /// </summary>
     /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
     public abstract class ARequest<TRequest> : IRequest,
@@ -123,9 +123,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region IEquatable<ARequest> Members
 
         /// <summary>
-        /// Compare two abstract requests for equality.
+        /// Compare two abstract generic OICP requests for equality.
         /// </summary>
-        /// <param name="ARequest">Another abstract OICP request.</param>
+        /// <param name="ARequest">Another abstract generic OICP request.</param>
         public abstract Boolean Equals(TRequest? ARequest);
 
         #endregion
