@@ -662,11 +662,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargingStationName               [mandatory => optional, because of Hubject data quality issues!]
 
-                if (!JSON.ParseMandatoryJSONArray2("ChargingStationNames",
-                                                   "multi-language charging station name",
-                                                   I18NText.TryParse,
-                                                   out I18NText ChargingStationName,
-                                                   out ErrorResponse))
+                if (!JSON.ParseMandatoryJSONArray("ChargingStationNames",
+                                                  "multi-language charging station name",
+                                                  I18NText.TryParse,
+                                                  out I18NText ChargingStationName,
+                                                  out ErrorResponse))
                 {
 
                     ChargingStationName = new I18NText(LanguageCode.en, "Unnamed station");
