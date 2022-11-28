@@ -478,9 +478,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging facilities.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A charging facility to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is ChargingFacility chargingFacility
@@ -493,24 +493,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(ChargingFacility)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging facilities.
         /// </summary>
-        /// <param name="ChargingFacility">An object to compare with.</param>
+        /// <param name="ChargingFacility">A charging facility to compare with.</param>
         public Int32 CompareTo(ChargingFacility ChargingFacility)
         {
 
-            var result =  PowerType.     CompareTo(ChargingFacility.PowerType);
+            var c =  PowerType.     CompareTo(ChargingFacility.PowerType);
 
-            if (result == 0)
-                result =  Power.         CompareTo(ChargingFacility.Power);
+            if (c == 0)
+                c =  Power.         CompareTo(ChargingFacility.Power);
 
-            if (result == 0)
-                result = (Voltage  ?? 0).CompareTo(ChargingFacility.Voltage  ?? 0);
+            if (c == 0)
+                c = (Voltage  ?? 0).CompareTo(ChargingFacility.Voltage  ?? 0);
 
-            if (result == 0)
-                result = (Amperage ?? 0).CompareTo(ChargingFacility.Amperage ?? 0);
+            if (c == 0)
+                c = (Amperage ?? 0).CompareTo(ChargingFacility.Amperage ?? 0);
 
-            return result;
+            return c;
 
         }
 
@@ -523,10 +523,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging facilities for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A charging facility to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is ChargingFacility chargingFacility &&
@@ -537,10 +536,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(ChargingFacility)
 
         /// <summary>
-        /// Compares two charging facilityes for equality.
+        /// Compares two charging facilities for equality.
         /// </summary>
         /// <param name="ChargingFacility">A charging facility to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(ChargingFacility ChargingFacility)
 
             => PowerType.            Equals(ChargingFacility.PowerType)             &&

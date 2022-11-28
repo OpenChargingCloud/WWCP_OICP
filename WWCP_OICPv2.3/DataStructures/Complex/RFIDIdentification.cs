@@ -516,10 +516,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two RFID identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A RFID identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is RFIDIdentification rfidIdentification &&
@@ -530,10 +529,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(RFIDIdentification)
 
         /// <summary>
-        /// Compares two RFID identificationss for equality.
+        /// Compares two RFID identifications for equality.
         /// </summary>
-        /// <param name="RFIDIdentification">An RFID identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="RFIDIdentification">A RFID identification to compare with.</param>
         public Boolean Equals(RFIDIdentification? RFIDIdentification)
 
             => RFIDIdentification is not null &&
@@ -541,15 +539,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                UID.     Equals(RFIDIdentification.UID)      &&
                RFIDType.Equals(RFIDIdentification.RFIDType) &&
 
-               ((!EVCOId.HasValue && !RFIDIdentification.EVCOId.HasValue) ||
-                 (EVCOId.HasValue && RFIDIdentification.EVCOId.HasValue && EVCOId.Value.Equals(RFIDIdentification.EVCOId.Value))) &&
+               ((!EVCOId.    HasValue && !RFIDIdentification.EVCOId.    HasValue) ||
+                 (EVCOId.    HasValue &&  RFIDIdentification.EVCOId.    HasValue && EVCOId.    Value.Equals(RFIDIdentification.EVCOId.    Value))) &&
+
+               ((!ExpiryDate.HasValue && !RFIDIdentification.ExpiryDate.HasValue) ||
+                 (ExpiryDate.HasValue &&  RFIDIdentification.ExpiryDate.HasValue && ExpiryDate.Value.Equals(RFIDIdentification.ExpiryDate.Value))) &&
 
                ((PrintedNumber == null && RFIDIdentification.PrintedNumber == null) ||
                 (PrintedNumber != null && RFIDIdentification.PrintedNumber != null &&
-                 String.Compare(PrintedNumber, RFIDIdentification.PrintedNumber, StringComparison.OrdinalIgnoreCase) != 0)) &&
-
-               ((!ExpiryDate.HasValue && !RFIDIdentification.ExpiryDate.HasValue) ||
-                 (ExpiryDate.HasValue && RFIDIdentification.ExpiryDate.HasValue && ExpiryDate.Value.Equals(RFIDIdentification.ExpiryDate.Value)));
+                 String.Compare(PrintedNumber,
+                                RFIDIdentification.PrintedNumber,
+                                StringComparison.OrdinalIgnoreCase) == 0));
 
         #endregion
 

@@ -483,9 +483,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two pricing product data for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">Pricing product data to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is PricingProductData pricingProductData
@@ -498,9 +498,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(PricingProductData)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two pricing product data.
         /// </summary>
-        /// <param name="PricingProductData">An object to compare with.</param>
+        /// <param name="PricingProductData">Pricing product data to compare with.</param>
         public Int32 CompareTo(PricingProductData? PricingProductData)
         {
 
@@ -570,10 +570,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two pricing product data for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">Pricing product data to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is PricingProductData pricingProductData &&
@@ -584,10 +583,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(PricingProductData)
 
         /// <summary>
-        /// Compares two pricing product data objects for equality.
+        /// Compares two pricing product data for equality.
         /// </summary>
-        /// <param name="PricingProductData">An pricing product data object to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="PricingProductData">Pricing product data to compare with.</param>
         public Boolean Equals(PricingProductData? PricingProductData)
 
             => PricingProductData is not null &&

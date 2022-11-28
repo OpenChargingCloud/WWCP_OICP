@@ -66,7 +66,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 throw new ArgumentException("The given message is invalid!", nameof(Message));
 
             this.Message           = Message;
-            this.ValidationErrors  = ValidationErrors ?? Array.Empty<ValidationError>();
+            this.ValidationErrors  = ValidationErrors.Distinct();
 
         }
 
@@ -115,8 +115,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                     if (!JSON.ParseMandatoryText("message",
                                                  "message",
-                                                 out String  Message,
-                                                 out         ErrorResponse))
+                                                 out String Message,
+                                                 out ErrorResponse))
                     {
                         return false;
                     }
@@ -128,8 +128,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (!JSON.ParseMandatoryJSON("validationErrors",
                                                  "validation errors",
                                                  ValidationError.TryParse,
-                                                 out IEnumerable<ValidationError>  ValidationErrors,
-                                                 out                               ErrorResponse))
+                                                 out IEnumerable<ValidationError> ValidationErrors,
+                                                 out ErrorResponse))
                     {
                         return false;
                     }
@@ -332,10 +332,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two validation error lists for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A validation error list to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is ValidationErrorList validationErrorList &&
@@ -346,31 +345,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(ValidationErrorList)
 
         /// <summary>
-        /// Compares two ValidationErrorLists for equality.
+        /// Compares two validation error lists for equality.
         /// </summary>
-        /// <param name="ValidationErrorList">A ValidationErrorList to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="ValidationErrorList">A validation error list to compare with.</param>
         public Boolean Equals(ValidationErrorList? ValidationErrorList)
-        {
 
-            if (ValidationErrorList is null)
-                return false;
+             => ValidationErrorList is not null &&
 
-            if (!Message.Equals(ValidationErrorList.Message))
-                return false;
+                Message.Equals(ValidationErrorList.Message) &&
 
-            if (ValidationErrors.Count() != ValidationErrorList.ValidationErrors.Count())
-                return false;
-
-            for (var i = 0; i < ValidationErrors.Count(); i++)
-            {
-                if (!ValidationErrors.ElementAt(i).Equals(ValidationErrorList.ValidationErrors.ElementAt(i)))
-                    return false;
-            }
-
-            return true;
-
-        }
+                ValidationErrors.Count().Equals(ValidationErrorList.ValidationErrors.Count()) &&
+                ValidationErrors.All(validationError => ValidationErrorList.ValidationErrors.Contains(validationError));
 
         #endregion
 
@@ -400,8 +385,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Message, ": ", Environment.NewLine,
-                             ValidationErrors.AggregateWith(Environment.NewLine));
+            => String.Concat(
+
+                   Message, ": ", Environment.NewLine,
+
+                   ValidationErrors.AggregateWith(Environment.NewLine)
+
+               );
 
         #endregion
 

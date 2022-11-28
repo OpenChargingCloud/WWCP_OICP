@@ -427,10 +427,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two signed metering values for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A signed metering value to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is SignedMeteringValue signedMeteringValue &&
@@ -441,13 +440,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(SignedMeteringValue)
 
         /// <summary>
-        /// Compares two SignedMeteringValues for equality.
+        /// Compares two signed metering values for equality.
         /// </summary>
         /// <param name="SignedMeteringValue">A signed metering value to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(SignedMeteringValue? SignedMeteringValue)
 
             => SignedMeteringValue is not null &&
+
                Value.         Equals(SignedMeteringValue.Value) &&
                MeteringStatus.Equals(SignedMeteringValue.MeteringStatus);
 

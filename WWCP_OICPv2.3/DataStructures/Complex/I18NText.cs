@@ -168,7 +168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             : this()
         {
 
-            if (Texts != null)
+            if (Texts is not null)
                 foreach (var Text in Texts)
                     I18NTexts.Add(Text.Key, Text.Value);
 
@@ -589,10 +589,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two internationalized (I18N) multi-language texts for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An internationalized (I18N) multi-language text to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is I18NText i18NText &&
@@ -603,10 +602,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(I18NText)
 
         /// <summary>
-        /// Compares two I18NText for equality.
+        /// Compares two internationalized (I18N) multi-language texts for equality.
         /// </summary>
-        /// <param name="I18NText">An I18NText to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="I18NText">An internationalized (I18N) multi-language text to compare with.</param>
         public Boolean Equals(I18NText? I18NText)
         {
 

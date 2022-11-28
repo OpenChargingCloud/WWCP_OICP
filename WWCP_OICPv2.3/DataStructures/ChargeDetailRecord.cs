@@ -43,110 +43,110 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The Hubject session identification, that identifies the charging process.
         /// </summary>
         [Mandatory]
-        public Session_Id                         SessionId                          { get; }
+        public Session_Id                        SessionId                          { get; }
 
         /// <summary>
         /// The EVSE identification, that identifies the location of the charging process.
         /// </summary>
         [Mandatory]
-        public EVSE_Id                            EVSEId                             { get; }
+        public EVSE_Id                           EVSEId                             { get; }
 
         /// <summary>
         /// The authentication data used to authorize the user or the car.
         /// </summary>
         [Mandatory]
-        public Identification                     Identification                     { get; }
+        public Identification                    Identification                     { get; }
 
         /// <summary>
         /// The timestamp when the charging session started.
         /// </summary>
         [Mandatory]
-        public DateTime                           SessionStart                       { get; }
+        public DateTime                          SessionStart                       { get; }
 
         /// <summary>
         /// The timestamp when the charging session ended.
         /// </summary>
         [Mandatory]
-        public DateTime                           SessionEnd                         { get; }
+        public DateTime                          SessionEnd                         { get; }
 
         /// <summary>
         /// The timestamp when the charging process started.
         /// </summary>
         [Mandatory]
-        public DateTime                           ChargingStart                      { get; }
+        public DateTime                          ChargingStart                      { get; }
 
         /// <summary>
         /// The timestamp when the charging process stopped.
         /// </summary>
         [Mandatory]
-        public DateTime                           ChargingEnd                        { get; }
+        public DateTime                          ChargingEnd                        { get; }
 
         /// <summary>
         /// The amount of consumed energy [kWh].
         /// </summary>
         [Mandatory]
-        public Decimal                            ConsumedEnergy                     { get; }
+        public Decimal                           ConsumedEnergy                     { get; }
 
         /// <summary>
         /// The optional pricing product name (for identifying a tariff) that must be unique.
         /// </summary>
         [Optional]
-        public PartnerProduct_Id?                 PartnerProductId                   { get; }
+        public PartnerProduct_Id?                PartnerProductId                   { get; }
 
         /// <summary>
         /// The optional session identification assinged by the CPO partner.
         /// </summary>
         [Optional]
-        public CPOPartnerSession_Id?              CPOPartnerSessionId                { get; }
+        public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; }
 
         /// <summary>
         /// The optional session identification assinged by the EMP partner.
         /// </summary>
         [Optional]
-        public EMPPartnerSession_Id?              EMPPartnerSessionId                { get; }
+        public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; }
 
         /// <summary>
         /// The optional starting value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                           MeterValueStart                    { get; }
+        public Decimal?                          MeterValueStart                    { get; }
 
         /// <summary>
         /// The optional ending value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                           MeterValueEnd                      { get; }
+        public Decimal?                          MeterValueEnd                      { get; }
 
         /// <summary>
         /// The optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Decimal>?              MeterValuesInBetween               { get; }
+        public IEnumerable<Decimal>              MeterValuesInBetween               { get; }
 
         /// <summary>
         /// Optional signed metering values, with can e.g. verified via a transparency software.
         /// </summary>
         [Optional]
-        public IEnumerable<SignedMeteringValue>?  SignedMeteringValues               { get; }
+        public IEnumerable<SignedMeteringValue>  SignedMeteringValues               { get; }
 
         /// <summary>
         /// Optional additional information which could directly or indirectly help to verify the
         /// signed metering values by using a valid transparency software.
         /// </summary>
         [Optional]
-        public CalibrationLawVerification?        CalibrationLawVerificationInfo     { get; }
+        public CalibrationLawVerification?       CalibrationLawVerificationInfo     { get; }
 
         /// <summary>
         /// The optional operator identification of the hub operator.
         /// </summary>
         [Optional]
-        public Operator_Id?                       HubOperatorId                      { get; }
+        public Operator_Id?                      HubOperatorId                      { get; }
 
         /// <summary>
         /// The optional provider identification of the hub provider.
         /// </summary>
         [Optional]
-        public Provider_Id?                       HubProviderId                      { get; }
+        public Provider_Id?                      HubProviderId                      { get; }
 
         #endregion
 
@@ -219,8 +219,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EMPPartnerSessionId             = EMPPartnerSessionId;
             this.MeterValueStart                 = MeterValueStart;
             this.MeterValueEnd                   = MeterValueEnd;
-            this.MeterValuesInBetween            = MeterValuesInBetween ?? Array.Empty<Decimal>();
-            this.SignedMeteringValues            = SignedMeteringValues ?? Array.Empty<SignedMeteringValue>();
+            this.MeterValuesInBetween            = MeterValuesInBetween?.Distinct() ?? Array.Empty<Decimal>();
+            this.SignedMeteringValues            = SignedMeteringValues?.Distinct() ?? Array.Empty<SignedMeteringValue>();
             this.CalibrationLawVerificationInfo  = CalibrationLawVerificationInfo;
             this.HubOperatorId                   = HubOperatorId;
             this.HubProviderId                   = HubProviderId;
@@ -1048,13 +1048,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
              ((!MeterValueEnd.      HasValue && !ChargeDetailRecord.MeterValueEnd.      HasValue) ||
                (MeterValueEnd.      HasValue &&  ChargeDetailRecord.MeterValueEnd.      HasValue && MeterValueEnd.      Value.Equals(ChargeDetailRecord.MeterValueEnd.      Value))) &&
 
-              ((MeterValuesInBetween is     null && ChargeDetailRecord.MeterValuesInBetween is     null) ||
-               (MeterValuesInBetween is not null && ChargeDetailRecord.MeterValuesInBetween is not null &&
                 MeterValuesInBetween.Count().Equals(ChargeDetailRecord.MeterValuesInBetween.Count()) &&
-                MeterValuesInBetween.All(meterValue => ChargeDetailRecord.MeterValuesInBetween.Contains(meterValue)))) &&
+                MeterValuesInBetween.All(meterValue          => ChargeDetailRecord.MeterValuesInBetween.Contains(meterValue))          &&
 
-              ((SignedMeteringValues is     null  &&  ChargeDetailRecord.SignedMeteringValues is     null) ||
-               (SignedMeteringValues is not null  &&  ChargeDetailRecord.SignedMeteringValues is not null  && SignedMeteringValues.    Equals(ChargeDetailRecord.SignedMeteringValues))) &&
+                SignedMeteringValues.Count().Equals(ChargeDetailRecord.SignedMeteringValues.Count()) &&
+                SignedMeteringValues.All(signedMeteringValue => ChargeDetailRecord.SignedMeteringValues.Contains(signedMeteringValue)) &&
 
               ((CalibrationLawVerificationInfo is     null && ChargeDetailRecord.CalibrationLawVerificationInfo is     null) ||
                (CalibrationLawVerificationInfo is not null && ChargeDetailRecord.CalibrationLawVerificationInfo is not null &&

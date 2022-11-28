@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// An optional enumeration of additional reference units and their respective prices.
         /// </summary>
         [Optional]
-        public IEnumerable<AdditionalReferences>?     AdditionalReferences                   { get; }
+        public IEnumerable<AdditionalReferences>      AdditionalReferences                   { get; }
 
         #endregion
 
@@ -129,9 +129,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.PricePerReferenceUnit        = PricePerReferenceUnit;
             this.MaximumProductChargingPower  = MaximumProductChargingPower;
             this.IsValid24hours               = IsValid24hours;
-            this.ProductAvailabilityTimes     = ProductAvailabilityTimes;
+            this.ProductAvailabilityTimes     = ProductAvailabilityTimes.Distinct();
 
-            this.AdditionalReferences         = AdditionalReferences?.Distinct();
+            this.AdditionalReferences         = AdditionalReferences?.   Distinct() ?? Array.Empty<AdditionalReferences>();
 
         }
 
@@ -381,20 +381,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomPricingProductDataRecordSerializer = null, CustomAddressSerializer = null, ...)
+        #region ToJSON(CustomPricingProductDataRecordSerializer = null, CustomProductAvailabilityTimesSerializer = null, ...)
 
         /// <summary>
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomPricingProductDataRecordSerializer">A delegate to serialize custom EVSE data record JSON objects.</param>
-        /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
-        /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
-        /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
-        /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
-        /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
-        /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
+        /// <param name="CustomProductAvailabilityTimesSerializer">A delegate to serialize custom time period JSON objects.</param>
+        /// <param name="CustomAdditionalReferencesSerializer">A delegate to serialize custom time period JSON objects.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<PricingProductDataRecord>?  CustomPricingProductDataRecordSerializer   = null,
-                             CustomJObjectSerializerDelegate<AdditionalReferences>?       CustomAdditionalReferencesSerializer       = null)
+                              CustomJObjectSerializerDelegate<ProductAvailabilityTimes>?  CustomProductAvailabilityTimesSerializer   = null,
+                              CustomJObjectSerializerDelegate<AdditionalReferences>?      CustomAdditionalReferencesSerializer       = null)
         {
 
             var JSON = JSONObject.Create(
@@ -405,10 +402,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            new JProperty("PricePerReferenceUnit",        PricePerReferenceUnit),
                            new JProperty("MaximumProductChargingPower",  MaximumProductChargingPower),
                            new JProperty("IsValid24hours",               IsValid24hours),
-                           new JProperty("ProductAvailabilityTimes",     new JArray(ProductAvailabilityTimes.Select(productAvailabilityTime => productAvailabilityTime.ToJSON()))),
+                           new JProperty("ProductAvailabilityTimes",     new JArray(ProductAvailabilityTimes.Select(productAvailabilityTime => productAvailabilityTime.ToJSON(CustomProductAvailabilityTimesSerializer)))),
 
-                           AdditionalReferences is not null && AdditionalReferences.Any()
-                               ? new JProperty("AdditionalReferences",   new JArray(AdditionalReferences.Select(additionalReference => additionalReference.ToJSON(CustomAdditionalReferencesSerializer))))
+                           AdditionalReferences.Any()
+                               ? new JProperty("AdditionalReferences",   new JArray(AdditionalReferences.    Select(additionalReference     => additionalReference.    ToJSON(CustomAdditionalReferencesSerializer))))
                                : null,
 
                            CustomData?.HasValues == true
@@ -501,10 +498,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two pricing product data data records for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A pricing product data data record to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is PricingProductDataRecord pricingProductDataRecord &&
@@ -515,27 +511,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(PricingProductDataRecord)
 
         /// <summary>
-        /// Compares two EVSE data records for equality.
+        /// Compares two pricing product data data records for equality.
         /// </summary>
-        /// <param name="PricingProductDataRecord">An EVSE data record to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="PricingProductDataRecord">A pricing product data data record to compare with.</param>
         public Boolean Equals(PricingProductDataRecord? PricingProductDataRecord)
 
             => PricingProductDataRecord is not null &&
 
-               ProductId.                  Equals(PricingProductDataRecord.ProductId)                   &&
-               ReferenceUnit.              Equals(PricingProductDataRecord.ReferenceUnit)               &&
-               ProductPriceCurrency.       Equals(PricingProductDataRecord.ProductPriceCurrency)        &&
-               PricePerReferenceUnit.      Equals(PricingProductDataRecord.PricePerReferenceUnit)       &&
-               MaximumProductChargingPower.Equals(PricingProductDataRecord.MaximumProductChargingPower) &&
-               IsValid24hours.             Equals(PricingProductDataRecord.IsValid24hours)              &&
-               ProductAvailabilityTimes.   Equals(PricingProductDataRecord.ProductAvailabilityTimes)    &&
+               ProductId.                   Equals(PricingProductDataRecord.ProductId)                    &&
+               ReferenceUnit.               Equals(PricingProductDataRecord.ReferenceUnit)                &&
+               ProductPriceCurrency.        Equals(PricingProductDataRecord.ProductPriceCurrency)         &&
+               PricePerReferenceUnit.       Equals(PricingProductDataRecord.PricePerReferenceUnit)        &&
+               MaximumProductChargingPower. Equals(PricingProductDataRecord.MaximumProductChargingPower)  &&
+               IsValid24hours.              Equals(PricingProductDataRecord.IsValid24hours)               &&
+               ProductAvailabilityTimes.    Equals(PricingProductDataRecord.ProductAvailabilityTimes)     &&
 
-             ((AdditionalReferences is null && PricingProductDataRecord.AdditionalReferences is null) ||
-
-              (AdditionalReferences is not null && PricingProductDataRecord.AdditionalReferences is not null &&
-                   AdditionalReferences.Count().Equals(PricingProductDataRecord.AdditionalReferences.Count()) &&
-                   AdditionalReferences.All(additionalReference => PricingProductDataRecord.AdditionalReferences.Contains(additionalReference))));
+               AdditionalReferences.Count().Equals(PricingProductDataRecord.AdditionalReferences.Count()) &&
+               AdditionalReferences.All(additionalReference => PricingProductDataRecord.AdditionalReferences.Contains(additionalReference));
 
         #endregion
 

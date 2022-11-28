@@ -528,7 +528,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two EVSE pricing informations for equality.
         /// </summary>
-        /// <param name="Object">A EVSE pricing information to compare with.</param>
+        /// <param name="Object">An EVSE pricing information to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is EVSEPricing evsePricing &&
@@ -541,7 +541,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two EVSE pricing informations for equality.
         /// </summary>
-        /// <param name="EVSEPricing">A EVSE pricing information to compare with.</param>
+        /// <param name="EVSEPricing">An EVSE pricing information to compare with.</param>
         public Boolean Equals(EVSEPricing? EVSEPricing)
 
             => EVSEPricing is not null &&

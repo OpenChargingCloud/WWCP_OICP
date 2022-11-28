@@ -717,9 +717,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Identification identification
@@ -732,9 +732,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Identification)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two identifications.
         /// </summary>
-        /// <param name="Identification">An object to compare with.</param>
+        /// <param name="Identification">An identification to compare with.</param>
         public Int32 CompareTo(Identification? Identification)
         {
 
@@ -770,10 +770,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Identification identification &&
@@ -787,7 +786,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two identifications for equality.
         /// </summary>
         /// <param name="Identification">An identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Identification? Identification)
 
             => Identification is not null &&

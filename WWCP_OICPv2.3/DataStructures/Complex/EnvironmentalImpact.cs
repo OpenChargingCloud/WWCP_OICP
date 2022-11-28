@@ -362,9 +362,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two environmental impacts.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An environmental impact to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is EnvironmentalImpact environmentalImpact
@@ -377,9 +377,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(EnvironmentalImpact)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two environmental impacts.
         /// </summary>
-        /// <param name="EnvironmentalImpact">An object to compare with.</param>
+        /// <param name="EnvironmentalImpact">An environmental impact to compare with.</param>
         public Int32 CompareTo(EnvironmentalImpact EnvironmentalImpact)
         {
 
@@ -403,10 +403,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two environmental impacts for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An environmental impact to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is EnvironmentalImpact environmentalImpactute &&
@@ -417,10 +416,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(EnvironmentalImpact)
 
         /// <summary>
-        /// Compares two EnvironmentalImpacts for equality.
+        /// Compares two environmental impacts for equality.
         /// </summary>
         /// <param name="EnvironmentalImpact">An environmental impact to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EnvironmentalImpact EnvironmentalImpact)
 
             => CO2Emission. Equals(EnvironmentalImpact.CO2Emission) &&

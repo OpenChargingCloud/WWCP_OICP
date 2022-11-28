@@ -72,7 +72,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (!Identifications.SafeAny())
                 throw new ArgumentNullException(nameof(Identifications),  "The given enumeration of user identification data records must not be null or empty!");
 
-            this.Identifications  = Identifications;
+            this.Identifications  = Identifications.Distinct();
             this.ProviderId       = ProviderId;
             this.CustomData       = CustomData;
 
@@ -412,9 +412,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two provider authentication data.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">Provider authentication data to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is ProviderAuthenticationData providerAuthenticationData
@@ -427,16 +427,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(ProviderAuthenticationData)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two provider authentication data.
         /// </summary>
-        /// <param name="ProviderAuthenticationData">An object to compare with.</param>
+        /// <param name="ProviderAuthenticationData">Provider authentication data to compare with.</param>
         public Int32 CompareTo(ProviderAuthenticationData? ProviderAuthenticationData)
         {
 
             if (ProviderAuthenticationData is null)
                 throw new ArgumentNullException(nameof(ProviderAuthenticationData), "The given provider user identification data must not be null!");
 
-            var c = ProviderId.  CompareTo(ProviderAuthenticationData.ProviderId);
+            var c = ProviderId.             CompareTo(ProviderAuthenticationData.ProviderId);
 
             if (c == 0)
                 c = Identifications.Count().CompareTo(ProviderAuthenticationData.Identifications.Count());
@@ -458,10 +458,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two provider authentication data for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">Provider authentication data to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is ProviderAuthenticationData providerAuthenticationData &&
@@ -472,10 +471,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(ProviderAuthenticationData)
 
         /// <summary>
-        /// Compares two provider user identification datas for equality.
+        /// Compares two provider authentication data for equality.
         /// </summary>
-        /// <param name="ProviderAuthenticationData">A provider user identification data to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="ProviderAuthenticationData">Provider authentication data to compare with.</param>
         public Boolean Equals(ProviderAuthenticationData? ProviderAuthenticationData)
 
             => ProviderAuthenticationData is not null &&

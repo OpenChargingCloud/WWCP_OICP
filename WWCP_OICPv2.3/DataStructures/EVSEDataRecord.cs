@@ -413,7 +413,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.AdditionalInfo                    = AdditionalInfo;
             this.ChargingStationLocationReference  = ChargingStationLocationReference;
             this.GeoChargingPointEntrance          = GeoChargingPointEntrance;
-            this.OpeningTimes                      = OpeningTimes;
+            this.OpeningTimes                      = OpeningTimes?.       Distinct() ?? Array.Empty<OpeningTime>();
             this.HubOperatorId                     = HubOperatorId;
             this.ClearingHouseId                   = ClearingHouseId;
 
@@ -1576,10 +1576,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE data records for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An EVSE data record to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is EVSEDataRecord evseDataRecord &&
@@ -1593,7 +1592,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two EVSE data records for equality.
         /// </summary>
         /// <param name="EVSEDataRecord">An EVSE data record to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EVSEDataRecord? EVSEDataRecord)
 
             => EVSEDataRecord is not null &&

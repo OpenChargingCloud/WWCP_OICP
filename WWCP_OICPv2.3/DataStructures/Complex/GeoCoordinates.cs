@@ -886,8 +886,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two geo coordinates for equality.
         /// </summary>
-        /// <param name="Object">Another geo coordinate.</param>
-        /// <returns>True if both are equal; False otherwise.</returns>
+        /// <param name="Object">A geo coordinate to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is GeoCoordinates geoCoordinate &&
@@ -900,8 +899,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two geo coordinates for equality.
         /// </summary>
-        /// <param name="GeoCoordinates">Another geo coordinate.</param>
-        /// <returns>True if both are equal; False otherwise.</returns>
+        /// <param name="GeoCoordinates">A geo coordinate to compare with.</param>
         public Boolean Equals(GeoCoordinates GeoCoordinates)
 
             => Latitude. Equals(GeoCoordinates.Latitude) &&

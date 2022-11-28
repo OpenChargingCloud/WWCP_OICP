@@ -417,9 +417,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator EVSE pricings.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A operator EVSE pricing to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is OperatorEVSEPricing operatorEVSEPricing
@@ -432,9 +432,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(OperatorEVSEPricing)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator EVSE pricings.
         /// </summary>
-        /// <param name="OperatorEVSEPricing">An object to compare with.</param>
+        /// <param name="OperatorEVSEPricing">A operator EVSE pricing to compare with.</param>
         public Int32 CompareTo(OperatorEVSEPricing? OperatorEVSEPricing)
         {
 
@@ -462,10 +462,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator EVSE pricings for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A operator EVSE pricing to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is OperatorEVSEPricing operatorEVSEPricing &&
@@ -479,7 +478,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two operator EVSE pricings for equality.
         /// </summary>
         /// <param name="OperatorEVSEPricing">A operator EVSE pricing to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(OperatorEVSEPricing? OperatorEVSEPricing)
 
             => OperatorEVSEPricing is not null &&

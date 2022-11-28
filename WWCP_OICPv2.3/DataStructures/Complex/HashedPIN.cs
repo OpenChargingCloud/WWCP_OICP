@@ -362,9 +362,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two hashed PINs.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A hashed PIN to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is HashedPIN hashedPIN
@@ -377,9 +377,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(HashedPIN)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two hashed PINs.
         /// </summary>
-        /// <param name="HashedPIN">An  with (hashed) pin object to compare with.</param>
+        /// <param name="HashedPIN">A hashed PIN to compare with.</param>
         public Int32 CompareTo(HashedPIN HashedPIN)
         {
 
@@ -401,10 +401,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two hashed PINs for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A hashed PIN to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is HashedPIN hashedPIN &&
@@ -415,10 +414,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(HashedPIN)
 
         /// <summary>
-        /// Compares two s with (hashed) pins for equality.
+        /// Compares two hashed PINs for equality.
         /// </summary>
-        /// <param name="HashedPIN">An  with (hashed) pin to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="HashedPIN">A hashed PIN to compare with.</param>
         public Boolean Equals(HashedPIN HashedPIN)
 
             => Value.   Equals(HashedPIN.Value) &&

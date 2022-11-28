@@ -83,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (duplicateEVSEStatusRecords.SafeAny())
                 throw new ArgumentException("The following EVSE Ids are not unique: " + duplicateEVSEStatusRecords.AggregateWith(", "), nameof(EVSEStatusRecords));
 
-            this.EVSEStatusRecords  = EVSEStatusRecords;
+            this.EVSEStatusRecords  = EVSEStatusRecords.Distinct();
             this.OperatorId         = OperatorId;
             this.OperatorName       = OperatorName.Trim();
 
@@ -419,9 +419,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator EVSE status.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An operator EVSE status to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is OperatorEVSEStatus operatorEVSEStatus
@@ -434,9 +434,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(OperatorEVSEStatus)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator EVSE status.
         /// </summary>
-        /// <param name="OperatorEVSEStatus">An object to compare with.</param>
+        /// <param name="OperatorEVSEStatus">An operator EVSE status to compare with.</param>
         public Int32 CompareTo(OperatorEVSEStatus? OperatorEVSEStatus)
         {
 
@@ -468,10 +468,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator EVSE status for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An operator EVSE status to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is OperatorEVSEStatus operatorEVSEStatus &&
@@ -482,10 +481,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(OperatorEVSEStatus)
 
         /// <summary>
-        /// Compares two operator EVSE statuss for equality.
+        /// Compares two operator EVSE status for equality.
         /// </summary>
-        /// <param name="OperatorEVSEStatus">A operator EVSE status to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="OperatorEVSEStatus">An operator EVSE status to compare with.</param>
         public Boolean Equals(OperatorEVSEStatus? OperatorEVSEStatus)
 
             => OperatorEVSEStatus is not null &&

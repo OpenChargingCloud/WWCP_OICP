@@ -57,7 +57,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new energy source.
+        /// Create a new additional reference.
         /// </summary>
         /// <param name="AdditionalReference">Additional pricing components to be considered in addition to the base pricing.</param>
         /// <param name="AdditionalReferenceUnit">Additional reference units that can be used in defining pricing products.</param>
@@ -91,10 +91,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (JSON, CustomAdditionalReferencesParser = null)
 
         /// <summary>
-        /// Parse the given JSON representation of an energy source.
+        /// Parse the given JSON representation of an additional reference.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom energy sources JSON objects.</param>
+        /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom additional references JSON objects.</param>
         public static AdditionalReferences Parse(JObject                                             JSON,
                                                  CustomJObjectParserDelegate<AdditionalReferences>?  CustomAdditionalReferencesParser   = null)
         {
@@ -107,7 +107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return additionalReferences!;
             }
 
-            throw new ArgumentException("The given JSON representation of an energy source is invalid: " + errorResponse,
+            throw new ArgumentException("The given JSON representation of an additional reference is invalid: " + errorResponse,
                                         nameof(JSON));
 
         }
@@ -117,10 +117,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(JSON, CustomAdditionalReferencesParser = null)
 
         /// <summary>
-        /// Try to parse the given JSON representation of an energy source.
+        /// Try to parse the given JSON representation of an additional reference.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom energy sources JSON objects.</param>
+        /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom additional references JSON objects.</param>
         public static AdditionalReferences? TryParse(JObject                                             JSON,
                                                      CustomJObjectParserDelegate<AdditionalReferences>?  CustomAdditionalReferencesParser   = null)
         {
@@ -144,10 +144,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
 
         /// <summary>
-        /// Try to parse the given JSON representation of an energy source.
+        /// Try to parse the given JSON representation of an additional reference.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AdditionalReferences">The parsed energy source.</param>
+        /// <param name="AdditionalReferences">The parsed additional reference.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
         public static Boolean TryParse(JObject                    JSON,
                                        out AdditionalReferences?  AdditionalReferences,
@@ -160,12 +160,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
         /// <summary>
-        /// Try to parse the given JSON representation of an energy source.
+        /// Try to parse the given JSON representation of an additional reference.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="AdditionalReferences">The parsed energy source.</param>
+        /// <param name="AdditionalReferences">The parsed additional reference.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom energy sources JSON objects.</param>
+        /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom additional references JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
                                        out AdditionalReferences?                           AdditionalReferences,
                                        out String?                                         ErrorResponse,
@@ -238,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             catch (Exception e)
             {
                 AdditionalReferences  = default;
-                ErrorResponse         = "The given JSON representation of an energy source is invalid: " + e.Message;
+                ErrorResponse         = "The given JSON representation of an additional reference is invalid: " + e.Message;
                 return false;
             }
 
@@ -252,7 +252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a JSON representation of this object.
         /// </summary>
         /// <param name="CustomAdditionalReferencesSerializer">A delegate to serialize custom time period JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<AdditionalReferences>?  CustomAdditionalReferencesSerializer   = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<AdditionalReferences>? CustomAdditionalReferencesSerializer = null)
         {
 
             var JSON = JSONObject.Create(
@@ -290,8 +290,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="AdditionalReferences1">An energy source.</param>
-        /// <param name="AdditionalReferences2">Another energy source.</param>
+        /// <param name="AdditionalReferences1">An additional reference.</param>
+        /// <param name="AdditionalReferences2">Another additional reference.</param>
         /// <returns>true|false</returns>
         public static Boolean operator == (AdditionalReferences? AdditionalReferences1,
                                            AdditionalReferences? AdditionalReferences2)
@@ -316,8 +316,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="AdditionalReferences1">An energy source.</param>
-        /// <param name="AdditionalReferences2">Another energy source.</param>
+        /// <param name="AdditionalReferences1">An additional reference.</param>
+        /// <param name="AdditionalReferences2">Another additional reference.</param>
         /// <returns>true|false</returns>
         public static Boolean operator != (AdditionalReferences? AdditionalReferences1,
                                            AdditionalReferences? AdditionalReferences2)
@@ -333,10 +333,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two additional references for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">Additional references to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is AdditionalReferences additionalReferences &&
@@ -347,10 +346,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(AdditionalReferences)
 
         /// <summary>
-        /// Compares two AdditionalReferencess for equality.
+        /// Compares two additional references for equality.
         /// </summary>
-        /// <param name="AdditionalReferences">An energy source to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="AdditionalReferences">Additional references to compare with.</param>
         public Boolean Equals(AdditionalReferences? AdditionalReferences)
 
             => AdditionalReferences is not null &&

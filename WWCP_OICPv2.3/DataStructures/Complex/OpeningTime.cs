@@ -78,10 +78,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (Periods.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Periods), "The given enumeration of periods must not be null or empty!");
 
-            this.Periods           = Periods;
-            this.On                = On;
+            this.Periods                  = Periods.Distinct();
+            this.On                       = On;
             this.UnstructuredOpeningTime  = UnstructuredText;
-            this.CustomData        = CustomData;
+            this.CustomData               = CustomData;
 
         }
 
@@ -361,10 +361,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two opening times for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An opening time to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is OpeningTime openingTime &&
@@ -378,7 +377,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two opening times for equality.
         /// </summary>
         /// <param name="OpeningTimes">An opening time to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(OpeningTime? OpeningTimes)
 
             => OpeningTimes is not null &&

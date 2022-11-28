@@ -261,9 +261,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two hours and minutes.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="HourMinute">A hour and a minute to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is HourMinute HourMinute
@@ -276,9 +276,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(HourMinute)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two hours and minutes.
         /// </summary>
-        /// <param name="HourMinute">An object to compare with.</param>
+        /// <param name="HourMinute">A hour and a minute to compare with.</param>
         public Int32 CompareTo(HourMinute HourMinute)
         {
 
@@ -300,10 +300,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two hours and minutes for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A hour and a minute to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is HourMinute hourMinute &&
@@ -314,10 +313,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(HourMinute)
 
         /// <summary>
-        /// Compares two HourMinutes for equality.
+        /// Compares two hours and minutes for equality.
         /// </summary>
-        /// <param name="HourMinute">A HourMinute to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="HourMinute">A hour and a minute to compare with.</param>
         public Boolean Equals(HourMinute HourMinute)
 
             => Hour.  Equals(HourMinute.Hour) &&

@@ -398,7 +398,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two time periods for equality.
         /// </summary>
-        /// <param name="Period">A time period to compare with.</param>
+        /// <param name="Object">A time period to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Period period &&
