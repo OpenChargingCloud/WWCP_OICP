@@ -851,20 +851,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
 
-        public static UID ToOICP(this WWCP.Auth_Token AuthToken)
+        public static UID ToOICP(this WWCP.AuthenticationToken AuthToken)
 
             => UID.Parse(AuthToken.ToString().ToUpper());
 
-        public static UID? ToOICP(this WWCP.Auth_Token? AuthToken)
+        public static UID? ToOICP(this WWCP.AuthenticationToken? AuthToken)
 
             => AuthToken.HasValue
                    ? UID.Parse(AuthToken.Value.ToString().ToUpper())
                    : null;
 
 
-        public static WWCP.Auth_Token ToWWCP(this UID UID)
+        public static WWCP.AuthenticationToken ToWWCP(this UID UID)
 
-            => WWCP.Auth_Token.Parse(UID.ToString());
+            => WWCP.AuthenticationToken.Parse(UID.ToString());
 
 
 
@@ -875,10 +875,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (Identification.RFIDId.HasValue)
-                return WWCP.RemoteAuthentication.FromAuthToken(WWCP.Auth_Token.Parse (Identification.RFIDId.Value.ToString()));
+                return WWCP.RemoteAuthentication.FromAuthToken(WWCP.AuthenticationToken.Parse (Identification.RFIDId.Value.ToString()));
 
             if (Identification.RFIDIdentification is not null)
-                return WWCP.RemoteAuthentication.FromAuthToken(WWCP.Auth_Token.Parse (Identification.RFIDIdentification.         UID.   ToString()));
+                return WWCP.RemoteAuthentication.FromAuthToken(WWCP.AuthenticationToken.Parse (Identification.RFIDIdentification.         UID.   ToString()));
 
             if (Identification.QRCodeIdentification.HasValue && Identification.QRCodeIdentification.Value.PIN.HasValue)
                 return WWCP.RemoteAuthentication.FromQRCodeIdentification       (Identification.QRCodeIdentification.Value.EVCOId.ToWWCP_eMAId(),

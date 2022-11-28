@@ -1559,7 +1559,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  WWCP.EMobilityProvider_Id?              ProviderId,
                                                  WWCP.RemoteAuthentication?              RemoteAuthentication,
                                                  WWCP.ChargingProduct?                   ChargingProduct,
-                                                 IEnumerable<WWCP.Auth_Token>?           AuthTokens,
+                                                 IEnumerable<WWCP.AuthenticationToken>?           AuthTokens,
                                                  IEnumerable<WWCP.eMobilityAccount_Id>?  eMAIds,
                                                  IEnumerable<UInt32>?                    PINs,
 
