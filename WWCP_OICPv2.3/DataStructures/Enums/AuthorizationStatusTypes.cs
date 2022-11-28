@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AuthorizationStatusTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out AuthorizationStatusTypes authorizationStatusType))
+            if (TryParse(Text, out var authorizationStatusType))
                 return authorizationStatusType;
 
             throw new ArgumentException("Undefined authorization status type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AuthorizationStatusTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out AuthorizationStatusTypes authorizationStatusType))
+            if (TryParse(Text, out var authorizationStatusType))
                 return authorizationStatusType;
 
             return default;

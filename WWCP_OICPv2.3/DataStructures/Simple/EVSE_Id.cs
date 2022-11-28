@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NewRandom(OperatorId, Length = 12, Mapper = null)
 
         /// <summary>
-        /// Generate a new unique identification of an EVSE.
+        /// Generate a new random identification of an EVSE.
         /// </summary>
         /// <param name="OperatorId">The unique identification of a charging station operator.</param>
         /// <param name="Length">The expected length of the EVSE identification suffix</param>
@@ -170,7 +170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse(Text)
+        #region (static) Parse    (Text)
 
         /// <summary>
         /// Parse the given string as an EVSE identification.
@@ -179,17 +179,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSE_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out EVSE_Id evseId))
+            if (TryParse(Text, out var evseId))
                 return evseId;
 
-            throw new ArgumentException("Invalid text-representation of an electric vehicle supply equipment (EVSE) identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of an electric vehicle supply equipment (EVSE) identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) Parse(OperatorId, Suffix)
+        #region (static) Parse    (OperatorId, Suffix)
 
         /// <summary>
         /// Parse the given string as an EVSE identification.
@@ -228,7 +228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text)
+        #region (static) TryParse (Text)
 
         /// <summary>
         /// Try to parse the given text-representation of an EVSE identification.
@@ -237,7 +237,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSE_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EVSE_Id evseId))
+            if (TryParse(Text, out var evseId))
                 return evseId;
 
             return null;
@@ -246,7 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out EVSEId)
+        #region (static) TryParse (Text, out EVSEId)
 
         /// <summary>
         /// Try to parse the given text-representation of an EVSE identification.

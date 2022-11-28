@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PowerTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out PowerTypes powerType))
+            if (TryParse(Text, out var powerType))
                 return powerType;
 
             throw new ArgumentException("Undefined power type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PowerTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out PowerTypes powerType))
+            if (TryParse(Text, out var powerType))
                 return powerType;
 
             return default;
@@ -60,36 +60,36 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out RFIDType)
+        #region TryParse(Text, out PowerType)
 
         /// <summary>
         /// Parses the given text-representation of a power type.
         /// </summary>
         /// <param name="Text">A text-representation of a power type.</param>
-        /// <param name="RFIDType">The parsed power type.</param>
-        public static Boolean TryParse(String Text, out PowerTypes RFIDType)
+        /// <param name="PowerType">The parsed power type.</param>
+        public static Boolean TryParse(String Text, out PowerTypes PowerType)
         {
             switch (Text?.Trim())
             {
 
                 case "AC_1_PHASE":
-                    RFIDType = PowerTypes.AC_1_PHASE;
+                    PowerType = PowerTypes.AC_1_PHASE;
                     return true;
 
                 case "AC_3_PHASE":
-                    RFIDType = PowerTypes.AC_3_PHASE;
+                    PowerType = PowerTypes.AC_3_PHASE;
                     return true;
 
                 case "DC":
-                    RFIDType = PowerTypes.DC;
+                    PowerType = PowerTypes.DC;
                     return true;
 
                 case "Unspecified":
-                    RFIDType = PowerTypes.Unspecified;
+                    PowerType = PowerTypes.Unspecified;
                     return true;
 
                 default:
-                    RFIDType = PowerTypes.Unspecified;
+                    PowerType = PowerTypes.Unspecified;
                     return false;
 
             };

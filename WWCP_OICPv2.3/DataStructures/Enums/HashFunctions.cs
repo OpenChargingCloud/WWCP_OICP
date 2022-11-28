@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static HashFunctions Parse(String Text)
         {
 
-            if (TryParse(Text, out HashFunctions hashFunction))
+            if (TryParse(Text, out var hashFunction))
                 return hashFunction;
 
             throw new ArgumentException("Undefined hash function '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static HashFunctions? TryParse(String Text)
         {
 
-            if (TryParse(Text, out HashFunctions hashFunction))
+            if (TryParse(Text, out var hashFunction))
                 return hashFunction;
 
             return default;

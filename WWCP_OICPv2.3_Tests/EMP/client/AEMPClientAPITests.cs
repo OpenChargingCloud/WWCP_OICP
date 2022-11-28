@@ -80,7 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new PullEVSEDataResponse(
                             Timestamp.Now,
                             pullEVSEDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pullEVSEDataRequest.Timestamp,
                             Array.Empty<EVSEDataRecord>(),
                             pullEVSEDataRequest,
@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new PullEVSEStatusResponse(
                             Timestamp.Now,
                             pullEVSEStatusRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pullEVSEStatusRequest.Timestamp,
                             Array.Empty<OperatorEVSEStatus>(),
                             pullEVSEStatusRequest,
@@ -122,7 +122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new PullEVSEStatusByIdResponse(
                             Timestamp.Now,
                             pullEVSEStatusByIdRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pullEVSEStatusByIdRequest.Timestamp,
                             Array.Empty<EVSEStatusRecord>(),
                             pullEVSEStatusByIdRequest,
@@ -143,7 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new PullEVSEStatusByOperatorIdResponse(
                             Timestamp.Now,
                             pullEVSEStatusByOperatorIdRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pullEVSEStatusByOperatorIdRequest.Timestamp,
                             Array.Empty<OperatorEVSEStatus>(),
                             pullEVSEStatusByOperatorIdRequest,
@@ -166,7 +166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                             new PullPricingProductDataResponse(
                                 Timestamp.Now,
                                 pullPricingProductDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - pullPricingProductDataRequest.Timestamp,
                                 new PricingProductData[] {
                                     new PricingProductData(
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                             new PullPricingProductDataResponse(
                                 Timestamp.Now,
                                 pullPricingProductDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - pullPricingProductDataRequest.Timestamp,
                                 Array.Empty<PricingProductData>(),
                                 pullPricingProductDataRequest,
@@ -240,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                             new PullEVSEPricingResponse(
                                 Timestamp.Now,
                                 pullEVSEPricingRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - pullEVSEPricingRequest.Timestamp,
                                 new OperatorEVSEPricing[] {
                                     new OperatorEVSEPricing(
@@ -278,7 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                             new PullEVSEPricingResponse(
                                 Timestamp.Now,
                                 pullEVSEPricingRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - pullEVSEPricingRequest.Timestamp,
                                 Array.Empty<OperatorEVSEPricing>(),
                                 pullEVSEPricingRequest,
@@ -300,7 +300,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new Acknowledgement<PushAuthenticationDataRequest>(
                             Timestamp.Now,
                             pushPushAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pushPushAuthenticationDataRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -323,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new Acknowledgement<AuthorizeRemoteReservationStartRequest>(
                             Timestamp.Now,
                             authorizeRemoteReservationStartRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - authorizeRemoteReservationStartRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -345,7 +345,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new Acknowledgement<AuthorizeRemoteReservationStopRequest>(
                             Timestamp.Now,
                             authorizeRemoteReservationStopRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - authorizeRemoteReservationStopRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -367,7 +367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                         new Acknowledgement<AuthorizeRemoteStartRequest>(
                             Timestamp.Now,
                             authorizeRemoteStartRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - authorizeRemoteStartRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -389,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                        new Acknowledgement<AuthorizeRemoteStopRequest>(
                            Timestamp.Now,
                            authorizeRemoteStopRequest.EventTrackingId ?? EventTracking_Id.New,
-                           Process_Id.NewRandom,
+                           Process_Id.NewRandom(),
                            Timestamp.Now - authorizeRemoteStopRequest.Timestamp,
                            new StatusCode(
                                StatusCodes.Success
@@ -413,7 +413,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                             new GetChargeDetailRecordsResponse(
                                 Timestamp.Now,
                                 getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - getChargeDetailRecordsRequest.Timestamp,
                                 Array.Empty<ChargeDetailRecord>(),
                                 getChargeDetailRecordsRequest,
@@ -431,7 +431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                             new GetChargeDetailRecordsResponse(
                                 Timestamp.Now,
                                 getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - getChargeDetailRecordsRequest.Timestamp,
                                 new ChargeDetailRecord[] {
 

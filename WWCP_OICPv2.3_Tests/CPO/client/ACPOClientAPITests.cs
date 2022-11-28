@@ -80,7 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<PushEVSEDataRequest>(
                             Timestamp.Now,
                             pushEVSEDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pushEVSEDataRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<PushEVSEStatusRequest>(
                             Timestamp.Now,
                             pushEVSEStatusRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pushEVSEStatusRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<PushPricingProductDataRequest>(
                             Timestamp.Now,
                             pushPricingProductDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pushPricingProductDataRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -147,7 +147,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<PushEVSEPricingRequest>(
                             Timestamp.Now,
                             pushEVSEPricingRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - pushEVSEPricingRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -171,7 +171,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                             new PullAuthenticationDataResponse(
                                 Timestamp.Now,
                                 pullAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - pullAuthenticationDataRequest.Timestamp,
                                 new ProviderAuthenticationData[] {
                                     new ProviderAuthenticationData(
@@ -233,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                             new PullAuthenticationDataResponse(
                                 Timestamp.Now,
                                 pullAuthenticationDataRequest.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - pullAuthenticationDataRequest.Timestamp,
                                 Array.Empty<ProviderAuthenticationData>(),
                                 pullAuthenticationDataRequest,
@@ -298,7 +298,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<ChargingStartNotificationRequest>(
                             Timestamp.Now,
                             chargingStartNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - chargingStartNotificationRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -320,7 +320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<ChargingProgressNotificationRequest>(
                             Timestamp.Now,
                             chargingProgressNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - chargingProgressNotificationRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -342,7 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<ChargingEndNotificationRequest>(
                             Timestamp.Now,
                             chargingEndNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - chargingEndNotificationRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -364,7 +364,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<ChargingErrorNotificationRequest>(
                             Timestamp.Now,
                             chargingErrorNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - chargingErrorNotificationRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success
@@ -387,7 +387,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                         new Acknowledgement<ChargeDetailRecordRequest>(
                             Timestamp.Now,
                             chargeDetailRecordRequest.EventTrackingId ?? EventTracking_Id.New,
-                            Process_Id.NewRandom,
+                            Process_Id.NewRandom(),
                             Timestamp.Now - chargeDetailRecordRequest.Timestamp,
                             new StatusCode(
                                 StatusCodes.Success

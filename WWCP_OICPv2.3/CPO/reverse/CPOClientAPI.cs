@@ -1340,7 +1340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<PushEVSEDataRequest>>? pullEVSEDataResponse = null;
 
@@ -1580,7 +1580,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<PushEVSEStatusRequest>>? pullEVSEStatusResponse = null;
 
@@ -1821,7 +1821,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<PushPricingProductDataRequest>>? pushPricingProductDataResponse = null;
 
@@ -2061,7 +2061,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<PushEVSEPricingRequest>>? pushEVSEPricingResponse = null;
 
@@ -2302,7 +2302,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<PullAuthenticationDataResponse>? pullAuthenticationDataResponse = null;
 
@@ -2550,7 +2550,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<AuthorizationStartResponse>? authorizationStartResponse = null;
 
@@ -2777,7 +2777,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<AuthorizationStopResponse>? authorizationStopResponse = null;
 
@@ -3004,7 +3004,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement>? chargingNotificationResponse = null;
 
@@ -3816,7 +3816,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<ChargeDetailRecordRequest>>? chargeDetailRecordResponse = null;
 

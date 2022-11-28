@@ -962,7 +962,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -1295,7 +1295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  new Acknowledgement<PushEVSEDataRequest>(
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
-                                     Process_Id.NewRandom,
+                                     Process_Id.NewRandom(),
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -1315,7 +1315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                new Acknowledgement<PushEVSEDataRequest>(
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
-                                   Process_Id.NewRandom,
+                                   Process_Id.NewRandom(),
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -1480,7 +1480,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -1810,7 +1810,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  new Acknowledgement<PushEVSEStatusRequest>(
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
-                                     Process_Id.NewRandom,
+                                     Process_Id.NewRandom(),
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -1830,7 +1830,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                new Acknowledgement<PushEVSEStatusRequest>(
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
-                                   Process_Id.NewRandom,
+                                   Process_Id.NewRandom(),
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -1996,7 +1996,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -2329,7 +2329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  new Acknowledgement<PushPricingProductDataRequest>(
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
-                                     Process_Id.NewRandom,
+                                     Process_Id.NewRandom(),
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -2349,7 +2349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                new Acknowledgement<PushPricingProductDataRequest>(
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
-                                   Process_Id.NewRandom,
+                                   Process_Id.NewRandom(),
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -2513,7 +2513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
@@ -2846,7 +2846,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  new Acknowledgement<PushEVSEPricingRequest>(
                                      Timestamp.Now,
                                      Request.EventTrackingId ?? EventTracking_Id.New,
-                                     Process_Id.NewRandom,
+                                     Process_Id.NewRandom(),
                                      Timestamp.Now - Request.Timestamp,
                                      new StatusCode(
                                          StatusCodes.SystemError,
@@ -2866,7 +2866,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                new Acknowledgement<PushEVSEPricingRequest>(
                                    Timestamp.Now,
                                    Request.EventTrackingId ?? EventTracking_Id.New,
-                                   Process_Id.NewRandom,
+                                   Process_Id.NewRandom(),
                                    Timestamp.Now - Request.Timestamp,
                                    new StatusCode(
                                        StatusCodes.SystemError,
@@ -3011,7 +3011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3417,7 +3417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              new PullAuthenticationDataResponse(
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
-                                 Process_Id.NewRandom,
+                                 Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
                                  Array.Empty<ProviderAuthenticationData>(),
                                  Request,
@@ -3436,7 +3436,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             new PullAuthenticationDataResponse(
                                 Timestamp.Now,
                                 Request.EventTrackingId ?? EventTracking_Id.New,
-                                Process_Id.NewRandom,
+                                Process_Id.NewRandom(),
                                 Timestamp.Now - Request.Timestamp,
                                 Array.Empty<ProviderAuthenticationData>(),
                                 Request,
@@ -3576,7 +3576,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -3978,7 +3978,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4408,7 +4408,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -4724,7 +4724,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              new Acknowledgement<ChargingStartNotificationRequest>(
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
-                                 Process_Id.NewRandom,
+                                 Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -4744,7 +4744,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            new Acknowledgement<ChargingStartNotificationRequest>(
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
-                               Process_Id.NewRandom,
+                               Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -4885,7 +4885,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -5201,7 +5201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              new Acknowledgement<ChargingProgressNotificationRequest>(
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
-                                 Process_Id.NewRandom,
+                                 Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -5221,7 +5221,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            new Acknowledgement<ChargingProgressNotificationRequest>(
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
-                               Process_Id.NewRandom,
+                               Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -5362,7 +5362,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -5678,7 +5678,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              new Acknowledgement<ChargingEndNotificationRequest>(
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
-                                 Process_Id.NewRandom,
+                                 Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -5698,7 +5698,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            new Acknowledgement<ChargingEndNotificationRequest>(
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
-                               Process_Id.NewRandom,
+                               Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -5839,7 +5839,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -6228,7 +6228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              new Acknowledgement<ChargingErrorNotificationRequest>(
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
-                                 Process_Id.NewRandom,
+                                 Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -6248,7 +6248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            new Acknowledgement<ChargingErrorNotificationRequest>(
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
-                               Process_Id.NewRandom,
+                               Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -6393,7 +6393,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom;
+                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
@@ -6630,7 +6630,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              new Acknowledgement<ChargeDetailRecordRequest>(
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
-                                 Process_Id.NewRandom,
+                                 Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -6650,7 +6650,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            new Acknowledgement<ChargeDetailRecordRequest>(
                                Timestamp.Now,
                                Request.EventTrackingId ?? EventTracking_Id.New,
-                               Process_Id.NewRandom,
+                               Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
                                new StatusCode(
                                    StatusCodes.SystemError,

@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as an additional reference.
@@ -110,17 +110,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Additional_Reference Parse(String Text)
         {
 
-            if (TryParse(Text, out Additional_Reference additionalReference))
+            if (TryParse(Text, out var additionalReference))
                 return additionalReference;
 
-            throw new ArgumentException("Invalid text-representation of an additional reference: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of an additional reference: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as an additional reference.
@@ -129,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Additional_Reference? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Additional_Reference additionalReference))
+            if (TryParse(Text, out var additionalReference))
                 return additionalReference;
 
             return null;
@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out AdditionalReference)
+        #region (static) TryParse(Text, out AdditionalReference)
 
         /// <summary>
         /// Try to parse the given string as an additional reference.
@@ -180,6 +180,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region Static Definitions
+
         // https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#AdditionalReferenceType
 
         /// <summary>
@@ -216,6 +218,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public static Additional_Reference MaximumFee
             => new ("MAXIMUM FEE");
+
+        #endregion
 
 
         #region Operator overloading

@@ -105,7 +105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnPushEVSEData                    +=       (timestamp, cpoClientAPI, pushEVSEDataRequest)   => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 switch (pushEVSEDataRequest.Action)
                 {
@@ -261,7 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnPushEVSEStatus                  +=       (timestamp, cpoClientAPI, pushEVSEStatusRequest) => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 switch (pushEVSEStatusRequest.Action)
                 {
@@ -385,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnPushPricingProductData          +=       (timestamp, cpoClientAPI, pushPricingProductDataRequest) => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 switch (pushPricingProductDataRequest.Action)
                 {
@@ -541,7 +541,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnPushEVSEPricing                 +=       (timestamp, cpoClientAPI, pushEVSEPricingRequest)        => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 switch (pushEVSEPricingRequest.Action)
                 {
@@ -698,7 +698,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnAuthorizeStart                  += async (timestamp, cpoClientAPI, authorizeStartRequest) => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 if (centralServiceAPI.EMPServerAPIClients.Any())
                 {
@@ -741,7 +741,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnAuthorizeStop                   += async (timestamp, cpoClientAPI, authorizeStopRequest)  => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 if (centralServiceAPI.EMPServerAPIClients.Any())
                 {
@@ -785,7 +785,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnChargingStartNotification       +=       (timestamp, cpoClientAPI, chargingStartNotificationRequest)    => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            new OICPResult<Acknowledgement<ChargingStartNotificationRequest>>(
@@ -811,7 +811,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnChargingProgressNotification    +=       (timestamp, cpoClientAPI, chargingProgressNotificationRequest) => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            new OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>(
@@ -837,7 +837,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnChargingEndNotification         +=       (timestamp, cpoClientAPI, chargingEndNotificationRequest)      => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            new OICPResult<Acknowledgement<ChargingEndNotificationRequest>>(
@@ -863,7 +863,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnChargingErrorNotification       +=       (timestamp, cpoClientAPI, chargingErrorNotificationRequest)    => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            new OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>(
@@ -890,7 +890,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.CPOClientAPI.OnChargeDetailRecord              += async (timestamp, cpoClientAPI, chargeDetailRecordRequest) => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 // Probably Hubject uses the session id here instead...
                 if (chargeDetailRecordRequest.ChargeDetailRecord.HubProviderId.HasValue &&
@@ -916,9 +916,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                Request:               chargeDetailRecordRequest,
                                HTTPResponse:          null,
                                Result:                true,
-                               SessionId:             Session_Id.NewRandom,
-                               CPOPartnerSessionId:   CPOPartnerSession_Id.NewRandom,
-                               EMPPartnerSessionId:   EMPPartnerSession_Id.NewRandom,
+                               SessionId:             Session_Id.NewRandom(),
+                               CPOPartnerSessionId:   CPOPartnerSession_Id.NewRandom(),
+                               EMPPartnerSessionId:   EMPPartnerSession_Id.NewRandom(),
                                CustomData:            null
                            )
                        );
@@ -931,7 +931,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnPullEVSEData                    +=       (timestamp, empClientAPI, pullEVSEDataRequest)                    => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            OICPResult<PullEVSEDataResponse>.Success(
@@ -960,7 +960,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnPullEVSEStatus                  +=       (timestamp, empClientAPI, pullEVSEStatusRequest)                  => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            OICPResult<PullEVSEStatusResponse>.Success(
@@ -992,7 +992,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnPullEVSEStatusById              +=       (timestamp, empClientAPI, pullEVSEStatusByIdRequest)              => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            OICPResult<PullEVSEStatusByIdResponse>.Success(
@@ -1018,7 +1018,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnPullEVSEStatusByOperatorId      +=       (timestamp, empClientAPI, pullEVSEStatusByOperatorIdRequest)      => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(
@@ -1045,7 +1045,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnPullPricingProductData          +=       (timestamp, empClientAPI, pullPricingProductDataRequest)          => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            OICPResult<PullPricingProductDataResponse>.Success(
@@ -1084,7 +1084,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnPullEVSEPricing                 +=       (timestamp, empClientAPI, pullEVSEPricingRequest)                 => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return Task.FromResult(
                            OICPResult<PullEVSEPricingResponse>.Success(
@@ -1131,7 +1131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                             StatusCode:            new StatusCode(StatusCodes.CommunicationToEVSEFailed),
                             HTTPResponse:          null,
                             Result:                false,
-                            ProcessId:             Process_Id.NewRandom,
+                            ProcessId:             Process_Id.NewRandom(),
                             CustomData:            null),
                         false));
 
@@ -1140,7 +1140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStart += async (timestamp, empClientAPI, authorizeRemoteReservationStartRequest) => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteReservationStartRequest.EVSEId.OperatorId,
                                                                       out CPOServerAPIClient? cpoServerAPIClient) &&
@@ -1189,7 +1189,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteReservationStop  += async (timestamp, empClientAPI, authorizeRemoteReservationStopRequest)  => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteReservationStopRequest.EVSEId.OperatorId,
                                                                       out CPOServerAPIClient? cpoServerAPIClient) &&
@@ -1236,7 +1236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStart            += async (timestamp, empClientAPI, authorizeRemoteStartRequest)            => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteStartRequest.EVSEId.OperatorId,
                                                                       out CPOServerAPIClient? cpoServerAPIClient) &&
@@ -1284,7 +1284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnAuthorizeRemoteStop             += async (timestamp, empClientAPI, authorizeRemoteStopRequest)             => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 if (centralServiceAPI.CPOServerAPIClients.TryGetValue(authorizeRemoteStopRequest.EVSEId.OperatorId,
                                                                       out CPOServerAPIClient? cpoServerAPIClient) &&
@@ -1331,7 +1331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI.EMPClientAPI.OnGetChargeDetailRecords          += async (timestamp, empClientAPI, getChargeDetailRecordsRequest)          => {
 
-                var processId = Process_Id.NewRandom;
+                var processId = Process_Id.NewRandom();
 
                 return OICPResult<GetChargeDetailRecordsResponse>.Success(
                            getChargeDetailRecordsRequest,
@@ -1343,7 +1343,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                ChargeDetailRecords:       new ChargeDetailRecord[] {
 
                                                               new ChargeDetailRecord(
-                                                                  SessionId:                       Session_Id.NewRandom,
+                                                                  SessionId:                       Session_Id.NewRandom(),
                                                                   EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                   Identification:                  Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                   SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
@@ -1353,8 +1353,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   ConsumedEnergy:                  35,
 
                                                                   PartnerProductId:                PartnerProduct_Id.Parse("AC1"),
-                                                                  CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
-                                                                  EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
+                                                                  CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom(),
+                                                                  EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom(),
                                                                   MeterValueStart:                 3,
                                                                   MeterValueEnd:                   38,
                                                                   MeterValuesInBetween:            Array.Empty<Decimal>(),
@@ -1368,7 +1368,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                               ),
 
                                                               new ChargeDetailRecord(
-                                                                  SessionId:                       Session_Id.NewRandom,
+                                                                  SessionId:                       Session_Id.NewRandom(),
                                                                   EVSEId:                          EVSE_Id.Parse("DE*GEF*E1234567*A*2"),
                                                                   Identification:                  Identification.FromUID(UID.Parse("CCDDEEFFAABBCC")),
                                                                   SessionStart:                    Timestamp.Now - TimeSpan.FromMinutes(60),
@@ -1378,8 +1378,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   ConsumedEnergy:                  35,
 
                                                                   PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
-                                                                  CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom,
-                                                                  EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom,
+                                                                  CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom(),
+                                                                  EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom(),
                                                                   MeterValueStart:                 3,
                                                                   MeterValueEnd:                   38,
                                                                   MeterValuesInBetween:            Array.Empty<Decimal>(),
@@ -1459,7 +1459,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null)),
 
                             _ =>
@@ -1475,7 +1475,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null))
                         };
 
@@ -1495,7 +1495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                        ProcessId:             Process_Id.NewRandom,
+                        ProcessId:             Process_Id.NewRandom(),
                         CustomData:            null));
 
             };
@@ -1517,7 +1517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteReservationStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null)),
 
                     _ =>
@@ -1533,7 +1533,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteReservationStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null))
                 };
 
@@ -1563,7 +1563,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null)),
 
                             _ =>
@@ -1579,7 +1579,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null))
                         };
 
@@ -1599,7 +1599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                         SessionId:             authorizeRemoteStartRequest.SessionId,
                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                        ProcessId:             Process_Id.NewRandom,
+                        ProcessId:             Process_Id.NewRandom(),
                         CustomData:            null));
 
             };
@@ -1621,7 +1621,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null)),
 
                     _ =>
@@ -1637,7 +1637,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null))
                 };
 
@@ -1698,7 +1698,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null)),
 
                             _ =>
@@ -1714,7 +1714,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null))
                         };
 
@@ -1734,7 +1734,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                        ProcessId:             Process_Id.NewRandom,
+                        ProcessId:             Process_Id.NewRandom(),
                         CustomData:            null));
 
             };
@@ -1756,7 +1756,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteReservationStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null)),
 
                     _ =>
@@ -1772,7 +1772,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteReservationStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null))
                 };
 
@@ -1802,7 +1802,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null)),
 
                             _ =>
@@ -1818,7 +1818,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                         SessionId:             authorizeRemoteStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null))
                         };
 
@@ -1838,7 +1838,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                         SessionId:             authorizeRemoteStartRequest.SessionId,
                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                        ProcessId:             Process_Id.NewRandom,
+                        ProcessId:             Process_Id.NewRandom(),
                         CustomData:            null));
 
             };
@@ -1860,7 +1860,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null)),
 
                     _ =>
@@ -1876,7 +1876,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                 SessionId:             authorizeRemoteStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null))
                 };
 
@@ -1978,7 +1978,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                      ),
                                 HTTPResponse:        null,
                                 Result:              true,
-                                ProcessId:           Process_Id.NewRandom,
+                                ProcessId:           Process_Id.NewRandom(),
                                 CustomData:          null));
 
             };
@@ -2078,7 +2078,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                      ),
                                 HTTPResponse:        null,
                                 Result:              true,
-                                ProcessId:           Process_Id.NewRandom,
+                                ProcessId:           Process_Id.NewRandom(),
                                 CustomData:          null));
 
             };

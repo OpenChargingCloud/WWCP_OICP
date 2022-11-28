@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a reference unit identification.
@@ -110,17 +110,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Reference_Unit Parse(String Text)
         {
 
-            if (TryParse(Text, out Reference_Unit chargingPoolId))
+            if (TryParse(Text, out var chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Invalid text-representation of a reference unit identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a reference unit identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a reference unit identification.
@@ -129,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Reference_Unit? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Reference_Unit chargingPoolId))
+            if (TryParse(Text, out var chargingPoolId))
                 return chargingPoolId;
 
             return null;
@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out ReferenceUnit)
+        #region (static) TryParse(Text, out ReferenceUnit)
 
         /// <summary>
         /// Try to parse the given string as a reference unit identification.
@@ -180,14 +180,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
+        #region Static Definitions
+
+        /// <summary>
+        /// Hour
+        /// </summary>
         public static Reference_Unit HOUR
             => new ("HOUR");
 
+        /// <summary>
+        /// kWh
+        /// </summary>
         public static Reference_Unit KILOWATT_HOUR
             => new ("KILOWATT_HOUR");
 
+        /// <summary>
+        /// Minute
+        /// </summary>
         public static Reference_Unit MINUTE
             => new ("MINUTE");
+
+        #endregion
 
 
         #region Operator overloading

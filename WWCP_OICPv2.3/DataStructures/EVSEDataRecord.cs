@@ -889,11 +889,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse DeltaType                         [optional]
 
-                if (JSON.ParseOptionalStruct("deltaType",
-                                             "delta type",
-                                             DeltaTypesExtensions.TryParse,
-                                             out DeltaTypes? DeltaType,
-                                             out ErrorResponse))
+                if (JSON.ParseOptional("deltaType",
+                                       "delta type",
+                                       DeltaTypesExtensions.TryParse,
+                                       out DeltaTypes? DeltaType,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                         return false;
@@ -917,11 +917,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargingStationId                 [optional]
 
-                if (JSON.ParseOptionalStruct("ChargingStationID",
-                                             "charging station identification",
-                                             ChargingStation_Id.TryParse,
-                                             out ChargingStation_Id? ChargingStationId,
-                                             out ErrorResponse))
+                if (JSON.ParseOptional("ChargingStationID",
+                                       "charging station identification",
+                                       ChargingStation_Id.TryParse,
+                                       out ChargingStation_Id? ChargingStationId,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                     {
@@ -941,11 +941,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargingPoolId                    [optional]
 
-                if (JSON.ParseOptionalStruct("ChargingPoolID",
-                                             "charging pool identification",
-                                             ChargingPool_Id.TryParse,
-                                             out ChargingPool_Id? ChargingPoolId,
-                                             out ErrorResponse))
+                if (JSON.ParseOptional("ChargingPoolID",
+                                       "charging pool identification",
+                                       ChargingPool_Id.TryParse,
+                                       out ChargingPool_Id? ChargingPoolId,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                     {
@@ -971,11 +971,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ChargingStationImageURL           [optional]
 
-                if (JSON.ParseOptionalStruct("ChargingStationImage",
-                                             "charging station image URL",
-                                             URL.TryParse,
-                                             out URL? ChargingStationImageURL,
-                                             out ErrorResponse))
+                if (JSON.ParseOptional("ChargingStationImage",
+                                       "charging station image URL",
+                                       URL.TryParse,
+                                       out URL? ChargingStationImageURL,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                         return false;
@@ -1045,11 +1045,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse AccessibilityLocationType         [optional]
 
-                if (JSON.ParseOptionalStruct("AccessibilityLocation",
-                                             "accessibility location",
-                                             AccessibilityLocationTypesExtensions.TryParse,
-                                             out AccessibilityLocationTypes? AccessibilityLocationType,
-                                             out ErrorResponse))
+                if (JSON.ParseOptional("AccessibilityLocation",
+                                       "accessibility location",
+                                       AccessibilityLocationTypesExtensions.TryParse,
+                                       out AccessibilityLocationTypes? AccessibilityLocationType,
+                                       out ErrorResponse))
+                {
+                    if (ErrorResponse is not null)
+                        return false;
+                }
+
+                if (JSON.ParseOptional("AccessibilityLocation",
+                                       "accessibility location",
+                                       AccessibilityLocationTypesExtensions.TryParse,
+                                       out AccessibilityLocationTypes? AccessibilityLocationType2,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                         return false;
@@ -1120,11 +1130,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse HubOperatorId                     [optional]
 
-                if (JSON.ParseOptionalStruct("HubOperatorID",
-                                             "hub operator identification",
-                                             Operator_Id.TryParse,
-                                             out Operator_Id? HubOperatorId,
-                                             out ErrorResponse))
+                if (JSON.ParseOptional("HubOperatorID",
+                                       "hub operator identification",
+                                       Operator_Id.TryParse,
+                                       out Operator_Id? HubOperatorId,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                         return false;
@@ -1134,11 +1144,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ClearingHouseId                   [optional]
 
-                if (JSON.ParseOptionalStruct("ClearingHouseID",
-                                             "clearing house identification",
-                                             ClearingHouse_Id.TryParse,
-                                             out ClearingHouse_Id? ClearingHouseId,
-                                             out ErrorResponse))
+                if (JSON.ParseOptional("ClearingHouseID",
+                                       "clearing house identification",
+                                       ClearingHouse_Id.TryParse,
+                                       out ClearingHouse_Id? ClearingHouseId,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                         return false;

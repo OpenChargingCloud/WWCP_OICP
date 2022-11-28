@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static StatusCodes Parse(String Text)
         {
 
-            if (TryParse(Text, out StatusCodes statusCode))
+            if (TryParse(Text, out var statusCode))
                 return statusCode;
 
             throw new ArgumentException("Undefined status code '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static StatusCodes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out StatusCodes statusCode))
+            if (TryParse(Text, out var statusCode))
                 return statusCode;
 
             return default;
@@ -70,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean TryParse(String Text, out StatusCodes StatusCode)
         {
 
-            if (Int32.TryParse(Text, out Int32 Integer))
+            if (Int32.TryParse(Text, out var Integer))
             {
                 StatusCode = (StatusCodes) Integer;
                 return true;

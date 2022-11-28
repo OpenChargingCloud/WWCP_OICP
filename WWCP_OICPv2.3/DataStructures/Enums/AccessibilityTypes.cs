@@ -24,7 +24,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class AccessibilityTypesExtensions
     {
 
-        #region Parse   (AccessibilityType)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility type.
@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AccessibilityTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out AccessibilityTypes accessibilityType))
+            if (TryParse(Text, out var accessibilityType))
                 return accessibilityType;
 
             throw new ArgumentException("Undefined accessibility type '" + Text + "'!");
@@ -42,7 +42,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(AccessibilityType)
+        #region TryParse(Text)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility type.
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AccessibilityTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out AccessibilityTypes accessibilityType))
+            if (TryParse(Text, out var accessibilityType))
                 return accessibilityType;
 
             return default;
@@ -60,7 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(AccessibilityType, out AccessibilityType)
+        #region TryParse(Text, out AccessibilityType)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility type.

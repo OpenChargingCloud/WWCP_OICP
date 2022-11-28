@@ -24,7 +24,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class FalseTrueAutoExtensions
     {
 
-        #region Parse   (AccessibilityType)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a FalseTrueAuto type.
@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static FalseTrueAuto Parse(String Text)
         {
 
-            if (TryParse(Text, out FalseTrueAuto falseTrueAuto))
+            if (TryParse(Text, out var falseTrueAuto))
                 return falseTrueAuto;
 
             throw new ArgumentException("Undefined FalseTrueAuto '" + Text + "'!");
@@ -42,7 +42,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(AccessibilityType)
+        #region TryParse(Text)
 
         /// <summary>
         /// Parses the given text-representation of a FalseTrueAuto type.
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static FalseTrueAuto? TryParse(String Text)
         {
 
-            if (TryParse(Text, out FalseTrueAuto falseTrueAuto))
+            if (TryParse(Text, out var falseTrueAuto))
                 return falseTrueAuto;
 
             return default;
@@ -60,13 +60,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(AccessibilityType, out FalseTrueAuto)
+        #region TryParse(Text, out FalseTrueAuto)
 
         /// <summary>
         /// Parses the given text-representation of a FalseTrueAuto type.
         /// </summary>
         /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
-        /// <param name="FalseTrueAuto">The parsed FalseTrueAuto.</param>
+        /// <param name="FalseTrueAuto">The parsed FalseTrueAuto type.</param>
         public static Boolean TryParse(String Text, out FalseTrueAuto FalseTrueAuto)
         {
             switch (Text.Trim().ToLower())
@@ -93,15 +93,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region AsString(AccessibilityType)
+        #region AsString(FalseTrueAuto)
 
         /// <summary>
         /// Return a text-representation of the given FalseTrueAuto type.
         /// </summary>
-        /// <param name="AccessibilityType">A FalseTrueAuto type.</param>
-        public static String AsString(this FalseTrueAuto AccessibilityType)
+        /// <param name="FalseTrueAuto">A FalseTrueAuto type.</param>
+        public static String AsString(this FalseTrueAuto FalseTrueAuto)
 
-            => AccessibilityType switch {
+            => FalseTrueAuto switch {
                    FalseTrueAuto.False  => "false",
                    FalseTrueAuto.True   => "true",
                    _                    => "auto",

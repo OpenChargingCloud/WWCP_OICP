@@ -175,7 +175,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.Authorized,
                     new StatusCode(
@@ -226,7 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     StatusCode,
@@ -275,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -328,7 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -381,7 +381,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -434,7 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -487,7 +487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -540,7 +540,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -593,7 +593,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Timestamp.Now - Request.Timestamp),
                     AuthorizationStatusTypes.NotAuthorized,
                     new StatusCode(
@@ -646,7 +646,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Request is not null
                                               ? Timestamp.Now - Request.Timestamp
                                               : TimeSpan.Zero),
@@ -701,7 +701,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
-                    ProcessId         ?? Process_Id.NewRandom,
+                    ProcessId         ?? Process_Id.NewRandom(),
                     Runtime           ?? (Request is not null
                                               ? Timestamp.Now - Request.Timestamp
                                               : TimeSpan.Zero),
@@ -1004,7 +1004,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 AuthorizationStartResponse = new AuthorizationStartResponse(ResponseTimestamp ?? Timestamp.Now,
                                                                             EventTrackingId   ?? Request.EventTrackingId,
-                                                                            ProcessId         ?? Process_Id.NewRandom,
+                                                                            ProcessId         ?? Process_Id.NewRandom(),
                                                                             Runtime           ?? Timestamp.Now - Request.Timestamp,
                                                                             AuthorizationStatus,
                                                                             StatusCode!,
@@ -1439,7 +1439,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 return new AuthorizationStartResponse(ResponseTimestamp ?? Timestamp.Now,
                                                       EventTrackingId   ?? EventTracking_Id.New,
-                                                      ProcessId         ?? Process_Id.NewRandom,
+                                                      ProcessId         ?? Process_Id.NewRandom(),
                                                       Runtime           ?? (Request is not null
                                                                                 ? Timestamp.Now - Request.Timestamp
                                                                                 : TimeSpan.Zero),

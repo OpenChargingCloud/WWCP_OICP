@@ -97,17 +97,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) NewRandom
+        #region (static) NewRandom(Mapper = null)
 
         /// <summary>
-        /// Create a new random process identification.
+        /// Generate a new random process identification.
         /// </summary>
-        public static Process_Id NewRandom
-            => Parse(Guid.NewGuid().ToString());
+        /// <param name="Mapper">A delegate to modify the newly generated process identification.</param>
+        public static Process_Id NewRandom(Func<String, String>? Mapper = null)
+
+            => new(Mapper is not null
+                        ? Mapper(Guid.NewGuid().ToString())
+                        : Guid.NewGuid().ToString());
 
         #endregion
 
-        #region (static) Parse   (Text)
+        #region (static) Parse    (Text)
 
         /// <summary>
         /// Parse the given string as a process identification.
@@ -116,17 +120,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Process_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out Process_Id processId))
+            if (TryParse(Text, out var processId))
                 return processId;
 
-            throw new ArgumentException("Invalid text-representation of a process identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a process identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(Text)
+        #region (static) TryParse (Text)
 
         /// <summary>
         /// Try to parse the given string as a process identification.
@@ -135,7 +139,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Process_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Process_Id processId))
+            if (TryParse(Text, out var processId))
                 return processId;
 
             return null;
@@ -144,7 +148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out ProcessId)
+        #region (static) TryParse (Text, out ProcessId)
 
         /// <summary>
         /// Try to parse the given string as a process identification.

@@ -743,7 +743,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #endregion
 
 
-            var processId = Process_Id.NewRandom;
+            var processId = Process_Id.NewRandom();
 
             OICPResult<PullEVSEDataResponse> result;
 
@@ -850,7 +850,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #endregion
 
 
-            var processId = Process_Id.NewRandom;
+            var processId = Process_Id.NewRandom();
 
             OICPResult<PullEVSEStatusResponse> result;
 
@@ -956,7 +956,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #endregion
 
 
-            var processId = Process_Id.NewRandom;
+            var processId = Process_Id.NewRandom();
 
             OICPResult<PullEVSEStatusByIdResponse> result;
 
@@ -1064,7 +1064,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #endregion
 
 
-            var processId = Process_Id.NewRandom;
+            var processId = Process_Id.NewRandom();
 
             OICPResult<PullPricingProductDataResponse> result;
 
@@ -1171,7 +1171,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #endregion
 
 
-            var processId = Process_Id.NewRandom;
+            var processId = Process_Id.NewRandom();
 
             OICPResult<PullEVSEPricingResponse> result;
 
@@ -1750,7 +1750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
 
 
-            var processId = Process_Id.NewRandom;
+            var processId = Process_Id.NewRandom();
 
             OICPResult<GetChargeDetailRecordsResponse> result;
 

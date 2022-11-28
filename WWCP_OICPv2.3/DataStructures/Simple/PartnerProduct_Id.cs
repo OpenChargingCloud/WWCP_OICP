@@ -107,10 +107,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PartnerProduct_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out PartnerProduct_Id partnerProductId))
+            if (TryParse(Text, out var partnerProductId))
                 return partnerProductId;
 
-            throw new ArgumentException("Invalid text-representation of a partner product identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a partner product identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
@@ -126,7 +126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PartnerProduct_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out PartnerProduct_Id partnerProductId))
+            if (TryParse(Text, out var partnerProductId))
                 return partnerProductId;
 
             return null;

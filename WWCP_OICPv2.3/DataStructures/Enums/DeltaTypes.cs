@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static DeltaTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out DeltaTypes deltaType))
+            if (TryParse(Text, out var deltaType))
                 return deltaType;
 
             throw new ArgumentException("Undefined delta type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static DeltaTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out DeltaTypes deltaType))
+            if (TryParse(Text, out var deltaType))
                 return deltaType;
 
             return default;

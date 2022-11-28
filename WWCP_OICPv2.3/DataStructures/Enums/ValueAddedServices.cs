@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ValueAddedServices Parse(String Text)
         {
 
-            if (TryParse(Text, out ValueAddedServices valueAddedService))
+            if (TryParse(Text, out var valueAddedService))
                 return valueAddedService;
 
             throw new ArgumentException("Undefined value added service '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ValueAddedServices? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ValueAddedServices valueAddedService))
+            if (TryParse(Text, out var valueAddedService))
                 return valueAddedService;
 
             return default;

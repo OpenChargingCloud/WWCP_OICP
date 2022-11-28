@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingModes Parse(String Text)
         {
 
-            if (TryParse(Text, out ChargingModes chargingMode))
+            if (TryParse(Text, out var chargingMode))
                 return chargingMode;
 
             throw new ArgumentException("Undefined charging mode '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingModes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ChargingModes chargingMode))
+            if (TryParse(Text, out var chargingMode))
                 return chargingMode;
 
             return default;

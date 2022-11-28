@@ -124,7 +124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a currency identification.
@@ -133,17 +133,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Currency_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out Currency_Id currencyId))
+            if (TryParse(Text, out var currencyId))
                 return currencyId;
 
-            throw new ArgumentException("Invalid text-representation of a currency identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a currency identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a currency identification.
@@ -161,7 +161,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out CurrencyId)
+        #region (static) TryParse(Text, out CurrencyId)
 
         /// <summary>
         /// Try to parse the given string as a currency identification.

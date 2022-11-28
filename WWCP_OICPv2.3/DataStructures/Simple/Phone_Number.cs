@@ -107,7 +107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a phone number.
@@ -116,17 +116,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Phone_Number Parse(String Text)
         {
 
-            if (TryParse(Text, out Phone_Number phoneNumber))
+            if (TryParse(Text, out var phoneNumber))
                 return phoneNumber;
 
-            throw new ArgumentException("Invalid text-representation of a phone number: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a phone number: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a phone number.
@@ -135,7 +135,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Phone_Number? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Phone_Number phoneNumber))
+            if (TryParse(Text, out var phoneNumber))
                 return phoneNumber;
 
             return null;
@@ -144,7 +144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out PhoneNumber)
+        #region (static) TryParse(Text, out PhoneNumber)
 
         /// <summary>
         /// Try to parse the given string as a phone number.

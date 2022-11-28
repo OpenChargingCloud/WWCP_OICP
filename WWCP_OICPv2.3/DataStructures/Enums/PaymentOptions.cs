@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PaymentOptions Parse(String Text)
         {
 
-            if (TryParse(Text, out PaymentOptions paymentOption))
+            if (TryParse(Text, out var paymentOption))
                 return paymentOption;
 
             throw new ArgumentException("Undefined paymet option '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PaymentOptions? TryParse(String Text)
         {
 
-            if (TryParse(Text, out PaymentOptions paymentOption))
+            if (TryParse(Text, out var paymentOption))
                 return paymentOption;
 
             return default;

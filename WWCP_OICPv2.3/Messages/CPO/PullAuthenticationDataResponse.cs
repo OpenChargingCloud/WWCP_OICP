@@ -446,7 +446,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 PullAuthenticationDataResponse = new PullAuthenticationDataResponse(ResponseTimestamp,
                                                                                     EventTrackingId,
-                                                                                    ProcessId ?? Process_Id.NewRandom,
+                                                                                    ProcessId ?? Process_Id.NewRandom(),
                                                                                     Runtime,
                                                                                     operatorEVSEPricings,
 
@@ -828,7 +828,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        ProcessId         ?? Process_Id.NewRandom,
+                        ProcessId         ?? Process_Id.NewRandom(),
                         Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                         ProviderAuthenticationData,
                         Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),

@@ -1292,7 +1292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                              new PullAuthenticationDataResponse(
                                  Timestamp.Now,
                                  Request.EventTrackingId ?? EventTracking_Id.New,
-                                 Process_Id.NewRandom,
+                                 Process_Id.NewRandom(),
                                  TimeSpan.FromMilliseconds(23),
                                  Array.Empty<ProviderAuthenticationData>(),
                                  Request,

@@ -285,7 +285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 PullEVSEStatusByIdResponse = new PullEVSEStatusByIdResponse(ResponseTimestamp,
                                                                             EventTrackingId,
-                                                                            ProcessId ?? Process_Id.NewRandom,
+                                                                            ProcessId ?? Process_Id.NewRandom(),
                                                                             Runtime,
                                                                             EVSEStatusRecords,
 
@@ -621,7 +621,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        ProcessId         ?? Process_Id.NewRandom,
+                        ProcessId         ?? Process_Id.NewRandom(),
                         Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                         EVSEStatusRecords,
                         Request ?? throw new ArgumentNullException(nameof(Request), "The given request must not be null!"),

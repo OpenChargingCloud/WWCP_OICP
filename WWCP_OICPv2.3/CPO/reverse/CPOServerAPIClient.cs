@@ -410,7 +410,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Byte                                                                  TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>?  result              = null;
-            var                                                                   processId           = Process_Id.NewRandom;
+            var                                                                   processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -799,7 +799,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Byte                                                                 TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>?  result              = null;
-            var                                                                  processId           = Process_Id.NewRandom;
+            var                                                                  processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -1188,7 +1188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Byte                                                       TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>?  result              = null;
-            var                                                        processId           = Process_Id.NewRandom;
+            var                                                        processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -1577,7 +1577,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Byte                                                      TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>?  result              = null;
-            var                                                       processId           = Process_Id.NewRandom;
+            var                                                       processId           = Process_Id.NewRandom();
 
             #endregion
 

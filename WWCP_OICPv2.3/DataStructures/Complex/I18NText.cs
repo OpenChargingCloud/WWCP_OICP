@@ -322,7 +322,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return I18NText!;
             }
 
-            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + errorResponse, nameof(Text));
+            throw new ArgumentException("Invalid text representation of an internationalized (I18N) multi-language text: " + errorResponse, nameof(Text));
 
         }
 
@@ -340,7 +340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return i18NText!;
             }
 
-            throw new ArgumentException("Invalid text-representation of an internationalized (I18N) multi-language text: " + errorResponse,
+            throw new ArgumentException("Invalid text representation of an internationalized (I18N) multi-language text: " + errorResponse,
                                         nameof(JSONArray));
 
         }

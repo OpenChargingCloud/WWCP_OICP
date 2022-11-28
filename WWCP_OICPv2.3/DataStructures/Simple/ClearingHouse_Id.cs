@@ -106,10 +106,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ClearingHouse_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out ClearingHouse_Id clearingHouseId))
+            if (TryParse(Text, out var clearingHouseId))
                 return clearingHouseId;
 
-            throw new ArgumentException("Invalid text-representation of a clearing house identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a clearing house identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ClearingHouse_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ClearingHouse_Id clearingHouseId))
+            if (TryParse(Text, out var clearingHouseId))
                 return clearingHouseId;
 
             return null;

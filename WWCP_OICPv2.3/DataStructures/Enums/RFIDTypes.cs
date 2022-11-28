@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static RFIDTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out RFIDTypes rfidType))
+            if (TryParse(Text, out var rfidType))
                 return rfidType;
 
             throw new ArgumentException("Undefined RFID type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static RFIDTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out RFIDTypes rfidType))
+            if (TryParse(Text, out var rfidType))
                 return rfidType;
 
             return default;

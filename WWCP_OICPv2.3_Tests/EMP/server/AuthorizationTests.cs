@@ -48,8 +48,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
                                                         EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                         PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                        SessionId:            Session_Id.NewRandom,
-                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        SessionId:            Session_Id.NewRandom(),
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
@@ -101,8 +101,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         Identification:       Identification.FromUID(UID.Parse("CCDDAABB")),
                                                         EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                         PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                        SessionId:            Session_Id.NewRandom,
-                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        SessionId:            Session_Id.NewRandom(),
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
@@ -155,8 +155,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         Identification:       Identification.FromRFIDIdentification(new RFIDIdentification(UID.Parse("AABBCCDD"), RFIDTypes.MifareClassic)),
                                                         EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                         PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                        SessionId:            Session_Id.NewRandom,
-                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        SessionId:            Session_Id.NewRandom(),
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
@@ -208,8 +208,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         Identification:       Identification.FromRFIDIdentification(new RFIDIdentification(UID.Parse("CCDDAABB"), RFIDTypes.MifareClassic)),
                                                         EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                         PartnerProductId:     PartnerProduct_Id.Parse("AC3"),
-                                                        SessionId:            Session_Id.NewRandom,
-                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                        SessionId:            Session_Id.NewRandom(),
+                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);
@@ -263,8 +263,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
             var request     = new AuthorizeStopRequest(OperatorId:           Operator_Id.Parse("DE*GEF"),
                                                        Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
                                                        EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
-                                                       SessionId:            Session_Id.NewRandom,
-                                                       CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                       SessionId:            Session_Id.NewRandom(),
+                                                       CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                        EMPPartnerSessionId:  null);
 
             Assert.IsNotNull(request);

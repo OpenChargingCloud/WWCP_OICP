@@ -139,10 +139,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVCO_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out EVCO_Id EVCOId))
+            if (TryParse(Text, out var EVCOId))
                 return EVCOId;
 
-            throw new ArgumentException("Invalid text-representation of an electric vehicle contract identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of an electric vehicle contract identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
@@ -162,7 +162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Initial checks
 
-            if (Suffix != null)
+            if (Suffix is not null)
                 Suffix = Suffix.Trim();
 
             if (Suffix.IsNullOrEmpty())
@@ -204,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVCO_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EVCO_Id EVCOId))
+            if (TryParse(Text, out var EVCOId))
                 return EVCOId;
 
             return null;

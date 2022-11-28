@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PlugTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out PlugTypes plugType))
+            if (TryParse(Text, out var plugType))
                 return plugType;
 
             throw new ArgumentException("Invalid plug type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PlugTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out PlugTypes plugType))
+            if (TryParse(Text, out var plugType))
                 return plugType;
 
             return default;

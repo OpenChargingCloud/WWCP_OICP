@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ErrorClassTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out ErrorClassTypes errorClassTypes))
+            if (TryParse(Text, out var errorClassTypes))
                 return errorClassTypes;
 
             throw new ArgumentException("Undefined error class type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ErrorClassTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ErrorClassTypes errorClassTypes))
+            if (TryParse(Text, out var errorClassTypes))
                 return errorClassTypes;
 
             return default;
@@ -60,7 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out EVSEStatusType)
+        #region TryParse(Text, out ErrorClassType)
 
         /// <summary>
         /// Parses the given text-representation of an error class type.
@@ -89,15 +89,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region AsString(EVSEStatusType)
+        #region AsString(ErrorClassType)
 
         /// <summary>
         /// Return a text-representation of the given error class.
         /// </summary>
-        /// <param name="EVSEStatusType">An error class.</param>
-        public static String AsString(this ErrorClassTypes EVSEStatusType)
+        /// <param name="ErrorClassType">An error class.</param>
+        public static String AsString(this ErrorClassTypes ErrorClassType)
 
-            => EVSEStatusType switch {
+            => ErrorClassType switch {
                    ErrorClassTypes.ConnectorError => "ConnectorError",
                    ErrorClassTypes.CriticalError  => "CriticalError",
                    _                              => "Unknown"

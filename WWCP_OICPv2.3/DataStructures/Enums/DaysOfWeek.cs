@@ -24,7 +24,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class DaysOfWeekExtensions
     {
 
-        #region Parse(Text)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of a day(s) of week.
@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static DaysOfWeek Parse(String Text)
         {
 
-            if (TryParse(Text, out DaysOfWeek daysOfWeek))
+            if (TryParse(Text, out var daysOfWeek))
                 return daysOfWeek;
 
             throw new ArgumentException("Undefined day(s) of week '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static DaysOfWeek? TryParse(String Text)
         {
 
-            if (TryParse(Text, out DaysOfWeek daysOfWeek))
+            if (TryParse(Text, out var daysOfWeek))
                 return daysOfWeek;
 
             return default;

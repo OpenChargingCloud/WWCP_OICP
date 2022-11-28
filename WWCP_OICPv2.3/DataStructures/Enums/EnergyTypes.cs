@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EnergyTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out EnergyTypes energyType))
+            if (TryParse(Text, out var energyType))
                 return energyType;
 
             throw new ArgumentException("Undefined energy type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EnergyTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EnergyTypes energyType))
+            if (TryParse(Text, out var energyType))
                 return energyType;
 
             return default;

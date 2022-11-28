@@ -573,7 +573,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Byte                                     TransmissionRetry   = 0;
             OICPResult<AuthorizationStartResponse>?  result              = null;
-            var                                      processId           = Process_Id.NewRandom;
+            var                                      processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -967,7 +967,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Byte                                    TransmissionRetry   = 0;
             OICPResult<AuthorizationStopResponse>?  result              = null;
-            var                                     processId           = Process_Id.NewRandom;
+            var                                     processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -1362,7 +1362,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Byte                                                            TransmissionRetry   = 0;
             OICPResult<Acknowledgement<ChargingStartNotificationRequest>>?  result              = null;
-            var                                                             processId           = Process_Id.NewRandom;
+            var                                                             processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -1751,7 +1751,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Byte                                                               TransmissionRetry   = 0;
             OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>?  result              = null;
-            var                                                                processId           = Process_Id.NewRandom;
+            var                                                                processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -2140,7 +2140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Byte                                                          TransmissionRetry   = 0;
             OICPResult<Acknowledgement<ChargingEndNotificationRequest>>?  result              = null;
-            var                                                           processId           = Process_Id.NewRandom;
+            var                                                           processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -2529,7 +2529,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Byte                                                            TransmissionRetry   = 0;
             OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>?  result              = null;
-            var                                                             processId           = Process_Id.NewRandom;
+            var                                                             processId           = Process_Id.NewRandom();
 
             #endregion
 
@@ -2919,7 +2919,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Byte                                                     TransmissionRetry   = 0;
             OICPResult<Acknowledgement<ChargeDetailRecordRequest>>?  result              = null;
-            var                                                      processId           = Process_Id.NewRandom;
+            var                                                      processId           = Process_Id.NewRandom();
 
             #endregion
 

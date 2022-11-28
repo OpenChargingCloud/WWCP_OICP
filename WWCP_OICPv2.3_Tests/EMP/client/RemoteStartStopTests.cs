@@ -50,9 +50,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
                               EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
                               Identification:       Identification.FromUID(UID.Parse("11223344")),
-                              SessionId:            Session_Id.          NewRandom,
-                              CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-                              EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom,
+                              SessionId:            Session_Id.          NewRandom(),
+                              CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
+                              EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom(),
                               PartnerProductId:     PartnerProduct_Id.AC1,
 
                               CustomData:           null,
@@ -113,9 +113,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
             var request = new AuthorizeRemoteStopRequest(
                               ProviderId:           Provider_Id.   Parse("DE-GDF"),
                               EVSEId:               EVSE_Id.       Parse("DE*GEF*E1234567*A*1"),
-                              SessionId:            Session_Id.          NewRandom,
-                              CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
-                              EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom,
+                              SessionId:            Session_Id.          NewRandom(),
+                              CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
+                              EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom(),
 
                               CustomData:           null,
 

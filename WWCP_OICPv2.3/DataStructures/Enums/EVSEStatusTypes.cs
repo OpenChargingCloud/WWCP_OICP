@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSEStatusTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out EVSEStatusTypes evseStatusType))
+            if (TryParse(Text, out var evseStatusType))
                 return evseStatusType;
 
             throw new ArgumentException("Undefined EVSE status type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSEStatusTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EVSEStatusTypes evseStatusType))
+            if (TryParse(Text, out var evseStatusType))
                 return evseStatusType;
 
             return default;

@@ -1561,7 +1561,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<PullEVSEDataResponse>? pullEVSEDataResponse = null;
 
@@ -1816,7 +1816,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<PullEVSEStatusResponse>? pullEVSEStatusResponse = null;
 
@@ -2063,7 +2063,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<PullEVSEStatusByIdResponse>? pullEVSEStatusByIdResponse = null;
 
@@ -2309,7 +2309,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<PullEVSEStatusByOperatorIdResponse>? pullEVSEStatusByOperatorIdResponse = null;
 
@@ -2328,7 +2328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                               new PullEVSEStatusByOperatorIdResponse(
                                                                                                   Timestamp.Now,
                                                                                                   Request.EventTrackingId,
-                                                                                                  Process_Id.NewRandom,
+                                                                                                  Process_Id.NewRandom(),
                                                                                                   Timestamp.Now - Request.Timestamp,
                                                                                                   Array.Empty<OperatorEVSEStatus>(),
                                                                                                   StatusCode: new StatusCode(
@@ -2560,7 +2560,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<PullPricingProductDataResponse>? pullPricingProductDataResponse = null;
 
@@ -2813,7 +2813,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<PullEVSEPricingResponse>? pullEVSEPricingResponse = null;
 
@@ -3064,7 +3064,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<PushAuthenticationDataRequest>>? pushAuthenticationDataResponse = null;
 
@@ -3299,7 +3299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>? authorizeRemoteReservationStartResponse = null;
 
@@ -3536,7 +3536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>? authorizeRemoteReservationStopResponse = null;
 
@@ -3773,7 +3773,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>? authorizeRemoteStartResponse = null;
 
@@ -4010,7 +4010,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          HTTPDelegate:        async Request => {
 
                                              var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>? authorizeRemoteStopResponse = null;
 
@@ -4251,7 +4251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              var page       = Request.QueryString.GetUInt32 ("page");
                                              var size       = Request.QueryString.GetUInt32 ("size");
                                              var sortOrder  = Request.QueryString.GetStrings("sortOrder");
-                                             var processId  = Process_Id.NewRandom;
+                                             var processId  = Process_Id.NewRandom();
 
                                              OICPResult<GetChargeDetailRecordsResponse>? getChargeDetailRecordsResponse = null;
 

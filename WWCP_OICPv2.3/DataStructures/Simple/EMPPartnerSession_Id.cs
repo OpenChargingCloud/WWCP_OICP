@@ -100,17 +100,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) NewRandom
+        #region (static) NewRandom(Mapper = null)
 
         /// <summary>
-        /// Create a new random charging session identification.
+        /// Generate a new random charging session identification.
         /// </summary>
-        public static EMPPartnerSession_Id NewRandom
-            => Parse(Guid.NewGuid().ToString());
+        /// <param name="Mapper">A delegate to modify the newly generated charging session identification.</param>
+        public static EMPPartnerSession_Id NewRandom(Func<String, String>? Mapper = null)
+
+            => new(Mapper is not null
+                        ? Mapper(Guid.NewGuid().ToString())
+                        : Guid.NewGuid().ToString());
 
         #endregion
 
-        #region (static) Parse   (Text)
+        #region (static) Parse    (Text)
 
         /// <summary>
         /// Parse the given string as a charging session identification.
@@ -119,17 +123,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EMPPartnerSession_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out EMPPartnerSession_Id sessionId))
+            if (TryParse(Text, out var sessionId))
                 return sessionId;
 
-            throw new ArgumentException("Invalid text-representation of an EMP charging session identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of an EMP charging session identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region (static) TryParse(Text)
+        #region (static) TryParse (Text)
 
         /// <summary>
         /// Try to parse the given string as a charging session identification.
@@ -138,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EMPPartnerSession_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out EMPPartnerSession_Id sessionId))
+            if (TryParse(Text, out var sessionId))
                 return sessionId;
 
             return null;
@@ -147,7 +151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) TryParse(Text, out SessionId)
+        #region (static) TryParse (Text, out SessionId)
 
         /// <summary>
         /// Try to parse the given string as a charging session identification.

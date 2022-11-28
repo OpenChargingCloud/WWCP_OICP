@@ -46,11 +46,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                 return;
             }
 
-            var request     = new ChargingStartNotificationRequest(SessionId:            Session_Id.NewRandom,
+            var request     = new ChargingStartNotificationRequest(SessionId:            Session_Id.NewRandom(),
                                                                    Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                    EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                    ChargingStart:        Timestamp.Now - TimeSpan.FromSeconds(5),
-                                                                   CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                                   CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                                    EMPPartnerSessionId:  null,
                                                                    SessionStart:         Timestamp.Now - TimeSpan.FromSeconds(10),
                                                                    MeterValueStart:      23,
@@ -108,12 +108,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                 return;
             }
 
-            var request     = new ChargingProgressNotificationRequest(SessionId:               Session_Id.NewRandom,
+            var request     = new ChargingProgressNotificationRequest(SessionId:               Session_Id.NewRandom(),
                                                                       Identification:          Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                       EVSEId:                  EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                       ChargingStart:           Timestamp.Now - TimeSpan.FromSeconds(5),
                                                                       EventOccurred:            Timestamp.Now,
-                                                                      CPOPartnerSessionId:     CPOPartnerSession_Id.NewRandom,
+                                                                      CPOPartnerSessionId:     CPOPartnerSession_Id.NewRandom(),
                                                                       EMPPartnerSessionId:     null,
                                                                       ChargingDuration:        TimeSpan.FromSeconds(5),
                                                                       SessionStart:            Timestamp.Now - TimeSpan.FromSeconds(10),
@@ -174,12 +174,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                 return;
             }
 
-            var request     = new ChargingEndNotificationRequest(SessionId:             Session_Id.NewRandom,
+            var request     = new ChargingEndNotificationRequest(SessionId:             Session_Id.NewRandom(),
                                                                  Identification:        Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                  EVSEId:                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                  ChargingStart:         Timestamp.Now - TimeSpan.FromSeconds(5),
                                                                  ChargingEnd:           Timestamp.Now - TimeSpan.FromSeconds(1),
-                                                                 CPOPartnerSessionId:   CPOPartnerSession_Id.NewRandom,
+                                                                 CPOPartnerSessionId:   CPOPartnerSession_Id.NewRandom(),
                                                                  EMPPartnerSessionId:   null,
                                                                  SessionStart:          Timestamp.Now - TimeSpan.FromSeconds(10),
                                                                  SessionEnd:            Timestamp.Now,
@@ -242,12 +242,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                 return;
             }
 
-            var request     = new ChargingErrorNotificationRequest(SessionId:            Session_Id.NewRandom,
+            var request     = new ChargingErrorNotificationRequest(SessionId:            Session_Id.NewRandom(),
                                                                    Identification:       Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                    OperatorId:           Operator_Id.Parse("DE*GEF"),
                                                                    EVSEId:               EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                    ErrorType:            ErrorClassTypes.CriticalError,
-                                                                   CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom,
+                                                                   CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                                    EMPPartnerSessionId:  null,
                                                                    ErrorAdditionalInfo:  "No space left of device!",
                                                                    CustomData:           null,

@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static GeoCoordinatesFormats Parse(String Text)
         {
 
-            if (TryParse(Text, out GeoCoordinatesFormats geoCoordinatesFormat))
+            if (TryParse(Text, out var geoCoordinatesFormat))
                 return geoCoordinatesFormat;
 
             throw new ArgumentException("Undefined geo coordinates format '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static GeoCoordinatesFormats? TryParse(String Text)
         {
 
-            if (TryParse(Text, out GeoCoordinatesFormats geoCoordinatesFormat))
+            if (TryParse(Text, out var geoCoordinatesFormat))
                 return geoCoordinatesFormat;
 
             return default;

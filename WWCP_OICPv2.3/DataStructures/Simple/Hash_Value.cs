@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a hash value.
@@ -110,17 +110,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Hash_Value Parse(String Text)
         {
 
-            if (TryParse(Text, out Hash_Value hashValue))
+            if (TryParse(Text, out var hashValue))
                 return hashValue;
 
-            throw new ArgumentException("Invalid text-representation of a hash value: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a hash value: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a hash value.
@@ -129,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Hash_Value? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Hash_Value hashValue))
+            if (TryParse(Text, out var hashValue))
                 return hashValue;
 
             return null;
@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out HashValue)
+        #region (static) TryParse(Text, out HashValue)
 
         /// <summary>
         /// Try to parse the given string as a hash value.
@@ -190,7 +190,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Hash_Value HashValue1, Hash_Value HashValue2)
+        public static Boolean operator == (Hash_Value HashValue1,
+                                           Hash_Value HashValue2)
+
             => HashValue1.Equals(HashValue2);
 
         #endregion
@@ -203,7 +205,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Hash_Value HashValue1, Hash_Value HashValue2)
+        public static Boolean operator != (Hash_Value HashValue1,
+                                           Hash_Value HashValue2)
+
             => !HashValue1.Equals(HashValue2);
 
         #endregion
@@ -216,7 +220,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Hash_Value HashValue1, Hash_Value HashValue2)
+        public static Boolean operator < (Hash_Value HashValue1,
+                                          Hash_Value HashValue2)
+
             => HashValue1.CompareTo(HashValue2) < 0;
 
         #endregion
@@ -229,7 +235,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Hash_Value HashValue1, Hash_Value HashValue2)
+        public static Boolean operator <= (Hash_Value HashValue1,
+                                           Hash_Value HashValue2)
+
             => HashValue1.CompareTo(HashValue2) <= 0;
 
         #endregion
@@ -242,7 +250,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Hash_Value HashValue1, Hash_Value HashValue2)
+        public static Boolean operator > (Hash_Value HashValue1,
+                                          Hash_Value HashValue2)
+
             => HashValue1.CompareTo(HashValue2) > 0;
 
         #endregion
@@ -255,7 +265,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Hash_Value HashValue1, Hash_Value HashValue2)
+        public static Boolean operator >= (Hash_Value HashValue1,
+                                           Hash_Value HashValue2)
+
             => HashValue1.CompareTo(HashValue2) >= 0;
 
         #endregion

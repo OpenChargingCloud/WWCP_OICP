@@ -385,7 +385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 GetChargeDetailRecordsResponse = new GetChargeDetailRecordsResponse(ResponseTimestamp,
                                                                                     EventTrackingId,
-                                                                                    ProcessId           ?? Process_Id.NewRandom,
+                                                                                    ProcessId           ?? Process_Id.NewRandom(),
                                                                                     Runtime,
                                                                                     ChargeDetailRecords ?? Array.Empty<ChargeDetailRecord>(),
 
@@ -750,7 +750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        ProcessId         ?? Process_Id.NewRandom,
+                        ProcessId         ?? Process_Id.NewRandom(),
                         Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                         ChargeDetailRecords,
 

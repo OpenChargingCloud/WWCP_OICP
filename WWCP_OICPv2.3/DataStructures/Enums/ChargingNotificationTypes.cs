@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingNotificationTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out ChargingNotificationTypes chargingNotificationType))
+            if (TryParse(Text, out var chargingNotificationType))
                 return chargingNotificationType;
 
             throw new ArgumentException("Undefined charging notification type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingNotificationTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ChargingNotificationTypes chargingNotificationType))
+            if (TryParse(Text, out var chargingNotificationType))
                 return chargingNotificationType;
 
             return default;
@@ -60,36 +60,36 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out ChargingMode)
+        #region TryParse(Text, out ChargingNotificationType)
 
         /// <summary>
         /// Parses the given text-representation of a charging notification type.
         /// </summary>
         /// <param name="Text">A text-representation of a charging notification type.</param>
-        /// <param name="ChargingMode">The parsed charging notification type.</param>
-        public static Boolean TryParse(String Text, out ChargingNotificationTypes ChargingMode)
+        /// <param name="ChargingNotificationType">The parsed charging notification type.</param>
+        public static Boolean TryParse(String Text, out ChargingNotificationTypes ChargingNotificationType)
         {
             switch (Text?.Trim()?.ToLower())
             {
 
                 case "start":
-                    ChargingMode = ChargingNotificationTypes.Start;
+                    ChargingNotificationType = ChargingNotificationTypes.Start;
                     return true;
 
                 case "progress":
-                    ChargingMode = ChargingNotificationTypes.Progress;
+                    ChargingNotificationType = ChargingNotificationTypes.Progress;
                     return true;
 
                 case "end":
-                    ChargingMode = ChargingNotificationTypes.End;
+                    ChargingNotificationType = ChargingNotificationTypes.End;
                     return true;
 
                 case "error":
-                    ChargingMode = ChargingNotificationTypes.Error;
+                    ChargingNotificationType = ChargingNotificationTypes.Error;
                     return true;
 
                 default:
-                    ChargingMode = ChargingNotificationTypes.Error;
+                    ChargingNotificationType = ChargingNotificationTypes.Error;
                     return false;
 
             }

@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ActionTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out ActionTypes actionType))
+            if (TryParse(Text, out var actionType))
                 return actionType;
 
             throw new ArgumentException("Undefined action type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ActionTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ActionTypes actionType))
+            if (TryParse(Text, out var actionType))
                 return actionType;
 
             return default;

@@ -95,7 +95,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null)),
 
                             _ =>
@@ -111,7 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null))
                         };
 
@@ -131,7 +131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                         SessionId:             authorizeRemoteReservationStartRequest.SessionId,
                         CPOPartnerSessionId:   authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
                         EMPPartnerSessionId:   authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                        ProcessId:             Process_Id.NewRandom,
+                        ProcessId:             Process_Id.NewRandom(),
                         CustomData:            null));
 
             };
@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                 SessionId:             authorizeRemoteReservationStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null)),
 
                     _ =>
@@ -169,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                 SessionId:             authorizeRemoteReservationStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null))
                 };
 
@@ -199,7 +199,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                         SessionId:             authorizeRemoteStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null)),
 
                             _ =>
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                         SessionId:             authorizeRemoteStartRequest.SessionId,
                                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                        ProcessId:             Process_Id.NewRandom,
+                                        ProcessId:             Process_Id.NewRandom(),
                                         CustomData:            null))
                         };
 
@@ -235,7 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                         SessionId:             authorizeRemoteStartRequest.SessionId,
                         CPOPartnerSessionId:   authorizeRemoteStartRequest.CPOPartnerSessionId,
                         EMPPartnerSessionId:   authorizeRemoteStartRequest.EMPPartnerSessionId,
-                        ProcessId:             Process_Id.NewRandom,
+                        ProcessId:             Process_Id.NewRandom(),
                         CustomData:            null));
 
             };
@@ -257,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                 SessionId:             authorizeRemoteStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null)),
 
                     _ =>
@@ -273,7 +273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                 SessionId:             authorizeRemoteStopRequest.SessionId,
                                 CPOPartnerSessionId:   authorizeRemoteStopRequest.CPOPartnerSessionId,
                                 EMPPartnerSessionId:   authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                ProcessId:             Process_Id.NewRandom,
+                                ProcessId:             Process_Id.NewRandom(),
                                 CustomData:            null))
                 };
 

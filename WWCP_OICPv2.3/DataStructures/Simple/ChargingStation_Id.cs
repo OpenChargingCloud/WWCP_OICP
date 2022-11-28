@@ -103,7 +103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Generate(OperatorId, Address, GeoLocation = null, SubOperatorName = null, ChargingStationName = null, Length = 15, Mapper = null)
+        #region (static) Generate (OperatorId, Address, GeoLocation = null, SubOperatorName = null, ChargingStationName = null, Length = 15, Mapper = null)
 
         /// <summary>
         /// Create a valid charging station identification based on the given parameters.
@@ -152,13 +152,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Random  (Mapper = null)
+        #region (static) NewRandom(Mapper = null)
 
         /// <summary>
         /// Generate a new unique identification of a charging station identification.
         /// </summary>
         /// <param name="Mapper">A delegate to modify the newly generated charging station identification.</param>
-        public static ChargingStation_Id Random(Func<String, String>? Mapper = null)
+        public static ChargingStation_Id NewRandom(Func<String, String>? Mapper = null)
 
             => new (Mapper is not null
                         ? Mapper(RandomExtensions.RandomString(50))
@@ -166,7 +166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Parse   (Text)
+        #region (static) Parse    (Text)
 
         /// <summary>
         /// Parse the given string as a charging station identification.
@@ -175,17 +175,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingStation_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out ChargingStation_Id chargingStationId))
+            if (TryParse(Text, out var chargingStationId))
                 return chargingStationId;
 
-            throw new ArgumentException("Invalid text-representation of a charging station identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a charging station identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse (Text)
 
         /// <summary>
         /// Try to parse the given string as a charging station identification.
@@ -194,7 +194,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingStation_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ChargingStation_Id chargingStationId))
+            if (TryParse(Text, out var chargingStationId))
                 return chargingStationId;
 
             return null;
@@ -203,7 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out ChargingStationId)
+        #region (static) TryParse (Text, out ChargingStationId)
 
         /// <summary>
         /// Try to parse the given string as a charging station identification.

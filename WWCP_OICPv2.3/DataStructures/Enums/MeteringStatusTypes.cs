@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static MeteringStatusTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out MeteringStatusTypes meteringStatusType))
+            if (TryParse(Text, out var meteringStatusType))
                 return meteringStatusType;
 
             throw new ArgumentException("Undefined metering status type '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static MeteringStatusTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out MeteringStatusTypes meteringStatusType))
+            if (TryParse(Text, out var meteringStatusType))
                 return meteringStatusType;
 
             return default;
@@ -60,32 +60,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out RFIDType)
+        #region TryParse(Text, out MeteringStatusType)
 
         /// <summary>
         /// Parses the given text-representation of a metering status type.
         /// </summary>
         /// <param name="Text">A text-representation of a metering status type.</param>
-        /// <param name="RFIDType">The parsed metering status type.</param>
-        public static Boolean TryParse(String Text, out MeteringStatusTypes RFIDType)
+        /// <param name="MeteringStatusType">The parsed metering status type.</param>
+        public static Boolean TryParse(String Text, out MeteringStatusTypes MeteringStatusType)
         {
             switch (Text?.Trim())
             {
 
                 case "Start":
-                    RFIDType = MeteringStatusTypes.Start;
+                    MeteringStatusType = MeteringStatusTypes.Start;
                     return true;
 
                 case "Progress":
-                    RFIDType = MeteringStatusTypes.Progress;
+                    MeteringStatusType = MeteringStatusTypes.Progress;
                     return true;
 
                 case "End":
-                    RFIDType = MeteringStatusTypes.End;
+                    MeteringStatusType = MeteringStatusTypes.End;
                     return true;
 
                 default:
-                    RFIDType = MeteringStatusTypes.End;
+                    MeteringStatusType = MeteringStatusTypes.End;
                     return false;
 
             };

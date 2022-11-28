@@ -108,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a time zone identification.
@@ -117,16 +117,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Time_Zone Parse(String Text)
         {
 
-            if (TryParse(Text, out Time_Zone timeZone))
+            if (TryParse(Text, out var timeZone))
                 return timeZone;
 
-            throw new ArgumentException("Invalid text-representation of a time zone identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text representation of a time zone identification: '" + Text + "'!", nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a time zone identification.
@@ -135,7 +135,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Time_Zone? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Time_Zone timeZone))
+            if (TryParse(Text, out var timeZone))
                 return timeZone;
 
             return null;
@@ -144,7 +144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out TimeZone)
+        #region (static) TryParse(Text, out TimeZone)
 
         /// <summary>
         /// Try to parse the given string as a time zone identification.

@@ -104,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Generate(OperatorId, Address, GeoLocation = null, SubOperatorName = null, Length = 15, Mapper = null)
+        #region (static) Generate (OperatorId, Address, GeoLocation = null, SubOperatorName = null, Length = 15, Mapper = null)
 
         /// <summary>
         /// Create a valid charging pool identification based on the given parameters.
@@ -150,13 +150,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Random  (Mapper = null)
+        #region (static) NewRandom(Mapper = null)
 
         /// <summary>
         /// Generate a new unique identification of a charging pool identification.
         /// </summary>
         /// <param name="Mapper">A delegate to modify the newly generated charging pool identification.</param>
-        public static ChargingPool_Id Random(Func<String, String>? Mapper = null)
+        public static ChargingPool_Id NewRandom(Func<String, String>? Mapper = null)
 
             => new (Mapper is not null
                         ? Mapper(RandomExtensions.RandomString(50))
@@ -164,7 +164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Parse   (Text)
+        #region (static) Parse    (Text)
 
         /// <summary>
         /// Parse the given string as a charging pool identification.
@@ -173,17 +173,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingPool_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out ChargingPool_Id chargingPoolId))
+            if (TryParse(Text, out var chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Invalid text-representation of a charging pool identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a charging pool identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse (Text)
 
         /// <summary>
         /// Try to parse the given string as a charging pool identification.
@@ -192,7 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingPool_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out ChargingPool_Id chargingPoolId))
+            if (TryParse(Text, out var chargingPoolId))
                 return chargingPoolId;
 
             return null;
@@ -201,7 +201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out ChargingPoolId)
+        #region (static) TryParse (Text, out ChargingPoolId)
 
         /// <summary>
         /// Try to parse the given string as a charging pool identification.

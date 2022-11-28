@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse   (Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given string as a week day.
@@ -110,17 +110,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WeekDay Parse(String Text)
         {
 
-            if (TryParse(Text, out WeekDay weekDay))
+            if (TryParse(Text, out var weekDay))
                 return weekDay;
 
-            throw new ArgumentException("Invalid text-representation of a week day: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a week day: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given string as a week day.
@@ -129,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WeekDay? TryParse(String Text)
         {
 
-            if (TryParse(Text, out WeekDay weekDay))
+            if (TryParse(Text, out var weekDay))
                 return weekDay;
 
             return null;
@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out WeekDay)
+        #region (static) TryParse(Text, out WeekDay)
 
         /// <summary>
         /// Try to parse the given string as a week day.
@@ -180,7 +180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) Everyday
+        #region Static Definitions
 
         /// <summary>
         /// Everyday
@@ -188,19 +188,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WeekDay Everyday
             => new ("Everyday");
 
-        #endregion
-
-        #region (static) Workdays
-
         /// <summary>
         /// Workdays
         /// </summary>
         public static WeekDay Workdays
             => new ("Workdays");
-
-        #endregion
-
-        #region (static) Weekend
 
         /// <summary>
         /// Weekend
@@ -208,19 +200,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WeekDay Weekend
             => new ("Weekend");
 
-        #endregion
-
-        #region (static) Monday
-
         /// <summary>
         /// Monday
         /// </summary>
         public static WeekDay Monday
             => new ("Monday");
-
-        #endregion
-
-        #region (static) Tuesday
 
         /// <summary>
         /// Tuesday
@@ -228,19 +212,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WeekDay Tuesday
             => new ("Tuesday");
 
-        #endregion
-
-        #region (static) Wednesday
-
         /// <summary>
         /// Wednesday
         /// </summary>
         public static WeekDay Wednesday
             => new ("Wednesday");
-
-        #endregion
-
-        #region (static) Thursday
 
         /// <summary>
         /// Thursday
@@ -248,29 +224,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static WeekDay Thursday
             => new ("Thursday");
 
-        #endregion
-
-        #region (static) Friday
-
         /// <summary>
         /// Friday
         /// </summary>
         public static WeekDay Friday
             => new ("Friday");
 
-        #endregion
-
-        #region (static) Saturday
-
         /// <summary>
         /// Saturday
         /// </summary>
         public static WeekDay Saturday
             => new ("Saturday");
-
-        #endregion
-
-        #region (static) Sunday
 
         /// <summary>
         /// Sunday

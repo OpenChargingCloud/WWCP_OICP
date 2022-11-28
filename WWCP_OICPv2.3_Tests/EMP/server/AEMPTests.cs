@@ -99,7 +99,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:                 Timestamp.Now,
                                         EventTrackingId:                   EventTracking_Id.New,
                                         Runtime:                           TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                         Process_Id.NewRandom,
+                                        ProcessId:                         Process_Id.NewRandom(),
                                         HTTPResponse:                      null,
                                         CustomData:                        null)),
 
@@ -115,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:                 Timestamp.Now,
                                         EventTrackingId:                   EventTracking_Id.New,
                                         Runtime:                           TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                         Process_Id.NewRandom,
+                                        ProcessId:                         Process_Id.NewRandom(),
                                         HTTPResponse:                      null,
                                         CustomData:                        null))
 
@@ -146,7 +146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:                 Timestamp.Now,
                                         EventTrackingId:                   EventTracking_Id.New,
                                         Runtime:                           TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                         Process_Id.NewRandom,
+                                        ProcessId:                         Process_Id.NewRandom(),
                                         HTTPResponse:                      null,
                                         CustomData:                        null)),
 
@@ -162,7 +162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:                 Timestamp.Now,
                                         EventTrackingId:                   EventTracking_Id.New,
                                         Runtime:                           TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                         Process_Id.NewRandom,
+                                        ProcessId:                         Process_Id.NewRandom(),
                                         HTTPResponse:                      null,
                                         CustomData:                        null))
 
@@ -184,7 +184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                         ResponseTimestamp:          Timestamp.Now,
                         EventTrackingId:            EventTracking_Id.New,
                         Runtime:                    TimeSpan.FromMilliseconds(2),
-                        ProcessId:                  Process_Id.NewRandom,
+                        ProcessId:                  Process_Id.NewRandom(),
                         HTTPResponse:               null,
                         CustomData:                 null));
 
@@ -213,7 +213,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:          Timestamp.Now,
                                         EventTrackingId:            EventTracking_Id.New,
                                         Runtime:                    TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                  Process_Id.NewRandom,
+                                        ProcessId:                  Process_Id.NewRandom(),
                                         HTTPResponse:               null,
                                         CustomData:                 null)),
 
@@ -229,7 +229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:          Timestamp.Now,
                                         EventTrackingId:            EventTracking_Id.New,
                                         Runtime:                    TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                  Process_Id.NewRandom,
+                                        ProcessId:                  Process_Id.NewRandom(),
                                         HTTPResponse:               null,
                                         CustomData:                 null))
 
@@ -256,7 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:          Timestamp.Now,
                                         EventTrackingId:            EventTracking_Id.New,
                                         Runtime:                    TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                  Process_Id.NewRandom,
+                                        ProcessId:                  Process_Id.NewRandom(),
                                         HTTPResponse:               null,
                                         CustomData:                 null)),
 
@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                         ResponseTimestamp:          Timestamp.Now,
                                         EventTrackingId:            EventTracking_Id.New,
                                         Runtime:                    TimeSpan.FromMilliseconds(2),
-                                        ProcessId:                  Process_Id.NewRandom,
+                                        ProcessId:                  Process_Id.NewRandom(),
                                         HTTPResponse:               null,
                                         CustomData:                 null))
 
@@ -294,7 +294,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                         ResponseTimestamp:          Timestamp.Now,
                         EventTrackingId:            EventTracking_Id.New,
                         Runtime:                    TimeSpan.FromMilliseconds(2),
-                        ProcessId:                  Process_Id.NewRandom,
+                        ProcessId:                  Process_Id.NewRandom(),
                         HTTPResponse:               null,
                         CustomData:                 null));
 
@@ -307,7 +307,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                     new Acknowledgement<ChargingStartNotificationRequest>(
                         Timestamp.Now,
                         chargingStartNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                        Process_Id.NewRandom,
+                        Process_Id.NewRandom(),
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingStartNotificationRequest,
@@ -328,7 +328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                     new Acknowledgement<ChargingProgressNotificationRequest>(
                         Timestamp.Now,
                         chargingProgressNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                        Process_Id.NewRandom,
+                        Process_Id.NewRandom(),
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingProgressNotificationRequest,
@@ -349,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                     new Acknowledgement<ChargingEndNotificationRequest>(
                         Timestamp.Now,
                         chargingEndNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                        Process_Id.NewRandom,
+                        Process_Id.NewRandom(),
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingEndNotificationRequest,
@@ -370,7 +370,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                     new Acknowledgement<ChargingErrorNotificationRequest>(
                         Timestamp.Now,
                         chargingErrorNotificationRequest.EventTrackingId ?? EventTracking_Id.New,
-                        Process_Id.NewRandom,
+                        Process_Id.NewRandom(),
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargingErrorNotificationRequest,
@@ -392,7 +392,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                     new Acknowledgement<ChargeDetailRecordRequest>(
                         Timestamp.Now,
                         chargeDetailRecordRequest.EventTrackingId ?? EventTracking_Id.New,
-                        Process_Id.NewRandom,
+                        Process_Id.NewRandom(),
                         TimeSpan.Zero,
                         new StatusCode(StatusCodes.Success),
                         chargeDetailRecordRequest,

@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AuthenticationModes Parse(String Text)
         {
 
-            if (TryParse(Text, out AuthenticationModes authenticationMode))
+            if (TryParse(Text, out var authenticationMode))
                 return authenticationMode;
 
             throw new ArgumentException("Undefined authentication mode '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AuthenticationModes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out AuthenticationModes authenticationMode))
+            if (TryParse(Text, out var authenticationMode))
                 return authenticationMode;
 
             return default;

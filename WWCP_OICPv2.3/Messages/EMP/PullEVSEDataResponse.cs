@@ -482,7 +482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 PullEVSEDataResponse = new PullEVSEDataResponse(ResponseTimestamp,
                                                                 EventTrackingId,
-                                                                ProcessId ?? Process_Id.NewRandom,
+                                                                ProcessId ?? Process_Id.NewRandom(),
                                                                 Runtime,
                                                                 EVSEDataRecords,
 
@@ -879,7 +879,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (ResponseTimestamp ?? Timestamp.Now,
                         EventTrackingId   ?? EventTracking_Id.New,
-                        ProcessId         ?? Process_Id.NewRandom,
+                        ProcessId         ?? Process_Id.NewRandom(),
                         Runtime           ?? (Timestamp.Now - (Request?.Timestamp ?? Timestamp.Now)),
                         EVSEDataRecords,
 

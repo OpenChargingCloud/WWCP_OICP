@@ -142,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse(Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given text-representation of a charging station operator identification.
@@ -151,17 +151,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Operator_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out Operator_Id operatorId))
+            if (TryParse(Text, out var operatorId))
                 return operatorId;
 
-            throw new ArgumentException("Invalid text-representation of an EVSE operator identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of an EVSE operator identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region Parse(CountryCode, Suffix, IdFormat = IdFormatType.ISO)
+        #region (static) Parse   (CountryCode, Suffix, IdFormat = IdFormatType.ISO)
 
         /// <summary>
         /// Parse the given string as an charging station operator identification.
@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given text-representation of a charging station operator identification.
@@ -207,7 +207,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Operator_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Operator_Id operatorId))
+            if (TryParse(Text, out var operatorId))
                 return operatorId;
 
             return null;
@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out OperatorId)
+        #region (static) TryParse(Text, out OperatorId)
 
         /// <summary>
         /// Try to parse the given text-representation of a charging station operator identification.
@@ -306,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(CountryCode, Suffix, out OperatorId, IdFormat = OperatorIdFormats.ISO_HYPHEN)
+        #region (static) TryParse(CountryCode, Suffix, out OperatorId, IdFormat = OperatorIdFormats.ISO_HYPHEN)
 
         /// <summary>
         /// Try to parse the given text-representation of an e-mobility operator identification.
@@ -382,7 +382,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator == (Operator_Id OperatorId1, Operator_Id OperatorId2)
+        public static Boolean operator == (Operator_Id OperatorId1,
+                                           Operator_Id OperatorId2)
+
             => OperatorId1.Equals(OperatorId2);
 
         #endregion
@@ -395,7 +397,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator != (Operator_Id OperatorId1, Operator_Id OperatorId2)
+        public static Boolean operator != (Operator_Id OperatorId1,
+                                           Operator_Id OperatorId2)
+
             => !OperatorId1.Equals(OperatorId2);
 
         #endregion
@@ -408,7 +412,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (Operator_Id OperatorId1, Operator_Id OperatorId2)
+        public static Boolean operator < (Operator_Id OperatorId1,
+                                          Operator_Id OperatorId2)
+
             => OperatorId1.CompareTo(OperatorId2) < 0;
 
         #endregion
@@ -421,7 +427,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (Operator_Id OperatorId1, Operator_Id OperatorId2)
+        public static Boolean operator <= (Operator_Id OperatorId1,
+                                           Operator_Id OperatorId2)
+
             => OperatorId1.CompareTo(OperatorId2) <= 0;
 
         #endregion
@@ -434,7 +442,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (Operator_Id OperatorId1, Operator_Id OperatorId2)
+        public static Boolean operator > (Operator_Id OperatorId1,
+                                          Operator_Id OperatorId2)
+
             => OperatorId1.CompareTo(OperatorId2) > 0;
 
         #endregion
@@ -447,7 +457,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (Operator_Id OperatorId1, Operator_Id OperatorId2)
+        public static Boolean operator >= (Operator_Id OperatorId1,
+                                           Operator_Id OperatorId2)
+
             => OperatorId1.CompareTo(OperatorId2) >= 0;
 
         #endregion

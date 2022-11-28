@@ -24,7 +24,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class AccessibilityLocationTypesExtensions
     {
 
-        #region Parse   (AccessibilityLocationType)
+        #region Parse   (Text)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility location type.
@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AccessibilityLocationTypes Parse(String Text)
         {
 
-            if (TryParse(Text, out AccessibilityLocationTypes accessibilityLocationType))
+            if (TryParse(Text, out var accessibilityLocationType))
                 return accessibilityLocationType;
 
             throw new ArgumentException("Undefined accessibility location type '" + Text + "'!");
@@ -42,7 +42,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(AccessibilityLocationType)
+        #region TryParse(Text)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility location type.
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static AccessibilityLocationTypes? TryParse(String Text)
         {
 
-            if (TryParse(Text, out AccessibilityLocationTypes accessibilityLocationType))
+            if (TryParse(Text, out var accessibilityLocationType))
                 return accessibilityLocationType;
 
             return default;
@@ -60,7 +60,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(AccessibilityLocationType, out AccessibilityLocationType)
+        #region TryParse(Text, out AccessibilityLocationType)
 
         /// <summary>
         /// Parses the given text-representation of an accessibility location type.

@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static LanguageCode Parse(String Text)
         {
 
-            if (TryParse(Text, out LanguageCode languageCode))
+            if (TryParse(Text, out var languageCode))
                 return languageCode;
 
             throw new ArgumentException("The given text representation of a ISO-639-1 or ISO-639-2/T language code is invalid!",
@@ -129,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static LanguageCode? TryParse(String Text)
         {
 
-            if (TryParse(Text, out LanguageCode languageCode))
+            if (TryParse(Text, out var languageCode))
                 return languageCode;
 
             return null;

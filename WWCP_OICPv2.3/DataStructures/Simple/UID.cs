@@ -150,10 +150,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static UID Parse(String Text)
         {
 
-            if (TryParse(Text, out UID uid))
+            if (TryParse(Text, out var uid))
                 return uid;
 
-            throw new ArgumentException("Invalid text-representation of a RFID card (user) identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a RFID card (user) identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
@@ -169,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static UID? TryParse(String Text)
         {
 
-            if (TryParse(Text, out UID uid))
+            if (TryParse(Text, out var uid))
                 return uid;
 
             return null;

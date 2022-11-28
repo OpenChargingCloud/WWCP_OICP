@@ -33,7 +33,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static CalibrationLawDataAvailabilities Parse(String Text)
         {
 
-            if (TryParse(Text, out CalibrationLawDataAvailabilities calibrationLawDataAvailability))
+            if (TryParse(Text, out var calibrationLawDataAvailability))
                 return calibrationLawDataAvailability;
 
             throw new ArgumentException("Undefined calibration law data availability '" + Text + "'!");
@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static CalibrationLawDataAvailabilities? TryParse(String Text)
         {
 
-            if (TryParse(Text, out CalibrationLawDataAvailabilities calibrationLawDataAvailability))
+            if (TryParse(Text, out var calibrationLawDataAvailability))
                 return calibrationLawDataAvailability;
 
             return default;

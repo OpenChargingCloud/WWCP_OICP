@@ -115,10 +115,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PIN Parse(String Text)
         {
 
-            if (TryParse(Text, out PIN pin))
+            if (TryParse(Text, out var pin))
                 return pin;
 
-            throw new ArgumentException("Invalid text-representation of a PIN: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of a PIN: '" + Text + "'!",
                                         nameof(Text));
 
         }
@@ -134,7 +134,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PIN? TryParse(String Text)
         {
 
-            if (TryParse(Text, out PIN pin))
+            if (TryParse(Text, out var pin))
                 return pin;
 
             return null;

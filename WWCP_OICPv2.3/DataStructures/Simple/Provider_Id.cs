@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region Parse(Text)
+        #region (static) Parse   (Text)
 
         /// <summary>
         /// Parse the given text-representation of an e-mobility provider identification.
@@ -159,17 +159,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Provider_Id Parse(String Text)
         {
 
-            if (TryParse(Text, out Provider_Id providerId))
+            if (TryParse(Text, out var providerId))
                 return providerId;
 
-            throw new ArgumentException("Invalid text-representation of an e-mobility provider identification: '" + Text + "'!",
+            throw new ArgumentException("Invalid text representation of an e-mobility provider identification: '" + Text + "'!",
                                         nameof(Text));
 
         }
 
         #endregion
 
-        #region Parse(CountryCode, Suffix, IdFormat = ProviderIdFormats.ISO_HYPHEN)
+        #region (static) Parse   (CountryCode, Suffix, IdFormat = ProviderIdFormats.ISO_HYPHEN)
 
         /// <summary>
         /// Parse the given string as an e-mobility provider identification.
@@ -210,7 +210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text)
+        #region (static) TryParse(Text)
 
         /// <summary>
         /// Try to parse the given text-representation of an e-mobility provider identification.
@@ -219,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Provider_Id? TryParse(String Text)
         {
 
-            if (TryParse(Text, out Provider_Id providerId))
+            if (TryParse(Text, out var providerId))
                 return providerId;
 
             return null;
@@ -228,7 +228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(Text, out ProviderId)
+        #region (static) TryParse(Text, out ProviderId)
 
         /// <summary>
         /// Try to parse the given text-representation of an e-mobility provider identification.
@@ -278,7 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region TryParse(CountryCode, Suffix, out ProviderId, IdFormat = ProviderIdFormats.ISO_HYPHEN)
+        #region (static) TryParse(CountryCode, Suffix, out ProviderId, IdFormat = ProviderIdFormats.ISO_HYPHEN)
 
         /// <summary>
         /// Try to parse the given text-representation of an e-mobility provider identification.
