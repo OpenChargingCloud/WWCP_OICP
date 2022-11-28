@@ -106,7 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a week day.
         /// </summary>
-        /// <param name="Text">A text-representation of a week day.</param>
+        /// <param name="Text">A text representation of a week day.</param>
         public static WeekDay Parse(String Text)
         {
 
@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a week day.
         /// </summary>
-        /// <param name="Text">A text-representation of a week day.</param>
+        /// <param name="Text">A text representation of a week day.</param>
         public static WeekDay? TryParse(String Text)
         {
 
@@ -143,7 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a week day.
         /// </summary>
-        /// <param name="Text">A text-representation of a week day.</param>
+        /// <param name="Text">A text representation of a week day.</param>
         /// <param name="WeekDay">The parsed week day.</param>
         public static Boolean TryParse(String Text, out WeekDay WeekDay)
         {
@@ -344,9 +344,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two week days.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A week day to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is WeekDay weekDay
@@ -359,9 +359,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(WeekDay)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two week days.
         /// </summary>
-        /// <param name="WeekDay">An object to compare with.</param>
+        /// <param name="WeekDay">A week day to compare with.</param>
         public Int32 CompareTo(WeekDay WeekDay)
 
             => String.Compare(InternalId,
@@ -377,10 +377,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two week days for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A week day to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is WeekDay weekDay &&
@@ -391,10 +390,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(WeekDay)
 
         /// <summary>
-        /// Compares two WeekDays for equality.
+        /// Compares two week days for equality.
         /// </summary>
         /// <param name="WeekDay">A week day to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(WeekDay WeekDay)
 
             => String.Equals(InternalId,
@@ -420,7 +418,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

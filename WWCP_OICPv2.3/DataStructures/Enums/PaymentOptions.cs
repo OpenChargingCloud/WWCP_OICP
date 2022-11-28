@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a paymet option.
+        /// Parses the given text representation of a paymet option.
         /// </summary>
-        /// <param name="Text">A text-representation of a payment option.</param>
+        /// <param name="Text">A text representation of a payment option.</param>
         public static PaymentOptions Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a paymet option.
+        /// Parses the given text representation of a paymet option.
         /// </summary>
-        /// <param name="Text">A text-representation of a payment option.</param>
+        /// <param name="Text">A text representation of a payment option.</param>
         public static PaymentOptions? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out PaymentOption)
 
         /// <summary>
-        /// Parses the given text-representation of a paymet option.
+        /// Parses the given text representation of a paymet option.
         /// </summary>
-        /// <param name="Text">A text-representation of a payment option.</param>
+        /// <param name="Text">A text representation of a payment option.</param>
         /// <param name="PaymentOption">The parsed payment option.</param>
         public static Boolean TryParse(String Text, out PaymentOptions PaymentOption)
         {
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(PaymentOption)
 
         /// <summary>
-        /// Return a text-representation of the given paymet option.
+        /// Return a text representation of the given paymet option.
         /// </summary>
         /// <param name="PaymentOption">A paymet option.</param>
         public static String AsString(this PaymentOptions PaymentOption)

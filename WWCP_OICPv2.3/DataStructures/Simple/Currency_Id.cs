@@ -129,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a currency identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a currency identification.</param>
+        /// <param name="Text">A text representation of a currency identification.</param>
         public static Currency_Id Parse(String Text)
         {
 
@@ -148,7 +148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a currency identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a currency identification.</param>
+        /// <param name="Text">A text representation of a currency identification.</param>
         public static Currency_Id? TryParse(String Text)
         {
 
@@ -166,7 +166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a currency identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a currency identification.</param>
+        /// <param name="Text">A text representation of a currency identification.</param>
         /// <param name="CurrencyId">The parsed currency identification.</param>
         public static Boolean TryParse(String Text, out Currency_Id CurrencyId)
         {
@@ -777,7 +777,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

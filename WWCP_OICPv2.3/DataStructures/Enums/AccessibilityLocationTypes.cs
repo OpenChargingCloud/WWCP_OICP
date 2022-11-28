@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an accessibility location type.
+        /// Parses the given text representation of an accessibility location type.
         /// </summary>
-        /// <param name="Text">A text-representation of an accessibility location type.</param>
+        /// <param name="Text">A text representation of an accessibility location type.</param>
         public static AccessibilityLocationTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an accessibility location type.
+        /// Parses the given text representation of an accessibility location type.
         /// </summary>
-        /// <param name="Text">A text-representation of an accessibility location type.</param>
+        /// <param name="Text">A text representation of an accessibility location type.</param>
         public static AccessibilityLocationTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out AccessibilityLocationType)
 
         /// <summary>
-        /// Parses the given text-representation of an accessibility location type.
+        /// Parses the given text representation of an accessibility location type.
         /// </summary>
-        /// <param name="Text">A text-representation of an accessibility location type.</param>
+        /// <param name="Text">A text representation of an accessibility location type.</param>
         /// <param name="AccessibilityLocationType">The parsed accessibility location type.</param>
         public static Boolean TryParse(String Text, out AccessibilityLocationTypes AccessibilityLocationType)
         {
@@ -100,7 +100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(AccessibilityLocationType)
 
         /// <summary>
-        /// Return a text-representation of the given accessibility location type.
+        /// Return a text representation of the given accessibility location type.
         /// </summary>
         /// <param name="AccessibilityLocationType">An accessibility location type.</param>
         public static String AsString(this AccessibilityLocationTypes AccessibilityLocationType)

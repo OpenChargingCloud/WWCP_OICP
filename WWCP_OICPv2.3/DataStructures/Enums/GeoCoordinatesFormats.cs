@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a geo coordinates format.
+        /// Parses the given text representation of a geo coordinates format.
         /// </summary>
-        /// <param name="Text">A text-representation of a geo coordinates format.</param>
+        /// <param name="Text">A text representation of a geo coordinates format.</param>
         public static GeoCoordinatesFormats Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a geo coordinates format.
+        /// Parses the given text representation of a geo coordinates format.
         /// </summary>
-        /// <param name="Text">A text-representation of a geo coordinates format.</param>
+        /// <param name="Text">A text representation of a geo coordinates format.</param>
         public static GeoCoordinatesFormats? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out GeoCoordinatesFormat)
 
         /// <summary>
-        /// Parses the given text-representation of a geo coordinates format.
+        /// Parses the given text representation of a geo coordinates format.
         /// </summary>
-        /// <param name="Text">A text-representation of a geo coordinates format.</param>
+        /// <param name="Text">A text representation of a geo coordinates format.</param>
         /// <param name="GeoCoordinatesFormat">The parsed geo coordinates format.</param>
         public static Boolean TryParse(String Text, out GeoCoordinatesFormats GeoCoordinatesFormat)
         {
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(GeoCoordinatesFormat)
 
         /// <summary>
-        /// Return a text-representation of the given geo coordinates format.
+        /// Return a text representation of the given geo coordinates format.
         /// </summary>
         /// <param name="GeoCoordinatesFormat">A geo coordinates format.</param>
         public static String AsString(this GeoCoordinatesFormats GeoCoordinatesFormat)

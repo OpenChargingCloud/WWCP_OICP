@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an authentication mode.
+        /// Parses the given text representation of an authentication mode.
         /// </summary>
-        /// <param name="Text">A text-representation of an authentication mode.</param>
+        /// <param name="Text">A text representation of an authentication mode.</param>
         public static AuthenticationModes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an authentication mode.
+        /// Parses the given text representation of an authentication mode.
         /// </summary>
-        /// <param name="Text">A text-representation of an authentication mode.</param>
+        /// <param name="Text">A text representation of an authentication mode.</param>
         public static AuthenticationModes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out AuthenticationMode)
 
         /// <summary>
-        /// Parses the given text-representation of an authentication mode.
+        /// Parses the given text representation of an authentication mode.
         /// </summary>
-        /// <param name="Text">A text-representation of an authentication mode.</param>
+        /// <param name="Text">A text representation of an authentication mode.</param>
         /// <param name="AuthenticationMode">The parsed authentication mode</param>
         public static Boolean TryParse(String Text, out AuthenticationModes AuthenticationMode)
         {
@@ -108,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(AuthenticationMode)
 
         /// <summary>
-        /// Return a text-representation of the given authentication mode.
+        /// Return a text representation of the given authentication mode.
         /// </summary>
         /// <param name="AuthenticationMode">An authentication mode.</param>
         /// <returns></returns>

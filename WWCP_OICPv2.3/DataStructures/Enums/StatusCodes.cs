@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a status code.
+        /// Parses the given text representation of a status code.
         /// </summary>
-        /// <param name="Text">A text-representation of a status code.</param>
+        /// <param name="Text">A text representation of a status code.</param>
         public static StatusCodes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a status code.
+        /// Parses the given text representation of a status code.
         /// </summary>
-        /// <param name="Text">A text-representation of a status code.</param>
+        /// <param name="Text">A text representation of a status code.</param>
         public static StatusCodes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out StatusCode)
 
         /// <summary>
-        /// Parses the given text-representation of a status code.
+        /// Parses the given text representation of a status code.
         /// </summary>
-        /// <param name="Text">A text-representation of a status code.</param>
+        /// <param name="Text">A text representation of a status code.</param>
         /// <param name="StatusCode">The parsed status code.</param>
         public static Boolean TryParse(String Text, out StatusCodes StatusCode)
         {
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(this StatusCode)
 
         /// <summary>
-        /// Return a text-representation of the given status code.
+        /// Return a text representation of the given status code.
         /// </summary>
         /// <param name="StatusCode">A status code.</param>
         public static String AsString(this StatusCodes StatusCode)

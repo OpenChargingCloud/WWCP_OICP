@@ -112,7 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a phone number.
         /// </summary>
-        /// <param name="Text">A text-representation of a phone number.</param>
+        /// <param name="Text">A text representation of a phone number.</param>
         public static Phone_Number Parse(String Text)
         {
 
@@ -131,7 +131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a phone number.
         /// </summary>
-        /// <param name="Text">A text-representation of a phone number.</param>
+        /// <param name="Text">A text representation of a phone number.</param>
         public static Phone_Number? TryParse(String Text)
         {
 
@@ -149,7 +149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a phone number.
         /// </summary>
-        /// <param name="Text">A text-representation of a phone number.</param>
+        /// <param name="Text">A text representation of a phone number.</param>
         /// <param name="PhoneNumber">The parsed phone number.</param>
         public static Boolean TryParse(String Text, out Phone_Number PhoneNumber)
         {
@@ -354,7 +354,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

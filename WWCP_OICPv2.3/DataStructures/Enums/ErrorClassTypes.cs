@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an error class type.
+        /// Parses the given text representation of an error class type.
         /// </summary>
-        /// <param name="Text">A text-representation of an error class type.</param>
+        /// <param name="Text">A text representation of an error class type.</param>
         public static ErrorClassTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an error class type.
+        /// Parses the given text representation of an error class type.
         /// </summary>
-        /// <param name="Text">A text-representation of an error class type.</param>
+        /// <param name="Text">A text representation of an error class type.</param>
         public static ErrorClassTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out ErrorClassType)
 
         /// <summary>
-        /// Parses the given text-representation of an error class type.
+        /// Parses the given text representation of an error class type.
         /// </summary>
-        /// <param name="Text">A text-representation of an error class type.</param>
+        /// <param name="Text">A text representation of an error class type.</param>
         /// <param name="ErrorClassType">The parsed error class type.</param>
         public static Boolean TryParse(String Text, out ErrorClassTypes ErrorClassType)
         {
@@ -92,7 +92,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(ErrorClassType)
 
         /// <summary>
-        /// Return a text-representation of the given error class.
+        /// Return a text representation of the given error class.
         /// </summary>
         /// <param name="ErrorClassType">An error class.</param>
         public static String AsString(this ErrorClassTypes ErrorClassType)

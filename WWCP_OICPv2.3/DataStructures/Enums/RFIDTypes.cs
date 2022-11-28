@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a RFID type.
+        /// Parses the given text representation of a RFID type.
         /// </summary>
-        /// <param name="Text">A text-representation of a RFID type.</param>
+        /// <param name="Text">A text representation of a RFID type.</param>
         public static RFIDTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a RFID type.
+        /// Parses the given text representation of a RFID type.
         /// </summary>
-        /// <param name="Text">A text-representation of a RFID type.</param>
+        /// <param name="Text">A text representation of a RFID type.</param>
         public static RFIDTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out RFIDType)
 
         /// <summary>
-        /// Parses the given text-representation of a RFID type.
+        /// Parses the given text representation of a RFID type.
         /// </summary>
-        /// <param name="Text">A text-representation of a RFID type.</param>
+        /// <param name="Text">A text representation of a RFID type.</param>
         /// <param name="RFIDType">The parsed RFID type.</param>
         public static Boolean TryParse(String Text, out RFIDTypes RFIDType)
         {
@@ -104,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(RFIDType)
 
         /// <summary>
-        /// Return a text-representation of the given RFID type.
+        /// Return a text representation of the given RFID type.
         /// </summary>
         /// <param name="RFIDType">A RFID type.</param>
         public static String AsString(this RFIDTypes RFIDType)

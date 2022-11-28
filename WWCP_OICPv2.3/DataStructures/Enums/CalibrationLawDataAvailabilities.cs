@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a calibration law data availability.
+        /// Parses the given text representation of a calibration law data availability.
         /// </summary>
-        /// <param name="Text">Parses the given text-representation of a calibration law data availability.</param>
+        /// <param name="Text">Parses the given text representation of a calibration law data availability.</param>
         public static CalibrationLawDataAvailabilities Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a calibration law data availability.
+        /// Parses the given text representation of a calibration law data availability.
         /// </summary>
-        /// <param name="Text">Parses the given text-representation of a calibration law data availability.</param>
+        /// <param name="Text">Parses the given text representation of a calibration law data availability.</param>
         public static CalibrationLawDataAvailabilities? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out CalibrationLawDataAvailability)
 
         /// <summary>
-        /// Parses the given text-representation of a calibration law data availability.
+        /// Parses the given text representation of a calibration law data availability.
         /// </summary>
-        /// <param name="Text">Parses the given text-representation of a calibration law data availability.</param>
+        /// <param name="Text">Parses the given text representation of a calibration law data availability.</param>
         /// <param name="CalibrationLawDataAvailability">The parsed calibration law data availability.</param>
         public static Boolean TryParse(String Text, out CalibrationLawDataAvailabilities CalibrationLawDataAvailability)
         {
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(CalibrationLawDataAvailability)
 
         /// <summary>
-        /// Return a text-representation of the given calibration law data availability.
+        /// Return a text representation of the given calibration law data availability.
         /// </summary>
         /// <param name="CalibrationLawDataAvailability">A calibration law data availability.</param>
         public static String AsString(this CalibrationLawDataAvailabilities CalibrationLawDataAvailability)

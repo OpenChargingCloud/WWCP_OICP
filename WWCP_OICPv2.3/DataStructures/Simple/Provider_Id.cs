@@ -153,9 +153,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given text-representation of an e-mobility provider identification.
+        /// Parse the given text representation of an e-mobility provider identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
+        /// <param name="Text">A text representation of an e-mobility provider identification.</param>
         public static Provider_Id Parse(String Text)
         {
 
@@ -213,9 +213,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given text-representation of an e-mobility provider identification.
+        /// Try to parse the given text representation of an e-mobility provider identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
+        /// <param name="Text">A text representation of an e-mobility provider identification.</param>
         public static Provider_Id? TryParse(String Text)
         {
 
@@ -231,9 +231,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(Text, out ProviderId)
 
         /// <summary>
-        /// Try to parse the given text-representation of an e-mobility provider identification.
+        /// Try to parse the given text representation of an e-mobility provider identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an e-mobility provider identification.</param>
+        /// <param name="Text">A text representation of an e-mobility provider identification.</param>
         /// <param name="ProviderId">The parsed e-mobility provider identification.</param>
         public static Boolean TryParse(String           Text,
                                        out Provider_Id  ProviderId)
@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(CountryCode, Suffix, out ProviderId, IdFormat = ProviderIdFormats.ISO_HYPHEN)
 
         /// <summary>
-        /// Try to parse the given text-representation of an e-mobility provider identification.
+        /// Try to parse the given text representation of an e-mobility provider identification.
         /// </summary>
         /// <param name="CountryCode">A country code.</param>
         /// <param name="Suffix">The suffix of an e-mobility provider identification.</param>
@@ -449,9 +449,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two e-mobility provider identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An e-mobility provider identifications to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Provider_Id providerId
@@ -463,17 +463,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(ProviderId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two e-mobility provider identifications.
         /// </summary>
-        /// <param name="ProviderId">An object to compare with.</param>
+        /// <param name="ProviderId">An e-mobility provider identifications to compare with.</param>
         public Int32 CompareTo(Provider_Id ProviderId)
         {
 
-            var result = CountryCode.CompareTo(ProviderId.CountryCode);
+            var c = CountryCode.CompareTo(ProviderId.CountryCode);
 
-            return result == 0
-                       ? String.Compare(Suffix, ProviderId.Suffix, StringComparison.OrdinalIgnoreCase)
-                       : result;
+            if (c == 0)
+                c = String.Compare(Suffix,
+                                   ProviderId.Suffix,
+                                   StringComparison.OrdinalIgnoreCase);
+
+            return c;
 
         }
 
@@ -486,14 +489,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two e-mobility provider identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An e-mobility provider identifications to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Provider_Id providerId &&
-               Equals(providerId);
+                   Equals(providerId);
 
         #endregion
 
@@ -502,8 +504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Compares two e-mobility provider identifications for equality.
         /// </summary>
-        /// <param name="ProviderId">An e-mobility provider to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="ProviderId">An e-mobility provider identifications to compare with.</param>
         public Boolean Equals(Provider_Id ProviderId)
 
             => CountryCode.Equals(ProviderId.CountryCode) &&
@@ -529,7 +530,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
         {

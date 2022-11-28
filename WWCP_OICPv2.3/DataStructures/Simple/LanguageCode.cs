@@ -287,9 +287,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two ISO-639-1 or ISO-639-2/T language codes.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An ISO-639-1 or ISO-639-2/T language code to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is LanguageCode languageCode
@@ -302,9 +302,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(LanguageCode)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two ISO-639-1 or ISO-639-2/T language codes.
         /// </summary>
-        /// <param name="LanguageCode">An object to compare with.</param>
+        /// <param name="LanguageCode">An ISO-639-1 or ISO-639-2/T language code to compare with.</param>
         public Int32 CompareTo(LanguageCode LanguageCode)
 
             => String.Compare(InternalId,
@@ -320,10 +320,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two ISO-639-1 or ISO-639-2/T language codes for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An ISO-639-1 or ISO-639-2/T language code to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is LanguageCode languageCode &&
@@ -337,7 +336,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two ISO-639-1 or ISO-639-2/T language codes for equality.
         /// </summary>
         /// <param name="LanguageCode">An ISO-639-1 or ISO-639-2/T language code to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(LanguageCode LanguageCode)
 
             => String.Equals(InternalId,

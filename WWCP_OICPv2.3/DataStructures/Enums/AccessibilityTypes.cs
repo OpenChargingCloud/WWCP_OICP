@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an accessibility type.
+        /// Parses the given text representation of an accessibility type.
         /// </summary>
-        /// <param name="Text">A text-representation of an accessibility type.</param>
+        /// <param name="Text">A text representation of an accessibility type.</param>
         public static AccessibilityTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an accessibility type.
+        /// Parses the given text representation of an accessibility type.
         /// </summary>
-        /// <param name="Text">A text-representation of an accessibility type.</param>
+        /// <param name="Text">A text representation of an accessibility type.</param>
         public static AccessibilityTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out AccessibilityType)
 
         /// <summary>
-        /// Parses the given text-representation of an accessibility type.
+        /// Parses the given text representation of an accessibility type.
         /// </summary>
-        /// <param name="Text">A text-representation of an accessibility type.</param>
+        /// <param name="Text">A text representation of an accessibility type.</param>
         /// <param name="AccessibilityType">The parsed accessibility type.</param>
         public static Boolean TryParse(String Text, out AccessibilityTypes AccessibilityType)
         {
@@ -104,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(AccessibilityType)
 
         /// <summary>
-        /// Return a text-representation of the given accessibility type.
+        /// Return a text representation of the given accessibility type.
         /// </summary>
         /// <param name="AccessibilityType">An accessibility type.</param>
         public static String AsString(this AccessibilityTypes AccessibilityType)

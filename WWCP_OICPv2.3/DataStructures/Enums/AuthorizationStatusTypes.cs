@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an authorization status type.
+        /// Parses the given text representation of an authorization status type.
         /// </summary>
-        /// <param name="Text">A text-representation of an authorization status type.</param>
+        /// <param name="Text">A text representation of an authorization status type.</param>
         public static AuthorizationStatusTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an authorization status type.
+        /// Parses the given text representation of an authorization status type.
         /// </summary>
-        /// <param name="Text">A text-representation of an authorization status type.</param>
+        /// <param name="Text">A text representation of an authorization status type.</param>
         public static AuthorizationStatusTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out AuthorizationStatusType)
 
         /// <summary>
-        /// Parses the given text-representation of an authorization status type.
+        /// Parses the given text representation of an authorization status type.
         /// </summary>
-        /// <param name="Text">A text-representation of an authorization status type.</param>
+        /// <param name="Text">A text representation of an authorization status type.</param>
         /// <param name="AuthorizationStatusType">The parsed authorization status type</param>
         public static Boolean TryParse(String Text, out AuthorizationStatusTypes AuthorizationStatusType)
         {
@@ -92,7 +92,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(AuthorizationStatusType)
 
         /// <summary>
-        /// Return a text-representation of the given authorization status type.
+        /// Return a text representation of the given authorization status type.
         /// </summary>
         /// <param name="AuthorizationStatusType">An authorization status type.</param>
         /// <returns></returns>

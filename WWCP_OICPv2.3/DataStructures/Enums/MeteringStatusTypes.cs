@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a metering status type.
+        /// Parses the given text representation of a metering status type.
         /// </summary>
-        /// <param name="Text">A text-representation of a metering status type.</param>
+        /// <param name="Text">A text representation of a metering status type.</param>
         public static MeteringStatusTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a metering status type.
+        /// Parses the given text representation of a metering status type.
         /// </summary>
-        /// <param name="Text">A text-representation of a metering status type.</param>
+        /// <param name="Text">A text representation of a metering status type.</param>
         public static MeteringStatusTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out MeteringStatusType)
 
         /// <summary>
-        /// Parses the given text-representation of a metering status type.
+        /// Parses the given text representation of a metering status type.
         /// </summary>
-        /// <param name="Text">A text-representation of a metering status type.</param>
+        /// <param name="Text">A text representation of a metering status type.</param>
         /// <param name="MeteringStatusType">The parsed metering status type.</param>
         public static Boolean TryParse(String Text, out MeteringStatusTypes MeteringStatusType)
         {
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(this MeteringStatusType)
 
         /// <summary>
-        /// Return a text-representation of the given metering status type.
+        /// Return a text representation of the given metering status type.
         /// </summary>
         /// <param name="MeteringStatusType">A metering status type.</param>
         public static String AsString(this MeteringStatusTypes MeteringStatusType)

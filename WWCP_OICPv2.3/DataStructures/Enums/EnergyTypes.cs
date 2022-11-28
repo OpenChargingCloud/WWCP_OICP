@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an energy type.
+        /// Parses the given text representation of an energy type.
         /// </summary>
-        /// <param name="Text">A text-representation of an energy type.</param>
+        /// <param name="Text">A text representation of an energy type.</param>
         public static EnergyTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an energy type.
+        /// Parses the given text representation of an energy type.
         /// </summary>
-        /// <param name="Text">A text-representation of an energy type.</param>
+        /// <param name="Text">A text representation of an energy type.</param>
         public static EnergyTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out EnergyType)
 
         /// <summary>
-        /// Parses the given text-representation of an energy type.
+        /// Parses the given text representation of an energy type.
         /// </summary>
-        /// <param name="Text">A text-representation of an energy type.</param>
+        /// <param name="Text">A text representation of an energy type.</param>
         /// <param name="EnergyType">The parsed energy type.</param>
         public static Boolean TryParse(String Text, out EnergyTypes EnergyType)
         {
@@ -120,7 +120,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(EnergyType)
 
         /// <summary>
-        /// Return a text-representation of the given energy type.
+        /// Return a text representation of the given energy type.
         /// </summary>
         /// <param name="EnergyType">An energy type.</param>
         public static String AsString(this EnergyTypes EnergyType)

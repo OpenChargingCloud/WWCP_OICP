@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a power type.
+        /// Parses the given text representation of a power type.
         /// </summary>
-        /// <param name="Text">A text-representation of a power type.</param>
+        /// <param name="Text">A text representation of a power type.</param>
         public static PowerTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a power type.
+        /// Parses the given text representation of a power type.
         /// </summary>
-        /// <param name="Text">A text-representation of a power type.</param>
+        /// <param name="Text">A text representation of a power type.</param>
         public static PowerTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out PowerType)
 
         /// <summary>
-        /// Parses the given text-representation of a power type.
+        /// Parses the given text representation of a power type.
         /// </summary>
-        /// <param name="Text">A text-representation of a power type.</param>
+        /// <param name="Text">A text representation of a power type.</param>
         /// <param name="PowerType">The parsed power type.</param>
         public static Boolean TryParse(String Text, out PowerTypes PowerType)
         {
@@ -100,7 +100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(this PowerType)
 
         /// <summary>
-        /// Return a text-representation of the given power type.
+        /// Return a text representation of the given power type.
         /// </summary>
         /// <param name="PowerType">A power type.</param>
         public static String AsString(this PowerTypes PowerType)

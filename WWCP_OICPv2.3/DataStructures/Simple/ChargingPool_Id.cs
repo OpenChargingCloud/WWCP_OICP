@@ -169,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a charging pool identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging pool identification.</param>
+        /// <param name="Text">A text representation of a charging pool identification.</param>
         public static ChargingPool_Id Parse(String Text)
         {
 
@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a charging pool identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging pool identification.</param>
+        /// <param name="Text">A text representation of a charging pool identification.</param>
         public static ChargingPool_Id? TryParse(String Text)
         {
 
@@ -206,7 +206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a charging pool identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging pool identification.</param>
+        /// <param name="Text">A text representation of a charging pool identification.</param>
         /// <param name="ChargingPoolId">The parsed charging pool identification.</param>
         public static Boolean TryParse(String Text, out ChargingPool_Id ChargingPoolId)
         {
@@ -342,9 +342,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging pool identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A charging pool identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is ChargingPool_Id chargingPoolId
@@ -357,9 +357,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(ChargingPoolId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging pool identifications.
         /// </summary>
-        /// <param name="ChargingPoolId">An object to compare with.</param>
+        /// <param name="ChargingPoolId">A charging pool identification to compare with.</param>
         public Int32 CompareTo(ChargingPool_Id ChargingPoolId)
 
             => String.Compare(InternalId,
@@ -375,10 +375,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging pool identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A charging pool identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is ChargingPool_Id chargingPoolId &&
@@ -389,10 +388,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(ChargingPoolId)
 
         /// <summary>
-        /// Compares two ChargingPoolIds for equality.
+        /// Compares two charging pool identifications for equality.
         /// </summary>
         /// <param name="ChargingPoolId">A charging pool identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(ChargingPool_Id ChargingPoolId)
 
             => String.Equals(InternalId,
@@ -418,7 +416,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

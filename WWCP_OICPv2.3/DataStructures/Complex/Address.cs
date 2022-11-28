@@ -624,31 +624,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (Address is null)
                 throw new ArgumentNullException(nameof(Address), "The given address must not be null!");
 
-            var c = Country.     CompareTo(Address.Country);
+            var c = Country.   CompareTo(Address.Country);
             if (c != 0)
                 return c;
 
-            c = City.CompareTo(Address.City);
+            c = City.          CompareTo(Address.City);
             if (c != 0)
                 return c;
 
-            c = Street.CompareTo(Address.Street);
+            c = Street.        CompareTo(Address.Street);
             if (c != 0)
                 return c;
 
-            c = PostalCode.CompareTo(Address.PostalCode);
+            c = PostalCode.    CompareTo(Address.PostalCode);
             if (c != 0)
                 return c;
 
-            c = HouseNumber.CompareTo(Address.HouseNumber);
+            c = HouseNumber.   CompareTo(Address.HouseNumber);
             if (c != 0)
                 return c;
 
-            c = (Floor ?? "").CompareTo(Address.Floor ?? "");
+            c = (Floor ?? ""). CompareTo(Address.Floor ?? "");
             if (c != 0)
                 return c;
 
-            c = (Floor ?? "").CompareTo(Address.Floor ?? "");
+            c = (Floor ?? ""). CompareTo(Address.Floor ?? "");
             if (c != 0)
                 return c;
 

@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a hash function.
+        /// Parses the given text representation of a hash function.
         /// </summary>
-        /// <param name="Text">A text-representation of a hash function.</param>
+        /// <param name="Text">A text representation of a hash function.</param>
         public static HashFunctions Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a hash function.
+        /// Parses the given text representation of a hash function.
         /// </summary>
-        /// <param name="Text">A text-representation of a hash function.</param>
+        /// <param name="Text">A text representation of a hash function.</param>
         public static HashFunctions? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out HashFunction)
 
         /// <summary>
-        /// Parses the given text-representation of a hash function.
+        /// Parses the given text representation of a hash function.
         /// </summary>
-        /// <param name="Text">A text-representation of a hash function.</param>
+        /// <param name="Text">A text representation of a hash function.</param>
         /// <param name="HashFunction">The parsed hash function.</param>
         public static Boolean TryParse(String Text, out HashFunctions HashFunction)
         {

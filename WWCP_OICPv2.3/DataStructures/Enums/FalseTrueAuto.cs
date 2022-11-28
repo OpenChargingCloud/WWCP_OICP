@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a FalseTrueAuto type.
+        /// Parses the given text representation of a FalseTrueAuto type.
         /// </summary>
-        /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
+        /// <param name="Text">A text representation of a FalseTrueAuto type.</param>
         public static FalseTrueAuto Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a FalseTrueAuto type.
+        /// Parses the given text representation of a FalseTrueAuto type.
         /// </summary>
-        /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
+        /// <param name="Text">A text representation of a FalseTrueAuto type.</param>
         public static FalseTrueAuto? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out FalseTrueAuto)
 
         /// <summary>
-        /// Parses the given text-representation of a FalseTrueAuto type.
+        /// Parses the given text representation of a FalseTrueAuto type.
         /// </summary>
-        /// <param name="Text">A text-representation of a FalseTrueAuto type.</param>
+        /// <param name="Text">A text representation of a FalseTrueAuto type.</param>
         /// <param name="FalseTrueAuto">The parsed FalseTrueAuto type.</param>
         public static Boolean TryParse(String Text, out FalseTrueAuto FalseTrueAuto)
         {
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(FalseTrueAuto)
 
         /// <summary>
-        /// Return a text-representation of the given FalseTrueAuto type.
+        /// Return a text representation of the given FalseTrueAuto type.
         /// </summary>
         /// <param name="FalseTrueAuto">A FalseTrueAuto type.</param>
         public static String AsString(this FalseTrueAuto FalseTrueAuto)

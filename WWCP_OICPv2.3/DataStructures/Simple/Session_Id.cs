@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging session identification.</param>
+        /// <param name="Text">A text representation of a charging session identification.</param>
         public static Session_Id Parse(String Text)
         {
 
@@ -144,7 +144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging session identification.</param>
+        /// <param name="Text">A text representation of a charging session identification.</param>
         public static Session_Id? TryParse(String Text)
         {
 
@@ -162,7 +162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a charging session identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging session identification.</param>
+        /// <param name="Text">A text representation of a charging session identification.</param>
         /// <param name="SessionId">The parsed charging session identification.</param>
         public static Boolean TryParse(String Text, out Session_Id SessionId)
         {
@@ -305,9 +305,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging session identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A charging session identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Session_Id sessionId
@@ -319,9 +319,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(SessionId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging session identifications.
         /// </summary>
-        /// <param name="SessionId">An object to compare with.</param>
+        /// <param name="SessionId">A charging session identification to compare with.</param>
         public Int32 CompareTo(Session_Id SessionId)
 
             => String.Compare(InternalId,
@@ -337,10 +337,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two charging session identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A charging session identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Session_Id sessionId &&
@@ -351,10 +350,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(SessionId)
 
         /// <summary>
-        /// Compares two SessionIds for equality.
+        /// Compares two charging session identifications for equality.
         /// </summary>
         /// <param name="SessionId">A charging session identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Session_Id SessionId)
 
             => String.Equals(InternalId,
@@ -380,7 +378,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

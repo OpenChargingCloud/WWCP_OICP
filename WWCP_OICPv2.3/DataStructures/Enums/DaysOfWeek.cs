@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a day(s) of week.
+        /// Parses the given text representation of a day(s) of week.
         /// </summary>
-        /// <param name="Text">Parses the given text-representation of a day(s) of week.</param>
+        /// <param name="Text">Parses the given text representation of a day(s) of week.</param>
         public static DaysOfWeek Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a day(s) of week..
+        /// Parses the given text representation of a day(s) of week..
         /// </summary>
-        /// <param name="Text">A text-representation of a day(s) of week..</param>
+        /// <param name="Text">A text representation of a day(s) of week..</param>
         public static DaysOfWeek? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out DayOfWeek)
 
         /// <summary>
-        /// Parses the given text-representation of a day(s) of week..
+        /// Parses the given text representation of a day(s) of week..
         /// </summary>
-        /// <param name="Text">A text-representation of a day(s) of week..</param>
+        /// <param name="Text">A text representation of a day(s) of week..</param>
         /// <param name="DayOfWeek">The parsed day(s) of week..</param>
         public static Boolean TryParse(String Text, out DaysOfWeek DayOfWeek)
         {
@@ -124,7 +124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(EVSEStatusType)
 
         /// <summary>
-        /// Return a text-representation of the given EVSE status.
+        /// Return a text representation of the given EVSE status.
         /// </summary>
         /// <param name="EVSEStatusType">An EVSE status.</param>
         public static String AsString(this DaysOfWeek EVSEStatusType)

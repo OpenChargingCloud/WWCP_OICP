@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a value added service.
+        /// Parses the given text representation of a value added service.
         /// </summary>
-        /// <param name="Text">A text-representation of a value added service.</param>
+        /// <param name="Text">A text representation of a value added service.</param>
         public static ValueAddedServices Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a value added service.
+        /// Parses the given text representation of a value added service.
         /// </summary>
-        /// <param name="Text">A text-representation of a value added service.</param>
+        /// <param name="Text">A text representation of a value added service.</param>
         public static ValueAddedServices? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out ValueAddedService)
 
         /// <summary>
-        /// Parses the given text-representation of a value added service.
+        /// Parses the given text representation of a value added service.
         /// </summary>
-        /// <param name="Text">A text-representation of a value added service.</param>
+        /// <param name="Text">A text representation of a value added service.</param>
         /// <param name="ValueAddedService">The parsed value added service.</param>
         public static Boolean TryParse(String Text, out ValueAddedServices ValueAddedService)
         {
@@ -116,7 +116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(ValueAddedService)
 
         /// <summary>
-        /// Return a text-representation of the given value added service.
+        /// Return a text representation of the given value added service.
         /// </summary>
         /// <param name="ValueAddedService">A value added service.</param>
         public static String AsString(this ValueAddedServices ValueAddedService)

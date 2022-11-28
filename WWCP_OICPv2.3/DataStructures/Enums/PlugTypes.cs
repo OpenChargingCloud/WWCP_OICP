@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a plug type.
+        /// Parses the given text representation of a plug type.
         /// </summary>
-        /// <param name="Text">A text-representation of a plug type.</param>
+        /// <param name="Text">A text representation of a plug type.</param>
         public static PlugTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a plug type.
+        /// Parses the given text representation of a plug type.
         /// </summary>
-        /// <param name="Text">A text-representation of a plug type.</param>
+        /// <param name="Text">A text representation of a plug type.</param>
         public static PlugTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out PlugType)
 
         /// <summary>
-        /// Parses the given text-representation of a plug type.
+        /// Parses the given text representation of a plug type.
         /// </summary>
-        /// <param name="Text">A text-representation of a plug type.</param>
+        /// <param name="Text">A text representation of a plug type.</param>
         /// <param name="PlugType">The parsed plug type.</param>
         public static Boolean TryParse(String Text, out PlugTypes PlugType)
         {
@@ -156,7 +156,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(PlugType)
 
         /// <summary>
-        /// Return a text-representation of the given plug type.
+        /// Return a text representation of the given plug type.
         /// </summary>
         /// <param name="PlugType">A plug type.</param>
         public static String AsString(this PlugTypes PlugType)

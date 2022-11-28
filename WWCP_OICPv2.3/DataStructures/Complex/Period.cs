@@ -378,10 +378,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(Period Period)
         {
 
-            var c = Begin.CompareTo(Period.Begin);
+            var c =    Begin.CompareTo(Period.Begin);
 
             if (c == 0)
-                return End.CompareTo(Period.End);
+                return End.  CompareTo(Period.End);
 
             return c;
 
@@ -441,7 +441,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

@@ -106,7 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a reference unit identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a reference unit identification.</param>
+        /// <param name="Text">A text representation of a reference unit identification.</param>
         public static Reference_Unit Parse(String Text)
         {
 
@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a reference unit identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a reference unit identification.</param>
+        /// <param name="Text">A text representation of a reference unit identification.</param>
         public static Reference_Unit? TryParse(String Text)
         {
 
@@ -143,7 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a reference unit identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a reference unit identification.</param>
+        /// <param name="Text">A text representation of a reference unit identification.</param>
         /// <param name="ReferenceUnit">The parsed reference unit identification.</param>
         public static Boolean TryParse(String Text, out Reference_Unit ReferenceUnit)
         {
@@ -302,9 +302,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two reference units.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A reference unit to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Reference_Unit chargingPoolId
@@ -317,9 +317,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(ReferenceUnit)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two reference units.
         /// </summary>
-        /// <param name="ReferenceUnit">An object to compare with.</param>
+        /// <param name="ReferenceUnit">A reference unit to compare with.</param>
         public Int32 CompareTo(Reference_Unit ReferenceUnit)
 
             => String.Compare(InternalId,
@@ -335,10 +335,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two reference units for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A reference unit to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Reference_Unit chargingPoolId &&
@@ -349,10 +348,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(ReferenceUnit)
 
         /// <summary>
-        /// Compares two ReferenceUnits for equality.
+        /// Compares two reference units for equality.
         /// </summary>
-        /// <param name="ReferenceUnit">A reference unit identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="ReferenceUnit">A reference unit to compare with.</param>
         public Boolean Equals(Reference_Unit ReferenceUnit)
 
             => String.Equals(InternalId,
@@ -378,7 +376,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

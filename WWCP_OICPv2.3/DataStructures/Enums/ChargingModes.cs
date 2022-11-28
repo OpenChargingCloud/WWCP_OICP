@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a charging mode.
+        /// Parses the given text representation of a charging mode.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging mode.</param>
+        /// <param name="Text">A text representation of a charging mode.</param>
         public static ChargingModes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a charging mode.
+        /// Parses the given text representation of a charging mode.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging mode.</param>
+        /// <param name="Text">A text representation of a charging mode.</param>
         public static ChargingModes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out ChargingMode)
 
         /// <summary>
-        /// Parses the given text-representation of a charging mode.
+        /// Parses the given text representation of a charging mode.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging mode.</param>
+        /// <param name="Text">A text representation of a charging mode.</param>
         /// <param name="ChargingMode">The parsed charging mode.</param>
         public static Boolean TryParse(String Text, out ChargingModes ChargingMode)
         {
@@ -104,7 +104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(ChargingMode)
 
         /// <summary>
-        /// Return a text-representation of the given charging mode.
+        /// Return a text representation of the given charging mode.
         /// </summary>
         /// <param name="ChargingMode">A charging mode.</param>
         public static String AsString(this ChargingModes ChargingMode)

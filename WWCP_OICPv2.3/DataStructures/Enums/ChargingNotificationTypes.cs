@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a charging notification type.
+        /// Parses the given text representation of a charging notification type.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging notification type.</param>
+        /// <param name="Text">A text representation of a charging notification type.</param>
         public static ChargingNotificationTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a charging notification type.
+        /// Parses the given text representation of a charging notification type.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging notification type.</param>
+        /// <param name="Text">A text representation of a charging notification type.</param>
         public static ChargingNotificationTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out ChargingNotificationType)
 
         /// <summary>
-        /// Parses the given text-representation of a charging notification type.
+        /// Parses the given text representation of a charging notification type.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging notification type.</param>
+        /// <param name="Text">A text representation of a charging notification type.</param>
         /// <param name="ChargingNotificationType">The parsed charging notification type.</param>
         public static Boolean TryParse(String Text, out ChargingNotificationTypes ChargingNotificationType)
         {
@@ -100,7 +100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(ChargingMode)
 
         /// <summary>
-        /// Return a text-representation of the given charging notification type.
+        /// Return a text representation of the given charging notification type.
         /// </summary>
         /// <param name="ChargingMode">A charging notification type.</param>
         public static String AsString(this ChargingNotificationTypes ChargingMode)

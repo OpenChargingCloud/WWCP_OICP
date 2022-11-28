@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NewRandom4
 
         /// <summary>
-        /// Create a new random 4-byte UID.
+        /// Create a new random 4-byte RFID card (user) identification.
         /// </summary>
         public static UID NewRandom4
 
@@ -121,7 +121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NewRandom7
 
         /// <summary>
-        /// Create a new random 7-byte UID.
+        /// Create a new random 7-byte RFID card (user) identification.
         /// </summary>
         public static UID NewRandom7
 
@@ -132,7 +132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) NewRandom10
 
         /// <summary>
-        /// Create a new random 10-byte UID.
+        /// Create a new random 10-byte RFID card (user) identification.
         /// </summary>
         public static UID NewRandom10
 
@@ -146,7 +146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a RFID card (user) identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a RFID card (user) identification.</param>
+        /// <param name="Text">A text representation of a RFID card (user) identification.</param>
         public static UID Parse(String Text)
         {
 
@@ -165,7 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a RFID card (user) identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a RFID card (user) identification.</param>
+        /// <param name="Text">A text representation of a RFID card (user) identification.</param>
         public static UID? TryParse(String Text)
         {
 
@@ -183,7 +183,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a RFID card (user) identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a RFID card (user) identification.</param>
+        /// <param name="Text">A text representation of a RFID card (user) identification.</param>
         /// <param name="UID">The parsed RFID card (user) identification.</param>
         public static Boolean TryParse(String Text, out UID UID)
         {
@@ -326,9 +326,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two RFID card identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A RFID card identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is UID uid
@@ -341,9 +341,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(UID)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two RFID card identifications.
         /// </summary>
-        /// <param name="UID">An object to compare with.</param>
+        /// <param name="UID">A RFID card identification to compare with.</param>
         public Int32 CompareTo(UID UID)
 
             => String.Compare(InternalId,
@@ -359,10 +359,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two RFID card identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A RFID card identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is UID uid &&
@@ -373,10 +372,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(UID)
 
         /// <summary>
-        /// Compares two UIDs for equality.
+        /// Compares two RFID card identifications for equality.
         /// </summary>
         /// <param name="UID">A RFID card identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(UID UID)
 
             => String.Equals(InternalId,
@@ -402,7 +400,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

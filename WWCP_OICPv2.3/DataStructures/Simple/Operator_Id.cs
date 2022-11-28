@@ -145,9 +145,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given text-representation of a charging station operator identification.
+        /// Parse the given text representation of a charging station operator identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging station operator identification.</param>
+        /// <param name="Text">A text representation of a charging station operator identification.</param>
         public static Operator_Id Parse(String Text)
         {
 
@@ -201,9 +201,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(Text)
 
         /// <summary>
-        /// Try to parse the given text-representation of a charging station operator identification.
+        /// Try to parse the given text representation of a charging station operator identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging station operator identification.</param>
+        /// <param name="Text">A text representation of a charging station operator identification.</param>
         public static Operator_Id? TryParse(String Text)
         {
 
@@ -219,9 +219,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(Text, out OperatorId)
 
         /// <summary>
-        /// Try to parse the given text-representation of a charging station operator identification.
+        /// Try to parse the given text representation of a charging station operator identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a charging station operator identification.</param>
+        /// <param name="Text">A text representation of a charging station operator identification.</param>
         /// <param name="OperatorId">The parsed charging station operator identification.</param>
         public static Boolean TryParse(String           Text,
                                        out Operator_Id  OperatorId)
@@ -309,7 +309,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(CountryCode, Suffix, out OperatorId, IdFormat = OperatorIdFormats.ISO_HYPHEN)
 
         /// <summary>
-        /// Try to parse the given text-representation of an e-mobility operator identification.
+        /// Try to parse the given text representation of an e-mobility operator identification.
         /// </summary>
         /// <param name="CountryCode">A country code.</param>
         /// <param name="Suffix">The suffix of an e-mobility operator identification.</param>
@@ -471,9 +471,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An operator identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Operator_Id operatorId
@@ -485,17 +485,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(OperatorId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator identifications for equality.
         /// </summary>
-        /// <param name="OperatorId">An object to compare with.</param>
+        /// <param name="OperatorId">An operator identification to compare with.</param>
         public Int32 CompareTo(Operator_Id OperatorId)
         {
 
-            var result = CountryCode.CompareTo(OperatorId.CountryCode);
+            var c = CountryCode.CompareTo(OperatorId.CountryCode);
 
-            return result == 0
-                       ? String.Compare(Suffix, OperatorId.Suffix, StringComparison.OrdinalIgnoreCase)
-                       : result;
+            if (c == 0)
+                c = String.Compare(Suffix,
+                                   OperatorId.Suffix,
+                                   StringComparison.OrdinalIgnoreCase);
+
+            return c;
 
         }
 
@@ -508,10 +511,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two operator identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An operator identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Operator_Id operatorId &&
@@ -525,11 +527,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two operator identifications for equality.
         /// </summary>
         /// <param name="OperatorId">An operator identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(Operator_Id OperatorId)
 
             => CountryCode.Equals(OperatorId.CountryCode) &&
-               String.Equals(Suffix, OperatorId.Suffix, StringComparison.OrdinalIgnoreCase);
+
+                   String.Equals(Suffix,
+                                 OperatorId.Suffix,
+                                 StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -551,7 +555,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
         {

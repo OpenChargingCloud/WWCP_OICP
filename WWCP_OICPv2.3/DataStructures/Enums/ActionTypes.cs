@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an action type.
+        /// Parses the given text representation of an action type.
         /// </summary>
-        /// <param name="Text">A text-representation of an action type.</param>
+        /// <param name="Text">A text representation of an action type.</param>
         public static ActionTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an action type.
+        /// Parses the given text representation of an action type.
         /// </summary>
-        /// <param name="Text">A text-representation of an action type.</param>
+        /// <param name="Text">A text representation of an action type.</param>
         public static ActionTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out ActionType)
 
         /// <summary>
-        /// Parses the given text-representation of an action type.
+        /// Parses the given text representation of an action type.
         /// </summary>
-        /// <param name="Text">A text-representation of an action type.</param>
+        /// <param name="Text">A text representation of an action type.</param>
         /// <param name="ActionType">The parsed action type</param>
         public static Boolean TryParse(String Text, out ActionTypes ActionType)
         {
@@ -100,7 +100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(this ActionType)
 
         /// <summary>
-        /// Return a text-representation of the given action type.
+        /// Return a text representation of the given action type.
         /// </summary>
         /// <param name="ActionType">An action type.</param>
         public static String AsString(this ActionTypes ActionType)

@@ -133,9 +133,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) Parse   (Text)
 
         /// <summary>
-        /// Parse the given text-representation of an electric vehicle contract identification.
+        /// Parse the given text representation of an electric vehicle contract identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an electric vehicle contract identification.</param>
+        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
         public static EVCO_Id Parse(String Text)
         {
 
@@ -200,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as an electric vehicle contract identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an electric vehicle contract identification.</param>
+        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
         public static EVCO_Id? TryParse(String Text)
         {
 
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as an electric vehicle contract identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an electric vehicle contract identification.</param>
+        /// <param name="Text">A text representation of an electric vehicle contract identification.</param>
         /// <param name="EVCOId">The parsed electric vehicle contract identification.</param>
         public static Boolean TryParse(String Text, out EVCO_Id EVCOId)
         {
@@ -391,9 +391,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two electric vehicle contract identifications.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An electric vehicle contract identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is EVCO_Id EVCOId
@@ -406,9 +406,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(EVCOId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two electric vehicle contract identifications.
         /// </summary>
-        /// <param name="EVCOId">An object to compare with.</param>
+        /// <param name="EVCOId">An electric vehicle contract identification to compare with.</param>
         public Int32 CompareTo(EVCO_Id EVCOId)
 
             => String.Compare(InternalId,
@@ -424,10 +424,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two electric vehicle contract identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An electric vehicle contract identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is EVCO_Id EVCOId &&
@@ -438,10 +437,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(EVCOId)
 
         /// <summary>
-        /// Compares two contract identifications for equality.
+        /// Compares two electric vehicle contract identifications for equality.
         /// </summary>
-        /// <param name="EVCOId">A contract identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
+        /// <param name="EVCOId">An electric vehicle contract identification to compare with.</param>
         public Boolean Equals(EVCO_Id EVCOId)
 
             => String.Equals(InternalId,
@@ -467,7 +465,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

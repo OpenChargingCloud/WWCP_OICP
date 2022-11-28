@@ -175,7 +175,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as an EVSE identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an EVSE identification.</param>
+        /// <param name="Text">A text representation of an EVSE identification.</param>
         public static EVSE_Id Parse(String Text)
         {
 
@@ -206,7 +206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 Suffix = Suffix.Trim();
 
             if (Suffix.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Suffix), "The given text-representation of an EVSE identification suffix must not be null or empty!");
+                throw new ArgumentNullException(nameof(Suffix), "The given text representation of an EVSE identification suffix must not be null or empty!");
 
             #endregion
 
@@ -231,9 +231,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse (Text)
 
         /// <summary>
-        /// Try to parse the given text-representation of an EVSE identification.
+        /// Try to parse the given text representation of an EVSE identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an EVSE identification.</param>
+        /// <param name="Text">A text representation of an EVSE identification.</param>
         public static EVSE_Id? TryParse(String Text)
         {
 
@@ -249,9 +249,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse (Text, out EVSEId)
 
         /// <summary>
-        /// Try to parse the given text-representation of an EVSE identification.
+        /// Try to parse the given text representation of an EVSE identification.
         /// </summary>
-        /// <param name="Text">A text-representation of an EVSE identification.</param>
+        /// <param name="Text">A text representation of an EVSE identification.</param>
         /// <param name="EVSEId">The parsed EVSE identification.</param>
         public static Boolean TryParse(String Text, out EVSE_Id EVSEId)
         {
@@ -418,17 +418,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(EVSEId)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE identifications.
         /// </summary>
-        /// <param name="EVSEId">An object to compare with.</param>
+        /// <param name="EVSEId">An EVSE identification to compare with.</param>
         public Int32 CompareTo(EVSE_Id EVSEId)
         {
 
-            var result = OperatorId.CompareTo(EVSEId.OperatorId);
+            var c = OperatorId.CompareTo(EVSEId.OperatorId);
 
-            return result == 0
-                       ? String.Compare(Suffix, EVSEId.Suffix, StringComparison.OrdinalIgnoreCase)
-                       : result;
+            if (c == 0)
+                c = String.Compare(Suffix,
+                                   EVSEId.Suffix,
+                                   StringComparison.OrdinalIgnoreCase);
+
+            return c;
 
         }
 
@@ -441,10 +444,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE identifications for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An EVSE identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is EVSE_Id EVSEId &&
@@ -458,11 +460,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two EVSE identifications for equality.
         /// </summary>
         /// <param name="EVSEId">An EVSE identification to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(EVSE_Id EVSEId)
 
             => OperatorId.Equals(EVSEId.OperatorId) &&
-               String.Equals(Suffix, EVSEId.Suffix, StringComparison.OrdinalIgnoreCase);
+
+                   String.Equals(Suffix,
+                                 EVSEId.Suffix,
+                                 StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -484,7 +488,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
         {

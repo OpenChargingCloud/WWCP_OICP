@@ -103,7 +103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a partner product identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a partner product identification.</param>
+        /// <param name="Text">A text representation of a partner product identification.</param>
         public static PartnerProduct_Id Parse(String Text)
         {
 
@@ -122,7 +122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a partner product identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a partner product identification.</param>
+        /// <param name="Text">A text representation of a partner product identification.</param>
         public static PartnerProduct_Id? TryParse(String Text)
         {
 
@@ -140,7 +140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a partner product identification.
         /// </summary>
-        /// <param name="Text">A text-representation of a partner product identification.</param>
+        /// <param name="Text">A text representation of a partner product identification.</param>
         /// <param name="PartnerProductId">The parsed partner product identification.</param>
         public static Boolean TryParse(String Text, out PartnerProduct_Id PartnerProductId)
         {
@@ -355,8 +355,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PartnerProductId">A partner product identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
-            => Object is PartnerProduct_Id partnerProductId
-                   && Equals(partnerProductId);
+            => Object is PartnerProduct_Id partnerProductId &&
+                   Equals(partnerProductId);
 
         #endregion
 
@@ -391,7 +391,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 

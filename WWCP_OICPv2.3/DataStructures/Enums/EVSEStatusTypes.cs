@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of an EVSE status type.
+        /// Parses the given text representation of an EVSE status type.
         /// </summary>
-        /// <param name="Text">A text-representation of an EVSE status type.</param>
+        /// <param name="Text">A text representation of an EVSE status type.</param>
         public static EVSEStatusTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of an EVSE status type.
+        /// Parses the given text representation of an EVSE status type.
         /// </summary>
-        /// <param name="Text">A text-representation of an EVSE status type.</param>
+        /// <param name="Text">A text representation of an EVSE status type.</param>
         public static EVSEStatusTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out EVSEStatusType)
 
         /// <summary>
-        /// Parses the given text-representation of an EVSE status type.
+        /// Parses the given text representation of an EVSE status type.
         /// </summary>
-        /// <param name="Text">A text-representation of an EVSE status type.</param>
+        /// <param name="Text">A text representation of an EVSE status type.</param>
         /// <param name="EVSEStatusType">The parsed EVSE status type.</param>
         public static Boolean TryParse(String Text, out EVSEStatusTypes EVSEStatusType)
         {
@@ -108,7 +108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(EVSEStatusType)
 
         /// <summary>
-        /// Return a text-representation of the given EVSE status.
+        /// Return a text representation of the given EVSE status.
         /// </summary>
         /// <param name="EVSEStatusType">An EVSE status.</param>
         public static String AsString(this EVSEStatusTypes EVSEStatusType)

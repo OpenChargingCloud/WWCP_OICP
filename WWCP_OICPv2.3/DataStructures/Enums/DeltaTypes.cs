@@ -27,9 +27,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Parse   (Text)
 
         /// <summary>
-        /// Parses the given text-representation of a delta type.
+        /// Parses the given text representation of a delta type.
         /// </summary>
-        /// <param name="Text">A text-representation of a delta type.</param>
+        /// <param name="Text">A text representation of a delta type.</param>
         public static DeltaTypes Parse(String Text)
         {
 
@@ -45,9 +45,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text)
 
         /// <summary>
-        /// Parses the given text-representation of a delta type.
+        /// Parses the given text representation of a delta type.
         /// </summary>
-        /// <param name="Text">A text-representation of a delta type.</param>
+        /// <param name="Text">A text representation of a delta type.</param>
         public static DeltaTypes? TryParse(String Text)
         {
 
@@ -63,9 +63,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region TryParse(Text, out DeltaType)
 
         /// <summary>
-        /// Parses the given text-representation of a delta type.
+        /// Parses the given text representation of a delta type.
         /// </summary>
-        /// <param name="Text">A text-representation of a delta type.</param>
+        /// <param name="Text">A text representation of a delta type.</param>
         /// <param name="DeltaType">The parsed delta type.</param>
         public static Boolean TryParse(String Text, out DeltaTypes DeltaType)
         {
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region AsString(this DeltaType)
 
         /// <summary>
-        /// Return a text-representation of the given delta type.
+        /// Return a text representation of the given delta type.
         /// </summary>
         /// <param name="DeltaType">A delta type.</param>
         public static String AsString(this DeltaTypes DeltaType)

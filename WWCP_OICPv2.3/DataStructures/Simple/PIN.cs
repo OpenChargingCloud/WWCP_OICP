@@ -111,7 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Parse the given string as a PIN.
         /// </summary>
-        /// <param name="Text">A text-representation of a PIN.</param>
+        /// <param name="Text">A text representation of a PIN.</param>
         public static PIN Parse(String Text)
         {
 
@@ -130,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a PIN.
         /// </summary>
-        /// <param name="Text">A text-representation of a PIN.</param>
+        /// <param name="Text">A text representation of a PIN.</param>
         public static PIN? TryParse(String Text)
         {
 
@@ -148,7 +148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Try to parse the given string as a PIN.
         /// </summary>
-        /// <param name="Text">A text-representation of a PIN.</param>
+        /// <param name="Text">A text representation of a PIN.</param>
         /// <param name="PIN">The parsed PIN.</param>
         public static Boolean TryParse(String Text, out PIN PIN)
         {
@@ -291,9 +291,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two PINs.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">A PIN to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is PIN pin
@@ -306,9 +306,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(PIN)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two PINs.
         /// </summary>
-        /// <param name="PIN">An object to compare with.</param>
+        /// <param name="PIN">A PIN to compare with.</param>
         public Int32 CompareTo(PIN PIN)
 
             => String.Compare(InternalId,
@@ -324,10 +324,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two PINs for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">A PIN to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is PIN pin &&
@@ -341,7 +340,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two PINs for equality.
         /// </summary>
         /// <param name="PIN">A PIN to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
         public Boolean Equals(PIN PIN)
 
             => String.Equals(InternalId,
@@ -367,7 +365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) ToString()
 
         /// <summary>
-        /// Return a text-representation of this object.
+        /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
 
