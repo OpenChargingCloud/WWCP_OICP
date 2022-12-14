@@ -1301,25 +1301,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region ~/ (HTTPRoot)
 
             if (RegisterRootService)
-                HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                             HTTPMethod.GET,
-                                             new HTTPPath[] {
-                                                 URLPathPrefix + "/",
-                                                 URLPathPrefix + "/{FileName}"
-                                             },
-                                             HTTPDelegate: Request => {
-                                                 return Task.FromResult(
-                                                     new HTTPResponse.Builder(Request) {
-                                                         HTTPStatusCode  = HTTPStatusCode.OK,
-                                                         Server          = HTTPServer.DefaultServerName,
-                                                         Date            = Timestamp.Now,
-                                                         ContentType     = HTTPContentType.TEXT_UTF8,
-                                                         Content         = "This is an OICP v2.3 CPO Client HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                         CacheControl    = "public, max-age=300",
-                                                         Connection      = "close"
-                                                     }.AsImmutable);
-                                             },
-                                             AllowReplacement: URLReplacement.Allow);
+                AddMethodCallback(HTTPHostname.Any,
+                                  HTTPMethod.GET,
+                                  new HTTPPath[] {
+                                      URLPathPrefix + "/",
+                                      URLPathPrefix + "/{FileName}"
+                                  },
+                                  HTTPDelegate: Request => {
+                                      return Task.FromResult(
+                                          new HTTPResponse.Builder(Request) {
+                                              HTTPStatusCode  = HTTPStatusCode.OK,
+                                              Server          = HTTPServer.DefaultServerName,
+                                              Date            = Timestamp.Now,
+                                              ContentType     = HTTPContentType.TEXT_UTF8,
+                                              Content         = "This is an OICP v2.3 CPO Client HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                              CacheControl    = "public, max-age=300",
+                                              Connection      = "close"
+                                          }.AsImmutable);
+                                  },
+                                  AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -1331,238 +1331,238 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepush/v23/operators/DE-GEF/data-records
             // -----------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/evsepush/v23/operators/{operatorId}/data-records",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logPushEVSEDataHTTPRequest,
-                                         HTTPResponseLogger:  logPushEVSEDataHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/evsepush/v23/operators/{operatorId}/data-records",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logPushEVSEDataHTTPRequest,
+                              HTTPResponseLogger:  logPushEVSEDataHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<Acknowledgement<PushEVSEDataRequest>>? pullEVSEDataResponse = null;
+                                  OICPResult<Acknowledgement<PushEVSEDataRequest>>? pullEVSEDataResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 #region Try to parse ProviderId URL parameter
+                                      #region Try to parse ProviderId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
 
-                                                     Counters.PushEVSEData.IncRequests_Error();
+                                          Counters.PushEVSEData.IncRequests_Error();
 
-                                                     pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                                                                                this,
-                                                                                new Acknowledgement<PushEVSEDataRequest>(
-                                                                                    Timestamp.Now,
-                                                                                    Request.EventTrackingId,
-                                                                                    processId,
-                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                    StatusCode: new StatusCode(
-                                                                                                    StatusCodes.SystemError,
-                                                                                                    "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                                )
-                                                                                )
-                                                                            );
+                                          pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                                     this,
+                                                                     new Acknowledgement<PushEVSEDataRequest>(
+                                                                         Timestamp.Now,
+                                                                         Request.EventTrackingId,
+                                                                         processId,
+                                                                         Timestamp.Now - Request.Timestamp,
+                                                                         StatusCode: new StatusCode(
+                                                                                         StatusCodes.SystemError,
+                                                                                         "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                     )
+                                                                     )
+                                                                 );
 
-                                                 }
+                                      }
 
-                                                 #endregion
+                                      #endregion
 
-                                                 else if (PushEVSEDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                       //     operatorId ????
-                                                                                       out PushEVSEDataRequest?          pullEVSEDataRequest,
-                                                                                       out String?                       errorResponse,
-                                                                                       ProcessId:                        processId,
+                                      else if (PushEVSEDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                            //     operatorId ????
+                                                                            out PushEVSEDataRequest?          pullEVSEDataRequest,
+                                                                            out String?                       errorResponse,
+                                                                            ProcessId:                        processId,
 
-                                                                                       Timestamp:                        Request.Timestamp,
-                                                                                       CancellationToken:                Request.CancellationToken,
-                                                                                       EventTrackingId:                  Request.EventTrackingId,
-                                                                                       RequestTimeout:                   Request.Timeout ?? DefaultRequestTimeout,
+                                                                            Timestamp:                        Request.Timestamp,
+                                                                            CancellationToken:                Request.CancellationToken,
+                                                                            EventTrackingId:                  Request.EventTrackingId,
+                                                                            RequestTimeout:                   Request.Timeout ?? DefaultRequestTimeout,
 
-                                                                                       CustomPushEVSEDataRequestParser:  CustomPushEVSEDataRequestParser))
-                                                 {
+                                                                            CustomPushEVSEDataRequestParser:  CustomPushEVSEDataRequestParser))
+                                      {
 
-                                                     Counters.PushEVSEData.IncRequests_OK();
+                                          Counters.PushEVSEData.IncRequests_OK();
 
-                                                     #region Send OnPushEVSEDataRequest event
+                                          #region Send OnPushEVSEDataRequest event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPushEVSEDataRequest is not null)
-                                                             await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
-                                                                                Cast<OnPushEVSEDataAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEDataRequest!))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPushEVSEDataRequest is not null)
+                                                  await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
+                                                                     Cast<OnPushEVSEDataAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullEVSEDataRequest!))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEDataRequest));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEDataRequest));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Call async subscribers
+                                          #region Call async subscribers
 
-                                                     var OnPushEVSEDataLocal = OnPushEVSEData;
-                                                     if (OnPushEVSEDataLocal is not null)
-                                                     {
-                                                         try
-                                                         {
+                                          var OnPushEVSEDataLocal = OnPushEVSEData;
+                                          if (OnPushEVSEDataLocal is not null)
+                                          {
+                                              try
+                                              {
 
-                                                             pullEVSEDataResponse = (await Task.WhenAll(OnPushEVSEDataLocal.GetInvocationList().
-                                                                                                                            Cast<OnPushEVSEDataAPIDelegate>().
-                                                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                                                          this,
-                                                                                                                                          pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                  pullEVSEDataResponse = (await Task.WhenAll(OnPushEVSEDataLocal.GetInvocationList().
+                                                                                                                 Cast<OnPushEVSEDataAPIDelegate>().
+                                                                                                                 Select(e => e(Timestamp.Now,
+                                                                                                                               this,
+                                                                                                                               pullEVSEDataRequest!))))?.FirstOrDefault();
 
-                                                             Counters.PushEVSEData.IncResponses_OK();
+                                                  Counters.PushEVSEData.IncResponses_OK();
 
-                                                         }
-                                                         catch (Exception e)
-                                                         {
+                                              }
+                                              catch (Exception e)
+                                              {
 
-                                                             Counters.PushEVSEData.IncResponses_Error();
+                                                  Counters.PushEVSEData.IncResponses_Error();
 
-                                                             pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                                                                                        this,
-                                                                                        new Acknowledgement<PushEVSEDataRequest>(
-                                                                                            Timestamp.Now,
-                                                                                            Request.EventTrackingId,
-                                                                                            processId,
-                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                            StatusCode: new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            e.Message,
-                                                                                                            e.StackTrace
-                                                                                                        ),
-                                                                                            pullEVSEDataRequest
-                                                                                        )
-                                                                                    );
+                                                  pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                                             this,
+                                                                             new Acknowledgement<PushEVSEDataRequest>(
+                                                                                 Timestamp.Now,
+                                                                                 Request.EventTrackingId,
+                                                                                 processId,
+                                                                                 Timestamp.Now - Request.Timestamp,
+                                                                                 StatusCode: new StatusCode(
+                                                                                                 StatusCodes.DataError,
+                                                                                                 e.Message,
+                                                                                                 e.StackTrace
+                                                                                             ),
+                                                                                 pullEVSEDataRequest
+                                                                             )
+                                                                         );
 
-                                                         }
-                                                     }
+                                              }
+                                          }
 
-                                                     if (pullEVSEDataResponse is null)
-                                                     {
+                                          if (pullEVSEDataResponse is null)
+                                          {
 
-                                                         Counters.PushEVSEData.IncResponses_Error();
+                                              Counters.PushEVSEData.IncResponses_Error();
 
-                                                         pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                                                                                    this,
-                                                                                    new Acknowledgement<PushEVSEDataRequest>(
-                                                                                        Timestamp.Now,
-                                                                                        Request.EventTrackingId,
-                                                                                        processId,
-                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                        StatusCode: new StatusCode(
-                                                                                                        StatusCodes.SystemError,
-                                                                                                        "Could not process the received PushEVSEData request!"
-                                                                                                    ),
-                                                                                        pullEVSEDataRequest
-                                                                                    )
-                                                                                );
+                                              pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                                         this,
+                                                                         new Acknowledgement<PushEVSEDataRequest>(
+                                                                             Timestamp.Now,
+                                                                             Request.EventTrackingId,
+                                                                             processId,
+                                                                             Timestamp.Now - Request.Timestamp,
+                                                                             StatusCode: new StatusCode(
+                                                                                             StatusCodes.SystemError,
+                                                                                             "Could not process the received PushEVSEData request!"
+                                                                                         ),
+                                                                             pullEVSEDataRequest
+                                                                         )
+                                                                     );
 
-                                                     }
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Send OnPushEVSEDataResponse event
+                                          #region Send OnPushEVSEDataResponse event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPushEVSEDataResponse is not null)
-                                                             await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
-                                                                                Cast<OnPushEVSEDataAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEDataRequest!,
-                                                                                              pullEVSEDataResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPushEVSEDataResponse is not null)
+                                                  await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
+                                                                     Cast<OnPushEVSEDataAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullEVSEDataRequest!,
+                                                                                   pullEVSEDataResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEDataResponse));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEDataResponse));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                 }
-                                                 else
-                                                 {
+                                      }
+                                      else
+                                      {
 
-                                                     Counters.PushEVSEData.IncRequests_Error();
+                                          Counters.PushEVSEData.IncRequests_Error();
 
-                                                     pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                                                                                this,
-                                                                                new Acknowledgement<PushEVSEDataRequest>(
-                                                                                    Timestamp.Now,
-                                                                                    Request.EventTrackingId,
-                                                                                    processId,
-                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                    StatusCode: new StatusCode(
-                                                                                                    StatusCodes.DataError,
-                                                                                                    "We could not parse the given PushEVSEData request!",
-                                                                                                    errorResponse
-                                                                                                ),
-                                                                                    pullEVSEDataRequest
-                                                                                )
-                                                                            );
+                                          pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                                     this,
+                                                                     new Acknowledgement<PushEVSEDataRequest>(
+                                                                         Timestamp.Now,
+                                                                         Request.EventTrackingId,
+                                                                         processId,
+                                                                         Timestamp.Now - Request.Timestamp,
+                                                                         StatusCode: new StatusCode(
+                                                                                         StatusCodes.DataError,
+                                                                                         "We could not parse the given PushEVSEData request!",
+                                                                                         errorResponse
+                                                                                     ),
+                                                                         pullEVSEDataRequest
+                                                                     )
+                                                                 );
 
-                                                 }
+                                      }
 
-                                             }
-                                             catch (Exception e)
-                                             {
+                                  }
+                                  catch (Exception e)
+                                  {
 
-                                                 Counters.PushEVSEData.IncResponses_Error();
+                                      Counters.PushEVSEData.IncResponses_Error();
 
-                                                 pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
-                                                                            this,
-                                                                            new Acknowledgement<PushEVSEDataRequest>(
-                                                                                Timestamp.Now,
-                                                                                Request.EventTrackingId,
-                                                                                processId,
-                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                StatusCode: new StatusCode(
-                                                                                                StatusCodes.SystemError,
-                                                                                                e.Message,
-                                                                                                e.StackTrace
-                                                                                            )
-                                                                            )
-                                                                        );
+                                      pullEVSEDataResponse = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                                 this,
+                                                                 new Acknowledgement<PushEVSEDataRequest>(
+                                                                     Timestamp.Now,
+                                                                     Request.EventTrackingId,
+                                                                     processId,
+                                                                     Timestamp.Now - Request.Timestamp,
+                                                                     StatusCode: new StatusCode(
+                                                                                     StatusCodes.SystemError,
+                                                                                     e.Message,
+                                                                                     e.StackTrace
+                                                                                 )
+                                                                 )
+                                                             );
 
-                                             }
+                                  }
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                           CustomStatusCodeSerializer).
-                                                                                                                    ToString(JSONFormatting).
-                                                                                                                    ToUTF8Bytes()
-                                                                                                          ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                CustomStatusCodeSerializer).
+                                                                                                         ToString(JSONFormatting).
+                                                                                                         ToUTF8Bytes()
+                                                                                               ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
 
-                                          }, AllowReplacement: URLReplacement.Allow);
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -1571,238 +1571,238 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/evsepush/v21/operators/DE-GEF/status-records
             // -------------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/evsepush/v21/operators/{operatorId}/status-records",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logPushEVSEStatusHTTPRequest,
-                                         HTTPResponseLogger:  logPushEVSEStatusHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/evsepush/v21/operators/{operatorId}/status-records",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logPushEVSEStatusHTTPRequest,
+                              HTTPResponseLogger:  logPushEVSEStatusHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<Acknowledgement<PushEVSEStatusRequest>>? pullEVSEStatusResponse = null;
+                                  OICPResult<Acknowledgement<PushEVSEStatusRequest>>? pullEVSEStatusResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 #region Try to parse ProviderId URL parameter
+                                      #region Try to parse ProviderId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
 
-                                                     Counters.PushEVSEStatus.IncRequests_Error();
+                                          Counters.PushEVSEStatus.IncRequests_Error();
 
-                                                     pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                  this,
-                                                                                  new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                      Timestamp.Now,
-                                                                                      Request.EventTrackingId,
-                                                                                      processId,
-                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                      StatusCode: new StatusCode(
-                                                                                                      StatusCodes.SystemError,
-                                                                                                      "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                                  )
-                                                                                  )
-                                                                              );
+                                          pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                                       this,
+                                                                       new Acknowledgement<PushEVSEStatusRequest>(
+                                                                           Timestamp.Now,
+                                                                           Request.EventTrackingId,
+                                                                           processId,
+                                                                           Timestamp.Now - Request.Timestamp,
+                                                                           StatusCode: new StatusCode(
+                                                                                           StatusCodes.SystemError,
+                                                                                           "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                       )
+                                                                       )
+                                                                   );
 
-                                                 }
+                                      }
 
-                                                 #endregion
+                                      #endregion
 
-                                                 else if (PushEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                         //     operatorId ????
-                                                                                         out PushEVSEStatusRequest?          pullEVSEStatusRequest,
-                                                                                         out String?                         errorResponse,
-                                                                                         ProcessId:                          processId,
+                                      else if (PushEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                              //     operatorId ????
+                                                                              out PushEVSEStatusRequest?          pullEVSEStatusRequest,
+                                                                              out String?                         errorResponse,
+                                                                              ProcessId:                          processId,
 
-                                                                                         Timestamp:                          Request.Timestamp,
-                                                                                         CancellationToken:                  Request.CancellationToken,
-                                                                                         EventTrackingId:                    Request.EventTrackingId,
-                                                                                         RequestTimeout:                     Request.Timeout ?? DefaultRequestTimeout,
+                                                                              Timestamp:                          Request.Timestamp,
+                                                                              CancellationToken:                  Request.CancellationToken,
+                                                                              EventTrackingId:                    Request.EventTrackingId,
+                                                                              RequestTimeout:                     Request.Timeout ?? DefaultRequestTimeout,
 
-                                                                                         CustomPushEVSEStatusRequestParser:  CustomPushEVSEStatusRequestParser))
-                                                 {
+                                                                              CustomPushEVSEStatusRequestParser:  CustomPushEVSEStatusRequestParser))
+                                      {
 
-                                                     Counters.PushEVSEStatus.IncRequests_OK();
+                                          Counters.PushEVSEStatus.IncRequests_OK();
 
-                                                     #region Send OnPushEVSEStatusRequest event
+                                          #region Send OnPushEVSEStatusRequest event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPushEVSEStatusRequest is not null)
-                                                             await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
-                                                                                Cast<OnPushEVSEStatusAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEStatusRequest!))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPushEVSEStatusRequest is not null)
+                                                  await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
+                                                                     Cast<OnPushEVSEStatusAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullEVSEStatusRequest!))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEStatusRequest));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEStatusRequest));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Call async subscribers
+                                          #region Call async subscribers
 
-                                                     var OnPushEVSEStatusLocal = OnPushEVSEStatus;
-                                                     if (OnPushEVSEStatusLocal is not null)
-                                                     {
-                                                         try
-                                                         {
+                                          var OnPushEVSEStatusLocal = OnPushEVSEStatus;
+                                          if (OnPushEVSEStatusLocal is not null)
+                                          {
+                                              try
+                                              {
 
-                                                             pullEVSEStatusResponse = (await Task.WhenAll(OnPushEVSEStatusLocal.GetInvocationList().
-                                                                                                                                Cast<OnPushEVSEStatusAPIDelegate>().
-                                                                                                                                Select(e => e(Timestamp.Now,
-                                                                                                                                              this,
-                                                                                                                                              pullEVSEStatusRequest!))))?.FirstOrDefault();
+                                                  pullEVSEStatusResponse = (await Task.WhenAll(OnPushEVSEStatusLocal.GetInvocationList().
+                                                                                                                     Cast<OnPushEVSEStatusAPIDelegate>().
+                                                                                                                     Select(e => e(Timestamp.Now,
+                                                                                                                                   this,
+                                                                                                                                   pullEVSEStatusRequest!))))?.FirstOrDefault();
 
-                                                             Counters.PushEVSEStatus.IncResponses_OK();
+                                                  Counters.PushEVSEStatus.IncResponses_OK();
 
-                                                         }
-                                                         catch (Exception e)
-                                                         {
+                                              }
+                                              catch (Exception e)
+                                              {
 
-                                                             Counters.PushEVSEStatus.IncResponses_Error();
+                                                  Counters.PushEVSEStatus.IncResponses_Error();
 
-                                                             pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                          this,
-                                                                                          new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                              Timestamp.Now,
-                                                                                              Request.EventTrackingId,
-                                                                                              processId,
-                                                                                              Timestamp.Now - Request.Timestamp,
-                                                                                              StatusCode: new StatusCode(
-                                                                                                              StatusCodes.DataError,
-                                                                                                              e.Message,
-                                                                                                              e.StackTrace
-                                                                                                          ),
-                                                                                              pullEVSEStatusRequest
-                                                                                          )
-                                                                                      );
+                                                  pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                                               this,
+                                                                               new Acknowledgement<PushEVSEStatusRequest>(
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   processId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.DataError,
+                                                                                                   e.Message,
+                                                                                                   e.StackTrace
+                                                                                               ),
+                                                                                   pullEVSEStatusRequest
+                                                                               )
+                                                                           );
 
-                                                         }
-                                                     }
+                                              }
+                                          }
 
-                                                     if (pullEVSEStatusResponse is null)
-                                                     {
+                                          if (pullEVSEStatusResponse is null)
+                                          {
 
-                                                         Counters.PushEVSEStatus.IncResponses_Error();
+                                              Counters.PushEVSEStatus.IncResponses_Error();
 
-                                                         pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                      this,
-                                                                                      new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                          Timestamp.Now,
-                                                                                          Request.EventTrackingId,
-                                                                                          processId,
-                                                                                          Timestamp.Now - Request.Timestamp,
-                                                                                          StatusCode: new StatusCode(
-                                                                                                          StatusCodes.SystemError,
-                                                                                                          "Could not process the received PushEVSEStatus request!"
-                                                                                                      ),
-                                                                                          pullEVSEStatusRequest
-                                                                                      )
-                                                                                  );
+                                              pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                                           this,
+                                                                           new Acknowledgement<PushEVSEStatusRequest>(
+                                                                               Timestamp.Now,
+                                                                               Request.EventTrackingId,
+                                                                               processId,
+                                                                               Timestamp.Now - Request.Timestamp,
+                                                                               StatusCode: new StatusCode(
+                                                                                               StatusCodes.SystemError,
+                                                                                               "Could not process the received PushEVSEStatus request!"
+                                                                                           ),
+                                                                               pullEVSEStatusRequest
+                                                                           )
+                                                                       );
 
-                                                     }
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Send OnPushEVSEStatusResponse event
+                                          #region Send OnPushEVSEStatusResponse event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPushEVSEStatusResponse is not null)
-                                                             await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
-                                                                                Cast<OnPushEVSEStatusAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEStatusRequest!,
-                                                                                              pullEVSEStatusResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPushEVSEStatusResponse is not null)
+                                                  await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
+                                                                     Cast<OnPushEVSEStatusAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullEVSEStatusRequest!,
+                                                                                   pullEVSEStatusResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEStatusResponse));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEStatusResponse));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                 }
-                                                 else
-                                                 {
+                                      }
+                                      else
+                                      {
 
-                                                     Counters.PushEVSEStatus.IncRequests_Error();
+                                          Counters.PushEVSEStatus.IncRequests_Error();
 
-                                                     pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                                  this,
-                                                                                  new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                      Timestamp.Now,
-                                                                                      Request.EventTrackingId,
-                                                                                      processId,
-                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                      StatusCode: new StatusCode(
-                                                                                                      StatusCodes.DataError,
-                                                                                                      "We could not parse the given PushEVSEStatus request!",
-                                                                                                      errorResponse
-                                                                                                  ),
-                                                                                      pullEVSEStatusRequest
-                                                                                  )
-                                                                              );
+                                          pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                                       this,
+                                                                       new Acknowledgement<PushEVSEStatusRequest>(
+                                                                           Timestamp.Now,
+                                                                           Request.EventTrackingId,
+                                                                           processId,
+                                                                           Timestamp.Now - Request.Timestamp,
+                                                                           StatusCode: new StatusCode(
+                                                                                           StatusCodes.DataError,
+                                                                                           "We could not parse the given PushEVSEStatus request!",
+                                                                                           errorResponse
+                                                                                       ),
+                                                                           pullEVSEStatusRequest
+                                                                       )
+                                                                   );
 
-                                                 }
+                                      }
 
-                                             }
-                                             catch (Exception e)
-                                             {
+                                  }
+                                  catch (Exception e)
+                                  {
 
-                                                 Counters.PushEVSEStatus.IncResponses_Error();
+                                      Counters.PushEVSEStatus.IncResponses_Error();
 
-                                                 pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
-                                                                              this,
-                                                                              new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                  Timestamp.Now,
-                                                                                  Request.EventTrackingId,
-                                                                                  processId,
-                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                  StatusCode: new StatusCode(
-                                                                                                  StatusCodes.SystemError,
-                                                                                                  e.Message,
-                                                                                                  e.StackTrace
-                                                                                              )
-                                                                              )
-                                                                          );
+                                      pullEVSEStatusResponse = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                                   this,
+                                                                   new Acknowledgement<PushEVSEStatusRequest>(
+                                                                       Timestamp.Now,
+                                                                       Request.EventTrackingId,
+                                                                       processId,
+                                                                       Timestamp.Now - Request.Timestamp,
+                                                                       StatusCode: new StatusCode(
+                                                                                       StatusCodes.SystemError,
+                                                                                       e.Message,
+                                                                                       e.StackTrace
+                                                                                   )
+                                                                   )
+                                                               );
 
-                                             }
+                                  }
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                             CustomStatusCodeSerializer).
-                                                                                                                      ToString(JSONFormatting).
-                                                                                                                      ToUTF8Bytes()
-                                                                                                            ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                  CustomStatusCodeSerializer).
+                                                                                                           ToString(JSONFormatting).
+                                                                                                           ToUTF8Bytes()
+                                                                                                 ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
 
-                                          }, AllowReplacement: URLReplacement.Allow);
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -1812,238 +1812,238 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/operators/DE*GEF/pricing-products
             // -----------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/pricing-products",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logPushPricingProductDataHTTPRequest,
-                                         HTTPResponseLogger:  logPushPricingProductDataHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/pricing-products",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logPushPricingProductDataHTTPRequest,
+                              HTTPResponseLogger:  logPushPricingProductDataHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<Acknowledgement<PushPricingProductDataRequest>>? pushPricingProductDataResponse = null;
+                                  OICPResult<Acknowledgement<PushPricingProductDataRequest>>? pushPricingProductDataResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 #region Try to parse ProviderId URL parameter
+                                      #region Try to parse ProviderId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
 
-                                                     Counters.PushPricingProductData.IncRequests_Error();
+                                          Counters.PushPricingProductData.IncRequests_Error();
 
-                                                     pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
-                                                                                          this,
-                                                                                          new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                              Timestamp.Now,
-                                                                                              Request.EventTrackingId,
-                                                                                              processId,
-                                                                                              Timestamp.Now - Request.Timestamp,
-                                                                                              StatusCode: new StatusCode(
-                                                                                                              StatusCodes.SystemError,
-                                                                                                              "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                                          )
-                                                                                          )
-                                                                                      );
+                                          pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                               this,
+                                                                               new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   processId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.SystemError,
+                                                                                                   "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                               )
+                                                                               )
+                                                                           );
 
-                                                 }
+                                      }
 
-                                                 #endregion
+                                      #endregion
 
-                                                 else if (PushPricingProductDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                                 //     operatorId ????
-                                                                                                 out PushPricingProductDataRequest?          pullEVSEDataRequest,
-                                                                                                 out String?                                 errorResponse,
-                                                                                                 ProcessId:                                  processId,
+                                      else if (PushPricingProductDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                      //     operatorId ????
+                                                                                      out PushPricingProductDataRequest?          pullEVSEDataRequest,
+                                                                                      out String?                                 errorResponse,
+                                                                                      ProcessId:                                  processId,
 
-                                                                                                 Timestamp:                                  Request.Timestamp,
-                                                                                                 CancellationToken:                          Request.CancellationToken,
-                                                                                                 EventTrackingId:                            Request.EventTrackingId,
-                                                                                                 RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
+                                                                                      Timestamp:                                  Request.Timestamp,
+                                                                                      CancellationToken:                          Request.CancellationToken,
+                                                                                      EventTrackingId:                            Request.EventTrackingId,
+                                                                                      RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
 
-                                                                                                 CustomPushPricingProductDataRequestParser:  CustomPushPricingProductDataRequestParser))
-                                                 {
+                                                                                      CustomPushPricingProductDataRequestParser:  CustomPushPricingProductDataRequestParser))
+                                      {
 
-                                                     Counters.PushPricingProductData.IncRequests_OK();
+                                          Counters.PushPricingProductData.IncRequests_OK();
 
-                                                     #region Send OnPushPricingProductDataRequest event
+                                          #region Send OnPushPricingProductDataRequest event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPushPricingProductDataRequest is not null)
-                                                             await Task.WhenAll(OnPushPricingProductDataRequest.GetInvocationList().
-                                                                                Cast<OnPushPricingProductDataAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEDataRequest!))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPushPricingProductDataRequest is not null)
+                                                  await Task.WhenAll(OnPushPricingProductDataRequest.GetInvocationList().
+                                                                     Cast<OnPushPricingProductDataAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullEVSEDataRequest!))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushPricingProductDataRequest));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushPricingProductDataRequest));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Call async subscribers
+                                          #region Call async subscribers
 
-                                                     var OnPushPricingProductDataLocal = OnPushPricingProductData;
-                                                     if (OnPushPricingProductDataLocal is not null)
-                                                     {
-                                                         try
-                                                         {
+                                          var OnPushPricingProductDataLocal = OnPushPricingProductData;
+                                          if (OnPushPricingProductDataLocal is not null)
+                                          {
+                                              try
+                                              {
 
-                                                             pushPricingProductDataResponse = (await Task.WhenAll(OnPushPricingProductDataLocal.GetInvocationList().
-                                                                                                                                                Cast<OnPushPricingProductDataAPIDelegate>().
-                                                                                                                                                Select(e => e(Timestamp.Now,
-                                                                                                                                                              this,
-                                                                                                                                                              pullEVSEDataRequest!))))?.FirstOrDefault();
+                                                  pushPricingProductDataResponse = (await Task.WhenAll(OnPushPricingProductDataLocal.GetInvocationList().
+                                                                                                                                     Cast<OnPushPricingProductDataAPIDelegate>().
+                                                                                                                                     Select(e => e(Timestamp.Now,
+                                                                                                                                                   this,
+                                                                                                                                                   pullEVSEDataRequest!))))?.FirstOrDefault();
 
-                                                             Counters.PushPricingProductData.IncResponses_OK();
+                                                  Counters.PushPricingProductData.IncResponses_OK();
 
-                                                         }
-                                                         catch (Exception e)
-                                                         {
+                                              }
+                                              catch (Exception e)
+                                              {
 
-                                                             Counters.PushPricingProductData.IncResponses_Error();
+                                                  Counters.PushPricingProductData.IncResponses_Error();
 
-                                                             pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
-                                                                                                  this,
-                                                                                                  new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                                      Timestamp.Now,
-                                                                                                      Request.EventTrackingId,
-                                                                                                      processId,
-                                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                                      StatusCode: new StatusCode(
-                                                                                                                      StatusCodes.DataError,
-                                                                                                                      e.Message,
-                                                                                                                      e.StackTrace
-                                                                                                                  ),
-                                                                                                      pullEVSEDataRequest
-                                                                                                  )
-                                                                                              );
+                                                  pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                       this,
+                                                                                       new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                           Timestamp.Now,
+                                                                                           Request.EventTrackingId,
+                                                                                           processId,
+                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                           StatusCode: new StatusCode(
+                                                                                                           StatusCodes.DataError,
+                                                                                                           e.Message,
+                                                                                                           e.StackTrace
+                                                                                                       ),
+                                                                                           pullEVSEDataRequest
+                                                                                       )
+                                                                                   );
 
-                                                         }
-                                                     }
+                                              }
+                                          }
 
-                                                     if (pushPricingProductDataResponse is null)
-                                                     {
+                                          if (pushPricingProductDataResponse is null)
+                                          {
 
-                                                         Counters.PushPricingProductData.IncResponses_Error();
+                                              Counters.PushPricingProductData.IncResponses_Error();
 
-                                                         pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
-                                                                                              this,
-                                                                                              new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  processId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.SystemError,
-                                                                                                                  "Could not process the received PushPricingProductData request!"
-                                                                                                              ),
-                                                                                                  pullEVSEDataRequest
-                                                                                              )
-                                                                                          );
+                                              pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                                   this,
+                                                                                   new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       processId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.SystemError,
+                                                                                                       "Could not process the received PushPricingProductData request!"
+                                                                                                   ),
+                                                                                       pullEVSEDataRequest
+                                                                                   )
+                                                                               );
 
-                                                     }
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Send OnPushPricingProductDataResponse event
+                                          #region Send OnPushPricingProductDataResponse event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPushPricingProductDataResponse is not null)
-                                                             await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
-                                                                                Cast<OnPushPricingProductDataAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEDataRequest!,
-                                                                                              pushPricingProductDataResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPushPricingProductDataResponse is not null)
+                                                  await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
+                                                                     Cast<OnPushPricingProductDataAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullEVSEDataRequest!,
+                                                                                   pushPricingProductDataResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushPricingProductDataResponse));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushPricingProductDataResponse));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                 }
-                                                 else
-                                                 {
+                                      }
+                                      else
+                                      {
 
-                                                     Counters.PushPricingProductData.IncRequests_Error();
+                                          Counters.PushPricingProductData.IncRequests_Error();
 
-                                                     pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
-                                                                                          this,
-                                                                                          new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                              Timestamp.Now,
-                                                                                              Request.EventTrackingId,
-                                                                                              processId,
-                                                                                              Timestamp.Now - Request.Timestamp,
-                                                                                              StatusCode: new StatusCode(
-                                                                                                              StatusCodes.DataError,
-                                                                                                              "We could not parse the given PushPricingProductData request!",
-                                                                                                              errorResponse
-                                                                                                          ),
-                                                                                              pullEVSEDataRequest
-                                                                                          )
-                                                                                      );
+                                          pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                               this,
+                                                                               new Acknowledgement<PushPricingProductDataRequest>(
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   processId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.DataError,
+                                                                                                   "We could not parse the given PushPricingProductData request!",
+                                                                                                   errorResponse
+                                                                                               ),
+                                                                                   pullEVSEDataRequest
+                                                                               )
+                                                                           );
 
-                                                 }
+                                      }
 
-                                             }
-                                             catch (Exception e)
-                                             {
+                                  }
+                                  catch (Exception e)
+                                  {
 
-                                                 Counters.PushPricingProductData.IncResponses_Error();
+                                      Counters.PushPricingProductData.IncResponses_Error();
 
-                                                 pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
-                                                                                      this,
-                                                                                      new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                          Timestamp.Now,
-                                                                                          Request.EventTrackingId,
-                                                                                          processId,
-                                                                                          Timestamp.Now - Request.Timestamp,
-                                                                                          StatusCode: new StatusCode(
-                                                                                                          StatusCodes.SystemError,
-                                                                                                          e.Message,
-                                                                                                          e.StackTrace
-                                                                                                      )
-                                                                                      )
-                                                                                  );
+                                      pushPricingProductDataResponse = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                                           this,
+                                                                           new Acknowledgement<PushPricingProductDataRequest>(
+                                                                               Timestamp.Now,
+                                                                               Request.EventTrackingId,
+                                                                               processId,
+                                                                               Timestamp.Now - Request.Timestamp,
+                                                                               StatusCode: new StatusCode(
+                                                                                               StatusCodes.SystemError,
+                                                                                               e.Message,
+                                                                                               e.StackTrace
+                                                                                           )
+                                                                           )
+                                                                       );
 
-                                             }
+                                  }
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pushPricingProductDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                     CustomStatusCodeSerializer).
-                                                                                                                              ToString(JSONFormatting).
-                                                                                                                              ToUTF8Bytes()
-                                                                                                                    ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = pushPricingProductDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                          CustomStatusCodeSerializer).
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes()
+                                                                                                         ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
 
-                                          }, AllowReplacement: URLReplacement.Allow);
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -2052,238 +2052,238 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/dynamicpricing/v10/operators/DE-GEF/evse-pricing
             // -----------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/evse-pricing",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logPushEVSEPricingHTTPRequest,
-                                         HTTPResponseLogger:  logPushEVSEPricingHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/evse-pricing",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logPushEVSEPricingHTTPRequest,
+                              HTTPResponseLogger:  logPushEVSEPricingHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<Acknowledgement<PushEVSEPricingRequest>>? pushEVSEPricingResponse = null;
+                                  OICPResult<Acknowledgement<PushEVSEPricingRequest>>? pushEVSEPricingResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 #region Try to parse ProviderId URL parameter
+                                      #region Try to parse ProviderId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
 
-                                                     Counters.PushEVSEPricing.IncRequests_Error();
+                                          Counters.PushEVSEPricing.IncRequests_Error();
 
-                                                     pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                          pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                        this,
+                                                                        new Acknowledgement<PushEVSEPricingRequest>(
+                                                                            Timestamp.Now,
+                                                                            Request.EventTrackingId,
+                                                                            processId,
+                                                                            Timestamp.Now - Request.Timestamp,
+                                                                            StatusCode: new StatusCode(
+                                                                                            StatusCodes.SystemError,
+                                                                                            "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                        )
+                                                                        )
+                                                                    );
+
+                                      }
+
+                                      #endregion
+
+                                      else if (PushEVSEPricingRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                               operatorId,
+                                                                               out PushEVSEPricingRequest?          pullEVSEDataRequest,
+                                                                               out String?                          errorResponse,
+                                                                               ProcessId:                           processId,
+
+                                                                               Timestamp:                           Request.Timestamp,
+                                                                               CancellationToken:                   Request.CancellationToken,
+                                                                               EventTrackingId:                     Request.EventTrackingId,
+                                                                               RequestTimeout:                      Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                               CustomPushEVSEPricingRequestParser:  CustomPushEVSEPricingRequestParser))
+                                      {
+
+                                          Counters.PushEVSEPricing.IncRequests_OK();
+
+                                          #region Send OnPushEVSEPricingRequest event
+
+                                          try
+                                          {
+
+                                              if (OnPushEVSEPricingRequest is not null)
+                                                  await Task.WhenAll(OnPushEVSEPricingRequest.GetInvocationList().
+                                                                     Cast<OnPushEVSEPricingAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
                                                                                    this,
-                                                                                   new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                       Timestamp.Now,
-                                                                                       Request.EventTrackingId,
-                                                                                       processId,
-                                                                                       Timestamp.Now - Request.Timestamp,
-                                                                                       StatusCode: new StatusCode(
-                                                                                                       StatusCodes.SystemError,
-                                                                                                       "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                                   )
-                                                                                   )
-                                                                               );
+                                                                                   pullEVSEDataRequest!))).
+                                                                     ConfigureAwait(false);
 
-                                                 }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEPricingRequest));
+                                          }
 
-                                                 #endregion
+                                          #endregion
 
-                                                 else if (PushEVSEPricingRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                          operatorId,
-                                                                                          out PushEVSEPricingRequest?          pullEVSEDataRequest,
-                                                                                          out String?                          errorResponse,
-                                                                                          ProcessId:                           processId,
+                                          #region Call async subscribers
 
-                                                                                          Timestamp:                           Request.Timestamp,
-                                                                                          CancellationToken:                   Request.CancellationToken,
-                                                                                          EventTrackingId:                     Request.EventTrackingId,
-                                                                                          RequestTimeout:                      Request.Timeout ?? DefaultRequestTimeout,
+                                          var OnPushEVSEPricingLocal = OnPushEVSEPricing;
+                                          if (OnPushEVSEPricingLocal is not null)
+                                          {
+                                              try
+                                              {
 
-                                                                                          CustomPushEVSEPricingRequestParser:  CustomPushEVSEPricingRequestParser))
-                                                 {
+                                                  pushEVSEPricingResponse = (await Task.WhenAll(OnPushEVSEPricingLocal.GetInvocationList().
+                                                                                                                       Cast<OnPushEVSEPricingAPIDelegate>().
+                                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                                     this,
+                                                                                                                                     pullEVSEDataRequest!))))?.FirstOrDefault();
 
-                                                     Counters.PushEVSEPricing.IncRequests_OK();
+                                                  Counters.PushEVSEPricing.IncResponses_OK();
 
-                                                     #region Send OnPushEVSEPricingRequest event
+                                              }
+                                              catch (Exception e)
+                                              {
 
-                                                     try
-                                                     {
+                                                  Counters.PushEVSEPricing.IncResponses_Error();
 
-                                                         if (OnPushEVSEPricingRequest is not null)
-                                                             await Task.WhenAll(OnPushEVSEPricingRequest.GetInvocationList().
-                                                                                Cast<OnPushEVSEPricingAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEDataRequest!))).
-                                                                                ConfigureAwait(false);
+                                                  pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                                this,
+                                                                                new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                    Timestamp.Now,
+                                                                                    Request.EventTrackingId,
+                                                                                    processId,
+                                                                                    Timestamp.Now - Request.Timestamp,
+                                                                                    StatusCode: new StatusCode(
+                                                                                                    StatusCodes.DataError,
+                                                                                                    e.Message,
+                                                                                                    e.StackTrace
+                                                                                                ),
+                                                                                    pullEVSEDataRequest!
+                                                                                )
+                                                                            );
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEPricingRequest));
-                                                     }
+                                              }
+                                          }
 
-                                                     #endregion
+                                          if (pushEVSEPricingResponse is null)
+                                          {
 
-                                                     #region Call async subscribers
+                                              Counters.PushEVSEPricing.IncResponses_Error();
 
-                                                     var OnPushEVSEPricingLocal = OnPushEVSEPricing;
-                                                     if (OnPushEVSEPricingLocal is not null)
-                                                     {
-                                                         try
-                                                         {
+                                              pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                            this,
+                                                                            new Acknowledgement<PushEVSEPricingRequest>(
+                                                                                Timestamp.Now,
+                                                                                Request.EventTrackingId,
+                                                                                processId,
+                                                                                Timestamp.Now - Request.Timestamp,
+                                                                                StatusCode: new StatusCode(
+                                                                                                StatusCodes.SystemError,
+                                                                                                "Could not process the received PushEVSEPricing request!"
+                                                                                            ),
+                                                                                pullEVSEDataRequest!
+                                                                            )
+                                                                        );
 
-                                                             pushEVSEPricingResponse = (await Task.WhenAll(OnPushEVSEPricingLocal.GetInvocationList().
-                                                                                                                                  Cast<OnPushEVSEPricingAPIDelegate>().
-                                                                                                                                  Select(e => e(Timestamp.Now,
-                                                                                                                                                this,
-                                                                                                                                                pullEVSEDataRequest!))))?.FirstOrDefault();
+                                          }
 
-                                                             Counters.PushEVSEPricing.IncResponses_OK();
+                                          #endregion
 
-                                                         }
-                                                         catch (Exception e)
-                                                         {
+                                          #region Send OnPushEVSEPricingResponse event
 
-                                                             Counters.PushEVSEPricing.IncResponses_Error();
+                                          try
+                                          {
 
-                                                             pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
-                                                                                           this,
-                                                                                           new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                               Timestamp.Now,
-                                                                                               Request.EventTrackingId,
-                                                                                               processId,
-                                                                                               Timestamp.Now - Request.Timestamp,
-                                                                                               StatusCode: new StatusCode(
-                                                                                                               StatusCodes.DataError,
-                                                                                                               e.Message,
-                                                                                                               e.StackTrace
-                                                                                                           ),
-                                                                                               pullEVSEDataRequest!
-                                                                                           )
-                                                                                       );
-
-                                                         }
-                                                     }
-
-                                                     if (pushEVSEPricingResponse is null)
-                                                     {
-
-                                                         Counters.PushEVSEPricing.IncResponses_Error();
-
-                                                         pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
-                                                                                       this,
-                                                                                       new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                           Timestamp.Now,
-                                                                                           Request.EventTrackingId,
-                                                                                           processId,
-                                                                                           Timestamp.Now - Request.Timestamp,
-                                                                                           StatusCode: new StatusCode(
-                                                                                                           StatusCodes.SystemError,
-                                                                                                           "Could not process the received PushEVSEPricing request!"
-                                                                                                       ),
-                                                                                           pullEVSEDataRequest!
-                                                                                       )
-                                                                                   );
-
-                                                     }
-
-                                                     #endregion
-
-                                                     #region Send OnPushEVSEPricingResponse event
-
-                                                     try
-                                                     {
-
-                                                         if (OnPushEVSEPricingResponse is not null)
-                                                             await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
-                                                                                Cast<OnPushEVSEPricingAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullEVSEDataRequest!,
-                                                                                              pushEVSEPricingResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
-
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEPricingResponse));
-                                                     }
-
-                                                     #endregion
-
-                                                 }
-                                                 else
-                                                 {
-
-                                                     Counters.PushEVSEPricing.IncRequests_Error();
-
-                                                     pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                              if (OnPushEVSEPricingResponse is not null)
+                                                  await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
+                                                                     Cast<OnPushEVSEPricingAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
                                                                                    this,
-                                                                                   new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                       Timestamp.Now,
-                                                                                       Request.EventTrackingId,
-                                                                                       processId,
-                                                                                       Timestamp.Now - Request.Timestamp,
-                                                                                       StatusCode: new StatusCode(
-                                                                                                       StatusCodes.DataError,
-                                                                                                       "We could not parse the given PushEVSEPricing request!",
-                                                                                                       errorResponse
-                                                                                                   ),
-                                                                                       pullEVSEDataRequest!
-                                                                                   )
-                                                                               );
+                                                                                   pullEVSEDataRequest!,
+                                                                                   pushEVSEPricingResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
 
-                                                 }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPushEVSEPricingResponse));
+                                          }
 
-                                             }
-                                             catch (Exception e)
-                                             {
+                                          #endregion
 
-                                                 Counters.PushEVSEPricing.IncResponses_Error();
+                                      }
+                                      else
+                                      {
 
-                                                 pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
-                                                                               this,
-                                                                               new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                   Timestamp.Now,
-                                                                                   Request.EventTrackingId,
-                                                                                   processId,
-                                                                                   Timestamp.Now - Request.Timestamp,
-                                                                                   StatusCode: new StatusCode(
-                                                                                                   StatusCodes.SystemError,
-                                                                                                   e.Message,
-                                                                                                   e.StackTrace
-                                                                                               )
-                                                                               )
-                                                                           );
+                                          Counters.PushEVSEPricing.IncRequests_Error();
 
-                                             }
+                                          pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                        this,
+                                                                        new Acknowledgement<PushEVSEPricingRequest>(
+                                                                            Timestamp.Now,
+                                                                            Request.EventTrackingId,
+                                                                            processId,
+                                                                            Timestamp.Now - Request.Timestamp,
+                                                                            StatusCode: new StatusCode(
+                                                                                            StatusCodes.DataError,
+                                                                                            "We could not parse the given PushEVSEPricing request!",
+                                                                                            errorResponse
+                                                                                        ),
+                                                                            pullEVSEDataRequest!
+                                                                        )
+                                                                    );
+
+                                      }
+
+                                  }
+                                  catch (Exception e)
+                                  {
+
+                                      Counters.PushEVSEPricing.IncResponses_Error();
+
+                                      pushEVSEPricingResponse = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                                    this,
+                                                                    new Acknowledgement<PushEVSEPricingRequest>(
+                                                                        Timestamp.Now,
+                                                                        Request.EventTrackingId,
+                                                                        processId,
+                                                                        Timestamp.Now - Request.Timestamp,
+                                                                        StatusCode: new StatusCode(
+                                                                                        StatusCodes.SystemError,
+                                                                                        e.Message,
+                                                                                        e.StackTrace
+                                                                                    )
+                                                                    )
+                                                                );
+
+                                  }
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pushEVSEPricingResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                              CustomStatusCodeSerializer).
-                                                                                                                       ToString(JSONFormatting).
-                                                                                                                       ToUTF8Bytes()
-                                                                                                             ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = pushEVSEPricingResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                   CustomStatusCodeSerializer).
+                                                                                                            ToString(JSONFormatting).
+                                                                                                            ToUTF8Bytes()
+                                                                                                  ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
 
-                                          }, AllowReplacement: URLReplacement.Allow);
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -2293,245 +2293,245 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // -----------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/authdata/v21/operators/DE*GEF/pull-request
             // -----------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/authdata/v21/operators/{operatorId}/pull-request",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logPullAuthenticationDataHTTPRequest,
-                                         HTTPResponseLogger:  logPullAuthenticationDataHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/authdata/v21/operators/{operatorId}/pull-request",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logPullAuthenticationDataHTTPRequest,
+                              HTTPResponseLogger:  logPullAuthenticationDataHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<PullAuthenticationDataResponse>? pullAuthenticationDataResponse = null;
+                                  OICPResult<PullAuthenticationDataResponse>? pullAuthenticationDataResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 #region Try to parse ProviderId URL parameter
+                                      #region Try to parse ProviderId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
 
-                                                     Counters.PullAuthenticationData.IncRequests_Error();
+                                          Counters.PullAuthenticationData.IncRequests_Error();
 
-                                                     pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
-                                                                                          this,
-                                                                                          new PullAuthenticationDataResponse(
-                                                                                              Timestamp.Now,
-                                                                                              Request.EventTrackingId,
-                                                                                              processId,
-                                                                                              Timestamp.Now - Request.Timestamp,
-                                                                                              Array.Empty<ProviderAuthenticationData>(),
-                                                                                              StatusCode: new StatusCode(
-                                                                                                              StatusCodes.SystemError,
-                                                                                                              "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                                          )
-                                                                                          )
-                                                                                      );
+                                          pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                               this,
+                                                                               new PullAuthenticationDataResponse(
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   processId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   Array.Empty<ProviderAuthenticationData>(),
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.SystemError,
+                                                                                                   "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                               )
+                                                                               )
+                                                                           );
 
-                                                 }
+                                      }
 
-                                                 #endregion
+                                      #endregion
 
-                                                 else if (PullAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                                 //operatorId,
-                                                                                                 out PullAuthenticationDataRequest?          pullAuthenticationDataRequest,
-                                                                                                 out String?                                 errorResponse,
-                                                                                                 ProcessId:                                  processId,
+                                      else if (PullAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                      //operatorId,
+                                                                                      out PullAuthenticationDataRequest?          pullAuthenticationDataRequest,
+                                                                                      out String?                                 errorResponse,
+                                                                                      ProcessId:                                  processId,
 
-                                                                                                 Timestamp:                                  Request.Timestamp,
-                                                                                                 CancellationToken:                          Request.CancellationToken,
-                                                                                                 EventTrackingId:                            Request.EventTrackingId,
-                                                                                                 RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
+                                                                                      Timestamp:                                  Request.Timestamp,
+                                                                                      CancellationToken:                          Request.CancellationToken,
+                                                                                      EventTrackingId:                            Request.EventTrackingId,
+                                                                                      RequestTimeout:                             Request.Timeout ?? DefaultRequestTimeout,
 
-                                                                                                 CustomPullAuthenticationDataRequestParser:  CustomPullAuthenticationDataRequestParser))
-                                                 {
+                                                                                      CustomPullAuthenticationDataRequestParser:  CustomPullAuthenticationDataRequestParser))
+                                      {
 
-                                                     Counters.PullAuthenticationData.IncRequests_OK();
+                                          Counters.PullAuthenticationData.IncRequests_OK();
 
-                                                     #region Send OnPullAuthenticationDataRequest event
+                                          #region Send OnPullAuthenticationDataRequest event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPullAuthenticationDataRequest is not null)
-                                                             await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
-                                                                                Cast<OnPullAuthenticationDataAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullAuthenticationDataRequest!))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPullAuthenticationDataRequest is not null)
+                                                  await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
+                                                                     Cast<OnPullAuthenticationDataAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullAuthenticationDataRequest!))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPullAuthenticationDataRequest));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPullAuthenticationDataRequest));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Call async subscribers
+                                          #region Call async subscribers
 
-                                                     var OnPullAuthenticationDataLocal = OnPullAuthenticationData;
-                                                     if (OnPullAuthenticationDataLocal is not null)
-                                                     {
-                                                         try
-                                                         {
+                                          var OnPullAuthenticationDataLocal = OnPullAuthenticationData;
+                                          if (OnPullAuthenticationDataLocal is not null)
+                                          {
+                                              try
+                                              {
 
-                                                             pullAuthenticationDataResponse = (await Task.WhenAll(OnPullAuthenticationDataLocal.GetInvocationList().
-                                                                                                                                                Cast<OnPullAuthenticationDataAPIDelegate>().
-                                                                                                                                                Select(e => e(Timestamp.Now,
-                                                                                                                                                              this,
-                                                                                                                                                              pullAuthenticationDataRequest!))))?.FirstOrDefault();
+                                                  pullAuthenticationDataResponse = (await Task.WhenAll(OnPullAuthenticationDataLocal.GetInvocationList().
+                                                                                                                                     Cast<OnPullAuthenticationDataAPIDelegate>().
+                                                                                                                                     Select(e => e(Timestamp.Now,
+                                                                                                                                                   this,
+                                                                                                                                                   pullAuthenticationDataRequest!))))?.FirstOrDefault();
 
-                                                             Counters.PullAuthenticationData.IncResponses_OK();
+                                                  Counters.PullAuthenticationData.IncResponses_OK();
 
-                                                         }
-                                                         catch (Exception e)
-                                                         {
+                                              }
+                                              catch (Exception e)
+                                              {
 
-                                                             Counters.PullAuthenticationData.IncResponses_Error();
+                                                  Counters.PullAuthenticationData.IncResponses_Error();
 
-                                                             pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
-                                                                                                  this,
-                                                                                                  new PullAuthenticationDataResponse(
-                                                                                                      Timestamp.Now,
-                                                                                                      Request.EventTrackingId,
-                                                                                                      processId,
-                                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                                      Array.Empty<ProviderAuthenticationData>(),
-                                                                                                      pullAuthenticationDataRequest,
-                                                                                                      StatusCode: new StatusCode(
-                                                                                                                      StatusCodes.DataError,
-                                                                                                                      e.Message,
-                                                                                                                      e.StackTrace
-                                                                                                                  )
-                                                                                                  )
-                                                                                              );
+                                                  pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                       this,
+                                                                                       new PullAuthenticationDataResponse(
+                                                                                           Timestamp.Now,
+                                                                                           Request.EventTrackingId,
+                                                                                           processId,
+                                                                                           Timestamp.Now - Request.Timestamp,
+                                                                                           Array.Empty<ProviderAuthenticationData>(),
+                                                                                           pullAuthenticationDataRequest,
+                                                                                           StatusCode: new StatusCode(
+                                                                                                           StatusCodes.DataError,
+                                                                                                           e.Message,
+                                                                                                           e.StackTrace
+                                                                                                       )
+                                                                                       )
+                                                                                   );
 
-                                                         }
-                                                     }
+                                              }
+                                          }
 
-                                                     if (pullAuthenticationDataResponse is null)
-                                                     {
+                                          if (pullAuthenticationDataResponse is null)
+                                          {
 
-                                                         Counters.PullAuthenticationData.IncResponses_Error();
+                                              Counters.PullAuthenticationData.IncResponses_Error();
 
-                                                         pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
-                                                                                              this,
-                                                                                              new PullAuthenticationDataResponse(
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  processId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  Array.Empty<ProviderAuthenticationData>(),
-                                                                                                  pullAuthenticationDataRequest,
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.SystemError,
-                                                                                                                  "Could not process the received PullAuthenticationData request!"
-                                                                                                              )
-                                                                                              )
-                                                                                          );
+                                              pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                                   this,
+                                                                                   new PullAuthenticationDataResponse(
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       processId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       Array.Empty<ProviderAuthenticationData>(),
+                                                                                       pullAuthenticationDataRequest,
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.SystemError,
+                                                                                                       "Could not process the received PullAuthenticationData request!"
+                                                                                                   )
+                                                                                   )
+                                                                               );
 
-                                                     }
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Send OnPullAuthenticationDataResponse event
+                                          #region Send OnPullAuthenticationDataResponse event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnPullAuthenticationDataResponse is not null)
-                                                             await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
-                                                                                Cast<OnPullAuthenticationDataAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              pullAuthenticationDataRequest!,
-                                                                                              pullAuthenticationDataResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
+                                              if (OnPullAuthenticationDataResponse is not null)
+                                                  await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
+                                                                     Cast<OnPullAuthenticationDataAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   pullAuthenticationDataRequest!,
+                                                                                   pullAuthenticationDataResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPullAuthenticationDataResponse));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnPullAuthenticationDataResponse));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                 }
-                                                 else
-                                                 {
+                                      }
+                                      else
+                                      {
 
-                                                     Counters.PullAuthenticationData.IncRequests_Error();
+                                          Counters.PullAuthenticationData.IncRequests_Error();
 
-                                                     pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
-                                                                                          this,
-                                                                                          new PullAuthenticationDataResponse(
-                                                                                              Timestamp.Now,
-                                                                                              Request.EventTrackingId,
-                                                                                              processId,
-                                                                                              Timestamp.Now - Request.Timestamp,
-                                                                                              Array.Empty<ProviderAuthenticationData>(),
-                                                                                              pullAuthenticationDataRequest,
-                                                                                              StatusCode: new StatusCode(
-                                                                                                              StatusCodes.DataError,
-                                                                                                              "We could not parse the given PullAuthenticationData request!",
-                                                                                                              errorResponse
-                                                                                                          )
-                                                                                          )
-                                                                                      );
+                                          pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                               this,
+                                                                               new PullAuthenticationDataResponse(
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   processId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   Array.Empty<ProviderAuthenticationData>(),
+                                                                                   pullAuthenticationDataRequest,
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.DataError,
+                                                                                                   "We could not parse the given PullAuthenticationData request!",
+                                                                                                   errorResponse
+                                                                                               )
+                                                                               )
+                                                                           );
 
-                                                 }
+                                      }
 
-                                             }
-                                             catch (Exception e)
-                                             {
+                                  }
+                                  catch (Exception e)
+                                  {
 
-                                                 Counters.PullAuthenticationData.IncResponses_Error();
+                                      Counters.PullAuthenticationData.IncResponses_Error();
 
-                                                 pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
-                                                                                      this,
-                                                                                      new PullAuthenticationDataResponse(
-                                                                                          Timestamp.Now,
-                                                                                          Request.EventTrackingId,
-                                                                                          processId,
-                                                                                          Timestamp.Now - Request.Timestamp,
-                                                                                          Array.Empty<ProviderAuthenticationData>(),
-                                                                                          StatusCode: new StatusCode(
-                                                                                                          StatusCodes.SystemError,
-                                                                                                          e.Message,
-                                                                                                          e.StackTrace
-                                                                                                      )
-                                                                                      )
-                                                                                  );
+                                      pullAuthenticationDataResponse = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                                           this,
+                                                                           new PullAuthenticationDataResponse(
+                                                                               Timestamp.Now,
+                                                                               Request.EventTrackingId,
+                                                                               processId,
+                                                                               Timestamp.Now - Request.Timestamp,
+                                                                               Array.Empty<ProviderAuthenticationData>(),
+                                                                               StatusCode: new StatusCode(
+                                                                                               StatusCodes.SystemError,
+                                                                                               e.Message,
+                                                                                               e.StackTrace
+                                                                                           )
+                                                                           )
+                                                                       );
 
-                                             }
+                                  }
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = pullAuthenticationDataResponse.Response?.ToJSON(CustomPullAuthenticationDataResponseSerializer,
-                                                                                                                                     CustomProviderAuthenticationDataSerializer,
-                                                                                                                                     CustomIdentificationSerializer,
-                                                                                                                                     CustomStatusCodeSerializer).
-                                                                                                                              ToString(JSONFormatting).
-                                                                                                                              ToUTF8Bytes()
-                                                                                                                    ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = pullAuthenticationDataResponse.Response?.ToJSON(CustomPullAuthenticationDataResponseSerializer,
+                                                                                                                          CustomProviderAuthenticationDataSerializer,
+                                                                                                                          CustomIdentificationSerializer,
+                                                                                                                          CustomStatusCodeSerializer).
+                                                                                                                   ToString(JSONFormatting).
+                                                                                                                   ToUTF8Bytes()
+                                                                                                         ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
 
-                                          }, AllowReplacement: URLReplacement.Allow);
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -2541,194 +2541,334 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // --------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GEF/authorize/start
             // --------------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/start",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logAuthorizeStartHTTPRequest,
-                                         HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/start",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logAuthorizeStartHTTPRequest,
+                              HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<AuthorizationStartResponse>? authorizationStartResponse = null;
+                                  OICPResult<AuthorizationStartResponse>? authorizationStartResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 #region Try to parse ProviderId URL parameter
+                                      #region Try to parse ProviderId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
 
-                                                     Counters.AuthorizeStart.IncRequests_Error();
+                                          Counters.AuthorizeStart.IncRequests_Error();
 
-                                                     authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
-                                                                                      this,
-                                                                                      AuthorizationStartResponse.SystemError(
-                                                                                          null,
-                                                                                          "The expected 'operatorId' URL parameter could not be parsed!",
-                                                                                          ResponseTimestamp:  Timestamp.Now,
-                                                                                          EventTrackingId:    Request.EventTrackingId,
-                                                                                          Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                      )
-                                                                                  );
+                                          authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
+                                                                           this,
+                                                                           AuthorizationStartResponse.SystemError(
+                                                                               null,
+                                                                               "The expected 'operatorId' URL parameter could not be parsed!",
+                                                                               ResponseTimestamp:  Timestamp.Now,
+                                                                               EventTrackingId:    Request.EventTrackingId,
+                                                                               Runtime:            Timestamp.Now - Request.Timestamp
+                                                                           )
+                                                                       );
 
-                                                 }
+                                      }
 
-                                                 #endregion
+                                      #endregion
 
-                                                 else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                         operatorId,
-                                                                                         out AuthorizeStartRequest?          authorizeStartRequest,
-                                                                                         out String?                         errorResponse,
-                                                                                         ProcessId:                          processId,
+                                      else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                              operatorId,
+                                                                              out AuthorizeStartRequest?          authorizeStartRequest,
+                                                                              out String?                         errorResponse,
+                                                                              ProcessId:                          processId,
 
-                                                                                         Timestamp:                          Request.Timestamp,
-                                                                                         CancellationToken:                  Request.CancellationToken,
-                                                                                         EventTrackingId:                    Request.EventTrackingId,
-                                                                                         RequestTimeout:                     Request.Timeout ?? DefaultRequestTimeout,
+                                                                              Timestamp:                          Request.Timestamp,
+                                                                              CancellationToken:                  Request.CancellationToken,
+                                                                              EventTrackingId:                    Request.EventTrackingId,
+                                                                              RequestTimeout:                     Request.Timeout ?? DefaultRequestTimeout,
 
-                                                                                         CustomAuthorizeStartRequestParser:  CustomAuthorizeStartRequestParser))
-                                                 {
+                                                                              CustomAuthorizeStartRequestParser:  CustomAuthorizeStartRequestParser))
+                                      {
 
-                                                     Counters.AuthorizeStart.IncRequests_OK();
+                                          Counters.AuthorizeStart.IncRequests_OK();
 
-                                                     #region Send OnAuthorizeStartRequest event
+                                          #region Send OnAuthorizeStartRequest event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnAuthorizeStartRequest is not null)
-                                                             await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
-                                                                                Cast<OnAuthorizeStartAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              authorizeStartRequest!))).
-                                                                                ConfigureAwait(false);
+                                              if (OnAuthorizeStartRequest is not null)
+                                                  await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
+                                                                     Cast<OnAuthorizeStartAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   authorizeStartRequest!))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStartRequest));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStartRequest));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Call async subscribers
+                                          #region Call async subscribers
 
-                                                     var OnAuthorizeStartLocal = OnAuthorizeStart;
-                                                     if (OnAuthorizeStartLocal is not null)
-                                                     {
-                                                         try
-                                                         {
+                                          var OnAuthorizeStartLocal = OnAuthorizeStart;
+                                          if (OnAuthorizeStartLocal is not null)
+                                          {
+                                              try
+                                              {
 
-                                                             authorizationStartResponse = (await Task.WhenAll(OnAuthorizeStartLocal.GetInvocationList().
-                                                                                                                                    Cast<OnAuthorizeStartAPIDelegate>().
-                                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                                  this,
-                                                                                                                                                  authorizeStartRequest!))))?.FirstOrDefault();
+                                                  authorizationStartResponse = (await Task.WhenAll(OnAuthorizeStartLocal.GetInvocationList().
+                                                                                                                         Cast<OnAuthorizeStartAPIDelegate>().
+                                                                                                                         Select(e => e(Timestamp.Now,
+                                                                                                                                       this,
+                                                                                                                                       authorizeStartRequest!))))?.FirstOrDefault();
 
-                                                             Counters.AuthorizeStart.IncResponses_OK();
+                                                  Counters.AuthorizeStart.IncResponses_OK();
 
-                                                         }
-                                                         catch (Exception e)
-                                                         {
+                                              }
+                                              catch (Exception e)
+                                              {
 
-                                                             Counters.AuthorizeStart.IncResponses_Error();
+                                                  Counters.AuthorizeStart.IncResponses_Error();
 
-                                                             authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
-                                                                                              this,
-                                                                                              AuthorizationStartResponse.DataError(
-                                                                                                  authorizeStartRequest,
-                                                                                                  e.Message,
-                                                                                                  e.StackTrace,
-                                                                                                  ResponseTimestamp:  Timestamp.Now,
-                                                                                                  EventTrackingId:    Request.EventTrackingId,
-                                                                                                  ProcessId:          processId,
-                                                                                                  Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                              )
-                                                                                          );
+                                                  authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
+                                                                                   this,
+                                                                                   AuthorizationStartResponse.DataError(
+                                                                                       authorizeStartRequest,
+                                                                                       e.Message,
+                                                                                       e.StackTrace,
+                                                                                       ResponseTimestamp:  Timestamp.Now,
+                                                                                       EventTrackingId:    Request.EventTrackingId,
+                                                                                       ProcessId:          processId,
+                                                                                       Runtime:            Timestamp.Now - Request.Timestamp
+                                                                                   )
+                                                                               );
 
-                                                         }
-                                                     }
+                                              }
+                                          }
 
-                                                     if (authorizationStartResponse is null)
-                                                     {
+                                          if (authorizationStartResponse is null)
+                                          {
 
-                                                         Counters.AuthorizeStart.IncResponses_Error();
+                                              Counters.AuthorizeStart.IncResponses_Error();
 
-                                                         authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
-                                                                                          this,
-                                                                                          AuthorizationStartResponse.SystemError(
-                                                                                              authorizeStartRequest,
-                                                                                              "Could not process the received AuthorizeStart request!",
-                                                                                              ResponseTimestamp:  Timestamp.Now,
-                                                                                              EventTrackingId:    Request.EventTrackingId,
-                                                                                              ProcessId:          processId,
-                                                                                              Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                          )
-                                                                                      );
+                                              authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
+                                                                               this,
+                                                                               AuthorizationStartResponse.SystemError(
+                                                                                   authorizeStartRequest,
+                                                                                   "Could not process the received AuthorizeStart request!",
+                                                                                   ResponseTimestamp:  Timestamp.Now,
+                                                                                   EventTrackingId:    Request.EventTrackingId,
+                                                                                   ProcessId:          processId,
+                                                                                   Runtime:            Timestamp.Now - Request.Timestamp
+                                                                               )
+                                                                           );
 
-                                                     }
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Send OnAuthorizeStartResponse event
+                                          #region Send OnAuthorizeStartResponse event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnAuthorizeStartResponse is not null)
-                                                             await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
-                                                                                Cast<OnAuthorizeStartAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              authorizeStartRequest!,
-                                                                                              authorizationStartResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
+                                              if (OnAuthorizeStartResponse is not null)
+                                                  await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
+                                                                     Cast<OnAuthorizeStartAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   authorizeStartRequest!,
+                                                                                   authorizationStartResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStartResponse));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStartResponse));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                 }
-                                                 else
-                                                 {
+                                      }
+                                      else
+                                      {
 
-                                                     Counters.AuthorizeStart.IncRequests_Error();
+                                          Counters.AuthorizeStart.IncRequests_Error();
 
-                                                     authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
-                                                                                      this,
-                                                                                      AuthorizationStartResponse.DataError(
-                                                                                          authorizeStartRequest,
-                                                                                          "We could not parse the given AuthorizeStart request!",
-                                                                                          errorResponse,
-                                                                                          ResponseTimestamp:  Timestamp.Now,
-                                                                                          EventTrackingId:    Request.EventTrackingId,
-                                                                                          ProcessId:          processId,
-                                                                                          Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                      )
-                                                                                  );
+                                          authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
+                                                                           this,
+                                                                           AuthorizationStartResponse.DataError(
+                                                                               authorizeStartRequest,
+                                                                               "We could not parse the given AuthorizeStart request!",
+                                                                               errorResponse,
+                                                                               ResponseTimestamp:  Timestamp.Now,
+                                                                               EventTrackingId:    Request.EventTrackingId,
+                                                                               ProcessId:          processId,
+                                                                               Runtime:            Timestamp.Now - Request.Timestamp
+                                                                           )
+                                                                       );
 
-                                                 }
+                                      }
 
-                                             }
-                                             catch (Exception e)
-                                             {
+                                  }
+                                  catch (Exception e)
+                                  {
 
-                                                 Counters.AuthorizeStart.IncResponses_Error();
+                                      Counters.AuthorizeStart.IncResponses_Error();
 
-                                                 authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
+                                      authorizationStartResponse = OICPResult<AuthorizationStartResponse>.Failed(
+                                                                       this,
+                                                                       AuthorizationStartResponse.SystemError(
+                                                                           null,
+                                                                           e.Message,
+                                                                           e.StackTrace,
+                                                                           ResponseTimestamp:  Timestamp.Now,
+                                                                           EventTrackingId:    Request.EventTrackingId,
+                                                                           ProcessId:          processId,
+                                                                           Runtime:            Timestamp.Now - Request.Timestamp
+                                                                       )
+                                                                   );
+
+                                  }
+
+
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = authorizationStartResponse.Response?.ToJSON(CustomAuthorizationStartSerializer,
+                                                                                                                      CustomStatusCodeSerializer,
+                                                                                                                      CustomIdentificationSerializer).
+                                                                                                               ToString(JSONFormatting).
+                                                                                                               ToUTF8Bytes()
+                                                                                                     ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
+
+                               }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
+
+            #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/stop
+
+            // --------------------------------------------------------------------------------------------------------------------------------------
+            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GEF/authorize/stop
+            // --------------------------------------------------------------------------------------------------------------------------------------
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/stop",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logAuthorizeStopHTTPRequest,
+                              HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
+                              HTTPDelegate:        async Request => {
+
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
+
+                                  OICPResult<AuthorizationStopResponse>? authorizationStopResponse = null;
+
+                                  try
+                                  {
+
+                                      #region Try to parse ProviderId URL parameter
+
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
+
+                                          Counters.AuthorizeStop.IncRequests_Error();
+
+                                          authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
+                                                                          this,
+                                                                          AuthorizationStopResponse.SystemError(
+                                                                              null,
+                                                                              "The expected 'operatorId' URL parameter could not be parsed!",
+                                                                              ResponseTimestamp:  Timestamp.Now,
+                                                                              EventTrackingId:    Request.EventTrackingId,
+                                                                              Runtime:            Timestamp.Now - Request.Timestamp
+                                                                          )
+                                                                      );
+
+                                      }
+
+                                      #endregion
+
+                                      else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                             operatorId,
+                                                                             out AuthorizeStopRequest?          authorizeStopRequest,
+                                                                             out String?                        errorResponse,
+                                                                             ProcessId:                         processId,
+
+                                                                             Timestamp:                         Request.Timestamp,
+                                                                             CancellationToken:                 Request.CancellationToken,
+                                                                             EventTrackingId:                   Request.EventTrackingId,
+                                                                             RequestTimeout:                    Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                             CustomAuthorizeStopRequestParser:  CustomAuthorizeStopRequestParser))
+                                      {
+
+                                          Counters.AuthorizeStop.IncRequests_OK();
+
+                                          #region Send OnAuthorizeStopRequest event
+
+                                          try
+                                          {
+
+                                              if (OnAuthorizeStopRequest is not null)
+                                                  await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
+                                                                     Cast<OnAuthorizeStopAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   authorizeStopRequest!))).
+                                                                     ConfigureAwait(false);
+
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStopRequest));
+                                          }
+
+                                          #endregion
+
+                                          #region Call async subscribers
+
+                                          var OnAuthorizeStopLocal = OnAuthorizeStop;
+                                          if (OnAuthorizeStopLocal is not null)
+                                          {
+                                              try
+                                              {
+
+                                                  authorizationStopResponse = (await Task.WhenAll(OnAuthorizeStopLocal.GetInvocationList().
+                                                                                                                       Cast<OnAuthorizeStopAPIDelegate>().
+                                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                                     this,
+                                                                                                                                     authorizeStopRequest!))))?.FirstOrDefault();
+
+                                                  Counters.AuthorizeStop.IncResponses_OK();
+
+                                              }
+                                              catch (Exception e)
+                                              {
+
+                                                  Counters.AuthorizeStop.IncResponses_Error();
+
+                                                  authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
                                                                                   this,
-                                                                                  AuthorizationStartResponse.SystemError(
-                                                                                      null,
+                                                                                  AuthorizationStopResponse.DataError(
+                                                                                      authorizeStopRequest,
                                                                                       e.Message,
                                                                                       e.StackTrace,
                                                                                       ResponseTimestamp:  Timestamp.Now,
@@ -2738,254 +2878,114 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                   )
                                                                               );
 
-                                             }
+                                              }
+                                          }
+
+                                          if (authorizationStopResponse is null)
+                                          {
+
+                                              Counters.AuthorizeStop.IncResponses_Error();
+
+                                              authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
+                                                                              this,
+                                                                              AuthorizationStopResponse.SystemError(
+                                                                                  authorizeStopRequest,
+                                                                                  "Could not process the received AuthorizeStop request!",
+                                                                                  ResponseTimestamp: Timestamp.Now,
+                                                                                  EventTrackingId: Request.EventTrackingId,
+                                                                                  ProcessId: processId,
+                                                                                  Runtime: Timestamp.Now - Request.Timestamp
+                                                                              )
+                                                                          );
+
+                                          }
+
+                                          #endregion
+
+                                          #region Send OnAuthorizeStopResponse event
+
+                                          try
+                                          {
+
+                                              if (OnAuthorizeStopResponse is not null)
+                                                  await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
+                                                                     Cast<OnAuthorizeStopAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   authorizeStopRequest!,
+                                                                                   authorizationStopResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
+
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStopResponse));
+                                          }
+
+                                          #endregion
+
+                                      }
+                                      else
+                                      {
+
+                                          Counters.AuthorizeStop.IncRequests_Error();
+
+                                          authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
+                                                                          this,
+                                                                          AuthorizationStopResponse.DataError(
+                                                                              authorizeStopRequest,
+                                                                              "We could not parse the given AuthorizeStop request!",
+                                                                              errorResponse,
+                                                                              ResponseTimestamp:  Timestamp.Now,
+                                                                              EventTrackingId:    Request.EventTrackingId,
+                                                                              ProcessId:          processId,
+                                                                              Runtime:            Timestamp.Now - Request.Timestamp
+                                                                          )
+                                                                      );
+
+                                      }
+
+                                  }
+                                  catch (Exception e)
+                                  {
+
+                                      Counters.AuthorizeStop.IncResponses_Error();
+
+                                      authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
+                                                                      this,
+                                                                      AuthorizationStopResponse.SystemError(
+                                                                          null,
+                                                                          e.Message,
+                                                                          e.StackTrace,
+                                                                          ResponseTimestamp:  Timestamp.Now,
+                                                                          EventTrackingId:    Request.EventTrackingId,
+                                                                          ProcessId:          processId,
+                                                                          Runtime:            Timestamp.Now - Request.Timestamp
+                                                                      )
+                                                                  );
+
+                                  }
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizationStartResponse.Response?.ToJSON(CustomAuthorizationStartSerializer,
-                                                                                                                                 CustomStatusCodeSerializer,
-                                                                                                                                 CustomIdentificationSerializer).
-                                                                                                                          ToString(JSONFormatting).
-                                                                                                                          ToUTF8Bytes()
-                                                                                                                ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = authorizationStopResponse.Response?.ToJSON(CustomAuthorizationStopSerializer,
+                                                                                                                     CustomStatusCodeSerializer).
+                                                                                                              ToString(JSONFormatting).
+                                                                                                              ToUTF8Bytes()
+                                                                                                    ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
 
-                                          }, AllowReplacement: URLReplacement.Allow);
-
-            #endregion
-
-            #region POST  ~/api/oicp/charging/v21/operators/{operatorId}/authorize/stop
-
-            // --------------------------------------------------------------------------------------------------------------------------------------
-            // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/charging/v21/operators/DE*GEF/authorize/stop
-            // --------------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/stop",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logAuthorizeStopHTTPRequest,
-                                         HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
-                                         HTTPDelegate:        async Request => {
-
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
-
-                                             OICPResult<AuthorizationStopResponse>? authorizationStopResponse = null;
-
-                                             try
-                                             {
-
-                                                 #region Try to parse ProviderId URL parameter
-
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
-
-                                                     Counters.AuthorizeStop.IncRequests_Error();
-
-                                                     authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
-                                                                                     this,
-                                                                                     AuthorizationStopResponse.SystemError(
-                                                                                         null,
-                                                                                         "The expected 'operatorId' URL parameter could not be parsed!",
-                                                                                         ResponseTimestamp:  Timestamp.Now,
-                                                                                         EventTrackingId:    Request.EventTrackingId,
-                                                                                         Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                     )
-                                                                                 );
-
-                                                 }
-
-                                                 #endregion
-
-                                                 else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                        operatorId,
-                                                                                        out AuthorizeStopRequest?          authorizeStopRequest,
-                                                                                        out String?                        errorResponse,
-                                                                                        ProcessId:                         processId,
-
-                                                                                        Timestamp:                         Request.Timestamp,
-                                                                                        CancellationToken:                 Request.CancellationToken,
-                                                                                        EventTrackingId:                   Request.EventTrackingId,
-                                                                                        RequestTimeout:                    Request.Timeout ?? DefaultRequestTimeout,
-
-                                                                                        CustomAuthorizeStopRequestParser:  CustomAuthorizeStopRequestParser))
-                                                 {
-
-                                                     Counters.AuthorizeStop.IncRequests_OK();
-
-                                                     #region Send OnAuthorizeStopRequest event
-
-                                                     try
-                                                     {
-
-                                                         if (OnAuthorizeStopRequest is not null)
-                                                             await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
-                                                                                Cast<OnAuthorizeStopAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              authorizeStopRequest!))).
-                                                                                ConfigureAwait(false);
-
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStopRequest));
-                                                     }
-
-                                                     #endregion
-
-                                                     #region Call async subscribers
-
-                                                     var OnAuthorizeStopLocal = OnAuthorizeStop;
-                                                     if (OnAuthorizeStopLocal is not null)
-                                                     {
-                                                         try
-                                                         {
-
-                                                             authorizationStopResponse = (await Task.WhenAll(OnAuthorizeStopLocal.GetInvocationList().
-                                                                                                                                  Cast<OnAuthorizeStopAPIDelegate>().
-                                                                                                                                  Select(e => e(Timestamp.Now,
-                                                                                                                                                this,
-                                                                                                                                                authorizeStopRequest!))))?.FirstOrDefault();
-
-                                                             Counters.AuthorizeStop.IncResponses_OK();
-
-                                                         }
-                                                         catch (Exception e)
-                                                         {
-
-                                                             Counters.AuthorizeStop.IncResponses_Error();
-
-                                                             authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
-                                                                                             this,
-                                                                                             AuthorizationStopResponse.DataError(
-                                                                                                 authorizeStopRequest,
-                                                                                                 e.Message,
-                                                                                                 e.StackTrace,
-                                                                                                 ResponseTimestamp:  Timestamp.Now,
-                                                                                                 EventTrackingId:    Request.EventTrackingId,
-                                                                                                 ProcessId:          processId,
-                                                                                                 Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                             )
-                                                                                         );
-
-                                                         }
-                                                     }
-
-                                                     if (authorizationStopResponse is null)
-                                                     {
-
-                                                         Counters.AuthorizeStop.IncResponses_Error();
-
-                                                         authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
-                                                                                         this,
-                                                                                         AuthorizationStopResponse.SystemError(
-                                                                                             authorizeStopRequest,
-                                                                                             "Could not process the received AuthorizeStop request!",
-                                                                                             ResponseTimestamp: Timestamp.Now,
-                                                                                             EventTrackingId: Request.EventTrackingId,
-                                                                                             ProcessId: processId,
-                                                                                             Runtime: Timestamp.Now - Request.Timestamp
-                                                                                         )
-                                                                                     );
-
-                                                     }
-
-                                                     #endregion
-
-                                                     #region Send OnAuthorizeStopResponse event
-
-                                                     try
-                                                     {
-
-                                                         if (OnAuthorizeStopResponse is not null)
-                                                             await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
-                                                                                Cast<OnAuthorizeStopAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              authorizeStopRequest!,
-                                                                                              authorizationStopResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
-
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnAuthorizeStopResponse));
-                                                     }
-
-                                                     #endregion
-
-                                                 }
-                                                 else
-                                                 {
-
-                                                     Counters.AuthorizeStop.IncRequests_Error();
-
-                                                     authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
-                                                                                     this,
-                                                                                     AuthorizationStopResponse.DataError(
-                                                                                         authorizeStopRequest,
-                                                                                         "We could not parse the given AuthorizeStop request!",
-                                                                                         errorResponse,
-                                                                                         ResponseTimestamp:  Timestamp.Now,
-                                                                                         EventTrackingId:    Request.EventTrackingId,
-                                                                                         ProcessId:          processId,
-                                                                                         Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                     )
-                                                                                 );
-
-                                                 }
-
-                                             }
-                                             catch (Exception e)
-                                             {
-
-                                                 Counters.AuthorizeStop.IncResponses_Error();
-
-                                                 authorizationStopResponse = OICPResult<AuthorizationStopResponse>.Failed(
-                                                                                 this,
-                                                                                 AuthorizationStopResponse.SystemError(
-                                                                                     null,
-                                                                                     e.Message,
-                                                                                     e.StackTrace,
-                                                                                     ResponseTimestamp:  Timestamp.Now,
-                                                                                     EventTrackingId:    Request.EventTrackingId,
-                                                                                     ProcessId:          processId,
-                                                                                     Runtime:            Timestamp.Now - Request.Timestamp
-                                                                                 )
-                                                                             );
-
-                                             }
-
-
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = authorizationStopResponse.Response?.ToJSON(CustomAuthorizationStopSerializer,
-                                                                                                                                CustomStatusCodeSerializer).
-                                                                                                                         ToString(JSONFormatting).
-                                                                                                                         ToUTF8Bytes()
-                                                                                                               ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
-
-                                          }, AllowReplacement: URLReplacement.Allow);
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -2995,617 +2995,446 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // ------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/notificationmgmt/v11/charging-notifications
             // ------------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logChargingNotificationHTTPRequest,
-                                         HTTPResponseLogger:  logChargingNotificationHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/notificationmgmt/v11/charging-notifications",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logChargingNotificationHTTPRequest,
+                              HTTPResponseLogger:  logChargingNotificationHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<Acknowledgement>? chargingNotificationResponse = null;
+                                  OICPResult<Acknowledgement>? chargingNotificationResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 if (Request.TryParseJObjectRequestBody(out JObject JSONRequest, out _) &&
-                                                     JSONRequest.ParseMandatory("Type",
-                                                                                "charging notification type",
-                                                                                ChargingNotificationTypesExtensions.TryParse,
-                                                                                out ChargingNotificationTypes chargingNotificationType,
-                                                                                out _))
-                                                 {
+                                      if (Request.TryParseJObjectRequestBody(out JObject JSONRequest, out _) &&
+                                          JSONRequest.ParseMandatory("Type",
+                                                                     "charging notification type",
+                                                                     ChargingNotificationTypesExtensions.TryParse,
+                                                                     out ChargingNotificationTypes chargingNotificationType,
+                                                                     out _))
+                                      {
 
-                                                     switch (chargingNotificationType)
-                                                     {
+                                          switch (chargingNotificationType)
+                                          {
 
-                                                         #region Start
+                                              #region Start
 
-                                                         case ChargingNotificationTypes.Start:
+                                              case ChargingNotificationTypes.Start:
 
-                                                             if (ChargingStartNotificationRequest.TryParse(JSONRequest,
-                                                                                                           out ChargingStartNotificationRequest?          chargingStartNotificationRequest,
-                                                                                                           out String?                                    errorResponse,
-                                                                                                           ProcessId:                                     processId,
+                                                  if (ChargingStartNotificationRequest.TryParse(JSONRequest,
+                                                                                                out ChargingStartNotificationRequest?          chargingStartNotificationRequest,
+                                                                                                out String?                                    errorResponse,
+                                                                                                ProcessId:                                     processId,
 
-                                                                                                           Timestamp:                                     Request.Timestamp,
-                                                                                                           CancellationToken:                             Request.CancellationToken,
-                                                                                                           EventTrackingId:                               Request.EventTrackingId,
-                                                                                                           RequestTimeout:                                Request.Timeout ?? DefaultRequestTimeout,
+                                                                                                Timestamp:                                     Request.Timestamp,
+                                                                                                CancellationToken:                             Request.CancellationToken,
+                                                                                                EventTrackingId:                               Request.EventTrackingId,
+                                                                                                RequestTimeout:                                Request.Timeout ?? DefaultRequestTimeout,
 
-                                                                                                           CustomChargingStartNotificationRequestParser:  CustomChargingStartNotificationRequestParser))
-                                                             {
+                                                                                                CustomChargingStartNotificationRequestParser:  CustomChargingStartNotificationRequestParser))
+                                                  {
 
-                                                                 Counters.ChargingNotifications.    IncRequests_OK();
-                                                                 Counters.ChargingStartNotification.IncRequests_OK();
+                                                      Counters.ChargingNotifications.    IncRequests_OK();
+                                                      Counters.ChargingStartNotification.IncRequests_OK();
 
-                                                                 #region Send OnChargingStartNotificationRequest event
+                                                      #region Send OnChargingStartNotificationRequest event
 
-                                                                 try
-                                                                 {
+                                                      try
+                                                      {
 
-                                                                     if (OnChargingStartNotificationRequest is not null)
-                                                                         await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
-                                                                                            Cast<OnChargingStartNotificationAPIRequestDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingStartNotificationRequest!))).
-                                                                                            ConfigureAwait(false);
+                                                          if (OnChargingStartNotificationRequest is not null)
+                                                              await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
+                                                                                 Cast<OnChargingStartNotificationAPIRequestDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingStartNotificationRequest!))).
+                                                                                 ConfigureAwait(false);
 
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingStartNotificationRequest));
-                                                                 }
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingStartNotificationRequest));
+                                                      }
 
-                                                                 #endregion
+                                                      #endregion
 
-                                                                 #region Call async subscribers
+                                                      #region Call async subscribers
 
-                                                                 OICPResult<Acknowledgement<ChargingStartNotificationRequest>>? chargingStartNotificationResponse = null;
+                                                      OICPResult<Acknowledgement<ChargingStartNotificationRequest>>? chargingStartNotificationResponse = null;
 
-                                                                 var OnChargingStartNotificationLocal = OnChargingStartNotification;
-                                                                 if (OnChargingStartNotificationLocal is not null)
-                                                                 {
-                                                                     try
-                                                                     {
+                                                      var OnChargingStartNotificationLocal = OnChargingStartNotification;
+                                                      if (OnChargingStartNotificationLocal is not null)
+                                                      {
+                                                          try
+                                                          {
 
-                                                                         chargingStartNotificationResponse = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
-                                                                                                                                                                  Cast<OnChargingStartNotificationAPIDelegate>().
-                                                                                                                                                                  Select(e => e(Timestamp.Now,
-                                                                                                                                                                                this,
-                                                                                                                                                                                chargingStartNotificationRequest!))).
-                                                                                                                                                                  ConfigureAwait(false))?.FirstOrDefault();
+                                                              chargingStartNotificationResponse = (await Task.WhenAll(OnChargingStartNotificationLocal.GetInvocationList().
+                                                                                                                                                       Cast<OnChargingStartNotificationAPIDelegate>().
+                                                                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                                                                     this,
+                                                                                                                                                                     chargingStartNotificationRequest!))).
+                                                                                                                                                       ConfigureAwait(false))?.FirstOrDefault();
 
-                                                                         Counters.ChargingNotifications.    IncResponses_OK();
-                                                                         Counters.ChargingStartNotification.IncResponses_OK();
+                                                              Counters.ChargingNotifications.    IncResponses_OK();
+                                                              Counters.ChargingStartNotification.IncResponses_OK();
 
-                                                                     }
-                                                                     catch (Exception e)
-                                                                     {
+                                                          }
+                                                          catch (Exception e)
+                                                          {
 
-                                                                         Counters.ChargingNotifications.    IncResponses_Error();
-                                                                         Counters.ChargingStartNotification.IncResponses_Error();
+                                                              Counters.ChargingNotifications.    IncResponses_Error();
+                                                              Counters.ChargingStartNotification.IncResponses_Error();
 
-                                                                         chargingStartNotificationResponse = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                                                                                                 this,
-                                                                                                                 new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                                     Timestamp.Now,
-                                                                                                                     Request.EventTrackingId,
-                                                                                                                     processId,
-                                                                                                                     Timestamp.Now - Request.Timestamp,
-                                                                                                                     StatusCode: new StatusCode(
-                                                                                                                                     StatusCodes.DataError,
-                                                                                                                                     e.Message,
-                                                                                                                                     e.StackTrace
-                                                                                                                                 ),
-                                                                                                                     chargingStartNotificationRequest
-                                                                                                                 )
-                                                                                                             );
+                                                              chargingStartNotificationResponse = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                                                                                                      this,
+                                                                                                      new Acknowledgement<ChargingStartNotificationRequest>(
+                                                                                                          Timestamp.Now,
+                                                                                                          Request.EventTrackingId,
+                                                                                                          processId,
+                                                                                                          Timestamp.Now - Request.Timestamp,
+                                                                                                          StatusCode: new StatusCode(
+                                                                                                                          StatusCodes.DataError,
+                                                                                                                          e.Message,
+                                                                                                                          e.StackTrace
+                                                                                                                      ),
+                                                                                                          chargingStartNotificationRequest
+                                                                                                      )
+                                                                                                  );
 
-                                                                     }
-                                                                 }
+                                                          }
+                                                      }
 
-                                                                 if (chargingStartNotificationResponse is null)
-                                                                 {
+                                                      if (chargingStartNotificationResponse is null)
+                                                      {
 
-                                                                     Counters.ChargingNotifications.    IncResponses_Error();
-                                                                     Counters.ChargingStartNotification.IncResponses_Error();
+                                                          Counters.ChargingNotifications.    IncResponses_Error();
+                                                          Counters.ChargingStartNotification.IncResponses_Error();
 
-                                                                     chargingStartNotificationResponse = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
-                                                                                                             this,
-                                                                                                             new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                                 Timestamp.Now,
-                                                                                                                 Request.EventTrackingId,
-                                                                                                                 processId,
-                                                                                                                 Timestamp.Now - Request.Timestamp,
-                                                                                                                 StatusCode: new StatusCode(
-                                                                                                                                 StatusCodes.SystemError,
-                                                                                                                                 "Could not process the received ChargingStartNotification request!"
-                                                                                                                             ),
-                                                                                                                 chargingStartNotificationRequest
-                                                                                                             )
-                                                                                                         );
+                                                          chargingStartNotificationResponse = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                                                                                                  this,
+                                                                                                  new Acknowledgement<ChargingStartNotificationRequest>(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      processId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.SystemError,
+                                                                                                                      "Could not process the received ChargingStartNotification request!"
+                                                                                                                  ),
+                                                                                                      chargingStartNotificationRequest
+                                                                                                  )
+                                                                                              );
 
-                                                                 }
+                                                      }
 
-                                                                 #endregion
+                                                      #endregion
 
-                                                                 #region Send OnChargingStartNotificationResponse event
+                                                      #region Send OnChargingStartNotificationResponse event
 
-                                                                 try
-                                                                 {
+                                                      try
+                                                      {
 
-                                                                     if (OnChargingStartNotificationResponse is not null)
-                                                                         await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
-                                                                                            Cast<OnChargingStartNotificationAPIResponseDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingStartNotificationRequest!,
-                                                                                                          chargingStartNotificationResponse,
-                                                                                                          Timestamp.Now - startTime))).
-                                                                                            ConfigureAwait(false);
+                                                          if (OnChargingStartNotificationResponse is not null)
+                                                              await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
+                                                                                 Cast<OnChargingStartNotificationAPIResponseDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingStartNotificationRequest!,
+                                                                                               chargingStartNotificationResponse,
+                                                                                               Timestamp.Now - startTime))).
+                                                                                 ConfigureAwait(false);
 
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingStartNotificationResponse));
-                                                                 }
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingStartNotificationResponse));
+                                                      }
 
-                                                                 #endregion
+                                                      #endregion
 
 
-                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
-                                                                                                    Request,
-                                                                                                    chargingStartNotificationResponse.Response,
-                                                                                                    chargingStartNotificationResponse.IsSuccessful,
-                                                                                                    chargingStartNotificationResponse.ValidationErrors,
-                                                                                                    chargingStartNotificationResponse.ProcessId);
+                                                      chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                         Request,
+                                                                                         chargingStartNotificationResponse.Response,
+                                                                                         chargingStartNotificationResponse.IsSuccessful,
+                                                                                         chargingStartNotificationResponse.ValidationErrors,
+                                                                                         chargingStartNotificationResponse.ProcessId);
 
-                                                             }
-                                                             else
-                                                             {
+                                                  }
+                                                  else
+                                                  {
 
-                                                                 Counters.ChargingNotifications.    IncRequests_Error();
-                                                                 Counters.ChargingStartNotification.IncRequests_Error();
+                                                      Counters.ChargingNotifications.    IncRequests_Error();
+                                                      Counters.ChargingStartNotification.IncRequests_Error();
 
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                      chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                         this,
+                                                                                         new Acknowledgement(
+                                                                                             Request.Timestamp,
+                                                                                             Timestamp.Now,
+                                                                                             Request.EventTrackingId,
+                                                                                             Timestamp.Now - Request.Timestamp,
+                                                                                             new StatusCode(
+                                                                                                 StatusCodes.DataError,
+                                                                                                 "We could not parse the given ChargingStartNotification request!",
+                                                                                                 errorResponse
+                                                                                             )
+                                                                                         )
+                                                                                     );
+
+                                                  }
+
+                                                  break;
+
+                                              #endregion
+
+                                              #region Progress
+
+                                              case ChargingNotificationTypes.Progress:
+
+                                                  if (ChargingProgressNotificationRequest.TryParse(JSONRequest,
+                                                                                                   out ChargingProgressNotificationRequest?          chargingProgressNotificationRequest,
+                                                                                                   out                                               errorResponse,
+                                                                                                   ProcessId:                                        processId,
+
+                                                                                                   Timestamp:                                        Request.Timestamp,
+                                                                                                   CancellationToken:                                Request.CancellationToken,
+                                                                                                   EventTrackingId:                                  Request.EventTrackingId,
+                                                                                                   RequestTimeout:                                   Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                   CustomChargingProgressNotificationRequestParser:  CustomChargingProgressNotificationRequestParser))
+                                                  {
+
+                                                      Counters.ChargingNotifications.       IncRequests_OK();
+                                                      Counters.ChargingProgressNotification.IncRequests_OK();
+
+                                                      #region Send OnChargingProgressNotificationRequest event
+
+                                                      try
+                                                      {
+
+                                                          if (OnChargingProgressNotificationRequest is not null)
+                                                              await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
+                                                                                 Cast<OnChargingProgressNotificationAPIRequestDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingProgressNotificationRequest!))).
+                                                                                 ConfigureAwait(false);
+
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingProgressNotificationRequest));
+                                                      }
+
+                                                      #endregion
+
+                                                      #region Call async subscribers
+
+                                                      OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>? chargingProgressNotificationResponse = null;
+
+                                                      var OnChargingProgressNotificationLocal = OnChargingProgressNotification;
+                                                      if (OnChargingProgressNotificationLocal is not null)
+                                                      {
+                                                          try
+                                                          {
+
+                                                              chargingProgressNotificationResponse = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
+                                                                                                                                                             Cast<OnChargingProgressNotificationAPIDelegate>().
+                                                                                                                                                             Select(e => e(Timestamp.Now,
+                                                                                                                                                                           this,
+                                                                                                                                                                           chargingProgressNotificationRequest!))).
+                                                                                                                                                             ConfigureAwait(false))?.FirstOrDefault();
+
+                                                              Counters.ChargingNotifications.       IncResponses_OK();
+                                                              Counters.ChargingProgressNotification.IncResponses_OK();
+
+                                                          }
+                                                          catch (Exception e)
+                                                          {
+
+                                                              Counters.ChargingNotifications.       IncResponses_Error();
+                                                              Counters.ChargingProgressNotification.IncResponses_Error();
+
+                                                              chargingProgressNotificationResponse = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                                                                         this,
+                                                                                                         new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                                                                             Timestamp.Now,
+                                                                                                             Request.EventTrackingId,
+                                                                                                             processId,
+                                                                                                             Timestamp.Now - Request.Timestamp,
+                                                                                                             StatusCode: new StatusCode(
+                                                                                                                             StatusCodes.DataError,
+                                                                                                                             e.Message,
+                                                                                                                             e.StackTrace
+                                                                                                                         ),
+                                                                                                             chargingProgressNotificationRequest
+                                                                                                         )
+                                                                                                     );
+
+                                                          }
+                                                      }
+
+                                                      if (chargingProgressNotificationResponse is null)
+                                                      {
+
+                                                          Counters.ChargingNotifications.       IncResponses_Error();
+                                                          Counters.ChargingProgressNotification.IncResponses_Error();
+
+                                                          chargingProgressNotificationResponse = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                                                                     this,
+                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                                                                         Timestamp.Now,
+                                                                                                         Request.EventTrackingId,
+                                                                                                         processId,
+                                                                                                         Timestamp.Now - Request.Timestamp,
+                                                                                                         StatusCode: new StatusCode(
+                                                                                                                         StatusCodes.SystemError,
+                                                                                                                         "Could not process the received ChargingProgressNotification request!"
+                                                                                                                     ),
+                                                                                                         chargingProgressNotificationRequest
+                                                                                                     )
+                                                                                                 );
+
+                                                      }
+
+                                                      #endregion
+
+                                                      #region Send OnChargingProgressNotificationResponse event
+
+                                                      try
+                                                      {
+
+                                                          if (OnChargingProgressNotificationResponse is not null)
+                                                              await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
+                                                                                 Cast<OnChargingProgressNotificationAPIResponseDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingProgressNotificationRequest!,
+                                                                                               chargingProgressNotificationResponse,
+                                                                                               Timestamp.Now - startTime))).
+                                                                                 ConfigureAwait(false);
+
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingProgressNotificationResponse));
+                                                      }
+
+                                                      #endregion
+
+
+                                                      chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                         Request,
+                                                                                         chargingProgressNotificationResponse.Response,
+                                                                                         chargingProgressNotificationResponse.IsSuccessful,
+                                                                                         chargingProgressNotificationResponse.ValidationErrors,
+                                                                                         chargingProgressNotificationResponse.ProcessId);
+
+                                                  }
+                                                  else
+                                                  {
+
+                                                      Counters.ChargingNotifications.       IncRequests_Error();
+                                                      Counters.ChargingProgressNotification.IncRequests_Error();
+
+                                                      chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                         this,
+                                                                                         new Acknowledgement(
+                                                                                             Request.Timestamp,
+                                                                                             Timestamp.Now,
+                                                                                             Request.EventTrackingId,
+                                                                                             Timestamp.Now - Request.Timestamp,
+                                                                                             new StatusCode(
+                                                                                                 StatusCodes.DataError,
+                                                                                                 "We could not parse the given ChargingProgressNotification request!",
+                                                                                                 errorResponse
+                                                                                             )
+                                                                                         )
+                                                                                     );
+
+                                                  }
+
+                                                  break;
+
+                                              #endregion
+
+                                              #region End
+
+                                              case ChargingNotificationTypes.End:
+
+                                                  if (ChargingEndNotificationRequest.TryParse(JSONRequest,
+                                                                                              out ChargingEndNotificationRequest?          chargingEndNotificationRequest,
+                                                                                              out                                          errorResponse,
+                                                                                              ProcessId:                                   processId,
+
+                                                                                              Timestamp:                                   Request.Timestamp,
+                                                                                              CancellationToken:                           Request.CancellationToken,
+                                                                                              EventTrackingId:                             Request.EventTrackingId,
+                                                                                              RequestTimeout:                              Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                              CustomChargingEndNotificationRequestParser:  CustomChargingEndNotificationRequestParser))
+                                                  {
+
+                                                      Counters.ChargingNotifications.  IncRequests_OK();
+                                                      Counters.ChargingEndNotification.IncRequests_OK();
+
+                                                      #region Send OnChargingEndNotificationRequest event
+
+                                                      try
+                                                      {
+
+                                                          if (OnChargingEndNotificationRequest is not null)
+                                                              await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
+                                                                                 Cast<OnChargingEndNotificationAPIRequestDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingEndNotificationRequest!))).
+                                                                                 ConfigureAwait(false);
+
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingEndNotificationRequest));
+                                                      }
+
+                                                      #endregion
+
+                                                      #region Call async subscribers
+
+                                                      OICPResult<Acknowledgement<ChargingEndNotificationRequest>>? chargingEndNotificationResponse = null;
+
+                                                      var OnChargingEndNotificationLocal = OnChargingEndNotification;
+                                                      if (OnChargingEndNotificationLocal is not null)
+                                                      {
+                                                          try
+                                                          {
+
+                                                              chargingEndNotificationResponse = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
+                                                                                                                                                   Cast<OnChargingEndNotificationAPIDelegate>().
+                                                                                                                                                   Select(e => e(Timestamp.Now,
+                                                                                                                                                                 this,
+                                                                                                                                                                 chargingEndNotificationRequest!))).
+                                                                                                                                                   ConfigureAwait(false))?.FirstOrDefault();
+
+                                                              Counters.ChargingNotifications.  IncResponses_OK();
+                                                              Counters.ChargingEndNotification.IncResponses_OK();
+
+                                                          }
+                                                          catch (Exception e)
+                                                          {
+
+                                                              Counters.ChargingNotifications.  IncResponses_Error();
+                                                              Counters.ChargingEndNotification.IncResponses_Error();
+
+                                                              chargingEndNotificationResponse = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                                                                     this,
-                                                                                                    new Acknowledgement(
-                                                                                                        Request.Timestamp,
-                                                                                                        Timestamp.Now,
-                                                                                                        Request.EventTrackingId,
-                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                        new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            "We could not parse the given ChargingStartNotification request!",
-                                                                                                            errorResponse
-                                                                                                        )
-                                                                                                    )
-                                                                                                );
-
-                                                             }
-
-                                                             break;
-
-                                                         #endregion
-
-                                                         #region Progress
-
-                                                         case ChargingNotificationTypes.Progress:
-
-                                                             if (ChargingProgressNotificationRequest.TryParse(JSONRequest,
-                                                                                                              out ChargingProgressNotificationRequest?          chargingProgressNotificationRequest,
-                                                                                                              out                                               errorResponse,
-                                                                                                              ProcessId:                                        processId,
-
-                                                                                                              Timestamp:                                        Request.Timestamp,
-                                                                                                              CancellationToken:                                Request.CancellationToken,
-                                                                                                              EventTrackingId:                                  Request.EventTrackingId,
-                                                                                                              RequestTimeout:                                   Request.Timeout ?? DefaultRequestTimeout,
-
-                                                                                                              CustomChargingProgressNotificationRequestParser:  CustomChargingProgressNotificationRequestParser))
-                                                             {
-
-                                                                 Counters.ChargingNotifications.       IncRequests_OK();
-                                                                 Counters.ChargingProgressNotification.IncRequests_OK();
-
-                                                                 #region Send OnChargingProgressNotificationRequest event
-
-                                                                 try
-                                                                 {
-
-                                                                     if (OnChargingProgressNotificationRequest is not null)
-                                                                         await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
-                                                                                            Cast<OnChargingProgressNotificationAPIRequestDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingProgressNotificationRequest!))).
-                                                                                            ConfigureAwait(false);
-
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingProgressNotificationRequest));
-                                                                 }
-
-                                                                 #endregion
-
-                                                                 #region Call async subscribers
-
-                                                                 OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>? chargingProgressNotificationResponse = null;
-
-                                                                 var OnChargingProgressNotificationLocal = OnChargingProgressNotification;
-                                                                 if (OnChargingProgressNotificationLocal is not null)
-                                                                 {
-                                                                     try
-                                                                     {
-
-                                                                         chargingProgressNotificationResponse = (await Task.WhenAll(OnChargingProgressNotificationLocal.GetInvocationList().
-                                                                                                                                                                        Cast<OnChargingProgressNotificationAPIDelegate>().
-                                                                                                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                                                                                                      this,
-                                                                                                                                                                                      chargingProgressNotificationRequest!))).
-                                                                                                                                                                        ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingNotifications.       IncResponses_OK();
-                                                                         Counters.ChargingProgressNotification.IncResponses_OK();
-
-                                                                     }
-                                                                     catch (Exception e)
-                                                                     {
-
-                                                                         Counters.ChargingNotifications.       IncResponses_Error();
-                                                                         Counters.ChargingProgressNotification.IncResponses_Error();
-
-                                                                         chargingProgressNotificationResponse = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                                                                                                    this,
-                                                                                                                    new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                                        Timestamp.Now,
-                                                                                                                        Request.EventTrackingId,
-                                                                                                                        processId,
-                                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                                        StatusCode: new StatusCode(
-                                                                                                                                        StatusCodes.DataError,
-                                                                                                                                        e.Message,
-                                                                                                                                        e.StackTrace
-                                                                                                                                    ),
-                                                                                                                        chargingProgressNotificationRequest
-                                                                                                                    )
-                                                                                                                );
-
-                                                                     }
-                                                                 }
-
-                                                                 if (chargingProgressNotificationResponse is null)
-                                                                 {
-
-                                                                     Counters.ChargingNotifications.       IncResponses_Error();
-                                                                     Counters.ChargingProgressNotification.IncResponses_Error();
-
-                                                                     chargingProgressNotificationResponse = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
-                                                                                                                this,
-                                                                                                                new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                                    Timestamp.Now,
-                                                                                                                    Request.EventTrackingId,
-                                                                                                                    processId,
-                                                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                                                    StatusCode: new StatusCode(
-                                                                                                                                    StatusCodes.SystemError,
-                                                                                                                                    "Could not process the received ChargingProgressNotification request!"
-                                                                                                                                ),
-                                                                                                                    chargingProgressNotificationRequest
-                                                                                                                )
-                                                                                                            );
-
-                                                                 }
-
-                                                                 #endregion
-
-                                                                 #region Send OnChargingProgressNotificationResponse event
-
-                                                                 try
-                                                                 {
-
-                                                                     if (OnChargingProgressNotificationResponse is not null)
-                                                                         await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
-                                                                                            Cast<OnChargingProgressNotificationAPIResponseDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingProgressNotificationRequest!,
-                                                                                                          chargingProgressNotificationResponse,
-                                                                                                          Timestamp.Now - startTime))).
-                                                                                            ConfigureAwait(false);
-
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingProgressNotificationResponse));
-                                                                 }
-
-                                                                 #endregion
-
-
-                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
-                                                                                                    Request,
-                                                                                                    chargingProgressNotificationResponse.Response,
-                                                                                                    chargingProgressNotificationResponse.IsSuccessful,
-                                                                                                    chargingProgressNotificationResponse.ValidationErrors,
-                                                                                                    chargingProgressNotificationResponse.ProcessId);
-
-                                                             }
-                                                             else
-                                                             {
-
-                                                                 Counters.ChargingNotifications.       IncRequests_Error();
-                                                                 Counters.ChargingProgressNotification.IncRequests_Error();
-
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
-                                                                                                    this,
-                                                                                                    new Acknowledgement(
-                                                                                                        Request.Timestamp,
-                                                                                                        Timestamp.Now,
-                                                                                                        Request.EventTrackingId,
-                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                        new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            "We could not parse the given ChargingProgressNotification request!",
-                                                                                                            errorResponse
-                                                                                                        )
-                                                                                                    )
-                                                                                                );
-
-                                                             }
-
-                                                             break;
-
-                                                         #endregion
-
-                                                         #region End
-
-                                                         case ChargingNotificationTypes.End:
-
-                                                             if (ChargingEndNotificationRequest.TryParse(JSONRequest,
-                                                                                                         out ChargingEndNotificationRequest?          chargingEndNotificationRequest,
-                                                                                                         out                                          errorResponse,
-                                                                                                         ProcessId:                                   processId,
-
-                                                                                                         Timestamp:                                   Request.Timestamp,
-                                                                                                         CancellationToken:                           Request.CancellationToken,
-                                                                                                         EventTrackingId:                             Request.EventTrackingId,
-                                                                                                         RequestTimeout:                              Request.Timeout ?? DefaultRequestTimeout,
-
-                                                                                                         CustomChargingEndNotificationRequestParser:  CustomChargingEndNotificationRequestParser))
-                                                             {
-
-                                                                 Counters.ChargingNotifications.  IncRequests_OK();
-                                                                 Counters.ChargingEndNotification.IncRequests_OK();
-
-                                                                 #region Send OnChargingEndNotificationRequest event
-
-                                                                 try
-                                                                 {
-
-                                                                     if (OnChargingEndNotificationRequest is not null)
-                                                                         await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
-                                                                                            Cast<OnChargingEndNotificationAPIRequestDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingEndNotificationRequest!))).
-                                                                                            ConfigureAwait(false);
-
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingEndNotificationRequest));
-                                                                 }
-
-                                                                 #endregion
-
-                                                                 #region Call async subscribers
-
-                                                                 OICPResult<Acknowledgement<ChargingEndNotificationRequest>>? chargingEndNotificationResponse = null;
-
-                                                                 var OnChargingEndNotificationLocal = OnChargingEndNotification;
-                                                                 if (OnChargingEndNotificationLocal is not null)
-                                                                 {
-                                                                     try
-                                                                     {
-
-                                                                         chargingEndNotificationResponse = (await Task.WhenAll(OnChargingEndNotificationLocal.GetInvocationList().
-                                                                                                                                                              Cast<OnChargingEndNotificationAPIDelegate>().
-                                                                                                                                                              Select(e => e(Timestamp.Now,
-                                                                                                                                                                            this,
-                                                                                                                                                                            chargingEndNotificationRequest!))).
-                                                                                                                                                              ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingNotifications.  IncResponses_OK();
-                                                                         Counters.ChargingEndNotification.IncResponses_OK();
-
-                                                                     }
-                                                                     catch (Exception e)
-                                                                     {
-
-                                                                         Counters.ChargingNotifications.  IncResponses_Error();
-                                                                         Counters.ChargingEndNotification.IncResponses_Error();
-
-                                                                         chargingEndNotificationResponse = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                                                                                               this,
-                                                                                                               new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                                   Timestamp.Now,
-                                                                                                                   Request.EventTrackingId,
-                                                                                                                   processId,
-                                                                                                                   Timestamp.Now - Request.Timestamp,
-                                                                                                                   StatusCode: new StatusCode(
-                                                                                                                                   StatusCodes.DataError,
-                                                                                                                                   e.Message,
-                                                                                                                                   e.StackTrace
-                                                                                                                               ),
-                                                                                                                   chargingEndNotificationRequest
-                                                                                                               )
-                                                                                                           );
-
-                                                                     }
-                                                                 }
-
-                                                                 if (chargingEndNotificationResponse is null)
-                                                                 {
-
-                                                                     Counters.ChargingNotifications.  IncResponses_Error();
-                                                                     Counters.ChargingEndNotification.IncResponses_Error();
-
-                                                                     chargingEndNotificationResponse = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
-                                                                                                           this,
-                                                                                                           new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                               Timestamp.Now,
-                                                                                                               Request.EventTrackingId,
-                                                                                                               processId,
-                                                                                                               Timestamp.Now - Request.Timestamp,
-                                                                                                               StatusCode: new StatusCode(
-                                                                                                                               StatusCodes.SystemError,
-                                                                                                                               "Could not process the received ChargingEndNotification request!"
-                                                                                                                           ),
-                                                                                                               chargingEndNotificationRequest
-                                                                                                           )
-                                                                                                       );
-
-                                                                 }
-
-                                                                 #endregion
-
-                                                                 #region Send OnChargingEndNotificationResponse event
-
-                                                                 try
-                                                                 {
-
-                                                                     if (OnChargingEndNotificationResponse is not null)
-                                                                         await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
-                                                                                            Cast<OnChargingEndNotificationAPIResponseDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingEndNotificationRequest!,
-                                                                                                          chargingEndNotificationResponse,
-                                                                                                          Timestamp.Now - startTime))).
-                                                                                            ConfigureAwait(false);
-
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingEndNotificationResponse));
-                                                                 }
-
-                                                                 #endregion
-
-
-                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
-                                                                                                    Request,
-                                                                                                    chargingEndNotificationResponse.Response,
-                                                                                                    chargingEndNotificationResponse.IsSuccessful,
-                                                                                                    chargingEndNotificationResponse.ValidationErrors,
-                                                                                                    chargingEndNotificationResponse.ProcessId);
-
-                                                             }
-                                                             else
-                                                             {
-
-                                                                 Counters.ChargingNotifications.  IncRequests_Error();
-                                                                 Counters.ChargingEndNotification.IncRequests_Error();
-
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
-                                                                                                    this,
-                                                                                                    new Acknowledgement(
-                                                                                                        Request.Timestamp,
-                                                                                                        Timestamp.Now,
-                                                                                                        Request.EventTrackingId,
-                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                        new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            "We could not parse the given ChargingEndNotification request!",
-                                                                                                            errorResponse
-                                                                                                        )
-                                                                                                    )
-                                                                                                );
-
-                                                             }
-
-                                                             break;
-
-                                                         #endregion
-
-                                                         #region Error
-
-                                                         case ChargingNotificationTypes.Error:
-
-                                                             if (ChargingErrorNotificationRequest.TryParse(JSONRequest,
-                                                                                                           out ChargingErrorNotificationRequest?          chargingErrorNotificationRequest,
-                                                                                                           out                                            errorResponse,
-                                                                                                           ProcessId:                                     processId,
-
-                                                                                                           Timestamp:                                     Request.Timestamp,
-                                                                                                           CancellationToken:                             Request.CancellationToken,
-                                                                                                           EventTrackingId:                               Request.EventTrackingId,
-                                                                                                           RequestTimeout:                                Request.Timeout ?? DefaultRequestTimeout,
-
-                                                                                                           CustomChargingErrorNotificationRequestParser:  CustomChargingErrorNotificationRequestParser))
-                                                             {
-
-                                                                 Counters.ChargingNotifications.    IncRequests_OK();
-                                                                 Counters.ChargingErrorNotification.IncRequests_OK();
-
-                                                                 #region Send OnChargingErrorNotificationRequest event
-
-                                                                 try
-                                                                 {
-
-                                                                     if (OnChargingErrorNotificationRequest is not null)
-                                                                         await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
-                                                                                            Cast<OnChargingErrorNotificationAPIRequestDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingErrorNotificationRequest!))).
-                                                                                            ConfigureAwait(false);
-
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingErrorNotificationRequest));
-                                                                 }
-
-                                                                 #endregion
-
-                                                                 #region Call async subscribers
-
-                                                                 OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>? chargingErrorNotificationResponse = null;
-
-                                                                 var OnChargingErrorNotificationLocal = OnChargingErrorNotification;
-                                                                 if (OnChargingErrorNotificationLocal is not null)
-                                                                 {
-                                                                     try
-                                                                     {
-
-                                                                         chargingErrorNotificationResponse = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
-                                                                                                                                                     Cast<OnChargingErrorNotificationAPIDelegate>().
-                                                                                                                                                     Select(e => e(Timestamp.Now,
-                                                                                                                                                                   this,
-                                                                                                                                                                   chargingErrorNotificationRequest!))).
-                                                                                                                                                     ConfigureAwait(false))?.FirstOrDefault();
-
-                                                                         Counters.ChargingNotifications.    IncResponses_OK();
-                                                                         Counters.ChargingErrorNotification.IncResponses_OK();
-
-                                                                     }
-                                                                     catch (Exception e)
-                                                                     {
-
-                                                                         Counters.ChargingNotifications.    IncResponses_Error();
-                                                                         Counters.ChargingErrorNotification.IncResponses_Error();
-
-                                                                         chargingErrorNotificationResponse = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
-                                                                                                    this,
-                                                                                                    new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                                    new Acknowledgement<ChargingEndNotificationRequest>(
                                                                                                         Timestamp.Now,
                                                                                                         Request.EventTrackingId,
                                                                                                         processId,
@@ -3615,189 +3444,360 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                         e.Message,
                                                                                                                         e.StackTrace
                                                                                                                     ),
-                                                                                                        chargingErrorNotificationRequest
+                                                                                                        chargingEndNotificationRequest
                                                                                                     )
                                                                                                 );
 
-                                                                     }
-                                                                 }
+                                                          }
+                                                      }
 
-                                                                 if (chargingErrorNotificationResponse is null)
-                                                                 {
+                                                      if (chargingEndNotificationResponse is null)
+                                                      {
 
-                                                                     Counters.ChargingNotifications.    IncResponses_Error();
-                                                                     Counters.ChargingErrorNotification.IncResponses_Error();
+                                                          Counters.ChargingNotifications.  IncResponses_Error();
+                                                          Counters.ChargingEndNotification.IncResponses_Error();
 
-                                                                     chargingErrorNotificationResponse = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
-                                                                                                             this,
-                                                                                                             new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                                                 Timestamp.Now,
-                                                                                                                 Request.EventTrackingId,
-                                                                                                                 processId,
-                                                                                                                 Timestamp.Now - Request.Timestamp,
-                                                                                                                 StatusCode: new StatusCode(
-                                                                                                                                 StatusCodes.SystemError,
-                                                                                                                                 "Could not process the received ChargingErrorNotification request!"
-                                                                                                                             ),
-                                                                                                                 chargingErrorNotificationRequest
-                                                                                                             )
-                                                                                                         );
-
-                                                                 }
-
-                                                                 #endregion
-
-                                                                 #region Send OnChargingErrorNotificationResponse event
-
-                                                                 try
-                                                                 {
-
-                                                                     if (OnChargingErrorNotificationResponse is not null)
-                                                                         await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
-                                                                                            Cast<OnChargingErrorNotificationAPIResponseDelegate>().
-                                                                                            Select(e => e(Timestamp.Now,
-                                                                                                          this,
-                                                                                                          chargingErrorNotificationRequest!,
-                                                                                                          chargingErrorNotificationResponse,
-                                                                                                          Timestamp.Now - startTime))).
-                                                                                            ConfigureAwait(false);
-
-                                                                 }
-                                                                 catch (Exception e)
-                                                                 {
-                                                                     DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingErrorNotificationResponse));
-                                                                 }
-
-                                                                 #endregion
-
-
-                                                                 chargingNotificationResponse = new OICPResult<Acknowledgement>(
-                                                                                                    Request,
-                                                                                                    chargingErrorNotificationResponse.Response,
-                                                                                                    chargingErrorNotificationResponse.IsSuccessful,
-                                                                                                    chargingErrorNotificationResponse.ValidationErrors,
-                                                                                                    chargingErrorNotificationResponse.ProcessId);
-
-                                                             }
-                                                             else
-                                                             {
-
-                                                                 Counters.ChargingNotifications.IncRequests_Error();
-                                                                 Counters.ChargingEndNotification.IncRequests_Error();
-
-                                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
-                                                                                                    this,
-                                                                                                    new Acknowledgement(
-                                                                                                        Request.Timestamp,
-                                                                                                        Timestamp.Now,
-                                                                                                        Request.EventTrackingId,
-                                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                                        new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            "We could not parse the given ChargingErrorNotification request!",
-                                                                                                            errorResponse
-                                                                                                        )
-                                                                                                    )
-                                                                                                );
-
-                                                             }
-
-                                                             break;
-
-                                                         #endregion
-
-                                                         #region ...or default
-
-                                                         default:
-
-                                                             Counters.ChargingNotifications.IncRequests_Error();
-
-                                                             chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                          chargingEndNotificationResponse = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                                                                 this,
-                                                                                                new Acknowledgement(
-                                                                                                    Request.Timestamp,
+                                                                                                new Acknowledgement<ChargingEndNotificationRequest>(
                                                                                                     Timestamp.Now,
                                                                                                     Request.EventTrackingId,
+                                                                                                    processId,
                                                                                                     Timestamp.Now - Request.Timestamp,
                                                                                                     StatusCode: new StatusCode(
-                                                                                                                    StatusCodes.DataError,
-                                                                                                                    "Unknown or invalid charging notification type '" + chargingNotificationType.ToString() + "'!"
-                                                                                                                    //errorResponse
-                                                                                                                )
+                                                                                                                    StatusCodes.SystemError,
+                                                                                                                    "Could not process the received ChargingEndNotification request!"
+                                                                                                                ),
+                                                                                                    chargingEndNotificationRequest
                                                                                                 )
                                                                                             );
 
-                                                             break;
+                                                      }
 
-                                                         #endregion
+                                                      #endregion
 
-                                                     }
+                                                      #region Send OnChargingEndNotificationResponse event
 
-                                                 }
-                                                 else
-                                                 {
+                                                      try
+                                                      {
 
-                                                     Counters.ChargingNotifications.IncRequests_Error();
+                                                          if (OnChargingEndNotificationResponse is not null)
+                                                              await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
+                                                                                 Cast<OnChargingEndNotificationAPIResponseDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingEndNotificationRequest!,
+                                                                                               chargingEndNotificationResponse,
+                                                                                               Timestamp.Now - startTime))).
+                                                                                 ConfigureAwait(false);
 
-                                                     chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
-                                                                                        this,
-                                                                                        new Acknowledgement(
-                                                                                            Request.Timestamp,
-                                                                                            Timestamp.Now,
-                                                                                            Request.EventTrackingId,
-                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                            StatusCode: new StatusCode(
-                                                                                                            StatusCodes.DataError,
-                                                                                                            "We could not parse the given ChargingNotification request!"
-                                                                                                            //errorResponse
-                                                                                                        )
-                                                                                        )
-                                                                                    );
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingEndNotificationResponse));
+                                                      }
 
-                                                 }
-
-                                             }
-                                             catch (Exception e)
-                                             {
-
-                                                 Counters.ChargingNotifications.IncResponses_Error();
-
-                                                 chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
-                                                                                    this,
-                                                                                    new Acknowledgement(
-                                                                                        Request.Timestamp,
-                                                                                        Timestamp.Now,
-                                                                                        Request.EventTrackingId,
-                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                        StatusCode: new StatusCode(
-                                                                                                        StatusCodes.SystemError,
-                                                                                                        e.Message,
-                                                                                                        e.StackTrace
-                                                                                                    )
-                                                                                    )
-                                                                                );
-
-                                             }
+                                                      #endregion
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = chargingNotificationResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                   CustomStatusCodeSerializer).
-                                                                                                                            ToString(JSONFormatting).
-                                                                                                                            ToUTF8Bytes()
-                                                                                                                  ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                                      chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                         Request,
+                                                                                         chargingEndNotificationResponse.Response,
+                                                                                         chargingEndNotificationResponse.IsSuccessful,
+                                                                                         chargingEndNotificationResponse.ValidationErrors,
+                                                                                         chargingEndNotificationResponse.ProcessId);
 
-                                          }, AllowReplacement: URLReplacement.Allow);
+                                                  }
+                                                  else
+                                                  {
+
+                                                      Counters.ChargingNotifications.  IncRequests_Error();
+                                                      Counters.ChargingEndNotification.IncRequests_Error();
+
+                                                      chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                         this,
+                                                                                         new Acknowledgement(
+                                                                                             Request.Timestamp,
+                                                                                             Timestamp.Now,
+                                                                                             Request.EventTrackingId,
+                                                                                             Timestamp.Now - Request.Timestamp,
+                                                                                             new StatusCode(
+                                                                                                 StatusCodes.DataError,
+                                                                                                 "We could not parse the given ChargingEndNotification request!",
+                                                                                                 errorResponse
+                                                                                             )
+                                                                                         )
+                                                                                     );
+
+                                                  }
+
+                                                  break;
+
+                                              #endregion
+
+                                              #region Error
+
+                                              case ChargingNotificationTypes.Error:
+
+                                                  if (ChargingErrorNotificationRequest.TryParse(JSONRequest,
+                                                                                                out ChargingErrorNotificationRequest?          chargingErrorNotificationRequest,
+                                                                                                out                                            errorResponse,
+                                                                                                ProcessId:                                     processId,
+
+                                                                                                Timestamp:                                     Request.Timestamp,
+                                                                                                CancellationToken:                             Request.CancellationToken,
+                                                                                                EventTrackingId:                               Request.EventTrackingId,
+                                                                                                RequestTimeout:                                Request.Timeout ?? DefaultRequestTimeout,
+
+                                                                                                CustomChargingErrorNotificationRequestParser:  CustomChargingErrorNotificationRequestParser))
+                                                  {
+
+                                                      Counters.ChargingNotifications.    IncRequests_OK();
+                                                      Counters.ChargingErrorNotification.IncRequests_OK();
+
+                                                      #region Send OnChargingErrorNotificationRequest event
+
+                                                      try
+                                                      {
+
+                                                          if (OnChargingErrorNotificationRequest is not null)
+                                                              await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
+                                                                                 Cast<OnChargingErrorNotificationAPIRequestDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingErrorNotificationRequest!))).
+                                                                                 ConfigureAwait(false);
+
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingErrorNotificationRequest));
+                                                      }
+
+                                                      #endregion
+
+                                                      #region Call async subscribers
+
+                                                      OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>? chargingErrorNotificationResponse = null;
+
+                                                      var OnChargingErrorNotificationLocal = OnChargingErrorNotification;
+                                                      if (OnChargingErrorNotificationLocal is not null)
+                                                      {
+                                                          try
+                                                          {
+
+                                                              chargingErrorNotificationResponse = (await Task.WhenAll(OnChargingErrorNotificationLocal.GetInvocationList().
+                                                                                                                                          Cast<OnChargingErrorNotificationAPIDelegate>().
+                                                                                                                                          Select(e => e(Timestamp.Now,
+                                                                                                                                                        this,
+                                                                                                                                                        chargingErrorNotificationRequest!))).
+                                                                                                                                          ConfigureAwait(false))?.FirstOrDefault();
+
+                                                              Counters.ChargingNotifications.    IncResponses_OK();
+                                                              Counters.ChargingErrorNotification.IncResponses_OK();
+
+                                                          }
+                                                          catch (Exception e)
+                                                          {
+
+                                                              Counters.ChargingNotifications.    IncResponses_Error();
+                                                              Counters.ChargingErrorNotification.IncResponses_Error();
+
+                                                              chargingErrorNotificationResponse = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                                                         this,
+                                                                                         new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                             Timestamp.Now,
+                                                                                             Request.EventTrackingId,
+                                                                                             processId,
+                                                                                             Timestamp.Now - Request.Timestamp,
+                                                                                             StatusCode: new StatusCode(
+                                                                                                             StatusCodes.DataError,
+                                                                                                             e.Message,
+                                                                                                             e.StackTrace
+                                                                                                         ),
+                                                                                             chargingErrorNotificationRequest
+                                                                                         )
+                                                                                     );
+
+                                                          }
+                                                      }
+
+                                                      if (chargingErrorNotificationResponse is null)
+                                                      {
+
+                                                          Counters.ChargingNotifications.    IncResponses_Error();
+                                                          Counters.ChargingErrorNotification.IncResponses_Error();
+
+                                                          chargingErrorNotificationResponse = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                                                                  this,
+                                                                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                                                                      Timestamp.Now,
+                                                                                                      Request.EventTrackingId,
+                                                                                                      processId,
+                                                                                                      Timestamp.Now - Request.Timestamp,
+                                                                                                      StatusCode: new StatusCode(
+                                                                                                                      StatusCodes.SystemError,
+                                                                                                                      "Could not process the received ChargingErrorNotification request!"
+                                                                                                                  ),
+                                                                                                      chargingErrorNotificationRequest
+                                                                                                  )
+                                                                                              );
+
+                                                      }
+
+                                                      #endregion
+
+                                                      #region Send OnChargingErrorNotificationResponse event
+
+                                                      try
+                                                      {
+
+                                                          if (OnChargingErrorNotificationResponse is not null)
+                                                              await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
+                                                                                 Cast<OnChargingErrorNotificationAPIResponseDelegate>().
+                                                                                 Select(e => e(Timestamp.Now,
+                                                                                               this,
+                                                                                               chargingErrorNotificationRequest!,
+                                                                                               chargingErrorNotificationResponse,
+                                                                                               Timestamp.Now - startTime))).
+                                                                                 ConfigureAwait(false);
+
+                                                      }
+                                                      catch (Exception e)
+                                                      {
+                                                          DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargingErrorNotificationResponse));
+                                                      }
+
+                                                      #endregion
+
+
+                                                      chargingNotificationResponse = new OICPResult<Acknowledgement>(
+                                                                                         Request,
+                                                                                         chargingErrorNotificationResponse.Response,
+                                                                                         chargingErrorNotificationResponse.IsSuccessful,
+                                                                                         chargingErrorNotificationResponse.ValidationErrors,
+                                                                                         chargingErrorNotificationResponse.ProcessId);
+
+                                                  }
+                                                  else
+                                                  {
+
+                                                      Counters.ChargingNotifications.IncRequests_Error();
+                                                      Counters.ChargingEndNotification.IncRequests_Error();
+
+                                                      chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                         this,
+                                                                                         new Acknowledgement(
+                                                                                             Request.Timestamp,
+                                                                                             Timestamp.Now,
+                                                                                             Request.EventTrackingId,
+                                                                                             Timestamp.Now - Request.Timestamp,
+                                                                                             new StatusCode(
+                                                                                                 StatusCodes.DataError,
+                                                                                                 "We could not parse the given ChargingErrorNotification request!",
+                                                                                                 errorResponse
+                                                                                             )
+                                                                                         )
+                                                                                     );
+
+                                                  }
+
+                                                  break;
+
+                                              #endregion
+
+                                              #region ...or default
+
+                                              default:
+
+                                                  Counters.ChargingNotifications.IncRequests_Error();
+
+                                                  chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                                     this,
+                                                                                     new Acknowledgement(
+                                                                                         Request.Timestamp,
+                                                                                         Timestamp.Now,
+                                                                                         Request.EventTrackingId,
+                                                                                         Timestamp.Now - Request.Timestamp,
+                                                                                         StatusCode: new StatusCode(
+                                                                                                         StatusCodes.DataError,
+                                                                                                         "Unknown or invalid charging notification type '" + chargingNotificationType.ToString() + "'!"
+                                                                                                         //errorResponse
+                                                                                                     )
+                                                                                     )
+                                                                                 );
+
+                                                  break;
+
+                                              #endregion
+
+                                          }
+
+                                      }
+                                      else
+                                      {
+
+                                          Counters.ChargingNotifications.IncRequests_Error();
+
+                                          chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                             this,
+                                                                             new Acknowledgement(
+                                                                                 Request.Timestamp,
+                                                                                 Timestamp.Now,
+                                                                                 Request.EventTrackingId,
+                                                                                 Timestamp.Now - Request.Timestamp,
+                                                                                 StatusCode: new StatusCode(
+                                                                                                 StatusCodes.DataError,
+                                                                                                 "We could not parse the given ChargingNotification request!"
+                                                                                                 //errorResponse
+                                                                                             )
+                                                                             )
+                                                                         );
+
+                                      }
+
+                                  }
+                                  catch (Exception e)
+                                  {
+
+                                      Counters.ChargingNotifications.IncResponses_Error();
+
+                                      chargingNotificationResponse = OICPResult<Acknowledgement>.Failed(
+                                                                         this,
+                                                                         new Acknowledgement(
+                                                                             Request.Timestamp,
+                                                                             Timestamp.Now,
+                                                                             Request.EventTrackingId,
+                                                                             Timestamp.Now - Request.Timestamp,
+                                                                             StatusCode: new StatusCode(
+                                                                                             StatusCodes.SystemError,
+                                                                                             e.Message,
+                                                                                             e.StackTrace
+                                                                                         )
+                                                                         )
+                                                                     );
+
+                                  }
+
+
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = chargingNotificationResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                        CustomStatusCodeSerializer).
+                                                                                                                 ToString(JSONFormatting).
+                                                                                                                 ToUTF8Bytes()
+                                                                                                       ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
+
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -3807,238 +3807,238 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // ------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3002/api/oicp/cdrmgmt/v22/operators/DE-GEF/charge-detail-record
             // ------------------------------------------------------------------------------------------------------------------------------------------
-            HTTPServer.AddMethodCallback(HTTPHostname.Any,
-                                         HTTPMethod.POST,
-                                         URLPathPrefix + "/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record",
-                                         HTTPContentType.JSON_UTF8,
-                                         HTTPRequestLogger:   logChargeDetailRecordHTTPRequest,
-                                         HTTPResponseLogger:  logChargeDetailRecordHTTPResponse,
-                                         HTTPDelegate:        async Request => {
+            AddMethodCallback(HTTPHostname.Any,
+                              HTTPMethod.POST,
+                              URLPathPrefix + "/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record",
+                              HTTPContentType.JSON_UTF8,
+                              HTTPRequestLogger:   logChargeDetailRecordHTTPRequest,
+                              HTTPResponseLogger:  logChargeDetailRecordHTTPResponse,
+                              HTTPDelegate:        async Request => {
 
-                                             var startTime  = Timestamp.Now;
-                                             var processId  = Process_Id.NewRandom();
+                                  var startTime  = Timestamp.Now;
+                                  var processId  = Process_Id.NewRandom();
 
-                                             OICPResult<Acknowledgement<ChargeDetailRecordRequest>>? chargeDetailRecordResponse = null;
+                                  OICPResult<Acknowledgement<ChargeDetailRecordRequest>>? chargeDetailRecordResponse = null;
 
-                                             try
-                                             {
+                                  try
+                                  {
 
-                                                 #region Try to parse ProviderId URL parameter
+                                      #region Try to parse ProviderId URL parameter
 
-                                                 if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
-                                                 {
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      {
 
-                                                     Counters.ChargeDetailRecord.IncRequests_Error();
+                                          Counters.ChargeDetailRecord.IncRequests_Error();
 
-                                                     chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
-                                                                                      this,
-                                                                                      new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                          Timestamp.Now,
-                                                                                          Request.EventTrackingId,
-                                                                                          processId,
-                                                                                          Timestamp.Now - Request.Timestamp,
-                                                                                          StatusCode: new StatusCode(
-                                                                                                          StatusCodes.SystemError,
-                                                                                                          "The expected 'operatorId' URL parameter could not be parsed!"
-                                                                                                      )
-                                                                                      )
-                                                                                  );
+                                          chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                                                           this,
+                                                                           new Acknowledgement<ChargeDetailRecordRequest>(
+                                                                               Timestamp.Now,
+                                                                               Request.EventTrackingId,
+                                                                               processId,
+                                                                               Timestamp.Now - Request.Timestamp,
+                                                                               StatusCode: new StatusCode(
+                                                                                               StatusCodes.SystemError,
+                                                                                               "The expected 'operatorId' URL parameter could not be parsed!"
+                                                                                           )
+                                                                           )
+                                                                       );
 
-                                                 }
+                                      }
 
-                                                 #endregion
+                                      #endregion
 
-                                                 else if (ChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
-                                                                                             operatorId,
-                                                                                             out ChargeDetailRecordRequest?          chargeDetailRecordRequest,
-                                                                                             out String?                             errorResponse,
-                                                                                             ProcessId:                              processId,
+                                      else if (ChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                                                                  operatorId,
+                                                                                  out ChargeDetailRecordRequest?          chargeDetailRecordRequest,
+                                                                                  out String?                             errorResponse,
+                                                                                  ProcessId:                              processId,
 
-                                                                                             Timestamp:                              Request.Timestamp,
-                                                                                             CancellationToken:                      Request.CancellationToken,
-                                                                                             EventTrackingId:                        Request.EventTrackingId,
-                                                                                             RequestTimeout:                         Request.Timeout ?? DefaultRequestTimeout,
+                                                                                  Timestamp:                              Request.Timestamp,
+                                                                                  CancellationToken:                      Request.CancellationToken,
+                                                                                  EventTrackingId:                        Request.EventTrackingId,
+                                                                                  RequestTimeout:                         Request.Timeout ?? DefaultRequestTimeout,
 
-                                                                                             CustomChargeDetailRecordRequestParser:  CustomChargeDetailRecordRequestParser))
-                                                 {
+                                                                                  CustomChargeDetailRecordRequestParser:  CustomChargeDetailRecordRequestParser))
+                                      {
 
-                                                     Counters.ChargeDetailRecord.IncRequests_OK();
+                                          Counters.ChargeDetailRecord.IncRequests_OK();
 
-                                                     #region Send OnChargeDetailRecordRequest event
+                                          #region Send OnChargeDetailRecordRequest event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnChargeDetailRecordRequest is not null)
-                                                             await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
-                                                                                Cast<OnChargeDetailRecordAPIRequestDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              chargeDetailRecordRequest!))).
-                                                                                ConfigureAwait(false);
+                                              if (OnChargeDetailRecordRequest is not null)
+                                                  await Task.WhenAll(OnChargeDetailRecordRequest.GetInvocationList().
+                                                                     Cast<OnChargeDetailRecordAPIRequestDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   chargeDetailRecordRequest!))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargeDetailRecordRequest));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargeDetailRecordRequest));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Call async subscribers
+                                          #region Call async subscribers
 
-                                                     var OnChargeDetailRecordLocal = OnChargeDetailRecord;
-                                                     if (OnChargeDetailRecordLocal is not null)
-                                                     {
-                                                         try
-                                                         {
+                                          var OnChargeDetailRecordLocal = OnChargeDetailRecord;
+                                          if (OnChargeDetailRecordLocal is not null)
+                                          {
+                                              try
+                                              {
 
-                                                             chargeDetailRecordResponse = (await Task.WhenAll(OnChargeDetailRecordLocal.GetInvocationList().
-                                                                                                                                        Cast<OnChargeDetailRecordAPIDelegate>().
-                                                                                                                                        Select(e => e(Timestamp.Now,
-                                                                                                                                                      this,
-                                                                                                                                                      chargeDetailRecordRequest!))))?.FirstOrDefault();
+                                                  chargeDetailRecordResponse = (await Task.WhenAll(OnChargeDetailRecordLocal.GetInvocationList().
+                                                                                                                             Cast<OnChargeDetailRecordAPIDelegate>().
+                                                                                                                             Select(e => e(Timestamp.Now,
+                                                                                                                                           this,
+                                                                                                                                           chargeDetailRecordRequest!))))?.FirstOrDefault();
 
-                                                             Counters.ChargeDetailRecord.IncResponses_OK();
+                                                  Counters.ChargeDetailRecord.IncResponses_OK();
 
-                                                         }
-                                                         catch (Exception e)
-                                                         {
+                                              }
+                                              catch (Exception e)
+                                              {
 
-                                                             Counters.ChargeDetailRecord.IncResponses_Error();
+                                                  Counters.ChargeDetailRecord.IncResponses_Error();
 
-                                                             chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
-                                                                                              this,
-                                                                                              new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                                  Timestamp.Now,
-                                                                                                  Request.EventTrackingId,
-                                                                                                  processId,
-                                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                                  StatusCode: new StatusCode(
-                                                                                                                  StatusCodes.DataError,
-                                                                                                                  e.Message,
-                                                                                                                  e.StackTrace
-                                                                                                              ),
-                                                                                                  chargeDetailRecordRequest
-                                                                                              )
-                                                                                          );
+                                                  chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                                                                   this,
+                                                                                   new Acknowledgement<ChargeDetailRecordRequest>(
+                                                                                       Timestamp.Now,
+                                                                                       Request.EventTrackingId,
+                                                                                       processId,
+                                                                                       Timestamp.Now - Request.Timestamp,
+                                                                                       StatusCode: new StatusCode(
+                                                                                                       StatusCodes.DataError,
+                                                                                                       e.Message,
+                                                                                                       e.StackTrace
+                                                                                                   ),
+                                                                                       chargeDetailRecordRequest
+                                                                                   )
+                                                                               );
 
-                                                         }
-                                                     }
+                                              }
+                                          }
 
-                                                     if (chargeDetailRecordResponse is null)
-                                                     {
+                                          if (chargeDetailRecordResponse is null)
+                                          {
 
-                                                         Counters.ChargeDetailRecord.IncResponses_Error();
+                                              Counters.ChargeDetailRecord.IncResponses_Error();
 
-                                                         chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
-                                                                                          this,
-                                                                                          new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                              Timestamp.Now,
-                                                                                              Request.EventTrackingId,
-                                                                                              processId,
-                                                                                              Timestamp.Now - Request.Timestamp,
-                                                                                              StatusCode: new StatusCode(
-                                                                                                              StatusCodes.SystemError,
-                                                                                                              "Could not process the received ChargeDetailRecord request!"
-                                                                                                          ),
-                                                                                              chargeDetailRecordRequest
-                                                                                          )
-                                                                                      );
+                                              chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                                                               this,
+                                                                               new Acknowledgement<ChargeDetailRecordRequest>(
+                                                                                   Timestamp.Now,
+                                                                                   Request.EventTrackingId,
+                                                                                   processId,
+                                                                                   Timestamp.Now - Request.Timestamp,
+                                                                                   StatusCode: new StatusCode(
+                                                                                                   StatusCodes.SystemError,
+                                                                                                   "Could not process the received ChargeDetailRecord request!"
+                                                                                               ),
+                                                                                   chargeDetailRecordRequest
+                                                                               )
+                                                                           );
 
-                                                     }
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                     #region Send OnChargeDetailRecordResponse event
+                                          #region Send OnChargeDetailRecordResponse event
 
-                                                     try
-                                                     {
+                                          try
+                                          {
 
-                                                         if (OnChargeDetailRecordResponse is not null)
-                                                             await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
-                                                                                Cast<OnChargeDetailRecordAPIResponseDelegate>().
-                                                                                Select(e => e(Timestamp.Now,
-                                                                                              this,
-                                                                                              chargeDetailRecordRequest!,
-                                                                                              chargeDetailRecordResponse,
-                                                                                              Timestamp.Now - startTime))).
-                                                                                ConfigureAwait(false);
+                                              if (OnChargeDetailRecordResponse is not null)
+                                                  await Task.WhenAll(OnChargeDetailRecordResponse.GetInvocationList().
+                                                                     Cast<OnChargeDetailRecordAPIResponseDelegate>().
+                                                                     Select(e => e(Timestamp.Now,
+                                                                                   this,
+                                                                                   chargeDetailRecordRequest!,
+                                                                                   chargeDetailRecordResponse,
+                                                                                   Timestamp.Now - startTime))).
+                                                                     ConfigureAwait(false);
 
-                                                     }
-                                                     catch (Exception e)
-                                                     {
-                                                         DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargeDetailRecordResponse));
-                                                     }
+                                          }
+                                          catch (Exception e)
+                                          {
+                                              DebugX.LogException(e, nameof(CPOClientAPI) + "." + nameof(OnChargeDetailRecordResponse));
+                                          }
 
-                                                     #endregion
+                                          #endregion
 
-                                                 }
-                                                 else
-                                                 {
+                                      }
+                                      else
+                                      {
 
-                                                     Counters.ChargeDetailRecord.IncRequests_Error();
+                                          Counters.ChargeDetailRecord.IncRequests_Error();
 
-                                                     chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
-                                                                                      this,
-                                                                                      new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                          Timestamp.Now,
-                                                                                          Request.EventTrackingId,
-                                                                                          processId,
-                                                                                          Timestamp.Now - Request.Timestamp,
-                                                                                          StatusCode: new StatusCode(
-                                                                                                          StatusCodes.DataError,
-                                                                                                          "We could not parse the given ChargeDetailRecord request!",
-                                                                                                          errorResponse
-                                                                                                      ),
-                                                                                          chargeDetailRecordRequest
-                                                                                      )
-                                                                                  );
+                                          chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                                                           this,
+                                                                           new Acknowledgement<ChargeDetailRecordRequest>(
+                                                                               Timestamp.Now,
+                                                                               Request.EventTrackingId,
+                                                                               processId,
+                                                                               Timestamp.Now - Request.Timestamp,
+                                                                               StatusCode: new StatusCode(
+                                                                                               StatusCodes.DataError,
+                                                                                               "We could not parse the given ChargeDetailRecord request!",
+                                                                                               errorResponse
+                                                                                           ),
+                                                                               chargeDetailRecordRequest
+                                                                           )
+                                                                       );
 
-                                                 }
+                                      }
 
-                                             }
-                                             catch (Exception e)
-                                             {
+                                  }
+                                  catch (Exception e)
+                                  {
 
-                                                 Counters.ChargeDetailRecord.IncResponses_Error();
+                                      Counters.ChargeDetailRecord.IncResponses_Error();
 
-                                                 chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
-                                                                                  this,
-                                                                                  new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                      Timestamp.Now,
-                                                                                      Request.EventTrackingId,
-                                                                                      processId,
-                                                                                      Timestamp.Now - Request.Timestamp,
-                                                                                      StatusCode: new StatusCode(
-                                                                                                      StatusCodes.SystemError,
-                                                                                                      e.Message,
-                                                                                                      e.StackTrace
-                                                                                                  )
-                                                                                  )
-                                                                              );
+                                      chargeDetailRecordResponse = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                                                       this,
+                                                                       new Acknowledgement<ChargeDetailRecordRequest>(
+                                                                           Timestamp.Now,
+                                                                           Request.EventTrackingId,
+                                                                           processId,
+                                                                           Timestamp.Now - Request.Timestamp,
+                                                                           StatusCode: new StatusCode(
+                                                                                           StatusCodes.SystemError,
+                                                                                           e.Message,
+                                                                                           e.StackTrace
+                                                                                       )
+                                                                       )
+                                                                   );
 
-                                             }
+                                  }
 
 
-                                             return new HTTPResponse.Builder(Request) {
-                                                        HTTPStatusCode             = HTTPStatusCode.OK,
-                                                        Server                     = HTTPServer.DefaultServerName,
-                                                        Date                       = Timestamp.Now,
-                                                        AccessControlAllowOrigin   = "*",
-                                                        AccessControlAllowMethods  = "POST",
-                                                        AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
-                                                        ContentType                = HTTPContentType.JSON_UTF8,
-                                                        Content                    = chargeDetailRecordResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                                 CustomStatusCodeSerializer).
-                                                                                                                          ToString(JSONFormatting).
-                                                                                                                          ToUTF8Bytes()
-                                                                                                                ?? Array.Empty<Byte>(),
-                                                        ProcessID                  = processId.ToString(),
-                                                        Connection                 = "close"
-                                                    }.AsImmutable;
+                                  return new HTTPResponse.Builder(Request) {
+                                             HTTPStatusCode             = HTTPStatusCode.OK,
+                                             Server                     = HTTPServer.DefaultServerName,
+                                             Date                       = Timestamp.Now,
+                                             AccessControlAllowOrigin   = "*",
+                                             AccessControlAllowMethods  = "POST",
+                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             Content                    = chargeDetailRecordResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                                      CustomStatusCodeSerializer).
+                                                                                                               ToString(JSONFormatting).
+                                                                                                               ToUTF8Bytes()
+                                                                                                     ?? Array.Empty<Byte>(),
+                                             ProcessID                  = processId.ToString(),
+                                             Connection                 = "close"
+                                         }.AsImmutable;
 
-                                          }, AllowReplacement: URLReplacement.Allow);
+                               }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 

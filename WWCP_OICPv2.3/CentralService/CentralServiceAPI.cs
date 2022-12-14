@@ -139,9 +139,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                  ThreadPriority?                       ServerThreadPriority               = null,
                                  Boolean?                              ServerThreadIsBackground           = null,
                                  ConnectionIdBuilder?                  ConnectionIdBuilder                = null,
-                                 //ConnectionThreadsNameBuilder?         ConnectionThreadsNameBuilder       = null,
-                                 //ConnectionThreadsPriorityBuilder?     ConnectionThreadsPriorityBuilder   = null,
-                                 //Boolean?                              ConnectionThreadsAreBackground     = null,
                                  TimeSpan?                             ConnectionTimeout                  = null,
                                  UInt32?                               MaxClientConnections               = null,
 
@@ -187,9 +184,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                   ServerThreadIsBackground,
 
                                   ConnectionIdBuilder,
-                                  //ConnectionThreadsNameBuilder,
-                                  //ConnectionThreadsPriorityBuilder,
-                                  //ConnectionThreadsAreBackground,
                                   ConnectionTimeout,
                                   MaxClientConnections,
 
@@ -210,24 +204,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                   DNSClient,
                                   false);
 
-            httpAPI.HTTPServer.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
-                                                 HTTPMethod.GET,
-                                                 new HTTPPath[] {
-                                                     URLPathPrefix + "/",
-                                                     URLPathPrefix + "/{FileName}"
-                                                 },
-                                                 HTTPDelegate: Request => {
-                                                     return Task.FromResult(
-                                                         new HTTPResponse.Builder(Request) {
-                                                             HTTPStatusCode  = HTTPStatusCode.OK,
-                                                             Server          = httpAPI.HTTPServer.DefaultServerName,
-                                                             Date            = Timestamp.Now,
-                                                             ContentType     = HTTPContentType.TEXT_UTF8,
-                                                             Content         = "This is an OICP v2.3 Central Service HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                             CacheControl    = "public, max-age=300",
-                                                             Connection      = "close"
-                                                         }.AsImmutable);
-                                                 });
+            httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
+                                      HTTPMethod.GET,
+                                      new HTTPPath[] {
+                                          URLPathPrefix + "/",
+                                          URLPathPrefix + "/{FileName}"
+                                      },
+                                      HTTPDelegate: Request => {
+                                          return Task.FromResult(
+                                              new HTTPResponse.Builder(Request) {
+                                                  HTTPStatusCode  = HTTPStatusCode.OK,
+                                                  Server          = httpAPI.HTTPServer.DefaultServerName,
+                                                  Date            = Timestamp.Now,
+                                                  ContentType     = HTTPContentType.TEXT_UTF8,
+                                                  Content         = "This is an OICP v2.3 Central Service HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                  CacheControl    = "public, max-age=300",
+                                                  Connection      = "close"
+                                              }.AsImmutable);
+                                      });
 
             this.EMPClientAPI          = new EMPClientAPI(httpAPI);
             this.CPOClientAPI          = new CPOClientAPI(httpAPI);

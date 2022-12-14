@@ -574,24 +574,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             this.empClients    = new Dictionary<Operator_Id, EMPClient>();
             this.Counters      = new APICounters();
 
-            httpAPI.HTTPServer.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
-                                                 HTTPMethod.GET,
-                                                 new HTTPPath[] {
-                                                     URLPathPrefix + "/",
-                                                     URLPathPrefix + "/{FileName}"
-                                                 },
-                                                 HTTPDelegate: Request => {
-                                                     return Task.FromResult(
-                                                         new HTTPResponse.Builder(Request) {
-                                                             HTTPStatusCode  = HTTPStatusCode.OK,
-                                                             Server          = httpAPI.HTTPServer.DefaultServerName,
-                                                             Date            = Timestamp.Now,
-                                                             ContentType     = HTTPContentType.TEXT_UTF8,
-                                                             Content         = "This is an OICP v2.3 EMP p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                             CacheControl    = "public, max-age=300",
-                                                             Connection      = "close"
-                                                         }.AsImmutable);
-                                                 });
+            httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
+                                      HTTPMethod.GET,
+                                      new HTTPPath[] {
+                                          URLPathPrefix + "/",
+                                          URLPathPrefix + "/{FileName}"
+                                      },
+                                      HTTPDelegate: Request => {
+                                          return Task.FromResult(
+                                              new HTTPResponse.Builder(Request) {
+                                                  HTTPStatusCode  = HTTPStatusCode.OK,
+                                                  Server          = httpAPI.HTTPServer.DefaultServerName,
+                                                  Date            = Timestamp.Now,
+                                                  ContentType     = HTTPContentType.TEXT_UTF8,
+                                                  Content         = "This is an OICP v2.3 EMP p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                  CacheControl    = "public, max-age=300",
+                                                  Connection      = "close"
+                                              }.AsImmutable);
+                                      });
 
             if (Autostart)
                 httpAPI.Start();
@@ -628,24 +628,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             this.Counters      = new APICounters();
 
             if (URLPathPrefix.HasValue)
-                httpAPI.HTTPServer.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
-                                                     HTTPMethod.GET,
-                                                     new HTTPPath[] {
-                                                         URLPathPrefix + "/",
-                                                         URLPathPrefix + "/{FileName}"
-                                                     },
-                                                     HTTPDelegate: Request => {
-                                                         return Task.FromResult(
-                                                             new HTTPResponse.Builder(Request) {
-                                                                 HTTPStatusCode  = HTTPStatusCode.OK,
-                                                                 Server          = httpAPI.HTTPServer.DefaultServerName,
-                                                                 Date            = Timestamp.Now,
-                                                                 ContentType     = HTTPContentType.TEXT_UTF8,
-                                                                 Content         = "This is an OICP v2.3 EMP p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                                                 CacheControl    = "public, max-age=300",
-                                                                 Connection      = "close"
-                                                             }.AsImmutable);
-                                                     });
+                httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
+                                          HTTPMethod.GET,
+                                          new HTTPPath[] {
+                                              URLPathPrefix + "/",
+                                              URLPathPrefix + "/{FileName}"
+                                          },
+                                          HTTPDelegate: Request => {
+                                              return Task.FromResult(
+                                                  new HTTPResponse.Builder(Request) {
+                                                      HTTPStatusCode  = HTTPStatusCode.OK,
+                                                      Server          = httpAPI.HTTPServer.DefaultServerName,
+                                                      Date            = Timestamp.Now,
+                                                      ContentType     = HTTPContentType.TEXT_UTF8,
+                                                      Content         = "This is an OICP v2.3 EMP p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                                      CacheControl    = "public, max-age=300",
+                                                      Connection      = "close"
+                                                  }.AsImmutable);
+                                          });
 
         }
 

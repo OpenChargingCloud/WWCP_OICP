@@ -127,12 +127,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             httpAPI.HTTPServer.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
             httpAPI.HTTPServer.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
 
-            this.DebugLog        = httpAPI.HTTPServer.AddJSONEventSource(EventIdentification:      DebugLogId,
-                                                                         URLTemplate:              this.URLPathPrefix + "/" + DebugLogId.ToString(),
-                                                                         MaxNumberOfCachedEvents:  10000,
-                                                                         RetryIntervall:           TimeSpan.FromSeconds(5),
-                                                                         EnableLogging:            true,
-                                                                         LogfilePath:              this.LoggingPath);
+            this.DebugLog        = httpAPI.AddJSONEventSource(EventIdentification:      DebugLogId,
+                                                              URLTemplate:              this.URLPathPrefix + "/" + DebugLogId.ToString(),
+                                                              MaxNumberOfCachedEvents:  10000,
+                                                              RetryIntervall:           TimeSpan.FromSeconds(5),
+                                                              EnableLogging:            true,
+                                                              LogfilePath:              this.LoggingPath);
 
         }
 
