@@ -203,6 +203,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public CustomJObjectSerializerDelegate<Address>?                             CustomAddressSerializer                               { get; set; }
         public CustomJObjectSerializerDelegate<ChargingFacility>?                    CustomChargingFacilitySerializer                      { get; set; }
         public CustomJObjectSerializerDelegate<GeoCoordinates>?                      CustomGeoCoordinatesSerializer                        { get; set; }
+        public CustomJObjectSerializerDelegate<EnergyMeter>?                         CustomEnergyMeterSerializer                           { get; set; }
+        public CustomJObjectSerializerDelegate<TransparencySoftwareStatus>?          CustomTransparencySoftwareStatusSerializer            { get; set; }
+        public CustomJObjectSerializerDelegate<TransparencySoftware>?                CustomTransparencySoftwareSerializer                  { get; set; }
         public CustomJObjectSerializerDelegate<EnergySource>?                        CustomEnergySourceSerializer                          { get; set; }
         public CustomJObjectSerializerDelegate<EnvironmentalImpact>?                 CustomEnvironmentalImpactSerializer                   { get; set; }
         public CustomJObjectSerializerDelegate<OpeningTime>?                         CustomOpeningTimesSerializer                          { get; set; }
@@ -1787,6 +1790,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                 CustomAddressSerializer,
                                                                                                                 CustomChargingFacilitySerializer,
                                                                                                                 CustomGeoCoordinatesSerializer,
+                                                                                                                CustomEnergyMeterSerializer,
+                                                                                                                CustomTransparencySoftwareStatusSerializer,
+                                                                                                                CustomTransparencySoftwareSerializer,
                                                                                                                 CustomEnergySourceSerializer,
                                                                                                                 CustomEnvironmentalImpactSerializer,
                                                                                                                 CustomOpeningTimesSerializer,

@@ -361,18 +361,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
         /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
+        /// <param name="CustomEnergyMeterSerializer">A delegate to serialize custom energy meter JSON objects.</param>
+        /// <param name="CustomTransparencySoftwareStatusSerializer">A delegate to serialize custom transparency software status JSON objects.</param>
+        /// <param name="CustomTransparencySoftwareSerializer">A delegate to serialize custom transparency software JSON objects.</param>
         /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<PushEVSEDataRequest>?  CustomPushEVSEDataRequestSerializer   = null,
-                              CustomJObjectSerializerDelegate<OperatorEVSEData>?     CustomOperatorEVSEDataSerializer      = null,
-                              CustomJObjectSerializerDelegate<EVSEDataRecord>?       CustomEVSEDataRecordSerializer        = null,
-                              CustomJObjectSerializerDelegate<Address>?              CustomAddressSerializer               = null,
-                              CustomJObjectSerializerDelegate<ChargingFacility>?     CustomChargingFacilitySerializer      = null,
-                              CustomJObjectSerializerDelegate<GeoCoordinates>?       CustomGeoCoordinatesSerializer        = null,
-                              CustomJObjectSerializerDelegate<EnergySource>?         CustomEnergySourceSerializer          = null,
-                              CustomJObjectSerializerDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactSerializer   = null,
-                              CustomJObjectSerializerDelegate<OpeningTime>?          CustomOpeningTimesSerializer          = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<PushEVSEDataRequest>?         CustomPushEVSEDataRequestSerializer          = null,
+                              CustomJObjectSerializerDelegate<OperatorEVSEData>?            CustomOperatorEVSEDataSerializer             = null,
+                              CustomJObjectSerializerDelegate<EVSEDataRecord>?              CustomEVSEDataRecordSerializer               = null,
+                              CustomJObjectSerializerDelegate<Address>?                     CustomAddressSerializer                      = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>?            CustomChargingFacilitySerializer             = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>?              CustomGeoCoordinatesSerializer               = null,
+                              CustomJObjectSerializerDelegate<EnergyMeter>?                 CustomEnergyMeterSerializer                  = null,
+                              CustomJObjectSerializerDelegate<TransparencySoftwareStatus>?  CustomTransparencySoftwareStatusSerializer   = null,
+                              CustomJObjectSerializerDelegate<TransparencySoftware>?        CustomTransparencySoftwareSerializer         = null,
+                              CustomJObjectSerializerDelegate<EnergySource>?                CustomEnergySourceSerializer                 = null,
+                              CustomJObjectSerializerDelegate<EnvironmentalImpact>?         CustomEnvironmentalImpactSerializer          = null,
+                              CustomJObjectSerializerDelegate<OpeningTime>?                 CustomOpeningTimesSerializer                 = null)
         {
 
             var JSON = JSONObject.Create(
@@ -384,6 +390,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                       CustomAddressSerializer,
                                                                                       CustomChargingFacilitySerializer,
                                                                                       CustomGeoCoordinatesSerializer,
+                                                                                      CustomEnergyMeterSerializer,
+                                                                                      CustomTransparencySoftwareStatusSerializer,
+                                                                                      CustomTransparencySoftwareSerializer,
                                                                                       CustomEnergySourceSerializer,
                                                                                       CustomEnvironmentalImpactSerializer,
                                                                                       CustomOpeningTimesSerializer)),

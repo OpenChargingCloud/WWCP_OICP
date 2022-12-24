@@ -108,6 +108,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public String?                              SubOperatorName                        { get; }
 
         /// <summary>
+        /// The optional energy meter, e.g. for the German calibration law.
+        /// </summary>
+        [Optional, NonStandard]
+        public EnergyMeter?                         EnergyMeter                            { get; }
+
+        /// <summary>
         /// Whether the EVSE is able to deliver different power outputs.
         /// </summary>
         [Optional]
@@ -336,6 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               String?                           HardwareManufacturer               = null,
                               URL?                              ChargingStationImageURL            = null,
                               String?                           SubOperatorName                    = null,
+                              EnergyMeter?                      EnergyMeter                        = null,
                               Boolean?                          DynamicPowerLevel                  = null,
                               IEnumerable<EnergySource>?        EnergySources                      = null,
                               EnvironmentalImpact?              EnvironmentalImpact                = null,
@@ -405,6 +412,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.HardwareManufacturer              = HardwareManufacturer;
             this.ChargingStationImageURL           = ChargingStationImageURL;
             this.SubOperatorName                   = SubOperatorName;
+            this.EnergyMeter                       = EnergyMeter;
             this.DynamicPowerLevel                 = DynamicPowerLevel;
             this.EnergySources                     = EnergySources?.      Distinct() ?? Array.Empty<EnergySource>();
             this.EnvironmentalImpact               = EnvironmentalImpact;
@@ -989,6 +997,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
+                #region Parse EnergyMeter                       [optional]
+
+                if (JSON.ParseOptionalJSON("EnergyMeter",
+                                           "energy meter",
+                                           OICPv2_3.EnergyMeter.TryParse,
+                                           out EnergyMeter? EnergyMeter,
+                                           out ErrorResponse))
+                {
+                    if (ErrorResponse is not null)
+                        return false;
+                }
+
+                #endregion
+
                 #region Parse DynamicPowerLevel                 [optional]
 
                 if (JSON.ParseOptional("DynamicPowerLevel",
@@ -1191,6 +1213,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                     hardwareManufacturer,
                                                     ChargingStationImageURL,
                                                     subOperatorName,
+                                                    EnergyMeter,
                                                     DynamicPowerLevel,
                                                     EnergySources,
                                                     EnvironmentalImpact,
@@ -1233,16 +1256,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAddressSerializer">A delegate to serialize custom address JSON objects.</param>
         /// <param name="CustomChargingFacilitySerializer">A delegate to serialize custom charging facility JSON objects.</param>
         /// <param name="CustomGeoCoordinatesSerializer">A delegate to serialize custom geo coordinates JSON objects.</param>
+        /// <param name="CustomEnergyMeterSerializer">A delegate to serialize custom energy meter JSON objects.</param>
+        /// <param name="CustomTransparencySoftwareStatusSerializer">A delegate to serialize custom transparency software status JSON objects.</param>
+        /// <param name="CustomTransparencySoftwareSerializer">A delegate to serialize custom transparency software JSON objects.</param>
         /// <param name="CustomEnergySourceSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomEnvironmentalImpactSerializer">A delegate to serialize custom time period JSON objects.</param>
         /// <param name="CustomOpeningTimesSerializer">A delegate to serialize custom opening time JSON objects.</param>
-        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEDataRecord>?       CustomEVSEDataRecordSerializer        = null,
-                              CustomJObjectSerializerDelegate<Address>?              CustomAddressSerializer               = null,
-                              CustomJObjectSerializerDelegate<ChargingFacility>?     CustomChargingFacilitySerializer      = null,
-                              CustomJObjectSerializerDelegate<GeoCoordinates>?       CustomGeoCoordinatesSerializer        = null,
-                              CustomJObjectSerializerDelegate<EnergySource>?         CustomEnergySourceSerializer          = null,
-                              CustomJObjectSerializerDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactSerializer   = null,
-                              CustomJObjectSerializerDelegate<OpeningTime>?          CustomOpeningTimesSerializer          = null)
+        public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEDataRecord>?              CustomEVSEDataRecordSerializer               = null,
+                              CustomJObjectSerializerDelegate<Address>?                     CustomAddressSerializer                      = null,
+                              CustomJObjectSerializerDelegate<ChargingFacility>?            CustomChargingFacilitySerializer             = null,
+                              CustomJObjectSerializerDelegate<GeoCoordinates>?              CustomGeoCoordinatesSerializer               = null,
+                              CustomJObjectSerializerDelegate<EnergyMeter>?                 CustomEnergyMeterSerializer                  = null,
+                              CustomJObjectSerializerDelegate<TransparencySoftwareStatus>?  CustomTransparencySoftwareStatusSerializer   = null,
+                              CustomJObjectSerializerDelegate<TransparencySoftware>?        CustomTransparencySoftwareSerializer         = null,
+                              CustomJObjectSerializerDelegate<EnergySource>?                CustomEnergySourceSerializer                 = null,
+                              CustomJObjectSerializerDelegate<EnvironmentalImpact>?         CustomEnvironmentalImpactSerializer          = null,
+                              CustomJObjectSerializerDelegate<OpeningTime>?                 CustomOpeningTimesSerializer                 = null)
         {
 
             var JSON = JSONObject.Create(
@@ -1293,6 +1322,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            SubOperatorName                  is not null && SubOperatorName.IsNeitherNullNorEmpty()
                                ? new JProperty("SubOperatorName",                   SubOperatorName)
+                               : null,
+
+                           EnergyMeter is not null
+                               ? new JProperty("energyMeter",                       EnergyMeter.                       ToJSON(CustomEnergyMeterSerializer,
+                                                                                                                              CustomTransparencySoftwareStatusSerializer,
+                                                                                                                              CustomTransparencySoftwareSerializer))
                                : null,
 
                            DynamicPowerLevel.               HasValue
@@ -1391,6 +1426,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     SubOperatorName      is not null
                         ? new String(SubOperatorName.     ToCharArray())
                         : null,
+                    EnergyMeter?.Clone(),
                     DynamicPowerLevel,
                     EnergySources        is not null
                         ? EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray()
@@ -1755,6 +1791,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// </summary>
             [Optional]
             public String?                            SubOperatorName                     { get; set; }
+
+            /// <summary>
+            /// The optional energy meter, e.g. for the German calibration law.
+            /// </summary>
+            [Optional, NonStandard]
+            public EnergyMeter?                       EnergyMeter                         { get; set; }
 
             /// <summary>
             /// Whether the EVSE is able to deliver different power outputs.
@@ -2128,6 +2170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           HardwareManufacturer,
                                           ChargingStationImageURL,
                                           SubOperatorName,
+                                          EnergyMeter,
                                           DynamicPowerLevel,
                                           EnergySources,
                                           EnvironmentalImpact,
