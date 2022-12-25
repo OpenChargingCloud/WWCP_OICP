@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {},
+      "distributionName": ""
+    },
+    "AuthorizeStart": {
+      "commandName": "Project",
+      "commandLineArgs": "authorizeStart --operatorId DE*BDO --uid 11223344"
+    },
+    "AuthorizeStop": {
+      "commandName": "Project",
+      "commandLineArgs": "authorizeStop --operatorId DE*BDO --sessionId 025d5167-52ba-46b8-9cba-caf6a4a69a10 --uid 11223344"
+    }
+  }
+}

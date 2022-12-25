@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OICPTool", "OICPTool\OICPTool.csproj", "{E54CE573-FD7B-4EF9-A7C4-EE5768F26FD3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{839DDBED-A1C0-452F-9B9B-30D23522AF88}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{344D74D4-B03C-48BD-92ED-FD04131F9509}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Styx", "..\Styx\Styx\Styx.csproj", "{A16778DB-F069-4B90-B508-530F18098A09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StyxTests", "..\Styx\StyxTests\StyxTests.csproj", "{7402D3FF-9750-4927-8FCE-05EF73AFAC44}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hermod", "..\Hermod\Hermod\Hermod.csproj", "{72AF16FD-1D06-4A01-B72C-BB98C8A15DC0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HermodTests", "..\Hermod\HermodTests\HermodTests.csproj", "{8EA3ACBA-722E-4F03-8036-786D2A932667}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WWCP_OICPv2.3", "WWCP_OICPv2.3\WWCP_OICPv2.3.csproj", "{8F1B828F-79BA-486D-B952-A09CD1BB2FAB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E54CE573-FD7B-4EF9-A7C4-EE5768F26FD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E54CE573-FD7B-4EF9-A7C4-EE5768F26FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E54CE573-FD7B-4EF9-A7C4-EE5768F26FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E54CE573-FD7B-4EF9-A7C4-EE5768F26FD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A16778DB-F069-4B90-B508-530F18098A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A16778DB-F069-4B90-B508-530F18098A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A16778DB-F069-4B90-B508-530F18098A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A16778DB-F069-4B90-B508-530F18098A09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7402D3FF-9750-4927-8FCE-05EF73AFAC44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7402D3FF-9750-4927-8FCE-05EF73AFAC44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7402D3FF-9750-4927-8FCE-05EF73AFAC44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7402D3FF-9750-4927-8FCE-05EF73AFAC44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72AF16FD-1D06-4A01-B72C-BB98C8A15DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72AF16FD-1D06-4A01-B72C-BB98C8A15DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72AF16FD-1D06-4A01-B72C-BB98C8A15DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72AF16FD-1D06-4A01-B72C-BB98C8A15DC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EA3ACBA-722E-4F03-8036-786D2A932667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA3ACBA-722E-4F03-8036-786D2A932667}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EA3ACBA-722E-4F03-8036-786D2A932667}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EA3ACBA-722E-4F03-8036-786D2A932667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F1B828F-79BA-486D-B952-A09CD1BB2FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F1B828F-79BA-486D-B952-A09CD1BB2FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F1B828F-79BA-486D-B952-A09CD1BB2FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F1B828F-79BA-486D-B952-A09CD1BB2FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A16778DB-F069-4B90-B508-530F18098A09} = {839DDBED-A1C0-452F-9B9B-30D23522AF88}
+		{7402D3FF-9750-4927-8FCE-05EF73AFAC44} = {839DDBED-A1C0-452F-9B9B-30D23522AF88}
+		{72AF16FD-1D06-4A01-B72C-BB98C8A15DC0} = {839DDBED-A1C0-452F-9B9B-30D23522AF88}
+		{8EA3ACBA-722E-4F03-8036-786D2A932667} = {839DDBED-A1C0-452F-9B9B-30D23522AF88}
+		{8F1B828F-79BA-486D-B952-A09CD1BB2FAB} = {839DDBED-A1C0-452F-9B9B-30D23522AF88}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B6C67075-4DE8-4848-947E-E0361F5E43E9}
+	EndGlobalSection
+EndGlobal
