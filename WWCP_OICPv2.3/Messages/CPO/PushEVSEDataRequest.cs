@@ -254,11 +254,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse OperatorEVSEData    [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("OperatorEvseData",
-                                              "operator EVSE data",
-                                              OICPv2_3.OperatorEVSEData.TryParse,
-                                              out OperatorEVSEData? OperatorEVSEData,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("OperatorEvseData",
+                                             "operator EVSE data",
+                                             OICPv2_3.OperatorEVSEData.TryParse,
+                                             out OperatorEVSEData? OperatorEVSEData,
+                                             out ErrorResponse) ||
+                     OperatorEVSEData is null)
                 {
                     return false;
                 }

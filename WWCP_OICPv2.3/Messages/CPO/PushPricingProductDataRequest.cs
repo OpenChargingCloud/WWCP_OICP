@@ -250,11 +250,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse PricingProductData    [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("PricingProductData",
-                                              "pricing product data",
-                                              OICPv2_3.PricingProductData.TryParse,
-                                              out PricingProductData? PricingProductData,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("PricingProductData",
+                                             "pricing product data",
+                                             OICPv2_3.PricingProductData.TryParse,
+                                             out PricingProductData? PricingProductData,
+                                             out ErrorResponse) ||
+                     PricingProductData is null)
                 {
                     return false;
                 }

@@ -345,11 +345,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Identification            [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("Identification",
-                                              "identification",
-                                              OICPv2_3.Identification.TryParse,
-                                              out Identification? Identification,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("Identification",
+                                             "identification",
+                                             OICPv2_3.Identification.TryParse,
+                                             out Identification? Identification,
+                                             out ErrorResponse) ||
+                     Identification is null)
                 {
                     return false;
                 }

@@ -687,11 +687,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Address                           [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("Address",
-                                              "address",
-                                              OICPv2_3.Address.TryParse,
-                                              out Address? Address,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("Address",
+                                             "address",
+                                             OICPv2_3.Address.TryParse,
+                                             out Address? Address,
+                                             out ErrorResponse) ||
+                     Address is null)
                 {
                     return false;
                 }
@@ -700,16 +701,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse GeoCoordinates                    [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("GeoCoordinates",
-                                              "geo coordinates",
-                                              OICPv2_3.GeoCoordinates.TryParse,
-                                              out GeoCoordinates? geoCoordinates,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("GeoCoordinates",
+                                             "geo coordinates",
+                                             OICPv2_3.GeoCoordinates.TryParse,
+                                             out GeoCoordinates? GeoCoordinates,
+                                             out ErrorResponse) ||
+                     !GeoCoordinates.HasValue)
                 {
                     return false;
                 }
-
-                var GeoCoordinates = geoCoordinates!.Value;
 
                 #endregion
 
@@ -1189,9 +1189,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 EVSEDataRecord = new EVSEDataRecord(EVSEId,
                                                     OperatorId,
                                                     OperatorName,
-                                                    ChargingStationName!,
-                                                    Address!,
-                                                    GeoCoordinates,
+                                                    ChargingStationName!, // "!" because of Hubject data quality issues!
+                                                    Address,
+                                                    GeoCoordinates.Value,
                                                     PlugTypes,
                                                     ChargingFacilities,
                                                     RenewableEnergy,

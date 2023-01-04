@@ -464,13 +464,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out GeoCoordinates?  geoCoordinates,
-                         out String?          errorResponse))
+                         out var geoCoordinates,
+                         out var errorResponse))
             {
                 return geoCoordinates!.Value;
             }
 
-            throw new ArgumentException("Invalid text representation of geo coordinates: '" + errorResponse + "'!", nameof(Text));
+            throw new ArgumentException("Invalid text representation of geo coordinates: '" + errorResponse + "'!",
+                                        nameof(Text));
 
         }
 
@@ -486,7 +487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(Text,
-                         out GeoCoordinates? geoCoordinates,
+                         out var geoCoordinates,
                          out _))
             {
                 return geoCoordinates;
@@ -582,21 +583,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static GeoCoordinates Parse(JObject JSON)
         {
 
-            #region Initial checks
-
-            if (JSON is null || !JSON.HasValues)
-                throw new ArgumentNullException(nameof(JSON), "The given JSON representation of geo coordinates must not be null or empty!");
-
-            #endregion
-
             if (TryParse(JSON,
-                         out GeoCoordinates?  geoCoordinates,
-                         out String?          errorResponse))
+                         out var geoCoordinates,
+                         out var errorResponse))
             {
                 return geoCoordinates!.Value;
             }
 
-            throw new ArgumentException("Invalid JSON representation of geo coordinates: '" + errorResponse + "'!", nameof(JSON));
+            throw new ArgumentException("Invalid JSON representation of geo coordinates: '" + errorResponse + "'!",
+                                        nameof(JSON));
 
         }
 
@@ -612,7 +607,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out GeoCoordinates? geoCoordinates,
+                         out var geoCoordinates,
                          out _))
             {
                 return geoCoordinates;

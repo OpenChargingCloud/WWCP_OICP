@@ -178,11 +178,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     {
                         if (authenticationDataRecordJSON is JObject authenticationDataRecordJObject)
                         {
-                            if (authenticationDataRecordJObject.ParseMandatoryJSON2("Identification",
-                                                                                    "user identification data record",
-                                                                                    Identification.TryParse,
-                                                                                    out Identification? identification,
-                                                                                    out ErrorResponse))
+                            if (authenticationDataRecordJObject.ParseMandatoryJSON("Identification",
+                                                                                   "user identification data record",
+                                                                                   Identification.TryParse,
+                                                                                   out Identification? identification,
+                                                                                   out ErrorResponse) &&
+                                identification is not null)
                             {
                                 Identifications.Add(identification!);
                             }

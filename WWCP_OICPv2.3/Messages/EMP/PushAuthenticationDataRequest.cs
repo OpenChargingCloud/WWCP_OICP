@@ -241,11 +241,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ProviderAuthenticationData    [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("ProviderAuthenticationData",
-                                              "provider authentication data",
-                                              OICPv2_3.ProviderAuthenticationData.TryParse,
-                                              out ProviderAuthenticationData? ProviderAuthenticationData,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("ProviderAuthenticationData",
+                                             "provider authentication data",
+                                             OICPv2_3.ProviderAuthenticationData.TryParse,
+                                             out ProviderAuthenticationData? ProviderAuthenticationData,
+                                             out ErrorResponse) ||
+                     ProviderAuthenticationData is null)
                 {
                     return false;
                 }

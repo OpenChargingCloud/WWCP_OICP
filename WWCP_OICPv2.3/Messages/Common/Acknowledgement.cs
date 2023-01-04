@@ -462,11 +462,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse StatusCode              [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("StatusCode",
-                                              "StatusCode",
-                                              OICPv2_3.StatusCode.TryParse,
-                                              out StatusCode? StatusCode,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("StatusCode",
+                                             "StatusCode",
+                                             OICPv2_3.StatusCode.TryParse,
+                                             out StatusCode? StatusCode,
+                                             out ErrorResponse) ||
+                     StatusCode is null)
                 {
                     return false;
                 }
@@ -1878,11 +1879,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse StatusCode              [mandatory]
 
-                if (!JSON.ParseMandatoryJSON2("StatusCode",
-                                              "StatusCode",
-                                              OICPv2_3.StatusCode.TryParse,
-                                              out StatusCode? StatusCode,
-                                              out ErrorResponse))
+                if (!JSON.ParseMandatoryJSON("StatusCode",
+                                             "StatusCode",
+                                             OICPv2_3.StatusCode.TryParse,
+                                             out StatusCode? StatusCode,
+                                             out ErrorResponse) ||
+                     StatusCode is null)
                 {
                     return false;
                 }
