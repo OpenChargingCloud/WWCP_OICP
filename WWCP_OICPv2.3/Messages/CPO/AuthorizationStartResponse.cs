@@ -1146,58 +1146,57 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Operator overloading
 
-        #region Operator == (AuthorizationStart1, AuthorizationStart2)
+        #region Operator == (AuthorizationStartResponse1, AuthorizationStartResponse2)
 
         /// <summary>
-        /// Compares two AuthorizationStart requests for equality.
+        /// Compares two authorization start responses for equality.
         /// </summary>
-        /// <param name="AuthorizationStart1">An authorize start request.</param>
-        /// <param name="AuthorizationStart2">Another authorize start request.</param>
+        /// <param name="AuthorizationStartResponse1">An authorize start response.</param>
+        /// <param name="AuthorizationStartResponse2">Another authorize start response.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (AuthorizationStartResponse AuthorizationStart1,
-                                           AuthorizationStartResponse AuthorizationStart2)
+        public static Boolean operator == (AuthorizationStartResponse AuthorizationStartResponse1,
+                                           AuthorizationStartResponse AuthorizationStartResponse2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(AuthorizationStart1, AuthorizationStart2))
+            if (ReferenceEquals(AuthorizationStartResponse1, AuthorizationStartResponse2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (AuthorizationStart1 is null || AuthorizationStart2 is null)
+            if (AuthorizationStartResponse1 is null || AuthorizationStartResponse2 is null)
                 return false;
 
-            return AuthorizationStart1.Equals(AuthorizationStart2);
+            return AuthorizationStartResponse1.Equals(AuthorizationStartResponse2);
 
         }
 
         #endregion
 
-        #region Operator != (AuthorizationStart1, AuthorizationStart2)
+        #region Operator != (AuthorizationStartResponse1, AuthorizationStartResponse2)
 
         /// <summary>
-        /// Compares two AuthorizationStart requests for inequality.
+        /// Compares two authorization start responses for inequality.
         /// </summary>
-        /// <param name="AuthorizationStart1">An authorize start request.</param>
-        /// <param name="AuthorizationStart2">Another authorize start request.</param>
+        /// <param name="AuthorizationStartResponse1">An authorize start response.</param>
+        /// <param name="AuthorizationStartResponse2">Another authorize start response.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (AuthorizationStartResponse AuthorizationStart1,
-                                           AuthorizationStartResponse AuthorizationStart2)
+        public static Boolean operator != (AuthorizationStartResponse AuthorizationStartResponse1,
+                                           AuthorizationStartResponse AuthorizationStartResponse2)
 
-            => !(AuthorizationStart1 == AuthorizationStart2);
-
-        #endregion
+            => !(AuthorizationStartResponse1 == AuthorizationStartResponse2);
 
         #endregion
 
-        #region IEquatable<AuthorizationStart> Members
+        #endregion
+
+        #region IEquatable<AuthorizationStartResponse> Members
 
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two authorize start responses for equality.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <param name="Object">An authorize start response to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is AuthorizationStartResponse authorizationStartResponse &&
@@ -1205,31 +1204,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Equals(AuthorizationStart)
+        #region Equals(AuthorizationStartResponse)
 
         /// <summary>
-        /// Compares two authorize start requests for equality.
+        /// Compares two authorize start responses for equality.
         /// </summary>
-        /// <param name="AuthorizationStart">An authorize start request to compare with.</param>
-        /// <returns>True if both match; False otherwise.</returns>
-        public override Boolean Equals(AuthorizationStartResponse? AuthorizationStart)
+        /// <param name="AuthorizationStartResponse">An authorize start response to compare with.</param>
+        public override Boolean Equals(AuthorizationStartResponse? AuthorizationStartResponse)
 
-            => AuthorizationStart is not null &&
-               AuthorizationStatus.Equals(AuthorizationStart.AuthorizationStatus) &&
-               StatusCode.         Equals(AuthorizationStart.StatusCode)          &&
+            => AuthorizationStartResponse is not null &&
+               AuthorizationStatus.Equals(AuthorizationStartResponse.AuthorizationStatus) &&
+               StatusCode.         Equals(AuthorizationStartResponse.StatusCode)          &&
                //ToDo: AuthorizationStopIdentifications
 
-               ((!SessionId.          HasValue && !AuthorizationStart.SessionId.          HasValue) ||
-                 (SessionId.          HasValue &&  AuthorizationStart.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStart.SessionId.          Value))) &&
+               ((!SessionId.          HasValue && !AuthorizationStartResponse.SessionId.          HasValue) ||
+                 (SessionId.          HasValue &&  AuthorizationStartResponse.SessionId.          HasValue && SessionId.          Value.Equals(AuthorizationStartResponse.SessionId.          Value))) &&
 
-               ((!CPOPartnerSessionId.HasValue && !AuthorizationStart.CPOPartnerSessionId.HasValue) ||
-                 (CPOPartnerSessionId.HasValue &&  AuthorizationStart.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizationStart.CPOPartnerSessionId.Value))) &&
+               ((!CPOPartnerSessionId.HasValue && !AuthorizationStartResponse.CPOPartnerSessionId.HasValue) ||
+                 (CPOPartnerSessionId.HasValue &&  AuthorizationStartResponse.CPOPartnerSessionId.HasValue && CPOPartnerSessionId.Value.Equals(AuthorizationStartResponse.CPOPartnerSessionId.Value))) &&
 
-               ((!EMPPartnerSessionId.HasValue && !AuthorizationStart.EMPPartnerSessionId.HasValue) ||
-                 (EMPPartnerSessionId.HasValue &&  AuthorizationStart.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizationStart.EMPPartnerSessionId.Value))) &&
+               ((!EMPPartnerSessionId.HasValue && !AuthorizationStartResponse.EMPPartnerSessionId.HasValue) ||
+                 (EMPPartnerSessionId.HasValue &&  AuthorizationStartResponse.EMPPartnerSessionId.HasValue && EMPPartnerSessionId.Value.Equals(AuthorizationStartResponse.EMPPartnerSessionId.Value))) &&
 
-               ((!ProviderId.         HasValue && !AuthorizationStart.ProviderId.         HasValue) ||
-                 (ProviderId.         HasValue &&  AuthorizationStart.ProviderId.         HasValue && ProviderId.         Value.Equals(AuthorizationStart.ProviderId.         Value)));
+               ((!ProviderId.         HasValue && !AuthorizationStartResponse.ProviderId.         HasValue) ||
+                 (ProviderId.         HasValue &&  AuthorizationStartResponse.ProviderId.         HasValue && ProviderId.         Value.Equals(AuthorizationStartResponse.ProviderId.         Value)));
 
         #endregion
 
