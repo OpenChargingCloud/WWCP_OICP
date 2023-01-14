@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2022 GraphDefined GmbH
+ * Copyright (c) 2014-2023 GraphDefined GmbH
  * This file is part of OICPTool <https://github.com/OpenChargingCloud/OICPTool>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,9 @@
 
 #region Usings
 
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;

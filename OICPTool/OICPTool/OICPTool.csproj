@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj" />
-    <ProjectReference Include="..\..\Styx\Styx\Styx.csproj" />
-    <ProjectReference Include="..\WWCP_OICPv2.3\WWCP_OICPv2.3.csproj" />
+    <ProjectReference Include="..\..\..\Hermod\Hermod\Hermod.csproj" />
+    <ProjectReference Include="..\..\..\Styx\Styx\Styx.csproj" />
+    <ProjectReference Include="..\..\WWCP_OICPv2.3\WWCP_OICPv2.3.csproj" />
   </ItemGroup>
 
 </Project>
