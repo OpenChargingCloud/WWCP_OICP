@@ -800,8 +800,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(Request,
                          JSON,
-                         out AuthorizationStartResponse?  authorizationStartResponse,
-                         out String?                      ErrorResponse,
+                         out var authorizationStartResponse,
+                         out var errorResponse,
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
@@ -812,50 +812,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return authorizationStartResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a AuthorizationStart response is invalid: " + ErrorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomAuthorizationStartResponseParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a AuthorizationStart response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
-        public static AuthorizationStartResponse Parse(AuthorizeStartRequest                                     Request,
-                                                       String                                                    Text,
-                                                       DateTime?                                                 ResponseTimestamp                        = null,
-                                                       EventTracking_Id?                                         EventTrackingId                          = null,
-                                                       TimeSpan?                                                 Runtime                                  = null,
-                                                       Process_Id?                                               ProcessId                                = null,
-                                                       HTTPResponse?                                             HTTPResponse                             = null,
-                                                       CustomJObjectParserDelegate<AuthorizationStartResponse>?  CustomAuthorizationStartResponseParser   = null)
-        {
-
-            if (TryParse(Request,
-                         Text,
-                         out AuthorizationStartResponse?  authorizationStartResponse,
-                         out String?                      ErrorResponse,
-                         ResponseTimestamp,
-                         EventTrackingId,
-                         Runtime,
-                         ProcessId,
-                         HTTPResponse,
-                         CustomAuthorizationStartResponseParser))
-            {
-                return authorizationStartResponse!;
-            }
-
-            throw new ArgumentException("The given text representation of a AuthorizationStart response is invalid: " + ErrorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a AuthorizationStart response is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -1029,59 +987,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 AuthorizationStartResponse  = default;
                 ErrorResponse               = "The given JSON representation of a AuthorizationStart response is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out AuthorizationStartResponse, out ErrorResponse, CustomAuthorizationStartResponseParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a AuthorizationStart response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="AuthorizationStartResponse">The parsed AuthorizationStart response.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
-        public static Boolean TryParse(AuthorizeStartRequest                                     Request,
-                                       String                                                    Text,
-                                       out AuthorizationStartResponse?                           AuthorizationStartResponse,
-                                       out String?                                               ErrorResponse,
-                                       DateTime?                                                 ResponseTimestamp                        = null,
-                                       EventTracking_Id?                                         EventTrackingId                          = null,
-                                       TimeSpan?                                                 Runtime                                  = null,
-                                       Process_Id?                                               ProcessId                                = null,
-                                       HTTPResponse?                                             HTTPResponse                             = null,
-                                       CustomJObjectParserDelegate<AuthorizationStartResponse>?  CustomAuthorizationStartResponseParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(Request,
-                                JObject.Parse(Text),
-                                out AuthorizationStartResponse,
-                                out ErrorResponse,
-                                ResponseTimestamp,
-                                EventTrackingId,
-                                Runtime,
-                                ProcessId,
-                                HTTPResponse,
-                                CustomAuthorizationStartResponseParser);
-
-            }
-            catch (Exception e)
-            {
-                AuthorizationStartResponse  = default;
-                ErrorResponse               = "The given text representation of a AuthorizationStart response is invalid: " + e.Message;
                 return false;
             }
 

@@ -756,10 +756,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                                providerId,
-                                                                                               out AuthorizeRemoteReservationStartRequest?  authorizeRemoteReservationStartRequest,
-                                                                                               out String?                                  errorResponse,
+                                                                                               out var authorizeRemoteReservationStartRequest,
+                                                                                               out var errorResponse,
                                                                                                processId,
                                                                                                Request.Timestamp,
                                                                                                Request.CancellationToken,
@@ -971,10 +971,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                               providerId,
-                                                                                              out AuthorizeRemoteReservationStopRequest?  authorizeRemoteReservationStopRequest,
-                                                                                              out String?                                 errorResponse,
+                                                                                              out var authorizeRemoteReservationStopRequest,
+                                                                                              out var errorResponse,
                                                                                               processId,
                                                                                               Request.Timestamp,
                                                                                               Request.CancellationToken,
@@ -1188,10 +1188,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                     providerId,
-                                                                                    out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
-                                                                                    out String?                       errorResponse,
+                                                                                    out var authorizeRemoteStartRequest,
+                                                                                    out var errorResponse,
                                                                                     processId,
                                                                                     Request.Timestamp,
                                                                                     Request.CancellationToken,
@@ -1404,10 +1404,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                    providerId,
-                                                                                   out AuthorizeRemoteStopRequest?  authorizeRemoteStopRequest,
-                                                                                   out String?                      errorResponse,
+                                                                                   out var authorizeRemoteStopRequest,
+                                                                                   out var errorResponse,
                                                                                    processId,
                                                                                    Request.Timestamp,
                                                                                    Request.CancellationToken,

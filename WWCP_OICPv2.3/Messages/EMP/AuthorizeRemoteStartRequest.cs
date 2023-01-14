@@ -204,8 +204,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          ProviderIdURL,
-                         out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
-                         out String?                       errorResponse,
+                         out var authorizeRemoteStartRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -216,50 +216,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return authorizeRemoteStartRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of an AuthorizeRemoteStart request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomAuthorizeRemoteStartRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an AuthorizeRemoteStart request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
-        public static AuthorizeRemoteStartRequest Parse(String                                                     Text,
-                                                        Provider_Id                                                ProviderIdURL,
-                                                        Process_Id?                                                ProcessId                                 = null,
-
-                                                        DateTime?                                                  Timestamp                                 = null,
-                                                        CancellationToken?                                         CancellationToken                         = null,
-                                                        EventTracking_Id?                                          EventTrackingId                           = null,
-                                                        TimeSpan?                                                  RequestTimeout                            = null,
-
-                                                        CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         ProviderIdURL,
-                         out AuthorizeRemoteStartRequest?  authorizeRemoteStartRequest,
-                         out String?                       errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomAuthorizeRemoteStartRequestParser))
-            {
-                return authorizeRemoteStartRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of an AuthorizeRemoteStart request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an AuthorizeRemoteStart request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -438,59 +396,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 AuthorizeRemoteStartRequest  = default;
                 ErrorResponse                = "The given JSON representation of an AuthorizeRemoteStart request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out AuthorizeRemoteStartRequest, out ErrorResponse, ..., CustomAuthorizeRemoteStartRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an AuthorizeRemoteStart request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="AuthorizeRemoteStartRequest">The parsed AuthorizeRemoteStart request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
-        public static Boolean TryParse(String                                                     Text,
-                                       Provider_Id                                                ProviderIdURL,
-                                       out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
-                                       out String?                                                ErrorResponse,
-                                       Process_Id?                                                ProcessId                                 = null,
-
-                                       DateTime?                                                  Timestamp                                 = null,
-                                       CancellationToken?                                         CancellationToken                         = null,
-                                       EventTracking_Id?                                          EventTrackingId                           = null,
-                                       TimeSpan?                                                  RequestTimeout                            = null,
-
-                                       CustomJObjectParserDelegate<AuthorizeRemoteStartRequest>?  CustomAuthorizeRemoteStartRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                ProviderIdURL,
-                                out AuthorizeRemoteStartRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomAuthorizeRemoteStartRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                AuthorizeRemoteStartRequest  = default;
-                ErrorResponse                = "The given text representation of an AuthorizeRemoteStart request is invalid: " + e.Message;
                 return false;
             }
 

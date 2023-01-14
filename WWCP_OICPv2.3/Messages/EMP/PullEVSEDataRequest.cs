@@ -264,8 +264,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PullEVSEDataRequest?  pullEVSEDataRequest,
-                         out String?               errorResponse,
+                         out var pullEVSEDataRequest,
+                         out var errorResponse,
                          ProcessId,
                          Page,
                          Size,
@@ -279,50 +279,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pullEVSEDataRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEData request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomPullEVSEDataRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a PullEVSEData request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData request JSON objects.</param>
-        public static PullEVSEDataRequest Parse(String                                             Text,
-                                                Process_Id?                                        ProcessId                         = null,
-                                                UInt32?                                            Page                              = null,
-                                                UInt32?                                            Size                              = null,
-                                                IEnumerable<String>?                               SortOrder                         = null,
-
-                                                DateTime?                                          Timestamp                         = null,
-                                                CancellationToken?                                 CancellationToken                 = null,
-                                                EventTracking_Id?                                  EventTrackingId                   = null,
-                                                TimeSpan?                                          RequestTimeout                    = null,
-
-                                                CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out PullEVSEDataRequest?  pullEVSEDataRequest,
-                         out String?               errorResponse,
-                         ProcessId,
-                         Page,
-                         Size,
-                         SortOrder,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPullEVSEDataRequestParser))
-            {
-                return pullEVSEDataRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a PullEVSEData request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a PullEVSEData request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -600,59 +558,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PullEVSEDataRequest  = default;
                 ErrorResponse        = "The given JSON representation of a PullEVSEData request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PullEVSEDataRequest, out ErrorResponse, ..., CustomPullEVSEDataRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a PullEVSEData request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PullEVSEDataRequest">The parsed PullEVSEData request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData request JSON objects.</param>
-        public static Boolean TryParse(String                                             Text,
-                                       out PullEVSEDataRequest?                           PullEVSEDataRequest,
-                                       out String?                                        ErrorResponse,
-                                       Process_Id?                                        ProcessId                         = null,
-                                       UInt32?                                            Page                              = null,
-                                       UInt32?                                            Size                              = null,
-                                       IEnumerable<String>?                               SortOrder                         = null,
-
-                                       DateTime?                                          Timestamp                         = null,
-                                       CancellationToken?                                 CancellationToken                 = null,
-                                       EventTracking_Id?                                  EventTrackingId                   = null,
-                                       TimeSpan?                                          RequestTimeout                    = null,
-
-                                       CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out PullEVSEDataRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Page,
-                                Size,
-                                SortOrder,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPullEVSEDataRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PullEVSEDataRequest  = default;
-                ErrorResponse        = "The given text representation of a PullEVSEData request is invalid: " + e.Message;
                 return false;
             }
 

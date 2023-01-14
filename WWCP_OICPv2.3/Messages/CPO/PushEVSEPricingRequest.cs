@@ -138,8 +138,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          OperatorId,
-                         out PushEVSEPricingRequest?  pushEVSEDataRequest,
-                         out String?                  errorResponse,
+                         out var pushEVSEDataRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -150,49 +150,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pushEVSEDataRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a push EVSE pricing data request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, OperatorId, ..., CustomPushEVSEPricingRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a push EVSE pricing data request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
-        public static PushEVSEPricingRequest Parse(String                                                Text,
-                                                   Operator_Id                                           OperatorId,
-                                                   Process_Id?                                           ProcessId                            = null,
-
-                                                   DateTime?                                             Timestamp                            = null,
-                                                   CancellationToken?                                    CancellationToken                    = null,
-                                                   EventTracking_Id?                                     EventTrackingId                      = null,
-                                                   TimeSpan?                                             RequestTimeout                       = null,
-
-                                                   CustomJObjectParserDelegate<PushEVSEPricingRequest>?  CustomPushEVSEPricingRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         OperatorId,
-                         out PushEVSEPricingRequest?  pushEVSEDataRequest,
-                         out String?                  errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPushEVSEPricingRequestParser))
-            {
-                return pushEVSEDataRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a push EVSE pricing data request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a push EVSE pricing data request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -289,58 +248,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PushEVSEPricingRequest  = default;
                 ErrorResponse           = "The given JSON representation of a push EVSE pricing data request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, OperatorId, out PushEVSEPricingRequest, out ErrorResponse, ..., CustomPushEVSEPricingRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a push EVSE pricing data request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PushEVSEPricingRequest">The parsed push EVSE pricing data request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEPricingRequestParser">A delegate to parse custom push EVSE pricing data request JSON objects.</param>
-        public static Boolean TryParse(String                                                Text,
-                                       Operator_Id                                           OperatorId,
-                                       out PushEVSEPricingRequest?                           PushEVSEPricingRequest,
-                                       out String?                                           ErrorResponse,
-                                       Process_Id?                                           ProcessId                            = null,
-
-                                       DateTime?                                             Timestamp                            = null,
-                                       CancellationToken?                                    CancellationToken                    = null,
-                                       EventTracking_Id?                                     EventTrackingId                      = null,
-                                       TimeSpan?                                             RequestTimeout                       = null,
-
-                                       CustomJObjectParserDelegate<PushEVSEPricingRequest>?  CustomPushEVSEPricingRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                OperatorId,
-                                out PushEVSEPricingRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPushEVSEPricingRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PushEVSEPricingRequest  = default;
-                ErrorResponse           = "The given text representation of a push EVSE pricing data request is invalid: " + e.Message;
                 return false;
             }
 

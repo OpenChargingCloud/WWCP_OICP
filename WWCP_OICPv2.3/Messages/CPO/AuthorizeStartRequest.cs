@@ -218,8 +218,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          OperatorIdURL,
-                         out AuthorizeStartRequest?  auhorizeStartRequest,
-                         out String?                 errorResponse,
+                         out var auhorizeStartRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -230,50 +230,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return auhorizeStartRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of an AuthorizeStart request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, OperatorIdURL, ..., CustomAuthorizeStartRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an AuthorizeStart request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
-        public static AuthorizeStartRequest Parse(String                                               Text,
-                                                  Operator_Id                                          OperatorIdURL,
-                                                  Process_Id?                                          ProcessId                           = null,
-
-                                                  DateTime?                                            Timestamp                           = null,
-                                                  CancellationToken?                                   CancellationToken                   = null,
-                                                  EventTracking_Id?                                    EventTrackingId                     = null,
-                                                  TimeSpan?                                            RequestTimeout                      = null,
-
-                                                  CustomJObjectParserDelegate<AuthorizeStartRequest>?  CustomAuthorizeStartRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         OperatorIdURL,
-                         out AuthorizeStartRequest?  auhorizeStartRequest,
-                         out String?                 errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomAuthorizeStartRequestParser))
-            {
-                return auhorizeStartRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of an AuthorizeStart request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an AuthorizeStart request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -453,59 +411,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 AuthorizeStartRequest  = default;
                 ErrorResponse          = "The given JSON representation of an AuthorizeStart request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, OperatorIdURL, out AuthorizeStartRequest, out ErrorResponse, ..., CustomAuthorizeStartRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an AuthorizeStart request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="AuthorizeStartRequest">The parsed AuthorizeStart request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeStartRequestParser">A delegate to parse custom AuthorizeStart request JSON objects.</param>
-        public static Boolean TryParse(String                                               Text,
-                                       Operator_Id                                          OperatorIdURL,
-                                       out AuthorizeStartRequest?                           AuthorizeStartRequest,
-                                       out String?                                          ErrorResponse,
-                                       Process_Id?                                          ProcessId                           = null,
-
-                                       DateTime?                                            Timestamp                           = null,
-                                       CancellationToken?                                   CancellationToken                   = null,
-                                       EventTracking_Id?                                    EventTrackingId                     = null,
-                                       TimeSpan?                                            RequestTimeout                      = null,
-
-                                       CustomJObjectParserDelegate<AuthorizeStartRequest>?  CustomAuthorizeStartRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                OperatorIdURL,
-                                out AuthorizeStartRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomAuthorizeStartRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                AuthorizeStartRequest  = default;
-                ErrorResponse          = "The given text representation of an AuthorizeStart request is invalid: " + e.Message;
                 return false;
             }
 

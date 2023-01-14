@@ -146,8 +146,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PushEVSEStatusRequest?  pushEVSEStatusRequest,
-                         out String?                 errorResponse,
+                         out var pushEVSEStatusRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -158,47 +158,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pushEVSEStatusRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a push EVSE status request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomPushEVSEStatusRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a push EVSE status request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEStatusRequestParser">A delegate to parse custom push EVSE status request JSON objects.</param>
-        public static PushEVSEStatusRequest Parse(String                                               Text,
-                                                  Process_Id?                                          ProcessId                           = null,
-
-                                                  DateTime?                                            Timestamp                           = null,
-                                                  CancellationToken?                                   CancellationToken                   = null,
-                                                  EventTracking_Id?                                    EventTrackingId                     = null,
-                                                  TimeSpan?                                            RequestTimeout                      = null,
-
-                                                  CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out PushEVSEStatusRequest?  pushEVSEStatusRequest,
-                         out String?                 errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPushEVSEStatusRequestParser))
-            {
-                return pushEVSEStatusRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a push EVSE status request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a push EVSE status request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -294,56 +255,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PushEVSEStatusRequest  = default;
                 ErrorResponse          = "The given JSON representation of a push EVSE status request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PushEVSEStatusRequest, out ErrorResponse, ..., CustomPushEVSEStatusRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a push EVSE status request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PushEVSEStatusRequest">The parsed push EVSE status request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushEVSEStatusRequestParser">A delegate to parse custom push EVSE status request JSON objects.</param>
-        public static Boolean TryParse(String                                               Text,
-                                       out PushEVSEStatusRequest?                           PushEVSEStatusRequest,
-                                       out String?                                          ErrorResponse,
-                                       Process_Id?                                          ProcessId                           = null,
-
-                                       DateTime?                                            Timestamp                           = null,
-                                       CancellationToken?                                   CancellationToken                   = null,
-                                       EventTracking_Id?                                    EventTrackingId                     = null,
-                                       TimeSpan?                                            RequestTimeout                      = null,
-
-                                       CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out PushEVSEStatusRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPushEVSEStatusRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PushEVSEStatusRequest  = default;
-                ErrorResponse          = "The given text representation of a push EVSE status request is invalid: " + e.Message;
                 return false;
             }
 

@@ -161,8 +161,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
-                         out GetChargeDetailRecordsResponse?  getChargeDetailRecordsResponse,
-                         out String?                          errorResponse,
+                         out var getChargeDetailRecordsResponse,
+                         out var errorResponse,
                          HTTPResponse,
                          ProcessId,
                          CustomGetChargeDetailRecordsResponseParser))
@@ -170,50 +170,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return getChargeDetailRecordsResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords response is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomGetChargeDetailRecordsResponseParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a GetChargeDetailRecords response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords response JSON objects.</param>
-        public static GetChargeDetailRecordsResponse Parse(GetChargeDetailRecordsRequest                                 Request,
-                                                           String                                                        Text,
-                                                           DateTime                                                      ResponseTimestamp,
-                                                           EventTracking_Id                                              EventTrackingId,
-                                                           TimeSpan                                                      Runtime,
-                                                           Process_Id?                                                   ProcessId                                    = null,
-                                                           HTTPResponse?                                                 HTTPResponse                                 = null,
-                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseParser   = null)
-        {
-
-            if (TryParse(Request,
-                         Text,
-                         ResponseTimestamp,
-                         EventTrackingId,
-                         Runtime,
-                         out GetChargeDetailRecordsResponse?  getChargeDetailRecordsResponse,
-                         out String?                          errorResponse,
-                         ProcessId,
-                         HTTPResponse,
-                         CustomGetChargeDetailRecordsResponseParser))
-            {
-                return getChargeDetailRecordsResponse!;
-            }
-
-            throw new ArgumentException("The given text representation of a GetChargeDetailRecords response is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords response is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -413,59 +371,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 GetChargeDetailRecordsResponse  = default;
                 ErrorResponse                   = "The given JSON representation of a GetChargeDetailRecords response is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out GetChargeDetailRecordsResponse, out ErrorResponse, CustomGetChargeDetailRecordsResponseParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a GetChargeDetailRecords response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="GetChargeDetailRecordsResponse">The parsed GetChargeDetailRecords response.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords response JSON objects.</param>
-        public static Boolean TryParse(GetChargeDetailRecordsRequest                                 Request,
-                                       String                                                        Text,
-                                       DateTime                                                      ResponseTimestamp,
-                                       EventTracking_Id                                              EventTrackingId,
-                                       TimeSpan                                                      Runtime,
-                                       out GetChargeDetailRecordsResponse?                           GetChargeDetailRecordsResponse,
-                                       out String?                                                   ErrorResponse,
-                                       Process_Id?                                                   ProcessId                                    = null,
-                                       HTTPResponse?                                                 HTTPResponse                                 = null,
-                                       CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(Request,
-                                JObject.Parse(Text),
-                                ResponseTimestamp,
-                                EventTrackingId,
-                                Runtime,
-                                out GetChargeDetailRecordsResponse,
-                                out ErrorResponse,
-                                HTTPResponse,
-                                ProcessId,
-                                CustomGetChargeDetailRecordsResponseParser);
-
-            }
-            catch (Exception e)
-            {
-                GetChargeDetailRecordsResponse  = default;
-                ErrorResponse                   = "The given text representation of a GetChargeDetailRecords response is invalid: " + e.Message;
                 return false;
             }
 

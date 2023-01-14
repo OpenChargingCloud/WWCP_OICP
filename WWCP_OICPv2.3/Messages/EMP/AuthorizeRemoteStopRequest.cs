@@ -154,8 +154,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          ProviderIdURL,
-                         out AuthorizeRemoteStopRequest?  authorizeRemoteStopRequest,
-                         out String?                      errorResponse,
+                         out var authorizeRemoteStopRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -166,50 +166,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return authorizeRemoteStopRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a AuthorizeRemoteStop request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomAuthorizeRemoteStopRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a AuthorizeRemoteStop request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
-        public static AuthorizeRemoteStopRequest Parse(String                                                    Text,
-                                                       Provider_Id                                               ProviderIdURL,
-                                                       Process_Id?                                               ProcessId                                = null,
-
-                                                       DateTime?                                                 Timestamp                                = null,
-                                                       CancellationToken?                                        CancellationToken                        = null,
-                                                       EventTracking_Id?                                         EventTrackingId                          = null,
-                                                       TimeSpan?                                                 RequestTimeout                           = null,
-
-                                                       CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>?  CustomAuthorizeRemoteStopRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         ProviderIdURL,
-                         out AuthorizeRemoteStopRequest?  authorizeRemoteStopRequest,
-                         out String?                      errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomAuthorizeRemoteStopRequestParser))
-            {
-                return authorizeRemoteStopRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a AuthorizeRemoteStop request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a AuthorizeRemoteStop request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -357,59 +315,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 AuthorizeRemoteStopRequest  = default;
                 ErrorResponse               = "The given JSON representation of a AuthorizeRemoteStop request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out AuthorizeRemoteStopRequest, out ErrorResponse, ..., CustomAuthorizeRemoteStopRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a AuthorizeRemoteStop request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="AuthorizeRemoteStopRequest">The parsed AuthorizeRemoteStop request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
-        public static Boolean TryParse(String                                                    Text,
-                                       Provider_Id                                               ProviderIdURL,
-                                       out AuthorizeRemoteStopRequest?                           AuthorizeRemoteStopRequest,
-                                       out String?                                               ErrorResponse,
-                                       Process_Id?                                               ProcessId                                = null,
-
-                                       DateTime?                                                 Timestamp                                = null,
-                                       CancellationToken?                                        CancellationToken                        = null,
-                                       EventTracking_Id?                                         EventTrackingId                          = null,
-                                       TimeSpan?                                                 RequestTimeout                           = null,
-
-                                       CustomJObjectParserDelegate<AuthorizeRemoteStopRequest>?  CustomAuthorizeRemoteStopRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                ProviderIdURL,
-                                out AuthorizeRemoteStopRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomAuthorizeRemoteStopRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                AuthorizeRemoteStopRequest  = default;
-                ErrorResponse               = "The given text representation of a AuthorizeRemoteStop request is invalid: " + e.Message;
                 return false;
             }
 

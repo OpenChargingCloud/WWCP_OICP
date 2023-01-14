@@ -1597,10 +1597,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PullEVSEDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                             //     providerId ????
-                                                                            out PullEVSEDataRequest?          pullEVSEDataRequest,
-                                                                            out String?                       errorResponse,
+                                                                            out var                           pullEVSEDataRequest,
+                                                                            out var                           errorResponse,
                                                                             ProcessId:                        processId,
                                                                             Page:                             page,
                                                                             Size:                             size,
@@ -1855,10 +1855,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PullEVSEStatusRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                               //     providerId ????
-                                                                              out PullEVSEStatusRequest?          pullEVSEStatusRequest,
-                                                                              out String?                         errorResponse,
+                                                                              out var                             pullEVSEStatusRequest,
+                                                                              out var                             errorResponse,
                                                                               ProcessId:                          processId,
 
                                                                               Timestamp:                          Request.Timestamp,
@@ -2102,10 +2102,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEStatusByIdRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PullEVSEStatusByIdRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                   //     providerId ????
-                                                                                  out PullEVSEStatusByIdRequest?          pullEVSEStatusByIdRequest,
-                                                                                  out String?                             errorResponse,
+                                                                                  out var                                 pullEVSEStatusByIdRequest,
+                                                                                  out var                                 errorResponse,
                                                                                   ProcessId:                              processId,
 
                                                                                   Timestamp:                              Request.Timestamp,
@@ -2348,10 +2348,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEStatusByOperatorIdRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PullEVSEStatusByOperatorIdRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                           //     providerId ????
-                                                                                          out PullEVSEStatusByOperatorIdRequest?          pullEVSEStatusByOperatorIdRequest,
-                                                                                          out String?                                     errorResponse,
+                                                                                          out var                                         pullEVSEStatusByOperatorIdRequest,
+                                                                                          out var                                         errorResponse,
                                                                                           ProcessId:                                      processId,
 
                                                                                           Timestamp:                                      Request.Timestamp,
@@ -2599,10 +2599,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullPricingProductDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PullPricingProductDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                       providerId,
-                                                                                      out PullPricingProductDataRequest?          pullPricingProductDataRequest,
-                                                                                      out String?                                 errorResponse,
+                                                                                      out var                                     pullPricingProductDataRequest,
+                                                                                      out var                                     errorResponse,
                                                                                       ProcessId:                                  processId,
                                                                                       Page:                                       page,
                                                                                       Size:                                       size,
@@ -2852,10 +2852,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEPricingRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PullEVSEPricingRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                //     providerId ????
-                                                                               out PullEVSEPricingRequest?          pullEVSEPricingRequest,
-                                                                               out String?                          errorResponse,
+                                                                               out var                              pullEVSEPricingRequest,
+                                                                               out var                              errorResponse,
                                                                                ProcessId:                           processId,
                                                                                Page:                                page,
                                                                                Size:                                size,
@@ -3102,10 +3102,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PushAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PushAuthenticationDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                       //     providerId ????
-                                                                                      out PushAuthenticationDataRequest?          pushAuthenticationDataRequest,
-                                                                                      out String?                                 errorResponse,
+                                                                                      out var                                     pushAuthenticationDataRequest,
+                                                                                      out var                                     errorResponse,
 
                                                                                       Timestamp:                                  Request.Timestamp,
                                                                                       CancellationToken:                          Request.CancellationToken,
@@ -3337,10 +3337,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                                providerId,
-                                                                                               out AuthorizeRemoteReservationStartRequest?          authorizeRemoteReservationStartRequest,
-                                                                                               out String?                                          errorResponse,
+                                                                                               out var                                              authorizeRemoteReservationStartRequest,
+                                                                                               out var                                              errorResponse,
                                                                                                ProcessId:                                           processId,
 
                                                                                                Timestamp:                                           Request.Timestamp,
@@ -3574,10 +3574,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                               providerId,
-                                                                                              out AuthorizeRemoteReservationStopRequest?          authorizeRemoteReservationStopRequest,
-                                                                                              out String?                                         errorResponse,
+                                                                                              out var                                             authorizeRemoteReservationStopRequest,
+                                                                                              out var                                             errorResponse,
                                                                                               ProcessId:                                          processId,
 
                                                                                               Timestamp:                                          Request.Timestamp,
@@ -3811,10 +3811,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                     providerId,
-                                                                                    out AuthorizeRemoteStartRequest?          authorizeRemoteStartRequest,
-                                                                                    out String?                               errorResponse,
+                                                                                    out var                                   authorizeRemoteStartRequest,
+                                                                                    out var                                   errorResponse,
                                                                                     ProcessId:                                processId,
 
                                                                                     Timestamp:                                Request.Timestamp,
@@ -4048,10 +4048,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                    providerId,
-                                                                                   out AuthorizeRemoteStopRequest?          authorizeRemoteStopRequest,
-                                                                                   out String?                              errorResponse,
+                                                                                   out var                                  authorizeRemoteStopRequest,
+                                                                                   out var                                  errorResponse,
                                                                                    ProcessId:                               processId,
 
                                                                                    Timestamp:                               Request.Timestamp,
@@ -4290,10 +4290,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (GetChargeDetailRecordsRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (GetChargeDetailRecordsRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                       //     providerId ????
-                                                                                      out GetChargeDetailRecordsRequest?          getChargeDetailRecordsRequest,
-                                                                                      out String?                                 errorResponse,
+                                                                                      out var                                     getChargeDetailRecordsRequest,
+                                                                                      out var                                     errorResponse,
                                                                                       ProcessId:                                  processId,
                                                                                       Page:                                       page,
                                                                                       Size:                                       size,

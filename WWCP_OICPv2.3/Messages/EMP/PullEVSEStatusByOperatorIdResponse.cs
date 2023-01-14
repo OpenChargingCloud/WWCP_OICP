@@ -150,8 +150,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
-                         out PullEVSEStatusByOperatorIdResponse?  pullEVSEStatusByOperatorIdResponse,
-                         out String?                              errorResponse,
+                         out var pullEVSEStatusByOperatorIdResponse,
+                         out var errorResponse,
                          ProcessId,
                          HTTPResponse,
                          CustomPullEVSEStatusByOperatorIdResponseParser))
@@ -159,50 +159,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pullEVSEStatusByOperatorIdResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEStatusByOperatorId response is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomPullEVSEStatusByOperatorIdResponseParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a PullEVSEStatusByOperatorId response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomPullEVSEStatusByOperatorIdResponseParser">A delegate to parse custom PullEVSEStatusByOperatorId response JSON objects.</param>
-        public static PullEVSEStatusByOperatorIdResponse Parse(PullEVSEStatusByOperatorIdRequest                                 Request,
-                                                               String                                                            Text,
-                                                               DateTime                                                          ResponseTimestamp,
-                                                               EventTracking_Id                                                  EventTrackingId,
-                                                               TimeSpan                                                          Runtime,
-                                                               Process_Id?                                                       ProcessId                                        = null,
-                                                               HTTPResponse?                                                     HTTPResponse                                     = null,
-                                                               CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
-        {
-
-            if (TryParse(Request,
-                         Text,
-                         ResponseTimestamp,
-                         EventTrackingId,
-                         Runtime,
-                         out PullEVSEStatusByOperatorIdResponse?  pullEVSEStatusByOperatorIdResponse,
-                         out String?                              errorResponse,
-                         ProcessId,
-                         HTTPResponse,
-                         CustomPullEVSEStatusByOperatorIdResponseParser))
-            {
-                return pullEVSEStatusByOperatorIdResponse!;
-            }
-
-            throw new ArgumentException("The given text representation of a PullEVSEStatusByOperatorId response is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatusByOperatorId response is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -309,59 +267,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PullEVSEStatusByOperatorIdResponse  = default;
                 ErrorResponse                       = "The given JSON representation of a PullEVSEStatusByOperatorId response is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, ..., out PullEVSEStatusByOperatorIdResponse, out ErrorResponse, ..., CustomPullEVSEStatusByOperatorIdResponseParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a PullEVSEStatusByOperatorId response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="PullEVSEStatusByOperatorIdResponse">The parsed PullEVSEStatusByOperatorId response.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomPullEVSEStatusByOperatorIdResponseParser">A delegate to parse custom PullEVSEStatusByOperatorId response JSON objects.</param>
-        public static Boolean TryParse(PullEVSEStatusByOperatorIdRequest                                 Request,
-                                       String                                                            Text,
-                                       DateTime                                                          ResponseTimestamp,
-                                       EventTracking_Id                                                  EventTrackingId,
-                                       TimeSpan                                                          Runtime,
-                                       out PullEVSEStatusByOperatorIdResponse?                           PullEVSEStatusByOperatorIdResponse,
-                                       out String?                                                       ErrorResponse,
-                                       Process_Id?                                                       ProcessId                                        = null,
-                                       HTTPResponse?                                                     HTTPResponse                                     = null,
-                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdResponse>?  CustomPullEVSEStatusByOperatorIdResponseParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(Request,
-                                JObject.Parse(Text),
-                                ResponseTimestamp,
-                                EventTrackingId,
-                                Runtime,
-                                out PullEVSEStatusByOperatorIdResponse,
-                                out ErrorResponse,
-                                ProcessId,
-                                HTTPResponse,
-                                CustomPullEVSEStatusByOperatorIdResponseParser);
-
-            }
-            catch (Exception e)
-            {
-                PullEVSEStatusByOperatorIdResponse  = default;
-                ErrorResponse                       = "The given text representation of a PullEVSEStatusByOperatorId response is invalid: " + e.Message;
                 return false;
             }
 

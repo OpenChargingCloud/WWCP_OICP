@@ -810,10 +810,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                               operatorId,
-                                                                              out AuthorizeStartRequest?  authorizeStartRequest,
-                                                                              out String?                 errorResponse,
+                                                                              out var authorizeStartRequest,
+                                                                              out var errorResponse,
                                                                               processId,
                                                                               Request.Timestamp,
                                                                               Request.CancellationToken,
@@ -1001,10 +1001,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                              operatorId,
-                                                                             out AuthorizeStopRequest?  authorizeStopRequest,
-                                                                             out String?                errorResponse,
+                                                                             out var authorizeStopRequest,
+                                                                             out var errorResponse,
                                                                              processId,
                                                                              Request.Timestamp,
                                                                              Request.CancellationToken,
@@ -1852,10 +1852,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (ChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (ChargeDetailRecordRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                   operatorId,
-                                                                                  out ChargeDetailRecordRequest?  chargeDetailRecordRequest,
-                                                                                  out String?                     errorResponse,
+                                                                                  out var chargeDetailRecordRequest,
+                                                                                  out var errorResponse,
                                                                                   processId,
                                                                                   Request.Timestamp,
                                                                                   Request.CancellationToken,

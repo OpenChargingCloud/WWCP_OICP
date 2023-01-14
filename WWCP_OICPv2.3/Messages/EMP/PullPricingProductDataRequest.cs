@@ -146,8 +146,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          ProviderId,
-                         out PullPricingProductDataRequest?  pullEVSEDataResponse,
-                         out String?                         errorResponse,
+                         out var pullEVSEDataResponse,
+                         out var errorResponse,
                          ProcessId,
                          Page,
                          Size,
@@ -161,53 +161,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pullEVSEDataResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullPricingProductData request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ProviderId, ..., CustomPullPricingProductDataRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a PullPricingProductData request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
-        /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData request JSON objects.</param>
-        public static PullPricingProductDataRequest Parse(String                                                       Text,
-                                                          Provider_Id                                                  ProviderId,
-                                                          Process_Id?                                                  ProcessId                                   = null,
-                                                          UInt32?                                                      Page                                        = null,
-                                                          UInt32?                                                      Size                                        = null,
-                                                          IEnumerable<String>?                                         SortOrder                                   = null,
-
-                                                          DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken?                                           CancellationToken                           = null,
-                                                          EventTracking_Id?                                            EventTrackingId                             = null,
-                                                          TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         ProviderId,
-                         out PullPricingProductDataRequest?  pullEVSEDataResponse,
-                         out String?                         errorResponse,
-                         ProcessId,
-                         Page,
-                         Size,
-                         SortOrder,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPullPricingProductDataRequestParser))
-            {
-                return pullEVSEDataResponse!;
-            }
-
-            throw new ArgumentException("The given text representation of a PullPricingProductData request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a PullPricingProductData request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -313,62 +268,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PullPricingProductDataRequest  = default;
                 ErrorResponse                  = "The given JSON representation of a PullPricingProductData request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, ProviderId, out PullPricingProductDataRequest, out ErrorResponse, ..., CustomPullPricingProductDataRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a PullPricingProductData request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderId">The unique identification of the e-mobility provider.</param>
-        /// <param name="PullPricingProductDataRequest">The parsed PullPricingProductData request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData request JSON objects.</param>
-        public static Boolean TryParse(String                                                       Text,
-                                       Provider_Id                                                  ProviderId,
-                                       out PullPricingProductDataRequest?                           PullPricingProductDataRequest,
-                                       out String?                                                  ErrorResponse,
-                                       Process_Id?                                                  ProcessId                                   = null,
-                                       UInt32?                                                      Page                                        = null,
-                                       UInt32?                                                      Size                                        = null,
-                                       IEnumerable<String>?                                         SortOrder                                   = null,
-
-                                       DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken?                                           CancellationToken                           = null,
-                                       EventTracking_Id?                                            EventTrackingId                             = null,
-                                       TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                ProviderId,
-                                out PullPricingProductDataRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Page,
-                                Size,
-                                SortOrder,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPullPricingProductDataRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PullPricingProductDataRequest  = default;
-                ErrorResponse                  = "The given text representation of a PullPricingProductData request is invalid: " + e.Message;
                 return false;
             }
 

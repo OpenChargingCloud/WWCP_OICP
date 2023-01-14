@@ -179,8 +179,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out GetChargeDetailRecordsRequest?  getChargeDetailRecordsRequest,
-                         out String?                         errorResponse,
+                         out var getChargeDetailRecordsRequest,
+                         out var errorResponse,
                          ProcessId,
                          Page,
                          Size,
@@ -194,53 +194,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return getChargeDetailRecordsRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomGetChargeDetailRecordsRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a GetChargeDetailRecords request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="Page">An optional page number of the request page.</param>
-        /// <param name="Size">An optional size of a request page.</param>
-        /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
-        /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
-        public static GetChargeDetailRecordsRequest Parse(String                                                       Text,
-                                                          Process_Id?                                                  ProcessId                                   = null,
-                                                          UInt32?                                                      Page                                        = null,
-                                                          UInt32?                                                      Size                                        = null,
-                                                          IEnumerable<String>?                                         SortOrder                                   = null,
-
-                                                          DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken?                                           CancellationToken                           = null,
-                                                          EventTracking_Id?                                            EventTrackingId                             = null,
-                                                          TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out GetChargeDetailRecordsRequest?  getChargeDetailRecordsRequest,
-                         out String?                         errorResponse,
-                         ProcessId,
-                         Page,
-                         Size,
-                         SortOrder,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomGetChargeDetailRecordsRequestParser))
-            {
-                return getChargeDetailRecordsRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a GetChargeDetailRecords request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -400,62 +355,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 GetChargeDetailRecordsRequest  = default;
                 ErrorResponse                  = "The given JSON representation of a GetChargeDetailRecords request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out GetChargeDetailRecordsRequest, out ErrorResponse, ..., CustomGetChargeDetailRecordsRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a GetChargeDetailRecords request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="GetChargeDetailRecordsRequest">The parsed GetChargeDetailRecords request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="Page">An optional page number of the request page.</param>
-        /// <param name="Size">An optional size of a request page.</param>
-        /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
-        /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
-        public static Boolean TryParse(String                                                       Text,
-                                       out GetChargeDetailRecordsRequest?                           GetChargeDetailRecordsRequest,
-                                       out String?                                                  ErrorResponse,
-                                       Process_Id?                                                  ProcessId                                   = null,
-                                       UInt32?                                                      Page                                        = null,
-                                       UInt32?                                                      Size                                        = null,
-                                       IEnumerable<String>?                                         SortOrder                                   = null,
-
-                                       DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken?                                           CancellationToken                           = null,
-                                       EventTracking_Id?                                            EventTrackingId                             = null,
-                                       TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out GetChargeDetailRecordsRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Page,
-                                Size,
-                                SortOrder,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomGetChargeDetailRecordsRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                GetChargeDetailRecordsRequest  = default;
-                ErrorResponse                  = "The given text representation of a GetChargeDetailRecords request is invalid: " + e.Message;
                 return false;
             }
 

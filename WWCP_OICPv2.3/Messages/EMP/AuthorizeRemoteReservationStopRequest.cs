@@ -187,8 +187,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          ProviderIdURL,
-                         out AuthorizeRemoteReservationStopRequest?  authorizeRemoteReservationStopRequest,
-                         out String?                                 errorResponse,
+                         out var authorizeRemoteReservationStopRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -199,50 +199,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return authorizeRemoteReservationStopRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a AuthorizeRemoteReservationStop request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomAuthorizeRemoteReservationStopRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a AuthorizeRemoteReservationStop request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop request JSON objects.</param>
-        public static AuthorizeRemoteReservationStopRequest Parse(String                                                               Text,
-                                                                  Provider_Id                                                          ProviderIdURL,
-                                                                  Process_Id?                                                          ProcessId                                           = null,
-
-                                                                  DateTime?                                                            Timestamp                                           = null,
-                                                                  CancellationToken?                                                   CancellationToken                                   = null,
-                                                                  EventTracking_Id?                                                    EventTrackingId                                     = null,
-                                                                  TimeSpan?                                                            RequestTimeout                                      = null,
-
-                                                                  CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?  CustomAuthorizeRemoteReservationStopRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         ProviderIdURL,
-                         out AuthorizeRemoteReservationStopRequest?  authorizeRemoteReservationStopRequest,
-                         out String?                                 errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomAuthorizeRemoteReservationStopRequestParser))
-            {
-                return authorizeRemoteReservationStopRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a AuthorizeRemoteReservationStop request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a AuthorizeRemoteReservationStop request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -390,59 +348,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 AuthorizeRemoteReservationStopRequest  = default;
                 ErrorResponse                          = "The given JSON representation of a AuthorizeRemoteReservationStop request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out AuthorizeRemoteReservationStopRequest, out ErrorResponse, ..., CustomAuthorizeRemoteReservationStopRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a AuthorizeRemoteReservationStop request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="AuthorizeRemoteReservationStopRequest">The parsed AuthorizeRemoteReservationStop request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop request JSON objects.</param>
-        public static Boolean TryParse(String                                                               Text,
-                                       Provider_Id                                                          ProviderIdURL,
-                                       out AuthorizeRemoteReservationStopRequest?                           AuthorizeRemoteReservationStopRequest,
-                                       out String?                                                          ErrorResponse,
-                                       Process_Id?                                                          ProcessId                                           = null,
-
-                                       DateTime?                                                            Timestamp                                           = null,
-                                       CancellationToken?                                                   CancellationToken                                   = null,
-                                       EventTracking_Id?                                                    EventTrackingId                                     = null,
-                                       TimeSpan?                                                            RequestTimeout                                      = null,
-
-                                       CustomJObjectParserDelegate<AuthorizeRemoteReservationStopRequest>?  CustomAuthorizeRemoteReservationStopRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                ProviderIdURL,
-                                out AuthorizeRemoteReservationStopRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomAuthorizeRemoteReservationStopRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                AuthorizeRemoteReservationStopRequest  = default;
-                ErrorResponse                          = "The given text representation of a AuthorizeRemoteReservationStop request is invalid: " + e.Message;
                 return false;
             }
 

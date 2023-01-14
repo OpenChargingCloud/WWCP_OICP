@@ -1372,10 +1372,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushEVSEDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PushEVSEDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                             //     operatorId ????
-                                                                            out PushEVSEDataRequest?          pullEVSEDataRequest,
-                                                                            out String?                       errorResponse,
+                                                                            out var                           pullEVSEDataRequest,
+                                                                            out var                           errorResponse,
                                                                             ProcessId:                        processId,
 
                                                                             Timestamp:                        Request.Timestamp,
@@ -1612,10 +1612,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushEVSEStatusRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PushEVSEStatusRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                               //     operatorId ????
-                                                                              out PushEVSEStatusRequest?          pullEVSEStatusRequest,
-                                                                              out String?                         errorResponse,
+                                                                              out var                             pullEVSEStatusRequest,
+                                                                              out var                             errorResponse,
                                                                               ProcessId:                          processId,
 
                                                                               Timestamp:                          Request.Timestamp,
@@ -1853,10 +1853,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushPricingProductDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PushPricingProductDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                       //     operatorId ????
-                                                                                      out PushPricingProductDataRequest?          pullEVSEDataRequest,
-                                                                                      out String?                                 errorResponse,
+                                                                                      out var                                     pullEVSEDataRequest,
+                                                                                      out var                                     errorResponse,
                                                                                       ProcessId:                                  processId,
 
                                                                                       Timestamp:                                  Request.Timestamp,
@@ -2093,10 +2093,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushEVSEPricingRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PushEVSEPricingRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                operatorId,
-                                                                               out PushEVSEPricingRequest?          pullEVSEDataRequest,
-                                                                               out String?                          errorResponse,
+                                                                               out var                              pullEVSEDataRequest,
+                                                                               out var                              errorResponse,
                                                                                ProcessId:                           processId,
 
                                                                                Timestamp:                           Request.Timestamp,
@@ -2335,10 +2335,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PullAuthenticationDataRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (PullAuthenticationDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                       //operatorId,
-                                                                                      out PullAuthenticationDataRequest?          pullAuthenticationDataRequest,
-                                                                                      out String?                                 errorResponse,
+                                                                                      out var                                     pullAuthenticationDataRequest,
+                                                                                      out var                                     errorResponse,
                                                                                       ProcessId:                                  processId,
 
                                                                                       Timestamp:                                  Request.Timestamp,
@@ -2579,10 +2579,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeStartRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                               operatorId,
-                                                                              out AuthorizeStartRequest?          authorizeStartRequest,
-                                                                              out String?                         errorResponse,
+                                                                              out var                             authorizeStartRequest,
+                                                                              out var                             errorResponse,
                                                                               ProcessId:                          processId,
 
                                                                               Timestamp:                          Request.Timestamp,
@@ -2806,10 +2806,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeStopRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (AuthorizeStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                              operatorId,
-                                                                             out AuthorizeStopRequest?          authorizeStopRequest,
-                                                                             out String?                        errorResponse,
+                                                                             out var                            authorizeStopRequest,
+                                                                             out var                            errorResponse,
                                                                              ProcessId:                         processId,
 
                                                                              Timestamp:                         Request.Timestamp,
@@ -3848,10 +3848,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (ChargeDetailRecordRequest.TryParse(Request.HTTPBody.ToUTF8String(),
+                                      else if (ChargeDetailRecordRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
                                                                                   operatorId,
-                                                                                  out ChargeDetailRecordRequest?          chargeDetailRecordRequest,
-                                                                                  out String?                             errorResponse,
+                                                                                  out var                                 chargeDetailRecordRequest,
+                                                                                  out var                                 errorResponse,
                                                                                   ProcessId:                              processId,
 
                                                                                   Timestamp:                              Request.Timestamp,

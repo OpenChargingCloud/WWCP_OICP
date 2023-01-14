@@ -262,8 +262,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
-                         out String?                               errorResponse,
+                         out var chargingProgressNotificationRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -274,47 +274,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return chargingProgressNotificationRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a charging notification progress request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomChargingProgressNotificationRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a charging notification progress request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingProgressNotificationRequestParser">A delegate to parse custom charging notification progress request JSON objects.</param>
-        public static ChargingProgressNotificationRequest Parse(String                                                             Text,
-                                                                Process_Id?                                                        ProcessId                                         = null,
-
-                                                                DateTime?                                                          Timestamp                                         = null,
-                                                                CancellationToken?                                                 CancellationToken                                 = null,
-                                                                EventTracking_Id?                                                  EventTrackingId                                   = null,
-                                                                TimeSpan?                                                          RequestTimeout                                    = null,
-
-                                                                CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
-                         out String?                               errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomChargingProgressNotificationRequestParser))
-            {
-                return chargingProgressNotificationRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a charging notification progress request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a charging notification progress request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -615,56 +576,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 ChargingProgressNotificationRequest  = default;
                 ErrorResponse                        = "The given JSON representation of a charging notification progress request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out ChargingProgressNotificationRequest, out ErrorResponse, ..., CustomChargingProgressNotificationRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a charging notification progress request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ChargingProgressNotificationRequest">The parsed charging notification progress request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingProgressNotificationRequestParser">A delegate to parse custom charging notification progress request JSON objects.</param>
-        public static Boolean TryParse(String                                                             Text,
-                                       out ChargingProgressNotificationRequest?                           ChargingProgressNotificationRequest,
-                                       out String?                                                        ErrorResponse,
-                                       Process_Id?                                                        ProcessId                                         = null,
-
-                                       DateTime?                                                          Timestamp                                         = null,
-                                       CancellationToken?                                                 CancellationToken                                 = null,
-                                       EventTracking_Id?                                                  EventTrackingId                                   = null,
-                                       TimeSpan?                                                          RequestTimeout                                    = null,
-
-                                       CustomJObjectParserDelegate<ChargingProgressNotificationRequest>?  CustomChargingProgressNotificationRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out ChargingProgressNotificationRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomChargingProgressNotificationRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                ChargingProgressNotificationRequest  = default;
-                ErrorResponse                        = "The given text representation of a charging notification progress request is invalid: " + e.Message;
                 return false;
             }
 

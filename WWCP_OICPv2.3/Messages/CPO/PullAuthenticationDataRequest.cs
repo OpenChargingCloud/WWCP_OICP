@@ -108,8 +108,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PullAuthenticationDataRequest?  pullAuthenticationDataRequest,
-                         out String?                         errorResponse,
+                         out var pullAuthenticationDataRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -120,44 +120,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pullAuthenticationDataRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullAuthenticationData request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomPullAuthenticationDataRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a PullAuthenticationData request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomPullAuthenticationDataRequestParser">A delegate to parse custom PullAuthenticationData request JSON objects.</param>
-        public static PullAuthenticationDataRequest Parse(String                                                       Text,
-                                                          Process_Id?                                                  ProcessId                                   = null,
-
-                                                          DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken?                                           CancellationToken                           = null,
-                                                          EventTracking_Id?                                            EventTrackingId                             = null,
-                                                          TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<PullAuthenticationDataRequest>?  CustomPullAuthenticationDataRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out PullAuthenticationDataRequest?  pullAuthenticationDataRequest,
-                         out String?                         errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPullAuthenticationDataRequestParser))
-            {
-                return pullAuthenticationDataRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a PullAuthenticationData request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a PullAuthenticationData request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -236,53 +200,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PullAuthenticationDataRequest  = default;
                 ErrorResponse                  = "The given JSON representation of a PullAuthenticationData request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PullAuthenticationDataRequest, out ErrorResponse, ..., CustomPullAuthenticationDataRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a PullAuthenticationData request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PullAuthenticationDataRequest">The parsed PullAuthenticationData request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomPullAuthenticationDataRequestParser">A delegate to parse custom PullAuthenticationData request JSON objects.</param>
-        public static Boolean TryParse(String                                                       Text,
-                                       out PullAuthenticationDataRequest?                           PullAuthenticationDataRequest,
-                                       out String?                                                  ErrorResponse,
-                                       Process_Id?                                                  ProcessId                                   = null,
-
-                                       DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken?                                           CancellationToken                           = null,
-                                       EventTracking_Id?                                            EventTrackingId                             = null,
-                                       TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<PullAuthenticationDataRequest>?  CustomPullAuthenticationDataRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out PullAuthenticationDataRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPullAuthenticationDataRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PullAuthenticationDataRequest  = default;
-                ErrorResponse                  = "The given text representation of a PullAuthenticationData request is invalid: " + e.Message;
                 return false;
             }
 

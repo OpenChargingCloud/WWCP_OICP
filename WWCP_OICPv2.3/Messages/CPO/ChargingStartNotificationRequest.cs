@@ -202,8 +202,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ChargingStartNotificationRequest?  chargingStartNotificationRequest,
-                         out String?                            errorResponse,
+                         out var chargingStartNotificationRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -214,47 +214,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return chargingStartNotificationRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a charging notification start request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomChargingStartNotificationRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a charging notification start request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingStartNotificationRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
-        public static ChargingStartNotificationRequest Parse(String                                                          Text,
-                                                             Process_Id?                                                     ProcessId                                      = null,
-
-                                                             DateTime?                                                       Timestamp                                      = null,
-                                                             CancellationToken?                                              CancellationToken                              = null,
-                                                             EventTracking_Id?                                               EventTrackingId                                = null,
-                                                             TimeSpan?                                                       RequestTimeout                                 = null,
-
-                                                             CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out ChargingStartNotificationRequest?  chargingStartNotificationRequest,
-                         out String?                            errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomChargingStartNotificationRequestParser))
-            {
-                return chargingStartNotificationRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a charging notification start request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a charging notification start request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -479,56 +440,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 ChargingStartNotificationRequest  = default;
                 ErrorResponse                     = "The given JSON representation of a charging notification start request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out ChargingStartNotificationRequest, out ErrorResponse, ..., CustomChargingStartNotificationRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a charging notification start request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ChargingStartNotificationRequest">The parsed charging notification start request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomChargingStartNotificationRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
-        public static Boolean TryParse(String                                                          Text,
-                                       out ChargingStartNotificationRequest?                           ChargingStartNotificationRequest,
-                                       out String?                                                     ErrorResponse,
-                                       Process_Id?                                                     ProcessId                                      = null,
-
-                                       DateTime?                                                       Timestamp                                      = null,
-                                       CancellationToken?                                              CancellationToken                              = null,
-                                       EventTracking_Id?                                               EventTrackingId                                = null,
-                                       TimeSpan?                                                       RequestTimeout                                 = null,
-
-                                       CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out ChargingStartNotificationRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomChargingStartNotificationRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                ChargingStartNotificationRequest  = default;
-                ErrorResponse                     = "The given text representation of a charging notification start request is invalid: " + e.Message;
                 return false;
             }
 

@@ -195,8 +195,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(JSON,
                          OperatorIdURL,
-                         out AuthorizeStopRequest?  auhorizeStopRequest,
-                         out String?                errorResponse,
+                         out var auhorizeStopRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -207,50 +207,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return auhorizeStopRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of an AuthorizeStop request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, OperatorIdURL, ..., CustomAuthorizeStopRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an AuthorizeStop request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop JSON objects.</param>
-        public static AuthorizeStopRequest Parse(String                                              Text,
-                                                 Operator_Id                                         OperatorIdURL,
-                                                 Process_Id?                                         ProcessId                          = null,
-
-                                                 DateTime?                                           Timestamp                          = null,
-                                                 CancellationToken?                                  CancellationToken                  = null,
-                                                 EventTracking_Id?                                   EventTrackingId                    = null,
-                                                 TimeSpan?                                           RequestTimeout                     = null,
-
-                                                 CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         OperatorIdURL,
-                         out AuthorizeStopRequest?  auhorizeStopRequest,
-                         out String?                errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomAuthorizeStopRequestParser))
-            {
-                return auhorizeStopRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of an AuthorizeStop request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of an AuthorizeStop request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -414,59 +372,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 AuthorizeStopRequest  = default;
                 ErrorResponse         = "The given JSON representation of an AuthorizeStop request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, OperatorIdURL, out AuthorizeStopRequest, out ErrorResponse, ..., CustomAuthorizeStopRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an AuthorizeStop request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="OperatorIdURL">The EVSE operator identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="AuthorizeStopRequest">The parsed AuthorizeStop request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
-        public static Boolean TryParse(String                                              Text,
-                                       Operator_Id                                         OperatorIdURL,
-                                       out AuthorizeStopRequest?                           AuthorizeStopRequest,
-                                       out String?                                         ErrorResponse,
-                                       Process_Id?                                         ProcessId                          = null,
-
-                                       DateTime?                                           Timestamp                          = null,
-                                       CancellationToken?                                  CancellationToken                  = null,
-                                       EventTracking_Id?                                   EventTrackingId                    = null,
-                                       TimeSpan?                                           RequestTimeout                     = null,
-
-                                       CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                OperatorIdURL,
-                                out AuthorizeStopRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomAuthorizeStopRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                AuthorizeStopRequest  = default;
-                ErrorResponse         = "The given text representation of an AuthorizeStop request is invalid: " + e.Message;
                 return false;
             }
 

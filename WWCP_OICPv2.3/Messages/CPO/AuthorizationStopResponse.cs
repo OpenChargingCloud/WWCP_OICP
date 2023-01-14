@@ -773,8 +773,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             if (TryParse(Request,
                          JSON,
-                         out AuthorizationStopResponse?  authorizationStopResponse,
-                         out String?                     errorResponse,
+                         out var authorizationStopResponse,
+                         out var errorResponse,
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
@@ -785,50 +785,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return authorizationStopResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a AuthorizationStop response is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomAuthorizationStopResponseParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a AuthorizationStop response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
-        public static AuthorizationStopResponse Parse(AuthorizeStopRequest                                     Request,
-                                                      String                                                   Text,
-                                                      DateTime?                                                ResponseTimestamp                       = null,
-                                                      EventTracking_Id?                                        EventTrackingId                         = null,
-                                                      TimeSpan?                                                Runtime                                 = null,
-                                                      Process_Id?                                              ProcessId                               = null,
-                                                      HTTPResponse?                                            HTTPResponse                            = null,
-                                                      CustomJObjectParserDelegate<AuthorizationStopResponse>?  CustomAuthorizationStopResponseParser   = null)
-        {
-
-            if (TryParse(Request,
-                         Text,
-                         out AuthorizationStopResponse?  authorizationStopResponse,
-                         out String?                     errorResponse,
-                         ResponseTimestamp,
-                         EventTrackingId,
-                         Runtime,
-                         ProcessId,
-                         HTTPResponse,
-                         CustomAuthorizationStopResponseParser))
-            {
-                return authorizationStopResponse!;
-            }
-
-            throw new ArgumentException("The given text representation of a AuthorizationStop response is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a AuthorizationStop response is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -987,59 +945,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 AuthorizationStopResponse  = default;
                 ErrorResponse              = "The given JSON representation of a AuthorizationStop response is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out AuthorizationStopResponse, out ErrorResponse, CustomAuthorizationStopResponseParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a AuthorizationStop response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="AuthorizationStopResponse">The parsed AuthorizationStop response.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
-        public static Boolean TryParse(AuthorizeStopRequest                                     Request,
-                                       String                                                   Text,
-                                       out AuthorizationStopResponse?                           AuthorizationStopResponse,
-                                       out String?                                              ErrorResponse,
-                                       DateTime?                                                ResponseTimestamp                       = null,
-                                       EventTracking_Id?                                        EventTrackingId                         = null,
-                                       TimeSpan?                                                Runtime                                 = null,
-                                       Process_Id?                                              ProcessId                               = null,
-                                       HTTPResponse?                                            HTTPResponse                            = null,
-                                       CustomJObjectParserDelegate<AuthorizationStopResponse>?  CustomAuthorizationStopResponseParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(Request,
-                                JObject.Parse(Text),
-                                out AuthorizationStopResponse,
-                                out ErrorResponse,
-                                ResponseTimestamp,
-                                EventTrackingId,
-                                Runtime,
-                                ProcessId,
-                                HTTPResponse,
-                                CustomAuthorizationStopResponseParser);
-
-            }
-            catch (Exception e)
-            {
-                AuthorizationStopResponse  = default;
-                ErrorResponse              = "The given text representation of a AuthorizationStop response is invalid: " + e.Message;
                 return false;
             }
 

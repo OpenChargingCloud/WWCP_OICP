@@ -168,8 +168,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ResponseTimestamp,
                          EventTrackingId,
                          Runtime,
-                         out PullPricingProductDataResponse?  pullPricingProductDataResponse,
-                         out String?                          errorResponse,
+                         out var pullPricingProductDataResponse,
+                         out var errorResponse,
                          ProcessId,
                          HTTPResponse,
                          CustomPullPricingProductDataResponseParser))
@@ -177,50 +177,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pullPricingProductDataResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullPricingProductData response is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomPullPricingProductDataResponseParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a PullPricingProductData response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomPullPricingProductDataResponseParser">A delegate to parse custom PullPricingProductData response JSON objects.</param>
-        public static PullPricingProductDataResponse Parse(PullPricingProductDataRequest                                 Request,
-                                                           String                                                        Text,
-                                                           DateTime                                                      ResponseTimestamp,
-                                                           EventTracking_Id                                              EventTrackingId,
-                                                           TimeSpan                                                      Runtime,
-                                                           Process_Id?                                                   ProcessId                                    = null,
-                                                           HTTPResponse?                                                 HTTPResponse                                 = null,
-                                                           CustomJObjectParserDelegate<PullPricingProductDataResponse>?  CustomPullPricingProductDataResponseParser   = null)
-        {
-
-            if (TryParse(Request,
-                         Text,
-                         ResponseTimestamp,
-                         EventTrackingId,
-                         Runtime,
-                         out PullPricingProductDataResponse?  pullPricingProductDataResponse,
-                         out String?                          errorResponse,
-                         ProcessId,
-                         HTTPResponse,
-                         CustomPullPricingProductDataResponseParser))
-            {
-                return pullPricingProductDataResponse!;
-            }
-
-            throw new ArgumentException("The given text representation of a PullPricingProductData response is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a PullPricingProductData response is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -475,59 +433,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PullPricingProductDataResponse  = default;
                 ErrorResponse                   = "The given JSON representation of a PullPricingProductData response is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PullPricingProductDataResponse, out ErrorResponse, CustomPullPricingProductDataResponseParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a PullPricingProductData response.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="PullPricingProductDataResponse">The parsed PullPricingProductData response.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomPullPricingProductDataResponseParser">A delegate to parse custom PullPricingProductData response JSON objects.</param>
-        public static Boolean TryParse(PullPricingProductDataRequest                                 Request,
-                                       String                                                        Text,
-                                       DateTime                                                      ResponseTimestamp,
-                                       EventTracking_Id                                              EventTrackingId,
-                                       TimeSpan                                                      Runtime,
-                                       out PullPricingProductDataResponse?                           PullPricingProductDataResponse,
-                                       out String?                                                   ErrorResponse,
-                                       Process_Id?                                                   ProcessId                                    = null,
-                                       HTTPResponse?                                                 HTTPResponse                                 = null,
-                                       CustomJObjectParserDelegate<PullPricingProductDataResponse>?  CustomPullPricingProductDataResponseParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(Request,
-                                JObject.Parse(Text),
-                                ResponseTimestamp,
-                                EventTrackingId,
-                                Runtime,
-                                out PullPricingProductDataResponse,
-                                out ErrorResponse,
-                                ProcessId,
-                                HTTPResponse,
-                                CustomPullPricingProductDataResponseParser);
-
-            }
-            catch (Exception e)
-            {
-                PullPricingProductDataResponse  = default;
-                ErrorResponse                   = "The given text representation of a PullPricingProductData response is invalid: " + e.Message;
                 return false;
             }
 

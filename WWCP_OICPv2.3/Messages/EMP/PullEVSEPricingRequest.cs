@@ -146,8 +146,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PullEVSEPricingRequest?  pullEVSEPricingRequest,
-                         out String?                  errorResponse,
+                         out var pullEVSEPricingRequest,
+                         out var errorResponse,
                          ProcessId,
                          Page,
                          Size,
@@ -161,50 +161,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pullEVSEPricingRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEPricing request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomPullEVSEPricingRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a PullEVSEPricing request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomPullEVSEPricingRequestParser">A delegate to parse custom PullEVSEPricing request JSON objects.</param>
-        public static PullEVSEPricingRequest Parse(String                                                Text,
-                                                   Process_Id?                                           ProcessId                            = null,
-                                                   UInt32?                                               Page                                 = null,
-                                                   UInt32?                                               Size                                 = null,
-                                                   IEnumerable<String>?                                  SortOrder                            = null,
-
-                                                   DateTime?                                             Timestamp                            = null,
-                                                   CancellationToken?                                    CancellationToken                    = null,
-                                                   EventTracking_Id?                                     EventTrackingId                      = null,
-                                                   TimeSpan?                                             RequestTimeout                       = null,
-
-                                                   CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out PullEVSEPricingRequest?  pullEVSEPricingRequest,
-                         out String?                  errorResponse,
-                         ProcessId,
-                         Page,
-                         Size,
-                         SortOrder,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPullEVSEPricingRequestParser))
-            {
-                return pullEVSEPricingRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a PullEVSEPricing request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a PullEVSEPricing request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -321,59 +279,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PullEVSEPricingRequest  = default;
                 ErrorResponse           = "The given JSON representation of a PullEVSEPricing request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PullEVSEPricingRequest, out ErrorResponse, ..., CustomPullEVSEPricingRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a PullEVSEPricing request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PullEVSEPricingRequest">The parsed PullEVSEPricing request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomPullEVSEPricingRequestParser">A delegate to parse custom PullEVSEPricing request JSON objects.</param>
-        public static Boolean TryParse(String                                                Text,
-                                       out PullEVSEPricingRequest?                           PullEVSEPricingRequest,
-                                       out String?                                           ErrorResponse,
-                                       Process_Id?                                           ProcessId                            = null,
-                                       UInt32?                                               Page                                 = null,
-                                       UInt32?                                               Size                                 = null,
-                                       IEnumerable<String>?                                  SortOrder                            = null,
-
-                                       DateTime?                                             Timestamp                            = null,
-                                       CancellationToken?                                    CancellationToken                    = null,
-                                       EventTracking_Id?                                     EventTrackingId                      = null,
-                                       TimeSpan?                                             RequestTimeout                       = null,
-
-                                       CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out PullEVSEPricingRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Page,
-                                Size,
-                                SortOrder,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPullEVSEPricingRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PullEVSEPricingRequest  = default;
-                ErrorResponse           = "The given text representation of a PullEVSEPricing request is invalid: " + e.Message;
                 return false;
             }
 

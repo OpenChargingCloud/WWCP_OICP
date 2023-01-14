@@ -118,8 +118,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PullEVSEStatusByOperatorIdRequest?  pullEVSEStatusResponse,
-                         out String?                             errorResponse,
+                         out var pullEVSEStatusResponse,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -130,44 +130,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pullEVSEStatusResponse!;
             }
 
-            throw new ArgumentException("The given JSON representation of a PullEVSEStatusByOperatorId request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomPullEVSEStatusByOperatorIdRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a PullEVSEStatusByOperatorId request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId request JSON objects.</param>
-        public static PullEVSEStatusByOperatorIdRequest Parse(String                                                           Text,
-                                                              Process_Id?                                                      ProcessId                                       = null,
-
-                                                              DateTime?                                                        Timestamp                                       = null,
-                                                              CancellationToken?                                               CancellationToken                               = null,
-                                                              EventTracking_Id?                                                EventTrackingId                                 = null,
-                                                              TimeSpan?                                                        RequestTimeout                                  = null,
-
-                                                              CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>?  CustomPullEVSEStatusByOperatorIdRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out PullEVSEStatusByOperatorIdRequest?  pullEVSEStatusResponse,
-                         out String?                             errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPullEVSEStatusByOperatorIdRequestParser))
-            {
-                return pullEVSEStatusResponse!;
-            }
-
-            throw new ArgumentException("The given text representation of a PullEVSEStatusByOperatorId request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a PullEVSEStatusByOperatorId request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -261,53 +225,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PullEVSEStatusByOperatorIdRequest  = default;
                 ErrorResponse                      = "The given JSON representation of a PullEVSEStatusByOperatorId request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PullEVSEStatusByOperatorIdRequest, out ErrorResponse, ..., CustomPullEVSEStatusByOperatorIdRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a PullEVSEStatusByOperatorId request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PullEVSEStatusByOperatorIdRequest">The parsed PullEVSEStatusByOperatorId request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="CustomPullEVSEStatusByOperatorIdRequestParser">A delegate to parse custom PullEVSEStatusByOperatorId request JSON objects.</param>
-        public static Boolean TryParse(String                                                           Text,
-                                       out PullEVSEStatusByOperatorIdRequest?                           PullEVSEStatusByOperatorIdRequest,
-                                       out String?                                                      ErrorResponse,
-                                       Process_Id?                                                      ProcessId                                       = null,
-
-                                       DateTime?                                                        Timestamp                                       = null,
-                                       CancellationToken?                                               CancellationToken                               = null,
-                                       EventTracking_Id?                                                EventTrackingId                                 = null,
-                                       TimeSpan?                                                        RequestTimeout                                  = null,
-
-                                       CustomJObjectParserDelegate<PullEVSEStatusByOperatorIdRequest>?  CustomPullEVSEStatusByOperatorIdRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out PullEVSEStatusByOperatorIdRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPullEVSEStatusByOperatorIdRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PullEVSEStatusByOperatorIdRequest  = default;
-                ErrorResponse                      = "The given text representation of a PullEVSEStatusByOperatorId request is invalid: " + e.Message;
                 return false;
             }
 

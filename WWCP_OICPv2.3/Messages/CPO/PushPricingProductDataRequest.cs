@@ -142,8 +142,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PushPricingProductDataRequest?  pushEVSEDataRequest,
-                         out String?                         errorResponse,
+                         out var pushEVSEDataRequest,
+                         out var errorResponse,
                          ProcessId,
                          Timestamp,
                          CancellationToken,
@@ -154,47 +154,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return pushEVSEDataRequest!;
             }
 
-            throw new ArgumentException("The given JSON representation of a push pricing product data request is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, ..., CustomPushPricingProductDataRequestParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of a push pricing product data request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushPricingProductDataRequestParser">A delegate to parse custom push pricing product data request JSON objects.</param>
-        public static PushPricingProductDataRequest Parse(String                                                       Text,
-                                                          Process_Id?                                                  ProcessId                                   = null,
-
-                                                          DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken?                                           CancellationToken                           = null,
-                                                          EventTracking_Id?                                            EventTrackingId                             = null,
-                                                          TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out PushPricingProductDataRequest?  pushEVSEDataRequest,
-                         out String?                         errorResponse,
-                         ProcessId,
-                         Timestamp,
-                         CancellationToken,
-                         EventTrackingId,
-                         RequestTimeout,
-                         CustomPushPricingProductDataRequestParser))
-            {
-                return pushEVSEDataRequest!;
-            }
-
-            throw new ArgumentException("The given text representation of a push pricing product data request is invalid: " + errorResponse, nameof(Text));
+            throw new ArgumentException("The given JSON representation of a push pricing product data request is invalid: " + errorResponse,
+                                        nameof(JSON));
 
         }
 
@@ -290,56 +251,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 PushPricingProductDataRequest  = default;
                 ErrorResponse        = "The given JSON representation of a push pricing product data request is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out PushPricingProductDataRequest, out ErrorResponse, ..., CustomPushPricingProductDataRequestParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of a push pricing product data request.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="PushPricingProductDataRequest">The parsed push pricing product data request.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="CustomPushPricingProductDataRequestParser">A delegate to parse custom push pricing product data request JSON objects.</param>
-        public static Boolean TryParse(String                                                       Text,
-                                       out PushPricingProductDataRequest?                           PushPricingProductDataRequest,
-                                       out String?                                                  ErrorResponse,
-                                       Process_Id?                                                  ProcessId                                   = null,
-
-                                       DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken?                                           CancellationToken                           = null,
-                                       EventTracking_Id?                                            EventTrackingId                             = null,
-                                       TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out PushPricingProductDataRequest,
-                                out ErrorResponse,
-                                ProcessId,
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout,
-                                CustomPushPricingProductDataRequestParser);
-
-            }
-            catch (Exception e)
-            {
-                PushPricingProductDataRequest  = default;
-                ErrorResponse                  = "The given text representation of a push pricing product data request is invalid: " + e.Message;
                 return false;
             }
 
