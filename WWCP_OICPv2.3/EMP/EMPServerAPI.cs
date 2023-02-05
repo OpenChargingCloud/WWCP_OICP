@@ -797,7 +797,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #region Try to parse OperatorId URL parameter
 
-                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Operator_Id operatorId))
+                                      if (Request.ParsedURLParameters.Length != 1 || !Operator_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out var operatorId))
                                       {
 
                                           Counters.AuthorizeStart.IncRequests_Error();
