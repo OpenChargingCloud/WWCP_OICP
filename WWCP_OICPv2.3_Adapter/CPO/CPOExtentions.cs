@@ -65,7 +65,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       I18NString                                                   Description,
                                       OICPv2_3.CPO.CPORoaming                                      CPORoaming,
 
-                                      Func<EVSE_Id, OICPv2_3.EVSE_Id>?                             CustomEVSEIdConverter                           = null,
+                                      OICPv2_3.WWCPEVSEId_2_EVSEId_Delegate?                       CustomEVSEIdConverter                           = null,
                                       OICPv2_3.EVSE2EVSEDataRecordDelegate?                        EVSE2EVSEDataRecord                             = null,
                                       OICPv2_3.EVSEStatusUpdate2EVSEStatusRecordDelegate?          EVSEStatusUpdate2EVSEStatusRecord               = null,
                                       OICPv2_3.WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,
@@ -98,56 +98,51 @@ namespace cloud.charging.open.protocols.WWCP
 
             #region Initial checks
 
-            if (Id == null)
-                throw new ArgumentNullException(nameof(Id),              "The given unique roaming provider identification must not be null!");
-
             if (Name.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
-
-            if (RoamingNetwork == null)
-                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
-
-            if (CPORoaming == null)
-                throw new ArgumentNullException(nameof(CPORoaming),      "The given CPORoaming must not be null!");
+                throw new ArgumentNullException(nameof(Name), "The given roaming provider name must not be null or empty!");
 
             #endregion
 
-            var NewRoamingProvider = new OICPv2_3.CPO.CPOAdapter(Id,
-                                                                 Name,
-                                                                 Description,
-                                                                 RoamingNetwork,
-                                                                 CPORoaming,
+            var newRoamingProvider = new OICPv2_3.CPO.CPOAdapter(
 
-                                                                 CustomEVSEIdConverter,
-                                                                 EVSE2EVSEDataRecord,
-                                                                 EVSEStatusUpdate2EVSEStatusRecord,
-                                                                 WWCPChargeDetailRecord2OICPChargeDetailRecord,
+                                         Id,
+                                         Name,
+                                         Description,
+                                         RoamingNetwork,
+                                         CPORoaming,
 
-                                                                 DefaultOperator,
-                                                                 DefaultOperatorIdFormat,
-                                                                 OperatorNameSelector,
+                                         CustomEVSEIdConverter,
+                                         EVSE2EVSEDataRecord,
+                                         EVSEStatusUpdate2EVSEStatusRecord,
+                                         WWCPChargeDetailRecord2OICPChargeDetailRecord,
 
-                                                                 IncludeEVSEIds,
-                                                                 IncludeEVSEs,
-                                                                 ChargeDetailRecordFilter,
+                                         DefaultOperator,
+                                         DefaultOperatorIdFormat,
+                                         OperatorNameSelector,
 
-                                                                 ServiceCheckEvery,
-                                                                 StatusCheckEvery,
-                                                                 CDRCheckEvery,
+                                         IncludeEVSEIds,
+                                         IncludeEVSEs,
+                                         ChargeDetailRecordFilter,
 
-                                                                 DisablePushData,
-                                                                 DisablePushStatus,
-                                                                 DisableAuthentication,
-                                                                 DisableSendChargeDetailRecords,
+                                         ServiceCheckEvery,
+                                         StatusCheckEvery,
+                                         CDRCheckEvery,
 
-                                                                 EllipticCurve,
-                                                                 PrivateKey,
-                                                                 PublicKeyCertificates);
+                                         DisablePushData,
+                                         DisablePushStatus,
+                                         DisableAuthentication,
+                                         DisableSendChargeDetailRecords,
 
-            OICPConfigurator?.Invoke(NewRoamingProvider);
+                                         EllipticCurve,
+                                         PrivateKey,
+                                         PublicKeyCertificates
+
+                                     );
+
+            OICPConfigurator?.Invoke(newRoamingProvider);
 
             return RoamingNetwork.
-                       CreateNewRoamingProvider(NewRoamingProvider,
+                       CreateNewRoamingProvider(newRoamingProvider,
                                                 Configurator) as OICPv2_3.CPO.CPOAdapter;
 
         }

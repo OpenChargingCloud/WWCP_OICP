@@ -105,7 +105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
 
-        public Func<WWCP.EVSE_Id, EVSE_Id>?                        CustomEVSEIdConverter                            { get; }
+        public WWCPEVSEId_2_EVSEId_Delegate?                       CustomEVSEIdConverter                            { get; }
 
         /// <summary>
         /// An optional default charging station operator.
@@ -248,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.RoamingNetwork                                 RoamingNetwork,
                           CPORoaming                                          CPORoaming,
 
-                          Func<WWCP.EVSE_Id, EVSE_Id>?                        CustomEVSEIdConverter                           = null,
+                          WWCPEVSEId_2_EVSEId_Delegate?                       CustomEVSEIdConverter                           = null,
                           EVSE2EVSEDataRecordDelegate?                        EVSE2EVSEDataRecord                             = null,
                           EVSEStatusUpdate2EVSEStatusRecordDelegate?          EVSEStatusUpdate2EVSEStatusRecord               = null,
                           WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2OICPChargeDetailRecord   = null,

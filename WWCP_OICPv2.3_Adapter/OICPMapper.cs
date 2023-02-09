@@ -25,20 +25,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
+    /// A delegate which allows you to modify the convertion from WWCP EVSE identifications to OICP EVSE identifications.
+    /// </summary>
+    /// <param name="EVSEId">A WWCP EVSE identification.</param>
+    public delegate EVSE_Id                  WWCPEVSEId_2_EVSEId_Delegate                     (WWCP.EVSE_Id             EVSEId);
+
+    /// <summary>
     /// A delegate which allows you to modify the convertion from WWCP EVSEs to EVSE data records.
     /// </summary>
     /// <param name="EVSE">A WWCP EVSE.</param>
     /// <param name="EVSEDataRecord">An EVSE data record.</param>
-    public delegate EVSEDataRecord      EVSE2EVSEDataRecordDelegate                      (WWCP.IEVSE               EVSE,
-                                                                                          EVSEDataRecord           EVSEDataRecord);
+    public delegate EVSEDataRecord           EVSE2EVSEDataRecordDelegate                      (WWCP.IEVSE               EVSE,
+                                                                                               EVSEDataRecord           EVSEDataRecord);
 
     /// <summary>
     /// A delegate which allows you to modify the convertion from WWCP EVSE status updates to EVSE status records.
     /// </summary>
     /// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
     /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
-    public delegate EVSEStatusRecord    EVSEStatusUpdate2EVSEStatusRecordDelegate        (WWCP.EVSEStatusUpdate    EVSEStatusUpdate,
-                                                                                          EVSEStatusRecord         EVSEStatusRecord);
+    public delegate EVSEStatusRecord         EVSEStatusUpdate2EVSEStatusRecordDelegate        (WWCP.EVSEStatusUpdate    EVSEStatusUpdate,
+                                                                                               EVSEStatusRecord         EVSEStatusRecord);
+
+    /// <summary>
+    /// A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.
+    /// </summary>
+    /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
+    /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
+    public delegate ChargeDetailRecord       WWCPChargeDetailRecord2ChargeDetailRecordDelegate(WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
+                                                                                               ChargeDetailRecord       OCIPChargeDetailRecord);
 
 
     /// <summary>
@@ -57,15 +71,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public delegate WWCP.EVSEStatusUpdate    EVSEStatusRecord2EVSEStatusUpdateDelegate        (EVSEStatusRecord         EVSEStatusRecord,
                                                                                                WWCP.EVSEStatusUpdate    EVSEStatusUpdate);
 
-
-    /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.
-    /// </summary>
-    /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
-    /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
-    public delegate ChargeDetailRecord  WWCPChargeDetailRecord2ChargeDetailRecordDelegate     (WWCP.ChargeDetailRecord  WWCPChargeDetailRecord,
-                                                                                               ChargeDetailRecord       OCIPChargeDetailRecord);
-
     /// <summary>
     /// A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.
     /// </summary>
@@ -74,9 +79,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public delegate WWCP.ChargeDetailRecord  ChargeDetailRecord2WWCPChargeDetailRecordDelegate(ChargeDetailRecord       OICPChargeDetailRecord,
                                                                                                WWCP.ChargeDetailRecord  WWCPChargeDetailRecord);
 
+
     /// <summary>
-    /// Helper methods to map OICP data type values to
-    /// WWCP data type values and vice versa.
+    /// Helper methods to map OICP data structures to
+    /// WWCP data structures and vice versa.
     /// </summary>
     public static class OICPMapper
     {
@@ -612,16 +618,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this EVSEId, CustomConverter = null)
 
-        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id             EVSEId,
-                                      Func<WWCP.EVSE_Id, EVSE_Id>?  CustomConverter   = null)
+        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id              EVSEId,
+                                      WWCPEVSEId_2_EVSEId_Delegate?  CustomConverter   = null)
 
             => CustomConverter is not null
                    ? CustomConverter(EVSEId)
                    : EVSE_Id.TryParse(EVSEId.ToString());
 
 
-        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id?            EVSEId,
-                                      Func<WWCP.EVSE_Id, EVSE_Id>?  CustomConverter   = null)
+        public static EVSE_Id? ToOICP(this WWCP.EVSE_Id?             EVSEId,
+                                      WWCPEVSEId_2_EVSEId_Delegate?  CustomConverter   = null)
 
             => EVSEId.HasValue
                    ? EVSEId.Value.ToOICP(CustomConverter)
