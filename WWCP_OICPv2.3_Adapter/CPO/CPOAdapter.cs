@@ -25,6 +25,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+
 using cloud.charging.open.protocols.WWCP;
 
 #endregion
@@ -938,8 +939,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (EVSEs is null)
-                EVSEs = Array.Empty<WWCP.EVSE>();
+            EVSEs ??= Array.Empty<WWCP.EVSE>();
 
 
             if (!Timestamp.HasValue)
@@ -948,8 +948,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId is null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
@@ -961,8 +960,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Get effective list of EVSEs/EVSEDataRecords to upload
 
-            var Warnings         = new List<Warning>();
-            var EVSEDataRecords  = new List<EVSEDataRecord>();
+            var warnings         = new List<Warning>();
+            var evseDataRecords  = new List<EVSEDataRecord>();
 
             foreach (var evse in EVSEs)
             {
@@ -975,7 +974,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     if (IncludeEVSEs(evse) && IncludeEVSEIds(evse.Id))
                         // WWCP EVSE will be added as internal data "WWCP.EVSE"...
-                        EVSEDataRecords.Add(evse.ToOICP(evse.Operator.Name.FirstText(),
+                        evseDataRecords.Add(evse.ToOICP(evse.Operator.Name.FirstText(),
                                                         EVSE2EVSEDataRecord));
 
                     else
@@ -985,7 +984,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 catch (Exception e)
                 {
                     DebugX.Log(e.Message + (e.InnerException != null ? " " + e.InnerException.Message : ""));
-                    Warnings.Add(Warning.Create(I18NString.Create(Languages.en,
+                    warnings.Add(Warning.Create(I18NString.Create(Languages.en,
                                                                   e.Message + (e.InnerException != null ? " " + e.InnerException.Message : "")),
                                                 evse));
                 }
@@ -1008,8 +1007,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                   EventTrackingId,
                                                   RoamingNetwork.Id,
                                                   ServerAction,
-                                                  EVSEDataRecords,
-                                                  Warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
+                                                  evseDataRecords,
+                                                  warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
                                                   RequestTimeout);
 
             }
@@ -1020,11 +1019,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            DateTime Endtime;
-            TimeSpan Runtime;
+            DateTime endtime;
+            TimeSpan runtime;
 
 
-            if (EVSEDataRecords.Count > 0)
+            if (evseDataRecords.Count > 0)
             {
 
                 var operatorId  = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
@@ -1032,7 +1031,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 var response    = await CPORoaming.PushEVSEData(
                                         new PushEVSEDataRequest(
                                             new OperatorEVSEData(
-                                                EVSEDataRecords,
+                                                evseDataRecords,
                                                 operatorId.Value,
                                                 DefaultOperatorName
                                             ),
@@ -1053,16 +1052,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (response.Response.Result == true)
                     {
 
-                        Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                        Runtime  = Endtime - startTime;
+                        endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                        runtime  = endtime - startTime;
                         result   = WWCP.PushEVSEDataResult.Success(Id,
                                                                    this,
-                                                                   EVSEDataRecords.Select(evseDataRecord => evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE),
+                                                                   evseDataRecords.Select(evseDataRecord => evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE),
                                                                    response.Response.StatusCode.Description,
                                                                    response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                       ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
-                                                                       : Warnings,
-                                                                   Runtime);
+                                                                       ? warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
+                                                                       : warnings,
+                                                                   runtime);
 
                     }
 
@@ -1078,14 +1077,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             #region Add warnings...
 
-                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, ServerAction.ToString() + " of " + EVSEDataRecords.Count + " EVSEs failed!")));
-                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.Code.ToString())));
-                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.Description)));
+                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, ServerAction.ToString() + " of " + evseDataRecords.Count + " EVSEs failed!")));
+                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.Code.ToString())));
+                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.Description)));
 
                             if (response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty())
-                                Warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo)));
+                                warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo)));
 
-                            Warnings.Add(Warning.Create(I18NString.Create(Languages.en, "Will try to fix this issue via a 'fullLoad' of all EVSEs!")));
+                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, "Will try to fix this issue via a 'fullLoad' of all EVSEs!")));
 
                             #endregion
 
@@ -1107,7 +1106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             catch (Exception e)
                                                             {
                                                                 DebugX.Log(e.Message);
-                                                                Warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evse));
+                                                                warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evse));
                                                             }
 
                                                             return null;
@@ -1141,8 +1140,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             #region Result mapping
 
-                            Endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                            Runtime = Endtime - startTime;
+                            endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                            runtime = endtime - startTime;
 
                             if (FullLoadResponse.IsSuccess())
                             {
@@ -1150,34 +1149,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (FullLoadResponse.Response.Result == true)
                                     result = WWCP.PushEVSEDataResult.Success(Id,
                                                                              this,
-                                                                             EVSEDataRecords.Select(evseDataRecord => evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE),
+                                                                             evseDataRecords.Select(evseDataRecord => evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE),
                                                                              FullLoadResponse.Response.StatusCode.Description,
                                                                              FullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                                 ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.Response.StatusCode.AdditionalInfo))
-                                                                                 : Warnings,
-                                                                             Runtime);
+                                                                                 ? warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.Response.StatusCode.AdditionalInfo))
+                                                                                 : warnings,
+                                                                             runtime);
 
                                 else
                                     result = WWCP.PushEVSEDataResult.Error(Id,
                                                                            this,
-                                                                           EVSEDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
+                                                                           evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
                                                                            FullLoadResponse.Response.StatusCode.Description,
                                                                            FullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                               ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.Response.StatusCode.AdditionalInfo))
-                                                                               : Warnings,
-                                                                           Runtime);
+                                                                               ? warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.Response.StatusCode.AdditionalInfo))
+                                                                               : warnings,
+                                                                           runtime);
 
                             }
 
                             else
                                 result = WWCP.PushEVSEDataResult.Error(Id,
                                                                        this,
-                                                                       EVSEDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
+                                                                       evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
                                                                        //FullLoadResponse.HTTPStatusCode.ToString(),
                                                                        //FullLoadResponse.HTTPBody != null
                                                                        //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.HTTPBody.ToUTF8String()))
                                                                        //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
-                                                                       Runtime: Runtime);
+                                                                       Runtime: runtime);
 
                             #endregion
 
@@ -1187,16 +1186,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else
                         {
 
-                            Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                            Runtime  = Endtime - startTime;
+                            endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                            runtime  = endtime - startTime;
                             result   = WWCP.PushEVSEDataResult.Error(Id,
                                                                      this,
-                                                                     EVSEDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
+                                                                     evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
                                                                      //response.HTTPStatusCode.ToString(),
                                                                      //response.HTTPBody != null
                                                                      //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
                                                                      //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
-                                                                     Runtime: Runtime);
+                                                                     Runtime: runtime);
 
                         }
 
@@ -1206,16 +1205,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 else
                 {
 
-                    Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                    Runtime  = Endtime - startTime;
+                    endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                    runtime  = endtime - startTime;
                     result   = WWCP.PushEVSEDataResult.Error(Id,
                                                              this,
-                                                             EVSEDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
+                                                             evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord.GetInternalData("WWCP.EVSE") as WWCP.EVSE, PushSingleDataResultTypes.Error)),
                                                              //response.HTTPStatusCode.ToString(),
                                                              //response.HTTPBody != null
                                                              //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
                                                              //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
-                                                             Runtime: Runtime);
+                                                             Runtime: runtime);
 
                 }
 
@@ -1226,14 +1225,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             else
             {
 
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - startTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - startTime;
                 result   = WWCP.PushEVSEDataResult.NoOperation(Id,
                                                                this,
                                                                EVSEs,
                                                                "No EVSEDataRecords to push!",
-                                                               Warnings,
-                                                               Runtime);
+                                                               warnings,
+                                                               runtime);
 
             }
 
@@ -1245,17 +1244,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                OnPushEVSEDataWWCPResponse?.Invoke(Endtime,
+                OnPushEVSEDataWWCPResponse?.Invoke(endtime,
                                                    Timestamp.Value,
                                                    this,
                                                    Id,
                                                    EventTrackingId,
                                                    RoamingNetwork.Id,
                                                    ServerAction,
-                                                   EVSEDataRecords,
+                                                   evseDataRecords,
                                                    RequestTimeout,
                                                    result,
-                                                   Runtime);
+                                                   runtime);
 
             }
             catch (Exception e)
@@ -1298,8 +1297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (EVSEStatusUpdates is null)
-                EVSEStatusUpdates = Array.Empty<WWCP.EVSEStatusUpdate>();
+            EVSEStatusUpdates ??= Array.Empty<WWCP.EVSEStatusUpdate>();
 
 
             if (!Timestamp.HasValue)
@@ -1308,8 +1306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!CancellationToken.HasValue)
                 CancellationToken = new CancellationTokenSource().Token;
 
-            if (EventTrackingId is null)
-                EventTrackingId = EventTracking_Id.New;
+            EventTrackingId ??= EventTracking_Id.New;
 
             if (!RequestTimeout.HasValue)
                 RequestTimeout = CPOClient?.RequestTimeout;
@@ -1363,8 +1360,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnEVSEStatusPush event
 
-            DateTime Endtime;
-            TimeSpan Runtime;
+            DateTime endtime;
+            TimeSpan runtime;
 
             var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
@@ -1413,8 +1410,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                             RequestTimeout));
 
 
-                Endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime = Endtime - StartTime;
+                endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime = endtime - StartTime;
 
                 if (response.IsSuccess())
                 {
@@ -1426,7 +1423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                    response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
                                                                        ? warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
                                                                        : warnings,
-                                                                   Runtime);
+                                                                   runtime);
 
                     else
                         result = WWCP.PushEVSEStatusResult.Error(Id,
@@ -1436,7 +1433,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
                                                                      ? warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
                                                                      : warnings,
-                                                                 Runtime);
+                                                                 runtime);
 
                 }
                 else
@@ -1447,7 +1444,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              //response.HTTPBody != null
                                                              //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
                                                              //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
-                                                             Runtime: Runtime);
+                                                             Runtime: runtime);
 
             }
 
@@ -1456,8 +1453,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             else
             {
 
-                Endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                Runtime  = Endtime - StartTime;
+                endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                runtime  = endtime - StartTime;
                 result   = WWCP.PushEVSEStatusResult.NoOperation(Id,
                                                                  this,
                                                                  "No EVSEStatusRecords to push!",
@@ -1475,7 +1472,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                OnPushEVSEStatusWWCPResponse?.Invoke(Endtime,
+                OnPushEVSEStatusWWCPResponse?.Invoke(endtime,
                                                      Timestamp.Value,
                                                      this,
                                                      Id,
@@ -1485,7 +1482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      evseStatusList,
                                                      RequestTimeout,
                                                      result,
-                                                     Runtime);
+                                                     runtime);
 
             }
             catch (Exception e)
@@ -2083,7 +2080,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingPoolDataResult>
 
             WWCP.ISendPOIData.SetStaticData(WWCP.IChargingPool      ChargingPool,
                                             WWCP.TransmissionTypes  TransmissionType,
@@ -2132,13 +2129,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         foreach (var evse in ChargingPool.EVSEs)
                         {
 
-                            if (IncludeEVSEs == null ||
-                               (IncludeEVSEs != null && IncludeEVSEs(evse)))
+                            if (IncludeEVSEs is null ||
+                               (IncludeEVSEs is not null && IncludeEVSEs(evse)))
                             {
 
                                 EVSEsToAddQueue.Add(evse);
 
-                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery,
+                                                                   TimeSpan.FromMilliseconds(-1));
 
                             }
 
@@ -2153,22 +2151,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         DataAndStatusLock.Release();
                 }
 
-                return WWCP.PushEVSEDataResult.Enqueued(Id, this, null);
+                return lockTaken
+                           ? WWCP.PushChargingPoolDataResult.Enqueued   (Id, this, new WWCP.IChargingPool[] { ChargingPool })
+                           : WWCP.PushChargingPoolDataResult.LockTimeout(Id, this, new WWCP.IChargingPool[] { ChargingPool });
 
             }
 
             #endregion
 
-            return await PushEVSEData(ChargingPool.EVSEs,
-                                      ActionTypes.FullLoad,
-                                      null,
+            var result = await PushEVSEData(ChargingPool.EVSEs,
+                                            ActionTypes.FullLoad,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout).
 
-                                      ConfigureAwait(false);
+                                            ConfigureAwait(false);
+
+            return new WWCP.PushChargingPoolDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2305,7 +2316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingPoolDataResult>
 
             WWCP.ISendPOIData.UpdateStaticData(WWCP.IChargingPool      ChargingPool,
                                                String?                 PropertyName,
@@ -2393,22 +2404,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         DataAndStatusLock.Release();
                 }
 
-                return WWCP.PushEVSEDataResult.Enqueued(Id, this, null);
+                return WWCP.PushChargingPoolDataResult.Enqueued(Id, this, new IChargingPool[] { ChargingPool });
 
             }
 
             #endregion
 
-            return await PushEVSEData(ChargingPool.EVSEs,
-                                      ActionTypes.Update,
-                                      null,
+            var result = await PushEVSEData(ChargingPool.EVSEs,
+                                            ActionTypes.Update,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout).
 
-                                      ConfigureAwait(false);
+                                            ConfigureAwait(false);
+
+            return new WWCP.PushChargingPoolDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2426,7 +2448,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingPoolDataResult>
 
             WWCP.ISendPOIData.DeleteStaticData(WWCP.IChargingPool      ChargingPool,
                                                WWCP.TransmissionTypes  TransmissionType,
@@ -2438,14 +2460,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            return PushEVSEData(ChargingPool.EVSEs,
-                                ActionTypes.Delete,
-                                null,
+            var result = await PushEVSEData(ChargingPool.EVSEs,
+                                            ActionTypes.Delete,
+                                            null,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingPoolDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2464,7 +2497,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingPoolDataResult>
 
             WWCP.ISendPOIData.SetStaticData(IEnumerable<WWCP.IChargingPool>  ChargingPools,
                                             WWCP.TransmissionTypes           TransmissionType,
@@ -2479,18 +2512,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingPools.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingPoolDataResult.NoOperation(Id, this, ChargingPools);
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.FullLoad,
-                                      null,
+            var result = await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                            ActionTypes.FullLoad,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingPoolDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2508,7 +2552,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingPoolDataResult>
 
             WWCP.ISendPOIData.AddStaticData(IEnumerable<WWCP.IChargingPool>  ChargingPools,
                                             WWCP.TransmissionTypes           TransmissionType,
@@ -2523,18 +2567,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingPools.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingPoolDataResult.NoOperation(Id, this, ChargingPools);
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.Insert,
-                                      null,
+            var result = await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                            ActionTypes.Insert,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingPoolDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2552,7 +2607,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingPoolDataResult>
 
             WWCP.ISendPOIData.UpdateStaticData(IEnumerable<WWCP.IChargingPool>  ChargingPools,
                                                WWCP.TransmissionTypes           TransmissionType,
@@ -2567,18 +2622,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingPools.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingPoolDataResult.NoOperation(Id, this, ChargingPools);
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.Update,
-                                      null,
+            var result = await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                            ActionTypes.Update,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingPoolDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2596,7 +2662,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingPoolDataResult>
 
             WWCP.ISendPOIData.DeleteStaticData(IEnumerable<WWCP.IChargingPool>  ChargingPools,
                                                WWCP.TransmissionTypes           TransmissionType,
@@ -2611,18 +2677,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingPools.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingPoolDataResult.NoOperation(Id, this, ChargingPools);
 
             #endregion
 
-            return await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
-                                      ActionTypes.Delete,
-                                      null,
+            var result = await PushEVSEData(ChargingPools.SafeSelectMany(pool => pool.EVSEs),
+                                            ActionTypes.Delete,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingPoolDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingPoolDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2699,15 +2776,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingStationDataResult>
 
-            WWCP.ISendPOIData.SetStaticData(WWCP.IChargingStation    ChargingStation,
-                                            WWCP.TransmissionTypes   TransmissionType,
+            WWCP.ISendPOIData.SetStaticData(WWCP.IChargingStation   ChargingStation,
+                                            WWCP.TransmissionTypes  TransmissionType,
 
-                                            DateTime?                Timestamp,
-                                            CancellationToken?       CancellationToken,
-                                            EventTracking_Id?        EventTrackingId,
-                                            TimeSpan?                RequestTimeout)
+                                            DateTime?               Timestamp,
+                                            CancellationToken?      CancellationToken,
+                                            EventTracking_Id?       EventTrackingId,
+                                            TimeSpan?               RequestTimeout)
 
         {
 
@@ -2747,13 +2824,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         foreach (var evse in ChargingStation)
                         {
 
-                            if (IncludeEVSEs == null ||
-                               (IncludeEVSEs != null && IncludeEVSEs(evse)))
+                            if (IncludeEVSEs is null ||
+                               (IncludeEVSEs is not null && IncludeEVSEs(evse)))
                             {
 
                                 EVSEsToAddQueue.Add(evse);
 
-                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                                FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery,
+                                                                   TimeSpan.FromMilliseconds(-1));
 
                             }
 
@@ -2767,22 +2845,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         DataAndStatusLock.Release();
                 }
 
-                return WWCP.PushEVSEDataResult.Enqueued(Id, this, null);
+                return lockTaken
+                           ? WWCP.PushChargingStationDataResult.Enqueued   (Id, this, new WWCP.IChargingStation[] { ChargingStation })
+                           : WWCP.PushChargingStationDataResult.LockTimeout(Id, this, new WWCP.IChargingStation[] { ChargingStation });
 
             }
 
             #endregion
 
-            return await PushEVSEData(ChargingStation.EVSEs,
-                                      ActionTypes.FullLoad,
-                                      null,
+            var result = await PushEVSEData(ChargingStation.EVSEs,
+                                            ActionTypes.FullLoad,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout).
 
-                                      ConfigureAwait(false);
+                                            ConfigureAwait(false);
+
+            return new WWCP.PushChargingStationDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -2920,7 +3011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingStationDataResult>
 
             WWCP.ISendPOIData.UpdateStaticData(WWCP.IChargingStation    ChargingStation,
                                                String?                  PropertyName,
@@ -3008,22 +3099,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         DataAndStatusLock.Release();
                 }
 
-                return WWCP.PushEVSEDataResult.Enqueued(Id, this, null);
+                return lockTaken
+                           ? WWCP.PushChargingStationDataResult.Enqueued   (Id, this, new WWCP.IChargingStation[] { ChargingStation })
+                           : WWCP.PushChargingStationDataResult.LockTimeout(Id, this, new WWCP.IChargingStation[] { ChargingStation });
 
             }
 
             #endregion
 
-            return await PushEVSEData(ChargingStation,
-                                      ActionTypes.Update,
-                                      null,
+            var result = await PushEVSEData(ChargingStation.EVSEs,
+                                            ActionTypes.Update,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout).
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout).
 
-                                      ConfigureAwait(false);
+                                            ConfigureAwait(false);
+
+            return new WWCP.PushChargingStationDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -3041,7 +3145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingStationDataResult>
 
             WWCP.ISendPOIData.DeleteStaticData(WWCP.IChargingStation    ChargingStation,
                                                WWCP.TransmissionTypes   TransmissionType,
@@ -3053,14 +3157,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            return PushEVSEData(ChargingStation.EVSEs,
-                                ActionTypes.Delete,
-                                null,
+            var result = await PushEVSEData(ChargingStation.EVSEs,
+                                            ActionTypes.Delete,
+                                            null,
 
-                                Timestamp,
-                                CancellationToken,
-                                EventTrackingId,
-                                RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingStationDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -3079,7 +3194,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingStationDataResult>
 
             WWCP.ISendPOIData.SetStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
                                             WWCP.TransmissionTypes              TransmissionType,
@@ -3094,18 +3209,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingStations.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingStationDataResult.NoOperation(Id, this, ChargingStations);
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.FullLoad,
-                                      null,
+            var result = await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                            ActionTypes.FullLoad,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingStationDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -3123,7 +3249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingStationDataResult>
 
             WWCP.ISendPOIData.AddStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
                                             WWCP.TransmissionTypes              TransmissionType,
@@ -3139,18 +3265,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingStations.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingStationDataResult.NoOperation(Id, this, ChargingStations);
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.Insert,
-                                      null,
+            var result = await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                            ActionTypes.Insert,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingStationDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -3168,7 +3305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingStationDataResult>
 
             WWCP.ISendPOIData.UpdateStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
                                                WWCP.TransmissionTypes              TransmissionType,
@@ -3183,18 +3320,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingStations.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingStationDataResult.NoOperation(Id, this, ChargingStations);
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.Update,
-                                      null,
+            var result = await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                            ActionTypes.Update,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingStationDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -3212,7 +3360,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        async Task<WWCP.PushEVSEDataResult>
+        async Task<WWCP.PushChargingStationDataResult>
 
             WWCP.ISendPOIData.DeleteStaticData(IEnumerable<WWCP.IChargingStation>  ChargingStations,
                                                WWCP.TransmissionTypes              TransmissionType,
@@ -3227,18 +3375,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Initial checks
 
             if (!ChargingStations.Any())
-                return WWCP.PushEVSEDataResult.NoOperation(Id, this, null);
+                return WWCP.PushChargingStationDataResult.NoOperation(Id, this, ChargingStations);
 
             #endregion
 
-            return await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
-                                      ActionTypes.Delete,
-                                      null,
+            var result = await PushEVSEData(ChargingStations.SafeSelectMany(station => station.EVSEs),
+                                            ActionTypes.Delete,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushChargingStationDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       Array.Empty<WWCP.PushSingleChargingStationDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -3359,12 +3518,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 {
 
                     if (lockTaken &&
-                       (IncludeEVSEs == null || IncludeEVSEs(EVSE)))
+                       (IncludeEVSEs is null || IncludeEVSEs(EVSE)))
                     {
 
                         EVSEsToAddQueue.Add(EVSE);
 
-                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
+                        FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery,
+                                                           TimeSpan.FromMilliseconds(-1));
 
                     }
 
@@ -3375,20 +3535,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         DataAndStatusLock.Release();
                 }
 
-                return WWCP.PushEVSEDataResult.Enqueued(Id, this, null);
+                return lockTaken
+                           ? WWCP.PushEVSEDataResult.Enqueued   (Id, this, new WWCP.IEVSE[] { EVSE })
+                           : WWCP.PushEVSEDataResult.LockTimeout(Id, this, new WWCP.IEVSE[] { EVSE });
 
             }
 
             #endregion
 
-            return await PushEVSEData(new WWCP.IEVSE[] { EVSE },
-                                      ActionTypes.FullLoad,
-                                      null,
+            var result = await PushEVSEData(new WWCP.IEVSE[] { EVSE },
+                                            ActionTypes.FullLoad,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushEVSEDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleEVSEDataResult>(),
+                       Array.Empty<WWCP.PushSingleEVSEDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -3467,20 +3640,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         DataAndStatusLock.Release();
                 }
 
-                return WWCP.PushEVSEDataResult.Enqueued(Id, this, null);
+                return lockTaken
+                           ? WWCP.PushEVSEDataResult.Enqueued   (Id, this, new WWCP.IEVSE[] { EVSE })
+                           : WWCP.PushEVSEDataResult.LockTimeout(Id, this, new WWCP.IEVSE[] { EVSE });
 
             }
 
             #endregion
 
-            return await PushEVSEData(new WWCP.IEVSE[] { EVSE },
-                                      ActionTypes.Insert,
-                                      null,
+            var result = await PushEVSEData(new WWCP.IEVSE[] { EVSE },
+                                            ActionTypes.Insert,
+                                            null,
 
-                                      Timestamp,
-                                      CancellationToken,
-                                      EventTrackingId,
-                                      RequestTimeout);
+                                            Timestamp,
+                                            CancellationToken,
+                                            EventTrackingId,
+                                            RequestTimeout);
+
+            return new WWCP.PushEVSEDataResult(
+                       result.AuthId,
+                       this,
+                       result.Result,
+                       Array.Empty<WWCP.PushSingleEVSEDataResult>(),
+                       Array.Empty<WWCP.PushSingleEVSEDataResult>(),
+                       result.Description,
+                       result.Warnings,
+                       result.Runtime
+                   );
 
         }
 
@@ -4815,8 +5001,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            if (ChargeDetailRecords is null)
-                throw new ArgumentNullException(nameof(ChargeDetailRecords),  "The given enumeration of charge detail records must not be null!");
+            ChargeDetailRecords ??= Array.Empty<WWCP.ChargeDetailRecord>();
 
 
             if (!Timestamp.HasValue)
