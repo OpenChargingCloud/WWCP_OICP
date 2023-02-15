@@ -83,6 +83,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       TimeSpan?                                                    CDRCheckEvery                                   = null,
 
                                       Boolean                                                      DisablePushData                                 = false,
+                                      Boolean                                                      DisablePushAdminStatus                          = true,
                                       Boolean                                                      DisablePushStatus                               = false,
                                       Boolean                                                      DisableAuthentication                           = false,
                                       Boolean                                                      DisableSendChargeDetailRecords                  = false,
@@ -129,6 +130,7 @@ namespace cloud.charging.open.protocols.WWCP
                                          CDRCheckEvery,
 
                                          DisablePushData,
+                                         DisablePushAdminStatus,
                                          DisablePushStatus,
                                          DisableAuthentication,
                                          DisableSendChargeDetailRecords,
