@@ -3302,9 +3302,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         out var chargingPool))
                                     {
 
-                                        chargingPool = chargingStationOperator.CreateChargingPool(chargingPoolId.Value,
-                                                                                                  I18NString.Create(Languages.unknown,
-                                                                                                                    (chargingPoolInfo.OperatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString()) + " pool"));
+                                        chargingPool = chargingStationOperator.CreateChargingPool(
+                                                           chargingPoolId.Value,
+                                                           I18NString.Create(
+                                                               Languages.unknown,
+                                                               (chargingPoolInfo.OperatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString()) + " pool"
+                                                           )
+                                                       ).ChargingPool;
 
                                         // ToDo...
 
