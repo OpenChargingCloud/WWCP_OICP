@@ -3163,7 +3163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         if (!RoamingNetwork.TryGetChargingStationOperatorById(WWCPChargingStationOperatorId, out var wwcpChargingStationOperator))
                             wwcpChargingStationOperator = RoamingNetwork.CreateChargingStationOperator(WWCPChargingStationOperatorId.Value,
                                                                                                        I18NString.Create(Languages.unknown,
-                                                                                                                         CurrentOperatorEVSEStatus.OperatorName));
+                                                                                                                         CurrentOperatorEVSEStatus.OperatorName)).Result.ChargingStationOperator;
 
                         else
                         {
@@ -3283,7 +3283,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         chargingStationOperator = RoamingNetwork.CreateChargingStationOperator(chargingStationOperatorId.Value,
                                                                                                I18NString.Create(Languages.unknown,
-                                                                                                                 operatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString()));
+                                                                                                                 operatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString())).Result.ChargingStationOperator;
 
                     }
 
@@ -3308,7 +3308,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                Languages.unknown,
                                                                (chargingPoolInfo.OperatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString()) + " pool"
                                                            )
-                                                       ).ChargingPool;
+                                                       ).Result.ChargingPool;
 
                                         // ToDo...
 

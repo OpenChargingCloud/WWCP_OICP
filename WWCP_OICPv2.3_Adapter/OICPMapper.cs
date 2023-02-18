@@ -180,6 +180,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  chargingStationId,
                                                  null,
                                                  null,
+                                                 null,
+                                                 null,
                                                  station => {
                                                      station.DataSource   = DataSource;
                                                      station.Address      = EVSEDataRecord.Address.ToWWCP();
