@@ -20,6 +20,7 @@
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -3161,9 +3162,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (!RoamingNetwork.TryGetChargingStationOperatorById(WWCPChargingStationOperatorId, out var wwcpChargingStationOperator))
-                            wwcpChargingStationOperator = RoamingNetwork.CreateChargingStationOperator(WWCPChargingStationOperatorId.Value,
-                                                                                                       I18NString.Create(Languages.unknown,
-                                                                                                                         CurrentOperatorEVSEStatus.OperatorName)).Result.ChargingStationOperator;
+                            wwcpChargingStationOperator = RoamingNetwork.AddChargingStationOperator(
+                                                              new ChargingStationOperator(
+                                                                  WWCPChargingStationOperatorId.Value,
+                                                                  RoamingNetwork,
+                                                                  I18NString.Create(
+                                                                      Languages.unknown,
+                                                                      CurrentOperatorEVSEStatus.OperatorName
+                                                                  )
+                                                              )
+                                                          ).Result.ChargingStationOperator;
 
                         else
                         {
@@ -3281,9 +3289,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                           out var chargingStationOperator))
                     {
 
-                        chargingStationOperator = RoamingNetwork.CreateChargingStationOperator(chargingStationOperatorId.Value,
-                                                                                               I18NString.Create(Languages.unknown,
-                                                                                                                 operatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString())).Result.ChargingStationOperator;
+                        chargingStationOperator = RoamingNetwork.AddChargingStationOperator(
+                                                      new ChargingStationOperator(
+                                                          chargingStationOperatorId.Value,
+                                                          RoamingNetwork,
+                                                          I18NString.Create(
+                                                              Languages.unknown,
+                                                              operatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString()
+                                                          )
+                                                      )
+                                                  ).Result.ChargingStationOperator;
 
                     }
 
