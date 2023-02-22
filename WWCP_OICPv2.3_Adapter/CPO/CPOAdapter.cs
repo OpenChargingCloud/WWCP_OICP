@@ -2382,13 +2382,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (AddData)
                         {
 
-                            if (ChargingPoolsUpdateLog.TryGetValue(ChargingPool, out List<PropertyUpdateInfos> PropertyUpdateInfo))
-                                PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                            if (ChargingPoolsUpdateLog.TryGetValue(ChargingPool, out List<PropertyUpdateInfo> PropertyUpdateInfo))
+                                PropertyUpdateInfo.Add(new PropertyUpdateInfo(PropertyName, OldValue, NewValue));
 
                             else
                             {
-                                var List = new List<PropertyUpdateInfos> {
-                                    new PropertyUpdateInfos(PropertyName, OldValue, NewValue)
+                                var List = new List<PropertyUpdateInfo> {
+                                    new PropertyUpdateInfo(PropertyName, OldValue, NewValue)
                                 };
                                 ChargingPoolsUpdateLog.Add(ChargingPool, List);
                             }
@@ -3077,13 +3077,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (AddData)
                         {
 
-                            if (ChargingStationsUpdateLog.TryGetValue(ChargingStation, out List<PropertyUpdateInfos> PropertyUpdateInfo))
-                                PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                            if (ChargingStationsUpdateLog.TryGetValue(ChargingStation, out List<PropertyUpdateInfo> PropertyUpdateInfo))
+                                PropertyUpdateInfo.Add(new PropertyUpdateInfo(PropertyName, OldValue, NewValue));
 
                             else
                             {
-                                var List = new List<PropertyUpdateInfos> {
-                                    new PropertyUpdateInfos(PropertyName, OldValue, NewValue)
+                                var List = new List<PropertyUpdateInfo> {
+                                    new PropertyUpdateInfo(PropertyName, OldValue, NewValue)
                                 };
                                 ChargingStationsUpdateLog.Add(ChargingStation, List);
                             }
@@ -3740,18 +3740,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        (IncludeEVSEs != null && IncludeEVSEs(EVSE)))
                     {
 
-                        if (EVSEsUpdateLog.TryGetValue(EVSE, out List<PropertyUpdateInfos> PropertyUpdateInfo))
-                            PropertyUpdateInfo.Add(new PropertyUpdateInfos(PropertyName, OldValue, NewValue));
+                        if (EVSEsUpdateLog.TryGetValue(EVSE, out var propertyUpdateInfos))
+                            propertyUpdateInfos.Add(new PropertyUpdateInfo(PropertyName, OldValue, NewValue));
 
                         else
-                        {
-
-                            var List = new List<PropertyUpdateInfos> {
-                                           new PropertyUpdateInfos(PropertyName, OldValue, NewValue)
-                                       };
-                            EVSEsUpdateLog.Add(EVSE, List);
-
-                        }
+                            EVSEsUpdateLog.Add(EVSE,
+                                               new List<PropertyUpdateInfo> {
+                                                   new PropertyUpdateInfo(PropertyName, OldValue, NewValue)
+                                               });
 
                         EVSEsToUpdateQueue.Add(EVSE);
 
@@ -5332,9 +5328,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             var EVSEsToUpdateQueueCopy             = new HashSet<WWCP.IEVSE>();
             var EVSEStatusChangesDelayedQueueCopy  = new List<WWCP.EVSEStatusUpdate>();
             var EVSEsToRemoveQueueCopy             = new HashSet<WWCP.IEVSE>();
-            var EVSEsUpdateLogCopy                 = new Dictionary<WWCP.IEVSE,            PropertyUpdateInfos[]>();
-            var ChargingStationsUpdateLogCopy      = new Dictionary<WWCP.IChargingStation, PropertyUpdateInfos[]>();
-            var ChargingPoolsUpdateLogCopy         = new Dictionary<WWCP.IChargingPool,    PropertyUpdateInfos[]>();
+            var EVSEsUpdateLogCopy                 = new Dictionary<WWCP.IEVSE,            PropertyUpdateInfo[]>();
+            var ChargingStationsUpdateLogCopy      = new Dictionary<WWCP.IChargingStation, PropertyUpdateInfo[]>();
+            var ChargingPoolsUpdateLogCopy         = new Dictionary<WWCP.IChargingPool,    PropertyUpdateInfo[]>();
 
             var lockTaken = await DataAndStatusLock.WaitAsync(0);
 
