@@ -305,62 +305,64 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                var evseDataRecord = new EVSEDataRecord(Id:                                evseId.Value,
-                                                        OperatorId:                        evseId.Value.OperatorId,
-                                                        OperatorName:                      OperatorName,
-                                                        ChargingStationName:               EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
-                                                        Address:                           (EVSE.ChargingStation.Address ??
-                                                                                            EVSE.ChargingPool.   Address).ToOICP(),
-                                                        GeoCoordinates:                    geoLocation.Value,
-                                                        PlugTypes:                         EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug.ToOICP()),
-                                                        ChargingFacilities:                EVSE.AsChargingFacilities(),
-                                                        RenewableEnergy:                   false,
-                                                        CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.NotAvailable,
-                                                        AuthenticationModes:               EVSE.ChargingStation.AuthenticationModes.ToOICP(),
-                                                        PaymentOptions:                    EVSE.IsFreeOfCharge
-                                                                                               ? new PaymentOptions[] { PaymentOptions.NoPayment }
-                                                                                               : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
-                                                        ValueAddedServices:                new ValueAddedServices[] { ValueAddedServices.None },
-                                                        Accessibility:                     accessibility.Value,
-                                                        HotlinePhoneNumber:                Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.FirstText()),
-                                                        IsOpen24Hours:                     EVSE.ChargingStation.OpeningTimes is not null
-                                                                                               ? EVSE.ChargingStation.OpeningTimes?.ToOICP()?.Any() == true  // OpeningTimes == false AND an empty list is invalid at Hubject!
-                                                                                                     ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
-                                                                                                     : true
-                                                                                               : true,
-                                                        IsHubjectCompatible:               EVSE.ChargingStation.IsHubjectCompatible,
-                                                        DynamicInfoAvailable:              EVSE.ChargingStation.DynamicInfoAvailable
-                                                                                               ? FalseTrueAuto.True
-                                                                                               : FalseTrueAuto.False,
+                var evseDataRecord = new EVSEDataRecord(
+                                         Id:                                evseId.Value,
+                                         OperatorId:                        evseId.Value.OperatorId,
+                                         OperatorName:                      OperatorName,
+                                         ChargingStationName:               EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
+                                         Address:                           (EVSE.ChargingStation.Address ??
+                                                                             EVSE.ChargingPool.   Address).ToOICP(),
+                                         GeoCoordinates:                    geoLocation.Value,
+                                         PlugTypes:                         EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug.ToOICP()),
+                                         ChargingFacilities:                EVSE.AsChargingFacilities(),
+                                         RenewableEnergy:                   false,
+                                         CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.NotAvailable,
+                                         AuthenticationModes:               EVSE.ChargingStation.AuthenticationModes.ToOICP(),
+                                         PaymentOptions:                    EVSE.IsFreeOfCharge
+                                                                                ? new PaymentOptions[] { PaymentOptions.NoPayment }
+                                                                                : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
+                                         ValueAddedServices:                new ValueAddedServices[] { ValueAddedServices.None },
+                                         Accessibility:                     accessibility.Value,
+                                         HotlinePhoneNumber:                EVSE.ChargingStation.HotlinePhoneNumber.HasValue ? Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.Value.ToString()) : null,
+                                         IsOpen24Hours:                     EVSE.ChargingStation.OpeningTimes is not null
+                                                                                ? EVSE.ChargingStation.OpeningTimes?.ToOICP()?.Any() == true  // OpeningTimes == false AND an empty list is invalid at Hubject!
+                                                                                      ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
+                                                                                      : true
+                                                                                : true,
+                                         IsHubjectCompatible:               EVSE.ChargingStation.IsHubjectCompatible,
+                                         DynamicInfoAvailable:              EVSE.ChargingStation.DynamicInfoAvailable
+                                                                                ? FalseTrueAuto.True
+                                                                                : FalseTrueAuto.False,
 
-                                                        DeltaType:                         DeltaType,
-                                                        LastUpdate:                        LastUpdate,
+                                         DeltaType:                         DeltaType,
+                                         LastUpdate:                        LastUpdate,
 
-                                                        ChargingStationId:                 ChargingStation_Id.TryParse(EVSE.ChargingStation.Id.ToString()),
-                                                        ChargingPoolId:                    ChargingPool_Id.   TryParse(EVSE.ChargingPool?.  Id.ToString()),
-                                                        HardwareManufacturer:              null,
-                                                        ChargingStationImageURL:           null,
-                                                        SubOperatorName:                   EVSE.ChargingPool?.SubOperator?.Name?.FirstText(),
-                                                        DynamicPowerLevel:                 null,
-                                                        EnergySources:                     null,
-                                                        EnvironmentalImpact:               null,
-                                                        MaxCapacity:                       null,
-                                                        AccessibilityLocationType:         null,
-                                                        AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).IsNeitherNullNorEmpty()
-                                                                                               ? new I18NText(
-                                                                                                     LanguageCode.Parse(
-                                                                                                         (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
-                                                                                                         (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).FirstText().SubstringMax(150)
-                                                                                                     )
-                                                                                               : null,
-                                                        ChargingStationLocationReference:  null,
-                                                        GeoChargingPointEntrance:          EVSE.ChargingPool?.EntranceLocation.ToOICP(),
-                                                        OpeningTimes:                      EVSE.ChargingStation.OpeningTimes?.ToOICP(),
-                                                        HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     (OICP_HubOperatorId),
-                                                        ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>(OICP_ClearingHouseId),
+                                         ChargingStationId:                 ChargingStation_Id.TryParse(EVSE.ChargingStation.Id.ToString()),
+                                         ChargingPoolId:                    ChargingPool_Id.   TryParse(EVSE.ChargingPool?.  Id.ToString()),
+                                         HardwareManufacturer:              null,
+                                         ChargingStationImageURL:           null,
+                                         SubOperatorName:                   EVSE.ChargingPool?.SubOperator?.Name?.FirstText(),
+                                         DynamicPowerLevel:                 null,
+                                         EnergySources:                     null,
+                                         EnvironmentalImpact:               null,
+                                         MaxCapacity:                       null,
+                                         AccessibilityLocationType:         null,
+                                         AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).IsNeitherNullNorEmpty()
+                                                                                ? new I18NText(
+                                                                                      LanguageCode.Parse(
+                                                                                          (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
+                                                                                          (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).FirstText().SubstringMax(150)
+                                                                                      )
+                                                                                : null,
+                                         ChargingStationLocationReference:  null,
+                                         GeoChargingPointEntrance:          EVSE.ChargingPool?.EntranceLocation.ToOICP(),
+                                         OpeningTimes:                      EVSE.ChargingStation.OpeningTimes?.ToOICP(),
+                                         HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     (OICP_HubOperatorId),
+                                         ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>(OICP_ClearingHouseId),
 
-                                                        CustomData:                        EVSE.CustomData,
-                                                        InternalData:                      internalData);
+                                         CustomData:                        EVSE.CustomData,
+                                         InternalData:                      internalData
+                                     );
 
                 return EVSE2EVSEDataRecord is not null
                            ? EVSE2EVSEDataRecord(EVSE, evseDataRecord)
