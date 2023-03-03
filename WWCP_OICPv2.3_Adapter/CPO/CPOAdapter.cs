@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         IId WWCP.IAuthorizeStartStop.AuthId
             => Id;
 
-        IId WWCP.ISendChargeDetailRecords.Id
+        IId WWCP.ISendChargeDetailRecords.SendChargeDetailRecordsId
             => Id;
 
         /// <summary>

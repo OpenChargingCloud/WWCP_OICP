@@ -1551,23 +1551,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.ReservationResult>
 
-            WWCP.IReserveRemoteStartStop.Reserve(WWCP.ChargingLocation                   ChargingLocation,
-                                                 WWCP.ChargingReservationLevel           ReservationLevel,
-                                                 DateTime?                               ReservationStartTime,
-                                                 TimeSpan?                               Duration,
-                                                 WWCP.ChargingReservation_Id?            ReservationId,
-                                                 WWCP.ChargingReservation_Id?            LinkedReservationId,
-                                                 WWCP.EMobilityProvider_Id?              ProviderId,
-                                                 WWCP.RemoteAuthentication?              RemoteAuthentication,
-                                                 WWCP.ChargingProduct?                   ChargingProduct,
-                                                 IEnumerable<WWCP.AuthenticationToken>?           AuthTokens,
-                                                 IEnumerable<WWCP.eMobilityAccount_Id>?  eMAIds,
-                                                 IEnumerable<UInt32>?                    PINs,
+            WWCP.IChargingReservations.Reserve(WWCP.ChargingLocation                   ChargingLocation,
+                                               WWCP.ChargingReservationLevel           ReservationLevel,
+                                               DateTime?                               ReservationStartTime,
+                                               TimeSpan?                               Duration,
+                                               WWCP.ChargingReservation_Id?            ReservationId,
+                                               WWCP.ChargingReservation_Id?            LinkedReservationId,
+                                               WWCP.EMobilityProvider_Id?              ProviderId,
+                                               WWCP.RemoteAuthentication?              RemoteAuthentication,
+                                               WWCP.ChargingProduct?                   ChargingProduct,
+                                               IEnumerable<WWCP.AuthenticationToken>?  AuthTokens,
+                                               IEnumerable<WWCP.eMobilityAccount_Id>?  eMAIds,
+                                               IEnumerable<UInt32>?                    PINs,
 
-                                                 DateTime?                               Timestamp,
-                                                 CancellationToken?                      CancellationToken,
-                                                 EventTracking_Id?                        EventTrackingId,
-                                                 TimeSpan?                               RequestTimeout)
+                                               DateTime?                               Timestamp,
+                                               CancellationToken?                      CancellationToken,
+                                               EventTracking_Id?                        EventTrackingId,
+                                               TimeSpan?                               RequestTimeout)
 
         {
 
@@ -1799,13 +1799,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.CancelReservationResult>
 
-            WWCP.IReserveRemoteStartStop.CancelReservation(WWCP.ChargingReservation_Id                 ReservationId,
-                                                           WWCP.ChargingReservationCancellationReason  Reason,
+            WWCP.IChargingReservations.CancelReservation(WWCP.ChargingReservation_Id                 ReservationId,
+                                                         WWCP.ChargingReservationCancellationReason  Reason,
 
-                                                           DateTime?                                   Timestamp,
-                                                           CancellationToken?                          CancellationToken,
-                                                           EventTracking_Id?                           EventTrackingId,
-                                                           TimeSpan?                                   RequestTimeout)
+                                                         DateTime?                                   Timestamp,
+                                                         CancellationToken?                          CancellationToken,
+                                                         EventTracking_Id?                           EventTrackingId,
+                                                         TimeSpan?                                   RequestTimeout)
 
         {
 
@@ -1907,7 +1907,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.RemoteStartResult>
 
-            WWCP.IReserveRemoteStartStop.RemoteStart(WWCP.ChargingLocation         ChargingLocation,
+            WWCP.IRemoteStartStop.RemoteStart(WWCP.ChargingLocation         ChargingLocation,
                                                      WWCP.ChargingProduct?         ChargingProduct,       // = null,
                                                      WWCP.ChargingReservation_Id?  ReservationId,         // = null,
                                                      WWCP.ChargingSession_Id?      SessionId,             // = null,
@@ -2146,7 +2146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         async Task<WWCP.RemoteStopResult>
 
-            WWCP.IReserveRemoteStartStop.RemoteStop(WWCP.ChargingSession_Id     SessionId,
+            WWCP.IRemoteStartStop.RemoteStop(WWCP.ChargingSession_Id     SessionId,
                                                     WWCP.ReservationHandling?   ReservationHandling,
                                                     WWCP.EMobilityProvider_Id?  ProviderId,
                                                     WWCP.RemoteAuthentication?  RemoteAuthentication,
