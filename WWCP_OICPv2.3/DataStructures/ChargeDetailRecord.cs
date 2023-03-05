@@ -1113,18 +1113,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(SessionId + ": ",
+            => String.Concat(
 
-                             ConsumedEnergy + " kWh",
+                   SessionId + ": ",
 
-                             PartnerProductId.HasValue
-                                 ? " of " + PartnerProductId.Value
-                                 : null,
+                   ConsumedEnergy + " kWh",
 
-                             " at ",  EVSEId,
-                             " for ", Identification,
+                   PartnerProductId.HasValue
+                       ? " of " + PartnerProductId.Value
+                       : null,
 
-                             ", " + SessionStart.ToIso8601(), " -> ", SessionEnd.ToIso8601());
+                   " at ",  EVSEId,
+                   " for ", Identification,
+
+                   ", " + SessionStart.ToIso8601(), " -> ", SessionEnd.ToIso8601()
+
+               );
 
         #endregion
 
