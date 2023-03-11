@@ -197,50 +197,52 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  MaxChargingStationAdminStatusListSize,
                                                  MaxChargingStationStatusListSize
                                              ),
+                                             null,          // Name
+                                             null,          // Description
+
                                              InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusTypes.OutOfService,
                                              InitialEVSEStatus      ?? WWCP.EVSEStatusTypes.OutOfService,
                                              MaxEVSEAdminStatusListSize,
                                              MaxEVSEStatusListSize,
 
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
-                                             null,
+                                             null,          // PhotoURLs
+                                             null,          // Brands
+                                             null,          // OpenDataLicenses
+                                             null,          // ChargingModes
+                                             null,          // ChargingTariffs
+                                             null,          // CurrentType
+                                             null,          // AverageVoltage
+                                             null,          // MaxCurrent
+                                             null,          // MaxCurrentRealTime
+                                             null,          // MaxCurrentPrognoses
+                                             null,          // MaxPower
+                                             null,          // MaxPowerRealTime
+                                             null,          // MaxPowerPrognoses
+                                             null,          // MaxCapacity
+                                             null,          // MaxCapacityRealTime
+                                             null,          // MaxCapacityPrognoses
+                                             null,          // EnergyMix
+                                             null,          // EnergyMixRealTime
+                                             null,          // EnergyMixPrognoses
+                                             null,          // EnergyMeter
+                                             null,          // IsFreeOfCharge
+                                             null,          // SocketOutlets
 
-                                             null,
-                                             null,
+                                             null,          // ChargingSession
+                                             null,          // LastStatusUpdate
                                              DataSource,
-                                             null,
+                                             null,          // LastChange
 
-                                             _evse => {
+                                             _evse => {     // Configurator
 
                                              },
-                                             null,
+                                             null,          // RemoteEVSECreator
 
                                              EVSEDataRecord.CustomData,
                                              new UserDefinedDictionary(new Dictionary<String, Object?> {
                                                  { OICP_EVSEDataRecord, EVSEDataRecord }
                                              })
+
                                          );
 
             }
