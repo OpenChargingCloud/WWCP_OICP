@@ -192,6 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public Boolean                                         PullEVSEData_UpdateRoamingNetwork                    { get; }
 
+        public Boolean                                         PullEVSEStatus_CalculateEVSEStatusDiffs              { get; }
         public Boolean                                         PullEVSEStatus_UpdateRoamingNetwork                  { get; }
 
         #endregion
@@ -240,6 +241,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => throw new NotImplementedException();
 
         public TimeSpan MaxReservationDuration { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+
+        private Dictionary<WWCP.EVSE_Id, WWCP.EVSEStatusUpdate> evseStatusUpdates = new Dictionary<WWCP.EVSE_Id, WWCP.EVSEStatusUpdate>();
+        public IEnumerable<WWCP.EVSEStatusUpdate> EVSEStatusUpdates
+
+            => evseStatusUpdates.Values;
+
+        public WWCP.EVSEStatusUpdate? TryGetEVSEStatusUpdate(WWCP.EVSE_Id EVSEId)
+        {
+
+            if (evseStatusUpdates.TryGetValue(EVSEId, out var evseStatusUpdate))
+                return evseStatusUpdate;
+
+            return null;
+
+        }
+
+        public Boolean TryGetEVSEStatusUpdate(WWCP.EVSE_Id EVSEId, out WWCP.EVSEStatusUpdate EVSEStatusUpdate)
+
+            => evseStatusUpdates.TryGetValue(EVSEId, out EVSEStatusUpdate);
 
         #endregion
 
@@ -483,6 +504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           TimeSpan?                                       PullEVSEStatus_Every                                = null,
                           TimeSpan?                                       PullEVSEStatus_RequestTimeout                       = null,
 
+                          Boolean                                         PullEVSEStatus_CalculateEVSEStatusDiffs             = false,
                           Boolean                                         PullEVSEStatus_UpdateRoamingNetwork                 = false,
 
                           Boolean                                         GetChargeDetailRecords_IsDisabled                   = false,
@@ -512,10 +534,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.PullEVSEData_Every                                 = PullEVSEData_Every                            ?? Default_PullEVSEData_Every;
             this.PullEVSEData_RequestPageSize                       = PullEVSEData_RequestPageSize                  ?? 2000;
             this.PullEVSEData_RequestTimeout                        = PullEVSEData_RequestTimeout                   ?? Default_PullEVSEData_RequestTimeout;
-            this.PullEVSEData_Timer                                 = new Timer(PullEVSEDataService,
-                                                                                null,
-                                                                                PullEVSEData_InitialDelay           ?? TimeSpan.FromSeconds(10),
-                                                                                this.PullEVSEData_Every);
+            this.PullEVSEData_Timer                                 = new Timer(
+                                                                          PullEVSEDataService,
+                                                                          null,
+                                                                          PullEVSEData_InitialDelay                 ?? TimeSpan.FromSeconds(10),
+                                                                          this.PullEVSEData_Every
+                                                                      );
 
             this.PullEVSEData_OperatorIdFilter                      = PullEVSEData_OperatorIdFilter;
             this.PullEVSEData_CountryCodeFilter                     = PullEVSEData_CountryCodeFilter;
@@ -531,21 +555,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.PullEVSEStatus_IsDisabled                          = PullEVSEStatus_IsDisabled;
             this.PullEVSEStatus_Every                               = PullEVSEStatus_Every                          ?? Default_PullEVSEStatus_Every;
             this.PullEVSEStatus_RequestTimeout                      = PullEVSEStatus_RequestTimeout                 ?? Default_PullEVSEStatus_RequestTimeout;
-            this.PullEVSEStatus_Timer                               = new Timer(PullStatusService,
-                                                                                null,
-                                                                                PullEVSEStatus_InitialDelay         ?? TimeSpan.FromSeconds(30),
-                                                                                this.PullEVSEStatus_Every);
+            this.PullEVSEStatus_Timer                               = new Timer(
+                                                                          PullStatusService,
+                                                                          null,
+                                                                          PullEVSEStatus_InitialDelay         ?? TimeSpan.FromSeconds(30),
+                                                                          this.PullEVSEStatus_Every
+                                                                      );
 
+            this.PullEVSEStatus_CalculateEVSEStatusDiffs            = PullEVSEStatus_CalculateEVSEStatusDiffs;
             this.PullEVSEStatus_UpdateRoamingNetwork                = PullEVSEStatus_UpdateRoamingNetwork;
 
             this.GetChargeDetailRecords_IsDisabled                  = GetChargeDetailRecords_IsDisabled;
             this.GetChargeDetailRecords_Every                       = GetChargeDetailRecords_Every                  ?? Default_GetChargeDetailRecords_Every;
             this.GetChargeDetailRecords_LastRunTimestamp            = GetChargeDetailRecords_LastRunTimestamp       ?? Timestamp.Now - TimeSpan.FromDays(3);
             this.GetChargeDetailRecords_RequestTimeout              = GetChargeDetailRecords_RequestTimeout         ?? Default_GetChargeDetailRecords_RequestTimeout;
-            this.GetChargeDetailRecords_Timer                       = new Timer(GetChargeDetailRecordsService,
-                                                                                null,
-                                                                                GetChargeDetailRecords_InitialDelay ?? TimeSpan.FromSeconds(10),
-                                                                                this.GetChargeDetailRecords_Every);
+            this.GetChargeDetailRecords_Timer                       = new Timer(
+                                                                          GetChargeDetailRecordsService,
+                                                                          null,
+                                                                          GetChargeDetailRecords_InitialDelay ?? TimeSpan.FromSeconds(10),
+                                                                          this.GetChargeDetailRecords_Every
+                                                                      );
 
             var defaultProviderId = (DefaultProvider?.Id ?? DefaultProviderId)?.ToOICP();
 
@@ -2892,6 +2921,100 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                             #endregion
 
+
+                            if (PullEVSEStatus_CalculateEVSEStatusDiffs)
+                            {
+
+                                var updates = new List<EVSEStatus>();
+
+                                foreach (var evseStatusRecord in pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords))
+                                {
+
+                                    var evseId         = evseStatusRecord.Id.    ToWWCP();
+                                    var newEVSEStatus  = evseStatusRecord.Status.ToWWCP();
+
+                                    if (evseId.HasValue && newEVSEStatus.HasValue)
+                                    {
+
+                                        if (!evseStatusUpdates.TryGetValue(evseId.Value, out var oldEVSEStatus))
+                                        {
+
+                                            evseStatusUpdates.Add(evseId.Value,
+                                                                  new WWCP.EVSEStatusUpdate(
+                                                                      evseId.Value,
+                                                                      new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                          downloadTime,
+                                                                          newEVSEStatus.Value
+                                                                      ),
+                                                                      new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                          downloadTime,
+                                                                          newEVSEStatus.Value
+                                                                      )
+                                                                  ));
+
+                                            updates.Add(new EVSEStatus(
+                                                            evseId.Value,
+                                                            new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                downloadTime,
+                                                                newEVSEStatus.Value
+                                                            )
+                                                        ));
+
+                                        }
+                                        else if (oldEVSEStatus.NewStatus.Value != newEVSEStatus.Value)
+                                        {
+
+                                            evseStatusUpdates[evseId.Value] = new WWCP.EVSEStatusUpdate(
+                                                                                  evseId.Value,
+                                                                                  oldEVSEStatus.NewStatus,
+                                                                                  new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                                      downloadTime,
+                                                                                      newEVSEStatus.Value
+                                                                                  )
+                                                                              );
+
+                                            updates.Add(new EVSEStatus(
+                                                            evseId.Value,
+                                                            new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                downloadTime,
+                                                                newEVSEStatus.Value
+                                                            )
+                                                        ));
+
+                                        }
+
+                                    }
+
+                                }
+
+                                #region Send OnEVSEStatusChanges event
+
+                                if (updates.Any())
+                                {
+                                    try
+                                    {
+
+                                        if (OnEVSEStatusChanges is not null)
+                                            await Task.WhenAll(OnEVSEStatusChanges.GetInvocationList().
+                                                               Cast<OnEVSEStatusChangesDelegate>().
+                                                               Select(e => e(startTime,
+                                                                             this,
+                                                                             nameof(OICPv2_3) + "." + nameof(EMPAdapter),
+                                                                             updates))).
+                                                               ConfigureAwait(false);
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnEVSEStatusChanges));
+                                    }
+                                }
+
+                                #endregion
+
+                            }
+
+
                             if (PullEVSEStatus_UpdateRoamingNetwork)
                             {
 
@@ -2927,7 +3050,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 #region Send OnEVSEStatusChanges event
 
-                                if (update.NewStatusList.Any())
+                                if (update.NewStatusList.Any() && !PullEVSEStatus_CalculateEVSEStatusDiffs)
                                 {
                                     try
                                     {
