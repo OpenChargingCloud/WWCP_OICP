@@ -456,7 +456,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public EMPAdapter(WWCP.CSORoamingProvider_Id                      Id,
                           I18NString                                      Name,
                           I18NString                                      Description,
-                          WWCP.RoamingNetwork                             RoamingNetwork,
+                          WWCP.IRoamingNetwork                            RoamingNetwork,
                           EMPRoaming                                      EMPRoaming,
 
                           EVSEDataRecord2EVSEDelegate?                    EVSEDataRecord2EVSE                                 = null,
@@ -491,7 +491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           DateTime?                                       GetChargeDetailRecords_LastRunTimestamp             = null,
                           TimeSpan?                                       GetChargeDetailRecords_RequestTimeout               = null,
 
-                          WWCP.EMobilityProvider?                         DefaultProvider                                     = null,
+                          WWCP.IEMobilityProvider?                        DefaultProvider                                     = null,
                           WWCP.EMobilityProvider_Id?                      DefaultProviderId                                   = null,
                           GeoCoordinate?                                  DefaultSearchCenter                                 = null,
                           UInt64?                                         DefaultDistanceKM                                   = null,

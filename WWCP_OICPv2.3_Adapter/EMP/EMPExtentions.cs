@@ -47,7 +47,7 @@ namespace cloud.charging.open.protocols.WWCP
         /// <param name="Configurator">An optional delegate to configure the new roaming provider after its creation.</param>
         public static OICPv2_3.EMP.EMPAdapter?
 
-            CreateOICPv2_3_EMPAdapter(this RoamingNetwork                                      RoamingNetwork,
+            CreateOICPv2_3_EMPAdapter(this IRoamingNetwork                                     RoamingNetwork,
                                       CSORoamingProvider_Id                                    Id,
                                       I18NString                                               Name,
                                       I18NString                                               Description,
@@ -85,7 +85,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       DateTime?                                                GetChargeDetailRecords_LastRunTimestamp             = null,
                                       TimeSpan?                                                GetChargeDetailRecords_RequestTimeout               = null,
 
-                                      EMobilityProvider?                                       DefaultProvider                                     = null,
+                                      IEMobilityProvider?                                      DefaultProvider                                     = null,
                                       EMobilityProvider_Id?                                    DefaultProviderId                                   = null,
                                       GeoCoordinate?                                           DefaultSearchCenter                                 = null,
                                       UInt64?                                                  DefaultDistanceKM                                   = null,
@@ -96,9 +96,6 @@ namespace cloud.charging.open.protocols.WWCP
         {
 
             #region Initial checks
-
-            if (RoamingNetwork is null)
-                throw new ArgumentNullException(nameof(RoamingNetwork),  "The given roaming network must not be null!");
 
             if (Name.IsNullOrEmpty())
                 throw new ArgumentNullException(nameof(Name),            "The given roaming provider name must not be null or empty!");
