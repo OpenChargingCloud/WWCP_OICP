@@ -243,7 +243,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public TimeSpan MaxReservationDuration { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 
-        private Dictionary<WWCP.EVSE_Id, WWCP.EVSEStatusUpdate> evseStatusUpdates = new Dictionary<WWCP.EVSE_Id, WWCP.EVSEStatusUpdate>();
+        private Dictionary<WWCP.EVSE_Id, WWCP.EVSEStatusUpdate> evseStatusUpdates = new ();
         public IEnumerable<WWCP.EVSEStatusUpdate> EVSEStatusUpdates
 
             => evseStatusUpdates.Values;
@@ -2897,7 +2897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Any())
                         {
 
-                            DebugX.Log("Imported " + pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Count() + " EVSE status records!");
+                            //DebugX.Log("Imported " + pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords).Count() + " EVSE status records!");
 
                             #region Send OnPullEVSEStatus event
 
@@ -2921,11 +2921,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                             #endregion
 
-
                             if (PullEVSEStatus_CalculateEVSEStatusDiffs)
                             {
 
-                                var updates = new List<EVSEStatus>();
+                                var updates = new List<WWCP.EVSEStatusUpdate>();
 
                                 foreach (var evseStatusRecord in pullEVSEStatusResult.Response.OperatorEVSEStatus.SelectMany(status => status.EVSEStatusRecords))
                                 {
@@ -2952,7 +2951,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                       )
                                                                   ));
 
-                                            updates.Add(new EVSEStatus(
+                                            updates.Add(new WWCP.EVSEStatusUpdate(
                                                             evseId.Value,
                                                             new Timestamped<WWCP.EVSEStatusTypes>(
                                                                 downloadTime,
@@ -2964,22 +2963,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                         else if (oldEVSEStatus.NewStatus.Value != newEVSEStatus.Value)
                                         {
 
-                                            evseStatusUpdates[evseId.Value] = new WWCP.EVSEStatusUpdate(
-                                                                                  evseId.Value,
-                                                                                  oldEVSEStatus.NewStatus,
-                                                                                  new Timestamped<WWCP.EVSEStatusTypes>(
-                                                                                      downloadTime,
-                                                                                      newEVSEStatus.Value
-                                                                                  )
-                                                                              );
+                                            var value = new WWCP.EVSEStatusUpdate(
+                                                                Id:          evseId.Value,
+                                                                OldStatus:   oldEVSEStatus.NewStatus,
+                                                                NewStatus:   new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                                 downloadTime,
+                                                                                 newEVSEStatus.Value
+                                                                             )
+                                                            );
 
-                                            updates.Add(new EVSEStatus(
-                                                            evseId.Value,
-                                                            new Timestamped<WWCP.EVSEStatusTypes>(
-                                                                downloadTime,
-                                                                newEVSEStatus.Value
-                                                            )
-                                                        ));
+                                            evseStatusUpdates[evseId.Value] = value;
+                                            updates.Add(value);
 
                                         }
 
@@ -3014,7 +3008,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                             }
 
-
                             if (PullEVSEStatus_UpdateRoamingNetwork)
                             {
 
@@ -3022,8 +3015,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                         downloadTime,
                                                                         pullEVSEStatusResult.Response.OperatorEVSEStatus,
                                                                         IncludeEVSEOperatorId);
-
-                                #region Send OnNewEVSEStatus     event
 
                                 if (update.ValidStatusList.Any())
                                 {
@@ -3045,33 +3036,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                         DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnNewEVSEStatus));
                                     }
                                 }
-
-                                #endregion
-
-                                #region Send OnEVSEStatusChanges event
-
-                                if (update.NewStatusList.Any() && !PullEVSEStatus_CalculateEVSEStatusDiffs)
-                                {
-                                    try
-                                    {
-
-                                        if (OnEVSEStatusChanges is not null)
-                                            await Task.WhenAll(OnEVSEStatusChanges.GetInvocationList().
-                                                               Cast<OnEVSEStatusChangesDelegate>().
-                                                               Select(e => e(startTime,
-                                                                             this,
-                                                                             nameof(OICPv2_3) + "." + nameof(EMPAdapter),
-                                                                             update.NewStatusList))).
-                                                               ConfigureAwait(false);
-
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnEVSEStatusChanges));
-                                    }
-                                }
-
-                                #endregion
 
                             }
 

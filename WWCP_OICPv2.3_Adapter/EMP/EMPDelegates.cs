@@ -48,66 +48,66 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnPullEVSEDataDelegate          (DateTime                       Timestamp,
-                                                          EMPAdapter                     Sender,
-                                                          String                         SenderDescription,
-                                                          String                         CorrelationId,
-                                                          Boolean                        IsFullLoad,
-                                                          IEnumerable<EVSEDataRecord>    EVSEDataRecords);
+    public delegate Task OnPullEVSEDataDelegate          (DateTime                             Timestamp,
+                                                          EMPAdapter                           Sender,
+                                                          String                               SenderDescription,
+                                                          String                               CorrelationId,
+                                                          Boolean                              IsFullLoad,
+                                                          IEnumerable<EVSEDataRecord>          EVSEDataRecords);
 
     /// <summary>
     /// A delegate called whenever new page of EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnPullEVSEDataPageDelegate      (DateTime                       Timestamp,
-                                                          EMPAdapter                     Sender,
-                                                          String                         SenderDescription,
-                                                          String                         CorrelationId,
-                                                          Boolean                        IsFullLoad,
-                                                          UInt64                         Page,
-                                                          UInt64                         TotalPages,
-                                                          IEnumerable<EVSEDataRecord>    EVSEDataRecords);
+    public delegate Task OnPullEVSEDataPageDelegate      (DateTime                             Timestamp,
+                                                          EMPAdapter                           Sender,
+                                                          String                               SenderDescription,
+                                                          String                               CorrelationId,
+                                                          Boolean                              IsFullLoad,
+                                                          UInt64                               Page,
+                                                          UInt64                               TotalPages,
+                                                          IEnumerable<EVSEDataRecord>          EVSEDataRecords);
 
     /// <summary>
     /// A delegate called whenever new OperatorInfos had been fetched.
     /// </summary>
-    public delegate Task OnPullOperatorInfosDelegate     (DateTime                       Timestamp,
-                                                          EMPAdapter                     Sender,
-                                                          String                         SenderDescription,
-                                                          String                         CorrelationId,
-                                                          IEnumerable<OperatorInfo>      OperatorInfos);
+    public delegate Task OnPullOperatorInfosDelegate     (DateTime                             Timestamp,
+                                                          EMPAdapter                           Sender,
+                                                          String                               SenderDescription,
+                                                          String                               CorrelationId,
+                                                          IEnumerable<OperatorInfo>            OperatorInfos);
 
     /// <summary>
     /// A delegate called whenever new EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnPullEVSEStatusDelegate        (DateTime                       Timestamp,
-                                                          EMPAdapter                     Sender,
-                                                          String                         SenderDescription,
-                                                          IEnumerable<EVSEStatusRecord>  EVSEStatusRecords);
+    public delegate Task OnPullEVSEStatusDelegate        (DateTime                             Timestamp,
+                                                          EMPAdapter                           Sender,
+                                                          String                               SenderDescription,
+                                                          IEnumerable<EVSEStatusRecord>        EVSEStatusRecords);
 
     /// <summary>
     /// A delegate called whenever new EVSE status changes had been received.
     /// </summary>
-    public delegate Task OnEVSEStatusChangesDelegate     (DateTime                       Timestamp,
-                                                          EMPAdapter                     Sender,
-                                                          String                         SenderDescription,
-                                                          IEnumerable<WWCP.EVSEStatus>   EVSEStatusChanges);
+    public delegate Task OnEVSEStatusChangesDelegate     (DateTime                             Timestamp,
+                                                          EMPAdapter                           Sender,
+                                                          String                               SenderDescription,
+                                                          IEnumerable<WWCP.EVSEStatusUpdate>   EVSEStatusChanges);
 
 
     /// <summary>
     /// A delegate called whenever new EVSE status had been received.
     /// </summary>
-    public delegate Task OnNewEVSEStatusDelegate         (DateTime                       Timestamp,
-                                                          EMPAdapter                     Sender,
-                                                          String                         SenderDescription,
-                                                          IEnumerable<WWCP.EVSEStatus>   NewEVSEStatus);
+    public delegate Task OnNewEVSEStatusDelegate         (DateTime                             Timestamp,
+                                                          EMPAdapter                           Sender,
+                                                          String                               SenderDescription,
+                                                          IEnumerable<WWCP.EVSEStatus>         NewEVSEStatus);
 
 
     /// <summary>
     /// A delegate called whenever new EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnGetChargeDetailRecordsDelegate(DateTime                         Timestamp,
-                                                          EMPAdapter                       Sender,
-                                                          String                           SenderDescription,
-                                                          IEnumerable<ChargeDetailRecord>  ChargeDetailRecords);
+    public delegate Task OnGetChargeDetailRecordsDelegate(DateTime                             Timestamp,
+                                                          EMPAdapter                           Sender,
+                                                          String                               SenderDescription,
+                                                          IEnumerable<ChargeDetailRecord>      ChargeDetailRecords);
 
 }
