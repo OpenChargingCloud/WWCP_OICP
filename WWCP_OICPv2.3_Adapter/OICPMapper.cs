@@ -334,8 +334,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                       ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
                                                                                       : true
                                                                                 : true,
-                                         IsHubjectCompatible:               EVSE.ChargingStation.IsHubjectCompatible,
-                                         DynamicInfoAvailable:              EVSE.ChargingStation.DynamicInfoAvailable
+                                         IsHubjectCompatible:               EVSE.ChargingStation.Features.Contains(Features.HubjectCompatible),
+                                         DynamicInfoAvailable:              EVSE.ChargingStation.Features.Contains(Features.StatusInfoAvailable)
                                                                                 ? FalseTrueAuto.True
                                                                                 : FalseTrueAuto.False,
 
