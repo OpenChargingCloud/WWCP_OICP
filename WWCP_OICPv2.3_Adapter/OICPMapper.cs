@@ -212,6 +212,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              null,          // ChargingTariffs
                                              null,          // CurrentType
                                              null,          // AverageVoltage
+                                             null,          // AverageVoltageRealTime
+                                             null,          // AverageVoltagePrognoses
                                              null,          // MaxCurrent
                                              null,          // MaxCurrentRealTime
                                              null,          // MaxCurrentPrognoses
