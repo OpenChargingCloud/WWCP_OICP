@@ -228,7 +228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              null,          // EnergyMixPrognoses
                                              null,          // EnergyMeter
                                              null,          // IsFreeOfCharge
-                                             null,          // SocketOutlets
+                                             null,          // ChargingConnectors
 
                                              null,          // ChargingSession
                                              null,          // LastStatusUpdate
@@ -318,7 +318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          Address:                           (EVSE.ChargingStation.Address ??
                                                                              EVSE.ChargingPool.   Address).ToOICP(),
                                          GeoCoordinates:                    geoLocation.Value,
-                                         PlugTypes:                         EVSE.SocketOutlets.SafeSelect(socketoutlet => socketoutlet.Plug.ToOICP()),
+                                         PlugTypes:                         EVSE.ChargingConnectors.SafeSelect(chargingConnector => chargingConnector.Plug.ToOICP()),
                                          ChargingFacilities:                EVSE.AsChargingFacilities(),
                                          RenewableEnergy:                   false,
                                          CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.NotAvailable,
@@ -1153,27 +1153,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToWWCP(this PlugType)
 
-        public static WWCP.PlugTypes ToWWCP(this PlugTypes PlugType)
+        public static WWCP.ChargingPlugTypes ToWWCP(this PlugTypes PlugType)
 
             => PlugType switch {
-                   PlugTypes.SmallPaddleInductive          => WWCP.PlugTypes.SmallPaddleInductive,
-                   PlugTypes.LargePaddleInductive          => WWCP.PlugTypes.LargePaddleInductive,
-                   PlugTypes.AVCONConnector                => WWCP.PlugTypes.AVCONConnector,
-                   PlugTypes.TeslaConnector                => WWCP.PlugTypes.TeslaConnector,
-                   PlugTypes.NEMA5_20                      => WWCP.PlugTypes.NEMA5_20,
-                   PlugTypes.TypeEFrenchStandard           => WWCP.PlugTypes.TypeEFrenchStandard,
-                   PlugTypes.TypeFSchuko                   => WWCP.PlugTypes.TypeFSchuko,
-                   PlugTypes.TypeGBritishStandard          => WWCP.PlugTypes.TypeGBritishStandard,
-                   PlugTypes.TypeJSwissStandard            => WWCP.PlugTypes.TypeJSwissStandard,
-                   PlugTypes.Type1Connector_CableAttached  => WWCP.PlugTypes.Type1Connector_CableAttached,
-                   PlugTypes.Type2Outlet                   => WWCP.PlugTypes.Type2Outlet,
-                   PlugTypes.Type2Connector_CableAttached  => WWCP.PlugTypes.Type2Connector_CableAttached,
-                   PlugTypes.Type3Outlet                   => WWCP.PlugTypes.Type3Outlet,
-                   PlugTypes.IEC60309SinglePhase           => WWCP.PlugTypes.IEC60309SinglePhase,
-                   PlugTypes.IEC60309ThreePhase            => WWCP.PlugTypes.IEC60309ThreePhase,
-                   PlugTypes.CCSCombo2Plug_CableAttached   => WWCP.PlugTypes.CCSCombo2Plug_CableAttached,
-                   PlugTypes.CCSCombo1Plug_CableAttached   => WWCP.PlugTypes.CCSCombo1Plug_CableAttached,
-                   PlugTypes.CHAdeMO                       => WWCP.PlugTypes.CHAdeMO,
+                   PlugTypes.SmallPaddleInductive          => WWCP.ChargingPlugTypes.SmallPaddleInductive,
+                   PlugTypes.LargePaddleInductive          => WWCP.ChargingPlugTypes.LargePaddleInductive,
+                   PlugTypes.AVCONConnector                => WWCP.ChargingPlugTypes.AVCONConnector,
+                   PlugTypes.TeslaConnector                => WWCP.ChargingPlugTypes.TeslaConnector,
+                   PlugTypes.NEMA5_20                      => WWCP.ChargingPlugTypes.NEMA5_20,
+                   PlugTypes.TypeEFrenchStandard           => WWCP.ChargingPlugTypes.TypeEFrenchStandard,
+                   PlugTypes.TypeFSchuko                   => WWCP.ChargingPlugTypes.TypeFSchuko,
+                   PlugTypes.TypeGBritishStandard          => WWCP.ChargingPlugTypes.TypeGBritishStandard,
+                   PlugTypes.TypeJSwissStandard            => WWCP.ChargingPlugTypes.TypeJSwissStandard,
+                   PlugTypes.Type1Connector_CableAttached  => WWCP.ChargingPlugTypes.Type1Connector_CableAttached,
+                   PlugTypes.Type2Outlet                   => WWCP.ChargingPlugTypes.Type2Outlet,
+                   PlugTypes.Type2Connector_CableAttached  => WWCP.ChargingPlugTypes.Type2Connector_CableAttached,
+                   PlugTypes.Type3Outlet                   => WWCP.ChargingPlugTypes.Type3Outlet,
+                   PlugTypes.IEC60309SinglePhase           => WWCP.ChargingPlugTypes.IEC60309SinglePhase,
+                   PlugTypes.IEC60309ThreePhase            => WWCP.ChargingPlugTypes.IEC60309ThreePhase,
+                   PlugTypes.CCSCombo2Plug_CableAttached   => WWCP.ChargingPlugTypes.CCSCombo2Plug_CableAttached,
+                   PlugTypes.CCSCombo1Plug_CableAttached   => WWCP.ChargingPlugTypes.CCSCombo1Plug_CableAttached,
+                   PlugTypes.CHAdeMO                       => WWCP.ChargingPlugTypes.CHAdeMO,
                    _                                       => throw new ArgumentException("Invalid plug type!")
                };
 
@@ -1181,27 +1181,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this PlugType)
 
-        public static PlugTypes ToOICP(this WWCP.PlugTypes PlugType)
+        public static PlugTypes ToOICP(this WWCP.ChargingPlugTypes PlugType)
 
             => PlugType switch {
-                   WWCP.PlugTypes.SmallPaddleInductive          => PlugTypes.SmallPaddleInductive,
-                   WWCP.PlugTypes.LargePaddleInductive          => PlugTypes.LargePaddleInductive,
-                   WWCP.PlugTypes.AVCONConnector                => PlugTypes.AVCONConnector,
-                   WWCP.PlugTypes.TeslaConnector                => PlugTypes.TeslaConnector,
-                   WWCP.PlugTypes.NEMA5_20                      => PlugTypes.NEMA5_20,
-                   WWCP.PlugTypes.TypeEFrenchStandard           => PlugTypes.TypeEFrenchStandard,
-                   WWCP.PlugTypes.TypeFSchuko                   => PlugTypes.TypeFSchuko,
-                   WWCP.PlugTypes.TypeGBritishStandard          => PlugTypes.TypeGBritishStandard,
-                   WWCP.PlugTypes.TypeJSwissStandard            => PlugTypes.TypeJSwissStandard,
-                   WWCP.PlugTypes.Type1Connector_CableAttached  => PlugTypes.Type1Connector_CableAttached,
-                   WWCP.PlugTypes.Type2Outlet                   => PlugTypes.Type2Outlet,
-                   WWCP.PlugTypes.Type2Connector_CableAttached  => PlugTypes.Type2Connector_CableAttached,
-                   WWCP.PlugTypes.Type3Outlet                   => PlugTypes.Type3Outlet,
-                   WWCP.PlugTypes.IEC60309SinglePhase           => PlugTypes.IEC60309SinglePhase,
-                   WWCP.PlugTypes.IEC60309ThreePhase            => PlugTypes.IEC60309ThreePhase,
-                   WWCP.PlugTypes.CCSCombo2Plug_CableAttached   => PlugTypes.CCSCombo2Plug_CableAttached,
-                   WWCP.PlugTypes.CCSCombo1Plug_CableAttached   => PlugTypes.CCSCombo1Plug_CableAttached,
-                   WWCP.PlugTypes.CHAdeMO                       => PlugTypes.CHAdeMO,
+                   WWCP.ChargingPlugTypes.SmallPaddleInductive          => PlugTypes.SmallPaddleInductive,
+                   WWCP.ChargingPlugTypes.LargePaddleInductive          => PlugTypes.LargePaddleInductive,
+                   WWCP.ChargingPlugTypes.AVCONConnector                => PlugTypes.AVCONConnector,
+                   WWCP.ChargingPlugTypes.TeslaConnector                => PlugTypes.TeslaConnector,
+                   WWCP.ChargingPlugTypes.NEMA5_20                      => PlugTypes.NEMA5_20,
+                   WWCP.ChargingPlugTypes.TypeEFrenchStandard           => PlugTypes.TypeEFrenchStandard,
+                   WWCP.ChargingPlugTypes.TypeFSchuko                   => PlugTypes.TypeFSchuko,
+                   WWCP.ChargingPlugTypes.TypeGBritishStandard          => PlugTypes.TypeGBritishStandard,
+                   WWCP.ChargingPlugTypes.TypeJSwissStandard            => PlugTypes.TypeJSwissStandard,
+                   WWCP.ChargingPlugTypes.Type1Connector_CableAttached  => PlugTypes.Type1Connector_CableAttached,
+                   WWCP.ChargingPlugTypes.Type2Outlet                   => PlugTypes.Type2Outlet,
+                   WWCP.ChargingPlugTypes.Type2Connector_CableAttached  => PlugTypes.Type2Connector_CableAttached,
+                   WWCP.ChargingPlugTypes.Type3Outlet                   => PlugTypes.Type3Outlet,
+                   WWCP.ChargingPlugTypes.IEC60309SinglePhase           => PlugTypes.IEC60309SinglePhase,
+                   WWCP.ChargingPlugTypes.IEC60309ThreePhase            => PlugTypes.IEC60309ThreePhase,
+                   WWCP.ChargingPlugTypes.CCSCombo2Plug_CableAttached   => PlugTypes.CCSCombo2Plug_CableAttached,
+                   WWCP.ChargingPlugTypes.CCSCombo1Plug_CableAttached   => PlugTypes.CCSCombo1Plug_CableAttached,
+                   WWCP.ChargingPlugTypes.CHAdeMO                       => PlugTypes.CHAdeMO,
                    _                                            => throw new ArgumentException("Invalid plug type!")
                };
 
