@@ -14,19 +14,29 @@ This implementation aims to become one of the OICP reference implementations. Th
 
 ### Versions
 
-- [OICP v2.3 .NET6](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
-- [OICP v2.3 .NET Framework 4.8](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.3) is deprecated and only left for reference
-- [OICP v2.2 .NET Framework 4.8](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/dotNetFramework/WWCP_OICPv2.2) is deprecated and only left for reference
+- [OICP v2.3 .NET7](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3) is fully maintained and should be used for new deployments
 
 
 ### Requirements & Configuration
 
-1. You will need .NET6+
+#### OICP Classic
+
+1. You will need .NET7+
 2. Tested and running in production since 2014 on *Debian GNU/Linux* servers
 3. The mutual authentication (TLS client certificates) with Hubject must be set up.
 4. Your server(s) must be registered within the Hubject firewalls.
 
 You can of course skip *3.* and *4.* when you use this software for your (internal) testing purposes only. 
+
+#### OICP Peer-to-Peer
+
+OICO P2P is a reference implementation of the Open InterCharge Protocol reassembled to support peer-to-peer
+operation instead of using a central EV roaming hub. This software is experimental, but should be as stable
+as the normal protocol implementation.
+
+1. You will need .NET7+
+2. Tested and running in production since 2022 on *Debian GNU/Linux* servers
+3. You can use OICP P2P with or without security. You're the admin ;)
 
 
 ### Documentation
@@ -34,9 +44,9 @@ You can of course skip *3.* and *4.* when you use this software for your (intern
 - Overview on the [OICP v2.3 implementation](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/WWCP_OICPv2.3)
 
 
-### Related Work
+### Tools & Extensions
 
-- [OICP Tool](https://github.com/OpenChargingCloud/OICPTool) is a small tool using this OICP library allowing you to test requests and responses easily on the command line. It can also be used within (bash/zsh/...) scripts for automated testing or automated processes like e.g. downloading new *Charge Detail Records* every night.
+- [OICP Tool](https://github.com/OpenChargingCloud/WWCP_OICP/tree/master/OICPTool) is a small tool using this OICP library allowing you to test requests and responses easily on the command line. It can also be used within (bash/zsh/...) scripts for automated testing or automated processes like e.g. downloading new *Charge Detail Records* every night.
 
 
 ### Your participation
