@@ -17,9 +17,6 @@
 
 #region Usings
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 
 using org.GraphDefined.Vanaheimr.Illias;
