@@ -143,7 +143,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                       )
                                   },
                                   Operator_Id.Parse("DE*GEF"),
-                                  "GraphDefiend"
+                                  "GraphDefined"
                               ),
                               ActionTypes.FullLoad
                           );
@@ -339,7 +339,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                       )
                                   },
                                   Operator_Id.Parse("DE*GEF"),
-                                  "GraphDefiend"
+                                  "GraphDefined"
                               ),
                               ActionTypes.FullLoad
                           );
