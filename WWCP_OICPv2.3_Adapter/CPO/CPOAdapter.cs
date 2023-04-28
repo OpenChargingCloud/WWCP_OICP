@@ -1763,7 +1763,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region UpdateStaticData(EVSE,  PropertyName, NewValue, OldValue = null, ...)
+        #region UpdateStaticData(EVSE,  PropertyName, NewValue, OldValue = null, DataSource = null, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the static data of the given EVSE.
@@ -1773,6 +1773,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="PropertyName">The name of the EVSE property to update.</param>
         /// <param name="NewValue">The new value of the EVSE property to update.</param>
         /// <param name="OldValue">The optional old value of the EVSE property to update.</param>
+        /// <param name="DataSource">An optional data source or context for this EVSE property update.</param>
         /// <param name="TransmissionType">Whether to send the EVSE update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -1785,6 +1786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              String                   PropertyName,
                              Object?                  NewValue,
                              Object?                  OldValue            = null,
+                             String?                  DataSource          = null,
                              WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                              DateTime?                Timestamp           = null,
@@ -1835,7 +1837,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         propertyUpdateInfo.Add(new PropertyUpdateInfo(
                                                    PropertyName,
                                                    NewValue,
-                                                   OldValue
+                                                   OldValue,
+                                                   DataSource
                                                ));
 
                         evsesToUpdateQueue.Add(EVSE);
