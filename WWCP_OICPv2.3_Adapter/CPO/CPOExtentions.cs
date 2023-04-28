@@ -20,6 +20,8 @@
 using Org.BouncyCastle.Crypto.Parameters;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -85,6 +87,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       Boolean                                                      DisablePushData                                 = false,
                                       Boolean                                                      DisablePushAdminStatus                          = true,
                                       Boolean                                                      DisablePushStatus                               = false,
+                                      Boolean                                                      DisablePushEnergyStatus                         = false,
                                       Boolean                                                      DisableAuthentication                           = false,
                                       Boolean                                                      DisableSendChargeDetailRecords                  = false,
 
@@ -93,7 +96,20 @@ namespace cloud.charging.open.protocols.WWCP
 
                                       String                                                       EllipticCurve                                   = "P-256",
                                       ECPrivateKeyParameters?                                      PrivateKey                                      = null,
-                                      PublicKeyCertificates?                                       PublicKeyCertificates                           = null)
+                                      PublicKeyCertificates?                                       PublicKeyCertificates                           = null,
+
+                                      Boolean?                                                     IsDevelopment                                   = null,
+                                      IEnumerable<String>?                                         DevelopmentServers                              = null,
+                                      Boolean?                                                     DisableLogging                                  = false,
+                                      String?                                                      LoggingPath                                     = null,
+                                      String?                                                      LoggingContext                                  = null,
+                                      String?                                                      LogfileName                                     = null,
+                                      LogfileCreatorDelegate?                                      LogfileCreator                                  = null,
+
+                                      String?                                                      ClientsLoggingPath                              = null,
+                                      String?                                                      ClientsLoggingContext                           = null,
+                                      LogfileCreatorDelegate?                                      ClientsLogfileCreator                           = null,
+                                      DNSClient?                                                   DNSClient                                       = null)
 
         {
 
@@ -132,12 +148,26 @@ namespace cloud.charging.open.protocols.WWCP
                                          DisablePushData,
                                          DisablePushAdminStatus,
                                          DisablePushStatus,
+                                         DisablePushEnergyStatus,
                                          DisableAuthentication,
                                          DisableSendChargeDetailRecords,
 
                                          EllipticCurve,
                                          PrivateKey,
-                                         PublicKeyCertificates
+                                         PublicKeyCertificates,
+
+                                         IsDevelopment,
+                                         DevelopmentServers,
+                                         DisableLogging,
+                                         LoggingPath,
+                                         LoggingContext,
+                                         LogfileName,
+                                         LogfileCreator,
+
+                                         ClientsLoggingPath,
+                                         ClientsLoggingContext,
+                                         ClientsLogfileCreator,
+                                         DNSClient
 
                                      );
 
