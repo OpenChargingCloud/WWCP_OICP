@@ -46,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Data
 
-        private static readonly  Regex                                             pattern                             = MyRegex();
+        private static readonly  Regex                                             pattern                             = new(@"\s=\s");
 
         public  static readonly  WWCP.ChargingStationOperatorNameSelectorDelegate  DefaultOperatorNameSelector         = I18N => I18N.FirstText();
 
@@ -87,38 +87,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The CPO client.
         /// </summary>
-        public CPOClient CPOClient
+        public CPOClient? CPOClient
             => CPORoaming?.CPOClient;
 
         /// <summary>
         /// The CPO client HTTP logger.
         /// </summary>
-        public CPOClient.HTTP_Logger ClientHTTPLogger
+        public CPOClient.HTTP_Logger? ClientHTTPLogger
             => CPORoaming?.CPOClient?.HTTPLogger;
 
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClient.CPOClientLogger ClientLogger
+        public CPOClient.CPOClientLogger? ClientLogger
             => CPORoaming?.CPOClient?.Logger;
 
 
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServerAPI CPOServer
+        public CPOServerAPI? CPOServer
             => CPORoaming?.CPOServer;
 
         /// <summary>
         /// The CPO server HTTP logger.
         /// </summary>
-        public CPOServerAPI.HTTP_Logger ServerHTTPLogger
+        public CPOServerAPI.HTTP_Logger? ServerHTTPLogger
             => CPORoaming?.CPOServer?.HTTPLogger;
 
         /// <summary>
         /// The CPO server logger.
         /// </summary>
-        public CPOServerAPI.ServerAPILogger ServerAPILogger
+        public CPOServerAPI.ServerAPILogger? ServerAPILogger
             => CPORoaming?.CPOServer?.Logger;
 
 
@@ -3990,8 +3990,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         public override String ToString()
 
             => "OICP" + Version.Number + " CPO Adapter " + Id;
-        [GeneratedRegex("\\s=\\s")]
-        private static partial Regex MyRegex();
 
         #endregion
 
