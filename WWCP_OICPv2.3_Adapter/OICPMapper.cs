@@ -17,7 +17,6 @@
 
 #region Usings
 
-using cloud.charging.open.protocols.WWCP;
 using org.GraphDefined.Vanaheimr.Illias;
 
 #endregion
@@ -334,8 +333,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                       ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
                                                                                       : true
                                                                                 : true,
-                                         IsHubjectCompatible:               EVSE.ChargingStation.Features.Contains(Features.HubjectCompatible),
-                                         DynamicInfoAvailable:              EVSE.ChargingStation.Features.Contains(Features.StatusInfoAvailable)
+                                         IsHubjectCompatible:               EVSE.ChargingStation.Features.Contains(WWCP.Features.HubjectCompatible),
+                                         DynamicInfoAvailable:              EVSE.ChargingStation.Features.Contains(WWCP.Features.StatusInfoAvailable)
                                                                                 ? FalseTrueAuto.True
                                                                                 : FalseTrueAuto.False,
 
@@ -479,8 +478,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static EVSEStatusRecord? ToOICP(this WWCP.EVSEStatus EVSEStatus)
         {
 
-            var evseId  = EVSEStatus?.Id.    ToOICP();
-            var status  = EVSEStatus?.Status.ToOICP();
+            var evseId  = EVSEStatus.Id.    ToOICP();
+            var status  = EVSEStatus.Status.ToOICP();
 
             if (evseId.HasValue && status.HasValue)
                 return new EVSEStatusRecord(evseId.Value,
@@ -1528,44 +1527,44 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return null;
 
             var CDR = new WWCP.ChargeDetailRecord(
-                          Id:                    WWCP.ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP()?.ToString() ?? ""),
-                          SessionId:             sessionId.Value,
-                          EVSEId:                evseId.   Value,
-                          ProviderIdStart:       ChargeDetailRecord.HubProviderId.HasValue
-                                                     ? new WWCP.EMobilityProvider_Id?(WWCP.EMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString() ?? ""))
-                                                     : null,
+                          Id:                     WWCP.ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP()?.ToString() ?? ""),
+                          SessionId:              sessionId.Value,
+                          EVSEId:                 evseId.   Value,
+                          ProviderIdStart:        ChargeDetailRecord.HubProviderId.HasValue
+                                                      ? new WWCP.EMobilityProvider_Id?(WWCP.EMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString() ?? ""))
+                                                      : null,
 
-                          ChargingProduct:       ChargeDetailRecord.PartnerProductId.HasValue
-                                                     ? WWCP.ChargingProduct.FromId(ChargeDetailRecord.PartnerProductId.Value.ToString())
-                                                     : null,
+                          ChargingProduct:        ChargeDetailRecord.PartnerProductId.HasValue
+                                                      ? WWCP.ChargingProduct.FromId(ChargeDetailRecord.PartnerProductId.Value.ToString())
+                                                      : null,
 
-                          SessionTime:           new StartEndDateTime(ChargeDetailRecord.SessionStart,
-                                                                      ChargeDetailRecord.SessionEnd),
+                          SessionTime:            new StartEndDateTime(ChargeDetailRecord.SessionStart,
+                                                                       ChargeDetailRecord.SessionEnd),
 
-                          AuthenticationStart:   ChargeDetailRecord.Identification.ToWWCP(),
+                          AuthenticationStart:    ChargeDetailRecord.Identification.ToWWCP(),
 
-                          EnergyMeteringValues:  new EnergyMeteringValue[] {
+                          EnergyMeteringValues:   new[] {
 
-                                                     new EnergyMeteringValue(
-                                                         ChargeDetailRecord.ChargingStart,
-                                                         ChargeDetailRecord.MeterValueStart ?? 0
-                                                     ),
+                                                      new WWCP.EnergyMeteringValue(
+                                                          ChargeDetailRecord.ChargingStart,
+                                                          ChargeDetailRecord.MeterValueStart ?? 0
+                                                      ),
 
-                                                     //ToDo: Meter values in between... but we don't have timestamps for them!
+                                                      //ToDo: Meter values in between... but we don't have timestamps for them!
 
-                                                     new EnergyMeteringValue(
-                                                         ChargeDetailRecord.ChargingEnd,
-                                                         ChargeDetailRecord.MeterValueEnd   ?? ChargeDetailRecord.ConsumedEnergy
-                                                     )
+                                                      new WWCP.EnergyMeteringValue(
+                                                          ChargeDetailRecord.ChargingEnd,
+                                                          ChargeDetailRecord.MeterValueEnd   ?? ChargeDetailRecord.ConsumedEnergy
+                                                      )
 
-                                                 },
+                                                  },
 
-                          //ConsumedEnergy:      Will be calculated!
+                          //ConsumedEnergy:       Will be calculated!
 
-                          //Signatures:            new String[] { ChargeDetailRecord.MeteringSignature },
+                          //Signatures:             new String[] { ChargeDetailRecord.MeteringSignature },
 
-                          CustomData:            ChargeDetailRecord.CustomData,
-                          InternalData:          internalData
+                          CustomData:             ChargeDetailRecord.CustomData,
+                          InternalData:           internalData
 
                       );
 
