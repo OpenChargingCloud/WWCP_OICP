@@ -1773,7 +1773,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="PropertyName">The name of the EVSE property to update.</param>
         /// <param name="NewValue">The new value of the EVSE property to update.</param>
         /// <param name="OldValue">The optional old value of the EVSE property to update.</param>
-        /// <param name="DataSource">An optional data source or context for this EVSE property update.</param>
+        /// <param name="DataSource">An optional data source or context for the EVSE property update.</param>
         /// <param name="TransmissionType">Whether to send the EVSE update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -1786,7 +1786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              String                   PropertyName,
                              Object?                  NewValue,
                              Object?                  OldValue            = null,
-                             String?                  DataSource          = null,
+                             Context?                 DataSource          = null,
                              WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                              DateTime?                Timestamp           = null,

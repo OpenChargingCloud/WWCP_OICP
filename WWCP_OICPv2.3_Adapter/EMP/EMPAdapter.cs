@@ -1353,8 +1353,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                        new Timestamped<WWCP.EVSEStatusTypes>(
                                                            importTimestamp,
                                                            evseStatus.Value
-                                                       ),
-                                                       evseStatusRecord.CustomData)
+                                                       ))
                                                    );
 
                     }
