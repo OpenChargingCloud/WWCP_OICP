@@ -35,27 +35,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The optional timestamp of the request.
         /// </summary>
-        DateTime            Timestamp           { get; }
+        DateTime           Timestamp           { get; }
 
         /// <summary>
         /// An optional token to cancel this request.
         /// </summary>
-        CancellationToken?  CancellationToken   { get; }
+        CancellationToken  CancellationToken   { get; }
 
         /// <summary>
         /// An optional event tracking identification for correlating this request with other events.
         /// </summary>
-        EventTracking_Id    EventTrackingId     { get; }
+        EventTracking_Id   EventTrackingId     { get; }
 
         /// <summary>
         /// An optional timeout for this request.
         /// </summary>
-        TimeSpan?           RequestTimeout      { get; }
+        TimeSpan?          RequestTimeout      { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
-        JObject?            CustomData          { get; set; }
+        JObject?           CustomData          { get; set; }
 
     }
 

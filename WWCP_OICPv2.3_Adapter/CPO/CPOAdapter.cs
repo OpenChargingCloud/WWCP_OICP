@@ -981,7 +981,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          JObject?                 CustomData          = null,
 
                          DateTime?                Timestamp           = null,
-                         CancellationToken?       CancellationToken   = null,
+                         CancellationToken        CancellationToken   = default,
                          EventTracking_Id?        EventTrackingId     = null,
                          TimeSpan?                RequestTimeout      = null)
 
@@ -989,20 +989,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            EVSEs ??= Array.Empty<WWCP.EVSE>();
-
-
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = CPOClient?.RequestTimeout;
-
+            RequestTimeout  ??= CPOClient?.RequestTimeout;
 
             WWCP.PushEVSEDataResult? result = null;
 
@@ -1339,7 +1328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?                            CustomData          = null,
 
                            DateTime?                           Timestamp           = null,
-                           CancellationToken?                  CancellationToken   = null,
+                           CancellationToken                   CancellationToken   = default,
                            EventTracking_Id?                   EventTrackingId     = null,
                            TimeSpan?                           RequestTimeout      = null)
 
@@ -1347,20 +1336,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            EVSEStatusUpdates ??= Array.Empty<WWCP.EVSEStatusUpdate>();
-
-
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = CPOClient?.RequestTimeout;
-
+            RequestTimeout  ??= CPOClient?.RequestTimeout;
 
             WWCP.PushEVSEStatusResult? result = null;
 
@@ -1571,7 +1549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.TransmissionTypes  TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                           DateTime?               Timestamp           = null,
-                          CancellationToken?      CancellationToken   = null,
+                          CancellationToken       CancellationToken   = default,
                           EventTracking_Id?       EventTrackingId     = null,
                           TimeSpan?               RequestTimeout      = null)
 
@@ -1676,7 +1654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.TransmissionTypes  TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                           DateTime?               Timestamp           = null,
-                          CancellationToken?      CancellationToken   = null,
+                          CancellationToken       CancellationToken   = default,
                           EventTracking_Id?       EventTrackingId     = null,
                           TimeSpan?               RequestTimeout      = null)
 
@@ -1790,7 +1768,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                              DateTime?                Timestamp           = null,
-                             CancellationToken?       CancellationToken   = null,
+                             CancellationToken        CancellationToken   = default,
                              EventTracking_Id?        EventTrackingId     = null,
                              TimeSpan?                RequestTimeout      = null)
 
@@ -1895,7 +1873,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              WWCP.TransmissionTypes  TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                              DateTime?               Timestamp           = null,
-                             CancellationToken?      CancellationToken   = null,
+                             CancellationToken       CancellationToken   = default,
                              EventTracking_Id?       EventTrackingId     = null,
                              TimeSpan?               RequestTimeout      = null)
 
@@ -1987,7 +1965,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                           DateTime?                Timestamp           = null,
-                          CancellationToken?       CancellationToken   = null,
+                          CancellationToken        CancellationToken   = default,
                           EventTracking_Id?        EventTrackingId     = null,
                           TimeSpan?                RequestTimeout      = null)
 
@@ -2097,7 +2075,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                           DateTime?                Timestamp           = null,
-                          CancellationToken?       CancellationToken   = null,
+                          CancellationToken        CancellationToken   = default,
                           EventTracking_Id?        EventTrackingId     = null,
                           TimeSpan?                RequestTimeout      = null)
 
@@ -2206,7 +2184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                              DateTime?                Timestamp           = null,
-                             CancellationToken?       CancellationToken   = null,
+                             CancellationToken        CancellationToken   = default,
                              EventTracking_Id?        EventTrackingId     = null,
                              TimeSpan?                RequestTimeout      = null)
 
@@ -2315,7 +2293,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                              WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                              DateTime?                Timestamp           = null,
-                             CancellationToken?       CancellationToken   = null,
+                             CancellationToken        CancellationToken   = default,
                              EventTracking_Id?        EventTrackingId     = null,
                              TimeSpan?                RequestTimeout      = null)
 
@@ -2425,7 +2403,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          WWCP.TransmissionTypes              TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
                          DateTime?                           Timestamp           = null,
-                         CancellationToken?                  CancellationToken   = null,
+                         CancellationToken                   CancellationToken   = default,
                          EventTracking_Id?                   EventTrackingId     = null,
                          TimeSpan?                           RequestTimeout      = null)
 
@@ -2574,7 +2552,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            WWCP.ChargingStationOperator_Id?  OperatorId            = null,
 
                            DateTime?                         Timestamp             = null,
-                           CancellationToken?                CancellationToken     = null,
+                           CancellationToken                 CancellationToken     = default,
                            EventTracking_Id?                 EventTrackingId       = null,
                            TimeSpan?                         RequestTimeout        = null)
 
@@ -2582,10 +2560,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Initial checks
 
-            Timestamp         ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            CancellationToken ??= new CancellationTokenSource().Token;
-            EventTrackingId   ??= EventTracking_Id.New;
-            RequestTimeout    ??= CPOClient?.RequestTimeout;
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            EventTrackingId ??= EventTracking_Id.New;
+            RequestTimeout  ??= CPOClient?.RequestTimeout;
 
             #endregion
 
@@ -2813,17 +2790,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           WWCP.ChargingStationOperator_Id?  OperatorId            = null,
 
                           DateTime?                         Timestamp             = null,
-                          CancellationToken?                CancellationToken     = null,
+                          CancellationToken                 CancellationToken     = default,
                           EventTracking_Id?                 EventTrackingId       = null,
                           TimeSpan?                         RequestTimeout        = null)
         {
 
             #region Initial checks
 
-            Timestamp         ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            CancellationToken ??= new CancellationTokenSource().Token;
-            EventTrackingId   ??= EventTracking_Id.New;
-            RequestTimeout    ??= CPOClient?.RequestTimeout;
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            EventTrackingId ??= EventTracking_Id.New;
+            RequestTimeout  ??= CPOClient?.RequestTimeout;
 
             #endregion
 
@@ -3044,18 +3020,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     WWCP.TransmissionTypes                TransmissionType,
 
                                     DateTime?                             Timestamp,
-                                    CancellationToken?                    CancellationToken,
-                                    EventTracking_Id                      EventTrackingId,
+                                    CancellationToken                     CancellationToken,
+                                    EventTracking_Id?                     EventTrackingId,
                                     TimeSpan?                             RequestTimeout)
 
         {
 
             #region Initial checks
 
-            Timestamp         ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            CancellationToken ??= new CancellationTokenSource().Token;
-            EventTrackingId   ??= EventTracking_Id.New;
-            RequestTimeout    ??= CPOClient?.RequestTimeout;
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            EventTrackingId ??= EventTracking_Id.New;
+            RequestTimeout  ??= CPOClient?.RequestTimeout;
 
             DateTime              endtime;
             TimeSpan              runtime;

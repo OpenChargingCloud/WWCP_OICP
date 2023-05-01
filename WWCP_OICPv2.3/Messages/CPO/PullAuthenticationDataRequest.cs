@@ -55,21 +55,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
-        public PullAuthenticationDataRequest(Operator_Id          OperatorId,
-                                             Process_Id?          ProcessId           = null,
-                                             JObject?             CustomData          = null,
+        public PullAuthenticationDataRequest(Operator_Id        OperatorId,
+                                             Process_Id?        ProcessId           = null,
+                                             JObject?           CustomData          = null,
 
-                                             DateTime?            Timestamp           = null,
-                                             CancellationToken?   CancellationToken   = null,
-                                             EventTracking_Id?    EventTrackingId     = null,
-                                             TimeSpan?            RequestTimeout      = null)
+                                             DateTime?          Timestamp           = null,
+                                             CancellationToken  CancellationToken   = default,
+                                             EventTracking_Id?  EventTrackingId     = null,
+                                             TimeSpan?          RequestTimeout      = null)
 
             : base(ProcessId,
                    CustomData,
                    Timestamp,
-                   CancellationToken,
                    EventTrackingId,
-                   RequestTimeout)
+                   RequestTimeout,
+                   CancellationToken)
 
         {
 
@@ -100,7 +100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           Process_Id?                                                  ProcessId                                   = null,
 
                                                           DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken?                                           CancellationToken                           = null,
+                                                          CancellationToken                                            CancellationToken                           = default,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
 
@@ -142,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Process_Id?                                                  ProcessId                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken?                                           CancellationToken                           = null,
+                                       CancellationToken                                            CancellationToken                           = default,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,
 

@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       JObject?                  CustomData          = null,
 
                                       DateTime?                 Timestamp           = null,
-                                      CancellationToken?        CancellationToken   = null,
+                                      CancellationToken         CancellationToken   = default,
                                       EventTracking_Id?         EventTrackingId     = null,
                                       TimeSpan?                 RequestTimeout      = null)
 
@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    IEnumerable<String>?                                  SortOrder                            = null,
 
                                                    DateTime?                                             Timestamp                            = null,
-                                                   CancellationToken?                                    CancellationToken                    = null,
+                                                   CancellationToken                                     CancellationToken                    = default,
                                                    EventTracking_Id?                                     EventTrackingId                      = null,
                                                    TimeSpan?                                             RequestTimeout                       = null,
 
@@ -186,7 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        IEnumerable<String>?                                  SortOrder                            = null,
 
                                        DateTime?                                             Timestamp                            = null,
-                                       CancellationToken?                                    CancellationToken                    = null,
+                                       CancellationToken                                     CancellationToken                    = default,
                                        EventTracking_Id?                                     EventTrackingId                      = null,
                                        TimeSpan?                                             RequestTimeout                       = null,
 

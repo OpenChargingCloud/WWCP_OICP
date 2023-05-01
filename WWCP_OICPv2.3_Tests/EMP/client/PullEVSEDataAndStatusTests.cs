@@ -66,9 +66,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                   SortOrder:                              null,
                                                   CustomData:                             null,
 
-                                                  Timestamp:                              Timestamp.Now,
-                                                  CancellationToken:                      null,
-                                                  EventTrackingId:                        EventTracking_Id.New,
                                                   RequestTimeout:                         TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -129,9 +126,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                     //SortOrder:            null,
                                                     //CustomStatus:         null,
 
-                                                    Timestamp:            Timestamp.Now,
-                                                    CancellationToken:    null,
-                                                    EventTrackingId:      EventTracking_Id.New,
                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -182,15 +176,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                 return;
             }
 
-            var request = new PullEVSEStatusByIdRequest(ProviderId:             Provider_Id.Parse("DE-GDF"),
-                                                        EVSEIds:                new EVSE_Id[] {
-                                                                                    EVSE_Id.Parse("DE*GEF*E1234567*A*1")
-                                                                                },
-
-                                                        Timestamp:              Timestamp.Now,
-                                                        CancellationToken:      null,
-                                                        EventTrackingId:        EventTracking_Id.New,
-                                                        RequestTimeout:         TimeSpan.FromSeconds(10));
+            var request = new PullEVSEStatusByIdRequest(ProviderId:      Provider_Id.Parse("DE-GDF"),
+                                                        EVSEIds:         new EVSE_Id[] {
+                                                                             EVSE_Id.Parse("DE*GEF*E1234567*A*1")
+                                                                         },
+                                                        RequestTimeout:  TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
 
@@ -240,15 +230,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                 return;
             }
 
-            var request = new PullEVSEStatusByOperatorIdRequest(ProviderId:             Provider_Id.Parse("DE-GDF"),
-                                                                OperatorIds:            new Operator_Id[] {
-                                                                                            Operator_Id.Parse("DE*GEF")
-                                                                                        },
-
-                                                                Timestamp:              Timestamp.Now,
-                                                                CancellationToken:      null,
-                                                                EventTrackingId:        EventTracking_Id.New,
-                                                                RequestTimeout:         TimeSpan.FromSeconds(10));
+            var request = new PullEVSEStatusByOperatorIdRequest(ProviderId:      Provider_Id.Parse("DE-GDF"),
+                                                                OperatorIds:     new Operator_Id[] {
+                                                                                     Operator_Id.Parse("DE*GEF")
+                                                                                 },
+                                                                RequestTimeout:  TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
 

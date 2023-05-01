@@ -59,9 +59,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                             SortOrder:          null,
                                                             CustomData:         null,
 
-                                                            Timestamp:          Timestamp.Now,
-                                                            CancellationToken:  null,
-                                                            EventTrackingId:    EventTracking_Id.New,
                                                             RequestTimeout:     TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -126,9 +123,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                             SortOrder:          null,
                                                             CustomData:         null,
 
-                                                            Timestamp:          Timestamp.Now,
-                                                            CancellationToken:  null,
-                                                            EventTrackingId:    EventTracking_Id.New,
                                                             RequestTimeout:     TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);

@@ -53,10 +53,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
                                                                      SessionId:            Session_Id.NewRandom(),
                                                                      CPOPartnerSessionId:  null,
                                                                      EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom(),
+
                                                                      CustomData:           null,
-                                                                     Timestamp:            Timestamp.Now,
-                                                                     CancellationToken:    null,
-                                                                     EventTrackingId:      EventTracking_Id.New,
                                                                      RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -112,10 +110,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
                                                                      SessionId:            Session_Id.NewRandom(),
                                                                      CPOPartnerSessionId:  null,
                                                                      EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom(),
+
                                                                      CustomData:           null,
-                                                                     Timestamp:            Timestamp.Now,
-                                                                     CancellationToken:    null,
-                                                                     EventTrackingId:      EventTracking_Id.New,
                                                                      RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -171,9 +167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
                                                                     CPOPartnerSessionId:  null,
                                                                     EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom(),
                                                                     CustomData:           null,
-                                                                    Timestamp:            Timestamp.Now,
-                                                                    CancellationToken:    null,
-                                                                    EventTrackingId:      EventTracking_Id.New,
+
                                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -228,9 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.EMP
                                                                     CPOPartnerSessionId:  null,
                                                                     EMPPartnerSessionId:  EMPPartnerSession_Id.NewRandom(),
                                                                     CustomData:           null,
-                                                                    Timestamp:            Timestamp.Now,
-                                                                    CancellationToken:    null,
-                                                                    EventTrackingId:      EventTracking_Id.New,
+
                                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);

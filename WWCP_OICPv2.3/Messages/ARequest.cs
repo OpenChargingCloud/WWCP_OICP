@@ -59,16 +59,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public DateTime                  Timestamp                  { get; }
 
         /// <summary>
-        /// An optional token source to cancel this request.
-        /// </summary>
-        public CancellationTokenSource?  CancellationTokenSource    { get; }
-
-        /// <summary>
-        /// An optional token to cancel this request.
-        /// </summary>
-        public CancellationToken?        CancellationToken          { get; }
-
-        /// <summary>
         /// An optional event tracking identification for correlating this request with other events.
         /// </summary>
         public EventTracking_Id          EventTrackingId            { get; }
@@ -84,6 +74,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public JObject?                  CustomData                 { get; set; }
 
+        /// <summary>
+        /// An optional token to cancel this request.
+        /// </summary>
+        public CancellationToken         CancellationToken          { get; }
+
         #endregion
 
         #region Constructor(s)
@@ -94,26 +89,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional unique OICP process identification.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public ARequest(Process_Id?         ProcessId           = null,
                         JObject?            CustomData          = null,
                         DateTime?           Timestamp           = null,
-                        CancellationToken?  CancellationToken   = null,
                         EventTracking_Id?   EventTrackingId     = null,
-                        TimeSpan?           RequestTimeout      = null)
+                        TimeSpan?           RequestTimeout      = null,
+                        CancellationToken   CancellationToken   = default)
         {
 
-            this.ProcessId                = ProcessId;
-            this.CustomData               = CustomData;
-            this.Timestamp                = Timestamp         ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            this.CancellationTokenSource  = CancellationToken is null
-                                                ? new CancellationTokenSource()
-                                                : null;
-            this.CancellationToken        = CancellationToken ?? CancellationTokenSource!.Token;
-            this.EventTrackingId          = EventTrackingId   ?? EventTracking_Id.New;
-            this.RequestTimeout           = RequestTimeout    ?? DefaultRequestTimeout;
+            this.ProcessId          = ProcessId;
+            this.CustomData         = CustomData;
+            this.Timestamp          = Timestamp         ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            this.EventTrackingId    = EventTrackingId   ?? EventTracking_Id.New;
+            this.RequestTimeout     = RequestTimeout    ?? DefaultRequestTimeout;
+            this.CancellationToken  = CancellationToken;
 
         }
 

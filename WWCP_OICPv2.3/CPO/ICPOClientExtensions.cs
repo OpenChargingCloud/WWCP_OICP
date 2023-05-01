@@ -54,7 +54,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          JObject?            CustomData          = null,
 
                          DateTime?           Timestamp           = null,
-                         CancellationToken?  CancellationToken   = null,
+                         CancellationToken   CancellationToken   = default,
                          EventTracking_Id?   EventTrackingId     = null,
                          TimeSpan?           RequestTimeout      = null)
 
@@ -101,7 +101,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          JObject?                         CustomData               = null,
 
                          DateTime?                        Timestamp                = null,
-                         CancellationToken?               CancellationToken        = null,
+                         CancellationToken                CancellationToken        = default,
                          EventTracking_Id?                EventTrackingId          = null,
                          TimeSpan?                        RequestTimeout           = null)
 
@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          JObject?            CustomData          = null,
 
                          DateTime?           Timestamp           = null,
-                         CancellationToken?  CancellationToken   = null,
+                         CancellationToken   CancellationToken   = default,
                          EventTracking_Id?   EventTrackingId     = null,
                          TimeSpan?           RequestTimeout      = null)
 
@@ -226,7 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?            CustomData          = null,
 
                            DateTime?           Timestamp           = null,
-                           CancellationToken?  CancellationToken   = null,
+                           CancellationToken   CancellationToken   = default,
                            EventTracking_Id?   EventTrackingId     = null,
                            TimeSpan?           RequestTimeout      = null)
 
@@ -273,7 +273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?                           CustomData                 = null,
 
                            DateTime?                          Timestamp                  = null,
-                           CancellationToken?                 CancellationToken          = null,
+                           CancellationToken                  CancellationToken          = default,
                            EventTracking_Id?                  EventTrackingId            = null,
                            TimeSpan?                          RequestTimeout             = null)
 
@@ -324,7 +324,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?            CustomData          = null,
 
                            DateTime?           Timestamp           = null,
-                           CancellationToken?  CancellationToken   = null,
+                           CancellationToken   CancellationToken   = default,
                            EventTracking_Id?   EventTrackingId     = null,
                            TimeSpan?           RequestTimeout      = null)
 
@@ -401,7 +401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    JObject?            CustomData          = null,
 
                                    DateTime?           Timestamp           = null,
-                                   CancellationToken?  CancellationToken   = null,
+                                   CancellationToken   CancellationToken   = default,
                                    EventTracking_Id?   EventTrackingId     = null,
                                    TimeSpan?           RequestTimeout      = null)
 
@@ -442,7 +442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             JObject?                  CustomData          = null,
 
                             DateTime?                 Timestamp           = null,
-                            CancellationToken?        CancellationToken   = null,
+                            CancellationToken         CancellationToken   = default,
                             EventTracking_Id?         EventTrackingId     = null,
                             TimeSpan?                 RequestTimeout      = null)
 
@@ -478,15 +478,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public static Task<OICPResult<PullAuthenticationDataResponse>>
 
-            PullAuthenticationData(this ICPOClient      CPOClient,
-                                   Operator_Id          OperatorId,
-                                   Process_Id?          ProcessId           = null,
-                                   JObject?             CustomData          = null,
+            PullAuthenticationData(this ICPOClient    CPOClient,
+                                   Operator_Id        OperatorId,
+                                   Process_Id?        ProcessId           = null,
+                                   JObject?           CustomData          = null,
 
-                                   DateTime?            Timestamp           = null,
-                                   CancellationToken?   CancellationToken   = null,
-                                   EventTracking_Id?    EventTrackingId     = null,
-                                   TimeSpan?            RequestTimeout      = null)
+                                   DateTime?          Timestamp           = null,
+                                   CancellationToken  CancellationToken   = default,
+                                   EventTracking_Id?  EventTrackingId     = null,
+                                   TimeSpan?          RequestTimeout      = null)
 
                 => CPOClient.PullAuthenticationData(
                        new PullAuthenticationDataRequest(
@@ -530,7 +530,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?               CustomData            = null,
 
                            DateTime?              Timestamp             = null,
-                           CancellationToken?     CancellationToken     = null,
+                           CancellationToken      CancellationToken     = default,
                            EventTracking_Id?      EventTrackingId       = null,
                            TimeSpan?              RequestTimeout        = null)
 
@@ -583,7 +583,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           JObject?               CustomData            = null,
 
                           DateTime?              Timestamp             = null,
-                          CancellationToken?     CancellationToken     = null,
+                          CancellationToken      CancellationToken     = default,
                           EventTracking_Id?      EventTrackingId       = null,
                           TimeSpan?              RequestTimeout        = null)
 
@@ -647,7 +647,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
-                                           CancellationToken?     CancellationToken     = null,
+                                           CancellationToken      CancellationToken     = default,
                                            EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null)
 
@@ -724,7 +724,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               JObject?               CustomData               = null,
 
                                               DateTime?              Timestamp                = null,
-                                              CancellationToken?     CancellationToken        = null,
+                                              CancellationToken      CancellationToken        = default,
                                               EventTracking_Id?      EventTrackingId          = null,
                                               TimeSpan?              RequestTimeout           = null)
 
@@ -809,7 +809,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          JObject?                CustomData               = null,
 
                                          DateTime?               Timestamp                = null,
-                                         CancellationToken?      CancellationToken        = null,
+                                         CancellationToken       CancellationToken        = default,
                                          EventTracking_Id?       EventTrackingId          = null,
                                          TimeSpan?               RequestTimeout           = null)
 
@@ -880,7 +880,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
-                                           CancellationToken?     CancellationToken     = null,
+                                           CancellationToken      CancellationToken     = default,
                                            EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null)
 
@@ -930,7 +930,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    JObject?            CustomData         = null,
 
                                    DateTime?           Timestamp          = null,
-                                   CancellationToken?  CancellationToken  = null,
+                                   CancellationToken   CancellationToken  = default,
                                    EventTracking_Id?   EventTrackingId    = null,
                                    TimeSpan?           RequestTimeout     = null)
 

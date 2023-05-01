@@ -46,13 +46,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                 return;
             }
 
-            var request = new PullAuthenticationDataRequest(OperatorId:         Operator_Id.Parse("DE*XXX"),
-                                                            CustomData:         null,
-
-                                                            Timestamp:          Timestamp.Now,
-                                                            CancellationToken:  null,
-                                                            EventTrackingId:    EventTracking_Id.New,
-                                                            RequestTimeout:     TimeSpan.FromSeconds(10));
+            var request = new PullAuthenticationDataRequest(OperatorId:     Operator_Id.Parse("DE*XXX"),
+                                                            CustomData:     null,
+                                                            RequestTimeout: TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
 
@@ -102,13 +98,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                 return;
             }
 
-            var request = new PullAuthenticationDataRequest(OperatorId:         Operator_Id.Parse("DE*GEF"),
-                                                            CustomData:         null,
-
-                                                            Timestamp:          Timestamp.Now,
-                                                            CancellationToken:  null,
-                                                            EventTrackingId:    EventTracking_Id.New,
-                                                            RequestTimeout:     TimeSpan.FromSeconds(10));
+            var request = new PullAuthenticationDataRequest(OperatorId:     Operator_Id.Parse("DE*GEF"),
+                                                            CustomData:     null,
+                                                            RequestTimeout: TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
 

@@ -68,9 +68,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                                   SortOrder:                              null,
                                                   CustomData:                             null,
 
-                                                  Timestamp:                              Timestamp.Now,
-                                                  CancellationToken:                      null,
-                                                  EventTrackingId:                        EventTracking_Id.New,
                                                   RequestTimeout:                         TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -141,9 +138,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                                     //SortOrder:            null,
                                                     //CustomStatus:         null,
 
-                                                    Timestamp:            Timestamp.Now,
-                                                    CancellationToken:    null,
-                                                    EventTrackingId:      EventTracking_Id.New,
                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -213,9 +207,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                                     //SortOrder:            null,
                                                     //CustomStatus:         null,
 
-                                                    Timestamp:            Timestamp.Now,
-                                                    CancellationToken:    null,
-                                                    EventTrackingId:      EventTracking_Id.New,
                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -293,10 +284,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                                         EVSEIds:                new EVSE_Id[] {
                                                                                     EVSE_Id.Parse("DE*XXX*E1234567*A*X")
                                                                                 },
-
-                                                        Timestamp:              Timestamp.Now,
-                                                        CancellationToken:      null,
-                                                        EventTrackingId:        EventTracking_Id.New,
                                                         RequestTimeout:         TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -360,10 +347,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                                         EVSEIds:                new EVSE_Id[] {
                                                                                     EVSE_Id.Parse("DE*GEF*E1234567*A*1")
                                                                                 },
-
-                                                        Timestamp:              Timestamp.Now,
-                                                        CancellationToken:      null,
-                                                        EventTrackingId:        EventTracking_Id.New,
                                                         RequestTimeout:         TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);

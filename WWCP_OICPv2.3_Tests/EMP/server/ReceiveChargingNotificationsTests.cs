@@ -57,9 +57,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                                    OperatorId:           Operator_Id.Parse("DE*GEF"),
                                                                    PartnerProductId:     PartnerProduct_Id.AC1,
                                                                    CustomData:           null,
-                                                                   Timestamp:            Timestamp.Now,
-                                                                   CancellationToken:    null,
-                                                                   EventTrackingId:      EventTracking_Id.New,
                                                                    RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -123,9 +120,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                                       OperatorId:              Operator_Id.Parse("DE*GEF"),
                                                                       PartnerProductId:        PartnerProduct_Id.AC1,
                                                                       CustomData:              null,
-                                                                      Timestamp:               Timestamp.Now,
-                                                                      CancellationToken:       null,
-                                                                      EventTrackingId:         EventTracking_Id.New,
                                                                       RequestTimeout:          TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -191,9 +185,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                                  PartnerProductId:      PartnerProduct_Id.AC1,
                                                                  PenaltyTimeStart:      Timestamp.Now - TimeSpan.FromSeconds(3),
                                                                  CustomData:            null,
-                                                                 Timestamp:             Timestamp.Now,
-                                                                 CancellationToken:     null,
-                                                                 EventTrackingId:       EventTracking_Id.New,
                                                                  RequestTimeout:        TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);
@@ -250,10 +241,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                                    CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                                    EMPPartnerSessionId:  null,
                                                                    ErrorAdditionalInfo:  "No space left of device!",
+
                                                                    CustomData:           null,
-                                                                   Timestamp:            Timestamp.Now,
-                                                                   CancellationToken:    null,
-                                                                   EventTrackingId:      EventTracking_Id.New,
                                                                    RequestTimeout:       TimeSpan.FromSeconds(10));
 
             Assert.IsNotNull(request);

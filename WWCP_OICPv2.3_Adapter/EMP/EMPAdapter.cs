@@ -1082,7 +1082,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          IEnumerable<Country>?                          CountryCodeFilter   = null,
 
                          DateTime?                                      Timestamp           = null,
-                         CancellationToken?                             CancellationToken   = null,
+                         CancellationToken                              CancellationToken   = default,
                          EventTracking_Id?                              EventTrackingId     = null,
                          TimeSpan?                                      RequestTimeout      = null)
 
@@ -1090,16 +1090,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = EMPClient?.RequestTimeout;
+            RequestTimeout  ??= EMPClient?.RequestTimeout;
 
             #endregion
 
@@ -1262,7 +1255,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            WWCP.EMobilityProvider_Id?  ProviderId          = null,
 
                            DateTime?                   Timestamp           = null,
-                           CancellationToken?          CancellationToken   = null,
+                           CancellationToken           CancellationToken   = default,
                            EventTracking_Id?           EventTrackingId     = null,
                            TimeSpan?                   RequestTimeout      = null)
 
@@ -1270,16 +1263,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = EMPClient?.RequestTimeout;
+            RequestTimeout  ??= EMPClient?.RequestTimeout;
 
             #endregion
 
@@ -1593,25 +1579,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                IEnumerable<UInt32>?                    PINs,
 
                                                DateTime?                               Timestamp,
-                                               CancellationToken?                      CancellationToken,
-                                               EventTracking_Id?                        EventTrackingId,
+                                               CancellationToken                       CancellationToken,
+                                               EventTracking_Id?                       EventTrackingId,
                                                TimeSpan?                               RequestTimeout)
 
         {
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = EMPClient?.RequestTimeout;
-
+            RequestTimeout  ??= EMPClient?.RequestTimeout;
 
             WWCP.ReservationResult? result = null;
 
@@ -1831,7 +1809,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                          WWCP.ChargingReservationCancellationReason  Reason,
 
                                                          DateTime?                                   Timestamp,
-                                                         CancellationToken?                          CancellationToken,
+                                                         CancellationToken                           CancellationToken,
                                                          EventTracking_Id?                           EventTrackingId,
                                                          TimeSpan?                                   RequestTimeout)
 
@@ -1839,16 +1817,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = EMPClient?.RequestTimeout;
+            RequestTimeout  ??= EMPClient?.RequestTimeout;
 
             #endregion
 
@@ -1936,16 +1907,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         async Task<WWCP.RemoteStartResult>
 
             WWCP.IRemoteStartStop.RemoteStart(WWCP.ChargingLocation         ChargingLocation,
-                                                     WWCP.ChargingProduct?         ChargingProduct,       // = null,
-                                                     WWCP.ChargingReservation_Id?  ReservationId,         // = null,
-                                                     WWCP.ChargingSession_Id?      SessionId,             // = null,
-                                                     WWCP.EMobilityProvider_Id?    ProviderId,            // = null,
-                                                     WWCP.RemoteAuthentication?    RemoteAuthentication,  // = null,
+                                              WWCP.ChargingProduct?         ChargingProduct,       // = null,
+                                              WWCP.ChargingReservation_Id?  ReservationId,         // = null,
+                                              WWCP.ChargingSession_Id?      SessionId,             // = null,
+                                              WWCP.EMobilityProvider_Id?    ProviderId,            // = null,
+                                              WWCP.RemoteAuthentication?    RemoteAuthentication,  // = null,
 
-                                                     DateTime?                     Timestamp,
-                                                     CancellationToken?            CancellationToken,
-                                                     EventTracking_Id?             EventTrackingId,
-                                                     TimeSpan?                     RequestTimeout)
+                                              DateTime?                     Timestamp,
+                                              CancellationToken             CancellationToken,
+                                              EventTracking_Id?             EventTrackingId,
+                                              TimeSpan?                     RequestTimeout)
 
         {
 
@@ -1954,18 +1925,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (RemoteAuthentication is null || !RemoteAuthentication.RemoteIdentification.HasValue)
                 throw new ArgumentNullException(nameof(RemoteAuthentication),  "The e-mobility account identification is mandatory in OICP!");
 
-
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = EMPClient?.RequestTimeout;
-
+            RequestTimeout  ??= EMPClient?.RequestTimeout;
 
             WWCP.RemoteStartResult? result = null;
 
@@ -2175,30 +2137,22 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         async Task<WWCP.RemoteStopResult>
 
             WWCP.IRemoteStartStop.RemoteStop(WWCP.ChargingSession_Id     SessionId,
-                                                    WWCP.ReservationHandling?   ReservationHandling,
-                                                    WWCP.EMobilityProvider_Id?  ProviderId,
-                                                    WWCP.RemoteAuthentication?  RemoteAuthentication,
+                                             WWCP.ReservationHandling?   ReservationHandling,
+                                             WWCP.EMobilityProvider_Id?  ProviderId,
+                                             WWCP.RemoteAuthentication?  RemoteAuthentication,
 
-                                                    DateTime?                   Timestamp,
-                                                    CancellationToken?          CancellationToken,
-                                                    EventTracking_Id?           EventTrackingId,
-                                                    TimeSpan?                   RequestTimeout)
+                                             DateTime?                   Timestamp,
+                                             CancellationToken           CancellationToken,
+                                             EventTracking_Id?           EventTrackingId,
+                                             TimeSpan?                   RequestTimeout)
 
         {
 
             #region Initial checks
 
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = EMPClient?.RequestTimeout;
-
+            RequestTimeout  ??= EMPClient?.RequestTimeout;
 
             WWCP.RemoteStopResult? result = null;
 
@@ -2333,7 +2287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    //JObject?                    CustomData          = null,
 
                                    DateTime?                   Timestamp           = null,
-                                   CancellationToken?          CancellationToken   = null,
+                                   CancellationToken           CancellationToken   = default,
                                    EventTracking_Id?           EventTrackingId     = null,
                                    TimeSpan?                   RequestTimeout      = null)
 
@@ -2341,20 +2295,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            if (!To.HasValue)
-                To = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-
-            if (!Timestamp.HasValue)
-                Timestamp = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-
-            if (!CancellationToken.HasValue)
-                CancellationToken = new CancellationTokenSource().Token;
-
+            To              ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
             EventTrackingId ??= EventTracking_Id.New;
-
-            if (!RequestTimeout.HasValue)
-                RequestTimeout = EMPClient?.RequestTimeout;
+            RequestTimeout  ??= EMPClient?.RequestTimeout;
 
             #endregion
 
