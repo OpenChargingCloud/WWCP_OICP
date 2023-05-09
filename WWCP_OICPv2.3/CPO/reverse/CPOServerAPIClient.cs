@@ -348,7 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   TimeSpan?                             RequestTimeout               = null,
                                   TransmissionRetryDelayDelegate?       TransmissionRetryDelay       = null,
                                   UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
-                                  Boolean                               DisableLogging               = false,
+                                  Boolean?                              DisableLogging               = false,
                                   String?                               LoggingPath                  = null,
                                   String                                LoggingContext               = HTTP_Logger.DefaultContext,
                                   LogfileCreatorDelegate?               LogfileCreator               = null,
@@ -367,6 +367,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    TransmissionRetryDelay,
                    MaxNumberOfRetries  ?? DefaultMaxNumberOfRetries,
                    false,
+                   DisableLogging,
                    null,
                    DNSClient)
 
@@ -376,14 +377,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger      = DisableLogging == false
+            base.HTTPLogger      = this.DisableLogging == false
                                        ? new HTTP_Logger(this,
                                                          LoggingPath,
                                                          LoggingContext,
                                                          LogfileCreator)
                                        : null;
 
-            this.Logger          = DisableLogging == false
+            this.Logger          = this.DisableLogging == false
                                        ? new CPOServerAPIClientLogger(this,
                                                                       LoggingPath,
                                                                       LoggingContext,
@@ -460,7 +461,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
                                                                       MaxNumberOfRetries,
-                                                                      false,
+                                                                      UseHTTPPipelining,
+                                                                      DisableLogging,
                                                                       null,
                                                                       DNSClient).
 
@@ -849,7 +851,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
                                                                       MaxNumberOfRetries,
-                                                                      false,
+                                                                      UseHTTPPipelining,
+                                                                      DisableLogging,
                                                                       null,
                                                                       DNSClient).
 
@@ -1238,7 +1241,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
                                                                       MaxNumberOfRetries,
-                                                                      false,
+                                                                      UseHTTPPipelining,
+                                                                      DisableLogging,
                                                                       null,
                                                                       DNSClient).
 
@@ -1627,7 +1631,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                       RequestTimeout,
                                                                       TransmissionRetryDelay,
                                                                       MaxNumberOfRetries,
-                                                                      false,
+                                                                      UseHTTPPipelining,
+                                                                      DisableLogging,
                                                                       null,
                                                                       DNSClient).
 

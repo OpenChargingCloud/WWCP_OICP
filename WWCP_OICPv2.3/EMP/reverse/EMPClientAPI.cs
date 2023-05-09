@@ -485,7 +485,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEData HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPullEVSEDataHTTPRequest = new();
+        public HTTPRequestLogEvent OnPullEVSEDataHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEData HTTP request was received.
@@ -527,7 +527,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEData HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPullEVSEDataHTTPResponse = new();
+        public HTTPResponseLogEvent OnPullEVSEDataHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEData HTTP response was sent.
@@ -554,7 +554,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEStatus HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPullEVSEStatusHTTPRequest = new();
+        public HTTPRequestLogEvent OnPullEVSEStatusHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEStatus HTTP request was received.
@@ -596,7 +596,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEStatus HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPullEVSEStatusHTTPResponse = new();
+        public HTTPResponseLogEvent OnPullEVSEStatusHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEStatus HTTP response was sent.
@@ -623,7 +623,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEStatusById HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPullEVSEStatusByIdHTTPRequest = new();
+        public HTTPRequestLogEvent OnPullEVSEStatusByIdHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEStatusById HTTP request was received.
@@ -665,7 +665,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEStatusById HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPullEVSEStatusByIdHTTPResponse = new();
+        public HTTPResponseLogEvent OnPullEVSEStatusByIdHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEStatusById HTTP response was sent.
@@ -692,7 +692,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEStatusByOperatorId HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPullEVSEStatusByOperatorIdHTTPRequest = new();
+        public HTTPRequestLogEvent OnPullEVSEStatusByOperatorIdHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEStatusByOperatorId HTTP request was received.
@@ -734,7 +734,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEStatusByOperatorId HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPullEVSEStatusByOperatorIdHTTPResponse = new();
+        public HTTPResponseLogEvent OnPullEVSEStatusByOperatorIdHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEStatusByOperatorId HTTP response was sent.
@@ -762,7 +762,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullPricingProductData HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPullPricingProductDataHTTPRequest = new();
+        public HTTPRequestLogEvent OnPullPricingProductDataHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an PullPricingProductData HTTP request was received.
@@ -804,7 +804,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullPricingProductData HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPullPricingProductDataHTTPResponse = new();
+        public HTTPResponseLogEvent OnPullPricingProductDataHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an PullPricingProductData HTTP response was sent.
@@ -831,7 +831,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEPricing HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPullEVSEPricingHTTPRequest = new();
+        public HTTPRequestLogEvent OnPullEVSEPricingHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEPricing HTTP request was received.
@@ -873,7 +873,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PullEVSEPricing HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPullEVSEPricingHTTPResponse = new();
+        public HTTPResponseLogEvent OnPullEVSEPricingHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an PullEVSEPricing HTTP response was sent.
@@ -901,7 +901,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PushAuthenticationData HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnPushAuthenticationDataHTTPRequest = new();
+        public HTTPRequestLogEvent OnPushAuthenticationDataHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an PushAuthenticationData HTTP request was received.
@@ -943,7 +943,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an PushAuthenticationData HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnPushAuthenticationDataHTTPResponse = new();
+        public HTTPResponseLogEvent OnPushAuthenticationDataHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an PushAuthenticationData HTTP response was sent.
@@ -971,7 +971,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
@@ -1013,7 +1013,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
@@ -1040,7 +1040,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
@@ -1082,7 +1082,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
@@ -1109,7 +1109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
@@ -1151,7 +1151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
@@ -1178,7 +1178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
@@ -1220,7 +1220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
@@ -1248,7 +1248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an GetChargeDetailRecords HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnGetChargeDetailRecordsHTTPRequest = new();
+        public HTTPRequestLogEvent OnGetChargeDetailRecordsHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an GetChargeDetailRecords HTTP request was received.
@@ -1290,7 +1290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an GetChargeDetailRecords HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnGetChargeDetailRecordsHTTPResponse = new();
+        public HTTPResponseLogEvent OnGetChargeDetailRecordsHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an GetChargeDetailRecords HTTP response was sent.
@@ -1334,14 +1334,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger      = DisableLogging == false
+            base.HTTPLogger      = this.DisableLogging == false
                                        ? new HTTP_Logger(this,
                                                          LoggingPath,
                                                          LoggingContext ?? DefaultLoggingContext,
                                                          LogfileCreator)
                                        : null;
 
-            this.Logger          = DisableLogging == false
+            this.Logger          = this.DisableLogging == false
                                        ? new EMPClientAPILogger(this,
                                                                 LoggingPath,
                                                                 LoggingContext ?? DefaultLoggingContext,
@@ -1490,14 +1490,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger      = DisableLogging == false
+            base.HTTPLogger      = this.DisableLogging == false
                                        ? new HTTP_Logger(this,
                                                          LoggingPath,
                                                          LoggingContext ?? DefaultLoggingContext,
                                                          LogfileCreator)
                                        : null;
 
-            this.Logger          = DisableLogging == false
+            this.Logger          = this.DisableLogging == false
                                        ? new EMPClientAPILogger(this,
                                                                 LoggingPath,
                                                                 LoggingContext ?? DefaultLoggingContext,

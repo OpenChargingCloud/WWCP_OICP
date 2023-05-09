@@ -50,7 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         public  static readonly  WWCP.ChargingStationOperatorNameSelectorDelegate  DefaultOperatorNameSelector         = I18N => I18N.FirstText();
 
-        private readonly         HashSet<WWCP.EVSE_Id>                             SuccessfullyUploadedEVSEs           = new();
+        private readonly         HashSet<WWCP.EVSE_Id>                             SuccessfullyUploadedEVSEs           = new ();
 
 
         /// <summary>

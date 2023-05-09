@@ -307,7 +307,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
@@ -349,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
@@ -376,7 +376,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
@@ -418,7 +418,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
@@ -446,7 +446,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest = new();
+        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP request was received.
@@ -489,7 +489,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse = new();
+        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP response was sent.
@@ -517,7 +517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new();
+        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
@@ -559,7 +559,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new();
+        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
@@ -717,14 +717,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger      = DisableLogging == false
+            base.HTTPLogger      = this.DisableLogging == false
                                        ? new HTTP_Logger(this,
                                                          LoggingPath,
                                                          LoggingContext ?? DefaultLoggingContext,
                                                          LogfileCreator)
                                        : null;
 
-            this.Logger          = DisableLogging == false
+            this.Logger          = this.DisableLogging == false
                                        ? new ServerAPILogger(this,
                                                              LoggingPath,
                                                              LoggingContext ?? DefaultLoggingContext,

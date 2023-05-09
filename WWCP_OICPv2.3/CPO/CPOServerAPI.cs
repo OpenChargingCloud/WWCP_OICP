@@ -234,7 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
@@ -276,7 +276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
@@ -303,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
@@ -345,7 +345,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
@@ -373,7 +373,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
@@ -415,7 +415,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
@@ -442,7 +442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new();
+        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
@@ -484,7 +484,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new();
+        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
@@ -642,14 +642,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
-            base.HTTPLogger      = DisableLogging == false
+            base.HTTPLogger      = this.DisableLogging == false
                                        ? new HTTP_Logger(this,
                                                          LoggingPath,
                                                          LoggingContext ?? DefaultLoggingContext,
                                                          LogfileCreator)
                                        : null;
 
-            this.Logger          = DisableLogging == false
+            this.Logger          = this.DisableLogging == false
                                        ? new ServerAPILogger(this,
                                                              LoggingPath,
                                                              LoggingContext ?? DefaultLoggingContext,
