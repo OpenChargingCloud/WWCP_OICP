@@ -3967,7 +3967,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         public override String ToString()
 
-            => "OICP" + Version.Number + " CPO Adapter " + Id;
+            => $"OICP {Version.String} CPO Adapter: {Id}";
 
         #endregion
 

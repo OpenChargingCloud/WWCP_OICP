@@ -17,8 +17,6 @@
 
 #region Usings
 
-using System;
-
 using cloud.charging.open.protocols.WWCP;
 
 #endregion
@@ -34,7 +32,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public EVSEToOICPException(IEVSE      EVSE,
                                    Exception  InnerException)
 
-            : base("Could not convert EVSE '" + EVSE.Id + "' to an OICP " + Version.Number + " EVSEDataRecord!",
+            : base("Could not convert EVSE '" + EVSE.Id + "' to an OICP " + Version.String + " EVSEDataRecord!",
                    InnerException)
 
         {

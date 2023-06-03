@@ -130,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The default HTTP user agent.
         /// </summary>
-        public new const        String    DefaultHTTPUserAgent        = "GraphDefined OICP " + Version.Number + " EMP Client";
+        public new const        String    DefaultHTTPUserAgent        = $"GraphDefined OICP {Version.String} EMP Client";
 
         /// <summary>
         /// The default timeout for HTTP requests.

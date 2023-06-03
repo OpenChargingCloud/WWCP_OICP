@@ -82,7 +82,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The default HTTP user agent.
         /// </summary>
-        public new const        String    DefaultHTTPUserAgent        = "GraphDefined OICP " + Version.Number + " CPO Server API Client";
+        public new const        String    DefaultHTTPUserAgent        = "GraphDefined OICP " + Version.String + " CPO Server API Client";
 
         /// <summary>
         /// The default timeout for HTTP requests.

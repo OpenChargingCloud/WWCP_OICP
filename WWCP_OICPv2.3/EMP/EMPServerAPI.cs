@@ -100,12 +100,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The default HTTP server name.
         /// </summary>
-        public new const String  DefaultHTTPServerName   = "GraphDefined OICP " + Version.Number + " EMP HTTP API";
+        public new const String  DefaultHTTPServerName   = "GraphDefined OICP " + Version.String + " EMP HTTP API";
 
         /// <summary>
         /// The default HTTP service name.
         /// </summary>
-        public new const String  DefaultHTTPServiceName  = "GraphDefined OICP " + Version.Number + " EMP HTTP API";
+        public new const String  DefaultHTTPServiceName  = "GraphDefined OICP " + Version.String + " EMP HTTP API";
 
         /// <summary>
         /// The default logging context.

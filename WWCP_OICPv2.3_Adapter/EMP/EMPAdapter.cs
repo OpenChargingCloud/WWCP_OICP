@@ -3347,7 +3347,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         out var chargingPool))
                                     {
 
-                                        chargingPool = chargingStationOperator.CreateChargingPool(
+                                        chargingPool = chargingStationOperator.AddChargingPool(
                                                            chargingPoolId.Value,
                                                            I18NString.Create(
                                                                Languages.unknown,
@@ -3820,9 +3820,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         public override String ToString()
 
-            => "OICP" + Version.Number + " EMP Adapter " + Id;
+            => $"OICP {Version.String} EMP Adapter: {Id}";
 
         #endregion
+
 
     }
 

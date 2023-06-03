@@ -19,15 +19,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// The current OICP version.
+    /// This OICP version 2.3.
     /// </summary>
     public static class Version
     {
 
         /// <summary>
-        /// The current OICP version.
+        /// This OICP version 2.3 as text "v2.3".
         /// </summary>
-        public const string Number = "v2.3";
+        public const           String      String   = "v2.3";
+
+        /// <summary>
+        /// This OICP version "2.3" as version identification.
+        /// </summary>
+        public readonly static Version_Id  Id       = Version_Id.Parse(String[1..]);
 
     }
 
