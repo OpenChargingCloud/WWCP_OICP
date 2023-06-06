@@ -147,19 +147,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEDataRecord">An EVSE data record.</param>
         /// 
         /// <param name="CustomConverter">A delegate to process an EVSE data record, e.g. before importing it into a roaming network.</param>
-        public static WWCP.EVSE? ToWWCP(this EVSEDataRecord                    EVSEDataRecord,
+        public static WWCP.EVSE? ToWWCP(this EVSEDataRecord                                 EVSEDataRecord,
 
-                                        WWCP.EVSEAdminStatusTypes?             InitialEVSEAdminStatus                  = null,
-                                        WWCP.ChargingStationAdminStatusTypes?  InitialChargingStationAdminStatus       = null,
-                                        WWCP.EVSEStatusTypes?                  InitialEVSEStatus                       = null,
-                                        WWCP.ChargingStationStatusTypes?       InitialChargingStationStatus            = null,
-                                        UInt16                                 MaxEVSEAdminStatusListSize              = WWCP.EVSE.           DefaultMaxEVSEAdminStatusScheduleSize,
-                                        UInt16                                 MaxChargingStationAdminStatusListSize   = WWCP.ChargingStation.DefaultMaxChargingStationAdminStatusScheduleSize,
-                                        UInt16                                 MaxEVSEStatusListSize                   = WWCP.EVSE.           DefaultMaxEVSEStatusScheduleSize,
-                                        UInt16                                 MaxChargingStationStatusListSize        = WWCP.ChargingStation.DefaultMaxChargingStationStatusScheduleSize,
+                                        Timestamped<WWCP.EVSEAdminStatusTypes>?             InitialEVSEAdminStatus                  = null,
+                                        Timestamped<WWCP.ChargingStationAdminStatusTypes>?  InitialChargingStationAdminStatus       = null,
+                                        Timestamped<WWCP.EVSEStatusTypes>?                  InitialEVSEStatus                       = null,
+                                        Timestamped<WWCP.ChargingStationStatusTypes>?       InitialChargingStationStatus            = null,
+                                        UInt16                                              MaxEVSEAdminStatusListSize              = WWCP.EVSE.           DefaultMaxEVSEAdminStatusScheduleSize,
+                                        UInt16                                              MaxChargingStationAdminStatusListSize   = WWCP.ChargingStation.DefaultMaxChargingStationAdminStatusScheduleSize,
+                                        UInt16                                              MaxEVSEStatusListSize                   = WWCP.EVSE.           DefaultMaxEVSEStatusScheduleSize,
+                                        UInt16                                              MaxChargingStationStatusListSize        = WWCP.ChargingStation.DefaultMaxChargingStationStatusScheduleSize,
 
-                                        String?                                DataSource                              = null,
-                                        EVSEDataRecord2EVSEDelegate?           CustomConverter                         = null)
+                                        String?                                             DataSource                              = null,
+                                        EVSEDataRecord2EVSEDelegate?                        CustomConverter                         = null)
 
         {
 
@@ -177,24 +177,48 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 evse                   = new WWCP.EVSE(
                                              evseId.Value,
                                              new WWCP.ChargingStation(
+
                                                  chargingStationId,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 null,
-                                                 station => {
-                                                     station.DataSource   = DataSource;
-                                                     station.Address      = EVSEDataRecord.Address.ToWWCP();
-                                                     station.GeoLocation  = new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
-                                                                                org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
-                                                                                org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
-                                                                            );
-                                                 },
-                                                 null,
+                                                 null,          // ChargingPool
+
+                                                 null,          // Name
+                                                 null,          // Description
+
+                                                 EVSEDataRecord.Address.ToWWCP(),
+                                                 new org.GraphDefined.Vanaheimr.Aegir.GeoCoordinate(
+                                                     org.GraphDefined.Vanaheimr.Aegir.Latitude. Parse(EVSEDataRecord.GeoCoordinates.Latitude),
+                                                     org.GraphDefined.Vanaheimr.Aegir.Longitude.Parse(EVSEDataRecord.GeoCoordinates.Longitude)
+                                                 ),
+                                                 null,          // OpeningTimes
+                                                 null,          // ChargingWhenClosed
+                                                 null,          // Accessibility
+                                                 null,          // LocationLanguage
+                                                 null,          // PhysicalReference
+                                                 null,          // HotlinePhoneNumber
+
+                                                 null,          // AuthenticationModes
+                                                 null,          // PaymentOptions
+                                                 null,          // Features
+
+                                                 null,          // ServiceIdentification
+                                                 null,          // ModelCode
+
+                                                 null,          // Brands
+
                                                  InitialChargingStationAdminStatus,
                                                  InitialChargingStationStatus,
                                                  MaxChargingStationAdminStatusListSize,
-                                                 MaxChargingStationStatusListSize
+                                                 MaxChargingStationStatusListSize,
+
+                                                 DataSource,
+                                                 null,          // LastChange,
+
+                                                 null,          // CustomData,
+                                                 null,          // InternalData,
+
+                                                 null,          // Configurator
+                                                 null           // RemoteChargingStationCreator
+
                                              ),
                                              null,          // Name
                                              null,          // Description
