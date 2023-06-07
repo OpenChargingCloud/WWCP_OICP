@@ -223,11 +223,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              null,          // Name
                                              null,          // Description
 
-                                             InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusTypes.OutOfService,
-                                             InitialEVSEStatus      ?? WWCP.EVSEStatusTypes.OutOfService,
-                                             MaxEVSEAdminStatusListSize,
-                                             MaxEVSEStatusListSize,
-
                                              null,          // PhotoURLs
                                              null,          // Brands
                                              null,          // OpenDataLicenses
@@ -252,21 +247,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              null,          // EnergyMeter
                                              null,          // IsFreeOfCharge
                                              null,          // ChargingConnectors
-
                                              null,          // ChargingSession
+
+                                             InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusTypes.Operational,
+                                             InitialEVSEStatus      ?? WWCP.EVSEStatusTypes.OutOfService,
+                                             MaxEVSEAdminStatusListSize,
+                                             MaxEVSEStatusListSize,
                                              null,          // LastStatusUpdate
+
                                              DataSource,
                                              null,          // LastChange
 
-                                             _evse => {     // Configurator
-
-                                             },
-                                             null,          // RemoteEVSECreator
-
                                              EVSEDataRecord.CustomData,
-                                             new UserDefinedDictionary(new Dictionary<String, Object?> {
-                                                 { OICP_EVSEDataRecord, EVSEDataRecord }
-                                             })
+                                             new UserDefinedDictionary(
+                                                 new Dictionary<String, Object?> {
+                                                     { OICP_EVSEDataRecord, EVSEDataRecord }
+                                                 }
+                                             ),
+
+                                             null,          // Configurator
+                                             null           // RemoteEVSECreator
 
                                          );
 
