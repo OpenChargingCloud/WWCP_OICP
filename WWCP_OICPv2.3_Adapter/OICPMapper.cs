@@ -1542,28 +1542,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 internalData.Set(OICP_HubProviderId,                   ChargeDetailRecord.HubProviderId.       Value.ToString());
 
 
-            var sessionId = ChargeDetailRecord.SessionId.ToWWCP();
+            var sessionId          = ChargeDetailRecord.SessionId.ToWWCP();
             if (sessionId is null)
                 return null;
 
-            var evseId    = ChargeDetailRecord.EVSEId.ToWWCP();
-            if (evseId    is null)
+            var evseId             = ChargeDetailRecord.EVSEId.   ToWWCP();
+            if (evseId is null)
                 return null;
 
+            var chargingProductId  = ChargeDetailRecord.PartnerProductId.HasValue
+                                         ? ChargeDetailRecord.PartnerProductId.Value.ToWWCP()
+                                         : null;
+
+
             var CDR = new WWCP.ChargeDetailRecord(
+
                           Id:                     WWCP.ChargeDetailRecord_Id.Parse(ChargeDetailRecord.SessionId.ToWWCP()?.ToString() ?? ""),
                           SessionId:              sessionId.Value,
                           EVSEId:                 evseId.   Value,
+
                           ProviderIdStart:        ChargeDetailRecord.HubProviderId.HasValue
                                                       ? new WWCP.EMobilityProvider_Id?(WWCP.EMobilityProvider_Id.Parse(ChargeDetailRecord.HubProviderId.ToString() ?? ""))
                                                       : null,
 
-                          ChargingProduct:        ChargeDetailRecord.PartnerProductId.HasValue
-                                                      ? WWCP.ChargingProduct.FromId(ChargeDetailRecord.PartnerProductId.Value.ToString())
+                          ChargingProduct:        chargingProductId.HasValue
+                                                      ? WWCP.ChargingProduct.FromId(chargingProductId.Value)
                                                       : null,
 
-                          SessionTime:            new StartEndDateTime(ChargeDetailRecord.SessionStart,
-                                                                       ChargeDetailRecord.SessionEnd),
+                          SessionTime:            new StartEndDateTime(
+                                                      ChargeDetailRecord.SessionStart,
+                                                      ChargeDetailRecord.SessionEnd
+                                                  ),
 
                           AuthenticationStart:    ChargeDetailRecord.Identification.ToWWCP(),
 
@@ -1630,7 +1639,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           SessionId:             sessionId.     Value,
                           SessionStart:          ChargeDetailRecord.SessionTime.StartTime,
                           SessionEnd:            sessionEndTime.Value,
-                          Identification:        ChargeDetailRecord.AuthenticationStart.ToOICP(),
+                          Identification:        ChargeDetailRecord.AuthenticationStart?.ToOICP(),
                           PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
                           CPOPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<CPOPartnerSession_Id?>(OICP_CPOPartnerSessionId),
                           EMPPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<EMPPartnerSession_Id?>(OICP_EMPPartnerSessionId),
@@ -1658,6 +1667,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         }
 
         #endregion
+
 
     }
 

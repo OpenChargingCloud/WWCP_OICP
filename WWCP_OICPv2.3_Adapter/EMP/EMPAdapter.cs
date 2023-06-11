@@ -20,7 +20,6 @@
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -597,18 +596,44 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                        Sender,
                                                        Request) => {
 
-                #region Map parameter values
+                #region Verify local authentication
 
-                var operatorId           = Request.OperatorId.    ToWWCP();
-                var localAuthentication  = Request.Identification.ToWWCP().ToLocal;
-                var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
-                var productId            = Request.PartnerProductId.HasValue
-                                               ? WWCP.ChargingProduct.FromId(Request.PartnerProductId.Value.ToWWCP()?.ToString())
-                                               : default;
-                var sessionId            = Request.SessionId.          ToWWCP();
-                var CPOPartnerSessionId  = Request.CPOPartnerSessionId.ToWWCP();
+                var localAuthentication  = Request.Identification.ToWWCP()?.ToLocal;
+
+                if (localAuthentication is null)
+                    return AuthorizationStartResponse.NotAuthorized(
+                               Request,
+                               new StatusCode(
+                                   StatusCodes.NoValidContract,
+                                   "No valid authentication!"
+                               ),
+                               Request.SessionId,
+                               Request.CPOPartnerSessionId,
+                               null, // EMPPartnerSessionId
+                               null, // ProviderId
+                               org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                               Request.EventTrackingId,
+                               null, // Runtime
+                               Request.ProcessId
+                           );
 
                 #endregion
+
+                #region Map parameter values
+
+                var operatorId           = Request.OperatorId.         ToWWCP();
+                var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
+                var chargingProductId    = Request.PartnerProductId.HasValue
+                                               ? Request.PartnerProductId.Value.ToWWCP()
+                                               : null;
+                var chargingProduct      = chargingProductId.HasValue
+                                               ? WWCP.ChargingProduct.FromId(chargingProductId.Value)
+                                               : null;
+                var sessionId            = Request.SessionId.          ToWWCP();
+                var cpoPartnerSessionId  = Request.CPOPartnerSessionId.ToWWCP();
+
+                #endregion
+
 
                 #region Send OnAuthorizeStartRequest event
 
@@ -628,9 +653,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                     operatorId,
                                                     localAuthentication,
                                                     chargingLocation,
-                                                    productId,
+                                                    chargingProduct,
                                                     sessionId,
-                                                    CPOPartnerSessionId,
+                                                    cpoPartnerSessionId,
                                                     new WWCP.ISendAuthorizeStartStop[0],
                                                     Request.RequestTimeout);
 
@@ -645,9 +670,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 var response = await RoamingNetwork.AuthorizeStart(localAuthentication,
                                                                    chargingLocation,
-                                                                   productId,
+                                                                   chargingProduct,
                                                                    sessionId,
-                                                                   CPOPartnerSessionId,
+                                                                   cpoPartnerSessionId,
                                                                    operatorId,
 
                                                                    Timestamp,
@@ -674,9 +699,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      operatorId,
                                                      localAuthentication,
                                                      chargingLocation,
-                                                     productId,
+                                                     chargingProduct,
                                                      sessionId,
-                                                     CPOPartnerSessionId,
+                                                     cpoPartnerSessionId,
                                                      new WWCP.ISendAuthorizeStartStop[0],
                                                      Request.RequestTimeout,
                                                      response,
@@ -1040,16 +1065,38 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
+        #region Charging Reservations
 
-        public Boolean TryGetChargingReservationById(WWCP.ChargingReservation_Id ReservationId, out WWCP.ChargingReservation ChargingReservation)
+        public Boolean TryGetChargingReservationById(WWCP.ChargingReservation_Id ReservationId, out WWCP.ChargingReservation? ChargingReservation)
         {
             throw new NotImplementedException();
         }
+
+        public Boolean TryGetChargingReservationsById(WWCP.ChargingReservation_Id ReservationId, out WWCP.ChargingReservationCollection? ChargingReservations)
+        {
+            throw new NotImplementedException();
+        }
+
+        public WWCP.ChargingReservation? GetChargingReservationById(WWCP.ChargingReservation_Id ReservationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public WWCP.ChargingReservationCollection? GetChargingReservationsById(WWCP.ChargingReservation_Id ReservationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Charging Sessions
 
         public Boolean TryGetChargingSessionById(WWCP.ChargingSession_Id ChargingSessionId, out WWCP.ChargingSession ChargingSession)
         {
             throw new NotImplementedException();
         }
+
+        #endregion
 
 
         // Outgoing OICP EMPClient requests...
@@ -2070,7 +2117,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             {
 
                 result = WWCP.RemoteStartResult.Success(remoteStartResponse.Response.SessionId.HasValue
-                                                            ? new WWCP.ChargingSession(remoteStartResponse.Response.SessionId.ToWWCP().Value)
+                                                            ? new WWCP.ChargingSession(remoteStartResponse.Response.SessionId.ToWWCP().Value,
+                                                                                       EventTrackingId)
                                                             : default,
                                                         Runtime);
 
@@ -3193,7 +3241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         if (!RoamingNetwork.TryGetChargingStationOperatorById(WWCPChargingStationOperatorId, out var wwcpChargingStationOperator))
                             wwcpChargingStationOperator = RoamingNetwork.AddChargingStationOperator(
-                                                              new ChargingStationOperator(
+                                                              new WWCP.ChargingStationOperator(
                                                                   WWCPChargingStationOperatorId.Value,
                                                                   RoamingNetwork,
                                                                   I18NString.Create(
@@ -3320,7 +3368,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         chargingStationOperator = RoamingNetwork.AddChargingStationOperator(
-                                                      new ChargingStationOperator(
+                                                      new WWCP.ChargingStationOperator(
                                                           chargingStationOperatorId.Value,
                                                           RoamingNetwork,
                                                           I18NString.Create(
@@ -3348,10 +3396,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                     {
 
                                         chargingPool = chargingStationOperator.AddChargingPool(
-                                                           chargingPoolId.Value,
-                                                           I18NString.Create(
-                                                               Languages.unknown,
-                                                               (chargingPoolInfo.OperatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString()) + " pool"
+                                                           new WWCP.ChargingPool(
+                                                               chargingPoolId.Value,
+                                                               chargingStationOperator,
+                                                               I18NString.Create(
+                                                                   Languages.unknown,
+                                                                   (chargingPoolInfo.OperatorInfo.OperatorName ?? chargingStationOperatorId.Value.ToString()) + " pool"
+                                                               )
                                                            )
                                                        ).Result.ChargingPool;
 
