@@ -863,25 +863,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //    => EVCO_Id.Parse(RemoteAuthentication.RemoteIdentification.ToString());
 
         public static WWCP.RemoteAuthentication ToWWCP(this EVCO_Id EVCOId)
-            => WWCP.RemoteAuthentication.FromRemoteIdentification(WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString()));
+            => WWCP.RemoteAuthentication.FromRemoteIdentification(WWCP.EMobilityAccount_Id.Parse(EVCOId.ToString()));
 
 
 
-        public static EVCO_Id ToOICP(this WWCP.eMobilityAccount_Id eMAId)
+        public static EVCO_Id ToOICP(this WWCP.EMobilityAccount_Id eMAId)
             => EVCO_Id.Parse(eMAId.ToString());
 
-        public static WWCP.eMobilityAccount_Id ToWWCP_eMAId(this EVCO_Id EVCOId)
-            => WWCP.eMobilityAccount_Id.Parse(EVCOId.ToString());
+        public static WWCP.EMobilityAccount_Id ToWWCP_eMAId(this EVCO_Id EVCOId)
+            => WWCP.EMobilityAccount_Id.Parse(EVCOId.ToString());
 
 
-        public static EVCO_Id? ToOICP(this WWCP.eMobilityAccount_Id? eMAId)
+        public static EVCO_Id? ToOICP(this WWCP.EMobilityAccount_Id? eMAId)
             => eMAId.HasValue
                    ? EVCO_Id.Parse(eMAId.Value.ToString())
                    : null;
 
-        public static WWCP.eMobilityAccount_Id? ToWWCP(this EVCO_Id? EVCOId)
+        public static WWCP.EMobilityAccount_Id? ToWWCP(this EVCO_Id? EVCOId)
             => EVCOId.HasValue
-                   ? WWCP.eMobilityAccount_Id.Parse(EVCOId.Value.ToString())
+                   ? WWCP.EMobilityAccount_Id.Parse(EVCOId.Value.ToString())
                    : null;
 
 

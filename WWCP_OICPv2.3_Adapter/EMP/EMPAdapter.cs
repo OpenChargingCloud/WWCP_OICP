@@ -1622,7 +1622,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                WWCP.RemoteAuthentication?              RemoteAuthentication,
                                                WWCP.ChargingProduct?                   ChargingProduct,
                                                IEnumerable<WWCP.AuthenticationToken>?  AuthTokens,
-                                               IEnumerable<WWCP.eMobilityAccount_Id>?  eMAIds,
+                                               IEnumerable<WWCP.EMobilityAccount_Id>?  eMAIds,
                                                IEnumerable<UInt32>?                    PINs,
 
                                                DateTime?                               Timestamp,
@@ -1730,11 +1730,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Add the eMAId to the list of valid eMAIds
 
             if (eMAIds == null && RemoteAuthentication?.RemoteIdentification.HasValue == true)
-                eMAIds = new List<WWCP.eMobilityAccount_Id> { RemoteAuthentication.RemoteIdentification.Value };
+                eMAIds = new List<WWCP.EMobilityAccount_Id> { RemoteAuthentication.RemoteIdentification.Value };
 
             if (eMAIds != null && RemoteAuthentication?.RemoteIdentification.HasValue == true && !eMAIds.Contains(RemoteAuthentication.RemoteIdentification.Value))
             {
-                var _eMAIds = new List<WWCP.eMobilityAccount_Id>(eMAIds);
+                var _eMAIds = new List<WWCP.EMobilityAccount_Id>(eMAIds);
                 _eMAIds.Add(RemoteAuthentication.RemoteIdentification.Value);
                 eMAIds = _eMAIds;
             }
