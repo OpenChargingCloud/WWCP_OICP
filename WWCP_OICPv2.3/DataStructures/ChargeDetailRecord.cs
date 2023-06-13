@@ -198,10 +198,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   Provider_Id?                       HubProviderId                    = null,
 
                                   JObject?                           CustomData                       = null,
-                                  UserDefinedDictionary?             InternalData                     = null)
+                                  UserDefinedDictionary?             InternalData                     = null,
+                                  DateTime?                          LastUpdate                       = null)
 
                 : base(CustomData,
-                       InternalData)
+                       InternalData,
+                       LastUpdate ?? Timestamp.Now)
 
         {
 

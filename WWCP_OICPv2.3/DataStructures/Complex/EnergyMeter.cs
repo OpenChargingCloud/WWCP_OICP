@@ -187,7 +187,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            DateTime?                                 LastUpdate                  = null)
 
             : base(CustomData,
-                   InternalData)
+                   InternalData,
+                   LastUpdate ?? Timestamp.Now)
 
         {
 

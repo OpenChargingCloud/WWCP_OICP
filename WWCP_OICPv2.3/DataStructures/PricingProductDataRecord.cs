@@ -119,7 +119,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         UserDefinedDictionary?                 InternalData           = null)
 
             : base(CustomData,
-                   InternalData)
+                   InternalData,
+                   Timestamp.Now)
 
         {
 
