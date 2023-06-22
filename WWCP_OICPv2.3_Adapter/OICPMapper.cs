@@ -523,19 +523,39 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="WWCPAddress">A WWCP address.</param>
         public static Address ToOICP(this org.GraphDefined.Vanaheimr.Illias.Address WWCPAddress)
+        {
 
-            => new (WWCPAddress.Country,
-                    WWCPAddress.City.FirstText(),
-                    WWCPAddress.Street,
-                    WWCPAddress.PostalCode,
-                    WWCPAddress.HouseNumber,
-                    WWCPAddress.FloorLevel,
-                    null,
-                    null,
-                    null,
-                    WWCPAddress.TimeZone.HasValue
-                        ? Time_Zone.Parse(WWCPAddress.TimeZone.Value.ToString())
-                        : null);
+            var utcOffset = new TimeSpan?();
+
+            if (WWCPAddress.TimeZone.HasValue)
+            {
+                try
+                {
+
+                    utcOffset = TimeZoneInfo.FindSystemTimeZoneById(WWCPAddress.TimeZone.Value.ToString()).
+                                             GetUtcOffset          (Timestamp.Now);
+
+                }
+                catch (Exception e)
+                {
+                    DebugX.Log(e, $"{nameof(Address)}.{nameof(ToOICP)} => TimeZoneInfo.FindSystemTimeZoneById('{WWCPAddress.TimeZone.Value}') failed:{Environment.NewLine}{e.Message}");
+                }
+            }
+
+            return new (WWCPAddress.Country,
+                        WWCPAddress.City.FirstText(),
+                        WWCPAddress.Street,
+                        WWCPAddress.PostalCode,
+                        WWCPAddress.HouseNumber,
+                        WWCPAddress.FloorLevel,
+                        null,
+                        null,
+                        null,
+                        utcOffset.HasValue    // [U][T][C][+,-][0-9][0-9][:][0-9][0-9]
+                            ? Time_Zone.Parse($"UTC{(utcOffset < TimeSpan.Zero ? "-" : "+")}{utcOffset:hh\\:mm}")
+                            : null);
+
+        }
 
         #endregion
 
