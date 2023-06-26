@@ -1091,9 +1091,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Charging Sessions
 
-        public Boolean TryGetChargingSessionById(WWCP.ChargingSession_Id ChargingSessionId, out WWCP.ChargingSession ChargingSession)
+        /// <summary>
+        /// Whether the given charging session identification is known within the roaming network.
+        /// </summary>
+        /// <param name="ChargingSessionId">The charging session identification.</param>
+        public Boolean Contains(WWCP.ChargingSession_Id ChargingSessionId)
+            => false;
+
+        /// <summary>
+        /// Return the charging session specified by the given charging session identification.
+        /// </summary>
+        /// <param name="ChargingSessionId">The charging session identification.</param>
+        /// <param name="ChargingSession">The charging session.</param>
+        Boolean WWCP.IChargingSessions.TryGetChargingSessionById(WWCP.ChargingSession_Id    ChargingSessionId,
+                                                                 out WWCP.ChargingSession?  ChargingSession)
         {
-            throw new NotImplementedException();
+            ChargingSession = null;
+            return false;
         }
 
         #endregion
