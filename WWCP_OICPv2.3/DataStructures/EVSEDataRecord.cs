@@ -1573,9 +1573,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE data records.
         /// </summary>
-        /// <param name="Object">An object to compare with.</param>
+        /// <param name="Object">An EVSE data record to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is EVSEDataRecord evseDataRecord
@@ -1588,9 +1588,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(EVSEDataRecord)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two EVSE data records.
         /// </summary>
-        /// <param name="EVSEDataRecord">An object to compare with.</param>
+        /// <param name="EVSEDataRecord">An EVSE data record to compare with.</param>
         public Int32 CompareTo(EVSEDataRecord? EVSEDataRecord)
         {
 
