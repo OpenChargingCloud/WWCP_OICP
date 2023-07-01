@@ -899,7 +899,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStartResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                          CustomStatusCodeSerializer).
@@ -1115,7 +1115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStopResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
@@ -1332,7 +1332,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = authorizeRemoteStartResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                               CustomStatusCodeSerializer).
@@ -1548,7 +1548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = authorizeRemoteStopResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                              CustomStatusCodeSerializer).

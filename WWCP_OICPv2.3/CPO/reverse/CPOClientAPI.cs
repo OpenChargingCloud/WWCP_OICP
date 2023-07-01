@@ -1551,7 +1551,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                 CustomStatusCodeSerializer).
@@ -1791,7 +1791,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                   CustomStatusCodeSerializer).
@@ -2032,7 +2032,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = pushPricingProductDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                           CustomStatusCodeSerializer).
@@ -2272,7 +2272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = pushEVSEPricingResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                    CustomStatusCodeSerializer).
@@ -2518,7 +2518,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = pullAuthenticationDataResponse.Response?.ToJSON(CustomPullAuthenticationDataResponseSerializer,
                                                                                                                           CustomProviderAuthenticationDataSerializer,
@@ -2747,7 +2747,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = authorizationStartResponse.Response?.ToJSON(CustomAuthorizationStartSerializer,
                                                                                                                       CustomStatusCodeSerializer,
@@ -2974,7 +2974,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = authorizationStopResponse.Response?.ToJSON(CustomAuthorizationStopSerializer,
                                                                                                                      CustomStatusCodeSerializer).
@@ -3786,7 +3786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = chargingNotificationResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
@@ -4027,7 +4027,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = "Content-Type, Accept, Authorization",
+                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
                                              ContentType                = HTTPContentType.JSON_UTF8,
                                              Content                    = chargeDetailRecordResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                       CustomStatusCodeSerializer).
