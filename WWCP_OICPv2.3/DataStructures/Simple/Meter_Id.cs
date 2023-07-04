@@ -81,7 +81,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The length of the meter identification.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -111,7 +111,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var meterId))
                 return meterId;
 
-            throw new ArgumentException("Invalid text representation of a meter identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a meter identification: '{Text}'!",
                                         nameof(Text));
 
         }
@@ -155,7 +155,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     MeterId = new Meter_Id(Text);
                     return true;
                 }
-                catch (Exception)
+                catch
                 { }
             }
 
@@ -185,7 +185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Operator == (MeterId1, MeterId2)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two meter identifications for equality.
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
@@ -200,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Operator != (MeterId1, MeterId2)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two meter identifications for inequality.
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Operator <  (MeterId1, MeterId2)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two meter identifications.
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
@@ -230,7 +230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Operator <= (MeterId1, MeterId2)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two meter identifications.
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
@@ -245,7 +245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Operator >  (MeterId1, MeterId2)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two meter identifications.
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
@@ -260,7 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Operator >= (MeterId1, MeterId2)
 
         /// <summary>
-        /// Compares two instances of this object.
+        /// Compares two meter identifications.
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>

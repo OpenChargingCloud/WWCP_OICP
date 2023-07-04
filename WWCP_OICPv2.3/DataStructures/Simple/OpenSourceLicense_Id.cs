@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var openSourceLicenseId))
                 return openSourceLicenseId;
 
-            throw new ArgumentException("Invalid text representation of an Open Source license identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of an Open Source license identification: '{Text}'!",
                                         nameof(Text));
 
         }

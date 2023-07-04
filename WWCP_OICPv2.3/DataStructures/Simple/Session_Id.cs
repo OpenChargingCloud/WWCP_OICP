@@ -132,7 +132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var sessionId))
                 return sessionId;
 
-            throw new ArgumentException("Invalid text representation of a charging session identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a charging session identification: '{Text}'!",
                                         nameof(Text));
 
         }

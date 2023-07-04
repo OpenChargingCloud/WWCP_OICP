@@ -3474,7 +3474,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        EVSEsToAddTask.Warnings);
 
                     }
-                    catch (Exception)
+                    catch
                     { }
                 }
 
@@ -3512,7 +3512,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            EVSEsToUpdateResult.Warnings);
 
                         }
-                        catch (Exception)
+                        catch
                         { }
                     }
 
@@ -3549,7 +3549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        PushEVSEStatusTask.Warnings);
 
                     }
-                    catch (Exception)
+                    catch
                     { }
                 }
 
@@ -3585,7 +3585,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            EVSEsToRemoveTask.Warnings);
 
                         }
-                        catch (Exception)
+                        catch
                         { }
                     }
 
@@ -3670,7 +3670,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                        pushEVSEStatusFastTask.Warnings);
 
                     }
-                    catch (Exception)
+                    catch
                     { }
                 }
 

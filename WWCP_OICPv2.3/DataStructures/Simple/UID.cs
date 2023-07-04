@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var uid))
                 return uid;
 
-            throw new ArgumentException("Invalid text representation of a RFID card (user) identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a RFID card (user) identification: '{Text}'!",
                                         nameof(Text));
 
         }

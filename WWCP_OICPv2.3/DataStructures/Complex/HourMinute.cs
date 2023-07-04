@@ -139,7 +139,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return true;
 
                 }
-                catch (Exception)
+                catch
                 { }
             }
 

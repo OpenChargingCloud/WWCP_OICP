@@ -123,7 +123,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var processId))
                 return processId;
 
-            throw new ArgumentException("Invalid text representation of a process identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a process identification: '{Text}'!",
                                         nameof(Text));
 
         }

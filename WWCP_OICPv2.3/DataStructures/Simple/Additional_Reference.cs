@@ -113,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var additionalReference))
                 return additionalReference;
 
-            throw new ArgumentException("Invalid text representation of an additional reference: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of an additional reference: '" + Text + "'!",
                                         nameof(Text));
 
         }

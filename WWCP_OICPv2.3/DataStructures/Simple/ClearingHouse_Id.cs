@@ -109,7 +109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var clearingHouseId))
                 return clearingHouseId;
 
-            throw new ArgumentException("Invalid text representation of a clearing house identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a clearing house identification: '{Text}'!",
                                         nameof(Text));
 
         }

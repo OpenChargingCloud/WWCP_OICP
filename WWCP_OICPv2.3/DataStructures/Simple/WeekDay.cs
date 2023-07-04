@@ -113,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var weekDay))
                 return weekDay;
 
-            throw new ArgumentException("Invalid text representation of a week day: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a week day: '" + Text + "'!",
                                         nameof(Text));
 
         }

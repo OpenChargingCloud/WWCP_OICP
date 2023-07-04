@@ -162,7 +162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var providerId))
                 return providerId;
 
-            throw new ArgumentException("Invalid text representation of an e-mobility provider identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of an e-mobility provider identification: '{Text}'!",
                                         nameof(Text));
 
         }

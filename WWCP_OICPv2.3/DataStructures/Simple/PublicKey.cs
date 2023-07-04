@@ -80,7 +80,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The length of the public key.
         /// </summary>
         public UInt64 Length
-            => (UInt64) InternalId.Length;
+            => (UInt64) (InternalId?.Length ?? 0);
 
         #endregion
 
@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var publicKey))
                 return publicKey;
 
-            throw new ArgumentException("Invalid text representation of a public key: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a public key: '" + Text + "'!",
                                         nameof(Text));
 
         }
@@ -154,7 +154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     PublicKey = new PublicKey(Text);
                     return true;
                 }
-                catch (Exception)
+                catch
                 { }
             }
 

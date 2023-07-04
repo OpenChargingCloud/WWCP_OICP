@@ -182,7 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var evseId))
                 return evseId;
 
-            throw new ArgumentException("Invalid text representation of an electric vehicle supply equipment (EVSE) identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of an electric vehicle supply equipment (EVSE) identification: '{Text}'!",
                                         nameof(Text));
 
         }

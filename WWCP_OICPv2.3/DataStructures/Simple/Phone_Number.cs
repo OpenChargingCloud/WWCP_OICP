@@ -119,7 +119,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var phoneNumber))
                 return phoneNumber;
 
-            throw new ArgumentException("Invalid text representation of a phone number: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a phone number: '" + Text + "'!",
                                         nameof(Text));
 
         }

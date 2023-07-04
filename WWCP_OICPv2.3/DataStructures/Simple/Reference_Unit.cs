@@ -113,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var chargingPoolId))
                 return chargingPoolId;
 
-            throw new ArgumentException("Invalid text representation of a reference unit identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a reference unit identification: '{Text}'!",
                                         nameof(Text));
 
         }

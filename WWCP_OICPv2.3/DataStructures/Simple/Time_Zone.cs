@@ -120,7 +120,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var timeZone))
                 return timeZone;
 
-            throw new ArgumentException("Invalid text representation of a time zone identification: '" + Text + "'!", nameof(Text));
+            throw new ArgumentException($"Invalid text representation of a time zone identification: '{Text}'!", nameof(Text));
 
         }
 

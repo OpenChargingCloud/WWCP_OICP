@@ -142,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var EVCOId))
                 return EVCOId;
 
-            throw new ArgumentException("Invalid text representation of an electric vehicle contract identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of an electric vehicle contract identification: '{Text}'!",
                                         nameof(Text));
 
         }

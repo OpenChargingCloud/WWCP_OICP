@@ -136,7 +136,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var currencyId))
                 return currencyId;
 
-            throw new ArgumentException("Invalid text representation of a currency identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a currency identification: '{Text}'!",
                                         nameof(Text));
 
         }

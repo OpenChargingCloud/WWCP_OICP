@@ -154,7 +154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var operatorId))
                 return operatorId;
 
-            throw new ArgumentException("Invalid text representation of an EVSE operator identification: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of an EVSE operator identification: '{Text}'!",
                                         nameof(Text));
 
         }

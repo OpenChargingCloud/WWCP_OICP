@@ -113,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var hashValue))
                 return hashValue;
 
-            throw new ArgumentException("Invalid text representation of a hash value: '" + Text + "'!",
+            throw new ArgumentException($"Invalid text representation of a hash value: '" + Text + "'!",
                                         nameof(Text));
 
         }

@@ -278,7 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return geoCoordinates!.Value;
             }
 
-            throw new ArgumentException("Invalid text representation of geo coordinates: '" + errorResponse + "'!");
+            throw new ArgumentException($"Invalid text representation of geo coordinates: '" + errorResponse + "'!");
 
         }
 
@@ -470,7 +470,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return geoCoordinates!.Value;
             }
 
-            throw new ArgumentException("Invalid text representation of geo coordinates: '" + errorResponse + "'!",
+            throw new ArgumentException($"Invalid text representation of geo coordinates: '" + errorResponse + "'!",
                                         nameof(Text));
 
         }
