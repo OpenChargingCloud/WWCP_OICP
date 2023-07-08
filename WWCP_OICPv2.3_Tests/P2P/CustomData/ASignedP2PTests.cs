@@ -94,9 +94,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
             var signer = SignerUtilities.GetSigner("NONEwithECDSA");
             signer.Init(true, PrivateKey);
-            signer.BlockUpdate(SHA256.Create().ComputeHash(JSON.ToString(Newtonsoft.Json.Formatting.None,
-                                                                         APeer.JSONDateTimeConverter).
-                                                                ToUTF8Bytes()),
+            signer.BlockUpdate(SHA256.HashData(JSON.ToString(Newtonsoft.Json.Formatting.None,
+                                                             APeer.JSONDateTimeConverter).
+                                                    ToUTF8Bytes()),
                                0, 32);
 
             JSON.Add(new JProperty("signature", Convert.ToBase64String(signer.GenerateSignature())));
@@ -128,9 +128,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                 var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                 verifier.Init(false, PublicKey);
-                verifier.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                               APeer.JSONDateTimeConverter).
-                                                                      ToUTF8Bytes()),
+                verifier.BlockUpdate(SHA256.HashData(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                                   APeer.JSONDateTimeConverter).
+                                                          ToUTF8Bytes()),
                                      0, 32);
 
                 Request.CustomData ??= new ();
@@ -174,9 +174,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
 
                 var verifier = SignerUtilities.GetSigner("NONEwithECDSA");
                 verifier.Init(false, PublicKey);
-                verifier.BlockUpdate(SHA256.Create().ComputeHash(json.ToString(Newtonsoft.Json.Formatting.None,
-                                                                               APeer.JSONDateTimeConverter).
-                                                                      ToUTF8Bytes()),
+                verifier.BlockUpdate(SHA256.HashData(json.ToString(Newtonsoft.Json.Formatting.None,
+                                                                   APeer.JSONDateTimeConverter).
+                                                          ToUTF8Bytes()),
                                      0, 32);
 
                 Response.CustomData ??= new ();
