@@ -295,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("description",   Description.ToJSON())
                                : null,
 
-                           new JProperty("URLs",                new JArray(URLs.Select(url => url.ToString())))
+                                 new JProperty("URLs",          new JArray(URLs.Select(url => url.ToString())))
 
                        );
 
