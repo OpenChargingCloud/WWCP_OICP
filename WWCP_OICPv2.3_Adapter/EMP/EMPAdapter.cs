@@ -761,6 +761,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         case WWCP.AuthStartResultTypes.OutOfService:
                             return AuthorizationStartResponse.EVSEOutOfService         (Request);
 
+                        case WWCP.AuthStartResultTypes.RateLimitReached:
+                            return AuthorizationStartResponse.NotAuthorized            (Request,
+                                                                                        new StatusCode(
+                                                                                            StatusCodes.NoPositiveAuthenticationResponse,
+                                                                                            "Authentication rate limit reached!")
+                                                                                        );
+
                     }
                 }
 
@@ -875,12 +882,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         case WWCP.AuthStopResultTypes.Authorized:
-                                return AuthorizationStopResponse.Authorized          (Request,
-                                                                                      response.SessionId. ToOICP(),
-                                                                                      default,
-                                                                                      default,
-                                                                                      response.ProviderId.ToOICP(),
-                                                                                      "Ready to stop charging!");
+                            return AuthorizationStopResponse.Authorized               (Request,
+                                                                                       response.SessionId. ToOICP(),
+                                                                                       default,
+                                                                                       default,
+                                                                                       response.ProviderId.ToOICP(),
+                                                                                       "Ready to stop charging!");
 
                         case WWCP.AuthStopResultTypes.InvalidSessionId:
                             return AuthorizationStopResponse.SessionIsInvalid         (Request);
@@ -896,6 +903,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         case WWCP.AuthStopResultTypes.OutOfService:
                             return AuthorizationStopResponse.EVSEOutOfService         (Request);
+
+                        case WWCP.AuthStopResultTypes.RateLimitReached:
+                            return AuthorizationStopResponse.NotAuthorized            (Request,
+                                                                                       new StatusCode(
+                                                                                           StatusCodes.NoPositiveAuthenticationResponse,
+                                                                                           "Authentication rate limit reached!")
+                                                                                       );
 
                     }
                 }
