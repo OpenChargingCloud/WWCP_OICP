@@ -458,7 +458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<Identification>?                    CustomIdentificationSerializer                     = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
                            new JProperty("Type",                       Type.                     AsString()),
                            new JProperty("SessionID",                  SessionId.                ToString()),
                            new JProperty("EvseID",                     EVSEId.                   ToString()),
@@ -496,8 +496,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomChargingStartNotificationRequestSerializer is not null
-                       ? CustomChargingStartNotificationRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomChargingStartNotificationRequestSerializer(this, json)
+                       : json;
 
         }
 

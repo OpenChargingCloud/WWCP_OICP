@@ -271,7 +271,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<OpeningTime>?  CustomOpeningTimesSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            Periods.SafeAny()
                                ? new JProperty("Period", new JArray(Periods.Select(period => period.ToJSON())))
@@ -286,8 +286,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomOpeningTimesSerializer is not null
-                       ? CustomOpeningTimesSerializer(this, JSON)
-                       : JSON;
+                       ? CustomOpeningTimesSerializer(this, json)
+                       : json;
 
         }
 

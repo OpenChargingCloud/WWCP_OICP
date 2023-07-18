@@ -280,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<OpeningTime>?                 CustomOpeningTimesSerializer                 = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("EvseDataRecord",  new JArray(EVSEDataRecords.Select(evseDataRecord => evseDataRecord.ToJSON(CustomEVSEDataRecordSerializer,
                                                                                                                                       CustomAddressSerializer,
@@ -302,8 +302,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomOperatorEVSEDataSerializer is not null
-                       ? CustomOperatorEVSEDataSerializer(this, JSON)
-                       : JSON;
+                       ? CustomOperatorEVSEDataSerializer(this, json)
+                       : json;
 
         }
 

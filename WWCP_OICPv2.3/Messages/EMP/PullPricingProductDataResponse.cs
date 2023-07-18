@@ -455,7 +455,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<StatusCode>?                      CustomStatusCodeSerializer                       = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("OperatorPricingProducts",  new JArray(PricingProductData.Select(pricingProductData => pricingProductData.ToJSON(CustomPricingProductDataSerializer,
                                                                                                                                                           CustomPricingProductDataRecordSerializer)))),
@@ -471,8 +471,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPullPricingProductDataResponseSerializer is not null
-                       ? CustomPullPricingProductDataResponseSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPullPricingProductDataResponseSerializer(this, json)
+                       : json;
 
         }
 

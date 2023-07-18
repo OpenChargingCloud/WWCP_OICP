@@ -536,7 +536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            RFIDId.HasValue
                                ? new JProperty("RFIDMifareFamilyIdentification",  new JObject(
@@ -565,8 +565,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null);
 
             var JSON2 = CustomIdentificationSerializer is not null
-                            ? CustomIdentificationSerializer(this, JSON)
-                            : JSON;
+                            ? CustomIdentificationSerializer(this, json)
+                            : json;
 
             return JSON2.HasValues
                        ? JSON2

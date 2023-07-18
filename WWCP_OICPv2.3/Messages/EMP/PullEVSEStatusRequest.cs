@@ -319,7 +319,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<GeoCoordinates>?         CustomGeoCoordinatesSerializer          = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ProviderID",                    ProviderId.            ToString()),
 
@@ -341,8 +341,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPullEVSEStatusRequestSerializer is not null
-                       ? CustomPullEVSEStatusRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPullEVSEStatusRequestSerializer(this, json)
+                       : json;
 
         }
 

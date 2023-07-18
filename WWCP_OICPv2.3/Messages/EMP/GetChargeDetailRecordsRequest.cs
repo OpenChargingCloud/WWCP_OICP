@@ -371,7 +371,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ProviderID",         ProviderId.ToString()),
                            new JProperty("From",               From.      ToIso8601()),
@@ -392,8 +392,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomGetChargeDetailRecordsRequestSerializer is not null
-                       ? CustomGetChargeDetailRecordsRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomGetChargeDetailRecordsRequestSerializer(this, json)
+                       : json;
 
         }
 

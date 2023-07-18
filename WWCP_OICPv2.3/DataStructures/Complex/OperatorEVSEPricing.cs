@@ -256,7 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<EVSEPricing>?          CustomEVSEPricingSerializer           = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("EVSEPricing",   new JArray(EVSEPricings.Select(evsePricing => evsePricing.ToJSON(CustomEVSEPricingSerializer)))),
                            new JProperty("OperatorID",    OperatorId.ToString()),
@@ -269,8 +269,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomOperatorEVSEPricingSerializer is not null
-                       ? CustomOperatorEVSEPricingSerializer(this, JSON)
-                       : JSON;
+                       ? CustomOperatorEVSEPricingSerializer(this, json)
+                       : json;
 
         }
 

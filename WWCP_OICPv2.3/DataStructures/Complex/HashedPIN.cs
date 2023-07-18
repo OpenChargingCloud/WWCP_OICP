@@ -237,14 +237,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<HashedPIN>?  CustomHashedPINSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
                            new JProperty("Function",  Function.ToString()),
                            new JProperty("Value",     Value.   ToString())
                        );
 
             return CustomHashedPINSerializer is not null
-                       ? CustomHashedPINSerializer(this, JSON)
-                       : JSON;
+                       ? CustomHashedPINSerializer(this, json)
+                       : json;
 
         }
 

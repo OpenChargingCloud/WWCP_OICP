@@ -230,7 +230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return null;
             }
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            CO2Emission.HasValue
                                ? new JProperty("CO2Emission",   CO2Emission)
@@ -243,8 +243,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomEnvironmentalImpactSerializer is not null
-                       ? CustomEnvironmentalImpactSerializer(this, JSON)
-                       : JSON;
+                       ? CustomEnvironmentalImpactSerializer(this, json)
+                       : json;
 
         }
 

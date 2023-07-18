@@ -46,42 +46,47 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp of the response creation.
         /// </summary>
         [Mandatory]
-        public DateTime          ResponseTimestamp    { get; }
+        public DateTime                ResponseTimestamp    { get; }
 
         /// <summary>
         /// An optional event tracking identification for correlating this response with other events.
         /// </summary>
-        public EventTracking_Id  EventTrackingId      { get; }
+        public EventTracking_Id        EventTrackingId      { get; }
 
         /// <summary>
         /// The runtime of the request/response.
         /// </summary>
-        public TimeSpan          Runtime              { get; }
+        public TimeSpan                Runtime              { get; }
 
         /// <summary>
         /// The request leading to this response.
         /// Might be null, when the request was not parsable!
         /// </summary>
         [Optional]
-        public TRequest?         Request              { get; }
+        public TRequest?               Request              { get; }
 
         /// <summary>
         /// The HTTP response.
         /// </summary>
         [Optional]
-        public HTTPResponse?     HTTPResponse         { get; }
+        public HTTPResponse?           HTTPResponse         { get; }
 
         /// <summary>
         /// The server side process identification of the request.
         /// </summary>
         [Mandatory]
-        public Process_Id        ProcessId            { get; }
+        public Process_Id              ProcessId            { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?          CustomData           { get; set; }
+        public JObject?                CustomData           { get; set; }
+
+        /// <summary>
+        /// Optional internal customer specific data, which will not be serialized.
+        /// </summary>
+        public UserDefinedDictionary?  InternalData         { get; set; }
 
         #endregion
 
@@ -98,14 +103,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        protected AResponse(DateTime          ResponseTimestamp,
-                            EventTracking_Id  EventTrackingId,
-                            Process_Id        ProcessId,
-                            TimeSpan          Runtime,
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        protected AResponse(DateTime                ResponseTimestamp,
+                            EventTracking_Id        EventTrackingId,
+                            Process_Id              ProcessId,
+                            TimeSpan                Runtime,
 
-                            TRequest?         Request        = null,
-                            HTTPResponse?     HTTPResponse   = null,
-                            JObject?          CustomData     = null)
+                            TRequest?               Request        = null,
+                            HTTPResponse?           HTTPResponse   = null,
+                            JObject?                CustomData     = null,
+                            UserDefinedDictionary?  InternalData   = null)
         {
 
             this.ResponseTimestamp  = ResponseTimestamp;
@@ -116,6 +123,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Request            = Request;
             this.HTTPResponse       = HTTPResponse;
             this.CustomData         = CustomData;
+            this.InternalData       = InternalData;
 
         }
 
@@ -156,41 +164,47 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The timestamp of the response message creation.
             /// </summary>
             [Mandatory]
-            public DateTime?          ResponseTimestamp    { get; set; }
+            public DateTime?               ResponseTimestamp    { get; set; }
 
             /// <summary>
             /// An optional event tracking identification for correlating this response with other events.
             /// </summary>
-            public EventTracking_Id?  EventTrackingId      { get; set; }
+            public EventTracking_Id?       EventTrackingId      { get; set; }
 
             /// <summary>
             /// The runtime of the request/response.
             /// </summary>
-            public TimeSpan?          Runtime              { get; set; }
+            public TimeSpan?               Runtime              { get; set; }
 
             /// <summary>
             /// The optional Hubject process identification of the request.
             /// </summary>
             [Optional]
-            public Process_Id?        ProcessId            { get; set; }
+            public Process_Id?             ProcessId            { get; set; }
 
             /// <summary>
             /// The request leading to this response.
             /// </summary>
             [Mandatory]
-            public TRequest?          Request              { get; set; }
+            public TRequest?               Request              { get; set; }
 
             /// <summary>
             /// The HTTP response.
             /// </summary>
             [Optional]
-            public HTTPResponse?      HTTPResponse         { get; set; }
+            public HTTPResponse?           HTTPResponse         { get; set; }
 
             /// <summary>
             /// Optional custom data, e.g. in combination with custom parsers and serializers.
             /// </summary>
             [Optional]
-            public JObject?           CustomData           { get; set; }
+            public JObject?                CustomData           { get; set; }
+
+            /// <summary>
+            /// Optional internal customer specific data, which will not be serialized.
+            /// </summary>
+            [Optional]
+            public UserDefinedDictionary?  InternalData         { get; set; }
 
             #endregion
 
@@ -205,14 +219,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="Runtime">The runtime of the request/response.</param>
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-            /// <param name="CustomData">Optional customer-specific data of the response.</param>
-            protected Builder(DateTime?          ResponseTimestamp   = null,
-                              EventTracking_Id?  EventTrackingId     = null,
-                              TimeSpan?          Runtime             = null,
-                              TRequest?          Request             = null,
-                              HTTPResponse?      HTTPResponse        = null,
-                              Process_Id?        ProcessId           = null,
-                              JObject?           CustomData          = null)
+            /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+            /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+            protected Builder(DateTime?               ResponseTimestamp   = null,
+                              EventTracking_Id?       EventTrackingId     = null,
+                              TimeSpan?               Runtime             = null,
+                              TRequest?               Request             = null,
+                              HTTPResponse?           HTTPResponse        = null,
+                              Process_Id?             ProcessId           = null,
+                              JObject?                CustomData          = null,
+                              UserDefinedDictionary?  InternalData        = null)
             {
 
                 this.ResponseTimestamp  = ResponseTimestamp;
@@ -222,6 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.HTTPResponse       = HTTPResponse;
                 this.ProcessId          = ProcessId;
                 this.CustomData         = CustomData;
+                this.InternalData       = InternalData;
 
             }
 

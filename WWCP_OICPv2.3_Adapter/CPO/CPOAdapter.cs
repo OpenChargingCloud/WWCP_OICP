@@ -2613,8 +2613,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.AdminDown(Id,
                                                                   this,
-                                                                  SessionId,
-                                                                  Runtime: runtime);
+                                                                  SessionId:  SessionId,
+                                                                  Runtime:    runtime);
             }
 
             // An optional EVSE Id is given, but it is invalid!
@@ -2624,8 +2624,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.UnknownLocation(Id,
                                                                         this,
-                                                                        SessionId,
-                                                                        Runtime: runtime);
+                                                                        SessionId:  SessionId,
+                                                                        Runtime:    runtime);
             }
 
             else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
@@ -2634,8 +2634,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.InvalidToken(Id,
                                                                      this,
-                                                                     SessionId,
-                                                                     Runtime: runtime);
+                                                                     SessionId:  SessionId,
+                                                                     Runtime:    runtime);
             }
 
             else if (DisableAuthentication)
@@ -2644,8 +2644,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime          = endtime - startTime;
                 authStartResult  = WWCP.AuthStartResult.AdminDown(Id,
                                                                   this,
-                                                                  SessionId,
-                                                                  Runtime: runtime);
+                                                                  SessionId:  SessionId,
+                                                                  Runtime:    runtime);
             }
 
             else
@@ -2686,6 +2686,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         authStartResult = WWCP.AuthStartResult.Authorized(
                                      Id,
                                      this,
+                                     null,
                                      responseSessionId.Value,
                                      response.Response.EMPPartnerSessionId.ToWWCP(),
                                      null,      // ContractId
@@ -2713,6 +2714,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 authStartResult ??= WWCP.AuthStartResult.NotAuthorized(
                                         Id,
                                         this,
+                                        null,
                                         SessionId,
                                         response?.Response?.ProviderId.ToWWCP(),
                                         response?.Response?.StatusCode?.Description is not null
@@ -2849,8 +2851,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.AdminDown(Id,
                                                                 this,
-                                                                SessionId,
-                                                                Runtime: runtime);
+                                                                SessionId:  SessionId,
+                                                                Runtime:    runtime);
             }
 
             else if (!sessionId.HasValue)
@@ -2859,8 +2861,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.InvalidSessionId(Id,
                                                                        this,
-                                                                       SessionId,
-                                                                       Runtime: runtime);
+                                                                       SessionId:  SessionId,
+                                                                       Runtime:    runtime);
             }
 
             // An optional EVSE Id is given, but it is invalid!
@@ -2870,8 +2872,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.UnknownLocation(Id,
                                                                       this,
-                                                                      SessionId,
-                                                                      Runtime: runtime);
+                                                                      SessionId:  SessionId,
+                                                                      Runtime:    runtime);
             }
 
             else if (identification?.RFIDId is null && identification?.RFIDIdentification is null)
@@ -2880,8 +2882,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.InvalidToken(Id,
                                                                    this,
-                                                                   SessionId,
-                                                                   Runtime: runtime);
+                                                                   SessionId:  SessionId,
+                                                                   Runtime:    runtime);
             }
 
             else if (DisableAuthentication)
@@ -2890,8 +2892,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 runtime         = endtime - startTime;
                 authStopResult  = WWCP.AuthStopResult.AdminDown(Id,
                                                                 this,
-                                                                SessionId,
-                                                                Runtime: runtime);
+                                                                SessionId:  SessionId,
+                                                                Runtime:    runtime);
             }
 
             else
@@ -2928,6 +2930,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     authStopResult = WWCP.AuthStopResult.Authorized(
                                          Id,
                                          this,
+                                         null,
                                          SessionId,
                                          response.Response?.ProviderId?.ToWWCP(),
                                          response.Response?.StatusCode?.Description     is not null
@@ -2943,6 +2946,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     authStopResult = WWCP.AuthStopResult.NotAuthorized(
                                          Id,
                                          this,
+                                         null,
                                          SessionId,
                                          response?.Response?.ProviderId?.ToWWCP(),
                                          response?.Response?.StatusCode?.Description    is not null

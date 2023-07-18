@@ -106,24 +106,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
         /// 
         /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomData">Optional customer-specific data of the response.</param>
-        protected APagedResponse(DateTime          ResponseTimestamp,
-                                 EventTracking_Id  EventTrackingId,
-                                 Process_Id        ProcessId,
-                                 TimeSpan          Runtime,
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        protected APagedResponse(DateTime                ResponseTimestamp,
+                                 EventTracking_Id        EventTrackingId,
+                                 Process_Id              ProcessId,
+                                 TimeSpan                Runtime,
 
-                                 TRequest?         Request            = null,
-                                 Boolean?          FirstPage          = null,
-                                 Boolean?          LastPage           = null,
-                                 UInt64?           Number             = null,
-                                 UInt64?           NumberOfElements   = null,
-                                 UInt64?           Size               = null,
-                                 UInt64?           TotalElements      = null,
-                                 UInt64?           TotalPages         = null,
-                                 StatusCode?       StatusCode         = null,
+                                 TRequest?               Request            = null,
+                                 Boolean?                FirstPage          = null,
+                                 Boolean?                LastPage           = null,
+                                 UInt64?                 Number             = null,
+                                 UInt64?                 NumberOfElements   = null,
+                                 UInt64?                 Size               = null,
+                                 UInt64?                 TotalElements      = null,
+                                 UInt64?                 TotalPages         = null,
+                                 StatusCode?             StatusCode         = null,
 
-                                 HTTPResponse?     HTTPResponse       = null,
-                                 JObject?          CustomData         = null)
+                                 HTTPResponse?           HTTPResponse       = null,
+                                 JObject?                CustomData         = null,
+                                 UserDefinedDictionary?  InternalData       = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
@@ -131,7 +133,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    Runtime,
                    Request,
                    HTTPResponse,
-                   CustomData)
+                   CustomData,
+                   InternalData)
 
         {
 
@@ -160,7 +163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  CustomJObjectSerializerDelegate<StatusCode>?      CustomStatusCodeSerializer       = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            StatusCode is not null
                                ? new JProperty("StatusCode",        StatusCode.ToJSON(CustomStatusCodeSerializer))
@@ -197,8 +200,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomIPagedResponseSerializer is not null
-                       ? CustomIPagedResponseSerializer(this, JSON)
-                       : JSON;
+                       ? CustomIPagedResponseSerializer(this, json)
+                       : json;
 
         }
 
@@ -277,24 +280,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// 
-            /// <param name="CustomData">Optional customer-specific data of the response.</param>
-            protected Builder(TRequest?          Request             = null,
-                              DateTime?          ResponseTimestamp   = null,
-                              EventTracking_Id?  EventTrackingId     = null,
-                              TimeSpan?          Runtime             = null,
+            /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+            /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+            protected Builder(TRequest?               Request             = null,
+                              DateTime?               ResponseTimestamp   = null,
+                              EventTracking_Id?       EventTrackingId     = null,
+                              TimeSpan?               Runtime             = null,
 
-                              HTTPResponse?      HTTPResponse        = null,
-                              Process_Id?        ProcessId           = null,
-                              StatusCode?        StatusCode          = null,
-                              Boolean?           FirstPage           = null,
-                              Boolean?           LastPage            = null,
-                              UInt64?            Number              = null,
-                              UInt64?            NumberOfElements    = null,
-                              UInt64?            Size                = null,
-                              UInt64?            TotalElements       = null,
-                              UInt64?            TotalPages          = null,
+                              HTTPResponse?           HTTPResponse        = null,
+                              Process_Id?             ProcessId           = null,
+                              StatusCode?             StatusCode          = null,
+                              Boolean?                FirstPage           = null,
+                              Boolean?                LastPage            = null,
+                              UInt64?                 Number              = null,
+                              UInt64?                 NumberOfElements    = null,
+                              UInt64?                 Size                = null,
+                              UInt64?                 TotalElements       = null,
+                              UInt64?                 TotalPages          = null,
 
-                              JObject?           CustomData          = null)
+                              JObject?                CustomData          = null,
+                              UserDefinedDictionary?  InternalData        = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
@@ -302,7 +307,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    Request,
                    HTTPResponse,
                    ProcessId,
-                   CustomData)
+                   CustomData,
+                   InternalData)
 
             {
 

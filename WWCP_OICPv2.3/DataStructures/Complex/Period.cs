@@ -232,14 +232,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<Period>?  CustomPeriodSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
                            new JProperty("begin",  Begin.ToString()),
                            new JProperty("end",    End.  ToString())
                        );
 
             return CustomPeriodSerializer is not null
-                       ? CustomPeriodSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPeriodSerializer(this, json)
+                       : json;
 
         }
 

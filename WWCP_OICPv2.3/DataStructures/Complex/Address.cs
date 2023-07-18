@@ -415,7 +415,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<Address>?  CustomAddressSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("Country",                Country.Alpha3Code),
                            new JProperty("City",                   City),
@@ -450,8 +450,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 );
 
             return CustomAddressSerializer is not null
-                       ? CustomAddressSerializer(this, JSON)
-                       : JSON;
+                       ? CustomAddressSerializer(this, json)
+                       : json;
 
         }
 

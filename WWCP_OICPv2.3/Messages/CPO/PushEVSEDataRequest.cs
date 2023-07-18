@@ -293,7 +293,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<OpeningTime>?                 CustomOpeningTimesSerializer                 = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ActionType",        Action.AsString()),
 
@@ -316,8 +316,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPushEVSEDataRequestSerializer is not null
-                       ? CustomPushEVSEDataRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPushEVSEDataRequestSerializer(this, json)
+                       : json;
 
         }
 

@@ -329,7 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<ChargingFacility>?  CustomChargingFacilitySerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("PowerType",              PowerType.AsString()),
                            new JProperty("Power",                  Power),
@@ -353,8 +353,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 );
 
             return CustomChargingFacilitySerializer is not null
-                       ? CustomChargingFacilitySerializer(this, JSON)
-                       : JSON;
+                       ? CustomChargingFacilitySerializer(this, json)
+                       : json;
 
         }
 

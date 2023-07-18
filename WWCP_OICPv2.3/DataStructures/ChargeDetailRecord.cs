@@ -176,7 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HubProviderId">An optional provider identification of the hub provider.</param>
         /// 
         /// <param name="CustomData">An optional dictionary of customer-specific data.</param>
-        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
         public ChargeDetailRecord(Session_Id                         SessionId,
                                   EVSE_Id                            EVSEId,
                                   Identification                     Identification,
@@ -685,7 +685,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("SessionID",                             SessionId.          ToString()),
                            new JProperty("EvseID",                                EVSEId.             ToString()),
@@ -750,8 +750,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     );
 
             return CustomChargeDetailRecordSerializer is not null
-                       ? CustomChargeDetailRecordSerializer(this, JSON)
-                       : JSON;
+                       ? CustomChargeDetailRecordSerializer(this, json)
+                       : json;
 
         }
 

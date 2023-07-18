@@ -399,19 +399,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<StatusCode>?                      CustomStatusCodeSerializer                       = null)
         {
 
-            var JSON = ToJSON(CustomIPagedResponseSerializer,
+            var json = ToJSON(CustomIPagedResponseSerializer,
                               CustomStatusCodeSerializer);
 
             if (ChargeDetailRecords.SafeAny())
-                JSON.Add(new JProperty("content",
+                json.Add(new JProperty("content",
                                        new JArray(ChargeDetailRecords.Select(chargeDetailRecord => chargeDetailRecord.ToJSON(CustomChargeDetailRecordSerializer,
                                                                                                                              CustomIdentificationSerializer,
                                                                                                                              CustomSignedMeteringValueSerializer,
                                                                                                                              CustomCalibrationLawVerificationSerializer)))));
 
             return CustomGetChargeDetailRecordsResponseSerializer is not null
-                       ? CustomGetChargeDetailRecordsResponseSerializer(this, JSON)
-                       : JSON;
+                       ? CustomGetChargeDetailRecordsResponseSerializer(this, json)
+                       : json;
 
         }
 

@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("EvseID",      Id.    ToString()),
                            new JProperty("EvseStatus",  Status.ToString()),
@@ -234,8 +234,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomEVSEStatusRecordSerializer is not null
-                       ? CustomEVSEStatusRecordSerializer(this, JSON)
-                       : JSON;
+                       ? CustomEVSEStatusRecordSerializer(this, json)
+                       : json;
 
         }
 

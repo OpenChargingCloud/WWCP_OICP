@@ -395,7 +395,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<AdditionalReferences>?      CustomAdditionalReferencesSerializer       = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ProductID",                    ProductId.               ToString()),
                            new JProperty("ReferenceUnit",                ReferenceUnit.           ToString()),
@@ -416,8 +416,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPricingProductDataRecordSerializer is not null
-                       ? CustomPricingProductDataRecordSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPricingProductDataRecordSerializer(this, json)
+                       : json;
 
         }
 

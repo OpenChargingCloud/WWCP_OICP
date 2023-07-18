@@ -92,6 +92,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProviderId">An optional e-mobility provider identification.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
         private AuthorizationStopResponse(DateTime                  ResponseTimestamp,
                                           EventTracking_Id          EventTrackingId,
                                           Process_Id                ProcessId,
@@ -104,7 +105,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           EMPPartnerSession_Id?     EMPPartnerSessionId   = null,
                                           Provider_Id?              ProviderId            = null,
                                           HTTPResponse?             HTTPResponse          = null,
-                                          JObject?                  CustomData            = null)
+                                          JObject?                  CustomData            = null,
+                                          UserDefinedDictionary?    InternalData          = null)
 
             : base(ResponseTimestamp,
                    EventTrackingId,
@@ -112,7 +114,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    Runtime,
                    Request,
                    HTTPResponse,
-                   CustomData)
+                   CustomData,
+                   InternalData)
 
         {
 
@@ -146,19 +149,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse Authorized(AuthorizeStopRequest   Request,
-                                                           Session_Id?            SessionId                  = null,
-                                                           CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                           EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                           Provider_Id?           ProviderId                 = null,
-                                                           String?                StatusCodeDescription      = null,
-                                                           String?                StatusCodeAdditionalInfo   = null,
-                                                           DateTime?              ResponseTimestamp          = null,
-                                                           EventTracking_Id?      EventTrackingId            = null,
-                                                           TimeSpan?              Runtime                    = null,
-                                                           Process_Id?            ProcessId                  = null,
-                                                           HTTPResponse?          HTTPResponse               = null,
-                                                           JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse Authorized(AuthorizeStopRequest    Request,
+                                                           Session_Id?             SessionId                  = null,
+                                                           CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                           EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                           Provider_Id?            ProviderId                 = null,
+                                                           String?                 StatusCodeDescription      = null,
+                                                           String?                 StatusCodeAdditionalInfo   = null,
+                                                           DateTime?               ResponseTimestamp          = null,
+                                                           EventTracking_Id?       EventTrackingId            = null,
+                                                           TimeSpan?               Runtime                    = null,
+                                                           Process_Id?             ProcessId                  = null,
+                                                           HTTPResponse?           HTTPResponse               = null,
+                                                           JObject?                CustomData                 = null,
+                                                           UserDefinedDictionary?  InternalData               = null)
 
 
             => new (ResponseTimestamp ?? Timestamp.Now,
@@ -177,7 +182,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -198,18 +204,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse NotAuthorized(AuthorizeStopRequest   Request,
-                                                              StatusCode             StatusCode,
-                                                              Session_Id?            SessionId             = null,
-                                                              CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
-                                                              EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                                              Provider_Id?           ProviderId            = null,
-                                                              DateTime?              ResponseTimestamp     = null,
-                                                              EventTracking_Id?      EventTrackingId       = null,
-                                                              TimeSpan?              Runtime               = null,
-                                                              Process_Id?            ProcessId             = null,
-                                                              HTTPResponse?          HTTPResponse          = null,
-                                                              JObject?               CustomData            = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse NotAuthorized(AuthorizeStopRequest    Request,
+                                                              StatusCode              StatusCode,
+                                                              Session_Id?             SessionId             = null,
+                                                              CPOPartnerSession_Id?   CPOPartnerSessionId   = null,
+                                                              EMPPartnerSession_Id?   EMPPartnerSessionId   = null,
+                                                              Provider_Id?            ProviderId            = null,
+                                                              DateTime?               ResponseTimestamp     = null,
+                                                              EventTracking_Id?       EventTrackingId       = null,
+                                                              TimeSpan?               Runtime               = null,
+                                                              Process_Id?             ProcessId             = null,
+                                                              HTTPResponse?           HTTPResponse          = null,
+                                                              JObject?                CustomData            = null,
+                                                              UserDefinedDictionary?  InternalData          = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -223,7 +231,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -245,19 +254,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse SessionIsInvalid(AuthorizeStopRequest   Request,
-                                                                 String?                StatusCodeDescription      = null,
-                                                                 String?                StatusCodeAdditionalInfo   = null,
-                                                                 Session_Id?            SessionId                  = null,
-                                                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                 Provider_Id?           ProviderId                 = null,
-                                                                 DateTime?              ResponseTimestamp          = null,
-                                                                 EventTracking_Id?      EventTrackingId            = null,
-                                                                 TimeSpan?              Runtime                    = null,
-                                                                 Process_Id?            ProcessId                  = null,
-                                                                 HTTPResponse?          HTTPResponse               = null,
-                                                                 JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse SessionIsInvalid(AuthorizeStopRequest    Request,
+                                                                 String?                 StatusCodeDescription      = null,
+                                                                 String?                 StatusCodeAdditionalInfo   = null,
+                                                                 Session_Id?             SessionId                  = null,
+                                                                 CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                                 EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                                 Provider_Id?            ProviderId                 = null,
+                                                                 DateTime?               ResponseTimestamp          = null,
+                                                                 EventTracking_Id?       EventTrackingId            = null,
+                                                                 TimeSpan?               Runtime                    = null,
+                                                                 Process_Id?             ProcessId                  = null,
+                                                                 HTTPResponse?           HTTPResponse               = null,
+                                                                 JObject?                CustomData                 = null,
+                                                                 UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -275,7 +286,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -297,19 +309,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse CommunicationToEVSEFailed(AuthorizeStopRequest   Request,
-                                                                          String?                StatusCodeDescription      = null,
-                                                                          String?                StatusCodeAdditionalInfo   = null,
-                                                                          Session_Id?            SessionId                  = null,
-                                                                          CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                                          EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                          Provider_Id?           ProviderId                 = null,
-                                                                          DateTime?              ResponseTimestamp          = null,
-                                                                          EventTracking_Id?      EventTrackingId            = null,
-                                                                          TimeSpan?              Runtime                    = null,
-                                                                          Process_Id?            ProcessId                  = null,
-                                                                          HTTPResponse?          HTTPResponse               = null,
-                                                                          JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse CommunicationToEVSEFailed(AuthorizeStopRequest    Request,
+                                                                          String?                 StatusCodeDescription      = null,
+                                                                          String?                 StatusCodeAdditionalInfo   = null,
+                                                                          Session_Id?             SessionId                  = null,
+                                                                          CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                                          EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                                          Provider_Id?            ProviderId                 = null,
+                                                                          DateTime?               ResponseTimestamp          = null,
+                                                                          EventTracking_Id?       EventTrackingId            = null,
+                                                                          TimeSpan?               Runtime                    = null,
+                                                                          Process_Id?             ProcessId                  = null,
+                                                                          HTTPResponse?           HTTPResponse               = null,
+                                                                          JObject?                CustomData                 = null,
+                                                                          UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -327,7 +341,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -349,19 +364,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse NoEVConnectedToEVSE(AuthorizeStopRequest   Request,
-                                                                    String?                StatusCodeDescription      = null,
-                                                                    String?                StatusCodeAdditionalInfo   = null,
-                                                                    Session_Id?            SessionId                  = null,
-                                                                    CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                                    EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                    Provider_Id?           ProviderId                 = null,
-                                                                    DateTime?              ResponseTimestamp          = null,
-                                                                    EventTracking_Id?      EventTrackingId            = null,
-                                                                    TimeSpan?              Runtime                    = null,
-                                                                    Process_Id?            ProcessId                  = null,
-                                                                    HTTPResponse?          HTTPResponse               = null,
-                                                                    JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse NoEVConnectedToEVSE(AuthorizeStopRequest    Request,
+                                                                    String?                 StatusCodeDescription      = null,
+                                                                    String?                 StatusCodeAdditionalInfo   = null,
+                                                                    Session_Id?             SessionId                  = null,
+                                                                    CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                                    EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                                    Provider_Id?            ProviderId                 = null,
+                                                                    DateTime?               ResponseTimestamp          = null,
+                                                                    EventTracking_Id?       EventTrackingId            = null,
+                                                                    TimeSpan?               Runtime                    = null,
+                                                                    Process_Id?             ProcessId                  = null,
+                                                                    HTTPResponse?           HTTPResponse               = null,
+                                                                    JObject?                CustomData                 = null,
+                                                                    UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -379,7 +396,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -401,19 +419,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse EVSEAlreadyReserved(AuthorizeStopRequest   Request,
-                                                                    String?                StatusCodeDescription      = null,
-                                                                    String?                StatusCodeAdditionalInfo   = null,
-                                                                    Session_Id?            SessionId                  = null,
-                                                                    CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                                    EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                    Provider_Id?           ProviderId                 = null,
-                                                                    DateTime?              ResponseTimestamp          = null,
-                                                                    EventTracking_Id?      EventTrackingId            = null,
-                                                                    TimeSpan?              Runtime                    = null,
-                                                                    Process_Id?            ProcessId                  = null,
-                                                                    HTTPResponse?          HTTPResponse               = null,
-                                                                    JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse EVSEAlreadyReserved(AuthorizeStopRequest    Request,
+                                                                    String?                 StatusCodeDescription      = null,
+                                                                    String?                 StatusCodeAdditionalInfo   = null,
+                                                                    Session_Id?             SessionId                  = null,
+                                                                    CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                                    EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                                    Provider_Id?            ProviderId                 = null,
+                                                                    DateTime?               ResponseTimestamp          = null,
+                                                                    EventTracking_Id?       EventTrackingId            = null,
+                                                                    TimeSpan?               Runtime                    = null,
+                                                                    Process_Id?             ProcessId                  = null,
+                                                                    HTTPResponse?           HTTPResponse               = null,
+                                                                    JObject?                CustomData                 = null,
+                                                                    UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -431,7 +451,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -453,19 +474,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse UnknownEVSEID(AuthorizeStopRequest   Request,
-                                                              String?                StatusCodeDescription      = null,
-                                                              String?                StatusCodeAdditionalInfo   = null,
-                                                              Session_Id?            SessionId                  = null,
-                                                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                              Provider_Id?           ProviderId                 = null,
-                                                              DateTime?              ResponseTimestamp          = null,
-                                                              EventTracking_Id?      EventTrackingId            = null,
-                                                              TimeSpan?              Runtime                    = null,
-                                                              Process_Id?            ProcessId                  = null,
-                                                              HTTPResponse?          HTTPResponse               = null,
-                                                              JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse UnknownEVSEID(AuthorizeStopRequest    Request,
+                                                              String?                 StatusCodeDescription      = null,
+                                                              String?                 StatusCodeAdditionalInfo   = null,
+                                                              Session_Id?             SessionId                  = null,
+                                                              CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                              EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                              Provider_Id?            ProviderId                 = null,
+                                                              DateTime?               ResponseTimestamp          = null,
+                                                              EventTracking_Id?       EventTrackingId            = null,
+                                                              TimeSpan?               Runtime                    = null,
+                                                              Process_Id?             ProcessId                  = null,
+                                                              HTTPResponse?           HTTPResponse               = null,
+                                                              JObject?                CustomData                 = null,
+                                                              UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -483,7 +506,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -505,19 +529,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse EVSEOutOfService(AuthorizeStopRequest   Request,
-                                                                 String?                StatusCodeDescription      = null,
-                                                                 String?                StatusCodeAdditionalInfo   = null,
-                                                                 Session_Id?            SessionId                  = null,
-                                                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                 Provider_Id?           ProviderId                 = null,
-                                                                 DateTime?              ResponseTimestamp          = null,
-                                                                 EventTracking_Id?      EventTrackingId            = null,
-                                                                 TimeSpan?              Runtime                    = null,
-                                                                 Process_Id?            ProcessId                  = null,
-                                                                 HTTPResponse?          HTTPResponse               = null,
-                                                                 JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse EVSEOutOfService(AuthorizeStopRequest    Request,
+                                                                 String?                 StatusCodeDescription      = null,
+                                                                 String?                 StatusCodeAdditionalInfo   = null,
+                                                                 Session_Id?             SessionId                  = null,
+                                                                 CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                                 EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                                 Provider_Id?            ProviderId                 = null,
+                                                                 DateTime?               ResponseTimestamp          = null,
+                                                                 EventTracking_Id?       EventTrackingId            = null,
+                                                                 TimeSpan?               Runtime                    = null,
+                                                                 Process_Id?             ProcessId                  = null,
+                                                                 HTTPResponse?           HTTPResponse               = null,
+                                                                 JObject?                CustomData                 = null,
+                                                                 UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -535,7 +561,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -557,19 +584,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse ServiceNotAvailable(AuthorizeStopRequest   Request,
-                                                                    String?                StatusCodeDescription      = null,
-                                                                    String?                StatusCodeAdditionalInfo   = null,
-                                                                    Session_Id?            SessionId                  = null,
-                                                                    CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                                    EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                                    Provider_Id?           ProviderId                 = null,
-                                                                    DateTime?              ResponseTimestamp          = null,
-                                                                    EventTracking_Id?      EventTrackingId            = null,
-                                                                    TimeSpan?              Runtime                    = null,
-                                                                    Process_Id?            ProcessId                  = null,
-                                                                    HTTPResponse?          HTTPResponse               = null,
-                                                                    JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse ServiceNotAvailable(AuthorizeStopRequest    Request,
+                                                                    String?                 StatusCodeDescription      = null,
+                                                                    String?                 StatusCodeAdditionalInfo   = null,
+                                                                    Session_Id?             SessionId                  = null,
+                                                                    CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                                    EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                                    Provider_Id?            ProviderId                 = null,
+                                                                    DateTime?               ResponseTimestamp          = null,
+                                                                    EventTracking_Id?       EventTrackingId            = null,
+                                                                    TimeSpan?               Runtime                    = null,
+                                                                    Process_Id?             ProcessId                  = null,
+                                                                    HTTPResponse?           HTTPResponse               = null,
+                                                                    JObject?                CustomData                 = null,
+                                                                    UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -587,7 +616,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -609,19 +639,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse DataError(AuthorizeStopRequest?  Request                    = null,
-                                                          String?                StatusCodeDescription      = null,
-                                                          String?                StatusCodeAdditionalInfo   = null,
-                                                          Session_Id?            SessionId                  = null,
-                                                          CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                          EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                          Provider_Id?           ProviderId                 = null,
-                                                          DateTime?              ResponseTimestamp          = null,
-                                                          EventTracking_Id?      EventTrackingId            = null,
-                                                          TimeSpan?              Runtime                    = null,
-                                                          Process_Id?            ProcessId                  = null,
-                                                          HTTPResponse?          HTTPResponse               = null,
-                                                          JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse DataError(AuthorizeStopRequest?   Request                    = null,
+                                                          String?                 StatusCodeDescription      = null,
+                                                          String?                 StatusCodeAdditionalInfo   = null,
+                                                          Session_Id?             SessionId                  = null,
+                                                          CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                          EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                          Provider_Id?            ProviderId                 = null,
+                                                          DateTime?               ResponseTimestamp          = null,
+                                                          EventTracking_Id?       EventTrackingId            = null,
+                                                          TimeSpan?               Runtime                    = null,
+                                                          Process_Id?             ProcessId                  = null,
+                                                          HTTPResponse?           HTTPResponse               = null,
+                                                          JObject?                CustomData                 = null,
+                                                          UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -639,7 +671,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -661,19 +694,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public static AuthorizationStopResponse SystemError(AuthorizeStopRequest?  Request                    = null,
-                                                            String?                StatusCodeDescription      = null,
-                                                            String?                StatusCodeAdditionalInfo   = null,
-                                                            Session_Id?            SessionId                  = null,
-                                                            CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
-                                                            EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                                            Provider_Id?           ProviderId                 = null,
-                                                            DateTime?              ResponseTimestamp          = null,
-                                                            EventTracking_Id?      EventTrackingId            = null,
-                                                            TimeSpan?              Runtime                    = null,
-                                                            Process_Id?            ProcessId                  = null,
-                                                            HTTPResponse?          HTTPResponse               = null,
-                                                            JObject?               CustomData                 = null)
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public static AuthorizationStopResponse SystemError(AuthorizeStopRequest?   Request                    = null,
+                                                            String?                 StatusCodeDescription      = null,
+                                                            String?                 StatusCodeAdditionalInfo   = null,
+                                                            Session_Id?             SessionId                  = null,
+                                                            CPOPartnerSession_Id?   CPOPartnerSessionId        = null,
+                                                            EMPPartnerSession_Id?   EMPPartnerSessionId        = null,
+                                                            Provider_Id?            ProviderId                 = null,
+                                                            DateTime?               ResponseTimestamp          = null,
+                                                            EventTracking_Id?       EventTrackingId            = null,
+                                                            TimeSpan?               Runtime                    = null,
+                                                            Process_Id?             ProcessId                  = null,
+                                                            HTTPResponse?           HTTPResponse               = null,
+                                                            JObject?                CustomData                 = null,
+                                                            UserDefinedDictionary?  InternalData               = null)
 
             => new (ResponseTimestamp ?? Timestamp.Now,
                     EventTrackingId   ?? EventTracking_Id.New,
@@ -691,7 +726,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSessionId,
                     ProviderId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -830,7 +866,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse AuthorizationStatus                   [mandatory]
+                #region Parse AuthorizationStatus    [mandatory]
 
                 if (!JSON.ParseMandatory("AuthorizationStatus",
                                          "authorization status",
@@ -843,7 +879,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse StatusCode                            [mandatory]
+                #region Parse StatusCode             [mandatory]
 
                 if (!JSON.ParseMandatoryJSON("StatusCode",
                                              "status code",
@@ -857,7 +893,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse SessionId                             [optional]
+                #region Parse SessionId              [optional]
 
                 if (JSON.ParseOptional("SessionID",
                                        "session identification",
@@ -871,7 +907,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CPOPartnerSessionId                   [optional]
+                #region Parse CPOPartnerSessionId    [optional]
 
                 if (JSON.ParseOptional("CPOPartnerSessionID",
                                        "CPO product session identification",
@@ -885,7 +921,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse EMPPartnerSessionId                   [optional]
+                #region Parse EMPPartnerSessionId    [optional]
 
                 if (JSON.ParseOptional("EMPPartnerSessionID",
                                        "EMP product session identification",
@@ -899,7 +935,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ProviderId                            [optional]
+                #region Parse ProviderId             [optional]
 
                 if (JSON.ParseOptional("ProviderID",
                                        "provider identification",
@@ -913,7 +949,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CustomData                            [optional]
+                #region Parse CustomData             [optional]
 
                 var customData = JSON[nameof(CustomData)] as JObject;
 
@@ -964,37 +1000,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
-                           new JProperty("AuthorizationStatus",        AuthorizationStatus.      ToString()),
+                                 new JProperty("AuthorizationStatus",   AuthorizationStatus.      ToString()),
 
-                           new JProperty("StatusCode",                 StatusCode.               ToJSON(CustomStatusCodeSerializer)),
+                                 new JProperty("StatusCode",            StatusCode.               ToJSON(CustomStatusCodeSerializer)),
 
                            ProviderId.HasValue
-                               ? new JProperty("ProviderID",           ProviderId.         Value.ToString())
+                               ? new JProperty("ProviderID",            ProviderId.         Value.ToString())
                                : null,
 
                            SessionId.HasValue
-                               ? new JProperty("SessionID",            SessionId.          Value.ToString())
+                               ? new JProperty("SessionID",             SessionId.          Value.ToString())
                                : null,
 
                            CPOPartnerSessionId.HasValue
-                               ? new JProperty("CPOPartnerSessionID",  CPOPartnerSessionId.Value.ToString())
+                               ? new JProperty("CPOPartnerSessionID",   CPOPartnerSessionId.Value.ToString())
                                : null,
 
                            EMPPartnerSessionId.HasValue
-                               ? new JProperty("EMPPartnerSessionID",  EMPPartnerSessionId.Value.ToString())
+                               ? new JProperty("EMPPartnerSessionID",   EMPPartnerSessionId.Value.ToString())
                                : null,
 
                            CustomData is not null
-                               ? new JProperty("CustomData",           CustomData)
+                               ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
 
             return CustomAuthorizationStopSerializer is not null
-                       ? CustomAuthorizationStopSerializer(this, JSON)
-                       : JSON;
+                       ? CustomAuthorizationStopSerializer(this, json)
+                       : json;
 
         }
 
@@ -1150,7 +1186,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     ProviderId,
                     ProcessId,
                     HTTPResponse,
-                    CustomData);
+                    CustomData,
+                    InternalData);
 
         #endregion
 
@@ -1221,6 +1258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+            /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
             public Builder(AuthorizeStopRequest?      Request               = null,
                            DateTime?                  ResponseTimestamp     = null,
                            EventTracking_Id?          EventTrackingId       = null,
@@ -1233,7 +1271,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            Provider_Id?               ProviderId            = null,
                            Process_Id?                ProcessId             = null,
                            HTTPResponse?              HTTPResponse          = null,
-                           JObject?                   CustomData            = null)
+                           JObject?                   CustomData            = null,
+                           UserDefinedDictionary?     InternalData          = null)
 
                 : base(ResponseTimestamp,
                        EventTrackingId,
@@ -1241,7 +1280,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        Request,
                        HTTPResponse,
                        ProcessId,
-                       CustomData)
+                       CustomData,
+                       InternalData)
 
             {
 
@@ -1297,7 +1337,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      EMPPartnerSessionId,
                                                      ProviderId,
                                                      HTTPResponse,
-                                                     CustomData);
+                                                     CustomData,
+                                                     InternalData);
 
             }
 

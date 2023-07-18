@@ -507,7 +507,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<StatusCode>?                  CustomStatusCodeSerializer                   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("content",           new JArray(EVSEDataRecords.Select(evseDataRecord => evseDataRecord.ToJSON(CustomEVSEDataRecordSerializer,
                                                                                                                                         CustomAddressSerializer,
@@ -531,8 +531,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPullEVSEDataResponseSerializer is not null
-                       ? CustomPullEVSEDataResponseSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPullEVSEDataResponseSerializer(this, json)
+                       : json;
 
         }
 

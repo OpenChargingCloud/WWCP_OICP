@@ -255,15 +255,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<AdditionalReferences>? CustomAdditionalReferencesSerializer = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
                            new JProperty("AdditionalReference",              AdditionalReference.    ToString()),
                            new JProperty("AdditionalReferenceUnit",          AdditionalReferenceUnit.ToString()),
                            new JProperty("PricePerAdditionalReferenceUnit",  PricePerAdditionalReferenceUnit)
                        );
 
             return CustomAdditionalReferencesSerializer is not null
-                       ? CustomAdditionalReferencesSerializer(this, JSON)
-                       : JSON;
+                       ? CustomAdditionalReferencesSerializer(this, json)
+                       : json;
 
         }
 

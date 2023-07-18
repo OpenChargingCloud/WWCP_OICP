@@ -265,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<Identification>?                 CustomIdentificationSerializer                  = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ActionType",                  Action.AsString()),
 
@@ -279,8 +279,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPushAuthenticationDataRequestSerializer is not null
-                       ? CustomPushAuthenticationDataRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPushAuthenticationDataRequestSerializer(this, json)
+                       : json;
 
         }
 

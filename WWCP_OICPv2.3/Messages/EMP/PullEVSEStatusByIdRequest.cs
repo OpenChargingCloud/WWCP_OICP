@@ -241,7 +241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEStatusByIdRequest>?  CustomPullEVSEStatusByIdRequestSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ProviderID",        ProviderId.ToString()),
 
@@ -254,8 +254,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPullEVSEStatusByIdRequestSerializer is not null
-                       ? CustomPullEVSEStatusByIdRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPullEVSEStatusByIdRequestSerializer(this, json)
+                       : json;
 
         }
 

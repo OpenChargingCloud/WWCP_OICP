@@ -306,14 +306,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationSerializer   = null)
         {
 
-            var JSON = ChargeDetailRecord.ToJSON(CustomChargeDetailRecordSerializer,
+            var json = ChargeDetailRecord.ToJSON(CustomChargeDetailRecordSerializer,
                                                  CustomIdentificationSerializer,
                                                  CustomSignedMeteringValueSerializer,
                                                  CustomCalibrationLawVerificationSerializer);
 
             return CustomChargeDetailRecordRequestSerializer is not null
-                       ? CustomChargeDetailRecordRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomChargeDetailRecordRequestSerializer(this, json)
+                       : json;
 
         }
 

@@ -228,7 +228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<SignedMeteringValue>?  CustomSignedMeteringValueSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("SignedMeteringValue",   Value),
 
@@ -243,8 +243,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomSignedMeteringValueSerializer is not null
-                       ? CustomSignedMeteringValueSerializer(this, JSON)
-                       : JSON;
+                       ? CustomSignedMeteringValueSerializer(this, json)
+                       : json;
 
         }
 

@@ -719,6 +719,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 if (response is not null)
                 {
+
+                    #region Map custom data
+
+                    UserDefinedDictionary? internalData = null;
+
+                    if (response.CachedResultRemainingLifeTime.HasValue)
+                    {
+                        internalData ??= new UserDefinedDictionary();
+                        internalData.Set("cachedResultRemainingLifeTime",  response.CachedResultRemainingLifeTime.Value);
+                    }
+
+                    #endregion
+
                     switch (response.Result)
                     {
 
@@ -730,43 +743,51 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         response.ProviderId.ToOICP(),
                                                                                         "Ready to charge!",
                                                                                         default,
-                                                                                        response.ListOfAuthStopTokens.
-                                                                                            SafeSelect(token => Identification.FromUID(token.ToOICP())));
+                                                                                        response.ListOfAuthStopTokens.SafeSelect(token => Identification.FromUID(token.ToOICP())),
+                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.NotAuthorized:
                             return AuthorizationStartResponse.NotAuthorized            (Request,
                                                                                         new StatusCode(
                                                                                             StatusCodes.RFIDAuthenticationfailed_InvalidUID,
-                                                                                            "RFID Authentication failed - invalid UID")
-                                                                                        );
+                                                                                            "RFID Authentication failed - invalid UID"
+                                                                                        ),
+                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.InvalidSessionId:
                             return AuthorizationStartResponse.SessionIsInvalid         (Request,
                                                                                         SessionId:            Request.SessionId,
                                                                                         CPOPartnerSessionId:  Request.CPOPartnerSessionId,
-                                                                                        EMPPartnerSessionId:  Request.EMPPartnerSessionId);
+                                                                                        EMPPartnerSessionId:  Request.EMPPartnerSessionId,
+                                                                                        InternalData:         internalData);
 
                         case WWCP.AuthStartResultTypes.CommunicationTimeout:
-                            return AuthorizationStartResponse.CommunicationToEVSEFailed(Request);
+                            return AuthorizationStartResponse.CommunicationToEVSEFailed(Request,
+                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.StartChargingTimeout:
-                            return AuthorizationStartResponse.NoEVConnectedToEVSE      (Request);
+                            return AuthorizationStartResponse.NoEVConnectedToEVSE      (Request,
+                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.Reserved:
-                            return AuthorizationStartResponse.EVSEAlreadyReserved      (Request);
+                            return AuthorizationStartResponse.EVSEAlreadyReserved      (Request,
+                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.UnknownLocation:
-                            return AuthorizationStartResponse.UnknownEVSEID            (Request);
+                            return AuthorizationStartResponse.UnknownEVSEID            (Request,
+                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.OutOfService:
-                            return AuthorizationStartResponse.EVSEOutOfService         (Request);
+                            return AuthorizationStartResponse.EVSEOutOfService         (Request,
+                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.RateLimitReached:
                             return AuthorizationStartResponse.NotAuthorized            (Request,
                                                                                         new StatusCode(
                                                                                             StatusCodes.NoPositiveAuthenticationResponse,
-                                                                                            "Authentication rate limit reached!")
-                                                                                        );
+                                                                                            "Authentication rate limit reached!"
+                                                                                        ),
+                                                                                        InternalData:  internalData);
 
                     }
                 }
@@ -775,8 +796,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 return AuthorizationStartResponse.ServiceNotAvailable(
                            Request,
-                           SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
-                           ProviderId: response?.ProviderId.ToOICP()
+                           SessionId:   response?.SessionId. ToOICP() ?? Request.SessionId,
+                           ProviderId:  response?.ProviderId.ToOICP()
                        );
 
             };
@@ -792,7 +813,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #region Map parameter values
 
                 var sessionId            = Request.SessionId.          ToWWCP();
-                var localAuthentication  = Request.Identification.     ToWWCP().ToLocal;
+                var localAuthentication  = Request.Identification.     ToWWCP()?.ToLocal;
                 var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
                 var CPOPartnerSessionId  = Request.CPOPartnerSessionId.ToWWCP();
                 var operatorId           = Request.OperatorId.         ToWWCP();
@@ -878,6 +899,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 if (response is not null)
                 {
+
+                    #region Map custom data
+
+                    UserDefinedDictionary? internalData = null;
+
+                    if (response.CachedResultRemainingLifeTime.HasValue)
+                    {
+                        internalData ??= new UserDefinedDictionary();
+                        internalData.Set("cachedResultRemainingLifeTime",  response.CachedResultRemainingLifeTime.Value);
+                    }
+
+                    #endregion
+
                     switch (response.Result)
                     {
 
@@ -887,29 +921,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        default,
                                                                                        default,
                                                                                        response.ProviderId.ToOICP(),
-                                                                                       "Ready to stop charging!");
+                                                                                       "Ready to stop charging!",
+                                                                                       InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.InvalidSessionId:
-                            return AuthorizationStopResponse.SessionIsInvalid         (Request);
+                            return AuthorizationStopResponse.SessionIsInvalid         (Request,
+                                                                                       InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.CommunicationTimeout:
-                            return AuthorizationStopResponse.CommunicationToEVSEFailed(Request);
+                            return AuthorizationStopResponse.CommunicationToEVSEFailed(Request,
+                                                                                       InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.StopChargingTimeout:
-                            return AuthorizationStopResponse.NoEVConnectedToEVSE      (Request);
+                            return AuthorizationStopResponse.NoEVConnectedToEVSE      (Request,
+                                                                                       InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.UnknownLocation:
-                            return AuthorizationStopResponse.UnknownEVSEID            (Request);
+                            return AuthorizationStopResponse.UnknownEVSEID            (Request,
+                                                                                       InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.OutOfService:
-                            return AuthorizationStopResponse.EVSEOutOfService         (Request);
+                            return AuthorizationStopResponse.EVSEOutOfService         (Request,
+                                                                                       InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.RateLimitReached:
                             return AuthorizationStopResponse.NotAuthorized            (Request,
                                                                                        new StatusCode(
                                                                                            StatusCodes.NoPositiveAuthenticationResponse,
-                                                                                           "Authentication rate limit reached!")
-                                                                                       );
+                                                                                           "Authentication rate limit reached!"
+                                                                                       ),
+                                                                                       InternalData:  internalData);
 
                     }
                 }

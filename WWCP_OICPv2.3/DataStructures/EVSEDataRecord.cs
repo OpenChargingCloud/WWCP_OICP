@@ -1275,7 +1275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<OpeningTime>?                 CustomOpeningTimesSerializer                 = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("EvseID",                                  Id.                                ToString()),
                            new JProperty("ChargingStationNames",                    ChargingStationName.               ToJSON()),
@@ -1382,8 +1382,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomEVSEDataRecordSerializer is not null
-                       ? CustomEVSEDataRecordSerializer(this, JSON)
-                       : JSON;
+                       ? CustomEVSEDataRecordSerializer(this, json)
+                       : json;
 
         }
 

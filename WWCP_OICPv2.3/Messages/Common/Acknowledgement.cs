@@ -631,7 +631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<StatusCode>?       CustomStatusCodeSerializer        = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("StatusCode", StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
 
@@ -654,8 +654,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomAcknowledgementSerializer is not null
-                       ? CustomAcknowledgementSerializer(this, JSON)
-                       : JSON;
+                       ? CustomAcknowledgementSerializer(this, json)
+                       : json;
 
         }
 
@@ -2048,7 +2048,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<StatusCode>?       CustomStatusCodeSerializer        = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("StatusCode", StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
 
@@ -2071,8 +2071,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomAcknowledgementSerializer is not null
-                       ? CustomAcknowledgementSerializer(this, JSON)
-                       : JSON;
+                       ? CustomAcknowledgementSerializer(this, json)
+                       : json;
 
         }
 

@@ -275,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               CustomJObjectSerializerDelegate<EVSEStatusRecord>?       CustomEVSEStatusRecordSerializer        = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ActionType",          Action.AsString()),
 
@@ -289,8 +289,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPushEVSEStatusRequestSerializer is not null
-                       ? CustomPushEVSEStatusRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPushEVSEStatusRequestSerializer(this, json)
+                       : json;
 
         }
 

@@ -295,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ProviderID",        ProviderId.ToString()),
                            new JProperty("OperatorIDs",       new JArray(OperatorIds.Select(operatorId => operatorId.ToString()))),
@@ -311,8 +311,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPullEVSEPricingRequestSerializer is not null
-                       ? CustomPullEVSEPricingRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPullEVSEPricingRequestSerializer(this, json)
+                       : json;
 
         }
 

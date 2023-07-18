@@ -342,7 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<TransparencySoftware>? CustomTransparencySoftwareSerializer = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                                  new JProperty("name",                    Name),
                                  new JProperty("version",                 Version),
@@ -368,8 +368,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomTransparencySoftwareSerializer is not null
-                       ? CustomTransparencySoftwareSerializer(this, JSON)
-                       : JSON;
+                       ? CustomTransparencySoftwareSerializer(this, json)
+                       : json;
 
         }
 

@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("Code",                  ((Int32) Code).ToString("D3")),
 
@@ -231,8 +231,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomStatusCodeSerializer is not null
-                       ? CustomStatusCodeSerializer(this, JSON)
-                       : JSON;
+                       ? CustomStatusCodeSerializer(this, json)
+                       : json;
 
         }
 

@@ -331,7 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<AuthorizeRemoteStopRequest>? CustomAuthorizeRemoteStopRequestSerializer = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("ProviderID",                  ProviderId.               ToString()),
                            new JProperty("EvseID",                      EVSEId.                   ToString()),
@@ -352,8 +352,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomAuthorizeRemoteStopRequestSerializer is not null
-                       ? CustomAuthorizeRemoteStopRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomAuthorizeRemoteStopRequestSerializer(this, json)
+                       : json;
 
         }
 

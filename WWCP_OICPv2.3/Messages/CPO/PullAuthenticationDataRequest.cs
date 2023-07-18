@@ -217,7 +217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<PullAuthenticationDataRequest>?  CustomPullAuthenticationDataRequestSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("OperatorID",          OperatorId.ToString()),
 
@@ -228,8 +228,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomPullAuthenticationDataRequestSerializer is not null
-                       ? CustomPullAuthenticationDataRequestSerializer(this, JSON)
-                       : JSON;
+                       ? CustomPullAuthenticationDataRequestSerializer(this, json)
+                       : json;
 
         }
 

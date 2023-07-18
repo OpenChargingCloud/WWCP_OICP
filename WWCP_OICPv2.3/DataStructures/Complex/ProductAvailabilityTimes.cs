@@ -248,14 +248,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<ProductAvailabilityTimes>? CustomProductAvailabilityTimesSerializer = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
                            new JProperty("Period",  Period.ToJSON()),
                            new JProperty("on",      On.    ToString())
                        );
 
             return CustomProductAvailabilityTimesSerializer is not null
-                       ? CustomProductAvailabilityTimesSerializer(this, JSON)
-                       : JSON;
+                       ? CustomProductAvailabilityTimesSerializer(this, json)
+                       : json;
 
         }
 

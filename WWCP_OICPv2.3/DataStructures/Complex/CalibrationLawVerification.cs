@@ -297,7 +297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject? ToJSON(CustomJObjectSerializerDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.IsNotNullOrEmpty()
                                ? new JProperty("CalibrationLawCertificateID",                  CalibrationLawCertificateId)
@@ -326,8 +326,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             var JSON2 = CustomCalibrationLawVerificationSerializer is not null
-                            ? CustomCalibrationLawVerificationSerializer(this, JSON)
-                            : JSON;
+                            ? CustomCalibrationLawVerificationSerializer(this, json)
+                            : json;
 
             return JSON2.HasValues
                        ? JSON2

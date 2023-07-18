@@ -290,7 +290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public JObject ToJSON(CustomJObjectSerializerDelegate<RFIDIdentification>?  CustomRFIDIdentificationSerializer   = null)
         {
 
-            var JSON = JSONObject.Create(
+            var json = JSONObject.Create(
 
                            new JProperty("UID",                     UID.         ToString()),
 
@@ -315,8 +315,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        );
 
             return CustomRFIDIdentificationSerializer is not null
-                       ? CustomRFIDIdentificationSerializer(this, JSON)
-                       : JSON;
+                       ? CustomRFIDIdentificationSerializer(this, json)
+                       : json;
 
         }
 
