@@ -134,6 +134,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.AdditionalReferences         = AdditionalReferences?.   Distinct() ?? Array.Empty<AdditionalReferences>();
 
+            unchecked
+            {
+
+                hashCode = ProductId.                  GetHashCode() * 29 ^
+                           ReferenceUnit.              GetHashCode() * 23 ^
+                           ProductPriceCurrency.       GetHashCode() * 17 ^
+                           PricePerReferenceUnit.      GetHashCode() * 13 ^
+                           MaximumProductChargingPower.GetHashCode() * 11 ^
+                           IsValid24hours.             GetHashCode() *  7 ^
+                           ProductAvailabilityTimes.   GetHashCode() *  3 ^
+
+                          (AdditionalReferences is not null && AdditionalReferences.Any()
+                               ? AdditionalReferences.GetHashCode()
+                               : 0);
+
+            }
+
         }
 
         #endregion
@@ -184,8 +201,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out PricingProductDataRecord?  pricingProductDataRecord,
-                         out String?                    errorResponse,
+                         out var pricingProductDataRecord,
+                         out var errorResponse,
                          CustomPricingProductDataRecordParser))
             {
                 return pricingProductDataRecord!;
@@ -536,23 +553,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-
-            => ProductId.                  GetHashCode() * 29 ^
-               ReferenceUnit.              GetHashCode() * 23 ^
-               ProductPriceCurrency.       GetHashCode() * 17 ^
-               PricePerReferenceUnit.      GetHashCode() * 13 ^
-               MaximumProductChargingPower.GetHashCode() * 11 ^
-               IsValid24hours.             GetHashCode() *  7 ^
-               ProductAvailabilityTimes.   GetHashCode() *  3 ^
-
-              (AdditionalReferences is not null && AdditionalReferences.Any()
-                   ? AdditionalReferences.GetHashCode()
-                   : 0);
+            => hashCode;
 
         #endregion
 

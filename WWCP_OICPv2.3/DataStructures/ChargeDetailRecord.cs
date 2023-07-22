@@ -227,6 +227,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.HubOperatorId                   = HubOperatorId;
             this.HubProviderId                   = HubProviderId;
 
+            unchecked
+            {
+
+                hashCode = SessionId.                      GetHashCode()       * 61 ^
+                           EVSEId.                         GetHashCode()       * 59 ^
+                           Identification.                 GetHashCode()       * 53 ^
+                           SessionStart.                   GetHashCode()       * 47 ^
+                           SessionEnd.                     GetHashCode()       * 43 ^
+                           ChargingStart.                  GetHashCode()       * 41 ^
+                           ChargingEnd.                    GetHashCode()       * 37 ^
+                           ConsumedEnergy.                 GetHashCode()       * 31 ^
+
+                          (PartnerProductId?.              GetHashCode() ?? 0) * 29 ^
+                          (CPOPartnerSessionId?.           GetHashCode() ?? 0) * 23 ^
+                          (EMPPartnerSessionId?.           GetHashCode() ?? 0) * 19 ^
+                          (MeterValueStart?.               GetHashCode() ?? 0) * 17 ^
+                          (MeterValueEnd?.                 GetHashCode() ?? 0) * 13 ^
+
+                          (MeterValuesInBetween?.Aggregate(0, (hashCode,       meterValue) => hashCode ^ meterValue.      GetHashCode()) ?? 0) ^
+                          (SignedMeteringValues?.Aggregate(0, (hashCode, signedMeterValue) => hashCode ^ signedMeterValue.GetHashCode()) ?? 0) ^
+
+                          (CalibrationLawVerificationInfo?.GetHashCode() ?? 0) *  5 ^
+                          (HubOperatorId?.                 GetHashCode() ?? 0) *  3 ^
+                          (HubProviderId?.                 GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -311,8 +338,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ChargeDetailRecord?  chargeDetailRecord,
-                         out String?              errorResponse,
+                         out var chargeDetailRecord,
+                         out var errorResponse,
                          CustomChargeDetailRecordParser))
             {
                 return chargeDetailRecord!;
@@ -1073,38 +1100,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Get the hashcode of this object.
+        /// Return the hash code of this object.
         /// </summary>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return SessionId.                       GetHashCode()       * 61 ^
-                       EVSEId.                          GetHashCode()       * 59 ^
-                       Identification.                  GetHashCode()       * 53 ^
-                       SessionStart.                    GetHashCode()       * 47 ^
-                       SessionEnd.                      GetHashCode()       * 43 ^
-                       ChargingStart.                   GetHashCode()       * 41 ^
-                       ChargingEnd.                     GetHashCode()       * 37 ^
-                       ConsumedEnergy.                  GetHashCode()       * 31 ^
-
-                       (PartnerProductId?.              GetHashCode() ?? 0) * 29 ^
-                       (CPOPartnerSessionId?.           GetHashCode() ?? 0) * 23 ^
-                       (EMPPartnerSessionId?.           GetHashCode() ?? 0) * 19 ^
-                       (MeterValueStart?.               GetHashCode() ?? 0) * 17 ^
-                       (MeterValueEnd?.                 GetHashCode() ?? 0) * 13 ^
-
-                       (MeterValuesInBetween?.Aggregate(0, (hashCode,       meterValue) => hashCode ^ meterValue.      GetHashCode()) ?? 0) ^
-                       (SignedMeteringValues?.Aggregate(0, (hashCode, signedMeterValue) => hashCode ^ signedMeterValue.GetHashCode()) ?? 0) ^
-
-                       (CalibrationLawVerificationInfo?.GetHashCode() ?? 0) *  5 ^
-                       (HubOperatorId?.                 GetHashCode() ?? 0) *  3 ^
-                       (HubProviderId?.                 GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

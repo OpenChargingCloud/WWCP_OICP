@@ -573,8 +573,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EVSEDataRecord?  evseDataRecord,
-                         out String?          errorResponse,
+                         out var evseDataRecord,
+                         out var errorResponse,
                          CustomEVSEDataRecordParser))
             {
                 return evseDataRecord!;
