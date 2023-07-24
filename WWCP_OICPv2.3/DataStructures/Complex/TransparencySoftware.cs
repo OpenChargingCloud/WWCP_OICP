@@ -625,7 +625,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       (Logo?.                GetHashCode() ?? 0) * 7 ^
                       (HowToUse?.            GetHashCode() ?? 0) * 5 ^
                       (MoreInformation?.     GetHashCode() ?? 0) * 3 ^
-                       SourceCodeRepository?.GetHashCode() ?? 0;
+                      (SourceCodeRepository?.GetHashCode() ?? 0);
 
             }
         }

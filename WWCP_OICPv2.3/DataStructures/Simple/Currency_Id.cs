@@ -217,12 +217,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Euro
         /// </summary>
-        public static readonly Currency_Id EUR = new ("EUR", 978, 2, "Euro", new String[] { "ÅLAND ISLANDS", "ANDORRA", "AUSTRIA", "BELGIUM", "CYPRUS", "ESTONIA", "EUROPEAN UNION",
-                                                                                            "FINLAND", "FRANCE", "FRENCH GUIANA", "FRENCH SOUTHERN TERRITORIES (THE)","GERMANY",
-                                                                                            "GREECE", "GUADELOUPE", "HOLY SEE (THE)", "IRELAND", "ITALY", "LATVIA", "LITHUANIA",
-                                                                                            "LUXEMBOURG", "MALTA", "MARTINIQUE", "SAINT MARTIN (FRENCH PART)", "SAINT PIERRE AND MIQUELON",
-                                                                                            "MAYOTTE", "SLOVAKIA", "SAN MARINO", "SLOVENIA", "MONACO", "MONTENEGRO", "NETHERLANDS (THE)",
-                                                                                            "PORTUGAL", "RÉUNION", "SAINT BARTHÉLEMY", "SPAIN" });
+        public static readonly Currency_Id EUR = new ("EUR", 978, 2, "Euro", new[] { "ÅLAND ISLANDS", "ANDORRA", "AUSTRIA", "BELGIUM", "CYPRUS", "ESTONIA", "EUROPEAN UNION",
+                                                                                     "FINLAND", "FRANCE", "FRENCH GUIANA", "FRENCH SOUTHERN TERRITORIES (THE)","GERMANY",
+                                                                                     "GREECE", "GUADELOUPE", "HOLY SEE (THE)", "IRELAND", "ITALY", "LATVIA", "LITHUANIA",
+                                                                                     "LUXEMBOURG", "MALTA", "MARTINIQUE", "SAINT MARTIN (FRENCH PART)", "SAINT PIERRE AND MIQUELON",
+                                                                                     "MAYOTTE", "SLOVAKIA", "SAN MARINO", "SLOVENIA", "MONACO", "MONTENEGRO", "NETHERLANDS (THE)",
+                                                                                     "PORTUGAL", "RÉUNION", "SAINT BARTHÉLEMY", "SPAIN" });
 
         /// <summary>
         /// Lek
@@ -237,11 +237,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// US Dollar
         /// </summary>
-        public static readonly Currency_Id USD = new ("USD", 840, 2, "US Dollar", new String[] { "AMERICAN SAMOA", "BONAIRE, SINT EUSTATIUS AND SABA", "BRITISH INDIAN OCEAN TERRITORY (THE)",
-                                                                                                 "ECUADOR", "EL SALVADOR", "GUAM", "HAITI", "MARSHALL ISLANDS (THE)", "TIMOR-LESTE",
-                                                                                                 "MICRONESIA (FEDERATED STATES OF)", "NORTHERN MARIANA ISLANDS (THE)", "PALAU", "PANAMA",
-                                                                                                 "PUERTO RICO", "UNITED STATES MINOR OUTLYING ISLANDS (THE)", "UNITED STATES OF AMERICA (THE)",
-                                                                                                 "TURKS AND CAICOS ISLANDS (THE)", "VIRGIN ISLANDS (BRITISH)", "VIRGIN ISLANDS (U.S.)" });
+        public static readonly Currency_Id USD = new ("USD", 840, 2, "US Dollar", new[] { "AMERICAN SAMOA", "BONAIRE, SINT EUSTATIUS AND SABA", "BRITISH INDIAN OCEAN TERRITORY (THE)",
+                                                                                          "ECUADOR", "EL SALVADOR", "GUAM", "HAITI", "MARSHALL ISLANDS (THE)", "TIMOR-LESTE",
+                                                                                          "MICRONESIA (FEDERATED STATES OF)", "NORTHERN MARIANA ISLANDS (THE)", "PALAU", "PANAMA",
+                                                                                          "PUERTO RICO", "UNITED STATES MINOR OUTLYING ISLANDS (THE)", "UNITED STATES OF AMERICA (THE)",
+                                                                                          "TURKS AND CAICOS ISLANDS (THE)", "VIRGIN ISLANDS (BRITISH)", "VIRGIN ISLANDS (U.S.)" });
 
         /// <summary>
         /// Kwanza
@@ -251,8 +251,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// East Caribbean Dollar
         /// </summary>
-        public static readonly Currency_Id XCD = new ("XCD", 951, 2, "East Caribbean Dollar", new String[] { "ANGUILLA", "ANTIGUA AND BARBUDA", "DOMINICA", "GRENADA", "MONTSERRAT",
-                                                                                                             "SAINT KITTS AND NEVIS", "SAINT LUCIA", "SAINT VINCENT AND THE GRENADINES" });
+        public static readonly Currency_Id XCD = new ("XCD", 951, 2, "East Caribbean Dollar", new[] { "ANGUILLA", "ANTIGUA AND BARBUDA", "DOMINICA", "GRENADA", "MONTSERRAT",
+                                                                                                      "SAINT KITTS AND NEVIS", "SAINT LUCIA", "SAINT VINCENT AND THE GRENADINES" });
 
         /// <summary>
         /// Argentine Peso
@@ -272,8 +272,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Australian Dollar
         /// </summary>
-        public static readonly Currency_Id AUD = new ("AUD", 036, 2, "Australian Dollar", new String[] { "AUSTRALIA", "CHRISTMAS ISLAND", "COCOS (KEELING) ISLANDS (THE)", "NORFOLK ISLAND",
-                                                                                                         "HEARD ISLAND AND McDONALD ISLANDS", "KIRIBATI", "NAURU", "TUVALU" });
+        public static readonly Currency_Id AUD = new ("AUD", 036, 2, "Australian Dollar", new[] { "AUSTRALIA", "CHRISTMAS ISLAND", "COCOS (KEELING) ISLANDS (THE)", "NORFOLK ISLAND",
+                                                                                                  "HEARD ISLAND AND McDONALD ISLANDS", "KIRIBATI", "NAURU", "TUVALU" });
 
         /// <summary>
         /// Azerbaijan Manat
@@ -313,8 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// CFA Franc BCEAO
         /// </summary>
-        public static readonly Currency_Id XOF = new ("XOF", 952, 0, "CFA Franc BCEAO", new String[] { "BENIN", "BURKINA FASO", "CÔTE D'IVOIRE", "GUINEA-BISSAU", "MALI", "NIGER (THE)",
-                                                                                                       "SENEGAL", "TOGO" });
+        public static readonly Currency_Id XOF = new ("XOF", 952, 0, "CFA Franc BCEAO", new[] { "BENIN", "BURKINA FASO", "CÔTE D'IVOIRE", "GUINEA-BISSAU", "MALI", "NIGER (THE)", "SENEGAL", "TOGO" });
 
         /// <summary>
         /// Bermudian Dollar
@@ -324,7 +323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Indian Rupee
         /// </summary>
-        public static readonly Currency_Id INR = new ("INR", 356, 2, "Indian Rupee", new String[] { "BHUTAN", "INDIA" });
+        public static readonly Currency_Id INR = new ("INR", 356, 2, "Indian Rupee", new[] { "BHUTAN", "INDIA" });
 
         /// <summary>
         /// Ngultrum
@@ -354,7 +353,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Norwegian Krone
         /// </summary>
-        public static readonly Currency_Id NOK = new ("NOK", 578, 2, "Norwegian Krone", new String[] { "BOUVET ISLAND", "SVALBARD AND JAN MAYEN", "NORWAY" });
+        public static readonly Currency_Id NOK = new ("NOK", 578, 2, "Norwegian Krone", new[] { "BOUVET ISLAND", "SVALBARD AND JAN MAYEN", "NORWAY" });
 
         /// <summary>
         /// Brazilian Real
@@ -389,7 +388,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// CFA Franc BEAC
         /// </summary>
-        public static readonly Currency_Id XAF = new ("XAF", 950, 0, "CFA Franc BEAC", new String[] { "CAMEROON", "CENTRAL AFRICAN REPUBLIC (THE)", "CHAD", "CONGO (THE)", "EQUATORIAL GUINEA", "GABON" });
+        public static readonly Currency_Id XAF = new ("XAF", 950, 0, "CFA Franc BEAC", new[] { "CAMEROON", "CENTRAL AFRICAN REPUBLIC (THE)", "CHAD", "CONGO (THE)", "EQUATORIAL GUINEA", "GABON" });
 
         /// <summary>
         /// Canadian Dollar
@@ -439,14 +438,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// New Zealand Dollar
         /// </summary>
-        public static readonly Currency_Id NZD = new ("NZD", 554, 2, "New Zealand Dollar", new String[] { "COOK ISLANDS (THE)", "NIUE", "NEW ZEALAND", "PITCAIRN", "TOKELAU" });
+        public static readonly Currency_Id NZD = new ("NZD", 554, 2, "New Zealand Dollar", new[] { "COOK ISLANDS (THE)", "NIUE", "NEW ZEALAND", "PITCAIRN", "TOKELAU" });
         public static readonly Currency_Id CRC = new ("CRC", 188, 2, "Costa Rican Colon", "COSTA RICA");
         public static readonly Currency_Id HRK = new ("HRK", 191, 2, "Kuna", "CROATIA");
         public static readonly Currency_Id CUP = new ("CUP", 192, 2, "Cuban Peso", "CUBA");
         public static readonly Currency_Id CUC = new ("CUC", 931, 2, "Peso Convertible", "CUBA");
-        public static readonly Currency_Id ANG = new ("ANG", 532, 2, "Netherlands Antillean Guilder", new String[] { "SINT MAARTEN (DUTCH PART)", "CURAÇAO" });
+        public static readonly Currency_Id ANG = new ("ANG", 532, 2, "Netherlands Antillean Guilder", new[] { "SINT MAARTEN (DUTCH PART)", "CURAÇAO" });
         public static readonly Currency_Id CZK = new ("CZK", 203, 2, "Czech Koruna", "CZECHIA");
-        public static readonly Currency_Id DKK = new ("DKK", 208, 2, "Danish Krone", new String[] { "DENMARK", "FAROE ISLANDS (THE)", "GREENLAND" });
+        public static readonly Currency_Id DKK = new ("DKK", 208, 2, "Danish Krone", new[] { "DENMARK", "FAROE ISLANDS (THE)", "GREENLAND" });
         public static readonly Currency_Id DJF = new ("DJF", 262, 0, "Djibouti Franc", "DJIBOUTI");
         public static readonly Currency_Id DOP = new ("DOP", 214, 2, "Dominican Peso", "DOMINICAN REPUBLIC (THE)");
         public static readonly Currency_Id EGP = new ("EGP", 818, 2, "Egyptian Pound", "EGYPT");
@@ -456,13 +455,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static readonly Currency_Id ETB = new ("ETB", 230, 2, "Ethiopian Birr", "ETHIOPIA");
         public static readonly Currency_Id FKP = new ("FKP", 238, 2, "Falkland Islands Pound", "FALKLAND ISLANDS (THE) [MALVINAS]");
         public static readonly Currency_Id FJD = new ("FJD", 242, 2, "Fiji Dollar", "FIJI");
-        public static readonly Currency_Id XPF = new ("XPF", 953, 0, "CFP Franc", new String[] {"FRENCH POLYNESIA", "NEW CALEDONIA", "WALLIS AND FUTUNA" });
+        public static readonly Currency_Id XPF = new ("XPF", 953, 0, "CFP Franc", new[] {"FRENCH POLYNESIA", "NEW CALEDONIA", "WALLIS AND FUTUNA" });
         public static readonly Currency_Id GMD = new ("GMD", 270, 2, "Dalasi", "GAMBIA (THE)");
         public static readonly Currency_Id GEL = new ("GEL", 981, 2, "Lari", "GEORGIA");
         public static readonly Currency_Id GHS = new ("GHS", 936, 2, "Ghana Cedi", "GHANA");
         public static readonly Currency_Id GIP = new ("GIP", 292, 2, "Gibraltar Pound", "GIBRALTAR");
         public static readonly Currency_Id GTQ = new ("GTQ", 320, 2, "Quetzal", "GUATEMALA");
-        public static readonly Currency_Id GBP = new ("GBP", 826, 2, "Pound Sterling", new String[] { "UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND (THE)", "GUERNSEY", "ISLE OF MAN", "JERSEY" });
+        public static readonly Currency_Id GBP = new ("GBP", 826, 2, "Pound Sterling", new[] { "UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND (THE)", "GUERNSEY", "ISLE OF MAN", "JERSEY" });
         public static readonly Currency_Id GNF = new ("GNF", 324, 0, "Guinean Franc", "GUINEA");
         public static readonly Currency_Id GYD = new ("GYD", 328, 2, "Guyana Dollar", "GUYANA");
         public static readonly Currency_Id HTG = new ("HTG", 332, 2, "Gourde", "HAITI");
@@ -487,10 +486,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static readonly Currency_Id LAK = new ("LAK", 418, 2, "Lao Kip", "LAO PEOPLE’S DEMOCRATIC REPUBLIC (THE)");
         public static readonly Currency_Id LBP = new ("LBP", 422, 2, "Lebanese Pound", "LEBANON");
         public static readonly Currency_Id LSL = new ("LSL", 426, 2, "Loti", "LESOTHO");
-        public static readonly Currency_Id ZAR = new ("ZAR", 710, 2, "Rand", new String[] { "LESOTHO", "NAMIBIA", "SOUTH AFRICA" });
+        public static readonly Currency_Id ZAR = new ("ZAR", 710, 2, "Rand", new[] { "LESOTHO", "NAMIBIA", "SOUTH AFRICA" });
         public static readonly Currency_Id LRD = new ("LRD", 430, 2, "Liberian Dollar", "LIBERIA");
         public static readonly Currency_Id LYD = new ("LYD", 434, 3, "Libyan Dinar", "LIBYA");
-        public static readonly Currency_Id CHF = new ("CHF", 756, 2, "Swiss Franc", new String[] { "SWITZERLAND", "LIECHTENSTEIN" });
+        public static readonly Currency_Id CHF = new ("CHF", 756, 2, "Swiss Franc", new[] { "SWITZERLAND", "LIECHTENSTEIN" });
         public static readonly Currency_Id MOP = new ("MOP", 446, 2, "Pataca", "MACAO");
         public static readonly Currency_Id MKD = new ("MKD", 807, 2, "Denar", "NORTH MACEDONIA");
         public static readonly Currency_Id MGA = new ("MGA", 969, 2, "Malagasy Ariary", "MADAGASCAR");
@@ -504,7 +503,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static readonly Currency_Id MXV = new ("MXV", 979, 2, "Mexican Unidad de Inversion (UDI)", "MEXICO");
         public static readonly Currency_Id MDL = new ("MDL", 498, 2, "Moldovan Leu", "MOLDOVA (THE REPUBLIC OF)");
         public static readonly Currency_Id MNT = new ("MNT", 496, 2, "Tugrik", "MONGOLIA");
-        public static readonly Currency_Id MAD = new ("MAD", 504, 2, "Moroccan Dirham", new String[] { "MOROCCO", "WESTERN SAHARA" });
+        public static readonly Currency_Id MAD = new ("MAD", 504, 2, "Moroccan Dirham", new[] { "MOROCCO", "WESTERN SAHARA" });
         public static readonly Currency_Id MZN = new ("MZN", 943, 2, "Mozambique Metical", "MOZAMBIQUE");
         public static readonly Currency_Id MMK = new ("MMK", 104, 2, "Kyat", "MYANMAR");
         public static readonly Currency_Id NAD = new ("NAD", 516, 2, "Namibia Dollar", "NAMIBIA");

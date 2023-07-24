@@ -73,6 +73,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Status      = Status;
             this.CustomData  = CustomData;
 
+            unchecked
+            {
+
+                hashCode = Id.    GetHashCode() * 3 ^
+                           Status.GetHashCode();
+
+            }
+
         }
 
         #endregion
@@ -419,22 +427,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region GetHashCode()
+        #region (override) GetHashCode()
+
+        private readonly Int32 hashCode;
 
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Id.    GetHashCode() * 3 ^
-                       Status.GetHashCode();
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

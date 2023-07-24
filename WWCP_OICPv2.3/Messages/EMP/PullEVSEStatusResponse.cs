@@ -404,7 +404,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return OperatorEVSEStatus.Aggregate(0, (hashCode, operatorEVSEStatus) => hashCode ^ operatorEVSEStatus.GetHashCode()) ^
-                       StatusCode?.GetHashCode() ?? 0;
+                       (StatusCode?.GetHashCode() ?? 0);
 
             }
         }

@@ -573,7 +573,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return ProviderAuthenticationData.Aggregate(0, (hashCode, operatorEVSEPricing) => hashCode ^ operatorEVSEPricing.GetHashCode()) ^
-                       StatusCode?.GetHashCode() ?? 0;
+                      (StatusCode?.GetHashCode() ?? 0);
 
             }
         }
