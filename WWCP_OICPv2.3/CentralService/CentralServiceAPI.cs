@@ -157,7 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                  String?                               LogfileName                        = null,
                                  LogfileCreatorDelegate?               LogfileCreator                     = null,
                                  DNSClient?                            DNSClient                          = null,
-                                 Boolean                               Autostart                          = false)
+                                 Boolean                               AutoStart                          = false)
 
         {
 
@@ -238,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             this.EMPServerAPIClients   = new Dictionary<Provider_Id, EMPServerAPIClient>();
             this.CPOServerAPIClients   = new Dictionary<Operator_Id, CPOServerAPIClient>();
 
-            if (Autostart)
+            if (AutoStart)
                 httpAPI.Start();
 
         }

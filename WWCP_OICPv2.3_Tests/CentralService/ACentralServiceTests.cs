@@ -95,7 +95,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                     ExternalDNSName:  "open.charging.cloud",
                                     HTTPServerPort:   IPPort.Parse(6001),
                                     LoggingPath:      "tests",
-                                    Autostart:        true
+                                    AutoStart:        true
                                 );
 
             Assert.IsNotNull(centralServiceAPI);
@@ -1426,7 +1426,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(7001),
                                        LoggingPath:      "tests",
-                                       Autostart:        true
+                                       AutoStart:        true
                                    )
 
                                );
@@ -1665,7 +1665,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(7002),
                                        LoggingPath:      "tests",
-                                       Autostart:        true
+                                       AutoStart:        true
                                    )
 
                                );
@@ -1905,7 +1905,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(8001),
                                        LoggingPath:      "tests",
-                                       Autostart:        true
+                                       AutoStart:        true
                                    )
 
                                );
@@ -2005,7 +2005,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(8002),
                                        LoggingPath:      "tests",
-                                       Autostart:        true
+                                       AutoStart:        true
                                    )
 
                                );

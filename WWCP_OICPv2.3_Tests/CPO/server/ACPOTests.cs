@@ -66,7 +66,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                ExternalDNSName:  "open.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(7000),
                                LoggingPath:      "tests",
-                               Autostart:        true
+                               AutoStart:        true
                            );
 
             Assert.IsNotNull(cpoServerAPI);

@@ -66,7 +66,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                ExternalDNSName:  "open.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(8000),
                                LoggingPath:      "tests",
-                               Autostart:        true
+                               AutoStart:        true
                            );
 
             Assert.IsNotNull(empServerAPI);

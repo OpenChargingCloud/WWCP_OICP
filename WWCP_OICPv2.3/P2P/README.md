@@ -32,13 +32,13 @@ First you have to create a CPO and an EMP peer...
 var cpoP2P_DEGEF = new CPOPeer(
                        HTTPServerPort:  IPPort.Parse(7001),
                        LoggingPath:    "DEGEF",
-                       Autostart:       true
+                       AutoStart:       true
                    );                   
                    
 var empP2P_DEGDF = new EMPPeer(
                        HTTPServerPort:  IPPort.Parse(8001),
                        LoggingPath:    "DEGDF",
-                       Autostart:       true
+                       AutoStart:       true
                    );
 ```
 

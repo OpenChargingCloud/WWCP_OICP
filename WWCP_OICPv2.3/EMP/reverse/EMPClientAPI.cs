@@ -1396,7 +1396,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="LoggingContext">The context of all logfiles.</param>
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
         /// <param name="DNSClient">The DNS client of the API.</param>
-        /// <param name="Autostart">Whether to start the API automatically.</param>
+        /// <param name="AutoStart">Whether to start the API automatically.</param>
         public EMPClientAPI(HTTPHostname?                         HTTPHostname                       = null,
                             String?                               ExternalDNSName                    = null,
                             IPPort?                               HTTPServerPort                     = null,
@@ -1438,7 +1438,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             String                                LogfileName                        = DefaultHTTPAPI_LogfileName,
                             LogfileCreatorDelegate?               LogfileCreator                     = null,
                             DNSClient?                            DNSClient                          = null,
-                            Boolean                               Autostart                          = false)
+                            Boolean                               AutoStart                          = false)
 
             : base(HTTPHostname,
                    ExternalDNSName,
@@ -1480,7 +1480,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    LogfileName,
                    LogfileCreator,
                    DNSClient,
-                   false) //Autostart)
+                   false) //AutoStart)
 
         {
 
@@ -1506,7 +1506,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             RegisterURLTemplates(RegisterRootService);
 
-            if (Autostart)
+            if (AutoStart)
                 Start();
 
         }

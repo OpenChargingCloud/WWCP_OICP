@@ -109,7 +109,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                ExternalDNSName:  "cso.graphdefined.ops.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(7001),
                                LoggingPath:      "tests",
-                               Autostart:        true
+                               AutoStart:        true
                            );
 
             Assert.IsNotNull(cpoP2P_DEGEF);
@@ -791,7 +791,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                ExternalDNSName: "emp.graphdefined.ops.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(8001),
                                LoggingPath:      "tests",
-                               Autostart:        true
+                               AutoStart:        true
                            );
 
             Assert.IsNotNull(empP2P_DEGDF);
