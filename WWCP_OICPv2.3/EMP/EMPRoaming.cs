@@ -17,10 +17,10 @@
 
 #region Usings
 
-using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
+using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An optional description of this CPO client.
         /// </summary>
-        String                               IHTTPClient.Description
+        String?                              IHTTPClient.Description
         {
 
             get
@@ -77,13 +77,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The remote SSL/TLS certificate validator.
         /// </summary>
-        RemoteCertificateValidationCallback  IHTTPClient.RemoteCertificateValidator
+        RemoteCertificateValidationHandler?  IHTTPClient.RemoteCertificateValidator
             => EMPClient.RemoteCertificateValidator;
 
         /// <summary>
         /// The SSL/TLS client certificate to use of HTTP authentication.
         /// </summary>
-        X509Certificate                      IHTTPClient.ClientCert
+        X509Certificate?                     IHTTPClient.ClientCert
             => EMPClient.ClientCert;
 
         /// <summary>

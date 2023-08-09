@@ -17,13 +17,13 @@
 
 #region Usings
 
-using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
@@ -786,25 +786,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="LoggingContext">An optional context for logging.</param>
         /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
         /// <param name="DNSClient">The DNS client to use.</param>
-        public CPOClient(URL?                                  RemoteURL                    = null,
-                         HTTPHostname?                         VirtualHostname              = null,
-                         String?                               Description                  = null,
-                         RemoteCertificateValidationCallback?  RemoteCertificateValidator   = null,
-                         LocalCertificateSelectionCallback?    ClientCertificateSelector    = null,
-                         X509Certificate?                      ClientCert                   = null,
-                         SslProtocols?                         TLSProtocol                  = null,
-                         Boolean?                              PreferIPv4                   = null,
-                         String                                HTTPUserAgent                = DefaultHTTPUserAgent,
-                         IHTTPAuthentication?                  HTTPAuthentication           = null,
-                         TimeSpan?                             RequestTimeout               = null,
-                         TransmissionRetryDelayDelegate?       TransmissionRetryDelay       = null,
-                         UInt16?                               MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
-                         UInt32?                               InternalBufferSize           = null,
-                         Boolean?                              DisableLogging               = false,
-                         String?                               LoggingPath                  = null,
-                         String                                LoggingContext               = CPOClientLogger.DefaultContext,
-                         LogfileCreatorDelegate?               LogfileCreator               = null,
-                         DNSClient?                            DNSClient                    = null)
+        public CPOClient(URL?                                 RemoteURL                    = null,
+                         HTTPHostname?                        VirtualHostname              = null,
+                         String?                              Description                  = null,
+                         Boolean?                             PreferIPv4                   = null,
+                         RemoteCertificateValidationHandler?  RemoteCertificateValidator   = null,
+                         LocalCertificateSelectionHandler?    ClientCertificateSelector    = null,
+                         X509Certificate?                     ClientCert                   = null,
+                         SslProtocols?                        TLSProtocol                  = null,
+                         String                               HTTPUserAgent                = DefaultHTTPUserAgent,
+                         IHTTPAuthentication?                 HTTPAuthentication           = null,
+                         TimeSpan?                            RequestTimeout               = null,
+                         TransmissionRetryDelayDelegate?      TransmissionRetryDelay       = null,
+                         UInt16?                              MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
+                         UInt32?                              InternalBufferSize           = null,
+                         Boolean?                             DisableLogging               = false,
+                         String?                              LoggingPath                  = null,
+                         String                               LoggingContext               = CPOClientLogger.DefaultContext,
+                         LogfileCreatorDelegate?              LogfileCreator               = null,
+                         DNSClient?                           DNSClient                    = null)
 
             : base(RemoteURL           ?? DefaultRemoteURL,
                    VirtualHostname,
