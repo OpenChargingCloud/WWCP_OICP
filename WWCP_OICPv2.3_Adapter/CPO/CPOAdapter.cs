@@ -37,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public partial class CPOAdapter : WWCP.AWWCPEMPAdapter<ChargeDetailRecord>,
+    public partial class CPOAdapter : WWCP.AWWCP__CSOAdapter<ChargeDetailRecord>,
                                       WWCP.IEMPRoamingProvider,
                                       IEquatable <CPOAdapter>,
                                       IComparable<CPOAdapter>,
@@ -152,17 +152,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         // Client logging...
 
-        #region OnPushEVSEDataWWCPRequest/-Response
+        #region OnPushDataRequest/-Response
 
         /// <summary>
         /// An event fired whenever new EVSE data will be send upstream.
         /// </summary>
-        public event OnPushEVSEDataWWCPRequestDelegate?   OnPushEVSEDataWWCPRequest;
+        public event OnPushDataRequestDelegate?   OnPushDataRequest
+            ;
 
         /// <summary>
         /// An event fired whenever new EVSE data had been sent upstream.
         /// </summary>
-        public event OnPushEVSEDataWWCPResponseDelegate?  OnPushEVSEDataWWCPResponse;
+        public event OnPushDataResponseDelegate?  OnPushDataResponse;
 
         #endregion
 
@@ -1039,7 +1040,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                OnPushEVSEDataWWCPRequest?.Invoke(startTime,
+                OnPushDataRequest?.Invoke(startTime,
                                                   Timestamp.Value,
                                                   this,
                                                   Id,
@@ -1053,7 +1054,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEDataWWCPRequest));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushDataRequest));
             }
 
             #endregion
@@ -1287,7 +1288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             try
             {
 
-                OnPushEVSEDataWWCPResponse?.Invoke(endtime,
+                OnPushDataResponse?.Invoke(endtime,
                                                    Timestamp.Value,
                                                    this,
                                                    Id,
@@ -1302,7 +1303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             }
             catch (Exception e)
             {
-                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushEVSEDataWWCPResponse));
+                DebugX.LogException(e, nameof(CPOAdapter) + "." + nameof(OnPushDataResponse));
             }
 
             #endregion
@@ -2820,8 +2821,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (filteredEVSEs.Any())
                         {
 
-                            foreach (var EVSE in filteredEVSEs)
-                                evsesToAddQueue.Replace(EVSE);
+                            //foreach (var EVSE in filteredEVSEs)
+                                //evsesToAddQueue.Replace(EVSE);
 
                             FlushEVSEDataAndStatusTimer.Change(FlushEVSEDataAndStatusEvery, TimeSpan.FromMilliseconds(-1));
 
@@ -4146,7 +4147,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 EventTrackingId: EventTrackingId);
 
                 foreach (var pushEVSEResult in result.SuccessfulEVSEs)
-                    successfullyUploadedEVSEs.Add(pushEVSEResult.EVSE.Id);
+                    successfullyUploadedEVSEs.Add(pushEVSEResult.EVSE.Id.ToWWCP().Value);
 
                 if (result.Warnings.Any())
                 {
@@ -4184,7 +4185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  EventTrackingId: EventTrackingId);
 
                     foreach (var pushEVSEResult in EVSEsToUpdateResult.SuccessfulEVSEs)
-                        successfullyUploadedEVSEs.Add(pushEVSEResult.EVSE.Id);
+                        successfullyUploadedEVSEs.Add(pushEVSEResult.EVSE.Id.ToWWCP().Value);
 
                     if (EVSEsToUpdateResult.Warnings.Any())
                     {
@@ -4257,7 +4258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                EventTrackingId: EventTrackingId);
 
                     foreach (var pushEVSEResult in EVSEsToRemoveTask.SuccessfulEVSEs)
-                        successfullyUploadedEVSEs.Remove(pushEVSEResult.EVSE.Id);
+                        successfullyUploadedEVSEs.Remove(pushEVSEResult.EVSE.Id.ToWWCP().Value);
 
                     if (EVSEsToRemoveTask.Warnings.Any())
                     {

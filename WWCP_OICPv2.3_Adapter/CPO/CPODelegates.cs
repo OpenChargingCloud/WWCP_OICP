@@ -64,34 +64,34 @@ namespace cloud.charging.open.protocols.OICPv2_3
     #region OnPushEVSEDataWWCPRequest/-Response
 
     /// <summary>
-    /// A delegate called whenever new EVSE data will be send upstream.
+    /// A delegate called whenever new EVSE data records will be send upstream.
     /// </summary>
-    public delegate void OnPushEVSEDataWWCPRequestDelegate   (DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
-                                                              Object                           Sender,
-                                                              WWCP.EMPRoamingProvider_Id       SenderId,
-                                                              EventTracking_Id                 EventTrackingId,
-                                                              WWCP.RoamingNetwork_Id           RoamingNetworkId,
-                                                              ActionTypes                      ServerAction,
-                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
-                                                              IEnumerable<Warning>             Warnings,
-                                                              TimeSpan?                        RequestTimeout);
+    public delegate void OnPushDataRequestDelegate   (DateTime                         LogTimestamp,
+                                                      DateTime                         RequestTimestamp,
+                                                      Object                           Sender,
+                                                      WWCP.EMPRoamingProvider_Id       SenderId,
+                                                      EventTracking_Id                 EventTrackingId,
+                                                      WWCP.RoamingNetwork_Id           RoamingNetworkId,
+                                                      ActionTypes                      ServerAction,
+                                                      IEnumerable<EVSEDataRecord>      EVSEDataRecords,
+                                                      IEnumerable<Warning>             Warnings,
+                                                      TimeSpan?                        RequestTimeout);
 
 
     /// <summary>
-    /// A delegate called whenever new EVSE data had been send upstream.
+    /// A delegate called whenever new EVSE data records had been send upstream.
     /// </summary>
-    public delegate void OnPushEVSEDataWWCPResponseDelegate  (DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
-                                                              Object                           Sender,
-                                                              WWCP.EMPRoamingProvider_Id       SenderId,
-                                                              EventTracking_Id                 EventTrackingId,
-                                                              WWCP.RoamingNetwork_Id           RoamingNetworkId,
-                                                              ActionTypes                      ServerAction,
-                                                              IEnumerable<EVSEDataRecord>      EVSEDataRecords,
-                                                              TimeSpan?                        RequestTimeout,
-                                                              WWCP.AddOrUpdateEVSEsResult      Result,
-                                                              TimeSpan                         Runtime);
+    public delegate void OnPushDataResponseDelegate  (DateTime                         LogTimestamp,
+                                                      DateTime                         RequestTimestamp,
+                                                      Object                           Sender,
+                                                      WWCP.EMPRoamingProvider_Id       SenderId,
+                                                      EventTracking_Id                 EventTrackingId,
+                                                      WWCP.RoamingNetwork_Id           RoamingNetworkId,
+                                                      ActionTypes                      ServerAction,
+                                                      IEnumerable<EVSEDataRecord>      EVSEDataRecords,
+                                                      TimeSpan?                        RequestTimeout,
+                                                      PushEVSEDataRecordResult         Result,
+                                                      TimeSpan                         Runtime);
 
     #endregion
 
