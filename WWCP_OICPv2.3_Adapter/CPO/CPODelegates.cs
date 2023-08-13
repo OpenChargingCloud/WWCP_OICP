@@ -90,7 +90,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                               ActionTypes                      ServerAction,
                                                               IEnumerable<EVSEDataRecord>      EVSEDataRecords,
                                                               TimeSpan?                        RequestTimeout,
-                                                              WWCP.PushEVSEDataResult          Result,
+                                                              WWCP.AddOrUpdateEVSEsResult      Result,
                                                               TimeSpan                         Runtime);
 
     #endregion
