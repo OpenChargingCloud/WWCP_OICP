@@ -37,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public partial class CPOAdapter : WWCP.AWWCP__CSOAdapter<ChargeDetailRecord>,
+    public partial class CPOAdapter : WWCP.AWWCPCSOAdapter<ChargeDetailRecord>,
                                       WWCP.IEMPRoamingProvider,
                                       IEquatable <CPOAdapter>,
                                       IComparable<CPOAdapter>,
@@ -157,8 +157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event fired whenever new EVSE data will be send upstream.
         /// </summary>
-        public event OnPushDataRequestDelegate?   OnPushDataRequest
-            ;
+        public event OnPushDataRequestDelegate?   OnPushDataRequest;
 
         /// <summary>
         /// An event fired whenever new EVSE data had been sent upstream.
