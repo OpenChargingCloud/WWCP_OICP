@@ -1011,46 +1011,46 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region OnAuthorizeRemoteReservationStart
 
-        ///// <summary>
-        ///// An event sent whenever an 'authorize remote reservation start' command was received.
-        ///// </summary>
-        //public event OnAuthorizeRemoteReservationStartDelegate OnAuthorizeRemoteReservationStart
-        //{
+        /// <summary>
+        /// An event sent whenever an 'authorize remote reservation start' command was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStartDelegate OnAuthorizeRemoteReservationStart
+        {
 
-        //    add
-        //    {
-        //        CPOServer.OnAuthorizeRemoteReservationStart += value;
-        //    }
+            add
+            {
+                CPOServer.OnAuthorizeRemoteReservationStart += value;
+            }
 
-        //    remove
-        //    {
-        //        CPOServer.OnAuthorizeRemoteReservationStart -= value;
-        //    }
+            remove
+            {
+                CPOServer.OnAuthorizeRemoteReservationStart -= value;
+            }
 
-        //}
+        }
 
         #endregion
 
         #region OnAuthorizeRemoteReservationStop
 
-        ///// <summary>
-        ///// An event sent whenever an 'authorize remote reservation stop' command was received.
-        ///// </summary>
-        //public event OnAuthorizeRemoteReservationStopDelegate OnAuthorizeRemoteReservationStop
+        /// <summary>
+        /// An event sent whenever an 'authorize remote reservation stop' command was received.
+        /// </summary>
+        public event OnAuthorizeRemoteReservationStopDelegate OnAuthorizeRemoteReservationStop
 
-        //{
+        {
 
-        //    add
-        //    {
-        //        CPOServer.OnAuthorizeRemoteReservationStop += value;
-        //    }
+            add
+            {
+                CPOServer.OnAuthorizeRemoteReservationStop += value;
+            }
 
-        //    remove
-        //    {
-        //        CPOServer.OnAuthorizeRemoteReservationStop -= value;
-        //    }
+            remove
+            {
+                CPOServer.OnAuthorizeRemoteReservationStop -= value;
+            }
 
-        //}
+        }
 
         #endregion
 

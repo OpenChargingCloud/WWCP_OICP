@@ -37,11 +37,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// A WWCP wrapper for the OICP CPO Roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public partial class CPOAdapter : WWCP.AWWCPCSOAdapter<ChargeDetailRecord>,
-                                      WWCP.ICSORoamingProvider,
-                                      IEquatable <CPOAdapter>,
-                                      IComparable<CPOAdapter>,
-                                      IComparable
+    public class CPOAdapter : WWCP.AWWCPCSOAdapter<ChargeDetailRecord>,
+                              WWCP.ICSORoamingProvider,
+                              IEquatable <CPOAdapter>,
+                              IComparable<CPOAdapter>,
+                              IComparable
     {
 
         #region Data
@@ -354,13 +354,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.CPORoaming                                     = CPORoaming      ?? throw new ArgumentNullException(nameof(CPORoaming),      "The given CPO roaming object must not be null!");
+            this.CPORoaming                                     = CPORoaming      ?? throw new ArgumentNullException(nameof(CPORoaming),       "The given CPO roaming object must not be null!");
             this.CustomEVSEIdConverter                          = CustomEVSEIdConverter;
             this.EVSE2EVSEDataRecord                            = EVSE2EVSEDataRecord;
             this.EVSEStatusUpdate2EVSEStatusRecord              = EVSEStatusUpdate2EVSEStatusRecord;
             this.WWCPChargeDetailRecord2OICPChargeDetailRecord  = WWCPChargeDetailRecord2OICPChargeDetailRecord;
 
-            this.DefaultOperator                                = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator), "The given charging station operator must not be null!");
+            this.DefaultOperator                                = DefaultOperator ?? throw new ArgumentNullException(nameof(DefaultOperator),  "The given charging station operator must not be null!");
             this.DefaultOperatorIdFormat                        = DefaultOperatorIdFormat;
             this.OperatorNameSelector                           = OperatorNameSelector;
             DefaultOperatorName = (this.OperatorNameSelector is not null
@@ -375,207 +375,207 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region OnAuthorizeRemoteReservationStart
 
-            //this.CPORoaming.OnAuthorizeRemoteReservationStart += async (Timestamp,
-            //                                                            Sender,
-            //                                                            Request) => {
+            this.CPORoaming.OnAuthorizeRemoteReservationStart += async (Timestamp,
+                                                                        Sender,
+                                                                        Request) => {
 
 
-            //    #region Request transformation
+                #region Request transformation
 
-            //    TimeSpan?           Duration           = null;
-            //    DateTime?           ReservationStartTime          = null;
-            //    PartnerProduct_Id?  PartnerProductId   = Request.PartnerProductId;
+                TimeSpan?           Duration           = null;
+                DateTime?           ReservationStartTime          = null;
+                PartnerProduct_Id?  PartnerProductId   = Request.PartnerProductId;
 
-            //    // Analyse the ChargingProductId field and apply the found key/value-pairs
-            //    if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
-            //    {
+                // Analyse the ChargingProductId field and apply the found key/value-pairs
+                if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
+                {
 
-            //        var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split('|').ToArray();
+                    var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split('|').ToArray();
 
-            //        if (Elements.Length > 0)
-            //        {
+                    if (Elements.Length > 0)
+                    {
 
-            //            var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
-            //            if (DurationText.IsNotNullOrEmpty())
-            //            {
+                        var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
+                        if (DurationText.IsNotNullOrEmpty())
+                        {
 
-            //                DurationText = DurationText.Substring(2);
+                            DurationText = DurationText.Substring(2);
 
-            //                if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
-            //                    Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+                            if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
 
-            //                if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
-            //                    Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+                            if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
 
-            //            }
+                        }
 
-            //            var PartnerProductText = Elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
-            //            if (PartnerProductText.IsNotNullOrEmpty())
-            //            {
-            //                PartnerProductId = PartnerProduct_Id.Parse(PartnerProductText.Substring(2));
-            //            }
+                        var PartnerProductText = Elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
+                        if (PartnerProductText.IsNotNullOrEmpty())
+                        {
+                            PartnerProductId = PartnerProduct_Id.Parse(PartnerProductText.Substring(2));
+                        }
 
-            //            var StartTimeText = Elements.FirstOrDefault(element => element.StartsWith("S=", StringComparison.InvariantCulture));
-            //            if (StartTimeText.IsNotNullOrEmpty())
-            //            {
-            //                ReservationStartTime = DateTime.Parse(StartTimeText.Substring(2));
-            //            }
+                        var StartTimeText = Elements.FirstOrDefault(element => element.StartsWith("S=", StringComparison.InvariantCulture));
+                        if (StartTimeText.IsNotNullOrEmpty())
+                        {
+                            ReservationStartTime = DateTime.Parse(StartTimeText.Substring(2));
+                        }
 
-            //        }
+                    }
 
-            //    }
+                }
 
-            //    #endregion
+                #endregion
 
-            //    var response = await RoamingNetwork.
-            //                             Reserve(ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
-            //                                     ReservationStartTime:  ReservationStartTime,
-            //                                     Duration:              Duration,
+                var response = await RoamingNetwork.
+                                         Reserve(WWCP.ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
+                                                 ReservationStartTime:  ReservationStartTime,
+                                                 Duration:              Duration,
 
-            //                                     // Always create a reservation identification usable for OICP!
-            //                                     ReservationId:         ChargingReservation_Id.Parse(
-            //                                                                Request.EVSEId.OperatorId.ToWWCP().Value,
-            //                                                                Request.SessionId.HasValue
-            //                                                                    ? Request.SessionId.ToString()
-            //                                                                    : Session_Id.NewRandom.ToString()
-            //                                                            ),
+                                                 // Always create a reservation identification usable for OICP!
+                                                 ReservationId:         WWCP.ChargingReservation_Id.Parse(
+                                                                            Request.EVSEId.OperatorId.ToWWCP().Value,
+                                                                            Request.SessionId.HasValue
+                                                                                ? Request.SessionId.ToString()
+                                                                                : Session_Id.NewRandom().ToString()
+                                                                        ),
 
-            //                                     ProviderId:            Request.ProviderId.    ToWWCP(),
-            //                                     RemoteAuthentication:  Request.Identification.ToWWCP(),
-            //                                     ChargingProduct:       PartnerProductId.HasValue
-            //                                                                ? new ChargingProduct(PartnerProductId.Value.ToWWCP())
-            //                                                                : null,
+                                                 ProviderId:            Request.ProviderId.    ToWWCP(),
+                                                 RemoteAuthentication:  Request.Identification.ToWWCP(),
+                                                 ChargingProduct:       PartnerProductId.HasValue
+                                                                            ? new WWCP.ChargingProduct(PartnerProductId.Value.ToWWCP().Value)
+                                                                            : null,
 
-            //                                     eMAIds:                Request?.Identification?.RemoteIdentification           != null &&
-            //                                                            Request?.Identification?.RemoteIdentification?.ToWWCP() != null
-            //                                                                ? new eMobilityAccount_Id[] {
-            //                                                                      Request.Identification.RemoteIdentification.ToWWCP().Value
-            //                                                                  }
-            //                                                                : null,
+                                                 eMAIds:                Request?.Identification?.RemoteIdentification           != null &&
+                                                                        Request?.Identification?.RemoteIdentification?.ToWWCP() != null
+                                                                            ? new WWCP.EMobilityAccount_Id[] {
+                                                                                  Request.Identification.RemoteIdentification.ToWWCP().Value
+                                                                              }
+                                                                            : null,
 
-            //                                     Timestamp:             Request.Timestamp,
-            //                                     CancellationToken:     Request.CancellationToken,
-            //                                     EventTrackingId:       Request.EventTrackingId,
-            //                                     RequestTimeout:        Request.RequestTimeout).
-            //                             ConfigureAwait(false);
+                                                 Timestamp:             Request.Timestamp,
+                                                 EventTrackingId:       Request.EventTrackingId,
+                                                 RequestTimeout:        Request.RequestTimeout,
+                                                 CancellationToken:     Request.CancellationToken).
+                                         ConfigureAwait(false);
 
-            //    #region Response mapping
+                #region Response mapping
 
-            //    if (response != null)
-            //    {
-            //        switch (response.Result)
-            //        {
+                if (response is not null)
+                {
+                    switch (response.Result)
+                    {
 
-            //            case ReservationResultType.Success:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.Success(
-            //                           Request,
-            //                           response.Reservation != null
-            //                               ? Session_Id.Parse(response.Reservation.Id.Suffix)
-            //                               : new Session_Id?(),
+                        case WWCP.ReservationResultType.Success:
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.Success(
+                                       Request,
+                                       response.Reservation != null
+                                           ? Session_Id.Parse(response.Reservation.Id.Suffix)
+                                           : new Session_Id?(),
 
-            //                           StatusCodeDescription :    "Reservation successful!",
-            //                           StatusCodeAdditionalInfo:  response.Reservation != null ? "ReservationId: " + response.Reservation.Id : null
+                                       StatusCodeDescription :    "Reservation successful!",
+                                       StatusCodeAdditionalInfo:  response.Reservation != null ? "ReservationId: " + response.Reservation.Id : null
 
-            //                       );
+                                   );
 
-            //            case ReservationResultType.InvalidCredentials:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.SessionIsInvalid(
-            //                           Request,
-            //                           SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
-            //                       );
+                        case WWCP.ReservationResultType.InvalidCredentials:
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.SessionIsInvalid(
+                                       Request,
+                                       SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
+                                   );
 
-            //            case ReservationResultType.Timeout:
-            //            case ReservationResultType.CommunicationError:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.CommunicationToEVSEFailed(Request);
+                        case WWCP.ReservationResultType.Timeout:
+                        case WWCP.ReservationResultType.CommunicationError:
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.CommunicationToEVSEFailed(Request);
 
-            //            case ReservationResultType.AlreadyReserved:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.EVSEAlreadyReserved(Request);
+                        case WWCP.ReservationResultType.AlreadyReserved:
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyReserved(Request);
 
-            //            case ReservationResultType.AlreadyInUse:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
+                        case WWCP.ReservationResultType.AlreadyInUse:
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEAlreadyInUse_WrongToken(Request);
 
-            //            case ReservationResultType.UnknownLocation:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.UnknownEVSEID(Request);
+                        case WWCP.ReservationResultType.UnknownLocation:
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.UnknownEVSEID(Request);
 
-            //            case ReservationResultType.OutOfService:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.EVSEOutOfService(Request);
+                        case WWCP.ReservationResultType.OutOfService:
+                            return Acknowledgement<AuthorizeRemoteReservationStartRequest>.EVSEOutOfService(Request);
 
-            //        }
-            //    }
+                    }
+                }
 
-            //    return Acknowledgement<EMP.AuthorizeRemoteReservationStartRequest>.ServiceNotAvailable(
-            //               Request,
-            //               SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
-            //           );
+                return Acknowledgement<AuthorizeRemoteReservationStartRequest>.ServiceNotAvailable(
+                           Request,
+                           SessionId: Session_Id.Parse(response.Reservation.Id.ToString())
+                       );
 
-            //    #endregion
+                #endregion
 
-            //};
+            };
 
             #endregion
 
             #region OnAuthorizeRemoteReservationStop
 
-            //this.CPORoaming.OnAuthorizeRemoteReservationStop += async (Timestamp,
-            //                                                           Sender,
-            //                                                           Request) => {
+            this.CPORoaming.OnAuthorizeRemoteReservationStop += async (Timestamp,
+                                                                       Sender,
+                                                                       Request) => {
 
-            //    var response = await RoamingNetwork.
-            //                             CancelReservation(ChargingReservation_Id.Parse(
-            //                                                   Request.EVSEId.OperatorId.ToWWCP().Value,
-            //                                                   Request.SessionId.ToString()
-            //                                               ),
-            //                                               ChargingReservationCancellationReason.Deleted,
-            //                                               //Request.ProviderId.ToWWCP(),
-            //                                               //Request.EVSEId.    ToWWCP(),
+                var response = await RoamingNetwork.
+                                         CancelReservation(WWCP.ChargingReservation_Id.Parse(
+                                                               Request.EVSEId.OperatorId.ToWWCP().Value,
+                                                               Request.SessionId.ToString()
+                                                           ),
+                                                           WWCP.ChargingReservationCancellationReason.Deleted,
+                                                           //Request.ProviderId.ToWWCP(),
+                                                           //Request.EVSEId.    ToWWCP(),
 
-            //                                               Request.Timestamp,
-            //                                               Request.CancellationToken,
-            //                                               Request.EventTrackingId,
-            //                                               Request.RequestTimeout).
-            //                             ConfigureAwait(false);
+                                                           Request.Timestamp,
+                                                           Request.EventTrackingId,
+                                                           Request.RequestTimeout,
+                                                           Request.CancellationToken).
+                                         ConfigureAwait(false);
 
-            //    #region Response mapping
+                #region Response mapping
 
-            //    if (response != null)
-            //    {
-            //        switch (response.Result)
-            //        {
+                if (response is not null)
+                {
+                    switch (response.Result)
+                    {
 
-            //            case CancelReservationResultTypes.Success:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.Success(
-            //                           Request,
-            //                           StatusCodeDescription: "Reservation deleted!"
-            //                       );
+                        case WWCP.CancelReservationResultTypes.Success:
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.Success(
+                                       Request,
+                                       StatusCodeDescription: "Reservation deleted!"
+                                   );
 
-            //            case CancelReservationResultTypes.UnknownReservationId:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.SessionIsInvalid(
-            //                           Request,
-            //                           SessionId: Request.SessionId
-            //                       );
+                        case WWCP.CancelReservationResultTypes.UnknownReservationId:
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.SessionIsInvalid(
+                                       Request,
+                                       SessionId: Request.SessionId
+                                   );
 
-            //            case CancelReservationResultTypes.Offline:
-            //            case CancelReservationResultTypes.Timeout:
-            //            case CancelReservationResultTypes.CommunicationError:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.CommunicationToEVSEFailed(Request);
+                        case WWCP.CancelReservationResultTypes.Offline:
+                        case WWCP.CancelReservationResultTypes.Timeout:
+                        case WWCP.CancelReservationResultTypes.CommunicationError:
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.CommunicationToEVSEFailed(Request);
 
-            //            case CancelReservationResultTypes.UnknownEVSE:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.UnknownEVSEID(Request);
+                        case WWCP.CancelReservationResultTypes.UnknownEVSE:
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.UnknownEVSEID(Request);
 
-            //            case CancelReservationResultTypes.OutOfService:
-            //                return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.EVSEOutOfService(Request);
+                        case WWCP.CancelReservationResultTypes.OutOfService:
+                            return Acknowledgement<AuthorizeRemoteReservationStopRequest>.EVSEOutOfService(Request);
 
-            //        }
-            //    }
+                    }
+                }
 
-            //    return Acknowledgement<EMP.AuthorizeRemoteReservationStopRequest>.ServiceNotAvailable(
-            //               Request,
-            //               SessionId: Request.SessionId
-            //           );
+                return Acknowledgement<AuthorizeRemoteReservationStopRequest>.ServiceNotAvailable(
+                           Request,
+                           SessionId: Request.SessionId
+                       );
 
-            //    #endregion
+                #endregion
 
-            //};
+            };
 
             #endregion
 
@@ -960,7 +960,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region PushEVSEData/-Status directly...
+        #region (private) Push OICP EVSE Data/-Status
 
         #region (private) PushEVSEData  (EVSEs,             ServerAction, ...)
 
@@ -1530,10 +1530,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+        #endregion
 
-        #region (Set/Add/Update/Delete) EVSE(s)...
-
-        // OICP only manages EVSEs!
+        #region Add/Update/Replace/Delete WWCP EVSE(s)... OICP only manages EVSEs!
 
         #region AddEVSE           (EVSE,  TransmissionType = Enqueue, ...)
 
@@ -3197,8 +3196,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #endregion
-
 
         // PushPricingProductData
 
@@ -4450,116 +4447,116 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Operator overloading
 
-        #region Operator == (WWCPEMPAdapter1, WWCPEMPAdapter2)
+        #region Operator == (CPOAdapter1, CPOAdapter2)
 
         /// <summary>
-        /// Compares two WWCPEMPAdapters for equality.
+        /// Compares two CPO Adapters for equality.
         /// </summary>
-        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
-        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <param name="CPOAdapter1">A CPO Adapter.</param>
+        /// <param name="CPOAdapter2">Another CPO Adapter.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (CPOAdapter WWCPEMPAdapter1,
-                                           CPOAdapter WWCPEMPAdapter2)
+        public static Boolean operator == (CPOAdapter CPOAdapter1,
+                                           CPOAdapter CPOAdapter2)
         {
 
             // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(WWCPEMPAdapter1, WWCPEMPAdapter2))
+            if (ReferenceEquals(CPOAdapter1, CPOAdapter2))
                 return true;
 
             // If one is null, but not both, return false.
-            if (WWCPEMPAdapter1 is null || WWCPEMPAdapter2 is null)
+            if (CPOAdapter1 is null || CPOAdapter2 is null)
                 return false;
 
-            return WWCPEMPAdapter1.Equals(WWCPEMPAdapter2);
+            return CPOAdapter1.Equals(CPOAdapter2);
 
         }
 
         #endregion
 
-        #region Operator != (WWCPEMPAdapter1, WWCPEMPAdapter2)
+        #region Operator != (CPOAdapter1, CPOAdapter2)
 
         /// <summary>
-        /// Compares two WWCPEMPAdapters for inequality.
+        /// Compares two CPO Adapters for inequality.
         /// </summary>
-        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
-        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <param name="CPOAdapter1">A CPO Adapter.</param>
+        /// <param name="CPOAdapter2">Another CPO Adapter.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (CPOAdapter WWCPEMPAdapter1,
-                                           CPOAdapter WWCPEMPAdapter2)
+        public static Boolean operator != (CPOAdapter CPOAdapter1,
+                                           CPOAdapter CPOAdapter2)
 
-            => !(WWCPEMPAdapter1 == WWCPEMPAdapter2);
+            => !(CPOAdapter1 == CPOAdapter2);
 
         #endregion
 
-        #region Operator <  (WWCPEMPAdapter1, WWCPEMPAdapter2)
+        #region Operator <  (CPOAdapter1, CPOAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
-        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <param name="CPOAdapter1">A CPO Adapter.</param>
+        /// <param name="CPOAdapter2">Another CPO Adapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator < (CPOAdapter  WWCPEMPAdapter1,
-                                          CPOAdapter  WWCPEMPAdapter2)
+        public static Boolean operator < (CPOAdapter  CPOAdapter1,
+                                          CPOAdapter  CPOAdapter2)
         {
 
-            if (WWCPEMPAdapter1 is null)
-                throw new ArgumentNullException(nameof(WWCPEMPAdapter1),  "The given WWCPEMPAdapter1 must not be null!");
+            if (CPOAdapter1 is null)
+                throw new ArgumentNullException(nameof(CPOAdapter1),  "The given CPOAdapter1 must not be null!");
 
-            return WWCPEMPAdapter1.CompareTo(WWCPEMPAdapter2) < 0;
+            return CPOAdapter1.CompareTo(CPOAdapter2) < 0;
 
         }
 
         #endregion
 
-        #region Operator <= (WWCPEMPAdapter1, WWCPEMPAdapter2)
+        #region Operator <= (CPOAdapter1, CPOAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
-        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <param name="CPOAdapter1">A CPO Adapter.</param>
+        /// <param name="CPOAdapter2">Another CPO Adapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator <= (CPOAdapter WWCPEMPAdapter1,
-                                           CPOAdapter WWCPEMPAdapter2)
+        public static Boolean operator <= (CPOAdapter CPOAdapter1,
+                                           CPOAdapter CPOAdapter2)
 
-            => !(WWCPEMPAdapter1 > WWCPEMPAdapter2);
+            => !(CPOAdapter1 > CPOAdapter2);
 
         #endregion
 
-        #region Operator >  (WWCPEMPAdapter1, WWCPEMPAdapter2)
+        #region Operator >  (CPOAdapter1, CPOAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
-        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <param name="CPOAdapter1">A CPO Adapter.</param>
+        /// <param name="CPOAdapter2">Another CPO Adapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator > (CPOAdapter WWCPEMPAdapter1,
-                                          CPOAdapter WWCPEMPAdapter2)
+        public static Boolean operator > (CPOAdapter CPOAdapter1,
+                                          CPOAdapter CPOAdapter2)
         {
 
-            if (WWCPEMPAdapter1 is null)
-                throw new ArgumentNullException(nameof(WWCPEMPAdapter1),  "The given WWCPEMPAdapter must not be null!");
+            if (CPOAdapter1 is null)
+                throw new ArgumentNullException(nameof(CPOAdapter1),  "The given CPO Adapter must not be null!");
 
-            return WWCPEMPAdapter1.CompareTo(WWCPEMPAdapter2) > 0;
+            return CPOAdapter1.CompareTo(CPOAdapter2) > 0;
 
         }
 
         #endregion
 
-        #region Operator >= (WWCPEMPAdapter1, WWCPEMPAdapter2)
+        #region Operator >= (CPOAdapter1, CPOAdapter2)
 
         /// <summary>
         /// Compares two instances of this object.
         /// </summary>
-        /// <param name="WWCPEMPAdapter1">A WWCPEMPAdapter.</param>
-        /// <param name="WWCPEMPAdapter2">Another WWCPEMPAdapter.</param>
+        /// <param name="CPOAdapter1">A CPO Adapter.</param>
+        /// <param name="CPOAdapter2">Another CPO Adapter.</param>
         /// <returns>true|false</returns>
-        public static Boolean operator >= (CPOAdapter WWCPEMPAdapter1,
-                                           CPOAdapter WWCPEMPAdapter2)
+        public static Boolean operator >= (CPOAdapter CPOAdapter1,
+                                           CPOAdapter CPOAdapter2)
 
-            => !(WWCPEMPAdapter1 < WWCPEMPAdapter2);
+            => !(CPOAdapter1 < CPOAdapter2);
 
         #endregion
 
