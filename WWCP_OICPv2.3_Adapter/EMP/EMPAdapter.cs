@@ -30,10 +30,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// A WWCP wrapper for the OICP EMP roaming client which maps
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
-    public class EMPAdapter : WWCP.ACryptoEMobilityEntity<WWCP.CSORoamingProvider_Id,
-                                                          WWCP.CSORoamingProviderAdminStatusTypes,
-                                                          WWCP.CSORoamingProviderStatusTypes>,
-                              WWCP.ICSORoamingProvider,
+    public class EMPAdapter : WWCP.ACryptoEMobilityEntity<WWCP.EMPRoamingProvider_Id,
+                                                          WWCP.EMPRoamingProviderAdminStatusTypes,
+                                                          WWCP.EMPRoamingProviderStatusTypes>,
+                              WWCP.IEMPRoamingProvider,
                               IEquatable<EMPAdapter>,
                               IComparable<EMPAdapter>,
                               IComparable
@@ -473,7 +473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// 
         /// <param name="EMPRoaming">A OICP EMP roaming object to be mapped to WWCP.</param>
         /// <param name="EVSEDataRecord2EVSE">A delegate to process an EVSE data record after receiving it from the roaming provider.</param>
-        public EMPAdapter(WWCP.CSORoamingProvider_Id                      Id,
+        public EMPAdapter(WWCP.EMPRoamingProvider_Id                      Id,
                           I18NString                                      Name,
                           I18NString                                      Description,
                           WWCP.IRoamingNetwork                            RoamingNetwork,

@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.WWCP
         public static OICPv2_3.EMP.EMPAdapter?
 
             CreateOICPv2_3_EMPAdapter(this IRoamingNetwork                                     RoamingNetwork,
-                                      CSORoamingProvider_Id                                    Id,
+                                      EMPRoamingProvider_Id                                    Id,
                                       I18NString                                               Name,
                                       I18NString                                               Description,
                                       OICPv2_3.EMP.EMPRoaming                                  EMPRoaming,
@@ -92,7 +92,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       UInt64?                                                  DefaultDistanceKM                                   = null,
 
                                       Action<OICPv2_3.EMP.EMPAdapter>?                         OICPConfigurator                                    = null,
-                                      Action<ICSORoamingProvider>?                             Configurator                                        = null)
+                                      Action<IEMPRoamingProvider>?                             Configurator                                        = null)
 
         {
 

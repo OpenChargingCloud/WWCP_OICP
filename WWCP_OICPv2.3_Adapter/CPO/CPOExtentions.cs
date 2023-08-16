@@ -62,7 +62,7 @@ namespace cloud.charging.open.protocols.WWCP
         public static OICPv2_3.CPO.CPOAdapter?
 
             CreateOICPv2_3_CPOAdapter(this RoamingNetwork                                          RoamingNetwork,
-                                      EMPRoamingProvider_Id                                        Id,
+                                      CSORoamingProvider_Id                                        Id,
                                       I18NString                                                   Name,
                                       I18NString                                                   Description,
                                       OICPv2_3.CPO.CPORoaming                                      CPORoaming,
@@ -92,7 +92,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       Boolean                                                      DisableSendChargeDetailRecords                  = false,
 
                                       Action<OICPv2_3.CPO.CPOAdapter>?                             OICPConfigurator                                = null,
-                                      Action<IEMPRoamingProvider>?                                 Configurator                                    = null,
+                                      Action<ICSORoamingProvider>?                                 Configurator                                    = null,
 
                                       String                                                       EllipticCurve                                   = "P-256",
                                       ECPrivateKeyParameters?                                      PrivateKey                                      = null,

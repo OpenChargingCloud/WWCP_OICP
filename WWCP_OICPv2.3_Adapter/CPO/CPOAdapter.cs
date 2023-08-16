@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// WWCP data structures onto OICP data structures and vice versa.
     /// </summary>
     public partial class CPOAdapter : WWCP.AWWCPCSOAdapter<ChargeDetailRecord>,
-                                      WWCP.IEMPRoamingProvider,
+                                      WWCP.ICSORoamingProvider,
                                       IEquatable <CPOAdapter>,
                                       IComparable<CPOAdapter>,
                                       IComparable
@@ -260,7 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="DisableSendChargeDetailRecords">This service can be disabled, e.g. for debugging reasons.</param>
         /// 
         /// <param name="DNSClient">The attached DNS service.</param>
-        public CPOAdapter(WWCP.EMPRoamingProvider_Id                          Id,
+        public CPOAdapter(WWCP.CSORoamingProvider_Id                          Id,
                           I18NString                                          Name,
                           I18NString                                          Description,
                           WWCP.RoamingNetwork                                 RoamingNetwork,
