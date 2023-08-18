@@ -687,7 +687,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.Success(
                                            Request:                   Request,
                                            SessionId:                 response.Session.Id.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to charge!",
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to charge!",
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -697,7 +697,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.Success(
                                            Request:                   Request,
                                            SessionId:                 response.Session.Id.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to charge (async)!",
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to charge (async)!",
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -707,7 +707,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.SessionIsInvalid(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -717,7 +717,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.NoValidContract(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -727,7 +727,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.NoEVConnectedToEVSE(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -740,7 +740,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.CommunicationToEVSEFailed(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -750,7 +750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEAlreadyReserved(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -760,7 +760,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEAlreadyInUse_WrongToken(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -770,7 +770,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.UnknownEVSEID(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -780,7 +780,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStartRequest>.EVSEOutOfService(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -859,7 +859,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStopRequest>.Success(
                                            Request:                   Request,
                                            SessionId:                 response.SessionId.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to stop charging!",
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to stop charging!",
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -869,7 +869,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStopRequest>.Success(
                                            Request:                   Request,
                                            SessionId:                 response.SessionId.ToOICP(),
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : "Ready to stop charging (async)!",
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : "Ready to stop charging (async)!",
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -879,7 +879,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStopRequest>.SessionIsInvalid(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -891,7 +891,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStopRequest>.CommunicationToEVSEFailed(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -901,7 +901,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStopRequest>.UnknownEVSEID(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId
@@ -911,7 +911,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 return Acknowledgement<AuthorizeRemoteStopRequest>.EVSEOutOfService(
                                            Request:                   Request,
                                            SessionId:                 Request.SessionId,
-                                           StatusCodeDescription:     response.Description.IsNeitherNullNorEmpty() ? response.Description.FirstText() : null,
+                                           StatusCodeDescription:     response.Description.IsNotNullOrEmpty() ? response.Description.FirstText() : null,
                                            StatusCodeAdditionalInfo:  response.AdditionalInfo,
                                            EMPPartnerSessionId:       Request.EMPPartnerSessionId,
                                            CPOPartnerSessionId:       Request.CPOPartnerSessionId

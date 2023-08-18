@@ -501,7 +501,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                                                                                                          CustomTransparencySoftwareSerializer))))
                                : null,
 
-                           Description is not null && Description.IsNeitherNullNorEmpty()
+                           Description is not null && Description.IsNotNullOrEmpty()
                                ? new JProperty("description",                    Description.ToJSON())
                                : null,
 
@@ -534,7 +534,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     PublicKeys.           Select(publicKey                  => publicKey.                 Clone).  ToArray(),
                     PublicKeyCertificateChain.HasValue    ? PublicKeyCertificateChain.Value.Clone     : null,
                     TransparencySoftwares.Select(transparencySoftwareStatus => transparencySoftwareStatus.Clone()).ToArray(),
-                    Description.IsNeitherNullNorEmpty()   ? Description.Clone                         : I18NString.Empty,
+                    Description.IsNotNullOrEmpty()   ? Description.Clone                         : I18NString.Empty,
 
                     CustomData,
                     InternalData,
@@ -870,7 +870,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        ? $"{TransparencySoftwares.Count()} transparency software(s)"
                        : String.Empty,
 
-                   Description is not null && Description.IsNeitherNullNorEmpty()
+                   Description is not null && Description.IsNotNullOrEmpty()
                        ? $"Description: {Description}"
                        : String.Empty,
 

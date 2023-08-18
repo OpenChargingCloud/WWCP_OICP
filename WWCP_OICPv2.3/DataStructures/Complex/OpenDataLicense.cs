@@ -291,7 +291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                  new JProperty("id",            Id.         ToString()),
 
-                           Description.IsNeitherNullNorEmpty()
+                           Description.IsNotNullOrEmpty()
                                ? new JProperty("description",   Description.ToJSON())
                                : null,
 
@@ -636,7 +636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                    Id.ToString(),
 
-                   Description.IsNeitherNullNorEmpty()
+                   Description.IsNotNullOrEmpty()
                        ? ": " + Description
                        : String.Empty
 

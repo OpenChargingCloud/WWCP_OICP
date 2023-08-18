@@ -375,7 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          EnvironmentalImpact:               null,
                                          MaxCapacity:                       null,
                                          AccessibilityLocationType:         null,
-                                         AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).IsNeitherNullNorEmpty()
+                                         AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).IsNotNullOrEmpty()
                                                                                 ? new I18NText(
                                                                                       LanguageCode.Parse(
                                                                                           (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
