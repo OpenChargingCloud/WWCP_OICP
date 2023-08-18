@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The unqiue identification of the authenticator.
         /// </summary>
-        public IId                                    AuthId             { get; }
+        public IId                                    SenderId             { get; }
 
         /// <summary>
         /// The result of the operation.
@@ -98,23 +98,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new PushEVSEData result.
         /// </summary>
-        /// <param name="AuthId">The unqiue identification of the authenticator.</param>
+        /// <param name="SenderId">The unqiue identification of the sender.</param>
         /// <param name="Result">The result of the operation.</param>
         /// <param name="Description">An optional description of the result code.</param>
         /// <param name="SuccessfulEVSEs">An enumeration of successfully uploaded EVSEs.</param>
         /// <param name="RejectedEVSEs">An enumeration of rejected EVSEs.</param>
         /// <param name="Warnings">Warnings or additional information.</param>
         /// <param name="Runtime">The runtime of the request.</param>
-        public PushEVSEDataRecordResult(IId                                     AuthId,
-                                  PushDataResultTypes                     Result,
-                                  IEnumerable<PushSingleEVSEDataResult>?  SuccessfulEVSEs   = null,
-                                  IEnumerable<PushSingleEVSEDataResult>?  RejectedEVSEs     = null,
-                                  String?                                 Description       = null,
-                                  IEnumerable<Warning>?                   Warnings          = null,
-                                  TimeSpan?                               Runtime           = null)
+        public PushEVSEDataRecordResult(IId                                     SenderId,
+                                        PushDataResultTypes                     Result,
+                                        IEnumerable<PushSingleEVSEDataResult>?  SuccessfulEVSEs   = null,
+                                        IEnumerable<PushSingleEVSEDataResult>?  RejectedEVSEs     = null,
+                                        String?                                 Description       = null,
+                                        IEnumerable<Warning>?                   Warnings          = null,
+                                        TimeSpan?                               Runtime           = null)
         {
 
-            this.AuthId           = AuthId;
+            this.SenderId         = SenderId;
             this.Result           = Result;
 
             this.Description      = Description is not null && Description.IsNotNullOrEmpty()
