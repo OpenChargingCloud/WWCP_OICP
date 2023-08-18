@@ -300,19 +300,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
     public static class PushDataResultTypesExtensions
     {
 
-        public static org.GraphDefined.Vanaheimr.Hermod.CommandResult ToWWCP(this PushDataResultTypes PushDataResultType)
+        public static CommandResult ToWWCP(this PushDataResultTypes PushDataResultType)
 
             => PushDataResultType switch {
 
-                   PushDataResultTypes.AdminDown    => org.GraphDefined.Vanaheimr.Hermod.CommandResult.AdminDown,
-                   PushDataResultTypes.NoOperation  => org.GraphDefined.Vanaheimr.Hermod.CommandResult.NoOperation,
-                   PushDataResultTypes.Enqueued     => org.GraphDefined.Vanaheimr.Hermod.CommandResult.Enqueued,
-                   PushDataResultTypes.Success      => org.GraphDefined.Vanaheimr.Hermod.CommandResult.Success,
-                   PushDataResultTypes.OutOfService => org.GraphDefined.Vanaheimr.Hermod.CommandResult.OutOfService,
-                   PushDataResultTypes.LockTimeout  => org.GraphDefined.Vanaheimr.Hermod.CommandResult.LockTimeout,
-                   PushDataResultTypes.Timeout      => org.GraphDefined.Vanaheimr.Hermod.CommandResult.Timeout,
-                   PushDataResultTypes.Error        => org.GraphDefined.Vanaheimr.Hermod.CommandResult.Error,
-                   _                                => org.GraphDefined.Vanaheimr.Hermod.CommandResult.Unspecified
+                   PushDataResultTypes.AdminDown    => CommandResult.AdminDown,
+                   PushDataResultTypes.NoOperation  => CommandResult.NoOperation,
+                   PushDataResultTypes.Enqueued     => CommandResult.Enqueued,
+                   PushDataResultTypes.Success      => CommandResult.Success,
+                   PushDataResultTypes.OutOfService => CommandResult.OutOfService,
+                   PushDataResultTypes.LockTimeout  => CommandResult.LockTimeout,
+                   PushDataResultTypes.Timeout      => CommandResult.Timeout,
+                   PushDataResultTypes.Error        => CommandResult.Error,
+                   _                                => CommandResult.Unspecified
 
                };
 
