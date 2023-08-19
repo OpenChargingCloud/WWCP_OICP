@@ -3011,7 +3011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   try
                                   {
 
-                                      if (Request.TryParseJObjectRequestBody(out JObject JSONRequest, out _) &&
+                                      if (Request.TryParseJSONObjectRequestBody(out JObject JSONRequest, out _) &&
                                           JSONRequest.ParseMandatory("Type",
                                                                      "charging notification type",
                                                                      ChargingNotificationTypesExtensions.TryParse,
