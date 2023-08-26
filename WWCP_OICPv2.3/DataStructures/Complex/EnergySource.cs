@@ -431,7 +431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region GetHashCode()
+        #region (override) GetHashCode()
 
         /// <summary>
         /// Return the hash code of this object.
@@ -442,11 +442,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                return EnergyType.GetHashCode() * 3 ^
-
-                      (Percentage.HasValue
-                           ? Percentage.Value.GetHashCode()
-                           : 0);
+                return EnergyType. GetHashCode() * 3 ^
+                      (Percentage?.GetHashCode() ?? 0);
 
             }
         }

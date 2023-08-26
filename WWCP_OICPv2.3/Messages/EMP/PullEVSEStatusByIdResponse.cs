@@ -386,7 +386,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region GetHashCode()
+        #region (override) GetHashCode()
 
         /// <summary>
         /// Return the HashCode of this object.

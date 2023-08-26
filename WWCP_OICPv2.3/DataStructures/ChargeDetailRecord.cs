@@ -1098,7 +1098,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region GetHashCode()
+        #region (override) GetHashCode()
 
         private readonly Int32 hashCode;
 
