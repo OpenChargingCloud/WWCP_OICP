@@ -204,6 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  null,          // ModelCode
 
                                                  null,          // Brands
+                                                 null,          // Mobility Root CAs
 
                                                  InitialChargingStationAdminStatus,
                                                  InitialChargingStationStatus,
@@ -225,6 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                              null,          // PhotoURLs
                                              null,          // Brands
+                                             null,          // Mobility Root CAs
                                              null,          // OpenDataLicenses
                                              null,          // ChargingModes
                                              null,          // ChargingTariffs
