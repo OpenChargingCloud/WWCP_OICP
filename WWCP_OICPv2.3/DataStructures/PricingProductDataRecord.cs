@@ -368,17 +368,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PricingProductDataRecord = new PricingProductDataRecord(ProductId,
-                                                                        ReferenceUnit,
-                                                                        ProductPriceCurrency,
-                                                                        PricePerReferenceUnit,
-                                                                        MaximumProductChargingPower,
-                                                                        IsValid24hours,
-                                                                        ProductAvailabilityTimes,
+                PricingProductDataRecord = new PricingProductDataRecord(
+                                               ProductId,
+                                               ReferenceUnit,
+                                               ProductPriceCurrency,
+                                               PricePerReferenceUnit,
+                                               MaximumProductChargingPower,
+                                               IsValid24hours,
+                                               ProductAvailabilityTimes,
 
-                                                                        AdditionalReferences,
+                                               AdditionalReferences,
 
-                                                                        customData);
+                                               customData
+                                           );
 
 
                 if (CustomPricingProductDataRecordParser is not null)

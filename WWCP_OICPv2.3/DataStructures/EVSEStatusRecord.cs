@@ -198,9 +198,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                EVSEStatusRecord = new EVSEStatusRecord(EVSEId,
-                                                        EVSEStatus,
-                                                        customData);
+                EVSEStatusRecord = new EVSEStatusRecord(
+                                       EVSEId,
+                                       EVSEStatus,
+                                       customData
+                                   );
 
 
                 if (CustomEVSEStatusRecordParser is not null)

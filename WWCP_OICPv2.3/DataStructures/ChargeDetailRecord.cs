@@ -656,27 +656,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargeDetailRecord = new ChargeDetailRecord(SessionId,
-                                                            EVSEId,
-                                                            Identification!,
-                                                            SessionStart,
-                                                            SessionEnd,
-                                                            ChargingStart ?? SessionStart,
-                                                            ChargingEnd   ?? SessionEnd,
-                                                            ConsumedEnergy,
+                ChargeDetailRecord = new ChargeDetailRecord(
+                                         SessionId,
+                                         EVSEId,
+                                         Identification!,
+                                         SessionStart,
+                                         SessionEnd,
+                                         ChargingStart ?? SessionStart,
+                                         ChargingEnd   ?? SessionEnd,
+                                         ConsumedEnergy,
 
-                                                            PartnerProductId,
-                                                            CPOPartnerSessionId,
-                                                            EMPPartnerSessionId,
-                                                            MeterValueStart,
-                                                            MeterValueEnd,
-                                                            MeterValuesInBetween,
-                                                            SignedMeteringValues,
-                                                            CalibrationLawVerification,
-                                                            HubOperatorId,
-                                                            HubProviderId,
+                                         PartnerProductId,
+                                         CPOPartnerSessionId,
+                                         EMPPartnerSessionId,
+                                         MeterValueStart,
+                                         MeterValueEnd,
+                                         MeterValuesInBetween,
+                                         SignedMeteringValues,
+                                         CalibrationLawVerification,
+                                         HubOperatorId,
+                                         HubProviderId,
 
-                                                            customData);
+                                         customData
+                                     );
 
                 if (CustomChargeDetailRecordParser is not null)
                     ChargeDetailRecord = CustomChargeDetailRecordParser(JSON,
