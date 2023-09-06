@@ -75,13 +75,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         /// <summary>
-        /// The remote SSL/TLS certificate validator.
+        /// The remote TLS certificate validator.
         /// </summary>
         RemoteCertificateValidationHandler?  IHTTPClient.RemoteCertificateValidator
             => EMPClient.RemoteCertificateValidator;
 
         /// <summary>
-        /// The SSL/TLS client certificate to use of HTTP authentication.
+        /// The TLS client certificate to use of HTTP authentication.
         /// </summary>
         X509Certificate?                     IHTTPClient.ClientCert
             => EMPClient.ClientCert;

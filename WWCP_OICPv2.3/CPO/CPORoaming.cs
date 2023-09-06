@@ -76,13 +76,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         }
 
         /// <summary>
-        /// The remote SSL/TLS certificate validator.
+        /// The remote TLS certificate validator.
         /// </summary>
         RemoteCertificateValidationHandler?  IHTTPClient.RemoteCertificateValidator
             => CPOClient.RemoteCertificateValidator;
 
         /// <summary>
-        /// The SSL/TLS client certificate to use of HTTP authentication.
+        /// The TLS client certificate to use of HTTP authentication.
         /// </summary>
         X509Certificate?                     IHTTPClient.ClientCert
             => CPOClient.ClientCert;
