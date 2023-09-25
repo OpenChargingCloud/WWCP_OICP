@@ -429,34 +429,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 var response = await RoamingNetwork.
                                          Reserve(WWCP.ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP().Value),
-                                                 ReservationStartTime:  ReservationStartTime,
-                                                 Duration:              Duration,
+                                                 WWCP.ChargingReservationLevel.EVSE,
+                                                 ReservationStartTime,
+                                                 Duration,
 
                                                  // Always create a reservation identification usable for OICP!
-                                                 ReservationId:         WWCP.ChargingReservation_Id.Parse(
-                                                                            Request.EVSEId.OperatorId.ToWWCP().Value,
-                                                                            Request.SessionId.HasValue
-                                                                                ? Request.SessionId.ToString()
-                                                                                : Session_Id.NewRandom().ToString()
-                                                                        ),
+                                                 WWCP.ChargingReservation_Id.Parse(
+                                                     Request.EVSEId.OperatorId.ToWWCP().Value,
+                                                     Request.SessionId.HasValue
+                                                         ? Request.SessionId.ToString()
+                                                         : Session_Id.NewRandom().ToString()
+                                                 ),
+                                                 null,
+                                                 Request.ProviderId.    ToWWCP(),
+                                                 Request.Identification.ToWWCP(),
 
-                                                 ProviderId:            Request.ProviderId.    ToWWCP(),
-                                                 RemoteAuthentication:  Request.Identification.ToWWCP(),
-                                                 ChargingProduct:       PartnerProductId.HasValue
-                                                                            ? new WWCP.ChargingProduct(PartnerProductId.Value.ToWWCP().Value)
-                                                                            : null,
+                                                 WWCP.Auth_Path.Parse(Id.ToString()),   // Authentication path == CSO Roaming Provider identification!
 
-                                                 eMAIds:                Request?.Identification?.RemoteIdentification           != null &&
-                                                                        Request?.Identification?.RemoteIdentification?.ToWWCP() != null
-                                                                            ? new WWCP.EMobilityAccount_Id[] {
-                                                                                  Request.Identification.RemoteIdentification.ToWWCP().Value
-                                                                              }
-                                                                            : null,
+                                                 PartnerProductId.HasValue
+                                                     ? new WWCP.ChargingProduct(PartnerProductId.Value.ToWWCP().Value)
+                                                     : null,
 
-                                                 Timestamp:             Request.Timestamp,
-                                                 EventTrackingId:       Request.EventTrackingId,
-                                                 RequestTimeout:        Request.RequestTimeout,
-                                                 CancellationToken:     Request.CancellationToken).
+                                                 null,  // AuthTokens
+                                                 Request.Identification?.RemoteIdentification           is not null &&
+                                                 Request.Identification?.RemoteIdentification?.ToWWCP() is not null
+                                                     ? new[] {
+                                                           Request.Identification.RemoteIdentification.ToWWCP().Value
+                                                       }
+                                                     : null,
+                                                 null, // PINs
+
+                                                 Request.Timestamp,
+                                                 Request.EventTrackingId,
+                                                 Request.RequestTimeout,
+                                                 Request.CancellationToken).
                                          ConfigureAwait(false);
 
                 #region Response mapping
@@ -662,18 +668,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
                     var response = await RoamingNetwork.
-                                             RemoteStart(CSORoamingProvider:    this,
-                                                         ChargingLocation:      WWCP.ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP()),
-                                                         ChargingProduct:       ChargingProduct,
-                                                         ReservationId:         ReservationId,
-                                                         SessionId:             Request.SessionId.     ToWWCP(),
-                                                         ProviderId:            Request.ProviderId.    ToWWCP(),
-                                                         RemoteAuthentication:  Request.Identification.ToWWCP(),
+                                             RemoteStart(this,                                  // CSORoamingProvider
+                                                         WWCP.ChargingLocation.FromEVSEId(Request.EVSEId.ToWWCP()),
+                                                         ChargingProduct,
+                                                         ReservationId,
+                                                         Request.SessionId.     ToWWCP(),
+                                                         Request.ProviderId.    ToWWCP(),
+                                                         Request.Identification.ToWWCP(),       // Remote Authentication
+                                                         WWCP.Auth_Path.Parse(Id.ToString()),   // Authentication path == CSO Roaming Provider identification!
 
-                                                         Timestamp:             Request.Timestamp,
-                                                         CancellationToken:     Request.CancellationToken,
-                                                         EventTrackingId:       Request.EventTrackingId,
-                                                         RequestTimeout:        Request.RequestTimeout).
+                                                         Request.Timestamp,
+                                                         Request.EventTrackingId,
+                                                         Request.RequestTimeout,
+                                                         Request.CancellationToken).
                                              ConfigureAwait(false);
 
                     #region Response mapping
@@ -836,16 +843,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     var sessionId  = Request.SessionId.ToWWCP();
 
                     var response   = await RoamingNetwork.
-                                               RemoteStop(CSORoamingProvider:    this,
-                                                          SessionId:             sessionId.Value,
-                                                          ReservationHandling:   WWCP.ReservationHandling.Close,
-                                                          ProviderId:            Request.ProviderId.ToWWCP(),
-                                                          //RemoteAuthentication:  null,
+                                               RemoteStop(this,                                  // CSORoamingProvider
+                                                          sessionId.Value,
+                                                          WWCP.ReservationHandling.Close,
+                                                          Request.ProviderId.ToWWCP(),
+                                                          null,                                  // Remote Authentication
+                                                          WWCP.Auth_Path.Parse(Id.ToString()),   // Authentication path == CSO Roaming Provider identification!
 
-                                                          Timestamp:             Request.Timestamp,
-                                                          CancellationToken:     Request.CancellationToken,
-                                                          EventTrackingId:       Request.EventTrackingId,
-                                                          RequestTimeout:        Request.RequestTimeout).
+                                                          Request.Timestamp,
+                                                          Request.EventTrackingId,
+                                                          Request.RequestTimeout,
+                                                          Request.CancellationToken).
                                                ConfigureAwait(false);
 
                     #region Response mapping
