@@ -294,13 +294,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
-        /// <returns>The corresponding OICP EVSE data record.</returns>
-        public static EVSEDataRecord ToOICP(this WWCP.IEVSE               EVSE,
-                                            String                        OperatorName,
+        public static EVSEDataRecord ToOICP(this WWCP.IEVSE                           EVSE,
+                                            String                                    OperatorName,
 
-                                            EVSE2EVSEDataRecordDelegate?  EVSE2EVSEDataRecord   = null,
-                                            DeltaTypes?                   DeltaType             = null,
-                                            DateTime?                     LastUpdate            = null)
+                                            EVSE2EVSEDataRecordDelegate?              EVSE2EVSEDataRecord      = null,
+                                            DeltaTypes?                               DeltaType                = null,
+                                            DateTime?                                 LastUpdate               = null)
+
         {
 
             try
@@ -349,9 +349,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.NotAvailable,
                                          AuthenticationModes:               EVSE.ChargingStation.AuthenticationModes.ToOICP(),
                                          PaymentOptions:                    EVSE.IsFreeOfCharge
-                                                                                ? new PaymentOptions[] { PaymentOptions.NoPayment }
+                                                                                ? new[] { PaymentOptions.NoPayment }
                                                                                 : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
-                                         ValueAddedServices:                new ValueAddedServices[] { ValueAddedServices.None },
+                                         ValueAddedServices:                new[] { ValueAddedServices.None },
                                          Accessibility:                     accessibility.Value,
                                          HotlinePhoneNumber:                EVSE.ChargingStation.HotlinePhoneNumber.HasValue ? Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.Value.ToString()) : null,
                                          IsOpen24Hours:                     EVSE.ChargingStation.OpeningTimes is not null
@@ -1321,7 +1321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             }
 
-            return new ChargingFacility[] {
+            return new[] {
                        new ChargingFacility(
                            powerType,
                            Convert.ToUInt32(EVSE.MaxPower.Value),
