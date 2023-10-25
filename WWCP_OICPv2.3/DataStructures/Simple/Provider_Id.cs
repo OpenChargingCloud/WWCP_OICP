@@ -58,7 +58,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Data
 
         /// <summary>
-        /// The regular expression for parsing an Alpha-2-CountryCode and an e-mobility provider identification.
+        /// The regular expression for parsing a e-mobility provider identification:
+        /// ^([A-Za-z]{2}([\*|\-]?)[A-Za-z0-9]{3})$
         /// </summary>
         public static readonly Regex  ProviderId_RegEx = new (@"^([A-Za-z]{2})([\*|\-]?)([A-Za-z0-9]{3})$",
                                                               RegexOptions.IgnorePatternWhitespace);

@@ -27,22 +27,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// Extension methods for operator identifications.
+    /// Extension methods for charging station operator identifications.
     /// </summary>
     public static class OperatorIdExtensions
     {
 
         /// <summary>
-        /// Indicates whether this operator identification is null or empty.
+        /// Indicates whether this charging station operator identification is null or empty.
         /// </summary>
-        /// <param name="OperatorId">A operator identification.</param>
+        /// <param name="OperatorId">A charging station operator identification.</param>
         public static Boolean IsNullOrEmpty(this Operator_Id? OperatorId)
             => !OperatorId.HasValue || OperatorId.Value.IsNullOrEmpty;
 
         /// <summary>
-        /// Indicates whether this operator identification is null or empty.
+        /// Indicates whether this charging station operator identification is null or empty.
         /// </summary>
-        /// <param name="OperatorId">A operator identification.</param>
+        /// <param name="OperatorId">A charging station operator identification.</param>
         public static Boolean IsNotNullOrEmpty(this Operator_Id? OperatorId)
             => OperatorId.HasValue && OperatorId.Value.IsNotNullOrEmpty;
 
@@ -50,7 +50,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
     /// <summary>
-    /// The unique identification of an operator.
+    /// The unique identification of a charging station operator.
     /// </summary>
     public readonly struct Operator_Id : IId<Operator_Id>
     {
@@ -58,20 +58,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Data
 
         /// <summary>
-        /// The regular expression for parsing an operator identification.
+        /// The regular expression for parsing a charging station operator identification.
         /// Official regular expression: ^(([A-Za-z]{2}\*?[A-Za-z0-9]{3})|(\+?[0-9]{1,3}\*[0-9]{3}))$
         /// </summary>
         /// <remarks>https://github.com/hubject/oicp/blob/master/OICP-2.3/OICP%202.3%20CPO/03_CPO_Data_Types.asciidoc#OperatorIDType</remarks>
-        public static readonly Regex  OperatorId_RegEx          = new (@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
-                                                                       @"^\+?([0-9]{1,3})\*([0-9]{3})$",
-                                                                       RegexOptions.IgnorePatternWhitespace);
-
-        /// <summary>
-        /// The regular expression for parsing a country alpha-2 code.
-        /// Official regular expression: ^[A-Za-z]{2}$
-        /// </summary>
-        public static readonly Regex  CountryAlpha2Codes_RegEx  = new (@"^[A-Za-z]{2}$",
-                                                                       RegexOptions.IgnorePatternWhitespace);
+        public static readonly Regex OperatorId_RegEx = new (@"^([A-Za-z]{2})(\*?)([A-Za-z0-9]{3})$ | " +
+                                                             @"^\+?([0-9]{1,3})\*([0-9]{3})$",
+                                                             RegexOptions.IgnorePatternWhitespace);
 
         #endregion
 
@@ -88,24 +81,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public String             Suffix        { get; }
 
         /// <summary>
-        /// The format of the operator identification.
+        /// The format of the charging station operator identification.
         /// </summary>
         public OperatorIdFormats  Format        { get; }
 
         /// <summary>
-        /// Indicates whether this operator identification is null or empty.
+        /// Indicates whether this charging station operator identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
             => Suffix.IsNullOrEmpty();
 
         /// <summary>
-        /// Indicates whether this operator identification is NOT null or empty.
+        /// Indicates whether this charging station operator identification is NOT null or empty.
         /// </summary>
         public Boolean IsNotNullOrEmpty
             => Suffix.IsNotNullOrEmpty();
 
         /// <summary>
-        /// Returns the length of the operator identification.
+        /// Returns the length of the charging station operator identification.
         /// </summary>
         public UInt64 Length
 
@@ -120,7 +113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Constructor(s)
 
         /// <summary>
-        /// Create a new operator identification.
+        /// Create a new charging station operator identification.
         /// </summary>
         /// <param name="CountryCode">The country code.</param>
         /// <param name="Suffix">The suffix of the charging station operator identification.</param>
@@ -154,7 +147,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (TryParse(Text, out var operatorId))
                 return operatorId;
 
-            throw new ArgumentException($"Invalid text representation of an EVSE operator identification: '{Text}'!",
+            throw new ArgumentException($"Invalid text representation of an EVSE charging station operator identification: '{Text}'!",
                                         nameof(Text));
 
         }
@@ -269,7 +262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         }
 
                         // An unknown/unassigned alpha-2 country code, like e.g. "DT"...
-                        if (CountryAlpha2Codes_RegEx.IsMatch(matchCollection[0].Groups[1].Value))
+                        if (Country.Alpha2Codes_RegEx.IsMatch(matchCollection[0].Groups[1].Value))
                         {
 
                             OperatorId = new Operator_Id(
@@ -309,12 +302,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (static) TryParse(CountryCode, Suffix, out OperatorId, IdFormat = OperatorIdFormats.ISO_HYPHEN)
 
         /// <summary>
-        /// Try to parse the given text representation of an e-mobility operator identification.
+        /// Try to parse the given text representation of a charging station operator identification.
         /// </summary>
         /// <param name="CountryCode">A country code.</param>
-        /// <param name="Suffix">The suffix of an e-mobility operator identification.</param>
-        /// <param name="OperatorId">The parsed e-mobility operator identification.</param>
-        /// <param name="IdFormat">The optional format of the e-mobility operator identification.</param>
+        /// <param name="Suffix">The suffix of a charging station operator identification.</param>
+        /// <param name="OperatorId">The parsed e-mobility charging station operator identification.</param>
+        /// <param name="IdFormat">The optional format of the e-mobility charging station operator identification.</param>
         public static Boolean TryParse(Country            CountryCode,
                                        String             Suffix,
                                        out Operator_Id    OperatorId,
@@ -471,9 +464,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(Object)
 
         /// <summary>
-        /// Compares two operator identifications for equality.
+        /// Compares two charging station operator identifications for equality.
         /// </summary>
-        /// <param name="Object">An operator identification to compare with.</param>
+        /// <param name="Object">A charging station operator identification to compare with.</param>
         public Int32 CompareTo(Object? Object)
 
             => Object is Operator_Id operatorId
@@ -485,9 +478,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region CompareTo(OperatorId)
 
         /// <summary>
-        /// Compares two operator identifications for equality.
+        /// Compares two charging station operator identifications for equality.
         /// </summary>
-        /// <param name="OperatorId">An operator identification to compare with.</param>
+        /// <param name="OperatorId">A charging station operator identification to compare with.</param>
         public Int32 CompareTo(Operator_Id OperatorId)
         {
 
@@ -511,9 +504,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(Object)
 
         /// <summary>
-        /// Compares two operator identifications for equality.
+        /// Compares two charging station operator identifications for equality.
         /// </summary>
-        /// <param name="Object">An operator identification to compare with.</param>
+        /// <param name="Object">A charging station operator identification to compare with.</param>
         public override Boolean Equals(Object? Object)
 
             => Object is Operator_Id operatorId &&
@@ -524,9 +517,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Equals(OperatorId)
 
         /// <summary>
-        /// Compares two operator identifications for equality.
+        /// Compares two charging station operator identifications for equality.
         /// </summary>
-        /// <param name="OperatorId">An operator identification to compare with.</param>
+        /// <param name="OperatorId">A charging station operator identification to compare with.</param>
         public Boolean Equals(Operator_Id OperatorId)
 
             => CountryCode.Equals(OperatorId.CountryCode) &&
