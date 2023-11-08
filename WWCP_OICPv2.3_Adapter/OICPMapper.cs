@@ -172,7 +172,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (!evseId.HasValue)
                     return null;
 
-                var chargingStationId  = WWCP.ChargingStation_Id.Create(evseId.Value);
+                var chargingStationId  = WWCP.ChargingStation_Id.Parse(evseId.Value);
 
                 evse                   = new WWCP.EVSE(
                                              evseId.Value,
