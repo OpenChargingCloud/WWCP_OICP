@@ -534,7 +534,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     PublicKeys.           Select(publicKey                  => publicKey.                 Clone).  ToArray(),
                     PublicKeyCertificateChain.HasValue    ? PublicKeyCertificateChain.Value.Clone     : null,
                     TransparencySoftwares.Select(transparencySoftwareStatus => transparencySoftwareStatus.Clone()).ToArray(),
-                    Description.IsNotNullOrEmpty()   ? Description.Clone                         : I18NString.Empty,
+                    Description.IsNotNullOrEmpty()        ? Description.Clone()                       : I18NString.Empty,
 
                     CustomData,
                     InternalData,

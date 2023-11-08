@@ -315,7 +315,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public OpenDataLicense Clone()
 
             => new (Id.         Clone,
-                    Description.Clone,
+                    Description.Clone(),
                     URLs.Select(url => url.Clone).ToArray());
 
         #endregion
