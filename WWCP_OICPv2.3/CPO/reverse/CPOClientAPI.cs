@@ -1313,7 +1313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               HTTPStatusCode  = HTTPStatusCode.OK,
                                               Server          = HTTPServer.DefaultServerName,
                                               Date            = Timestamp.Now,
-                                              ContentType     = HTTPContentType.TEXT_UTF8,
+                                              ContentType     = HTTPContentType.Text.PLAIN,
                                               Content         = "This is an OICP v2.3 CPO Client HTTP/JSON endpoint!".ToUTF8Bytes(),
                                               CacheControl    = "public, max-age=300",
                                               Connection      = "close"
@@ -1334,7 +1334,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepush/v23/operators/{operatorId}/data-records",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPushEVSEDataHTTPRequest,
                               HTTPResponseLogger:  logPushEVSEDataHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -1552,7 +1552,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                 CustomStatusCodeSerializer).
                                                                                                          ToString(JSONFormatting).
@@ -1574,7 +1574,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepush/v21/operators/{operatorId}/status-records",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPushEVSEStatusHTTPRequest,
                               HTTPResponseLogger:  logPushEVSEStatusHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -1792,7 +1792,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                   CustomStatusCodeSerializer).
                                                                                                            ToString(JSONFormatting).
@@ -1815,7 +1815,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/pricing-products",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPushPricingProductDataHTTPRequest,
                               HTTPResponseLogger:  logPushPricingProductDataHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2033,7 +2033,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pushPricingProductDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                           CustomStatusCodeSerializer).
                                                                                                                    ToString(JSONFormatting).
@@ -2055,7 +2055,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/operators/{operatorId}/evse-pricing",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPushEVSEPricingHTTPRequest,
                               HTTPResponseLogger:  logPushEVSEPricingHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2273,7 +2273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pushEVSEPricingResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                    CustomStatusCodeSerializer).
                                                                                                             ToString(JSONFormatting).
@@ -2296,7 +2296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/authdata/v21/operators/{operatorId}/pull-request",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPullAuthenticationDataHTTPRequest,
                               HTTPResponseLogger:  logPullAuthenticationDataHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2519,7 +2519,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullAuthenticationDataResponse.Response?.ToJSON(CustomPullAuthenticationDataResponseSerializer,
                                                                                                                           CustomProviderAuthenticationDataSerializer,
                                                                                                                           CustomIdentificationSerializer,
@@ -2544,7 +2544,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/start",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeStartHTTPRequest,
                               HTTPResponseLogger:  logAuthorizationStartHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2748,7 +2748,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizationStartResponse.Response?.ToJSON(CustomAuthorizationStartSerializer,
                                                                                                                       CustomStatusCodeSerializer,
                                                                                                                       CustomIdentificationSerializer).
@@ -2771,7 +2771,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/operators/{operatorId}/authorize/stop",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeStopHTTPRequest,
                               HTTPResponseLogger:  logAuthorizationStopHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2975,7 +2975,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizationStopResponse.Response?.ToJSON(CustomAuthorizationStopSerializer,
                                                                                                                      CustomStatusCodeSerializer).
                                                                                                               ToString(JSONFormatting).
@@ -2998,7 +2998,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logChargingNotificationHTTPRequest,
                               HTTPResponseLogger:  logChargingNotificationHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -3787,7 +3787,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = chargingNotificationResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
                                                                                                                  ToString(JSONFormatting).
@@ -3810,7 +3810,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/cdrmgmt/v22/operators/{operatorId}/charge-detail-record",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logChargeDetailRecordHTTPRequest,
                               HTTPResponseLogger:  logChargeDetailRecordHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -4028,7 +4028,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = chargeDetailRecordResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                       CustomStatusCodeSerializer).
                                                                                                                ToString(JSONFormatting).

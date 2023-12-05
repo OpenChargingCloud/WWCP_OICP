@@ -952,8 +952,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v23/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/data-records"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEDataRequestSerializer,
                                                                                                                                         CustomOperatorEVSEDataSerializer,
                                                                                                                                         CustomEVSEDataRecordSerializer,
@@ -987,7 +987,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -1067,7 +1067,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -1163,7 +1163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -1241,7 +1241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -1482,8 +1482,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEStatusRequestSerializer,
                                                                                                                                         CustomOperatorEVSEStatusSerializer,
                                                                                                                                         CustomEVSEStatusRecordSerializer).
@@ -1508,7 +1508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -1588,7 +1588,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -1681,7 +1681,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody?.Length > 0)
                             {
 
@@ -1759,7 +1759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody?.Length > 0)
                             {
 
@@ -2001,8 +2001,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pricing-products"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushPricingProductDataRequestSerializer,
                                                                                                                                         CustomPricingProductDataSerializer,
                                                                                                                                         CustomPricingProductDataRecordSerializer).
@@ -2027,7 +2027,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -2107,7 +2107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -2203,7 +2203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -2281,7 +2281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -2522,8 +2522,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/evse-pricing"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEPricingRequestSerializer,
                                                                                                                                         CustomEVSEPricingSerializer).
                                                                                                                                  ToString(JSONFormatting).
@@ -2547,7 +2547,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -2627,7 +2627,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -2723,7 +2723,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -2801,7 +2801,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                                 HTTPResponse.HTTPBody.Length > 0)
                             {
 
@@ -3024,8 +3024,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                 Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/authdata/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pull-request"),
                                                                                      requestbuilder => {
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                         requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                         requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                         requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                          requestbuilder.Content      = Request.ToJSON(CustomPullAuthenticationDataRequestSerializer).
                                                                                                                                ToString(JSONFormatting).
                                                                                                                                ToUTF8Bytes();
@@ -3048,7 +3048,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3127,7 +3127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3215,7 +3215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         statusDescription = "Hubject firewall problem!";
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3296,7 +3296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3375,7 +3375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3591,8 +3591,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStartRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -3616,7 +3616,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3719,7 +3719,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3798,7 +3798,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -3996,8 +3996,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStopRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -4021,7 +4021,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4078,7 +4078,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4157,7 +4157,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4230,7 +4230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4429,8 +4429,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
                                                                                                                                 ToString(JSONFormatting).
@@ -4454,7 +4454,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4534,7 +4534,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4613,7 +4613,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4691,7 +4691,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -4909,8 +4909,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
                                                                                                                                 ToString(JSONFormatting).
@@ -4934,7 +4934,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5014,7 +5014,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5093,7 +5093,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5171,7 +5171,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5389,8 +5389,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
                                                                                                                                 ToString(JSONFormatting).
@@ -5414,7 +5414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5494,7 +5494,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5573,7 +5573,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5651,7 +5651,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5869,8 +5869,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
                                                                                                                                 ToString(JSONFormatting).
@@ -5894,7 +5894,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -5974,7 +5974,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -6053,7 +6053,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -6131,7 +6131,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -6207,7 +6207,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // {"StatusCode":{"Code":"001","Description":"Unexpected error checking partners: null","AdditionalInfo":null}}
 
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -6423,8 +6423,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.JSON_UTF8;
+                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
                                                                                                                                     CustomChargeDetailRecordSerializer,
                                                                                                                                     CustomIdentificationSerializer,
@@ -6451,7 +6451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -6512,7 +6512,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 
@@ -6609,7 +6609,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.JSON_UTF8 &&
+                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
                             HTTPResponse.HTTPBody.Length > 0)
                         {
 

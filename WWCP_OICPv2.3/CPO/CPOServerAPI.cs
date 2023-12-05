@@ -686,7 +686,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               HTTPStatusCode  = HTTPStatusCode.OK,
                                               Server          = HTTPServer.DefaultServerName,
                                               Date            = Timestamp.Now,
-                                              ContentType     = HTTPContentType.TEXT_UTF8,
+                                              ContentType     = HTTPContentType.Text.PLAIN,
                                               Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
                                               CacheControl    = "public, max-age=300",
                                               Connection      = "close"
@@ -727,7 +727,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -900,7 +900,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStartResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                          CustomStatusCodeSerializer).
                                                                                                                   ToString(JSONFormatting).
@@ -942,7 +942,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -1116,7 +1116,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStopResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
                                                                                                                  ToString(JSONFormatting).
@@ -1159,7 +1159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote/start",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteStartHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -1333,7 +1333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStartResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                               CustomStatusCodeSerializer).
                                                                                                        ToString(JSONFormatting).
@@ -1375,7 +1375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteStopHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -1549,7 +1549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStopResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                              CustomStatusCodeSerializer).
                                                                                                       ToString(JSONFormatting).

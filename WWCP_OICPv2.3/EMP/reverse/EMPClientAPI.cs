@@ -1536,7 +1536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               HTTPStatusCode  = HTTPStatusCode.OK,
                                               Server          = HTTPServer.DefaultServerName,
                                               Date            = Timestamp.Now,
-                                              ContentType     = HTTPContentType.TEXT_UTF8,
+                                              ContentType     = HTTPContentType.Text.PLAIN,
                                               Content         = "This is an OICP v2.3 EMP Client HTTP/JSON endpoint!".ToUTF8Bytes(),
                                               CacheControl    = "public, max-age=300",
                                               Connection      = "close"
@@ -1555,7 +1555,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v23/providers/{providerId}/data-records",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPullEVSEDataHTTPRequest,
                               HTTPResponseLogger:  logPullEVSEDataHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -1784,7 +1784,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomPullEVSEDataResponseSerializer,
                                                                                                                 CustomEVSEDataRecordSerializer,
                                                                                                                 CustomAddressSerializer,
@@ -1816,7 +1816,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPullEVSEStatusHTTPRequest,
                               HTTPResponseLogger:  logPullEVSEStatusHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2039,7 +2039,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomPullEVSEStatusResponseSerializer,
                                                                                                                   CustomOperatorEVSEStatusSerializer,
                                                                                                                   CustomEVSEStatusRecordSerializer,
@@ -2063,7 +2063,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-id",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPullEVSEStatusByIdHTTPRequest,
                               HTTPResponseLogger:  logPullEVSEStatusByIdHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2286,7 +2286,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusByIdResponse.Response?.ToJSON(CustomPullEVSEStatusByIdResponseSerializer,
                                                                                                                       CustomEVSEStatusRecordSerializer,
                                                                                                                       CustomStatusCodeSerializer).
@@ -2309,7 +2309,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/evsepull/v21/providers/{providerId}/status-records-by-operator-id",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPullEVSEStatusByOperatorIdHTTPRequest,
                               HTTPResponseLogger:  logPullEVSEStatusByOperatorIdHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2532,7 +2532,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusByOperatorIdResponse.Response?.ToJSON(CustomPullEVSEStatusByOperatorIdResponseSerializer,
                                                                                                                               CustomOperatorEVSEStatusSerializer,
                                                                                                                               CustomEVSEStatusRecordSerializer,
@@ -2557,7 +2557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/providers/{providerId}/pricing-products",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPullPricingProductDataHTTPRequest,
                               HTTPResponseLogger:  logPullPricingProductDataHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -2786,7 +2786,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullPricingProductDataResponse.Response?.ToJSON(CustomPullPricingProductDataResponseSerializer,
                                                                                                                           CustomPricingProductDataSerializer,
                                                                                                                           CustomPricingProductDataRecordSerializer,
@@ -2810,7 +2810,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/dynamicpricing/v10/providers/{providerId}/evse-pricing",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPullEVSEPricingHTTPRequest,
                               HTTPResponseLogger:  logPullEVSEPricingHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -3039,7 +3039,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEPricingResponse.Response?.ToJSON(CustomPullEVSEPricingResponseSerializer,
                                                                                                                    CustomOperatorEVSEPricingSerializer,
                                                                                                                    CustomEVSEPricingSerializer,
@@ -3064,7 +3064,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/authdata/v21/providers/{providerId}/push-request",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logPushAuthenticationDataHTTPRequest,
                               HTTPResponseLogger:  logPushAuthenticationDataHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -3276,7 +3276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pushAuthenticationDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                           CustomStatusCodeSerializer).
                                                                                                                    ToString(JSONFormatting).
@@ -3299,7 +3299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -3514,7 +3514,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStartResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                                    CustomStatusCodeSerializer).
                                                                                                                             ToString(JSONFormatting).
@@ -3536,7 +3536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -3751,7 +3751,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStopResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                                   CustomStatusCodeSerializer).
                                                                                                                            ToString(JSONFormatting).
@@ -3773,7 +3773,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteStartHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -3988,7 +3988,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStartResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
                                                                                                                  ToString(JSONFormatting).
@@ -4010,7 +4010,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logAuthorizeRemoteStopHTTPRequest,
                               HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -4225,7 +4225,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStopResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                        CustomStatusCodeSerializer).
                                                                                                                 ToString(JSONFormatting).
@@ -4248,7 +4248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             AddMethodCallback(HTTPHostname.Any,
                               HTTPMethod.POST,
                               URLPathPrefix + "/api/oicp/cdrmgmt/v22/providers/{providerId}/get-charge-detail-records-request",
-                              HTTPContentType.JSON_UTF8,
+                              HTTPContentType.Application.JSON_UTF8,
                               HTTPRequestLogger:   logGetChargeDetailRecordsHTTPRequest,
                               HTTPResponseLogger:  logGetChargeDetailRecordsHTTPResponse,
                               HTTPDelegate:        async Request => {
@@ -4477,7 +4477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              AccessControlAllowOrigin   = "*",
                                              AccessControlAllowMethods  = new[] { "POST" },
                                              AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
-                                             ContentType                = HTTPContentType.JSON_UTF8,
+                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = getChargeDetailRecordsResponse.Response?.ToJSON(CustomGetChargeDetailRecordsResponseSerializer,
                                                                                                                           CustomIPagedResponseSerializer,
                                                                                                                           CustomChargeDetailRecordSerializer,
