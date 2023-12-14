@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -69,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                AutoStart:        true
                            );
 
-            Assert.IsNotNull(cpoServerAPI);
+            ClassicAssert.IsNotNull(cpoServerAPI);
 
 
             cpoServerAPI.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
@@ -283,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
             cpoServerAPIClient = new CPOServerAPIClient(URL.Parse("http://127.0.0.1:7000"),
                                                         RequestTimeout: TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(cpoServerAPIClient);
+            ClassicAssert.IsNotNull(cpoServerAPIClient);
 
         }
 

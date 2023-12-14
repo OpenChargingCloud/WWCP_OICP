@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
@@ -146,35 +147,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               ActionTypes.FullLoad
                           );
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
 
             var oicpResult  = await cpoClient.PushEVSEData(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
 
         }
 
@@ -333,35 +334,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               ActionTypes.FullLoad
                           );
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
 
             var oicpResult  = await cpoClient.PushEVSEData(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEData.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEData.Responses_Error);
 
         }
 
@@ -397,35 +398,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               Action:               ActionTypes.FullLoad
                           );
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_Error);
 
             var oicpResult  = await cpoClient.PushEVSEStatus(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.PushEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PushEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PushEVSEStatus.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.PushEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PushEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PushEVSEStatus.Responses_Error);
 
         }
 

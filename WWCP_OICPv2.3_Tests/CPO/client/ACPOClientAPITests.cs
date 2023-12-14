@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -69,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                AutoStart:        true
                            );
 
-            Assert.IsNotNull(cpoClientAPI);
+            ClassicAssert.IsNotNull(cpoClientAPI);
 
 
             cpoClientAPI.OnPushEVSEData                 += (timestamp, cpoClientAPI, pushEVSEDataRequest)                 => {
@@ -406,7 +407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
             cpoClient = new CPOClient(URL.Parse("http://127.0.0.1:9500"),
                                       RequestTimeout: TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(cpoClient);
+            ClassicAssert.IsNotNull(cpoClient);
 
         }
 

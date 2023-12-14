@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -69,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                AutoStart:        true
                            );
 
-            Assert.IsNotNull(empServerAPI);
+            ClassicAssert.IsNotNull(empServerAPI);
 
 
             empServerAPI.OnAuthorizeStart               += (timestamp, empServerAPI, authorizeStartRequest) => {
@@ -412,7 +413,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
             empServerAPIClient = new EMPServerAPIClient(URL.Parse("http://127.0.0.1:8000"),
                                                         RequestTimeout: TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(empServerAPIClient);
+            ClassicAssert.IsNotNull(empServerAPIClient);
 
         }
 

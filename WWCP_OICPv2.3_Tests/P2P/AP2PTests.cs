@@ -20,6 +20,7 @@
 using Newtonsoft.Json.Linq;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -112,8 +113,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                AutoStart:        true
                            );
 
-            Assert.IsNotNull(cpoP2P_DEGEF);
-            Assert.IsNotNull(cpoP2P_DEGEF.EMPClientAPI);
+            ClassicAssert.IsNotNull(cpoP2P_DEGEF);
+            ClassicAssert.IsNotNull(cpoP2P_DEGEF.EMPClientAPI);
 
 
             cpoP2P_DEGEF.EMPClientAPI.OnPullEVSEData                     += (timestamp, empClientAPI, pullEVSEDataRequest)                    => {
@@ -794,8 +795,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                AutoStart:        true
                            );
 
-            Assert.IsNotNull(empP2P_DEGDF);
-            Assert.IsNotNull(empP2P_DEGDF.CPOClientAPI);
+            ClassicAssert.IsNotNull(empP2P_DEGDF);
+            ClassicAssert.IsNotNull(empP2P_DEGDF.CPOClientAPI);
 
             empP2P_DEGDF.CPOClientAPI.OnPushEVSEData                  += (timestamp, cpoClientAPI, pushEVSEDataRequest)                 => {
 

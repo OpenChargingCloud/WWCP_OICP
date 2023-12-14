@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 #endregion
 
@@ -91,35 +92,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                               ActionTypes.FullLoad
                           );
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Requests_Error);
-            Assert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Responses_Error);
 
-            Assert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Requests_Error);
-            Assert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Responses_Error);
 
             var oicpResult  = await empClient.PushAuthenticationData(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, empClient.   Counters.PushAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Requests_Error);
-            Assert.AreEqual(1, empClient.   Counters.PushAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PushAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PushAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PushAuthenticationData.Responses_Error);
 
-            Assert.AreEqual(1, empClientAPI.Counters.PushAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Requests_Error);
-            Assert.AreEqual(1, empClientAPI.Counters.PushAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PushAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PushAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PushAuthenticationData.Responses_Error);
 
         }
 

@@ -18,8 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
-
-using org.GraphDefined.Vanaheimr.Illias;
+using NUnit.Framework.Legacy;
 
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 
@@ -70,41 +69,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
                                                   RequestTimeout:                         TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEData.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEData.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEData.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEData.Responses_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEData.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEData.Requests_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEData.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEData.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_Error);
 
 
                 var oicpResult  = await empClient.PullEVSEData(request);
 
-                Assert.IsNotNull(oicpResult);
-                Assert.IsNotNull(oicpResult.Response);
-                Assert.IsTrue   (oicpResult.IsSuccessful);
-                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-                Assert.IsNotNull(oicpResult.Response?.EVSEDataRecords);
-                Assert.IsFalse  (oicpResult.Response?.EVSEDataRecords.Any());
+                ClassicAssert.IsNotNull(oicpResult);
+                ClassicAssert.IsNotNull(oicpResult.Response);
+                ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+                ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+                ClassicAssert.IsNotNull(oicpResult.Response?.EVSEDataRecords);
+                ClassicAssert.IsFalse  (oicpResult.Response?.EVSEDataRecords.Any());
 
 
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEData.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEData.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEData.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEData.Responses_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEData.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEData.Requests_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEData.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEData.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Requests_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEData.Responses_Error);
 
             }
             else
@@ -140,41 +139,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
 
 
                 var oicpResult  = await empClient.PullEVSEStatus(request);
 
-                Assert.IsNotNull(oicpResult);
-                Assert.IsNotNull(oicpResult.Response);
-                Assert.IsTrue   (oicpResult.IsSuccessful);
-                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-                Assert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
-                Assert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
+                ClassicAssert.IsNotNull(oicpResult);
+                ClassicAssert.IsNotNull(oicpResult.Response);
+                ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+                ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+                ClassicAssert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
+                ClassicAssert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
 
 
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
 
             }
             else
@@ -209,54 +208,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
 
 
                 var oicpResult  = await empClient.PullEVSEStatus(request);
 
-                Assert.IsNotNull(oicpResult);
-                Assert.IsNotNull(oicpResult.Response);
-                Assert.IsTrue   (oicpResult.IsSuccessful);
-                Assert.AreEqual (StatusCodes.Success,                    oicpResult.Response?.StatusCode?.Code);
-                Assert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
-                Assert.AreEqual (1,                                      oicpResult.Response?.OperatorEVSEStatus.Count());
+                ClassicAssert.IsNotNull(oicpResult);
+                ClassicAssert.IsNotNull(oicpResult.Response);
+                ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+                ClassicAssert.AreEqual (StatusCodes.Success,                    oicpResult.Response?.StatusCode?.Code);
+                ClassicAssert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
+                ClassicAssert.AreEqual (1,                                      oicpResult.Response?.OperatorEVSEStatus.Count());
 
                 var operatorEVSEStatus  = oicpResult.Response?.OperatorEVSEStatus.FirstOrDefault();
-                Assert.IsNotNull(operatorEVSEStatus);
-                Assert.AreEqual ("GraphDefined",                         operatorEVSEStatus.OperatorName);
-                Assert.AreEqual (2,                                      operatorEVSEStatus.EVSEStatusRecords.Count());
+                ClassicAssert.IsNotNull(operatorEVSEStatus);
+                ClassicAssert.AreEqual ("GraphDefined",                         operatorEVSEStatus.OperatorName);
+                ClassicAssert.AreEqual (2,                                      operatorEVSEStatus.EVSEStatusRecords.Count());
 
                 var operatorEVSEStatus1 = operatorEVSEStatus.EVSEStatusRecords.ElementAt(0);
-                Assert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   operatorEVSEStatus1.Id);
-                Assert.AreEqual (EVSEStatusTypes.Available,              operatorEVSEStatus1.Status);
+                ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   operatorEVSEStatus1.Id);
+                ClassicAssert.AreEqual (EVSEStatusTypes.Available,              operatorEVSEStatus1.Status);
 
                 var operatorEVSEStatus2 = operatorEVSEStatus.EVSEStatusRecords.ElementAt(1);
-                Assert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*2"),   operatorEVSEStatus2.Id);
-                Assert.AreEqual (EVSEStatusTypes.Occupied,               operatorEVSEStatus2.Status);
+                ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*2"),   operatorEVSEStatus2.Id);
+                ClassicAssert.AreEqual (EVSEStatusTypes.Occupied,               operatorEVSEStatus2.Status);
 
 
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
 
             }
             else
@@ -286,41 +285,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                                                                 },
                                                         RequestTimeout:         TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
 
 
                 var oicpResult  = await empClient.PullEVSEStatusById(request);
 
-                Assert.IsNotNull(oicpResult);
-                Assert.IsNotNull(oicpResult.Response);
-                Assert.IsTrue   (oicpResult.IsSuccessful);
-                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-                Assert.IsNotNull(oicpResult.Response?.EVSEStatusRecords);
-                Assert.IsFalse  (oicpResult.Response?.EVSEStatusRecords.Any());
+                ClassicAssert.IsNotNull(oicpResult);
+                ClassicAssert.IsNotNull(oicpResult.Response);
+                ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+                ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+                ClassicAssert.IsNotNull(oicpResult.Response?.EVSEStatusRecords);
+                ClassicAssert.IsFalse  (oicpResult.Response?.EVSEStatusRecords.Any());
 
 
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
 
             }
             else
@@ -349,45 +348,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                                                                                 },
                                                         RequestTimeout:         TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
 
 
                 var oicpResult  = await empClient.PullEVSEStatusById(request);
 
-                Assert.IsNotNull(oicpResult);
-                Assert.IsNotNull(oicpResult.Response);
-                Assert.IsTrue   (oicpResult.IsSuccessful);
-                Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-                Assert.IsNotNull(oicpResult.Response?.EVSEStatusRecords);
-                Assert.IsTrue   (oicpResult.Response?.EVSEStatusRecords.Any());
+                ClassicAssert.IsNotNull(oicpResult);
+                ClassicAssert.IsNotNull(oicpResult.Response);
+                ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+                ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+                ClassicAssert.IsNotNull(oicpResult.Response?.EVSEStatusRecords);
+                ClassicAssert.IsTrue   (oicpResult.Response?.EVSEStatusRecords.Any());
 
                 var evseStatusRecord1 = oicpResult.Response?.EVSEStatusRecords.ElementAt(0);
-                Assert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   evseStatusRecord1.Value.Id);
-                Assert.AreEqual (EVSEStatusTypes.Available,              evseStatusRecord1.Value.Status);
+                ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   evseStatusRecord1.Value.Id);
+                ClassicAssert.AreEqual (EVSEStatusTypes.Available,              evseStatusRecord1.Value.Status);
 
 
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
 
             }
             else

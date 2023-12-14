@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 #endregion
 
@@ -52,33 +53,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
 
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -105,33 +106,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
 
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
 
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);    //!!!
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error); //!!!
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);    //!!!
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error); //!!!
 
         }
 
@@ -159,33 +160,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
 
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -212,33 +213,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                         CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                         EMPPartnerSessionId:  null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
 
             var oicpResult  = await empServerAPIClient.AuthorizeStart(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (AuthorizationStatusTypes.NotAuthorized, oicpResult.Response?.AuthorizationStatus);
 
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -267,33 +268,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                        CPOPartnerSessionId:  CPOPartnerSession_Id.NewRandom(),
                                                        EMPPartnerSessionId:  null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Responses_Error);
 
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Responses_Error);
 
             var oicpResult  = await empServerAPIClient.AuthorizeStop(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (AuthorizationStatusTypes.Authorized, oicpResult.Response?.AuthorizationStatus);
 
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.AuthorizeStop.Responses_Error);
 
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(1, empServerAPI.      Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.AuthorizeStop.Responses_Error);
 
         }
 

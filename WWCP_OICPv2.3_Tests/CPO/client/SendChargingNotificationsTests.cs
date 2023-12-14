@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 #endregion
 
@@ -60,35 +61,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               PartnerProductId:      PartnerProduct_Id.AC1,
                               CustomData:            null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Responses_Error);
 
             var oicpResult  = await cpoClient.SendChargingStartNotification(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingStartNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingStartNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingStartNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingStartNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingStartNotification.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingStartNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingStartNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingStartNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingStartNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingStartNotification.    Responses_Error);
 
         }
 
@@ -127,35 +128,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                               PartnerProductId:         PartnerProduct_Id.AC1,
                               CustomData:               null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_Error);
 
             var oicpResult  = await cpoClient.SendChargingProgressNotification(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingProgressNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingProgressNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingProgressNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingProgressNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingProgressNotification.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingProgressNotification.    Responses_Error);
 
         }
 
@@ -199,35 +200,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
                               CustomData:             null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Responses_Error);
 
             var oicpResult  = await cpoClient.SendChargingEndNotification(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingEndNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingEndNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingEndNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingEndNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingEndNotification.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingEndNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingEndNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingEndNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingEndNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingEndNotification.    Responses_Error);
 
         }
 
@@ -261,35 +262,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
 
                               CustomData:            null);
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_Error);
 
             var oicpResult  = await cpoClient.SendChargingErrorNotification(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsTrue   (oicpResult.Response?.Result);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingErrorNotification.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.SendChargingErrorNotification.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingErrorNotification.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.SendChargingErrorNotification.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.SendChargingErrorNotification.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.ChargingErrorNotification.    Responses_Error);
 
         }
 

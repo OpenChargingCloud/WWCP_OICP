@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 #endregion
 
@@ -55,43 +56,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.CPO
                               CustomData:           null
                           );
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
 
             var oicpResult  = await cpoRoaming_DEGEF.AuthorizeStart(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
-            Assert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
-            Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            Assert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
-            Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
+            ClassicAssert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
+            ClassicAssert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
+            ClassicAssert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
+            ClassicAssert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
 
-            Assert.AreEqual (2,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
-            Assert.AreEqual (UID.Parse("11223344"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId);
-            Assert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
+            ClassicAssert.AreEqual (2,                                                                    oicpResult.Response?.AuthorizationStopIdentifications?.Count());
+            ClassicAssert.AreEqual (UID.Parse("11223344"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(0).RFIDId);
+            ClassicAssert.AreEqual (UID.Parse("55667788"),                                                oicpResult.Response?.AuthorizationStopIdentifications?.ElementAt(1).RFIDId);
 
-            Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStart.Responses_Error);
 
-            Assert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
-            Assert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
+            ClassicAssert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Requests_Error);
+            ClassicAssert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStart.Responses_Error);
 
         }
 
@@ -123,39 +124,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService.CPO
                               CustomData:           null
                           );
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_Error);
 
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_Error);
 
             var oicpResult  = await cpoRoaming_DEGEF.AuthorizeStop(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
-            Assert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
-            Assert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
-            Assert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
-            Assert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
-            Assert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success,                                                  oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.AreEqual (AuthorizationStatusTypes.Authorized,                                  oicpResult.Response?.AuthorizationStatus);
+            ClassicAssert.AreEqual (Session_Id.          Parse("f8c7c2bf-10dc-46a1-929b-a2bf52bcfaff"),   oicpResult.Response?.SessionId);
+            ClassicAssert.AreEqual (CPOPartnerSession_Id.Parse("9b217a90-9924-4229-a217-3d67a4de00da"),   oicpResult.Response?.CPOPartnerSessionId);
+            ClassicAssert.AreEqual (EMPPartnerSession_Id.Parse("bce77f78-6966-48f4-9abd-007f04862d6c"),   oicpResult.Response?.EMPPartnerSessionId);
+            ClassicAssert.AreEqual (Provider_Id.         Parse("DE-GDF"),                                 oicpResult.Response?.ProviderId);
 
-            Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoRoaming_DEGEF.CPOClient.    Counters.AuthorizeStop.Responses_Error);
 
-            Assert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_Error);
-            Assert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_OK);
-            Assert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_Error);
+            ClassicAssert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Requests_Error);
+            ClassicAssert.AreEqual(1, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_OK);
+            ClassicAssert.AreEqual(0, centralServiceAPI.CPOClientAPI.Counters.AuthorizeStop.Responses_Error);
 
         }
 

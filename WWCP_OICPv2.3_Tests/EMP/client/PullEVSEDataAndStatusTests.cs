@@ -18,8 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
-
-using org.GraphDefined.Vanaheimr.Illias;
+using NUnit.Framework.Legacy;
 
 #endregion
 
@@ -68,36 +67,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
                                                   RequestTimeout:                         TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_Error);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_Error);
 
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_Error);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Responses_Error);
 
             var oicpResult  = await empClient.PullEVSEData(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsNotNull(oicpResult.Response?.EVSEDataRecords);
-            Assert.IsFalse  (oicpResult.Response?.EVSEDataRecords.Any());
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsNotNull(oicpResult.Response?.EVSEDataRecords);
+            ClassicAssert.IsFalse  (oicpResult.Response?.EVSEDataRecords.Any());
 
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEData.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_Error);
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEData.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEData.Responses_Error);
 
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEData.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_Error);
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEData.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Responses_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEData.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Requests_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEData.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEData.Responses_Error);
 
         }
 
@@ -128,36 +127,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_Error);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_Error);
 
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_Error);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_Error);
 
             var oicpResult  = await empClient.PullEVSEStatus(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
-            Assert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
+            ClassicAssert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
 
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_Error);
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatus.Responses_Error);
 
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatus.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_Error);
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatus.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEStatus.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Requests_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEStatus.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatus.Responses_Error);
 
         }
 
@@ -182,36 +181,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                                          },
                                                         RequestTimeout:  TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_Error);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_Error);
 
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_Error);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_Error);
 
             var oicpResult  = await empClient.PullEVSEStatusById(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsNotNull(oicpResult.Response?.EVSEStatusRecords);
-            Assert.IsFalse  (oicpResult.Response?.EVSEStatusRecords.Any());
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsNotNull(oicpResult.Response?.EVSEStatusRecords);
+            ClassicAssert.IsFalse  (oicpResult.Response?.EVSEStatusRecords.Any());
 
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusById.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_Error);
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusById.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEStatusById.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Requests_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEStatusById.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusById.Responses_Error);
 
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusById.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_Error);
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusById.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusById.Responses_Error);
 
         }
 
@@ -236,36 +235,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
                                                                                  },
                                                                 RequestTimeout:  TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_Error);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_Error);
 
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_Error);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_Error);
 
             var oicpResult  = await empClient.PullEVSEStatusByOperatorId(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
-            Assert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsNotNull(oicpResult.Response?.OperatorEVSEStatus);
+            ClassicAssert.IsFalse  (oicpResult.Response?.OperatorEVSEStatus.Any());
 
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_Error);
-            Assert.AreEqual(1, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_OK);
-            Assert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            ClassicAssert.AreEqual(1, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            ClassicAssert.AreEqual(0, empClient.   Counters.PullEVSEStatusByOperatorId.Responses_Error);
 
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_Error);
-            Assert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_OK);
-            Assert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Requests_Error);
+            ClassicAssert.AreEqual(1, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_OK);
+            ClassicAssert.AreEqual(0, empClientAPI.Counters.PullEVSEStatusByOperatorId.Responses_Error);
 
         }
 

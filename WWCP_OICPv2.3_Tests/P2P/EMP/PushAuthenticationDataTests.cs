@@ -18,6 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 
@@ -93,40 +94,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                               ActionTypes.FullLoad
                           );
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
             if (empP2P_DEGDF.GetEMPClient(DEGEF_Id) is EMPClient empClient)
             {
 
-                Assert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Requests_Error);
-                Assert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Responses_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Requests_Error);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Responses_Error);
 
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_Error);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_Error);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_Error);
 
 
                 var oicpResult  = await empClient.PushAuthenticationData(request);
 
-                Assert.IsNotNull(oicpResult);
-                Assert.IsNotNull(oicpResult.Response);
-                Assert.IsTrue   (oicpResult.IsSuccessful);
-                Assert.AreEqual (StatusCodes.Success,        oicpResult.Response?.StatusCode?.Code);
-                Assert.IsTrue   (oicpResult.Response?.Result);
+                ClassicAssert.IsNotNull(oicpResult);
+                ClassicAssert.IsNotNull(oicpResult.Response);
+                ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+                ClassicAssert.AreEqual (StatusCodes.Success,        oicpResult.Response?.StatusCode?.Code);
+                ClassicAssert.IsTrue   (oicpResult.Response?.Result);
 
 
-                Assert.AreEqual(1, empClient.                Counters.PushAuthenticationData.Requests_OK);
-                Assert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Requests_Error);
-                Assert.AreEqual(1, empClient.                Counters.PushAuthenticationData.Responses_OK);
-                Assert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Responses_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PushAuthenticationData.Requests_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Requests_Error);
+                ClassicAssert.AreEqual(1, empClient.                Counters.PushAuthenticationData.Responses_OK);
+                ClassicAssert.AreEqual(0, empClient.                Counters.PushAuthenticationData.Responses_Error);
 
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_Error);
-                Assert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_OK);
-                Assert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Requests_Error);
+                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_OK);
+                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PushAuthenticationData.Responses_Error);
 
             }
             else

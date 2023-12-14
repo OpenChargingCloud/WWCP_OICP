@@ -18,6 +18,8 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 using Newtonsoft.Json.Linq;
 
 #endregion
@@ -78,9 +80,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          new JProperty("HubProviderID",          "DE-GDF")
                                      ));
 
-            Assert.IsNotNull(chargeDetailRecord);
-            Assert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
-            Assert.AreEqual("OCMF", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
+            ClassicAssert.IsNotNull(chargeDetailRecord);
+            ClassicAssert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
+            ClassicAssert.AreEqual("OCMF", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
 
         }
 
@@ -133,9 +135,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          ""HubProviderID"": ""DE-GDF""
                                      }"));
 
-            Assert.IsNotNull(chargeDetailRecord);
-            Assert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
-            Assert.AreEqual ("OCMF", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
+            ClassicAssert.IsNotNull(chargeDetailRecord);
+            ClassicAssert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
+            ClassicAssert.AreEqual ("OCMF", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
 
         }
 
@@ -184,9 +186,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          ""HubProviderID"":         ""DE-GDF""
                                      }"));
 
-            Assert.IsNotNull(chargeDetailRecord);
-            Assert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
-            Assert.AreEqual("EDL", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
+            ClassicAssert.IsNotNull(chargeDetailRecord);
+            ClassicAssert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
+            ClassicAssert.AreEqual("EDL", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
 
         }
 

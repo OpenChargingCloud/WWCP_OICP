@@ -18,8 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
-
-using org.GraphDefined.Vanaheimr.Illias;
+using NUnit.Framework.Legacy;
 
 #endregion
 
@@ -57,34 +56,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                                                      CustomData:           null,
                                                                      RequestTimeout:       TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteReservationStart(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response?.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (true,                oicpResult.Response?.Result);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
         }
 
@@ -114,34 +113,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
                                                                      CustomData:           null,
                                                                      RequestTimeout:       TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteReservationStart(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (false,                                 oicpResult.Response?.Result);
-            Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (false,                                 oicpResult.Response?.Result);
+            ClassicAssert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
 
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStart.Responses_Error);
 
         }
 
@@ -170,34 +169,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
                                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteReservationStop(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response?.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (true,                oicpResult.Response?.Result);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
         }
 
@@ -225,34 +224,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
 
                                                                     RequestTimeout:       TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
             var oicpResult = await cpoServerAPIClient.AuthorizeRemoteReservationStop(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (false,                                 oicpResult.Response?.Result);
-            Assert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (false,                                 oicpResult.Response?.Result);
+            ClassicAssert.AreEqual (StatusCodes.CommunicationToEVSEFailed, oicpResult.Response?.StatusCode.Code);
 
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPIClient.Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
-            Assert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
-            Assert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoServerAPI.      Counters.AuthorizeRemoteReservationStop.Responses_Error);
 
         }
 

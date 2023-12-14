@@ -18,8 +18,7 @@
 #region Usings
 
 using NUnit.Framework;
-
-using org.GraphDefined.Vanaheimr.Illias;
+using NUnit.Framework.Legacy;
 
 #endregion
 
@@ -50,36 +49,36 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                             CustomData:     null,
                                                             RequestTimeout: TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
 
             var oicpResult  = await cpoClient.PullAuthenticationData(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsNotNull(oicpResult.Response?.ProviderAuthenticationData);
-            Assert.IsFalse  (oicpResult.Response?.ProviderAuthenticationData.Any());
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsNotNull(oicpResult.Response?.ProviderAuthenticationData);
+            ClassicAssert.IsFalse  (oicpResult.Response?.ProviderAuthenticationData.Any());
 
-            Assert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
 
         }
 
@@ -102,67 +101,67 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                                             CustomData:     null,
                                                             RequestTimeout: TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
 
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
 
             var oicpResult                = await cpoClient.PullAuthenticationData(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsNotNull(oicpResult.Response);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
-            Assert.IsNotNull(oicpResult.Response?.ProviderAuthenticationData);
-            Assert.AreEqual (1, oicpResult.Response?.ProviderAuthenticationData.Count());
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsNotNull(oicpResult.Response);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode?.Code);
+            ClassicAssert.IsNotNull(oicpResult.Response?.ProviderAuthenticationData);
+            ClassicAssert.AreEqual (1, oicpResult.Response?.ProviderAuthenticationData.Count());
 
             var providerAuthenticationData  = oicpResult.Response?.ProviderAuthenticationData.FirstOrDefault();
-            Assert.IsNotNull(providerAuthenticationData);
-            Assert.AreEqual (Provider_Id.Parse("DE-GDF"),                                   providerAuthenticationData?.ProviderId);
-            Assert.AreEqual (5,                                                             providerAuthenticationData?.Identifications.Count());
+            ClassicAssert.IsNotNull(providerAuthenticationData);
+            ClassicAssert.AreEqual (Provider_Id.Parse("DE-GDF"),                                   providerAuthenticationData?.ProviderId);
+            ClassicAssert.AreEqual (5,                                                             providerAuthenticationData?.Identifications.Count());
 
             var identification1  = providerAuthenticationData?.Identifications.ElementAt(0);
-            Assert.IsNotNull(identification1);
-            Assert.AreEqual (UID.Parse("11223344"),                                         identification1?.RFIDId);
+            ClassicAssert.IsNotNull(identification1);
+            ClassicAssert.AreEqual (UID.Parse("11223344"),                                         identification1?.RFIDId);
 
             var identification2  = providerAuthenticationData?.Identifications.ElementAt(1);
-            Assert.IsNotNull(identification2);
-            Assert.AreEqual (UID.Parse("55667788"),                                         identification2?.RFIDIdentification?.UID);
-            Assert.AreEqual (RFIDTypes.MifareClassic,                                       identification2?.RFIDIdentification?.RFIDType);
-            Assert.AreEqual (EVCO_Id.Parse("DE-GDF-C12345678-X"),                           identification2?.RFIDIdentification?.EVCOId);
-            Assert.AreEqual ("GDF-0001",                                                    identification2?.RFIDIdentification?.PrintedNumber);
-            Assert.AreEqual (DateTime.Parse("2022-08-09T10:18:25.229Z").ToUniversalTime(),  identification2?.RFIDIdentification?.ExpiryDate);
+            ClassicAssert.IsNotNull(identification2);
+            ClassicAssert.AreEqual (UID.Parse("55667788"),                                         identification2?.RFIDIdentification?.UID);
+            ClassicAssert.AreEqual (RFIDTypes.MifareClassic,                                       identification2?.RFIDIdentification?.RFIDType);
+            ClassicAssert.AreEqual (EVCO_Id.Parse("DE-GDF-C12345678-X"),                           identification2?.RFIDIdentification?.EVCOId);
+            ClassicAssert.AreEqual ("GDF-0001",                                                    identification2?.RFIDIdentification?.PrintedNumber);
+            ClassicAssert.AreEqual (DateTime.Parse("2022-08-09T10:18:25.229Z").ToUniversalTime(),  identification2?.RFIDIdentification?.ExpiryDate);
 
             var identification3  = providerAuthenticationData?.Identifications.ElementAt(2);
-            Assert.IsNotNull(identification3);
-            Assert.AreEqual (EVCO_Id.Parse("DE-GDF-C56781234-X"),                           identification3?.QRCodeIdentification?.EVCOId);
-            Assert.AreEqual (HashFunctions.Bcrypt,                                          identification3?.QRCodeIdentification?.HashedPIN?.Function);
-            Assert.AreEqual (Hash_Value.Parse("XXX"),                                       identification3?.QRCodeIdentification?.HashedPIN?.Value);
+            ClassicAssert.IsNotNull(identification3);
+            ClassicAssert.AreEqual (EVCO_Id.Parse("DE-GDF-C56781234-X"),                           identification3?.QRCodeIdentification?.EVCOId);
+            ClassicAssert.AreEqual (HashFunctions.Bcrypt,                                          identification3?.QRCodeIdentification?.HashedPIN?.Function);
+            ClassicAssert.AreEqual (Hash_Value.Parse("XXX"),                                       identification3?.QRCodeIdentification?.HashedPIN?.Value);
 
             var identification4  = providerAuthenticationData?.Identifications.ElementAt(3);
-            Assert.IsNotNull(identification4);
-            Assert.AreEqual (EVCO_Id.Parse("DE-GDF-C23456781-X"),                           identification4?.RemoteIdentification);
+            ClassicAssert.IsNotNull(identification4);
+            ClassicAssert.AreEqual (EVCO_Id.Parse("DE-GDF-C23456781-X"),                           identification4?.RemoteIdentification);
 
             var identification5  = providerAuthenticationData?.Identifications.ElementAt(4);
-            Assert.IsNotNull(identification5);
-            Assert.AreEqual (EVCO_Id.Parse("DE-GDF-C81235674-X"),                           identification5?.PlugAndChargeIdentification);
+            ClassicAssert.IsNotNull(identification5);
+            ClassicAssert.AreEqual (EVCO_Id.Parse("DE-GDF-C81235674-X"),                           identification5?.PlugAndChargeIdentification);
 
-            Assert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClient.   Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClient.   Counters.PullAuthenticationData.Responses_Error);
 
-            Assert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
-            Assert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
-            Assert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Requests_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Requests_Error);
+            ClassicAssert.AreEqual(1, cpoClientAPI.Counters.PullAuthenticationData.Responses_OK);
+            ClassicAssert.AreEqual(0, cpoClientAPI.Counters.PullAuthenticationData.Responses_Error);
 
         }
 

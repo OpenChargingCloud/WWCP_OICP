@@ -18,8 +18,8 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -101,34 +101,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
                                RequestTimeout:     TimeSpan.FromSeconds(10));
 
-            Assert.IsNotNull(request);
+            ClassicAssert.IsNotNull(request);
 
-            Assert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_Error);
-            Assert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_Error);
 
-            Assert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Requests_Error);
-            Assert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Responses_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Requests_Error);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Responses_Error);
 
             var oicpResult  = await empServerAPIClient.SendChargeDetailRecord(request);
 
-            Assert.IsNotNull(oicpResult);
-            Assert.IsTrue   (oicpResult.IsSuccessful);
-            Assert.AreEqual (true,                oicpResult.Response?.Result);
-            Assert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
+            ClassicAssert.IsNotNull(oicpResult);
+            ClassicAssert.IsTrue   (oicpResult.IsSuccessful);
+            ClassicAssert.AreEqual (true,                oicpResult.Response?.Result);
+            ClassicAssert.AreEqual (StatusCodes.Success, oicpResult.Response?.StatusCode.Code);
 
-            Assert.AreEqual(1, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_Error);
-            Assert.AreEqual(1, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_OK);
-            Assert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPIClient.Counters.SendChargeDetailRecord.Responses_Error);
 
-            Assert.AreEqual(1, empServerAPI.      Counters.    ChargeDetailRecord.Requests_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Requests_Error);
-            Assert.AreEqual(1, empServerAPI.      Counters.    ChargeDetailRecord.Responses_OK);
-            Assert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Responses_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.    ChargeDetailRecord.Requests_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Requests_Error);
+            ClassicAssert.AreEqual(1, empServerAPI.      Counters.    ChargeDetailRecord.Responses_OK);
+            ClassicAssert.AreEqual(0, empServerAPI.      Counters.    ChargeDetailRecord.Responses_Error);
 
         }
 

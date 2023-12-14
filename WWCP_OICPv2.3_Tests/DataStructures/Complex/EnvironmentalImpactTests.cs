@@ -18,6 +18,8 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 using Newtonsoft.Json.Linq;
 
 #endregion
@@ -48,42 +50,42 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var environmentalImpact6 = new EnvironmentalImpact(CO2Emission: 30000, NuclearWaste: 50000);
             var environmentalImpact7 = new EnvironmentalImpact(CO2Emission: 30000, NuclearWaste: 50000);
 
-            Assert.IsNotNull  (environmentalImpact1);
-            Assert.IsNotNull  (environmentalImpact3);
-            Assert.IsNotNull  (environmentalImpact5);
-            Assert.IsNotNull  (environmentalImpact6);
+            ClassicAssert.IsNotNull  (environmentalImpact1);
+            ClassicAssert.IsNotNull  (environmentalImpact3);
+            ClassicAssert.IsNotNull  (environmentalImpact5);
+            ClassicAssert.IsNotNull  (environmentalImpact6);
 
-            Assert.IsNull     (environmentalImpact1.CO2Emission);
-            Assert.IsNull     (environmentalImpact1.NuclearWaste);
-            Assert.IsNull     (environmentalImpact3.NuclearWaste);
-            Assert.IsNull     (environmentalImpact5.NuclearWaste);
+            ClassicAssert.IsNull     (environmentalImpact1.CO2Emission);
+            ClassicAssert.IsNull     (environmentalImpact1.NuclearWaste);
+            ClassicAssert.IsNull     (environmentalImpact3.NuclearWaste);
+            ClassicAssert.IsNull     (environmentalImpact5.NuclearWaste);
 
-            Assert.AreEqual   (20000, environmentalImpact3.CO2Emission);
-            Assert.AreEqual   (25000, environmentalImpact5.CO2Emission);
-            Assert.AreEqual   (30000, environmentalImpact6.CO2Emission);
-            Assert.AreEqual   (50000, environmentalImpact6.NuclearWaste);
+            ClassicAssert.AreEqual   (20000, environmentalImpact3.CO2Emission);
+            ClassicAssert.AreEqual   (25000, environmentalImpact5.CO2Emission);
+            ClassicAssert.AreEqual   (30000, environmentalImpact6.CO2Emission);
+            ClassicAssert.AreEqual   (50000, environmentalImpact6.NuclearWaste);
 
-            Assert.AreEqual   (environmentalImpact1,   environmentalImpact2);
-            Assert.AreEqual   (environmentalImpact3,   environmentalImpact4);
-            Assert.AreEqual   (environmentalImpact6,   environmentalImpact7);
+            ClassicAssert.AreEqual   (environmentalImpact1,   environmentalImpact2);
+            ClassicAssert.AreEqual   (environmentalImpact3,   environmentalImpact4);
+            ClassicAssert.AreEqual   (environmentalImpact6,   environmentalImpact7);
 
-            Assert.AreNotEqual(environmentalImpact1,   environmentalImpact3);
-            Assert.AreNotEqual(environmentalImpact1,   environmentalImpact5);
-            Assert.AreNotEqual(environmentalImpact1,   environmentalImpact6);
-            Assert.AreNotEqual(environmentalImpact3,   environmentalImpact5);
-            Assert.AreNotEqual(environmentalImpact3,   environmentalImpact6);
+            ClassicAssert.AreNotEqual(environmentalImpact1,   environmentalImpact3);
+            ClassicAssert.AreNotEqual(environmentalImpact1,   environmentalImpact5);
+            ClassicAssert.AreNotEqual(environmentalImpact1,   environmentalImpact6);
+            ClassicAssert.AreNotEqual(environmentalImpact3,   environmentalImpact5);
+            ClassicAssert.AreNotEqual(environmentalImpact3,   environmentalImpact6);
 
-            Assert.IsFalse    (environmentalImpact3  < environmentalImpact4);
-            Assert.IsFalse    (environmentalImpact3  > environmentalImpact4);
-            Assert.IsTrue     (environmentalImpact3 == environmentalImpact4);
-            Assert.IsTrue     (environmentalImpact3 <= environmentalImpact4);
-            Assert.IsTrue     (environmentalImpact3 >= environmentalImpact4);
+            ClassicAssert.IsFalse    (environmentalImpact3  < environmentalImpact4);
+            ClassicAssert.IsFalse    (environmentalImpact3  > environmentalImpact4);
+            ClassicAssert.IsTrue     (environmentalImpact3 == environmentalImpact4);
+            ClassicAssert.IsTrue     (environmentalImpact3 <= environmentalImpact4);
+            ClassicAssert.IsTrue     (environmentalImpact3 >= environmentalImpact4);
 
-            Assert.IsTrue     (environmentalImpact3  < environmentalImpact5);
-            Assert.IsFalse    (environmentalImpact3  > environmentalImpact5);
-            Assert.IsFalse    (environmentalImpact3 == environmentalImpact5);
-            Assert.IsTrue     (environmentalImpact3 <= environmentalImpact5);
-            Assert.IsFalse    (environmentalImpact3 >= environmentalImpact5);
+            ClassicAssert.IsTrue     (environmentalImpact3  < environmentalImpact5);
+            ClassicAssert.IsFalse    (environmentalImpact3  > environmentalImpact5);
+            ClassicAssert.IsFalse    (environmentalImpact3 == environmentalImpact5);
+            ClassicAssert.IsTrue     (environmentalImpact3 <= environmentalImpact5);
+            ClassicAssert.IsFalse    (environmentalImpact3 >= environmentalImpact5);
 
         }
 
@@ -99,21 +101,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var environmentalImpact2 = new EnvironmentalImpact(CO2Emission: 20000);
             var environmentalImpact3 = new EnvironmentalImpact(CO2Emission: 30000, NuclearWaste: 50000);
 
-            Assert.IsNotNull(environmentalImpact1);
-            Assert.IsNotNull(environmentalImpact2);
-            Assert.IsNotNull(environmentalImpact3);
+            ClassicAssert.IsNotNull(environmentalImpact1);
+            ClassicAssert.IsNotNull(environmentalImpact2);
+            ClassicAssert.IsNotNull(environmentalImpact3);
 
             var json1 = environmentalImpact1.ToJSON();
             var json2 = environmentalImpact2.ToJSON();
             var json3 = environmentalImpact3.ToJSON();
 
-            Assert.IsNull   (json1);
-            Assert.IsNotNull(json2);
-            Assert.IsNotNull(json3);
+            ClassicAssert.IsNull   (json1);
+            ClassicAssert.IsNotNull(json2);
+            ClassicAssert.IsNotNull(json3);
 
-            Assert.AreEqual (20000, json2?["CO2Emission"]?. Value<Decimal>());
-            Assert.AreEqual (30000, json3?["CO2Emission"]?. Value<Decimal>());
-            Assert.AreEqual (50000, json3?["NuclearWaste"]?.Value<Decimal>());
+            ClassicAssert.AreEqual (20000, json2?["CO2Emission"]?. Value<Decimal>());
+            ClassicAssert.AreEqual (30000, json3?["CO2Emission"]?. Value<Decimal>());
+            ClassicAssert.AreEqual (50000, json3?["NuclearWaste"]?.Value<Decimal>());
 
         }
 
@@ -132,17 +134,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var environmentalImpact3 = EnvironmentalImpact.Parse(new JObject(new JProperty("CO2Emission",  30000),
                                                                              new JProperty("NuclearWaste", 50000)));
 
-            Assert.IsNotNull(environmentalImpact1);
-            Assert.IsNotNull(environmentalImpact2);
-            Assert.IsNotNull(environmentalImpact3);
+            ClassicAssert.IsNotNull(environmentalImpact1);
+            ClassicAssert.IsNotNull(environmentalImpact2);
+            ClassicAssert.IsNotNull(environmentalImpact3);
 
-            Assert.IsNull   (environmentalImpact1.CO2Emission);
-            Assert.IsNull   (environmentalImpact1.NuclearWaste);
-            Assert.IsNull   (environmentalImpact2.NuclearWaste);
+            ClassicAssert.IsNull   (environmentalImpact1.CO2Emission);
+            ClassicAssert.IsNull   (environmentalImpact1.NuclearWaste);
+            ClassicAssert.IsNull   (environmentalImpact2.NuclearWaste);
 
-            Assert.AreEqual (20000, environmentalImpact2.CO2Emission);
-            Assert.AreEqual (30000, environmentalImpact3.CO2Emission);
-            Assert.AreEqual (50000, environmentalImpact3.NuclearWaste);
+            ClassicAssert.AreEqual (20000, environmentalImpact2.CO2Emission);
+            ClassicAssert.AreEqual (30000, environmentalImpact3.CO2Emission);
+            ClassicAssert.AreEqual (50000, environmentalImpact3.NuclearWaste);
 
         }
 

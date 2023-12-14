@@ -18,6 +18,8 @@
 #region Usings
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+
 using Newtonsoft.Json.Linq;
 
 #endregion
@@ -42,28 +44,28 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var energySource2 = new EnergySource(EnergyTypes.Coal);
             var energySource3 = new EnergySource(EnergyTypes.NuclearEnergy);
 
-            Assert.IsNotNull  (energySource1);
-            Assert.IsNotNull  (energySource2);
-            Assert.IsNotNull  (energySource3);
+            ClassicAssert.IsNotNull  (energySource1);
+            ClassicAssert.IsNotNull  (energySource2);
+            ClassicAssert.IsNotNull  (energySource3);
 
-            Assert.AreEqual   (EnergyTypes.Coal,          energySource1.EnergyType);
-            Assert.AreEqual   (EnergyTypes.Coal,          energySource2.EnergyType);
-            Assert.AreEqual   (EnergyTypes.NuclearEnergy, energySource3.EnergyType);
+            ClassicAssert.AreEqual   (EnergyTypes.Coal,          energySource1.EnergyType);
+            ClassicAssert.AreEqual   (EnergyTypes.Coal,          energySource2.EnergyType);
+            ClassicAssert.AreEqual   (EnergyTypes.NuclearEnergy, energySource3.EnergyType);
 
-            Assert.IsNull     (energySource1.Percentage);
-            Assert.IsNull     (energySource2.Percentage);
-            Assert.IsNull     (energySource3.Percentage);
+            ClassicAssert.IsNull     (energySource1.Percentage);
+            ClassicAssert.IsNull     (energySource2.Percentage);
+            ClassicAssert.IsNull     (energySource3.Percentage);
 
-            Assert.AreEqual   (energySource1.EnergyType, energySource2.EnergyType);
-            Assert.AreNotEqual(energySource1.EnergyType, energySource3.EnergyType);
-            Assert.AreNotEqual(energySource2.EnergyType, energySource3.EnergyType);
+            ClassicAssert.AreEqual   (energySource1.EnergyType, energySource2.EnergyType);
+            ClassicAssert.AreNotEqual(energySource1.EnergyType, energySource3.EnergyType);
+            ClassicAssert.AreNotEqual(energySource2.EnergyType, energySource3.EnergyType);
 
-            Assert.AreEqual   (energySource1, energySource2);
-            Assert.AreNotEqual(energySource1, energySource3);
-            Assert.AreNotEqual(energySource2, energySource3);
+            ClassicAssert.AreEqual   (energySource1, energySource2);
+            ClassicAssert.AreNotEqual(energySource1, energySource3);
+            ClassicAssert.AreNotEqual(energySource2, energySource3);
 
-            Assert.IsFalse    (energySource1 < energySource2);
-            Assert.IsFalse    (energySource1 > energySource2);
+            ClassicAssert.IsFalse    (energySource1 < energySource2);
+            ClassicAssert.IsFalse    (energySource1 > energySource2);
 
         }
 
@@ -79,32 +81,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var energySource2 = new EnergySource(EnergyTypes.Coal,           95);
             var energySource3 = new EnergySource(EnergyTypes.NuclearEnergy, 120);
 
-            Assert.IsNotNull  (energySource1);
-            Assert.IsNotNull  (energySource2);
-            Assert.IsNotNull  (energySource3);
+            ClassicAssert.IsNotNull  (energySource1);
+            ClassicAssert.IsNotNull  (energySource2);
+            ClassicAssert.IsNotNull  (energySource3);
 
-            Assert.AreEqual   (EnergyTypes.Coal,          energySource1.EnergyType);
-            Assert.AreEqual   (EnergyTypes.Coal,          energySource2.EnergyType);
-            Assert.AreEqual   (EnergyTypes.NuclearEnergy, energySource3.EnergyType);
+            ClassicAssert.AreEqual   (EnergyTypes.Coal,          energySource1.EnergyType);
+            ClassicAssert.AreEqual   (EnergyTypes.Coal,          energySource2.EnergyType);
+            ClassicAssert.AreEqual   (EnergyTypes.NuclearEnergy, energySource3.EnergyType);
 
-            Assert.AreEqual   (25,                        energySource1.Percentage);
-            Assert.AreEqual   (95,                        energySource2.Percentage);
-            Assert.AreEqual   (100,                       energySource3.Percentage);
+            ClassicAssert.AreEqual   (25,                        energySource1.Percentage);
+            ClassicAssert.AreEqual   (95,                        energySource2.Percentage);
+            ClassicAssert.AreEqual   (100,                       energySource3.Percentage);
 
-            Assert.AreEqual   (energySource1.EnergyType,  energySource2.EnergyType);
-            Assert.AreNotEqual(energySource1.EnergyType,  energySource3.EnergyType);
-            Assert.AreNotEqual(energySource2.EnergyType,  energySource3.EnergyType);
+            ClassicAssert.AreEqual   (energySource1.EnergyType,  energySource2.EnergyType);
+            ClassicAssert.AreNotEqual(energySource1.EnergyType,  energySource3.EnergyType);
+            ClassicAssert.AreNotEqual(energySource2.EnergyType,  energySource3.EnergyType);
 
-            Assert.AreNotEqual(energySource1.Percentage,  energySource2.Percentage);
-            Assert.AreNotEqual(energySource1.Percentage,  energySource3.Percentage);
-            Assert.AreNotEqual(energySource2.Percentage,  energySource3.Percentage);
+            ClassicAssert.AreNotEqual(energySource1.Percentage,  energySource2.Percentage);
+            ClassicAssert.AreNotEqual(energySource1.Percentage,  energySource3.Percentage);
+            ClassicAssert.AreNotEqual(energySource2.Percentage,  energySource3.Percentage);
 
-            Assert.AreNotEqual(energySource1, energySource2);
-            Assert.AreNotEqual(energySource1, energySource3);
-            Assert.AreNotEqual(energySource2, energySource3);
+            ClassicAssert.AreNotEqual(energySource1, energySource2);
+            ClassicAssert.AreNotEqual(energySource1, energySource3);
+            ClassicAssert.AreNotEqual(energySource2, energySource3);
 
-            Assert.IsTrue     (energySource1 < energySource2);
-            Assert.IsFalse    (energySource1 > energySource2);
+            ClassicAssert.IsTrue     (energySource1 < energySource2);
+            ClassicAssert.IsFalse    (energySource1 > energySource2);
 
         }
 
@@ -119,20 +121,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var energySource1 = new EnergySource(EnergyTypes.Coal);
             var energySource2 = new EnergySource(EnergyTypes.NuclearEnergy, 120);
 
-            Assert.IsNotNull(energySource1);
-            Assert.IsNotNull(energySource2);
+            ClassicAssert.IsNotNull(energySource1);
+            ClassicAssert.IsNotNull(energySource2);
 
             var json1 = energySource1.ToJSON();
             var json2 = energySource2.ToJSON();
 
-            Assert.IsNotNull(json1);
-            Assert.IsNotNull(json2);
+            ClassicAssert.IsNotNull(json1);
+            ClassicAssert.IsNotNull(json2);
 
-            Assert.AreEqual ("Coal",          json1["Energy"]?.Value<String>());
-            Assert.AreEqual ("NuclearEnergy", json2["Energy"]?.Value<String>());
+            ClassicAssert.AreEqual ("Coal",          json1["Energy"]?.Value<String>());
+            ClassicAssert.AreEqual ("NuclearEnergy", json2["Energy"]?.Value<String>());
 
-            Assert.IsNull   (json1["Percentage"]);
-            Assert.AreEqual (100,             json2["Percentage"]?.Value<Byte>());
+            ClassicAssert.IsNull   (json1["Percentage"]);
+            ClassicAssert.AreEqual (100,             json2["Percentage"]?.Value<Byte>());
 
         }
 
@@ -155,14 +157,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var energySource4 = EnergySource.TryParse(new JObject(new JProperty("Energy",     "PoliticalTalks"),
                                                                   new JProperty("Percentage",  38)));
 
-            Assert.IsNotNull(energySource1);
-            Assert.IsNotNull(energySource2);
-            Assert.IsNull   (energySource3);
-            Assert.IsNull   (energySource4);
+            ClassicAssert.IsNotNull(energySource1);
+            ClassicAssert.IsNotNull(energySource2);
+            ClassicAssert.IsNull   (energySource3);
+            ClassicAssert.IsNull   (energySource4);
 
-            Assert.AreEqual (EnergyTypes.Coal,          energySource1.EnergyType);
-            Assert.AreEqual (EnergyTypes.NuclearEnergy, energySource2.EnergyType);
-            Assert.AreEqual (100,                       energySource2.Percentage);
+            ClassicAssert.AreEqual (EnergyTypes.Coal,          energySource1.EnergyType);
+            ClassicAssert.AreEqual (EnergyTypes.NuclearEnergy, energySource2.EnergyType);
+            ClassicAssert.AreEqual (100,                       energySource2.Percentage);
 
         }
 
