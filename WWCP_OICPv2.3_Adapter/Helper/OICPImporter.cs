@@ -877,7 +877,7 @@
 
 //                                if (_EVSEDataXMLHandler != null)
 //                                    _EVSEDataXMLHandler(UpdateContext,
-//                                                        DateTime.UtcNow,
+//                                                        org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
 //                                                        OperatorEvseDataXMLs);
 
 //                                var _OperatorEVSEData = OperatorEvseDataXMLs.
@@ -888,7 +888,7 @@
 //                                if (_OperatorEVSEData.Length  > 0 &&
 //                                    _EVSEDataXMLHandler      != null)
 //                                    _EVSEDataHandler(UpdateContext,
-//                                                     DateTime.UtcNow,
+//                                                     org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
 //                                                     _OperatorEVSEData);
 
 //                            }
@@ -918,10 +918,10 @@
 
 //                                    //if (_EVSEDataXMLHandler != null)
 //                                    //    _EVSEDataXMLHandler(UpdateContext,
-//                                    //                        DateTime.UtcNow,
+//                                    //                        org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
 //                                    //                        PullEVSEDataTask.Result.Content.OperatorEVSEData);
 
-//                                    _EVSEDataHandler(UpdateContext, DateTime.UtcNow, PullEVSEDataTask.Result.Content.OperatorEVSEData);
+//                                    _EVSEDataHandler(UpdateContext, org.GraphDefined.Vanaheimr.Illias.Timestamp.Now, PullEVSEDataTask.Result.Content.OperatorEVSEData);
 
 //                                }
 
@@ -1081,7 +1081,7 @@
 //                                                        ToArray();
 
 //                            if (EvseStatus.Length > 0)
-//                                EvseStatus.ForEach(EVSEStatusKVP => _EVSEStatusHandler(UpdateContext, DateTime.UtcNow, EVSEStatusKVP.Key, EVSEStatusKVP.Value));
+//                                EvseStatus.ForEach(EVSEStatusKVP => _EVSEStatusHandler(UpdateContext, org.GraphDefined.Vanaheimr.Illias.Timestamp.Now, EVSEStatusKVP.Key, EVSEStatusKVP.Value));
 
 //                            else
 //                                DebugX.Log("Could not fetch any 'EvseStatusRecords' from XML stream!");
@@ -1112,7 +1112,7 @@
 //                        try
 //                        {
 
-//                            EVSEIds = _GetEVSEIdsForStatusUpdate(UpdateContext, DateTime.UtcNow);
+//                            EVSEIds = _GetEVSEIdsForStatusUpdate(UpdateContext, org.GraphDefined.Vanaheimr.Illias.Timestamp.Now);
 
 //                        }
 //                        catch (Exception e)
@@ -1142,7 +1142,7 @@
 //                                                                                            if (NewEVSEStatusTask.Result.Content != null)
 //                                                                                                NewEVSEStatusTask.Result.Content.EVSEStatusRecords.ForEach(NewEVSEStatusRecord =>
 //                                                                                                    _EVSEStatusHandler(UpdateContext,
-//                                                                                                                       DateTime.UtcNow,
+//                                                                                                                       org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
 //                                                                                                                       NewEVSEStatusRecord.Id,
 //                                                                                                                       NewEVSEStatusRecord.Status));
 

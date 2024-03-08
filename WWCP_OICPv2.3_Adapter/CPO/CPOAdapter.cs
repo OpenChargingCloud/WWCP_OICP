@@ -1030,10 +1030,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 }
                 catch (Exception e)
                 {
-                    DebugX.Log(e.Message + (e.InnerException != null ? " " + e.InnerException.Message : ""));
-                    warnings.Add(Warning.Create(I18NString.Create(Languages.en,
-                                                                  e.Message + (e.InnerException != null ? " " + e.InnerException.Message : "")),
-                                                evse));
+
+                    DebugX.Log(e.Message + (e.InnerException is not null ? " " + e.InnerException.Message : ""));
+
+                    warnings.Add(
+                        Warning.Create(
+                            e.Message + (e.InnerException is not null ? " " + e.InnerException.Message : ""),
+                            evse
+                        )
+                    );
+
                 }
 
             }
@@ -1128,14 +1134,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             #region Add warnings...
 
-                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, ServerAction.ToString() + " of " + evseDataRecords.Count + " EVSEs failed!")));
-                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.Code.ToString())));
-                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.Description)));
+                            warnings.Add(Warning.Create(ServerAction.ToString() + " of " + evseDataRecords.Count + " EVSEs failed!"));
+                            warnings.Add(Warning.Create(response.Response.StatusCode.Code.ToString()));
+                            warnings.Add(Warning.Create(response.Response.StatusCode.Description));
 
                             if (response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty())
-                                warnings.Add(Warning.Create(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo)));
+                                warnings.Add(Warning.Create(response.Response.StatusCode.AdditionalInfo));
 
-                            warnings.Add(Warning.Create(I18NString.Create(Languages.en, "Will try to fix this issue via a 'fullLoad' of all EVSEs!")));
+                            warnings.Add(Warning.Create("Will try to fix this issue via a 'fullLoad' of all EVSEs!"));
 
                             #endregion
 
@@ -1157,7 +1163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             catch (Exception e)
                                                             {
                                                                 DebugX.Log(e.Message);
-                                                                warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message), evse));
+                                                                warnings.Add(Warning.Create(e.Message, evse));
                                                             }
 
                                                             return null;
@@ -1202,7 +1208,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                               evseDataRecords.Select(evseDataRecord => evseDataRecord),
                                                                               FullLoadResponse.Response.StatusCode.Description,
                                                                               FullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                                  ? warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.Response.StatusCode.AdditionalInfo))
+                                                                                  ? warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.Response.StatusCode.AdditionalInfo))
                                                                                   : warnings,
                                                                               runtime);
 
@@ -1211,7 +1217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                             evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
                                                                             FullLoadResponse.Response.StatusCode.Description,
                                                                             FullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                                ? warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.Response.StatusCode.AdditionalInfo))
+                                                                                ? warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.Response.StatusCode.AdditionalInfo))
                                                                                 : warnings,
                                                                             runtime);
 
@@ -1222,8 +1228,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                         evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
                                                                         //FullLoadResponse.HTTPStatusCode.ToString(),
                                                                         //FullLoadResponse.HTTPBody != null
-                                                                        //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, FullLoadResponse.HTTPBody.ToUTF8String()))
-                                                                        //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
+                                                                        //    ? Warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.HTTPBody.ToUTF8String()))
+                                                                        //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                                                         Runtime: runtime);
 
                             #endregion
@@ -1241,8 +1247,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
                                            //response.HTTPStatusCode.ToString(),
                                            //response.HTTPBody != null
-                                           //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
-                                           //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
+                                           //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                           //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                            Runtime: runtime
                                        );
 
@@ -1261,8 +1267,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
                                    //response.HTTPStatusCode.ToString(),
                                    //response.HTTPBody != null
-                                   //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
-                                   //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
+                                   //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                   //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                    Runtime: runtime
                                );
 
@@ -1389,8 +1395,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     DebugX.LogException(e);
 
-                    warnings.Add(Warning.Create(I18NString.Create(Languages.en, e.Message),
-                                                evseStatusUpdate));
+                    warnings.Add(
+                        Warning.Create(
+                            e.Message,
+                            evseStatusUpdate
+                        )
+                    );
 
                 }
 
@@ -1461,7 +1471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                    this,
                                                                    response.Response.StatusCode.Description,
                                                                    response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                       ? warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
+                                                                       ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
                                                                        : warnings,
                                                                    runtime);
 
@@ -1471,7 +1481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  EVSEStatusUpdates,
                                                                  response.Response.StatusCode.Description,
                                                                  response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                     ? warnings.AddAndReturnList(I18NString.Create(Languages.en, response.Response.StatusCode.AdditionalInfo))
+                                                                     ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
                                                                      : warnings,
                                                                  runtime);
 
@@ -1482,8 +1492,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              EVSEStatusUpdates,
                                                              //response.HTTPStatusCode.ToString(),
                                                              //response.HTTPBody != null
-                                                             //    ? Warnings.AddAndReturnList(I18NString.Create(Languages.en, response.HTTPBody.ToUTF8String()))
-                                                             //    : Warnings.AddAndReturnList(I18NString.Create(Languages.en, "No HTTP body received!")),
+                                                             //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                                             //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                                              Runtime: runtime);
 
             }
@@ -3738,9 +3748,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     forwardedCDRs.Add(chargeDetailRecord);
 
                 else
-                    filteredCDRs.Add(WWCP.SendCDRResult.Filtered(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                 chargeDetailRecord,
-                                                                 Warning.Create(I18NString.Create(Languages.en, "This charge detail record was filtered!"))));
+                    filteredCDRs.Add(
+                        WWCP.SendCDRResult.Filtered(
+                            org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                            Id,
+                            chargeDetailRecord,
+                            Warning.Create("This charge detail record was filtered!")
+                        )
+                    );
 
             }
 
@@ -3858,28 +3873,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 {
 
                                     chargeDetailRecordsQueue.Add(ChargeDetailRecord.ToOICP(WWCPChargeDetailRecord2OICPChargeDetailRecord));
-                                    sendCDRsResults.Add(WWCP.SendCDRResult.Enqueued(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                                    ChargeDetailRecord));
+
+                                    sendCDRsResults.Add(
+                                        WWCP.SendCDRResult.Enqueued(
+                                            org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                            Id,
+                                            ChargeDetailRecord
+                                        )
+                                    );
 
                                 }
                                 catch (Exception e)
                                 {
-                                    sendCDRsResults.Add(WWCP.SendCDRResult.CouldNotConvertCDRFormat(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                                                    ChargeDetailRecord,
-                                                                                                    Warning.Create(I18NString.Create(Languages.en, e.Message))));
+                                    sendCDRsResults.Add(
+                                        WWCP.SendCDRResult.CouldNotConvertCDRFormat(
+                                            org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                            Id,
+                                            ChargeDetailRecord,
+                                            Warning.Create(e.Message)
+                                        )
+                                    );
                                 }
 
                             }
 
                             endtime         = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
                             runtime         = endtime - startTime;
-                            sendCDRsResult  = WWCP.SendCDRsResult.Enqueued(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                           Id,
-                                                                           this,
-                                                                           ChargeDetailRecords,
-                                                                           I18NString.Create(Languages.en, "Enqueued for at least " + FlushChargeDetailRecordsEvery.TotalSeconds + " seconds!"),
-                                                                           //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
-                                                                           Runtime: runtime);
+                            sendCDRsResult  = WWCP.SendCDRsResult.Enqueued(
+                                                  org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                                  Id,
+                                                  this,
+                                                  ChargeDetailRecords,
+                                                  I18NString.Create($"Enqueued for at least {FlushChargeDetailRecordsEvery.TotalSeconds} seconds!"),
+                                                  //SendCDRsResults.SafeWhere(cdrresult => cdrresult.Result != SendCDRResultTypes.Enqueued),
+                                                  Runtime: runtime
+                                              );
                             invokeTimer     = true;
 
                         }
@@ -3915,31 +3943,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         if (response.Response.Result == true)
                                         {
 
-                                            result = WWCP.SendCDRResult.Success(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                                chargeDetailRecord);
+                                            result = WWCP.SendCDRResult.Success(
+                                                         org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                                         Id,
+                                                         chargeDetailRecord
+                                                     );
 
                                         }
 
                                         else
                                         {
 
-                                            result = WWCP.SendCDRResult.Error(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                              chargeDetailRecord);
+                                            result = WWCP.SendCDRResult.Error(
+                                                         org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                                         Id,
+                                                         chargeDetailRecord
+                                                     );
 
                                         }
 
                                     }
 
                                     else
-                                        result = WWCP.SendCDRResult.Error(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                          chargeDetailRecord);
+                                        result = WWCP.SendCDRResult.Error(
+                                                     org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                                     Id,
+                                                     chargeDetailRecord
+                                                 );
 
                                 }
                                 catch (Exception e)
                                 {
-                                    result = WWCP.SendCDRResult.CouldNotConvertCDRFormat(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                                         chargeDetailRecord,
-                                                                                         I18NString.Create(Languages.en, e.Message));
+                                    result = WWCP.SendCDRResult.CouldNotConvertCDRFormat(
+                                                 org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                                 Id,
+                                                 chargeDetailRecord,
+                                                 I18NString.Create(e.Message)
+                                             );
                                 }
 
                                 sendCDRsResults.Add(result);
@@ -3951,20 +3991,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             runtime  = endtime - startTime;
 
                             if (sendCDRsResults.All(cdrresult => cdrresult.Result == WWCP.SendCDRResultTypes.Success))
-                                sendCDRsResult = WWCP.SendCDRsResult.Success(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                      Id,
-                                                                      this,
-                                                                      ChargeDetailRecords,
-                                                                      Runtime: runtime);
+                                sendCDRsResult = WWCP.SendCDRsResult.Success(
+                                                     org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                                     Id,
+                                                     this,
+                                                     ChargeDetailRecords,
+                                                     Runtime: runtime
+                                                 );
 
                             else
-                                sendCDRsResult = WWCP.SendCDRsResult.Error(org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                                                                    Id,
-                                                                    this,
-                                                                    sendCDRsResults.
-                                                                        Where (cdrresult => cdrresult.Result != WWCP.SendCDRResultTypes.Success).
-                                                                        Select(cdrresult => cdrresult.ChargeDetailRecord),
-                                                                    Runtime: runtime);
+                                sendCDRsResult = WWCP.SendCDRsResult.Error(
+                                                     org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                                                     Id,
+                                                     this,
+                                                     sendCDRsResults.
+                                                         Where (cdrresult => cdrresult.Result != WWCP.SendCDRResultTypes.Success).
+                                                         Select(cdrresult => cdrresult.ChargeDetailRecord),
+                                                     Runtime: runtime
+                                                 );
 
                         }
 
@@ -3983,7 +4027,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                Id,
                                                                this,
                                                                ChargeDetailRecords,
-                                                               I18NString.Create(Languages.en, "Could not " + (TransmissionType == WWCP.TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!"),
+                                                               I18NString.Create("Could not " + (TransmissionType == WWCP.TransmissionTypes.Enqueue ? "enqueue" : "send") + " charge detail records!"),
                                                                //ChargeDetailRecords.SafeSelect(cdr => new SendCDRResult(cdr, SendCDRResultTypes.Timeout)),
                                                                Runtime: runtime);
 
@@ -4388,58 +4432,71 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 try
                 {
 
-                    var response  = await CPORoaming.SendChargeDetailRecord(chargeDetailRecord,
-                                                                            DefaultOperator.Id.ToOICP().Value,
-                                                                            null,
+                    var response  = await CPORoaming.SendChargeDetailRecord(
+                                              chargeDetailRecord,
+                                              DefaultOperator.Id.ToOICP().Value,
+                                              null,
 
-                                                                            Timestamp.Now,
-                                                                            new CancellationTokenSource().Token,
-                                                                            EventTracking_Id.New,
-                                                                            DefaultRequestTimeout).
-                                                     ConfigureAwait(false);
+                                              Timestamp.Now,
+                                              new CancellationTokenSource().Token,
+                                              EventTracking_Id.New,
+                                              DefaultRequestTimeout
+                                          ).ConfigureAwait(false);
 
                     if (response.IsSuccess())
                     {
 
-                        if (response.Response.Result == true)
+                        if (response.Response?.Result == true)
                         {
 
-                            result = WWCP.SendCDRResult.Success(Timestamp.Now,
-                                                                chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                                                Runtime: response.Response.Runtime);
+                            result = WWCP.SendCDRResult.Success(
+                                         Timestamp.Now,
+                                         Id,
+                                         chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                                         Runtime: response.Response.Runtime
+                                     );
 
                         }
 
                         else
                         {
 
-                            result = WWCP.SendCDRResult.Error(Timestamp.Now,
-                                                              chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                                              //I18NString.Create(Languages.en, response.HTTPBodyAsUTF8String),
-                                                              Runtime: response.Response.Runtime);
+                            result = WWCP.SendCDRResult.Error(
+                                         Timestamp.Now,
+                                         Id,
+                                         chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                                         //I18NString.Create(response.HTTPBodyAsUTF8String),
+                                         Runtime: response.Response.Runtime
+                                     );
 
                         }
 
                     }
 
                     else
-                        result = WWCP.SendCDRResult.Error(Timestamp.Now,
-                                                          chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                                          //I18NString.Create(Languages.en, response.HTTPBodyAsUTF8String),
-                                                          Runtime: response.Response.Runtime);
+                        result = WWCP.SendCDRResult.Error(
+                                     Timestamp.Now,
+                                     Id,
+                                     chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                                     //I18NString.Create(response.HTTPBodyAsUTF8String),
+                                     Runtime: response.Response.Runtime
+                                 );
 
                 }
                 catch (Exception e)
                 {
 
-                    result = WWCP.SendCDRResult.Error(Timestamp.Now,
-                                                      chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                                      Warning.Create(I18NString.Create(Languages.en, e.Message)),
-                                                      Runtime: TimeSpan.Zero);
+                    result = WWCP.SendCDRResult.Error(
+                                 Timestamp.Now,
+                                 Id,
+                                 chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
+                                 Warning.Create(e.Message),
+                                 Runtime: TimeSpan.Zero
+                             );
 
                 }
 
-                RoamingNetwork.SessionsStore.CDRForwarded(chargeDetailRecord.SessionId.ToWWCP().Value, result);
+                await RoamingNetwork.SessionsStore.CDRForwarded(chargeDetailRecord.SessionId.ToWWCP().Value, result);
 
             }
 
