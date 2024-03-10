@@ -2189,9 +2189,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 result = WWCP.RemoteStartResult.Success(
                              remoteStartResponse.Response.SessionId.HasValue
-                                 ? new WWCP.ChargingSession(remoteStartResponse.Response.SessionId.ToWWCP().Value,
-                                                            EventTrackingId)
-                                 : default,
+                                 ? new WWCP.ChargingSession(
+                                       remoteStartResponse.Response.SessionId.ToWWCP().Value,
+                                       RoamingNetwork,
+                                       EventTrackingId
+                                   )
+                                 : null,
                              System_Id.Local,
                              Runtime
                          );

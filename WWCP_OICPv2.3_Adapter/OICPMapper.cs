@@ -17,7 +17,9 @@
 
 #region Usings
 
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Runtime.InteropServices;
 
 #endregion
 
@@ -313,15 +315,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     throw new InvalidEVSEIdentificationException(EVSE.Id.ToString());
 
                 if (EVSE.ChargingStation is null)
-                    throw new ArgumentNullException("ChargingStation", "Within OICP v2.3 some charging station information is mandatory!");
+                    throw new ArgumentNullException(nameof(EVSE.ChargingStation),                "Within OICP v2.3 some charging station information is mandatory!");
 
                 var geoLocation    = (EVSE.ChargingStation.GeoLocation ?? EVSE.ChargingPool?.GeoLocation)?.ToOICP();
                 if (!geoLocation.HasValue)
-                    throw new ArgumentNullException("GeoCoordinates",  "Within OICP v2.3 the geo coordinates of an EVSE are mandatory!");
+                    throw new ArgumentNullException(nameof(EVSE.ChargingStation.GeoLocation),    "Within OICP v2.3 the geo coordinates of an EVSE are mandatory!");
 
                 var accessibility  = EVSE.ChargingStation.Accessibility?.ToOICP();
                 if (!accessibility.HasValue)
-                    throw new ArgumentNullException("Accessibility",   "Within OICP v2.3 the accessibility of an EVSE is mandatory!");
+                    throw new ArgumentNullException(nameof(EVSE.ChargingStation.Accessibility),  "Within OICP v2.3 the accessibility of an EVSE is mandatory!");
 
                 #endregion
 
@@ -336,62 +338,62 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 var evseDataRecord = new EVSEDataRecord(
-                                         Id:                                evseId.Value,
-                                         OperatorId:                        evseId.Value.OperatorId,
-                                         OperatorName:                      OperatorName,
-                                         ChargingStationName:               EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
-                                         Address:                           (EVSE.ChargingStation.Address ??
-                                                                             EVSE.ChargingPool.   Address).ToOICP(),
-                                         GeoCoordinates:                    geoLocation.Value,
-                                         PlugTypes:                         EVSE.ChargingConnectors.SafeSelect(chargingConnector => chargingConnector.Plug.ToOICP()),
-                                         ChargingFacilities:                EVSE.AsChargingFacilities(),
-                                         RenewableEnergy:                   false,
-                                         CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.NotAvailable,
-                                         AuthenticationModes:               EVSE.ChargingStation.AuthenticationModes.ToOICP(),
-                                         PaymentOptions:                    EVSE.IsFreeOfCharge
-                                                                                ? new[] { PaymentOptions.NoPayment }
-                                                                                : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
-                                         ValueAddedServices:                new[] { ValueAddedServices.None },
-                                         Accessibility:                     accessibility.Value,
-                                         HotlinePhoneNumber:                EVSE.ChargingStation.HotlinePhoneNumber.HasValue ? Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.Value.ToString()) : null,
-                                         IsOpen24Hours:                     EVSE.ChargingStation.OpeningTimes is not null
-                                                                                ? EVSE.ChargingStation.OpeningTimes?.ToOICP()?.Any() == true  // OpeningTimes == false AND an empty list is invalid at Hubject!
-                                                                                      ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
-                                                                                      : true
-                                                                                : true,
-                                         IsHubjectCompatible:               EVSE.ChargingStation.Features.Contains(WWCP.ChargingStationFeature.HubjectCompatible),
-                                         DynamicInfoAvailable:              EVSE.ChargingStation.Features.Contains(WWCP.ChargingStationFeature.StatusInfoAvailable)
-                                                                                ? FalseTrueAuto.True
-                                                                                : FalseTrueAuto.False,
+                                         Id:                                 evseId.Value,
+                                         OperatorId:                         evseId.Value.OperatorId,
+                                         OperatorName:                       OperatorName,
+                                         ChargingStationName:                EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
+                                         Address:                            (EVSE.ChargingStation.Address ??
+                                                                              EVSE.ChargingPool.   Address).ToOICP(),
+                                         GeoCoordinates:                     geoLocation.Value,
+                                         PlugTypes:                          EVSE.ChargingConnectors.SafeSelect(chargingConnector => chargingConnector.Plug.ToOICP()),
+                                         ChargingFacilities:                 EVSE.AsChargingFacilities(),
+                                         RenewableEnergy:                    false,
+                                         CalibrationLawDataAvailability:     CalibrationLawDataAvailabilities.NotAvailable,
+                                         AuthenticationModes:                EVSE.ChargingStation.AuthenticationModes.ToOICP(),
+                                         PaymentOptions:                     EVSE.IsFreeOfCharge
+                                                                                 ? [ PaymentOptions.NoPayment ]
+                                                                                 : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
+                                         ValueAddedServices:                 [ ValueAddedServices.None ],
+                                         Accessibility:                      accessibility.Value,
+                                         HotlinePhoneNumber:                 EVSE.ChargingStation.HotlinePhoneNumber.HasValue ? Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.Value.ToString()) : null,
+                                         IsOpen24Hours:                      EVSE.ChargingStation.OpeningTimes is not null
+                                                                                 ? EVSE.ChargingStation.OpeningTimes?.ToOICP()?.Any() == true  // OpeningTimes == false AND an empty list is invalid at Hubject!
+                                                                                       ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
+                                                                                       : true
+                                                                                 : true,
+                                         IsHubjectCompatible:                EVSE.ChargingStation.Features.Contains(WWCP.ChargingStationFeature.HubjectCompatible),
+                                         DynamicInfoAvailable:               EVSE.ChargingStation.Features.Contains(WWCP.ChargingStationFeature.StatusInfoAvailable)
+                                                                                 ? FalseTrueAuto.True
+                                                                                 : FalseTrueAuto.False,
 
-                                         DeltaType:                         DeltaType,
-                                         LastUpdate:                        LastUpdate,
+                                         DeltaType:                          DeltaType,
+                                         LastUpdate:                         LastUpdate,
 
-                                         ChargingStationId:                 ChargingStation_Id.TryParse(EVSE.ChargingStation.Id.ToString()),
-                                         ChargingPoolId:                    ChargingPool_Id.   TryParse(EVSE.ChargingPool?.  Id.ToString()),
-                                         HardwareManufacturer:              null,
-                                         ChargingStationImageURL:           null,
-                                         SubOperatorName:                   EVSE.ChargingPool?.SubOperator?.Name?.FirstText(),
-                                         DynamicPowerLevel:                 null,
-                                         EnergySources:                     null,
-                                         EnvironmentalImpact:               null,
-                                         MaxCapacity:                       null,
-                                         AccessibilityLocationType:         null,
-                                         AdditionalInfo:                    (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).IsNotNullOrEmpty()
-                                                                                ? new I18NText(
-                                                                                      LanguageCode.Parse(
-                                                                                          (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
-                                                                                          (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).FirstText().SubstringMax(150)
-                                                                                      )
-                                                                                : null,
-                                         ChargingStationLocationReference:  null,
-                                         GeoChargingPointEntrance:          EVSE.ChargingPool?.EntranceLocation.ToOICP(),
-                                         OpeningTimes:                      EVSE.ChargingStation.OpeningTimes?.ToOICP(),
-                                         HubOperatorId:                     EVSE.GetInternalDataAs<Operator_Id?>     (OICP_HubOperatorId),
-                                         ClearingHouseId:                   EVSE.GetInternalDataAs<ClearingHouse_Id?>(OICP_ClearingHouseId),
+                                         ChargingStationId:                  ChargingStation_Id.TryParse(EVSE.ChargingStation.Id.ToString()),
+                                         ChargingPoolId:                     ChargingPool_Id.   TryParse(EVSE.ChargingPool?.  Id.ToString()),
+                                         HardwareManufacturer:               null,
+                                         ChargingStationImageURL:            null,
+                                         SubOperatorName:                    EVSE.ChargingPool?.SubOperator?.Name?.FirstText(),
+                                         DynamicPowerLevel:                  null,
+                                         EnergySources:                      null,
+                                         EnvironmentalImpact:                null,
+                                         MaxCapacity:                        null,
+                                         AccessibilityLocationType:          null,
+                                         AdditionalInfo:                     (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).IsNotNullOrEmpty()
+                                                                                 ? new I18NText(
+                                                                                       LanguageCode.Parse(
+                                                                                           (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).First().Language.ToString()),
+                                                                                           (EVSE.Description ?? EVSE.ChargingStation.Description ?? EVSE.ChargingPool.Description).FirstText().SubstringMax(150)
+                                                                                       )
+                                                                                 : null,
+                                         ChargingStationLocationReference:   null,
+                                         GeoChargingPointEntrance:           EVSE.ChargingPool?.EntranceLocation.ToOICP(),
+                                         OpeningTimes:                       EVSE.ChargingStation.OpeningTimes?.ToOICP(),
+                                         HubOperatorId:                      EVSE.GetInternalDataAs<Operator_Id?>     (OICP_HubOperatorId),
+                                         ClearingHouseId:                    EVSE.GetInternalDataAs<ClearingHouse_Id?>(OICP_ClearingHouseId),
 
-                                         CustomData:                        EVSE.CustomData,
-                                         InternalData:                      internalData
+                                         CustomData:                         EVSE.CustomData,
+                                         InternalData:                       internalData
                                      );
 
                 return EVSE2EVSEDataRecord is not null
@@ -1102,7 +1104,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (AuthenticationModes == null)
-                return new AuthenticationModes[0];
+                return [];
 
             var authenticationModes = new List<AuthenticationModes>();
 
@@ -1295,7 +1297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (!EVSE.MaxPower.HasValue)
-                return Array.Empty<ChargingFacility>();
+                return [];
 
 
             var powerType = PowerTypes.AC_1_PHASE;
@@ -1321,7 +1323,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             }
 
-            return new[] {
+            return [
                        new ChargingFacility(
                            powerType,
                            Convert.ToUInt32(EVSE.MaxPower.Value),
@@ -1329,7 +1331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent))     : null,
                            EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
                        )
-                   };
+                   ];
 
         }
 
@@ -1468,7 +1470,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  regularOpeningGroup.Key.  ToOICP()));
             }
 
-            return openingTimes.Any()
+            return openingTimes.Count != 0
                        ? openingTimes
                        : null;
 
@@ -1598,25 +1600,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                           AuthenticationStart:    ChargeDetailRecord.Identification.ToWWCP(),
 
-                          EnergyMeteringValues:   new[] {
+                          EnergyMeteringValues:   [
 
                                                       new WWCP.EnergyMeteringValue(
                                                           ChargeDetailRecord.ChargingStart,
-                                                          ChargeDetailRecord.MeterValueStart ?? 0
+                                                          ChargeDetailRecord.MeterValueStart ?? 0,
+                                                          WWCP.EnergyMeteringValueTypes.Start
                                                       ),
 
                                                       //ToDo: Meter values in between... but we don't have timestamps for them!
 
                                                       new WWCP.EnergyMeteringValue(
                                                           ChargeDetailRecord.ChargingEnd,
-                                                          ChargeDetailRecord.MeterValueEnd   ?? ChargeDetailRecord.ConsumedEnergy
+                                                          ChargeDetailRecord.MeterValueEnd   ?? ChargeDetailRecord.ConsumedEnergy,
+                                                          WWCP.EnergyMeteringValueTypes.Stop
                                                       )
 
-                                                  },
+                                                  ],
 
                           //ConsumedEnergy:       Will be calculated!
-
-                          //Signatures:             new String[] { ChargeDetailRecord.MeteringSignature },
 
                           CustomData:             ChargeDetailRecord.CustomData,
                           InternalData:           internalData
@@ -1656,29 +1658,72 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return null;
 
 
+            var calibrationLawCertificateID                  = ChargeDetailRecord.GetInternalDataAs<String>("OICP.CalibrationLawCertificateID");
+            var publicKey                                    = ChargeDetailRecord.EnergyMeter?.PublicKeys?.FirstOrDefault().ToString();
+            var meteringSignatureUrl                         = ChargeDetailRecord.GetInternalDataAs<String>("OICP.MeteringSignatureUrl");
+            var meteringSignatureEncodingFormat              = ChargeDetailRecord.GetInternalDataAs<String>("OICP.MeteringSignatureEncodingFormat");
+            var signedMeteringValuesVerificationInstruction  = ChargeDetailRecord.GetInternalDataAs<String>("OICP.SignedMeteringValuesVerificationInstruction");
+
+            var calibrationLawVerificationInfo               = (calibrationLawCertificateID                 is not null ||
+                                                                publicKey                                   is not null ||
+                                                                meteringSignatureUrl                        is not null ||
+                                                                meteringSignatureEncodingFormat             is not null ||
+                                                                signedMeteringValuesVerificationInstruction is not null)
+
+                                                                ? new CalibrationLawVerification(
+                                                                      calibrationLawCertificateID,
+                                                                      publicKey,
+                                                                      meteringSignatureUrl is not null
+                                                                          ? URL.Parse(meteringSignatureUrl)
+                                                                          : null,
+                                                                      meteringSignatureEncodingFormat,
+                                                                      signedMeteringValuesVerificationInstruction
+                                                                  )
+                                                                : null;
+
+            var signedMeteringValues = new List<SignedMeteringValue>();
+
+            foreach (var smv in ChargeDetailRecord.EnergyMeteringValues)
+            {
+                if (smv.SignedData is not null)
+                    signedMeteringValues.Add(
+                        new SignedMeteringValue(
+                            smv.SignedData.ToString(),
+                            smv.Type switch {
+                                WWCP.EnergyMeteringValueTypes.Start         => MeteringStatusTypes.Start,
+                                WWCP.EnergyMeteringValueTypes.Intermediate  => MeteringStatusTypes.Progress,
+                                WWCP.EnergyMeteringValueTypes.TariffChange  => MeteringStatusTypes.Progress,
+                                WWCP.EnergyMeteringValueTypes.Stop          => MeteringStatusTypes.End,
+                                _                                           => null
+                            }
+                        )
+                    );
+            }
+
             var CDR = new ChargeDetailRecord(
-                          EVSEId:                evseId.        Value,
-                          SessionId:             sessionId.     Value,
-                          SessionStart:          ChargeDetailRecord.SessionTime.StartTime,
-                          SessionEnd:            sessionEndTime.Value,
-                          Identification:        ChargeDetailRecord.AuthenticationStart?.ToOICP(),
-                          PartnerProductId:      ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
-                          CPOPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<CPOPartnerSession_Id?>(OICP_CPOPartnerSessionId),
-                          EMPPartnerSessionId:   ChargeDetailRecord.GetInternalDataAs<EMPPartnerSession_Id?>(OICP_EMPPartnerSessionId),
-                          ChargingStart:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.StartTime,
-                          ChargingEnd:           ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : sessionEndTime.Value,
-                          MeterValueStart:       ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : null,
-                          MeterValueEnd:         ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value     : null,
-                          MeterValuesInBetween:  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select(energyMeteringValue => energyMeteringValue.Value) : null,
-                          ConsumedEnergy:        ChargeDetailRecord.ConsumedEnergy ?? 0,
-                          //MeteringSignature:     ChargeDetailRecord.Signatures.FirstOrDefault(),
-                          HubOperatorId:         ChargeDetailRecord.GetInternalDataAs<Operator_Id?>(OICP_HubOperatorId),
-                          HubProviderId:         ChargeDetailRecord.GetInternalDataAs<Provider_Id?>(OICP_HubProviderId),
-                          InternalData:          new UserDefinedDictionary(
-                                                     new Dictionary<String, Object?>() {
-                                                         { WWCP_CDR, ChargeDetailRecord }
-                                                     }
-                                                 )
+                          EVSEId:                           evseId.        Value,
+                          SessionId:                        sessionId.     Value,
+                          SessionStart:                     ChargeDetailRecord.SessionTime.StartTime,
+                          SessionEnd:                       sessionEndTime.Value,
+                          Identification:                   ChargeDetailRecord.AuthenticationStart?.ToOICP(),
+                          PartnerProductId:                 ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
+                          CPOPartnerSessionId:              ChargeDetailRecord.GetInternalDataAs<CPOPartnerSession_Id?>(OICP_CPOPartnerSessionId),
+                          EMPPartnerSessionId:              ChargeDetailRecord.GetInternalDataAs<EMPPartnerSession_Id?>(OICP_EMPPartnerSessionId),
+                          ChargingStart:                    ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.StartTime,
+                          ChargingEnd:                      ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : sessionEndTime.Value,
+                          MeterValueStart:                  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : null,
+                          MeterValueEnd:                    ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value     : null,
+                          MeterValuesInBetween:             ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select(energyMeteringValue => energyMeteringValue.Value) : null,
+                          ConsumedEnergy:                   ChargeDetailRecord.ConsumedEnergy ?? 0,
+                          SignedMeteringValues:             signedMeteringValues,
+                          CalibrationLawVerificationInfo:   calibrationLawVerificationInfo,
+                          HubOperatorId:                    ChargeDetailRecord.GetInternalDataAs<Operator_Id?>(OICP_HubOperatorId),
+                          HubProviderId:                    ChargeDetailRecord.GetInternalDataAs<Provider_Id?>(OICP_HubProviderId),
+                          InternalData:                     new UserDefinedDictionary(
+                                                                new Dictionary<String, Object?>() {
+                                                                    { WWCP_CDR, ChargeDetailRecord }
+                                                                }
+                                                            )
                       );
 
             if (WWCPChargeDetailRecord2ChargeDetailRecord is not null)

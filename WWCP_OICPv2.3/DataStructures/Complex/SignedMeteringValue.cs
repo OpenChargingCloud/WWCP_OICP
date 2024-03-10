@@ -20,6 +20,7 @@
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Diagnostics.CodeAnalysis;
 
 #endregion
 
@@ -111,7 +112,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomSignedMeteringValueParser))
             {
-                return signedMeteringValue!;
+                return signedMeteringValue;
             }
 
             throw new ArgumentException("The given JSON representation of a signed metering value is invalid: " + errorResponse,
@@ -131,9 +132,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="SignedMeteringValue">The parsed signed metering value.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                   JSON,
-                                       out SignedMeteringValue?  SignedMeteringValue,
-                                       out String?               ErrorResponse)
+        public static Boolean TryParse(JObject                                        JSON,
+                                       [NotNullWhen(true)]  out SignedMeteringValue?  SignedMeteringValue,
+                                       [NotNullWhen(false)] out String?               ErrorResponse)
 
             => TryParse(JSON,
                         out SignedMeteringValue,
@@ -149,8 +150,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomSignedMeteringValueParser">A delegate to parse custom signed metering values JSON objects.</param>
         public static Boolean TryParse(JObject                                            JSON,
-                                       out SignedMeteringValue?                           SignedMeteringValue,
-                                       out String?                                        ErrorResponse,
+                                       [NotNullWhen(true)]  out SignedMeteringValue?      SignedMeteringValue,
+                                       [NotNullWhen(false)] out String?                   ErrorResponse,
                                        CustomJObjectParserDelegate<SignedMeteringValue>?  CustomSignedMeteringValueParser)
         {
 
@@ -169,7 +170,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("SignedMeteringValue",
                                              "signed metering value",
-                                             out String Value,
+                                             out var Value,
                                              out ErrorResponse))
                 {
                     return false;
@@ -197,9 +198,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                SignedMeteringValue = new SignedMeteringValue(Value,
-                                                              MeteringStatus,
-                                                              customData);
+                SignedMeteringValue = new SignedMeteringValue(
+                                          Value,
+                                          MeteringStatus,
+                                          customData
+                                      );
 
                 if (CustomSignedMeteringValueParser is not null)
                     SignedMeteringValue = CustomSignedMeteringValueParser(JSON,

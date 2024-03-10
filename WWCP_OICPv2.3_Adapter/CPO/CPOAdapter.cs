@@ -3700,13 +3700,47 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         // SendChargingErrorNotification
 
 
+        #region SendChargeDetailRecord (ChargeDetailRecord,  TransmissionType = Enqueue, ...)
+
+        /// <summary>
+        /// Send a charge detail record to an OICP server.
+        /// </summary>
+        /// <param name="ChargeDetailRecord">A charge detail record.</param>
+        /// <param name="TransmissionType">Whether to send the CDR directly or enqueue it for a while.</param>
+        /// 
+        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
+        public async Task<WWCP.SendCDRResult>
+
+            SendChargeDetailRecord(WWCP.ChargeDetailRecord  ChargeDetailRecord,
+                                   WWCP.TransmissionTypes   TransmissionType,
+
+                                   DateTime?                Timestamp,
+                                   EventTracking_Id?        EventTrackingId,
+                                   TimeSpan?                RequestTimeout,
+                                   CancellationToken        CancellationToken)
+
+            => (await SendChargeDetailRecords(
+                   [ ChargeDetailRecord ],
+                   TransmissionType,
+
+                   Timestamp,
+                   EventTrackingId,
+                   RequestTimeout,
+                   CancellationToken
+               )).First();
+
+        #endregion
+
         #region SendChargeDetailRecords(ChargeDetailRecords, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Send charge detail records to an OICP server.
         /// </summary>
         /// <param name="ChargeDetailRecords">An enumeration of charge detail records.</param>
-        /// <param name="TransmissionType">Whether to send the CDR directly or enqueue it for a while.</param>
+        /// <param name="TransmissionType">Whether to send the CDRs directly or enqueue them for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
@@ -3753,7 +3787,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                             Id,
                             chargeDetailRecord,
-                            Warning.Create("This charge detail record was filtered!")
+                            Warnings: Warnings.Create("This charge detail record was filtered!")
                         )
                     );
 
@@ -3890,7 +3924,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                             org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                             Id,
                                             ChargeDetailRecord,
-                                            Warning.Create(e.Message)
+                                            Warnings: Warnings.Create(e.Message)
                                         )
                                     );
                                 }
@@ -4490,8 +4524,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Timestamp.Now,
                                  Id,
                                  chargeDetailRecord.GetInternalDataAs<WWCP.ChargeDetailRecord>(OICPMapper.WWCP_CDR),
-                                 Warning.Create(e.Message),
-                                 Runtime: TimeSpan.Zero
+                                 Warnings: Warnings.Create(e.Message),
+                                 Runtime:  TimeSpan.Zero
                              );
 
                 }
