@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -49,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => OpenSourceLicense is null || !OpenSourceLicense.Any()
 
-                   ? new JArray()
+                   ? []
 
                    : new JArray(OpenSourceLicense.
                                     Where         (openSourceLicense => openSourceLicense is not null).
@@ -113,7 +115,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Id           = Id;
             this.Description  = I18NString.Empty;
-            this.URLs         = URLs?.Distinct() ?? Array.Empty<URL>();
+            this.URLs         = URLs?.Distinct() ?? [];
+
+            unchecked
+            {
+
+                hashCode = this.Id.         GetHashCode() * 5 ^
+                           this.Description.GetHashCode() * 3 ^
+                           this.URLs.       CalcHashCode();
+
+            }
 
         }
 
@@ -134,7 +145,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Id           = Id;
             this.Description  = Description      ?? I18NString.Empty;
-            this.URLs         = URLs?.Distinct() ?? Array.Empty<URL>();
+            this.URLs         = URLs?.Distinct() ?? [];
+
+            unchecked
+            {
+
+                hashCode = this.Id.         GetHashCode() * 5 ^
+                           this.Description.GetHashCode() * 3 ^
+                           this.URLs.       CalcHashCode();
+
+            }
 
         }
 
@@ -159,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomOpenSourceLicenseParser))
             {
-                return openSourceLicense!;
+                return openSourceLicense;
             }
 
             throw new ArgumentException("The given JSON representation of an Open Source license is invalid: " + errorResponse,
@@ -179,9 +199,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OpenSourceLicense">The parsed Open Source license.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                 JSON,
-                                       out OpenSourceLicense?  OpenSourceLicense,
-                                       out String?             ErrorResponse)
+        public static Boolean TryParse(JObject                                      JSON,
+                                       [NotNullWhen(true)]  out OpenSourceLicense?  OpenSourceLicense,
+                                       [NotNullWhen(false)] out String?             ErrorResponse)
 
             => TryParse(JSON,
                         out OpenSourceLicense,
@@ -197,8 +217,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpenSourceLicenseParser">A delegate to parse custom Open Source license JSON objects.</param>
         public static Boolean TryParse(JObject                                          JSON,
-                                       out OpenSourceLicense?                           OpenSourceLicense,
-                                       out String?                                      ErrorResponse,
+                                       [NotNullWhen(true)]  out OpenSourceLicense?      OpenSourceLicense,
+                                       [NotNullWhen(false)] out String?                 ErrorResponse,
                                        CustomJObjectParserDelegate<OpenSourceLicense>?  CustomOpenSourceLicenseParser   = null)
         {
 
@@ -256,9 +276,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                OpenSourceLicense = new OpenSourceLicense(Id,
-                                                          Description ?? I18NString.Empty,
-                                                          URLs.ToArray());
+                OpenSourceLicense = new OpenSourceLicense(
+                                        Id,
+                                        Description ?? I18NString.Empty,
+                                        [.. URLs]
+                                    );
 
                 if (CustomOpenSourceLicenseParser is not null)
                     OpenSourceLicense = CustomOpenSourceLicenseParser(JSON,
@@ -578,21 +600,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Id.          GetHashCode()        * 5 ^
-                      (Description?.GetHashCode()  ?? 0) * 3 ^
-                       URLs?.       CalcHashCode() ?? 0;
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

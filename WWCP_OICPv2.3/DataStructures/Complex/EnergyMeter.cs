@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -205,6 +207,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Description                = Description                       ?? I18NString.Empty;
             this.LastUpdate                 = LastUpdate                        ?? Timestamp.Now;
 
+            unchecked
+            {
+
+                hashCode = this.Id.                        GetHashCode()        * 31 ^
+                          (this.Model?.                    GetHashCode()  ?? 0) * 29 ^
+                          (this.ModelURL?.                 GetHashCode()  ?? 0) * 27 ^
+                          (this.HardwareVersion?.          GetHashCode()  ?? 0) * 23 ^
+                          (this.FirmwareVersion?.          GetHashCode()  ?? 0) * 19 ^
+                          (this.Manufacturer?.             GetHashCode()  ?? 0) * 17 ^
+                          (this.ManufacturerURL?.          GetHashCode()  ?? 0) * 13 ^
+                           this.PublicKeys.                CalcHashCode()       * 11 ^
+                          (this.PublicKeyCertificateChain?.GetHashCode()  ?? 0) *  7 ^
+                           this.TransparencySoftwares.     CalcHashCode()       *  5 ^
+                           this.Description.               CalcHashCode()       *  3 ^
+                           this.LastUpdate.                GetHashCode();
+
+            }
+
         }
 
         #endregion
@@ -226,7 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomEnergyMeterParser))
             {
-                return energyMeter!;
+                return energyMeter;
             }
 
             throw new ArgumentException("The given JSON representation of an energy meter is invalid: " + errorResponse,
@@ -246,9 +266,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EnergyMeter">The parsed energy meter.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject           JSON,
-                                       out EnergyMeter?  EnergyMeter,
-                                       out String?       ErrorResponse)
+        public static Boolean TryParse(JObject                                JSON,
+                                       [NotNullWhen(true)]  out EnergyMeter?  EnergyMeter,
+                                       [NotNullWhen(false)] out String?       ErrorResponse)
 
             => TryParse(JSON,
                         out EnergyMeter,
@@ -264,8 +284,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnergyMeterParser">A delegate to parse custom energy meter JSON objects.</param>
         public static Boolean TryParse(JObject                                    JSON,
-                                       out EnergyMeter?                           EnergyMeter,
-                                       out String?                                ErrorResponse,
+                                       [NotNullWhen(true)]  out EnergyMeter?      EnergyMeter,
+                                       [NotNullWhen(false)] out String?           ErrorResponse,
                                        CustomJObjectParserDelegate<EnergyMeter>?  CustomEnergyMeterParser   = null)
         {
 
@@ -414,20 +434,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                EnergyMeter = new EnergyMeter(Id,
-                                              Model,
-                                              ModelURL,
-                                              HardwareVersion,
-                                              FirmwareVersion,
-                                              Manufacturer,
-                                              ManufacturerURL,
-                                              PublicKeys,
-                                              PublicKeyCertificateChain,
-                                              TransparencySoftwares,
-                                              Description,
-                                              null,
-                                              null,
-                                              LastUpdate);
+                EnergyMeter = new EnergyMeter(
+                                  Id,
+                                  Model,
+                                  ModelURL,
+                                  HardwareVersion,
+                                  FirmwareVersion,
+                                  Manufacturer,
+                                  ManufacturerURL,
+                                  PublicKeys,
+                                  PublicKeyCertificateChain,
+                                  TransparencySoftwares,
+                                  Description,
+                                  null,
+                                  null,
+                                  LastUpdate
+                              );
 
                 if (CustomEnergyMeterParser is not null)
                     EnergyMeter = CustomEnergyMeterParser(JSON,
@@ -462,7 +484,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("id",                                   Id.                             ToString()),
+                                 new JProperty("id",                             Id.                             ToString()),
 
                            Model is not null
                                ? new JProperty("model",                          Model)
@@ -796,30 +818,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Id.                        GetHashCode()        * 31 ^
-                      (Model?.                    GetHashCode()  ?? 0) * 29 ^
-                      (ModelURL?.                 GetHashCode()  ?? 0) * 27 ^
-                      (HardwareVersion?.          GetHashCode()  ?? 0) * 23 ^
-                      (FirmwareVersion?.          GetHashCode()  ?? 0) * 19 ^
-                      (Manufacturer?.             GetHashCode()  ?? 0) * 17 ^
-                      (ManufacturerURL?.          GetHashCode()  ?? 0) * 13 ^
-                      (PublicKeys?.               CalcHashCode() ?? 0) * 11 ^
-                      (PublicKeyCertificateChain?.GetHashCode()  ?? 0) *  7 ^
-                      (TransparencySoftwares?.    CalcHashCode() ?? 0) *  5 ^
-                      (Description?.              GetHashCode()  ?? 0) *  3 ^
-                       LastUpdate.                GetHashCode();
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

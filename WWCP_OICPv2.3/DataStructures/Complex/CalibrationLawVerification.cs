@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -106,6 +108,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.SignedMeteringValuesVerificationInstruction  = SignedMeteringValuesVerificationInstruction;
             this.CustomData                                   = CustomData;
 
+            unchecked
+            {
+
+                hashCode = (this.PublicKey?.                                  GetHashCode() ?? 0) * 11 ^
+                           (this.CalibrationLawCertificateId?.                GetHashCode() ?? 0) *  7 ^
+                           (this.MeteringSignatureURL?.                       GetHashCode() ?? 0) *  5 ^
+                           (this.MeteringSignatureEncodingFormat?.            GetHashCode() ?? 0) *  3 ^
+                           (this.SignedMeteringValuesVerificationInstruction?.GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -141,7 +154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomCalibrationLawVerificationParser))
             {
-                return calibrationLawVerification!;
+                return calibrationLawVerification;
             }
 
             throw new ArgumentException("The given JSON representation of a calibration law verification is invalid: " + errorResponse,
@@ -161,9 +174,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="CalibrationLawVerification">The parsed calibration law verification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                          JSON,
-                                       out CalibrationLawVerification?  CalibrationLawVerification,
-                                       out String?                      ErrorResponse)
+        public static Boolean TryParse(JObject                                               JSON,
+                                       [NotNullWhen(true)]  out CalibrationLawVerification?  CalibrationLawVerification,
+                                       [NotNullWhen(false)] out String?                      ErrorResponse)
 
             => TryParse(JSON,
                         out CalibrationLawVerification,
@@ -179,8 +192,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomCalibrationLawVerificationParser">A delegate to parse custom calibration law verifications JSON objects.</param>
         public static Boolean TryParse(JObject                                                   JSON,
-                                       out CalibrationLawVerification?                           CalibrationLawVerification,
-                                       out String?                                               ErrorResponse,
+                                       [NotNullWhen(true)]  out CalibrationLawVerification?      CalibrationLawVerification,
+                                       [NotNullWhen(false)] out String?                          ErrorResponse,
                                        CustomJObjectParserDelegate<CalibrationLawVerification>?  CustomCalibrationLawVerificationParser)
         {
 
@@ -263,12 +276,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                CalibrationLawVerification  = new CalibrationLawVerification(CalibrationLawCertificateId,
-                                                                             PublicKey,
-                                                                             MeteringSignatureURL,
-                                                                             MeteringSignatureEncodingFormat,
-                                                                             SignedMeteringValuesVerificationInstruction,
-                                                                             customData);
+                CalibrationLawVerification  = new CalibrationLawVerification(
+                                                  CalibrationLawCertificateId,
+                                                  PublicKey,
+                                                  MeteringSignatureURL,
+                                                  MeteringSignatureEncodingFormat,
+                                                  SignedMeteringValuesVerificationInstruction,
+                                                  customData
+                                              );
 
                 if (CustomCalibrationLawVerificationParser is not null)
                     CalibrationLawVerification = CustomCalibrationLawVerificationParser(JSON,
@@ -559,23 +574,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return (PublicKey?.                                  GetHashCode() ?? 0) * 11 ^
-                       (CalibrationLawCertificateId?.                GetHashCode() ?? 0) *  7 ^
-                       (MeteringSignatureURL?.                       GetHashCode() ?? 0) *  5 ^
-                       (MeteringSignatureEncodingFormat?.            GetHashCode() ?? 0) *  3 ^
-                       (SignedMeteringValuesVerificationInstruction?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

@@ -1658,6 +1658,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 return null;
 
 
+            var signedMeteringValues = new List<SignedMeteringValue>();
+
+            foreach (var smv in ChargeDetailRecord.EnergyMeteringValues)
+            {
+                if (smv.SignedData is not null)
+                    signedMeteringValues.Add(
+                        new SignedMeteringValue(
+                            smv.SignedData.ToString(),
+                            smv.Type switch {
+                                WWCP.EnergyMeteringValueTypes.Start         => MeteringStatusTypes.Start,
+                                WWCP.EnergyMeteringValueTypes.Intermediate  => MeteringStatusTypes.Progress,
+                                WWCP.EnergyMeteringValueTypes.TariffChange  => MeteringStatusTypes.Progress,
+                                WWCP.EnergyMeteringValueTypes.Stop          => MeteringStatusTypes.End,
+                                _                                           => null
+                            }
+                        )
+                    );
+            }
+
+
             var calibrationLawCertificateID                  = ChargeDetailRecord.GetInternalDataAs<String>("OICP.CalibrationLawCertificateID");
             var publicKey                                    = ChargeDetailRecord.EnergyMeter?.PublicKeys?.FirstOrDefault().ToString();
             var meteringSignatureUrl                         = ChargeDetailRecord.GetInternalDataAs<String>("OICP.MeteringSignatureUrl");
@@ -1681,24 +1701,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                   )
                                                                 : null;
 
-            var signedMeteringValues = new List<SignedMeteringValue>();
+            // Hubject does not accept signed metering values without calibration law verification info!
+            if (signedMeteringValues.Count > 0 && calibrationLawVerificationInfo is null)
+                calibrationLawVerificationInfo               = new CalibrationLawVerification(
+                                                                   SignedMeteringValuesVerificationInstruction: "Please use the official transparency app!"
+                                                               );
 
-            foreach (var smv in ChargeDetailRecord.EnergyMeteringValues)
-            {
-                if (smv.SignedData is not null)
-                    signedMeteringValues.Add(
-                        new SignedMeteringValue(
-                            smv.SignedData.ToString(),
-                            smv.Type switch {
-                                WWCP.EnergyMeteringValueTypes.Start         => MeteringStatusTypes.Start,
-                                WWCP.EnergyMeteringValueTypes.Intermediate  => MeteringStatusTypes.Progress,
-                                WWCP.EnergyMeteringValueTypes.TariffChange  => MeteringStatusTypes.Progress,
-                                WWCP.EnergyMeteringValueTypes.Stop          => MeteringStatusTypes.End,
-                                _                                           => null
-                            }
-                        )
-                    );
-            }
 
             var CDR = new ChargeDetailRecord(
                           EVSEId:                           evseId.        Value,
