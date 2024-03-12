@@ -1679,10 +1679,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
             var calibrationLawCertificateID                  = ChargeDetailRecord.GetInternalDataAs<String>("OICP.CalibrationLawCertificateID");
-            var publicKey                                    = ChargeDetailRecord.EnergyMeter?.PublicKeys?.FirstOrDefault().ToString();
             var meteringSignatureUrl                         = ChargeDetailRecord.GetInternalDataAs<String>("OICP.MeteringSignatureUrl");
             var meteringSignatureEncodingFormat              = ChargeDetailRecord.GetInternalDataAs<String>("OICP.MeteringSignatureEncodingFormat");
             var signedMeteringValuesVerificationInstruction  = ChargeDetailRecord.GetInternalDataAs<String>("OICP.SignedMeteringValuesVerificationInstruction");
+
+            var publicKey                                    = ChargeDetailRecord.EnergyMeter?.PublicKeys.Any() == true
+                                                                   ? ChargeDetailRecord.EnergyMeter?.PublicKeys?.First()
+                                                                   : null;
 
             var calibrationLawVerificationInfo               = (calibrationLawCertificateID                 is not null ||
                                                                 publicKey                                   is not null ||
@@ -1692,7 +1695,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                                 ? new CalibrationLawVerification(
                                                                       calibrationLawCertificateID,
-                                                                      publicKey,
+                                                                      publicKey?.ToString(),
                                                                       meteringSignatureUrl is not null
                                                                           ? URL.Parse(meteringSignatureUrl)
                                                                           : null,

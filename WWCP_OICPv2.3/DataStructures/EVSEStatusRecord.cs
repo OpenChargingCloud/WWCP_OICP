@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -132,9 +134,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EVSEStatusRecord">The parsed EVSE status record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject               JSON,
-                                       out EVSEStatusRecord  EVSEStatusRecord,
-                                       out String?           ErrorResponse)
+        public static Boolean TryParse(JObject                                    JSON,
+                                       [NotNullWhen(true)]  out EVSEStatusRecord  EVSEStatusRecord,
+                                       [NotNullWhen(false)] out String?           ErrorResponse)
 
             => TryParse(JSON,
                         out EVSEStatusRecord,
@@ -150,8 +152,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEStatusRecordParser">A delegate to parse custom EVSE status records JSON objects.</param>
         public static Boolean TryParse(JObject                                         JSON,
-                                       out EVSEStatusRecord                            EVSEStatusRecord,
-                                       out String?                                     ErrorResponse,
+                                       [NotNullWhen(true)]  out EVSEStatusRecord       EVSEStatusRecord,
+                                       [NotNullWhen(false)] out String?                ErrorResponse,
                                        CustomJObjectParserDelegate<EVSEStatusRecord>?  CustomEVSEStatusRecordParser)
         {
 

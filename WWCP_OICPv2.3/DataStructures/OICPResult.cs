@@ -204,20 +204,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => JSONObject.Create(
 
                    RequestJSON is not null
-                       ? new JProperty("request",           RequestJSON)
+                       ? new JProperty("request",            RequestJSON)
                        : null,
 
                    ResponseJSON is not null
-                       ? new JProperty("response",          ResponseJSON)
+                       ? new JProperty("response",           ResponseJSON)
                        : null,
 
-                   new JProperty("wasSuccessful",           IsSuccessful),
+                         new JProperty("wasSuccessful",      IsSuccessful),
 
                    ValidationErrors is not null
-                       ? new JProperty("validationErrors",  ValidationErrors.ToJSON())
+                       ? new JProperty("validationErrors",   ValidationErrors.ToJSON())
                        : null,
 
-                   new JProperty("processId",               ProcessId.       ToString())
+                         new JProperty("processId",          ProcessId.       ToString())
 
                );
 
@@ -231,8 +231,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(IsSuccessful      ? "Successful" : "Failed",
-                             ProcessId.HasValue ? ", ProcessId: " + ProcessId : "");
+            => String.Concat(
+                   IsSuccessful       ? "Successful"                : "Failed",
+                   ProcessId.HasValue ? $", ProcessId: {ProcessId}" : ""
+               );
 
         #endregion
 

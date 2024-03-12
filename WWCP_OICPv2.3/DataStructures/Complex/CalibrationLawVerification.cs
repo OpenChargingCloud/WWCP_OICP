@@ -79,6 +79,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
         [Optional]
         public JObject?  CustomData                                     { get; }
 
+
+        /// <summary>
+        /// Whether all sub-datastructures are empty/null.
+        /// </summary>
+        public Boolean IsEmpty
+
+            => CalibrationLawCertificateId                 is null &&
+               PublicKey                                   is null &&
+              !MeteringSignatureURL.HasValue                       &&
+               MeteringSignatureEncodingFormat             is null &&
+               SignedMeteringValuesVerificationInstruction is null;
+
+        /// <summary>
+        /// Whether NOT all sub-datastructures are empty/null.
+        /// </summary>
+        public Boolean IsNotEmpty
+            => !IsEmpty;
+
         #endregion
 
         #region Constructor(s)
@@ -207,7 +225,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("CalibrationLawCertificateID",
                                        "calibration law certificate identification",
-                                       out String CalibrationLawCertificateId,
+                                       out String? CalibrationLawCertificateId,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -220,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("PublicKey",
                                        "public key",
-                                       out String PublicKey,
+                                       out String? PublicKey,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -247,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("MeteringSignatureEncodingFormat",
                                        "metering signature encoding format",
-                                       out String MeteringSignatureEncodingFormat,
+                                       out String? MeteringSignatureEncodingFormat,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -260,7 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("SignedMeteringValuesVerificationInstruction",
                                        "signed metering values verification instruction",
-                                       out String SignedMeteringValuesVerificationInstruction,
+                                       out String? SignedMeteringValuesVerificationInstruction,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -314,11 +332,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.IsNotNullOrEmpty()
+                           CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.                IsNotNullOrEmpty()
                                ? new JProperty("CalibrationLawCertificateID",                  CalibrationLawCertificateId)
                                : null,
 
-                           PublicKey                                   is not null && PublicKey.IsNotNullOrEmpty()
+                           PublicKey                                   is not null && PublicKey.                                  IsNotNullOrEmpty()
                                ? new JProperty("PublicKey",                                    PublicKey)
                                : null,
 
@@ -326,7 +344,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MeteringSignatureUrl",                         MeteringSignatureURL.Value.ToString())
                                : null,
 
-                           MeteringSignatureEncodingFormat             is not null && MeteringSignatureEncodingFormat.IsNotNullOrEmpty()
+                           MeteringSignatureEncodingFormat             is not null && MeteringSignatureEncodingFormat.            IsNotNullOrEmpty()
                                ? new JProperty("MeteringSignatureEncodingFormat",              MeteringSignatureEncodingFormat)
                                : null,
 
@@ -592,13 +610,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => new String[] {
-                   PublicKey                                   is not null && PublicKey.                                  IsNotNullOrEmpty() ? "pk: "       + PublicKey.                                  SubstringMax(10) : "",
-                   CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.                IsNotNullOrEmpty() ? "certId: "   + CalibrationLawCertificateId.                SubstringMax(10) : "",
-                   MeteringSignatureURL                        is not null && MeteringSignatureURL.                       HasValue           ? "URL: "      + MeteringSignatureURL.Value.ToString().      SubstringMax(10) : "",
-                   MeteringSignatureEncodingFormat             is not null && MeteringSignatureEncodingFormat.            IsNotNullOrEmpty() ? "encoding: " + MeteringSignatureEncodingFormat.            SubstringMax(10) : "",
-                   SignedMeteringValuesVerificationInstruction is not null && SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty() ? "info: "     + SignedMeteringValuesVerificationInstruction.SubstringMax(10) : ""
-               }.AggregateWith(", ");
+            => new String?[] {
+                   PublicKey                                   is not null && PublicKey.                                  IsNotNullOrEmpty() ? "pk: "       + PublicKey.                                  SubstringMax(10) : null,
+                   CalibrationLawCertificateId                 is not null && CalibrationLawCertificateId.                IsNotNullOrEmpty() ? "certId: "   + CalibrationLawCertificateId.                SubstringMax(10) : null,
+                   MeteringSignatureURL                        is not null && MeteringSignatureURL.                       HasValue           ? "URL: "      + MeteringSignatureURL.Value.ToString().      SubstringMax(10) : null,
+                   MeteringSignatureEncodingFormat             is not null && MeteringSignatureEncodingFormat.            IsNotNullOrEmpty() ? "encoding: " + MeteringSignatureEncodingFormat.            SubstringMax(10) : null,
+                   SignedMeteringValuesVerificationInstruction is not null && SignedMeteringValuesVerificationInstruction.IsNotNullOrEmpty() ? "info: "     + SignedMeteringValuesVerificationInstruction.SubstringMax(10) : null
+               }.Where(text => text is not null).
+                 AggregateWith(", ");
 
         #endregion
 

@@ -18,6 +18,7 @@
 #region Usings
 
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 
 using Newtonsoft.Json.Linq;
 
@@ -342,7 +343,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomChargeDetailRecordParser))
             {
-                return chargeDetailRecord!;
+                return chargeDetailRecord;
             }
 
             throw new ArgumentException("The given JSON representation of a charge detail record is invalid: " + errorResponse, nameof(JSON));
@@ -361,9 +362,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ChargeDetailRecord">The parsed charge detail record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                  JSON,
-                                       out ChargeDetailRecord?  ChargeDetailRecord,
-                                       out String?              ErrorResponse)
+        public static Boolean TryParse(JObject                                       JSON,
+                                       [NotNullWhen(true)]  out ChargeDetailRecord?  ChargeDetailRecord,
+                                       [NotNullWhen(false)] out String?              ErrorResponse)
 
             => TryParse(JSON,
                         out ChargeDetailRecord,
@@ -379,8 +380,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargeDetailRecordParser">A delegate to parse custom charge detail records JSON objects.</param>
         public static Boolean TryParse(JObject                                           JSON,
-                                       out ChargeDetailRecord?                           ChargeDetailRecord,
-                                       out String?                                       ErrorResponse,
+                                       [NotNullWhen(true)]  out ChargeDetailRecord?      ChargeDetailRecord,
+                                       [NotNullWhen(false)] out String?                  ErrorResponse,
                                        CustomJObjectParserDelegate<ChargeDetailRecord>?  CustomChargeDetailRecordParser)
         {
 
@@ -657,6 +658,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 ChargeDetailRecord = new ChargeDetailRecord(
+
                                          SessionId,
                                          EVSEId,
                                          Identification!,
@@ -678,6 +680,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          HubProviderId,
 
                                          customData
+
                                      );
 
                 if (CustomChargeDetailRecordParser is not null)
@@ -716,64 +719,64 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("SessionID",                             SessionId.          ToString()),
-                           new JProperty("EvseID",                                EVSEId.             ToString()),
-                           new JProperty("Identification",                        Identification.     ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
-                           new JProperty("SessionStart",                          SessionStart.       ToIso8601()),
-                           new JProperty("SessionEnd",                            SessionEnd.         ToIso8601()),
-                           new JProperty("ChargingStart",                         ChargingStart.      ToIso8601()),
-                           new JProperty("ChargingEnd",                           ChargingEnd.        ToIso8601()),
-                           new JProperty("ConsumedEnergy",                        String.Format("{0:0.###}", ConsumedEnergy).Replace(",", ".")),
+                                 new JProperty("SessionID",                        SessionId.          ToString()),
+                                 new JProperty("EvseID",                           EVSEId.             ToString()),
+                                 new JProperty("Identification",                   Identification.     ToJSON(CustomIdentificationSerializer: CustomIdentificationSerializer)),
+                                 new JProperty("SessionStart",                     SessionStart.       ToIso8601()),
+                                 new JProperty("SessionEnd",                       SessionEnd.         ToIso8601()),
+                                 new JProperty("ChargingStart",                    ChargingStart.      ToIso8601()),
+                                 new JProperty("ChargingEnd",                      ChargingEnd.        ToIso8601()),
+                                 new JProperty("ConsumedEnergy",                   String.Format("{0:0.###}", ConsumedEnergy).Replace(",", ".")),
 
                            PartnerProductId.   HasValue
-                               ? new JProperty("PartnerProductID",                PartnerProductId.   Value.ToString())
+                               ? new JProperty("PartnerProductID",                 PartnerProductId.   Value.ToString())
                                : null,
 
                            CPOPartnerSessionId.HasValue
-                               ? new JProperty("CPOPartnerSessionID",             CPOPartnerSessionId.Value.ToString())
+                               ? new JProperty("CPOPartnerSessionID",              CPOPartnerSessionId.Value.ToString())
                                : null,
 
                            EMPPartnerSessionId.HasValue
-                               ? new JProperty("EMPPartnerSessionID",             EMPPartnerSessionId.Value.ToString())
+                               ? new JProperty("EMPPartnerSessionID",              EMPPartnerSessionId.Value.ToString())
                                : null,
 
                            MeterValueStart.    HasValue
-                               ? new JProperty("MeterValueStart",                 String.Format("{0:0.###}", MeterValueStart.Value).Replace(",", "."))
+                               ? new JProperty("MeterValueStart",                  String.Format("{0:0.###}", MeterValueStart.Value).Replace(",", "."))
                                : null,
 
                            MeterValueEnd.      HasValue
-                               ? new JProperty("MeterValueEnd",                   String.Format("{0:0.###}", MeterValueEnd.  Value).Replace(",", "."))
+                               ? new JProperty("MeterValueEnd",                    String.Format("{0:0.###}", MeterValueEnd.  Value).Replace(",", "."))
                                : null,
 
                            MeterValuesInBetween is not null && MeterValuesInBetween.Any()
                                ? new JProperty("MeterValueInBetween",
                                      new JObject(  // OICP is crazy!
-                                         new JProperty("meterValues",             new JArray(MeterValuesInBetween.
-                                                                                                 SafeSelect(meterValue => String.Format("{0:0.###}", meterValue).Replace(",", ".")))
+                                         new JProperty("meterValues",              new JArray(MeterValuesInBetween.
+                                                                                                  SafeSelect(meterValue => String.Format("{0:0.###}", meterValue).Replace(",", ".")))
                                          )
                                      )
                                  )
                                : null,
 
                            SignedMeteringValues is not null && SignedMeteringValues.Any()
-                               ? new JProperty("SignedMeteringValues",            new JArray(SignedMeteringValues.
-                                                                                                 Select(signedMeteringValue => signedMeteringValue.ToJSON(CustomSignedMeteringValueSerializer))))
+                               ? new JProperty("SignedMeteringValues",             new JArray(SignedMeteringValues.
+                                                                                                  Select(signedMeteringValue => signedMeteringValue.ToJSON(CustomSignedMeteringValueSerializer))))
                                : null,
 
-                           CalibrationLawVerificationInfo is not null
-                               ? new JProperty("CalibrationLawVerificationInfo",  CalibrationLawVerificationInfo.ToJSON(CustomCalibrationLawVerificationSerializer))
+                           CalibrationLawVerificationInfo is not null && CalibrationLawVerificationInfo.IsNotEmpty
+                               ? new JProperty("CalibrationLawVerificationInfo",   CalibrationLawVerificationInfo.ToJSON(CustomCalibrationLawVerificationSerializer))
                                : null,
 
                            HubOperatorId.HasValue
-                               ? new JProperty("HubOperatorID",                   HubOperatorId.Value.ToString())
+                               ? new JProperty("HubOperatorID",                    HubOperatorId.Value.ToString())
                                : null,
 
                            HubProviderId.HasValue
-                               ? new JProperty("HubProviderID",                   HubProviderId.Value.ToString())
+                               ? new JProperty("HubProviderID",                    HubProviderId.Value.ToString())
                                : null,
 
                            CustomData?.HasValues == true
-                               ? new JProperty("CustomData",                      CustomData)
+                               ? new JProperty("CustomData",                       CustomData)
                                : null
 
                     );
@@ -1121,18 +1124,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => String.Concat(
 
-                   SessionId + ": ",
-
-                   ConsumedEnergy + " kWh",
+                   $"{SessionId}: {ConsumedEnergy} kWh",
 
                    PartnerProductId.HasValue
-                       ? " of " + PartnerProductId.Value
+                       ? $" of {PartnerProductId.Value}"
                        : null,
 
-                   " at ",  EVSEId,
-                   " for ", Identification,
-
-                   ", " + SessionStart.ToIso8601(), " -> ", SessionEnd.ToIso8601()
+                   $" at {EVSEId}  for {Identification}, {SessionStart.ToIso8601()} -> {SessionEnd.ToIso8601()}"
 
                );
 
@@ -1365,10 +1363,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.MeterValueEnd                   = MeterValueEnd;
                 this.MeterValuesInBetween            = MeterValuesInBetween is not null && MeterValuesInBetween.Any()
                                                            ? new List<Decimal>            (MeterValuesInBetween)
-                                                           : new List<Decimal>();
+                                                           : [];
                 this.SignedMeteringValues            = SignedMeteringValues is not null && SignedMeteringValues.Any()
                                                            ? new List<SignedMeteringValue>(SignedMeteringValues)
-                                                           : new List<SignedMeteringValue>();
+                                                           : [];
                 this.CalibrationLawVerificationInfo  = CalibrationLawVerificationInfo;
                 this.HubOperatorId                   = HubOperatorId;
                 this.HubProviderId                   = HubProviderId;
@@ -1422,28 +1420,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                return new ChargeDetailRecord(SessionId.     Value,
-                                              EVSEId.        Value,
-                                              Identification,
-                                              SessionStart.  Value,
-                                              SessionEnd.    Value,
-                                              ChargingStart. Value,
-                                              ChargingEnd.   Value,
-                                              ConsumedEnergy.Value,
+                return new ChargeDetailRecord(
+                           SessionId.     Value,
+                           EVSEId.        Value,
+                           Identification,
+                           SessionStart.  Value,
+                           SessionEnd.    Value,
+                           ChargingStart. Value,
+                           ChargingEnd.   Value,
+                           ConsumedEnergy.Value,
 
-                                              PartnerProductId,
-                                              CPOPartnerSessionId,
-                                              EMPPartnerSessionId,
-                                              MeterValueStart,
-                                              MeterValueEnd,
-                                              MeterValuesInBetween,
-                                              SignedMeteringValues,
-                                              CalibrationLawVerificationInfo,
-                                              HubOperatorId,
-                                              HubProviderId,
+                           PartnerProductId,
+                           CPOPartnerSessionId,
+                           EMPPartnerSessionId,
+                           MeterValueStart,
+                           MeterValueEnd,
+                           MeterValuesInBetween,
+                           SignedMeteringValues,
+                           CalibrationLawVerificationInfo,
+                           HubOperatorId,
+                           HubProviderId,
 
-                                              CustomData,
-                                              InternalData);
+                           CustomData,
+                           InternalData
+                       );
 
             }
 

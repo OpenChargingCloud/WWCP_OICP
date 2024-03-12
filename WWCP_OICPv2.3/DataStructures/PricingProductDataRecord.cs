@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -40,51 +42,51 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// A pricing product name (for identifying a tariff) that MUST be unique.
         /// </summary>
         [Mandatory]
-        public PartnerProduct_Id                      ProductId                              { get; }
+        public PartnerProduct_Id                      ProductId                      { get; }
 
 
         /// <summary>
         /// Reference unit in time or kWh.
         /// </summary>
         [Mandatory]
-        public Reference_Unit                         ReferenceUnit                          { get; }
+        public Reference_Unit                         ReferenceUnit                  { get; }
 
         /// <summary>
         /// Currency for default prices.
         /// </summary>
         [Mandatory]
-        public Currency_Id                            ProductPriceCurrency                   { get; }
+        public Currency_Id                            ProductPriceCurrency           { get; }
 
         /// <summary>
         /// A price per reference unit.
         /// </summary>
         [Mandatory]
-        public Decimal                                PricePerReferenceUnit                  { get; }
+        public Decimal                                PricePerReferenceUnit          { get; }
 
         /// <summary>
         /// A value in kWh.
         /// </summary>
         [Mandatory]
-        public Decimal                                MaximumProductChargingPower            { get; }
+        public Decimal                                MaximumProductChargingPower    { get; }
 
         /// <summary>
         /// Set to TRUE if the respective pricing product is applicable 24 hours a day.
         /// If FALSE, the respective applicability times SHOULD be provided in the field "ProductAvailabilityTimes".
         /// </summary>
         [Mandatory]
-        public Boolean                                IsValid24hours                         { get; }
+        public Boolean                                IsValid24hours                 { get; }
 
         /// <summary>
         /// An enumeration indicating when the pricing product is applicable.
         /// </summary>
         [Mandatory]
-        public IEnumerable<ProductAvailabilityTimes>  ProductAvailabilityTimes               { get; }
+        public IEnumerable<ProductAvailabilityTimes>  ProductAvailabilityTimes       { get; }
 
         /// <summary>
         /// An optional enumeration of additional reference units and their respective prices.
         /// </summary>
         [Optional]
-        public IEnumerable<AdditionalReferences>      AdditionalReferences                   { get; }
+        public IEnumerable<AdditionalReferences>      AdditionalReferences           { get; }
 
         #endregion
 
@@ -133,6 +135,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ProductAvailabilityTimes     = ProductAvailabilityTimes.Distinct();
 
             this.AdditionalReferences         = AdditionalReferences?.   Distinct() ?? Array.Empty<AdditionalReferences>();
+
 
             unchecked
             {
@@ -205,7 +208,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomPricingProductDataRecordParser))
             {
-                return pricingProductDataRecord!;
+                return pricingProductDataRecord;
             }
 
             throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + errorResponse, nameof(JSON));
@@ -224,9 +227,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="PricingProductDataRecord">The parsed EVSE data record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                        JSON,
-                                       out PricingProductDataRecord?  PricingProductDataRecord,
-                                       out String?                    ErrorResponse)
+        public static Boolean TryParse(JObject                                             JSON,
+                                       [NotNullWhen(true)]  out PricingProductDataRecord?  PricingProductDataRecord,
+                                       [NotNullWhen(false)] out String?                    ErrorResponse)
 
             => TryParse(JSON,
                         out PricingProductDataRecord,
@@ -242,8 +245,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPricingProductDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
         public static Boolean TryParse(JObject                                                 JSON,
-                                       out PricingProductDataRecord?                           PricingProductDataRecord,
-                                       out String?                                             ErrorResponse,
+                                       [NotNullWhen(true)]  out PricingProductDataRecord?      PricingProductDataRecord,
+                                       [NotNullWhen(false)] out String?                        ErrorResponse,
                                        CustomJObjectParserDelegate<PricingProductDataRecord>?  CustomPricingProductDataRecordParser)
         {
 
@@ -369,6 +372,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PricingProductDataRecord = new PricingProductDataRecord(
+
                                                ProductId,
                                                ReferenceUnit,
                                                ProductPriceCurrency,
@@ -380,6 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                AdditionalReferences,
 
                                                customData
+
                                            );
 
 
@@ -572,10 +577,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(ProductId,             ", ",
-                             ReferenceUnit,         ", ",
-                             PricePerReferenceUnit, " ",
-                             ProductPriceCurrency);
+            => $"{ProductId}, {ReferenceUnit}, {PricePerReferenceUnit} {ProductPriceCurrency}";
 
         #endregion
 

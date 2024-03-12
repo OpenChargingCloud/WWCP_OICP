@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -577,7 +579,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomEVSEDataRecordParser))
             {
-                return evseDataRecord!;
+                return evseDataRecord;
             }
 
             throw new ArgumentException("The given JSON representation of an EVSE data record is invalid: " + errorResponse,
@@ -597,9 +599,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EVSEDataRecord">The parsed EVSE data record.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject              JSON,
-                                       out EVSEDataRecord?  EVSEDataRecord,
-                                       out String?          ErrorResponse)
+        public static Boolean TryParse(JObject                                   JSON,
+                                       [NotNullWhen(true)]  out EVSEDataRecord?  EVSEDataRecord,
+                                       [NotNullWhen(false)] out String?          ErrorResponse)
 
             => TryParse(JSON,
                         out EVSEDataRecord,
@@ -615,8 +617,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEDataRecordParser">A delegate to parse custom EVSE data records JSON objects.</param>
         public static Boolean TryParse(JObject                                       JSON,
-                                       out EVSEDataRecord?                           EVSEDataRecord,
-                                       out String?                                   ErrorResponse,
+                                       [NotNullWhen(true)]  out EVSEDataRecord?      EVSEDataRecord,
+                                       [NotNullWhen(false)] out String?              ErrorResponse,
                                        CustomJObjectParserDelegate<EVSEDataRecord>?  CustomEVSEDataRecordParser)
         {
 
@@ -1188,6 +1190,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 EVSEDataRecord = new EVSEDataRecord(
+
                                      EVSEId,
                                      OperatorId,
                                      OperatorName,
@@ -1229,6 +1232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      ClearingHouseId,
 
                                      customData
+
                                  );
 
 

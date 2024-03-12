@@ -988,7 +988,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -1028,9 +1028,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                         Counters.PushEVSEData.IncResponses_OK();
 
-                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(Request,
-                                                                                                          acknowledgement!,
-                                                                                                          processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Success(
+                                                     Request,
+                                                     acknowledgement!,
+                                                     processId
+                                                 );
 
                                     }
 
@@ -1068,7 +1070,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400
@@ -1107,9 +1109,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  out var errorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.BadRequest(Request,
-                                                                                                         validationErrors,
-                                                                                                         processId);
+                                    result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.BadRequest(
+                                                 Request,
+                                                 validationErrors,
+                                                 processId
+                                             );
 
                                 }
 
@@ -1164,7 +1168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -1180,16 +1184,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
-                                                                                                         new Acknowledgement<PushEVSEDataRequest>(
-                                                                                                             HTTPResponse.Timestamp,
-                                                                                                             HTTPResponse.EventTrackingId,
-                                                                                                             processId,
-                                                                                                             HTTPResponse.Runtime,
-                                                                                                             statusCode!,
-                                                                                                             Request
-                                                                                                         ),
-                                                                                                         processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushEVSEDataRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -1242,7 +1248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -1258,16 +1264,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(Request,
-                                                                                                         new Acknowledgement<PushEVSEDataRequest>(
-                                                                                                             HTTPResponse.Timestamp,
-                                                                                                             HTTPResponse.EventTrackingId,
-                                                                                                             processId,
-                                                                                                             HTTPResponse.Runtime,
-                                                                                                             statusCode!,
-                                                                                                             Request
-                                                                                                         ),
-                                                                                                         processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushEVSEDataRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -1509,7 +1517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -1549,9 +1557,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                         Counters.PushEVSEStatus.IncResponses_OK();
 
-                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(Request,
-                                                                                                            acknowledgement!,
-                                                                                                            processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Success(
+                                                     Request,
+                                                     acknowledgement!,
+                                                     processId
+                                                 );
 
                                     }
 
@@ -1589,7 +1599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400 BadRequest
@@ -1627,9 +1637,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  out var errorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.BadRequest(Request,
-                                                                                                           validationErrors,
-                                                                                                           processId);
+                                    result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.BadRequest(
+                                                 Request,
+                                                 validationErrors,
+                                                 processId
+                                             );
 
                                 }
 
@@ -1698,16 +1710,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
-                                                                                                           new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                                               HTTPResponse.Timestamp,
-                                                                                                               HTTPResponse.EventTrackingId,
-                                                                                                               processId,
-                                                                                                               HTTPResponse.Runtime,
-                                                                                                               statusCode!,
-                                                                                                               Request
-                                                                                                           ),
-                                                                                                           processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushEVSEStatusRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -1776,16 +1790,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(Request,
-                                                                                                           new Acknowledgement<PushEVSEStatusRequest>(
-                                                                                                               HTTPResponse.Timestamp,
-                                                                                                               HTTPResponse.EventTrackingId,
-                                                                                                               processId,
-                                                                                                               HTTPResponse.Runtime,
-                                                                                                               statusCode!,
-                                                                                                               Request
-                                                                                                           ),
-                                                                                                           processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushEVSEStatusRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -2028,7 +2044,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2068,9 +2084,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                         Counters.PushPricingProductData.IncResponses_OK();
 
-                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(Request,
-                                                                                                                    acknowledgement!,
-                                                                                                                    processId);
+                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Success(
+                                                     Request,
+                                                     acknowledgement!,
+                                                     processId
+                                                 );
 
                                     }
 
@@ -2108,7 +2126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400
@@ -2147,9 +2165,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  out var errorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.BadRequest(Request,
-                                                                                                                   validationErrors,
-                                                                                                                   processId);
+                                    result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.BadRequest(
+                                                 Request,
+                                                 validationErrors,
+                                                 processId
+                                             );
 
                                 }
 
@@ -2204,7 +2224,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2220,16 +2240,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       processId,
-                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                       statusCode!,
-                                                                                                                       Request
-                                                                                                                   ),
-                                                                                                                   processId);
+                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushPricingProductDataRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -2282,7 +2304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2298,16 +2320,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(Request,
-                                                                                                                   new Acknowledgement<PushPricingProductDataRequest>(
-                                                                                                                       HTTPResponse.Timestamp,
-                                                                                                                       HTTPResponse.EventTrackingId,
-                                                                                                                       processId,
-                                                                                                                       HTTPResponse.Runtime,
-                                                                                                                       statusCode!,
-                                                                                                                       Request
-                                                                                                                   ),
-                                                                                                                   processId);
+                                        result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushPricingProductDataRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -2548,7 +2572,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2588,9 +2612,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                         Counters.PushEVSEPricing.IncResponses_OK();
 
-                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(Request,
-                                                                                                             acknowledgement!,
-                                                                                                             processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Success(
+                                                     Request,
+                                                     acknowledgement!,
+                                                     processId
+                                                 );
 
                                     }
 
@@ -2628,7 +2654,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         {
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400
@@ -2667,9 +2693,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                  out var errorResponse))
                                 {
 
-                                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.BadRequest(Request,
-                                                                                                            validationErrors,
-                                                                                                            processId);
+                                    result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.BadRequest(
+                                                 Request,
+                                                 validationErrors,
+                                                 processId
+                                             );
 
                                 }
 
@@ -2724,7 +2752,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2740,16 +2768,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(Request,
-                                                                                                         new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                                             HTTPResponse.Timestamp,
-                                                                                                             HTTPResponse.EventTrackingId,
-                                                                                                             processId,
-                                                                                                             HTTPResponse.Runtime,
-                                                                                                             statusCode!,
-                                                                                                             Request
-                                                                                                         ),
-                                                                                                         processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushEVSEPricingRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -2802,7 +2832,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             // }
 
                             if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody.Length > 0)
+                                HTTPResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2818,16 +2848,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                             CustomStatusCodeParser))
                                     {
 
-                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(Request,
-                                                                                                         new Acknowledgement<PushEVSEPricingRequest>(
-                                                                                                             HTTPResponse.Timestamp,
-                                                                                                             HTTPResponse.EventTrackingId,
-                                                                                                             processId,
-                                                                                                             HTTPResponse.Runtime,
-                                                                                                             statusCode!,
-                                                                                                             Request
-                                                                                                         ),
-                                                                                                         processId);
+                                        result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
+                                                     Request,
+                                                     new Acknowledgement<PushEVSEPricingRequest>(
+                                                         HTTPResponse.Timestamp,
+                                                         HTTPResponse.EventTrackingId,
+                                                         processId,
+                                                         HTTPResponse.Runtime,
+                                                         statusCode!,
+                                                         Request
+                                                     ),
+                                                     processId
+                                                 );
 
                                     }
 
@@ -3049,7 +3081,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3089,9 +3121,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     Counters.PullAuthenticationData.IncResponses_OK();
 
-                                    result = OICPResult<PullAuthenticationDataResponse>.Success(Request,
-                                                                                                pullAuthenticationDataResponse!,
-                                                                                                processId);
+                                    result = OICPResult<PullAuthenticationDataResponse>.Success(
+                                                 Request,
+                                                 pullAuthenticationDataResponse!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -3128,7 +3162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -3167,9 +3201,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<PullAuthenticationDataResponse>.BadRequest(Request,
-                                                                                               validationErrors,
-                                                                                               processId);
+                                result = OICPResult<PullAuthenticationDataResponse>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -3216,7 +3252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         statusDescription = "Hubject firewall problem!";
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3232,17 +3268,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
-                                                                                               new PullAuthenticationDataResponse(
-                                                                                                   HTTPResponse.Timestamp,
-                                                                                                   HTTPResponse.EventTrackingId,
-                                                                                                   processId,
-                                                                                                   HTTPResponse.Runtime,
-                                                                                                   Array.Empty<ProviderAuthenticationData>(),
-                                                                                                   Request,
-                                                                                                   StatusCode: statusCode
-                                                                                               ),
-                                                                                               processId);
+                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                 Request,
+                                                 new PullAuthenticationDataResponse(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     Array.Empty<ProviderAuthenticationData>(),
+                                                     Request,
+                                                     StatusCode: statusCode
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -3297,7 +3335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3313,17 +3351,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
-                                                                                               new PullAuthenticationDataResponse(
-                                                                                                   HTTPResponse.Timestamp,
-                                                                                                   HTTPResponse.EventTrackingId,
-                                                                                                   processId,
-                                                                                                   HTTPResponse.Runtime,
-                                                                                                   Array.Empty<ProviderAuthenticationData>(),
-                                                                                                   Request,
-                                                                                                   StatusCode: statusCode
-                                                                                               ),
-                                                                                               processId);
+                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                 Request,
+                                                 new PullAuthenticationDataResponse(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     Array.Empty<ProviderAuthenticationData>(),
+                                                     Request,
+                                                     StatusCode: statusCode
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -3376,7 +3416,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3392,17 +3432,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(Request,
-                                                                                               new PullAuthenticationDataResponse(
-                                                                                                   HTTPResponse.Timestamp,
-                                                                                                   HTTPResponse.EventTrackingId,
-                                                                                                   processId,
-                                                                                                   HTTPResponse.Runtime,
-                                                                                                   Array.Empty<ProviderAuthenticationData>(),
-                                                                                                   Request,
-                                                                                                   StatusCode: statusCode
-                                                                                               ),
-                                                                                               processId);
+                                    result = OICPResult<PullAuthenticationDataResponse>.Failed(
+                                                 Request,
+                                                 new PullAuthenticationDataResponse(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     Array.Empty<ProviderAuthenticationData>(),
+                                                     Request,
+                                                     StatusCode: statusCode
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -3617,7 +3659,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3684,9 +3726,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     Counters.AuthorizeStart.IncResponses_OK();
 
-                                    result = OICPResult<AuthorizationStartResponse>.Success(Request,
-                                                                                            authorizationStartResponse!,
-                                                                                            processId);
+                                    result = OICPResult<AuthorizationStartResponse>.Success(
+                                                 Request,
+                                                 authorizationStartResponse!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -3720,7 +3764,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -3758,9 +3802,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<AuthorizationStartResponse>.BadRequest(Request,
-                                                                                           validationErrors,
-                                                                                           processId);
+                                result = OICPResult<AuthorizationStartResponse>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -3799,7 +3845,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3810,18 +3856,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<AuthorizationStartResponse>.Failed(Request,
-                                                                                           AuthorizationStartResponse.NotAuthorized(
-                                                                                               Request,
-                                                                                               statusCode!,
-                                                                                               ProcessId: processId
-                                                                                           ),
-                                                                                           processId);
+                                    result = OICPResult<AuthorizationStartResponse>.Failed(
+                                                 Request,
+                                                 AuthorizationStartResponse.NotAuthorized(
+                                                     Request,
+                                                     statusCode!,
+                                                     ProcessId: processId
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -4022,7 +4070,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4042,9 +4090,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     Counters.AuthorizeStop.IncResponses_OK();
 
-                                    result = OICPResult<AuthorizationStopResponse>.Success(Request,
-                                                                                           authorizationStopResponse!,
-                                                                                           processId);
+                                    result = OICPResult<AuthorizationStopResponse>.Success(
+                                                 Request,
+                                                 authorizationStopResponse!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -4079,7 +4129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -4117,9 +4167,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<AuthorizationStopResponse>.BadRequest(Request,
-                                                                                          validationErrors,
-                                                                                          processId);
+                                result = OICPResult<AuthorizationStopResponse>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -4158,7 +4210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4174,13 +4226,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<AuthorizationStopResponse>.Failed(Request,
-                                                                                          AuthorizationStopResponse.NotAuthorized(
-                                                                                              Request,
-                                                                                              statusCode!,
-                                                                                              ProcessId: processId
-                                                                                          ),
-                                                                                          processId);
+                                    result = OICPResult<AuthorizationStopResponse>.Failed(
+                                                 Request,
+                                                 AuthorizationStopResponse.NotAuthorized(
+                                                     Request,
+                                                     statusCode!,
+                                                     ProcessId: processId
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -4231,7 +4285,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4247,13 +4301,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<AuthorizationStopResponse>.Failed(Request,
-                                                                                          AuthorizationStopResponse.NotAuthorized(
-                                                                                              Request,
-                                                                                              statusCode!,
-                                                                                              ProcessId: processId
-                                                                                          ),
-                                                                                          processId);
+                                    result = OICPResult<AuthorizationStopResponse>.Failed(
+                                                 Request,
+                                                 AuthorizationStopResponse.NotAuthorized(
+                                                     Request,
+                                                     statusCode!,
+                                                     ProcessId: processId
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -4455,7 +4511,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4495,9 +4551,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     Counters.SendChargingStartNotification.IncResponses_OK();
 
-                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(Request,
-                                                                                                                   acknowledgement!,
-                                                                                                                   processId);
+                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Success(
+                                                 Request,
+                                                 acknowledgement!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -4535,7 +4593,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -4573,9 +4631,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.BadRequest(Request,
-                                                                                                                  validationErrors,
-                                                                                                                  processId);
+                                result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -4614,7 +4674,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4630,16 +4690,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
-                                                                                                                  new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                                      HTTPResponse.Timestamp,
-                                                                                                                      HTTPResponse.EventTrackingId,
-                                                                                                                      processId,
-                                                                                                                      HTTPResponse.Runtime,
-                                                                                                                      statusCode!,
-                                                                                                                      Request
-                                                                                                                  ),
-                                                                                                                  processId);
+                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingStartNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -4692,7 +4754,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4708,16 +4770,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(Request,
-                                                                                                                  new Acknowledgement<ChargingStartNotificationRequest>(
-                                                                                                                      HTTPResponse.Timestamp,
-                                                                                                                      HTTPResponse.EventTrackingId,
-                                                                                                                      processId,
-                                                                                                                      HTTPResponse.Runtime,
-                                                                                                                      statusCode!,
-                                                                                                                      Request
-                                                                                                                  ),
-                                                                                                                  processId);
+                                    result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingStartNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -4935,7 +4999,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4975,9 +5039,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     Counters.SendChargingProgressNotification.IncResponses_OK();
 
-                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(Request,
-                                                                                                                      acknowledgement!,
-                                                                                                                      processId);
+                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Success(
+                                                 Request,
+                                                 acknowledgement!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -5015,7 +5081,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -5053,9 +5119,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.BadRequest(Request,
-                                                                                                                     validationErrors,
-                                                                                                                     processId);
+                                result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -5094,7 +5162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5110,16 +5178,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
-                                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                                         HTTPResponse.Timestamp,
-                                                                                                                         HTTPResponse.EventTrackingId,
-                                                                                                                         processId,
-                                                                                                                         HTTPResponse.Runtime,
-                                                                                                                         statusCode!,
-                                                                                                                         Request
-                                                                                                                     ),
-                                                                                                                     processId);
+                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -5172,7 +5242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5188,16 +5258,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(Request,
-                                                                                                                     new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                                                                                         HTTPResponse.Timestamp,
-                                                                                                                         HTTPResponse.EventTrackingId,
-                                                                                                                         processId,
-                                                                                                                         HTTPResponse.Runtime,
-                                                                                                                         statusCode!,
-                                                                                                                         Request
-                                                                                                                     ),
-                                                                                                                     processId);
+                                    result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingProgressNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -5415,7 +5487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5455,9 +5527,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     Counters.SendChargingEndNotification.IncResponses_OK();
 
-                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(Request,
-                                                                                                                 acknowledgement!,
-                                                                                                                 processId);
+                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Success(
+                                                 Request,
+                                                 acknowledgement!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -5495,7 +5569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -5533,9 +5607,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.BadRequest(Request,
-                                                                                                                validationErrors,
-                                                                                                                processId);
+                                result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -5574,7 +5650,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5590,16 +5666,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
-                                                                                                                new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                                    HTTPResponse.Timestamp,
-                                                                                                                    HTTPResponse.EventTrackingId,
-                                                                                                                    processId,
-                                                                                                                    HTTPResponse.Runtime,
-                                                                                                                    statusCode!,
-                                                                                                                    Request
-                                                                                                                ),
-                                                                                                                processId);
+                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingEndNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -5652,7 +5730,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5668,16 +5746,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(Request,
-                                                                                                                new Acknowledgement<ChargingEndNotificationRequest>(
-                                                                                                                    HTTPResponse.Timestamp,
-                                                                                                                    HTTPResponse.EventTrackingId,
-                                                                                                                    processId,
-                                                                                                                    HTTPResponse.Runtime,
-                                                                                                                    statusCode!,
-                                                                                                                    Request
-                                                                                                                ),
-                                                                                                                processId);
+                                    result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingEndNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -5895,7 +5975,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5935,9 +6015,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                     Counters.SendChargingErrorNotification.IncResponses_OK();
 
-                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(Request,
-                                                                                                                   acknowledgement!,
-                                                                                                                   processId);
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Success(
+                                                 Request,
+                                                 acknowledgement!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -5975,7 +6057,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -6013,9 +6095,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.BadRequest(Request,
-                                                                                                                  validationErrors,
-                                                                                                                  processId);
+                                result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -6054,7 +6138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -6070,16 +6154,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
-                                                                                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                                                      HTTPResponse.Timestamp,
-                                                                                                                      HTTPResponse.EventTrackingId,
-                                                                                                                      processId,
-                                                                                                                      HTTPResponse.Runtime,
-                                                                                                                      statusCode!,
-                                                                                                                      Request
-                                                                                                                  ),
-                                                                                                                  processId);
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -6132,7 +6218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -6148,16 +6234,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
-                                                                                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                                                      HTTPResponse.Timestamp,
-                                                                                                                      HTTPResponse.EventTrackingId,
-                                                                                                                      processId,
-                                                                                                                      HTTPResponse.Runtime, 
-                                                                                                                      statusCode!,
-                                                                                                                      Request
-                                                                                                                  ),
-                                                                                                                  processId);
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime, 
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -6208,7 +6296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -6224,16 +6312,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(Request,
-                                                                                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                                                                                      HTTPResponse.Timestamp,
-                                                                                                                      HTTPResponse.EventTrackingId,
-                                                                                                                      processId,
-                                                                                                                      HTTPResponse.Runtime,
-                                                                                                                      statusCode!,
-                                                                                                                      Request
-                                                                                                                  ),
-                                                                                                                  processId);
+                                    result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargingErrorNotificationRequest>(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -6402,7 +6492,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
+                    var httpResponse = await HTTPClientFactory.Create(RemoteURL,
                                                                       VirtualHostname,
                                                                       Description,
                                                                       PreferIPv4,
@@ -6446,35 +6536,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
                                 if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
-                                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                        JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                         out var acknowledgement,
                                                                                         out var ErrorResponse,
-                                                                                        HTTPResponse,
-                                                                                        HTTPResponse.Timestamp,
-                                                                                        HTTPResponse.EventTrackingId,
-                                                                                        HTTPResponse.Runtime,
+                                                                                        httpResponse,
+                                                                                        httpResponse.Timestamp,
+                                                                                        httpResponse.EventTrackingId,
+                                                                                        httpResponse.Runtime,
                                                                                         processId,
                                                                                         CustomSendChargeDetailRecordAcknowledgementParser))
                                 {
 
                                     Counters.SendChargeDetailRecord.IncResponses_OK();
 
-                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(Request,
-                                                                                                            acknowledgement!,
-                                                                                                            processId);
+                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Success(
+                                                 Request,
+                                                 acknowledgement!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -6485,16 +6577,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargeDetailRecordRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              ),
                                              processId
@@ -6509,11 +6601,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 OK
@@ -6546,14 +6638,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.BadRequest(Request,
-                                                                                                           validationErrors,
-                                                                                                           processId);
+                                result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.BadRequest(
+                                             Request,
+                                             validationErrors,
+                                             processId
+                                         );
 
                             }
 
@@ -6561,7 +6655,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -6570,8 +6664,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized ||
-                        HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized ||
+                        httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -6609,14 +6703,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -6626,16 +6720,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(Request,
-                                                                                                           new Acknowledgement<ChargeDetailRecordRequest>(
-                                                                                                               HTTPResponse.Timestamp,
-                                                                                                               HTTPResponse.EventTrackingId,
-                                                                                                               processId,
-                                                                                                               HTTPResponse.Runtime,
-                                                                                                               statusCode!,
-                                                                                                               Request
-                                                                                                           ),
-                                                                                                           processId);
+                                    result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
+                                                 Request,
+                                                 new Acknowledgement<ChargeDetailRecordRequest>(
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
+                                                     processId,
+                                                     httpResponse.Runtime,
+                                                     statusCode!,
+                                                     Request
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
@@ -6646,16 +6742,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargeDetailRecordRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -6668,7 +6764,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
