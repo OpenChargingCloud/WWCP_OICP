@@ -1667,10 +1667,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         new SignedMeteringValue(
                             smv.SignedData.ToString(),
                             smv.Type switch {
-                                WWCP.EnergyMeteringValueTypes.Start         => MeteringStatusTypes.Start,
-                                WWCP.EnergyMeteringValueTypes.Intermediate  => MeteringStatusTypes.Progress,
-                                WWCP.EnergyMeteringValueTypes.TariffChange  => MeteringStatusTypes.Progress,
-                                WWCP.EnergyMeteringValueTypes.Stop          => MeteringStatusTypes.End,
+                                WWCP.EnergyMeteringValueTypes.Start         => MeteringStatusType.Start,
+                                WWCP.EnergyMeteringValueTypes.Intermediate  => MeteringStatusType.Progress,
+                                WWCP.EnergyMeteringValueTypes.TariffChange  => MeteringStatusType.Progress,
+                                WWCP.EnergyMeteringValueTypes.Stop          => MeteringStatusType.End,
                                 _                                           => null
                             }
                         )

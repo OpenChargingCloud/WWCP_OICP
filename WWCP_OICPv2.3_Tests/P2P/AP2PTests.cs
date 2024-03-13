@@ -708,23 +708,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                                                       EMPPartnerSessionId:              EMPPartnerSession_Id.Parse("290b96b3-57df-4021-b8f8-50d9c211c767"),
                                                                       MeterValueStart:                  3,
                                                                       MeterValueEnd:                    38,
-                                                                      MeterValuesInBetween:             new Decimal[] {
+                                                                      MeterValuesInBetween:             [
                                                                                                             4, 5 ,6
-                                                                                                        },
-                                                                      SignedMeteringValues:             new SignedMeteringValue[] {
+                                                                                                        ],
+                                                                      SignedMeteringValues:             [
                                                                                                             new SignedMeteringValue(
                                                                                                                 "loooong start...",
-                                                                                                                MeteringStatusTypes.Start
+                                                                                                                MeteringStatusType.Start
                                                                                                             ),
                                                                                                             new SignedMeteringValue(
                                                                                                                 "loooong progress...",
-                                                                                                                MeteringStatusTypes.Progress
+                                                                                                                MeteringStatusType.Progress
                                                                                                             ),
                                                                                                             new SignedMeteringValue(
                                                                                                                 "loooong end...",
-                                                                                                                MeteringStatusTypes.End
+                                                                                                                MeteringStatusType.End
                                                                                                             )
-                                                                                                        },
+                                                                                                        ],
                                                                       CalibrationLawVerificationInfo:   new CalibrationLawVerification(
                                                                                                             CalibrationLawCertificateId:                  "4c6da173-6427-49ed-9b7d-ab0c674d4bc2",
                                                                                                             PublicKey:                                    "0x046eb5c26727e9477f916eb5c26727e9477f91f872d3d79b2bd9f872d3d79b2bd9",

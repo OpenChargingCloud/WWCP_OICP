@@ -17,10 +17,11 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Diagnostics.CodeAnalysis;
 
 #endregion
 
@@ -38,22 +39,37 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// Signed metering value for a transparency software.
-        /// </summary>
-        [Mandatory]
-        public String                Value             { get; }
-
-        /// <summary>
-        /// The status of the given signed metering value.
+        /// The optional signed metering value for a transparency software.
         /// </summary>
         [Optional]
-        public MeteringStatusTypes?  MeteringStatus    { get; }
+        public String?              Value             { get; }
+
+        /// <summary>
+        /// The optional status of the given signed metering value.
+        /// </summary>
+        [Optional]
+        public MeteringStatusType?  MeteringStatus    { get; }
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?              CustomData        { get; }
+        public JObject?             CustomData        { get; }
+
+
+        /// <summary>
+        /// Whether all sub-datastructures are empty/null.
+        /// </summary>
+        public Boolean IsEmpty
+
+            => Value is null &&
+               MeteringStatus.HasValue;
+
+        /// <summary>
+        /// Whether NOT all sub-datastructures are empty/null.
+        /// </summary>
+        public Boolean IsNotEmpty
+            => !IsEmpty;
 
         #endregion
 
@@ -62,21 +78,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new signed metering value.
         /// </summary>
-        /// <param name="Value">Signed metering value for a transparency software.</param>
-        /// <param name="MeteringStatus">The status of the given signed metering value.</param>
+        /// <param name="Value">An optional signed metering value for a transparency software.</param>
+        /// <param name="MeteringStatus">An optional status of the given signed metering value.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public SignedMeteringValue(String                Value,
-                                   MeteringStatusTypes?  MeteringStatus   = null,
-                                   JObject?              CustomData       = null)
+        public SignedMeteringValue(String?              Value,
+                                   MeteringStatusType?  MeteringStatus   = null,
+                                   JObject?             CustomData       = null)
 
         {
 
-            Value = Value.Trim();
-
-            if (Value.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Value), "The given signed metering value must not be null or empty!");
-
-            this.Value           = Value;
+            this.Value           = Value?.TrimToNull();
             this.MeteringStatus  = MeteringStatus;
             this.CustomData      = CustomData;
 
@@ -168,22 +179,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Value             [optional]
 
-                if (!JSON.ParseMandatoryText("SignedMeteringValue",
-                                             "signed metering value",
-                                             out var Value,
-                                             out ErrorResponse))
-                {
-                    return false;
-                }
+                var Value = JSON["SignedMeteringValue"]?.Value<String>();
 
                 #endregion
 
                 #region Parse MeteringStatus    [optional]
 
-                if (JSON.ParseOptionalEnum("MeteringStatus",
-                                           "metering status",
-                                           out MeteringStatusTypes? MeteringStatus,
-                                           out ErrorResponse))
+                if (JSON.ParseOptional("MeteringStatus",
+                                       "metering status",
+                                       MeteringStatusType.TryParse,
+                                       out MeteringStatusType? MeteringStatus,
+                                       out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
                         return false;
@@ -233,14 +239,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("SignedMeteringValue",   Value),
+                           Value is not null
+                               ? new JProperty("SignedMeteringValue",   Value)
+                               : null,
 
                            MeteringStatus.HasValue
-                               ? new JProperty("MeteringStatus",  MeteringStatus.Value.AsString())
+                               ? new JProperty("MeteringStatus",        MeteringStatus.ToString())
                                : null,
 
                            CustomData?.HasValues == true
-                               ? new JProperty("CustomData",      CustomData)
+                               ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
@@ -260,11 +268,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public SignedMeteringValue Clone
 
-            => new (new String(Value.ToCharArray()),
-                    MeteringStatus,
-                    CustomData is not null
-                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
-                        : null);
+            => new (
+
+                   Value is not null
+                       ? new String(Value.ToCharArray())
+                       : null,
+
+                   MeteringStatus,
+
+                   CustomData is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null
+
+               );
 
         #endregion
 
@@ -412,10 +428,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Int32 CompareTo(SignedMeteringValue? SignedMeteringValue)
         {
 
-            var c = Value.CompareTo(SignedMeteringValue?.Value);
+            if (SignedMeteringValue is null)
+                throw new ArgumentNullException(nameof(SignedMeteringValue), "The given SignedMeteringValue must not be null!");
 
-            if (c == 0 && MeteringStatus.HasValue && SignedMeteringValue is not null && SignedMeteringValue.MeteringStatus.HasValue)
-                return MeteringStatus.Value.CompareTo(SignedMeteringValue.MeteringStatus.Value);
+            var c = 0;
+
+            if (         Value           is not null && SignedMeteringValue.Value is not null)
+                c = Value.               CompareTo(SignedMeteringValue.Value);
+
+            if (c == 0 && MeteringStatus.HasValue    && SignedMeteringValue.MeteringStatus.HasValue)
+                c = MeteringStatus.Value.CompareTo(SignedMeteringValue.MeteringStatus.Value);
 
             return c;
 
@@ -450,8 +472,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => SignedMeteringValue is not null &&
 
-               Value.         Equals(SignedMeteringValue.Value) &&
-               MeteringStatus.Equals(SignedMeteringValue.MeteringStatus);
+               Value?.         Equals(SignedMeteringValue.Value)          == true &&
+               MeteringStatus?.Equals(SignedMeteringValue.MeteringStatus) == true;
 
         #endregion
 
@@ -467,8 +489,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-                return Value.          GetHashCode() * 3 ^
-                      (MeteringStatus?.GetHashCode() ?? 0);
+                return (Value?.         GetHashCode() ?? 0) * 3 ^
+                       (MeteringStatus?.GetHashCode() ?? 0);
             }
         }
 
@@ -481,9 +503,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Value.SubstringMax(20),
-                             ", ",
-                             MeteringStatus);
+            => $"{Value?.SubstringMax(20) ?? ""}, {MeteringStatus}";
 
         #endregion
 

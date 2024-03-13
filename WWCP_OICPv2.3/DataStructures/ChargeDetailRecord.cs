@@ -321,7 +321,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //     "SignedMeteringValues": [{
         //         "SignedMeteringValue":                           "string",
         //         "MeteringStatus":                                "Start"
-        // 
         //     }]
         // }
 

@@ -171,11 +171,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
 
             ClassicAssert.AreEqual(3,                                                                           cdr?.SignedMeteringValues?.Count());
             ClassicAssert.AreEqual("loooong start...",                                                          cdr?.SignedMeteringValues?.ElementAt(0).Value);
-            ClassicAssert.AreEqual(MeteringStatusTypes.Start,                                                   cdr?.SignedMeteringValues?.ElementAt(0).MeteringStatus);
+            ClassicAssert.AreEqual(MeteringStatusType.Start,                                                    cdr?.SignedMeteringValues?.ElementAt(0).MeteringStatus);
             ClassicAssert.AreEqual("loooong progress...",                                                       cdr?.SignedMeteringValues?.ElementAt(1).Value);
-            ClassicAssert.AreEqual(MeteringStatusTypes.Progress,                                                cdr?.SignedMeteringValues?.ElementAt(1).MeteringStatus);
+            ClassicAssert.AreEqual(MeteringStatusType.Progress,                                                 cdr?.SignedMeteringValues?.ElementAt(1).MeteringStatus);
             ClassicAssert.AreEqual("loooong end...",                                                            cdr?.SignedMeteringValues?.ElementAt(2).Value);
-            ClassicAssert.AreEqual(MeteringStatusTypes.End,                                                     cdr?.SignedMeteringValues?.ElementAt(2).MeteringStatus);
+            ClassicAssert.AreEqual(MeteringStatusType.End,                                                      cdr?.SignedMeteringValues?.ElementAt(2).MeteringStatus);
 
             ClassicAssert.AreEqual("4c6da173-6427-49ed-9b7d-ab0c674d4bc2",                                      cdr?.CalibrationLawVerificationInfo?.CalibrationLawCertificateId);
             ClassicAssert.AreEqual("0x046eb5c26727e9477f916eb5c26727e9477f91f872d3d79b2bd9f872d3d79b2bd9",      cdr?.CalibrationLawVerificationInfo?.PublicKey);
