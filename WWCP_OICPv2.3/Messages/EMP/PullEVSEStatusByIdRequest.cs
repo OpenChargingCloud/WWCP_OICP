@@ -67,9 +67,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          JObject?              CustomData          = null,
 
                                          DateTime?             Timestamp           = null,
-                                         CancellationToken     CancellationToken   = default,
                                          EventTracking_Id?     EventTrackingId     = null,
-                                         TimeSpan?             RequestTimeout      = null)
+                                         TimeSpan?             RequestTimeout      = null,
+                                         CancellationToken     CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -81,7 +81,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             this.ProviderId  = ProviderId;
-            this.EVSEIds     = EVSEIds ?? Array.Empty<EVSE_Id>();
+            this.EVSEIds     = EVSEIds ?? [];
+
+            unchecked
+            {
+
+                hashCode = this.ProviderId.GetHashCode() * 3 ^
+                           this.EVSEIds.   CalcHashCode();
+
+            }
 
         }
 
@@ -206,15 +214,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEStatusByIdRequest = new PullEVSEStatusByIdRequest(ProviderId,
-                                                                          EVSEIds?.ToArray() ?? Array.Empty<EVSE_Id>(),
-                                                                          ProcessId,
-                                                                          customData,
+                PullEVSEStatusByIdRequest = new PullEVSEStatusByIdRequest(
 
-                                                                          Timestamp,
-                                                                          CancellationToken,
-                                                                          EventTrackingId,
-                                                                          RequestTimeout);
+                                                ProviderId,
+                                                EVSEIds?.ToArray() ?? [],
+                                                ProcessId,
+                                                customData,
+
+                                                Timestamp,
+                                                EventTrackingId,
+                                                RequestTimeout,
+                                                CancellationToken
+
+                                            );
 
                 if (CustomPullEVSEStatusByIdRequestParser is not null)
                     PullEVSEStatusByIdRequest = CustomPullEVSEStatusByIdRequestParser(JSON,
@@ -245,12 +257,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ProviderID",        ProviderId.ToString()),
+                                 new JProperty("ProviderID",   ProviderId.ToString()),
 
-                           new JProperty("EvseID",            new JArray(EVSEIds.Select(evseId => evseId.ToString()))),
+                                 new JProperty("EvseID",       new JArray(EVSEIds.Select(evseId => evseId.ToString()))),
 
                            CustomData is not null
-                               ? new JProperty("CustomData",  CustomData)
+                               ? new JProperty("CustomData",   CustomData)
                                : null
 
                        );
@@ -278,11 +290,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PullEVSEStatusByIdRequest PullEVSEStatusById2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullEVSEStatusById1, PullEVSEStatusById2))
                 return true;
 
-            // If one is null, but not both, return false.
             if ((PullEVSEStatusById1 is null) || (PullEVSEStatusById2 is null))
                 return false;
 
@@ -347,20 +357,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderId.GetHashCode() * 3 ^
-                       EVSEIds.Aggregate(0, (hashCode, evseId) => hashCode ^ evseId.GetHashCode());
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -371,8 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(ProviderId, ", ",
-                             EVSEIds.Count(), " EVSE identifications");
+            => $"{ProviderId}: {EVSEIds.Count()} EVSE identifications";
 
         #endregion
 

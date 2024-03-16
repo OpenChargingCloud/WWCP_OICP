@@ -67,9 +67,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public APagedRequest(Process_Id?           ProcessId           = null,
                              UInt32?               Page                = null,
                              UInt32?               Size                = null,
@@ -77,9 +77,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              JObject?              CustomData          = null,
 
                              DateTime?             Timestamp           = null,
-                             CancellationToken     CancellationToken   = default,
                              EventTracking_Id?     EventTrackingId     = null,
-                             TimeSpan?             RequestTimeout      = null)
+                             TimeSpan?             RequestTimeout      = null,
+                             CancellationToken     CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,

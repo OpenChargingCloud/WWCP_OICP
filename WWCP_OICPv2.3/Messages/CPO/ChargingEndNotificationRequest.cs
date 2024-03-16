@@ -363,10 +363,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Type                      [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("Type",
-                                             "charging notifications type",
-                                             out ChargingNotificationTypes Type,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("Type",
+                                         "charging notifications type",
+                                         ChargingNotificationTypesExtensions.TryParse,
+                                         out ChargingNotificationTypes Type,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -781,11 +782,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            ChargingEndNotificationRequest ChargingNotificationsEnd2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(ChargingNotificationsEnd1, ChargingNotificationsEnd2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (ChargingNotificationsEnd1 is null || ChargingNotificationsEnd2 is null)
                 return false;
 

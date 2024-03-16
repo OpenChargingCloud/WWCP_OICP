@@ -208,10 +208,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse LegalStatus             [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("legal_status",
-                                             "legal status",
-                                             out LegalStatus LegalStatus,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("legal_status",
+                                         "legal status",
+                                         OICPv2_3.LegalStatus.TryParse,
+                                         out LegalStatus LegalStatus,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

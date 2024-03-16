@@ -340,11 +340,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            ChargeDetailRecordRequest ChargeDetailRecord2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(ChargeDetailRecord1, ChargeDetailRecord2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (ChargeDetailRecord1 is null || ChargeDetailRecord2 is null)
                 return false;
 

@@ -42,28 +42,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// An enumeration of pricing product data.
         /// </summary>
         [Mandatory]
-        public IEnumerable<PricingProductData>  PricingProductData         { get; }
+        public IEnumerable<PricingProductData>  PricingProductData    { get; }
 
 
-        public UInt64?                          Number                  { get; }
-        public UInt64?                          Size                    { get; }
-        public UInt64?                          TotalElements           { get; }
-        public Boolean?                         LastPage                { get; }
-        public Boolean?                         FirstPage               { get; }
-        public UInt64?                          TotalPages              { get; }
-        public UInt64?                          NumberOfElements        { get; }
+        public UInt64?                          Number                { get; }
+        public UInt64?                          Size                  { get; }
+        public UInt64?                          TotalElements         { get; }
+        public Boolean?                         LastPage              { get; }
+        public Boolean?                         FirstPage             { get; }
+        public UInt64?                          TotalPages            { get; }
+        public UInt64?                          NumberOfElements      { get; }
 
 
         /// <summary>
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode?                      StatusCode              { get; }
+        public StatusCode?                      StatusCode            { get; }
 
         /// <summary>
         /// Optional warnings.
         /// </summary>
-        public IEnumerable<Warning>?            Warnings                { get; }
+        public IEnumerable<Warning>?            Warnings              { get; }
 
         #endregion
 
@@ -126,6 +126,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.StatusCode          = StatusCode;
             this.Warnings            = Warnings;
+
+
+            unchecked
+            {
+
+                hashCode = this.PricingProductData.CalcHashCode() * 3 ^
+                           this.StatusCode?.       GetHashCode() ?? 0;
+
+            }
 
         }
 
@@ -405,6 +414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PullPricingProductDataResponse = new PullPricingProductDataResponse(
+
                                                      ResponseTimestamp,
                                                      EventTrackingId,
                                                      ProcessId ?? Process_Id.NewRandom(),
@@ -424,6 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                      HTTPResponse,
                                                      customData,
                                                      Warnings
+
                                                  );
 
                 if (CustomPullPricingProductDataResponseParser is not null)
@@ -497,11 +508,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PullPricingProductDataResponse PullPricingProductDataResponse2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullPricingProductDataResponse1, PullPricingProductDataResponse2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PullPricingProductDataResponse1 is null || PullPricingProductDataResponse2 is null)
                 return false;
 
@@ -567,20 +576,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return PricingProductData.Aggregate(0, (hashCode, operatorEVSEData) => hashCode ^ operatorEVSEData.GetHashCode()) ^
-                       (StatusCode?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -591,10 +594,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(PricingProductData.Count() + " operator EVSE data record(s)",
-                             StatusCode is not null
-                                 ? " -> " + StatusCode.Code
-                                 : "");
+            => String.Concat(
+
+                   $"{PricingProductData.Count()} operator EVSE data record(s)",
+
+                   StatusCode is not null
+                       ? $" -> {StatusCode.Code}"
+                       : ""
+
+               );
 
         #endregion
 
@@ -639,20 +647,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <summary>
             /// An enumeration of pricing product data grouped.
             /// </summary>
-            public HashSet<PricingProductData>  PricingProductData      { get; }
+            public HashSet<PricingProductData>  PricingProductData    { get; }
 
-            public UInt64?                      Number                  { get; set; }
-            public UInt64?                      Size                    { get; set; }
-            public UInt64?                      TotalElements           { get; set; }
-            public Boolean?                     LastPage                { get; set; }
-            public Boolean?                     FirstPage               { get; set; }
-            public UInt64?                      TotalPages              { get; set; }
-            public UInt64?                      NumberOfElements        { get; set; }
+            public UInt64?                      Number                { get; set; }
+            public UInt64?                      Size                  { get; set; }
+            public UInt64?                      TotalElements         { get; set; }
+            public Boolean?                     LastPage              { get; set; }
+            public Boolean?                     FirstPage             { get; set; }
+            public UInt64?                      TotalPages            { get; set; }
+            public UInt64?                      NumberOfElements      { get; set; }
 
             /// <summary>
             /// The optional status code for this request.
             /// </summary>
-            public StatusCode.Builder           StatusCode              { get; }
+            public StatusCode.Builder           StatusCode            { get; }
 
             #endregion
 
@@ -754,7 +762,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         TotalPages,
                         NumberOfElements,
                         StatusCode,
-                        
+
                         HTTPResponse,
                         CustomData);
 

@@ -318,11 +318,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            ProviderAuthenticationData? ProviderAuthenticationData2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(ProviderAuthenticationData1, ProviderAuthenticationData2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (ProviderAuthenticationData1 is null || ProviderAuthenticationData2 is null)
                 return false;
 

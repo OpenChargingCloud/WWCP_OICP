@@ -131,8 +131,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                hashCode = ProviderAuthenticationData.Aggregate(0, (hashCode, operatorEVSEPricing) => hashCode ^ operatorEVSEPricing.GetHashCode()) ^
-                          (StatusCode?.GetHashCode() ?? 0);
+                hashCode = this.ProviderAuthenticationData.CalcHashCode() * 3 ^
+                           this.StatusCode?.               GetHashCode() ?? 0;
 
             }
 
@@ -506,11 +506,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PullAuthenticationDataResponse PullAuthenticationDataResponse2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullAuthenticationDataResponse1, PullAuthenticationDataResponse2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PullAuthenticationDataResponse1 is null || PullAuthenticationDataResponse2 is null)
                 return false;
 

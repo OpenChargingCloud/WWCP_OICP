@@ -498,11 +498,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            AuthorizeStartRequest AuthorizeStart2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(AuthorizeStart1, AuthorizeStart2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (AuthorizeStart1 is null || AuthorizeStart2 is null)
                 return false;
 

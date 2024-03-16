@@ -94,9 +94,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public GetChargeDetailRecordsRequest(Provider_Id                ProviderId,
                                              DateTime                   From,
                                              DateTime                   To,
@@ -111,9 +111,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              JObject?                   CustomData          = null,
 
                                              DateTime?                  Timestamp           = null,
-                                             CancellationToken          CancellationToken   = default,
                                              EventTracking_Id?          EventTrackingId     = null,
-                                             TimeSpan?                  RequestTimeout      = null)
+                                             TimeSpan?                  RequestTimeout      = null,
+                                             CancellationToken          CancellationToken   = default)
 
             : base(ProcessId,
                    Page,
@@ -122,19 +122,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    CustomData,
 
                    Timestamp,
-                   CancellationToken,
                    EventTrackingId,
-                   RequestTimeout)
+                   RequestTimeout,
+                   CancellationToken)
 
         {
 
             this.ProviderId    = ProviderId;
             this.From          = From;
             this.To            = To;
-
             this.SessionIds    = SessionIds;
             this.OperatorIds   = OperatorIds;
             this.CDRForwarded  = CDRForwarded;
+
+            unchecked
+            {
+
+                hashCode = this.ProviderId.   GetHashCode()        * 13 ^
+                           this.From.         GetHashCode()        * 11 ^
+                           this.To.           GetHashCode()        * 7 ^
+                          (this.SessionIds?.  CalcHashCode() ?? 0) * 5 ^
+                          (this.OperatorIds?. CalcHashCode() ?? 0) * 3 ^
+                          (this.CDRForwarded?.GetHashCode()  ?? 0);
+
+            }
 
         }
 
@@ -173,11 +184,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
 
                                                           DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken                                            CancellationToken                           = default,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
+                                                          CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null,
+                                                          CancellationToken                                            CancellationToken                           = default)
         {
 
             if (TryParse(JSON,
@@ -188,10 +198,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomGetChargeDetailRecordsRequestParser))
+                         CustomGetChargeDetailRecordsRequestParser,
+                         CancellationToken))
             {
                 return getChargeDetailRecordsRequest;
             }
@@ -224,11 +234,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        IEnumerable<String>?                                         SortOrder                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken                                            CancellationToken                           = default,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null)
+                                       CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null,
+                                       CancellationToken                                            CancellationToken                           = default)
         {
 
             try
@@ -327,24 +336,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                GetChargeDetailRecordsRequest = new GetChargeDetailRecordsRequest(ProviderId,
-                                                                                  From,
-                                                                                  To,
-                                                                                  SessionIds,
-                                                                                  OperatorIds,
-                                                                                  CDRForwarded,
+                GetChargeDetailRecordsRequest = new GetChargeDetailRecordsRequest(
+                                                    ProviderId,
+                                                    From,
+                                                    To,
+                                                    SessionIds,
+                                                    OperatorIds,
+                                                    CDRForwarded,
 
-                                                                                  ProcessId,
-                                                                                  Page,
-                                                                                  Size,
-                                                                                  SortOrder,
+                                                    ProcessId,
+                                                    Page,
+                                                    Size,
+                                                    SortOrder,
 
-                                                                                  customData,
+                                                    customData,
 
-                                                                                  Timestamp,
-                                                                                  CancellationToken,
-                                                                                  EventTrackingId,
-                                                                                  RequestTimeout);
+                                                    Timestamp,
+                                                    EventTrackingId,
+                                                    RequestTimeout,
+                                                    CancellationToken
+                                                );
 
                 if (CustomGetChargeDetailRecordsRequestParser is not null)
                     GetChargeDetailRecordsRequest = CustomGetChargeDetailRecordsRequestParser(JSON,
@@ -375,9 +386,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ProviderID",         ProviderId.ToString()),
-                           new JProperty("From",               From.      ToIso8601()),
-                           new JProperty("To",                 To.        ToIso8601()),
+                                 new JProperty("ProviderID",   ProviderId.ToString()),
+                                 new JProperty("From",         From.      ToIso8601()),
+                                 new JProperty("To",           To.        ToIso8601()),
 
                            SessionIds  is not null && SessionIds .Any()
                                ? new JProperty("SessionID",    new JArray(SessionIds. Select(sessionId  => sessionId. ToString())))
@@ -416,11 +427,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            GetChargeDetailRecordsRequest GetChargeDetailRecords2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(GetChargeDetailRecords1, GetChargeDetailRecords2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (GetChargeDetailRecords1 is null || GetChargeDetailRecords2 is null)
                 return false;
 
@@ -478,6 +487,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                From.            Equals(GetChargeDetailRecordsRequest.From)       &&
                To.              Equals(GetChargeDetailRecordsRequest.To)         &&
 
+               //ToDo: Fix me!
+
             ((!CDRForwarded.HasValue && !GetChargeDetailRecordsRequest.CDRForwarded.HasValue) ||
               (CDRForwarded.HasValue &&  GetChargeDetailRecordsRequest.CDRForwarded.HasValue && CDRForwarded.Value.Equals(GetChargeDetailRecordsRequest.CDRForwarded.Value)));
 
@@ -487,23 +498,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return  ProviderId.   GetHashCode() * 13 ^
-                        From.         GetHashCode() * 11 ^
-                        To.           GetHashCode() *  7 ^
-
-                       (CDRForwarded?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -515,11 +517,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => String.Concat(
-                   ProviderId.ToString(),
-                   ", " + From.ToIso8601(), " <> ", To.ToIso8601(),
+
+                   $"{ProviderId} from: '{From}' to: '{To}'",
+
                    CDRForwarded == true
-                       ? ", only forwarded"
-                       : "");
+                       ? " [forwarded]"
+                       : ""
+
+               );
 
         #endregion
 

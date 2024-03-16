@@ -17,7 +17,7 @@
 
 #region Usings
 
-using System;
+using System.Diagnostics.CodeAnalysis;
 
 using Newtonsoft.Json.Linq;
 
@@ -34,7 +34,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Data
 
-        private readonly Dictionary<ChargingStation_Id, ChargingStationInfo> chargingStations;
+        private readonly Dictionary<ChargingStation_Id, ChargingStationInfo> chargingStations = [];
 
         #endregion
 
@@ -65,14 +65,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (PoolId.IsNullOrEmpty)
                 throw new ArgumentNullException(nameof(PoolId), "The given pool identification must not be null or empty!");
 
-            this.OperatorInfo       = OperatorInfo   ?? throw new ArgumentNullException(nameof(OperatorInfo),    "The given OperatorInfo must not be null!");
-            this.PoolId             = PoolId;
-            this.Address            = Address        ?? throw new ArgumentNullException(nameof(Address),         "The given address must not be null!");
-            this.GeoCoordinates     = GeoCoordinates ?? throw new ArgumentNullException(nameof(GeoCoordinates),  "The given geo coordinates must not be null!");
+            this.OperatorInfo      = OperatorInfo   ?? throw new ArgumentNullException(nameof(OperatorInfo),    "The given OperatorInfo must not be null!");
+            this.PoolId            = PoolId;
+            this.Address           = Address        ?? throw new ArgumentNullException(nameof(Address),         "The given address must not be null!");
+            this.GeoCoordinates    = GeoCoordinates ?? throw new ArgumentNullException(nameof(GeoCoordinates),  "The given geo coordinates must not be null!");
 
-            this.chargingStations  = ChargingStationInfos != null
-                                          ? ChargingStationInfos.ToDictionary(station => station.StationId)
-                                          : new Dictionary<ChargingStation_Id, ChargingStationInfo>();
+            if (ChargingStationInfos is not null)
+            {
+                foreach (var chargingStationInfo in ChargingStationInfos)
+                {
+                    this.chargingStations.Add(
+                        chargingStationInfo.StationId,
+                        chargingStationInfo
+                    );
+                }
+            }
 
         }
 
@@ -85,19 +92,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             var chargingStationId = EVSE.ChargingStationId
-                                        ?? ChargingStation_Id.Generate(EVSE.OperatorId,
-                                                                       EVSE.Address,
-                                                                       EVSE.GeoCoordinates,
-                                                                       EVSE.SubOperatorName,
-                                                                       EVSE.ChargingStationName);
+                                        ?? ChargingStation_Id.Generate(
+                                               EVSE.OperatorId,
+                                               EVSE.Address,
+                                               EVSE.GeoCoordinates,
+                                               EVSE.SubOperatorName,
+                                               EVSE.ChargingStationName
+                                           );
 
             if (!chargingStations.TryGetValue(chargingStationId, out var chargingStationInfo))
             {
 
-                chargingStationInfo = new ChargingStationInfo(this,
-                                                              chargingStationId,
-                                                              EVSE.Address,
-                                                              EVSE.GeoCoordinates);
+                chargingStationInfo = new ChargingStationInfo(
+                                          this,
+                                          chargingStationId,
+                                          EVSE.Address,
+                                          EVSE.GeoCoordinates
+                                      );
 
                 chargingStations.Add(chargingStationInfo.StationId,
                                      chargingStationInfo);
@@ -119,9 +130,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ChargingPoolInfo">The parsed charging pool info.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                JSON,
-                                       out ChargingPoolInfo?  ChargingPoolInfo,
-                                       out String?            ErrorResponse)
+        public static Boolean TryParse(JObject                                     JSON,
+                                       [NotNullWhen(true)]  out ChargingPoolInfo?  ChargingPoolInfo,
+                                       [NotNullWhen(false)] out String?            ErrorResponse)
         {
 
             try
@@ -153,7 +164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("address",
                                            "charging pool address",
                                            OICPv2_3.Address.TryParse,
-                                           out Address Address,
+                                           out Address? Address,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -191,11 +202,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingPoolInfo = new ChargingPoolInfo(null,
-                                                        PoolId,
-                                                        Address,
-                                                        GeoCoordinates,
-                                                        null);
+                ChargingPoolInfo = new ChargingPoolInfo(
+                                       null,
+                                       PoolId,
+                                       Address,
+                                       GeoCoordinates,
+                                       null
+                                   );
 
                 return true;
 
@@ -221,18 +234,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => JSONObject.Create(
 
-                         new JProperty("poolId",            PoolId.              ToString()),
+                         new JProperty("poolId",             PoolId.              ToString()),
 
-                   Address != null
-                       ? new JProperty("address",           Address.             ToJSON())
+                   Address is not null
+                       ? new JProperty("address",            Address.             ToJSON())
                        : null,
 
                    GeoCoordinates.HasValue
-                       ? new JProperty("geoCoordinates",    GeoCoordinates.Value.ToJSON())
+                       ? new JProperty("geoCoordinates",     GeoCoordinates.Value.ToJSON())
                        : null,
 
                    ChargingStations.SafeAny()
-                       ? new JProperty("chargingStations",  JSONArray.Create(ChargingStations.Select(chargingStation => chargingStation.ToJSON())))
+                       ? new JProperty("chargingStations",   JSONArray.Create(ChargingStations.Select(chargingStation => chargingStation.ToJSON())))
                        : null
 
                );
@@ -307,11 +320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat("'", PoolId, "' => ",
-                             chargingStations.Count,
-                             " charging stations, ",
-                             chargingStations.SelectMany(v => v.Value.EVSEDataRecords).Count(),
-                             " EVSEs");
+            => $"'{PoolId}' => {chargingStations.Count} charging stations, {chargingStations.SelectMany(v => v.Value.EVSEDataRecords).Count()} EVSEs";
 
         #endregion
 

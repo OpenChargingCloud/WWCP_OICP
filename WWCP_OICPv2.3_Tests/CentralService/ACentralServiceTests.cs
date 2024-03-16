@@ -62,11 +62,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
         public ACentralServiceTests()
         {
 
-            this.EVSEDataRecords      = new Dictionary<Operator_Id, HashSet<EVSEDataRecord>>();
-            this.EVSEStatusRecords    = new Dictionary<Operator_Id, HashSet<EVSEStatusRecord>>();
-            this.PricingProductData   = new Dictionary<Operator_Id, HashSet<PricingProductDataRecord>>();
-            this.EVSEPricings         = new Dictionary<Operator_Id, HashSet<EVSEPricing>>();
-            this.ChargeDetailRecords  = new Dictionary<Operator_Id, HashSet<ChargeDetailRecord>>();
+            this.EVSEDataRecords      = [];
+            this.EVSEStatusRecords    = [];
+            this.PricingProductData   = [];
+            this.EVSEPricings         = [];
+            this.ChargeDetailRecords  = [];
 
         }
 
@@ -701,7 +701,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                 var processId = Process_Id.NewRandom();
 
-                if (centralServiceAPI.EMPServerAPIClients.Any())
+                if (centralServiceAPI.EMPServerAPIClients.Count != 0)
                 {
 
                     var broadcastToAll  = centralServiceAPI.EMPServerAPIClients.Values.
@@ -716,7 +716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                       response.Response.AuthorizationStatus == AuthorizationStatusTypes.Authorized).
                                                     ToArray();
 
-                    if (success.Any())
+                    if (success.Length != 0)
                         return success.First();
 
                 }
@@ -744,7 +744,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                 var processId = Process_Id.NewRandom();
 
-                if (centralServiceAPI.EMPServerAPIClients.Any())
+                if (centralServiceAPI.EMPServerAPIClients.Count != 0)
                 {
 
                     var broadcastToAll  = centralServiceAPI.EMPServerAPIClients.Values.
@@ -759,7 +759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                       response.Response.AuthorizationStatus == AuthorizationStatusTypes.Authorized).
                                                     ToArray();
 
-                    if (success.Any())
+                    if (success.Length != 0)
                         return success.First();
 
                 }
@@ -971,13 +971,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                    EventTrackingId:     EventTracking_Id.New,
                                    ProcessId:           processId,
                                    Runtime:             TimeSpan.FromMilliseconds(23),
-                                   new OperatorEVSEStatus[] {
+                                   [
                                        new OperatorEVSEStatus(EVSEDataRecords.ContainsKey(Operator_Id.Parse("DE*GEF"))
                                                                   ? EVSEStatusRecords[Operator_Id.Parse("DE*GEF")]
                                                                   : Array.Empty<EVSEStatusRecord>(),
                                                               Operator_Id.Parse("DE*GEF"),
                                                               "GraphDefined")
-                                   },
+                                   ],
                                    Request:             pullEVSEStatusRequest,
                                    StatusCode:          new StatusCode(
                                                             StatusCodes.Success
@@ -1003,7 +1003,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                    EventTrackingId:     EventTracking_Id.New,
                                    ProcessId:           processId,
                                    Runtime:             TimeSpan.FromMilliseconds(23),
-                                   Array.Empty<EVSEStatusRecord>(),
+                                   EVSEStatusRecords:   [],
                                    Request:             pullEVSEStatusByIdRequest,
                                    StatusCode:          new StatusCode(
                                                             StatusCodes.Success
@@ -1025,17 +1025,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                            OICPResult<PullEVSEStatusByOperatorIdResponse>.Success(
                                pullEVSEStatusByOperatorIdRequest,
                                new PullEVSEStatusByOperatorIdResponse(
-                                   ResponseTimestamp:   Timestamp.Now,
-                                   EventTrackingId:     EventTracking_Id.New,
-                                   ProcessId:           processId,
-                                   Runtime:             TimeSpan.FromMilliseconds(23),
-                                   Array.Empty<OperatorEVSEStatus>(),
-                                   Request:             pullEVSEStatusByOperatorIdRequest,
-                                   StatusCode:          new StatusCode(
-                                                            StatusCodes.Success
-                                                        ),
-                                   HTTPResponse:        null,
-                                   CustomData:          null
+                                   ResponseTimestamp:    Timestamp.Now,
+                                   EventTrackingId:      EventTracking_Id.New,
+                                   ProcessId:            processId,
+                                   Runtime:              TimeSpan.FromMilliseconds(23),
+                                   OperatorEVSEStatus:   [],
+                                   Request:              pullEVSEStatusByOperatorIdRequest,
+                                   StatusCode:           new StatusCode(
+                                                             StatusCodes.Success
+                                                         ),
+                                   HTTPResponse:         null,
+                                   CustomData:           null
                                ),
                                processId
                            )
@@ -1052,30 +1052,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                            OICPResult<PullPricingProductDataResponse>.Success(
                                pullPricingProductDataRequest,
                                new PullPricingProductDataResponse(
-                                   ResponseTimestamp:   Timestamp.Now,
-                                   EventTrackingId:     EventTracking_Id.New,
-                                   ProcessId:           processId,
-                                   Runtime:             TimeSpan.FromMilliseconds(23),
-                                   PricingProductData:  new PricingProductData[] {
-                                                            new PricingProductData(
-                                                                Operator_Id.Parse("DE*GEF"),
-                                                                pullPricingProductDataRequest.ProviderId,
-                                                                1.2M,
-                                                                Currency_Id.EUR,
-                                                                Reference_Unit.KILOWATT_HOUR,
-                                                                PricingProductData.ContainsKey(Operator_Id.Parse("DE*GEF"))
-                                                                    ? PricingProductData[Operator_Id.Parse("DE*GEF")]
-                                                                    : Array.Empty<PricingProductDataRecord>(),
-                                                                "GraphDefined"
-                                                            )
-                                                        },
-                                   Request:             pullPricingProductDataRequest,
-                                   StatusCode:          new StatusCode(
-                                                            StatusCodes.Success
-                                                        ),
-                                   HTTPResponse:        null,
-                                   CustomData:          null,
-                                   Warnings:            null
+                                   ResponseTimestamp:    Timestamp.Now,
+                                   EventTrackingId:      EventTracking_Id.New,
+                                   ProcessId:            processId,
+                                   Runtime:              TimeSpan.FromMilliseconds(23),
+                                   PricingProductData:   [
+                                                             new PricingProductData(
+                                                                 Operator_Id.Parse("DE*GEF"),
+                                                                 pullPricingProductDataRequest.ProviderId,
+                                                                 1.2M,
+                                                                 Currency_Id.EUR,
+                                                                 Reference_Unit.KILOWATT_HOUR,
+                                                                 PricingProductData.ContainsKey(Operator_Id.Parse("DE*GEF"))
+                                                                     ? PricingProductData[Operator_Id.Parse("DE*GEF")]
+                                                                     : Array.Empty<PricingProductDataRecord>(),
+                                                                 "GraphDefined"
+                                                             )
+                                                         ],
+                                   Request:              pullPricingProductDataRequest,
+                                   StatusCode:           new StatusCode(
+                                                             StatusCodes.Success
+                                                         ),
+                                   HTTPResponse:         null,
+                                   CustomData:           null,
+                                   Warnings:             null
                                ),
                                processId
                            )
@@ -1095,7 +1095,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                    EventTrackingId:       EventTracking_Id.New,
                                    ProcessId:             processId,
                                    Runtime:               TimeSpan.FromMilliseconds(23),
-                                   OperatorEVSEPricings:  new OperatorEVSEPricing[] {
+                                   OperatorEVSEPricings:  [
                                                               new OperatorEVSEPricing(
                                                                   EVSEPricings.ContainsKey(Operator_Id.Parse("DE*GEF"))
                                                                       ? EVSEPricings[Operator_Id.Parse("DE*GEF")]
@@ -1103,7 +1103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   Operator_Id.Parse("DE*GEF"),
                                                                   "GraphDefined"
                                                               )
-                                                          },
+                                                          ],
                                    Request:               pullEVSEPricingRequest,
                                    StatusCode:            new StatusCode(
                                                               StatusCodes.Success
@@ -1148,22 +1148,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                     cpoServerAPIClient is not null)
                 {
 
-                    return await cpoServerAPIClient.AuthorizeRemoteReservationStart(new AuthorizeRemoteReservationStartRequest(
-                                                                                        authorizeRemoteReservationStartRequest.ProviderId,
-                                                                                        authorizeRemoteReservationStartRequest.EVSEId,
-                                                                                        authorizeRemoteReservationStartRequest.Identification,
-                                                                                        authorizeRemoteReservationStartRequest.SessionId,
-                                                                                        authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
-                                                                                        authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
-                                                                                        authorizeRemoteReservationStartRequest.PartnerProductId,
-                                                                                        authorizeRemoteReservationStartRequest.Duration,
-                                                                                        processId,
-                                                                                        authorizeRemoteReservationStartRequest.CustomData,
-                                                                                        authorizeRemoteReservationStartRequest.Timestamp,
-                                                                                        authorizeRemoteReservationStartRequest.CancellationToken,
-                                                                                        authorizeRemoteReservationStartRequest.EventTrackingId,
-                                                                                        TimeSpan.FromSeconds(10)
-                                                                                    ));
+                    return await cpoServerAPIClient.AuthorizeRemoteReservationStart(
+                                     new AuthorizeRemoteReservationStartRequest(
+                                         authorizeRemoteReservationStartRequest.ProviderId,
+                                         authorizeRemoteReservationStartRequest.EVSEId,
+                                         authorizeRemoteReservationStartRequest.Identification,
+                                         authorizeRemoteReservationStartRequest.SessionId,
+                                         authorizeRemoteReservationStartRequest.CPOPartnerSessionId,
+                                         authorizeRemoteReservationStartRequest.EMPPartnerSessionId,
+                                         authorizeRemoteReservationStartRequest.PartnerProductId,
+                                         authorizeRemoteReservationStartRequest.Duration,
+                                         processId,
+                                         authorizeRemoteReservationStartRequest.CustomData,
+                                         authorizeRemoteReservationStartRequest.Timestamp,
+                                         authorizeRemoteReservationStartRequest.EventTrackingId,
+                                         TimeSpan.FromSeconds(10),
+                                         authorizeRemoteReservationStartRequest.CancellationToken
+                                     )
+                                 );
 
                 }
 
@@ -1197,19 +1199,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                     cpoServerAPIClient is not null)
                 {
 
-                    return await cpoServerAPIClient.AuthorizeRemoteReservationStop(new AuthorizeRemoteReservationStopRequest(
-                                                                                       authorizeRemoteReservationStopRequest.ProviderId,
-                                                                                       authorizeRemoteReservationStopRequest.EVSEId,
-                                                                                       authorizeRemoteReservationStopRequest.SessionId,
-                                                                                       authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
-                                                                                       authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
-                                                                                       processId,
-                                                                                       authorizeRemoteReservationStopRequest.CustomData,
-                                                                                       authorizeRemoteReservationStopRequest.Timestamp,
-                                                                                       authorizeRemoteReservationStopRequest.CancellationToken,
-                                                                                       authorizeRemoteReservationStopRequest.EventTrackingId,
-                                                                                       TimeSpan.FromSeconds(10)
-                                                                                   ));
+                    return await cpoServerAPIClient.AuthorizeRemoteReservationStop(
+                                     new AuthorizeRemoteReservationStopRequest(
+                                         authorizeRemoteReservationStopRequest.ProviderId,
+                                         authorizeRemoteReservationStopRequest.EVSEId,
+                                         authorizeRemoteReservationStopRequest.SessionId,
+                                         authorizeRemoteReservationStopRequest.CPOPartnerSessionId,
+                                         authorizeRemoteReservationStopRequest.EMPPartnerSessionId,
+                                         processId,
+                                         authorizeRemoteReservationStopRequest.CustomData,
+                                         authorizeRemoteReservationStopRequest.Timestamp,
+                                         authorizeRemoteReservationStopRequest.EventTrackingId,
+                                         TimeSpan.FromSeconds(10),
+                                         authorizeRemoteReservationStopRequest.CancellationToken
+                                     )
+                                 );
 
                 }
 
@@ -1244,21 +1248,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                     cpoServerAPIClient is not null)
                 {
 
-                    return await cpoServerAPIClient.AuthorizeRemoteStart(new AuthorizeRemoteStartRequest(
-                                                                             authorizeRemoteStartRequest.ProviderId,
-                                                                             authorizeRemoteStartRequest.EVSEId,
-                                                                             authorizeRemoteStartRequest.Identification,
-                                                                             authorizeRemoteStartRequest.SessionId,
-                                                                             authorizeRemoteStartRequest.CPOPartnerSessionId,
-                                                                             authorizeRemoteStartRequest.EMPPartnerSessionId,
-                                                                             authorizeRemoteStartRequest.PartnerProductId,
-                                                                             processId,
-                                                                             authorizeRemoteStartRequest.CustomData,
-                                                                             authorizeRemoteStartRequest.Timestamp,
-                                                                             authorizeRemoteStartRequest.CancellationToken,
-                                                                             authorizeRemoteStartRequest.EventTrackingId,
-                                                                             TimeSpan.FromSeconds(10)
-                                                                         ));
+                    return await cpoServerAPIClient.AuthorizeRemoteStart(
+                                     new AuthorizeRemoteStartRequest(
+                                         authorizeRemoteStartRequest.ProviderId,
+                                         authorizeRemoteStartRequest.EVSEId,
+                                         authorizeRemoteStartRequest.Identification,
+                                         authorizeRemoteStartRequest.SessionId,
+                                         authorizeRemoteStartRequest.CPOPartnerSessionId,
+                                         authorizeRemoteStartRequest.EMPPartnerSessionId,
+                                         authorizeRemoteStartRequest.PartnerProductId,
+                                         processId,
+                                         authorizeRemoteStartRequest.CustomData,
+                                         authorizeRemoteStartRequest.Timestamp,
+                                         authorizeRemoteStartRequest.EventTrackingId,
+                                         TimeSpan.FromSeconds(10),
+                                         authorizeRemoteStartRequest.CancellationToken
+                                     )
+                                 );
 
                 }
 
@@ -1292,19 +1298,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                     cpoServerAPIClient is not null)
                 {
 
-                    return await cpoServerAPIClient.AuthorizeRemoteStop(new AuthorizeRemoteStopRequest(
-                                                                             authorizeRemoteStopRequest.ProviderId,
-                                                                             authorizeRemoteStopRequest.EVSEId,
-                                                                             authorizeRemoteStopRequest.SessionId,
-                                                                             authorizeRemoteStopRequest.CPOPartnerSessionId,
-                                                                             authorizeRemoteStopRequest.EMPPartnerSessionId,
-                                                                             processId,
-                                                                             authorizeRemoteStopRequest.CustomData,
-                                                                             authorizeRemoteStopRequest.Timestamp,
-                                                                             authorizeRemoteStopRequest.CancellationToken,
-                                                                             authorizeRemoteStopRequest.EventTrackingId,
-                                                                             TimeSpan.FromSeconds(10)
-                                                                         ));
+                    return await cpoServerAPIClient.AuthorizeRemoteStop(
+                                     new AuthorizeRemoteStopRequest(
+                                         authorizeRemoteStopRequest.ProviderId,
+                                         authorizeRemoteStopRequest.EVSEId,
+                                         authorizeRemoteStopRequest.SessionId,
+                                         authorizeRemoteStopRequest.CPOPartnerSessionId,
+                                         authorizeRemoteStopRequest.EMPPartnerSessionId,
+                                         processId,
+                                         authorizeRemoteStopRequest.CustomData,
+                                         authorizeRemoteStopRequest.Timestamp,
+                                         authorizeRemoteStopRequest.EventTrackingId,
+                                         TimeSpan.FromSeconds(10),
+                                         authorizeRemoteStopRequest.CancellationToken
+                                     )
+                                 );
 
                 }
 
@@ -1341,7 +1349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                ResponseTimestamp:         Timestamp.Now,
                                EventTrackingId:           getChargeDetailRecordsRequest.EventTrackingId ?? EventTracking_Id.New,
                                Runtime:                   TimeSpan.FromMilliseconds(23),
-                               ChargeDetailRecords:       new ChargeDetailRecord[] {
+                               ChargeDetailRecords:       [
 
                                                               new ChargeDetailRecord(
                                                                   SessionId:                       Session_Id.NewRandom(),
@@ -1358,8 +1366,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom(),
                                                                   MeterValueStart:                 3,
                                                                   MeterValueEnd:                   38,
-                                                                  MeterValuesInBetween:            Array.Empty<Decimal>(),
-                                                                  SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
+                                                                  MeterValuesInBetween:            [],
+                                                                  SignedMeteringValues:            [],
                                                                   CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
                                                                   HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
                                                                   HubProviderId:                   Provider_Id.Parse("DE-GDF"),
@@ -1383,8 +1391,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   EMPPartnerSessionId:             EMPPartnerSession_Id.NewRandom(),
                                                                   MeterValueStart:                 3,
                                                                   MeterValueEnd:                   38,
-                                                                  MeterValuesInBetween:            Array.Empty<Decimal>(),
-                                                                  SignedMeteringValues:            Array.Empty<SignedMeteringValue>(),
+                                                                  MeterValuesInBetween:            [],
+                                                                  SignedMeteringValues:            [],
                                                                   CalibrationLawVerificationInfo:  new CalibrationLawVerification(),
                                                                   HubOperatorId:                   Operator_Id.Parse("DE*GEF"),
                                                                   HubProviderId:                   Provider_Id.Parse("DE-GDF"),
@@ -1393,7 +1401,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   InternalData:                    null
                                                               )
 
-                                                          },
+                                                          ],
                                HTTPResponse:              null,
                                ProcessId:                 processId,
                                StatusCode:                null,
@@ -1928,10 +1936,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                    Provider_Id.Parse("DE-GDF"),
                                    "Nice to see you!",
                                    "Hello world!",
-                                   new Identification[] {
+                                   [
                                        Identification.FromUID(UID.Parse("11223344")),
                                        Identification.FromUID(UID.Parse("55667788"))
-                                   }
+                                   ]
                                )
                            );
 
@@ -2028,10 +2036,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                    Provider_Id.Parse("DE-BDP"),
                                    "Nice to see you!",
                                    "Hello world!",
-                                   new Identification[] {
+                                   [
                                        Identification.FromUID(UID.Parse("11223344556677")),
                                        Identification.FromUID(UID.Parse("33445566778899"))
-                                   }
+                                   ]
                                )
                            );
 

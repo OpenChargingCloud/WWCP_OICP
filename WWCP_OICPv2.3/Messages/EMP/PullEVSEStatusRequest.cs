@@ -75,9 +75,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public PullEVSEStatusRequest(Provider_Id        ProviderId,
                                      GeoCoordinates?    SearchCenter        = null,
                                      Single?            DistanceKM          = null,
@@ -86,9 +86,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                      JObject?           CustomData          = null,
 
                                      DateTime?          Timestamp           = null,
-                                     CancellationToken  CancellationToken   = default,
                                      EventTracking_Id?  EventTrackingId     = null,
-                                     TimeSpan?          RequestTimeout      = null)
+                                     TimeSpan?          RequestTimeout      = null,
+                                     CancellationToken  CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -103,6 +103,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.SearchCenter      = SearchCenter;
             this.DistanceKM        = DistanceKM;
             this.EVSEStatusFilter  = EVSEStatusFilter;
+
+            unchecked
+            {
+
+                hashCode = this.ProviderId.       GetHashCode()       * 7 ^
+                          (this.SearchCenter?.    GetHashCode() ?? 0) * 5 ^
+                          (this.DistanceKM?.      GetHashCode() ?? 0) * 3 ^
+                          (this.EVSEStatusFilter?.GetHashCode() ?? 0);
+
+            }
 
         }
 
@@ -147,11 +157,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                   Process_Id?                                          ProcessId                           = null,
 
                                                   DateTime?                                            Timestamp                           = null,
-                                                  CancellationToken                                    CancellationToken                   = default,
                                                   EventTracking_Id?                                    EventTrackingId                     = null,
                                                   TimeSpan?                                            RequestTimeout                      = null,
-
-                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null)
+                                                  CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null,
+                                                  CancellationToken                                    CancellationToken                   = default)
         {
 
             if (TryParse(JSON,
@@ -159,10 +168,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPullEVSEStatusRequestParser))
+                         CustomPullEVSEStatusRequestParser,
+                         CancellationToken))
             {
                 return pullEVSEStatusResponse;
             }
@@ -189,11 +198,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Process_Id?                                          ProcessId                           = null,
 
                                        DateTime?                                            Timestamp                           = null,
-                                       CancellationToken                                    CancellationToken                   = default,
                                        EventTracking_Id?                                    EventTrackingId                     = null,
                                        TimeSpan?                                            RequestTimeout                      = null,
-
-                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null)
+                                       CustomJObjectParserDelegate<PullEVSEStatusRequest>?  CustomPullEVSEStatusRequestParser   = null,
+                                       CancellationToken                                    CancellationToken                   = default)
         {
 
             try
@@ -279,18 +287,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEStatusRequest = new PullEVSEStatusRequest(ProviderId,
-                                                                  SearchCenter,
-                                                                  DistanceKM,
-                                                                  EVSEStatusFilter,
-                                                                  ProcessId,
+                PullEVSEStatusRequest = new PullEVSEStatusRequest(
 
-                                                                  customData,
+                                            ProviderId,
+                                            SearchCenter,
+                                            DistanceKM,
+                                            EVSEStatusFilter,
+                                            ProcessId,
 
-                                                                  Timestamp,
-                                                                  CancellationToken,
-                                                                  EventTrackingId,
-                                                                  RequestTimeout);
+                                            customData,
+
+                                            Timestamp,
+                                            EventTrackingId,
+                                            RequestTimeout,
+                                            CancellationToken
+
+                                        );
 
                 if (CustomPullEVSEStatusRequestParser is not null)
                     PullEVSEStatusRequest = CustomPullEVSEStatusRequestParser(JSON,
@@ -323,21 +335,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ProviderID",                    ProviderId.            ToString()),
+                                 new JProperty("ProviderID",     ProviderId.            ToString()),
 
                            SearchCenter.HasValue && DistanceKM.HasValue
-                               ? new JProperty("SearchCenter",            new JObject(
-                                                                              new JProperty("GeoCoordinates",  SearchCenter.Value.ToJSON(CustomGeoCoordinatesSerializer)),
-                                                                              new JProperty("Radius",          DistanceKM.Value)
-                                                                          ))
+                               ? new JProperty("SearchCenter",   new JObject(
+                                                                     new JProperty("GeoCoordinates",  SearchCenter.Value.ToJSON(CustomGeoCoordinatesSerializer)),
+                                                                     new JProperty("Radius",          DistanceKM.Value)
+                                                                 ))
                                : null,
 
                            EVSEStatusFilter.HasValue
-                               ? new JProperty("EvseStatus",              EVSEStatusFilter.Value.AsString())
+                               ? new JProperty("EvseStatus",     EVSEStatusFilter.Value.AsString())
                                : null,
 
                            CustomData is not null
-                               ? new JProperty("CustomData",              CustomData)
+                               ? new JProperty("CustomData",     CustomData)
                                : null
 
                        );
@@ -365,11 +377,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PullEVSEStatusRequest PullEVSEStatus2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullEVSEStatus1, PullEVSEStatus2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PullEVSEStatus1 is null || PullEVSEStatus2 is null)
                 return false;
 
@@ -440,22 +450,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return  ProviderId.       GetHashCode()       * 7 ^
-                       (SearchCenter?.    GetHashCode() ?? 0) * 5 ^
-                       (DistanceKM?.      GetHashCode() ?? 0) * 3 ^
-                       (EVSEStatusFilter?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -467,13 +469,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => new String[] {
+
                    ProviderId.ToString(),
+
                    SearchCenter.HasValue && DistanceKM.HasValue
-                       ? SearchCenter.ToString() + " / " + DistanceKM + " km"
+                       ? $"{SearchCenter} / {DistanceKM} km"
                        : "",
+
                    EVSEStatusFilter.HasValue
                        ? EVSEStatusFilter.Value.ToString()
                        : ""
+
                }.Where(text => text.IsNotNullOrEmpty()).
                  AggregateWith(", ");
 

@@ -89,12 +89,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                hashCode = this.Periods.Aggregate(0, (hashCode, period) => hashCode ^ period.GetHashCode()) ^
-                           this.On.     GetHashCode() * 3 ^
-
-                           (this.UnstructuredOpeningTime is not null && this.UnstructuredOpeningTime.IsNullOrEmpty()
-                               ? this.UnstructuredOpeningTime.GetHashCode()
-                               : 0);
+                hashCode = this.Periods.                 CalcHashCode() * 5 ^
+                           this.On.                      GetHashCode()  * 3 ^
+                           this.UnstructuredOpeningTime?.GetHashCode() ?? 0;
 
             }
 
@@ -205,10 +202,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse On                    [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("on",
-                                             "on days of the week",
-                                             out DaysOfWeek On,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("on",
+                                         "on days of the week",
+                                         DaysOfWeekExtensions.TryParse,
+                                         out DaysOfWeek On,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

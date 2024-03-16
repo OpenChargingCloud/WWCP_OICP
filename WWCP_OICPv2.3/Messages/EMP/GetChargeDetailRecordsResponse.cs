@@ -48,8 +48,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
-#pragma warning disable IDE0290 // Use primary constructor
-
         /// <summary>
         /// Create a new GetChargeDetailRecords response.
         /// </summary>
@@ -106,9 +104,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.ChargeDetailRecords = ChargeDetailRecords ?? throw new ArgumentNullException(nameof(ChargeDetailRecords), "The given enumeration of charge detail records must not be null!");
 
-        }
+            unchecked
+            {
 
-#pragma warning restore IDE0290 // Use primary constructor
+                hashCode = base.GetHashCode() * 3 ^
+                           ChargeDetailRecords.CalcHashCode();
+
+            }
+
+        }
 
         #endregion
 
@@ -508,20 +512,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return base.GetHashCode() ^
-                       ChargeDetailRecords.Aggregate(0, (hashCode, operatorEVSEStatus) => hashCode ^ operatorEVSEStatus.GetHashCode());
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

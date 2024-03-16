@@ -308,11 +308,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            SignedMeteringValue? SignedMeteringValue2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(SignedMeteringValue1, SignedMeteringValue2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (SignedMeteringValue1 is null || SignedMeteringValue2 is null)
                 return false;
 

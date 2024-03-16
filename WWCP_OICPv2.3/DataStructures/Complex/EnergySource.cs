@@ -186,10 +186,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse EnergyType     [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("Energy",
-                                             "energy type",
-                                             out EnergyTypes EnergyType,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("Energy",
+                                         "energy type",
+                                         EnergyTypesExtensions.TryParse,
+                                         out EnergyTypes EnergyType,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

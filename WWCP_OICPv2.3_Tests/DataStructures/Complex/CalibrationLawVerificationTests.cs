@@ -126,7 +126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
         public void CalibrationLawVerification_ParseJSON_Test1()
         {
 
-            var calibrationLawVerification1a = CalibrationLawVerification.Parse(new JObject());
+            var calibrationLawVerification1a = CalibrationLawVerification.Parse([]);
 
             ClassicAssert.IsNotNull     (calibrationLawVerification1a);
             ClassicAssert.IsNull        (calibrationLawVerification1a.CalibrationLawCertificateId);

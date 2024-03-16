@@ -97,9 +97,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    CustomData,
 
                    Timestamp,
-                   CancellationToken,
                    EventTrackingId,
-                   RequestTimeout)
+                   RequestTimeout,
+                   CancellationToken)
 
         {
 
@@ -110,9 +110,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                hashCode = ProviderId. GetHashCode()  * 5 ^
-                           OperatorIds.CalcHashCode() * 3 ^
-                           LastCall?.  GetHashCode() ?? 0;
+                hashCode = this.ProviderId. GetHashCode()  * 5 ^
+                           this.OperatorIds.CalcHashCode() * 3 ^
+                           this.LastCall?.  GetHashCode() ?? 0;
 
             }
 
@@ -340,15 +340,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEPricing1">An pull EVSE data request.</param>
         /// <param name="PullEVSEPricing2">Another pull EVSE data request.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (PullEVSEPricingRequest PullEVSEPricing1, PullEVSEPricingRequest PullEVSEPricing2)
+        public static Boolean operator == (PullEVSEPricingRequest PullEVSEPricing1,
+                                           PullEVSEPricingRequest PullEVSEPricing2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullEVSEPricing1, PullEVSEPricing2))
                 return true;
 
-            // If one is null, but not both, return false.
-            if (((Object) PullEVSEPricing1 == null) || ((Object) PullEVSEPricing2 == null))
+            if (PullEVSEPricing1 is null || PullEVSEPricing2 is null)
                 return false;
 
             return PullEVSEPricing1.Equals(PullEVSEPricing2);
@@ -365,7 +364,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEPricing1">An pull EVSE data request.</param>
         /// <param name="PullEVSEPricing2">Another pull EVSE data request.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (PullEVSEPricingRequest PullEVSEPricing1, PullEVSEPricingRequest PullEVSEPricing2)
+        public static Boolean operator != (PullEVSEPricingRequest PullEVSEPricing1,
+                                           PullEVSEPricingRequest PullEVSEPricing2)
 
             => !(PullEVSEPricing1 == PullEVSEPricing2);
 

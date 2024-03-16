@@ -32,8 +32,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
-    public abstract class AResponse<TRequest, TResponse> : IResponse,
-                                                           IEquatable<TResponse>
+    /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+    /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+    /// <param name="ProcessId">The server side process identification of the request.</param>
+    /// <param name="Runtime">The runtime of the request/response.</param>
+    /// 
+    /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
+    /// <param name="HTTPResponse">The optional HTTP response.</param>
+    /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+    /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+    public abstract class AResponse<TRequest, TResponse>(DateTime                ResponseTimestamp,
+                                                         EventTracking_Id        EventTrackingId,
+                                                         Process_Id              ProcessId,
+                                                         TimeSpan                Runtime,
+
+                                                         TRequest?               Request        = null,
+                                                         HTTPResponse?           HTTPResponse   = null,
+                                                         JObject?                CustomData     = null,
+                                                         UserDefinedDictionary?  InternalData   = null) : IResponse,
+                                                                                                          IEquatable<TResponse>
 
         where TRequest  : class, IRequest
         where TResponse : class, IResponse
@@ -46,86 +63,47 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp of the response creation.
         /// </summary>
         [Mandatory]
-        public DateTime                ResponseTimestamp    { get; }
+        public DateTime                ResponseTimestamp    { get; }      = ResponseTimestamp;
 
         /// <summary>
         /// An optional event tracking identification for correlating this response with other events.
         /// </summary>
-        public EventTracking_Id        EventTrackingId      { get; }
+        public EventTracking_Id        EventTrackingId      { get; }      = EventTrackingId;
 
         /// <summary>
         /// The runtime of the request/response.
         /// </summary>
-        public TimeSpan                Runtime              { get; }
+        public TimeSpan                Runtime              { get; }      = Runtime;
 
         /// <summary>
         /// The request leading to this response.
         /// Might be null, when the request was not parsable!
         /// </summary>
         [Optional]
-        public TRequest?               Request              { get; }
+        public TRequest?               Request              { get; }      = Request;
 
         /// <summary>
         /// The HTTP response.
         /// </summary>
         [Optional]
-        public HTTPResponse?           HTTPResponse         { get; }
+        public HTTPResponse?           HTTPResponse         { get; }      = HTTPResponse;
 
         /// <summary>
         /// The server side process identification of the request.
         /// </summary>
         [Mandatory]
-        public Process_Id              ProcessId            { get; }
+        public Process_Id              ProcessId            { get; }      = ProcessId;
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?                CustomData           { get; set; }
+        public JObject?                CustomData           { get; set; } = CustomData;
 
         /// <summary>
         /// Optional internal customer specific data, which will not be serialized.
         /// </summary>
-        public UserDefinedDictionary?  InternalData         { get; set; }
-
-        #endregion
-
-        #region Constructor(s)
-
-        /// <summary>
-        /// Create a new generic response.
-        /// </summary>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="ProcessId">The server side process identification of the request.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// 
-        /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
-        protected AResponse(DateTime                ResponseTimestamp,
-                            EventTracking_Id        EventTrackingId,
-                            Process_Id              ProcessId,
-                            TimeSpan                Runtime,
-
-                            TRequest?               Request        = null,
-                            HTTPResponse?           HTTPResponse   = null,
-                            JObject?                CustomData     = null,
-                            UserDefinedDictionary?  InternalData   = null)
-        {
-
-            this.ResponseTimestamp  = ResponseTimestamp;
-            this.EventTrackingId    = EventTrackingId;
-            this.ProcessId          = ProcessId;
-            this.Runtime            = Runtime;
-
-            this.Request            = Request;
-            this.HTTPResponse       = HTTPResponse;
-            this.CustomData         = CustomData;
-            this.InternalData       = InternalData;
-
-        }
+        public UserDefinedDictionary?  InternalData         { get; set; } = InternalData;
 
         #endregion
 
@@ -210,6 +188,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new generic response.
             /// </summary>
@@ -241,6 +221,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.InternalData       = InternalData;
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

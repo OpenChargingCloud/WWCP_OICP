@@ -117,7 +117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            this.Power.        GetHashCode()       *  7 ^
                           (this.Voltage?.     GetHashCode() ?? 0) *  5 ^
                           (this.Amperage?.    GetHashCode() ?? 0) *  3 ^
-                           this.ChargingModes.Aggregate(0, (hashCode, chargingMode) => hashCode ^ chargingMode.GetHashCode());
+                           this.ChargingModes.CalcHashCode();
 
             }
 
@@ -239,10 +239,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse PowerType         [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("PowerType",
-                                             "power type",
-                                             out PowerTypes PowerType,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("PowerType",
+                                         "power type",
+                                         PowerTypesExtensions.TryParse,
+                                         out PowerTypes PowerType,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

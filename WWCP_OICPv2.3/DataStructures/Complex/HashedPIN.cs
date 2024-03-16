@@ -201,10 +201,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse Function    [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("Function",
-                                             "hash function",
-                                             out HashFunctions Function,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("Function",
+                                         "hash function",
+                                         HashFunctionExtensions.TryParse,
+                                         out HashFunctions Function,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

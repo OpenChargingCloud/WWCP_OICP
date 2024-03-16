@@ -94,8 +94,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                hashCode = this.OperatorEVSEStatus.Aggregate(0, (hashCode, operatorEVSEStatus) => hashCode ^ operatorEVSEStatus.GetHashCode()) ^
-                          (this.StatusCode?.GetHashCode() ?? 0);
+                hashCode = this.OperatorEVSEStatus.CalcHashCode() * 3 ^
+                           this.StatusCode?.       GetHashCode() ?? 0;
 
             }
 
@@ -423,10 +423,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorEVSEStatus.Count() + " operator EVSE status record(s)",
-                             StatusCode is not null
-                                 ? " -> " + StatusCode.Code
-                                 : "");
+            => String.Concat(
+
+                   $"{OperatorEVSEStatus.Count()} operator EVSE status record(s)",
+
+                   StatusCode is not null
+                       ? $" -> {StatusCode.Code}"
+                       : ""
+
+               );
 
         #endregion
 

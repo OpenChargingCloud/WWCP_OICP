@@ -280,11 +280,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            StatusCode? StatusCode2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(StatusCode1, StatusCode2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (StatusCode1 is null || StatusCode2 is null)
                 return false;
 

@@ -18,6 +18,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
@@ -35,10 +36,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Data
 
-        private Regex MappedCharactersRegEx  = new Regex("[_/\\-]");
-        private Regex InvalidCharactersRegEx = new Regex("[^A-Z0-9\\*]");
+        private readonly Dictionary<EVSE_Id, EVSEDataRecord>  EVSEs                   = [];
 
-        private readonly Dictionary<EVSE_Id, EVSEDataRecord> EVSEs;
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+        private readonly Regex                                MappedCharactersRegEx   = new ("[_/\\-]");
+        private readonly Regex                                InvalidCharactersRegEx  = new ("[^A-Z0-9\\*]");
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
         #endregion
 
@@ -71,9 +74,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Address         = Address        ?? throw new ArgumentNullException(nameof(Address),         "The given address must not be null!");
             this.GeoCoordinates  = GeoCoordinates ?? throw new ArgumentNullException(nameof(GeoCoordinates),  "The given geo coordinates must not be null!");
 
-            this.EVSEs           = EVSEs is not null
-                                       ? EVSEs.ToDictionary(evse => evse.Id)
-                                       : new Dictionary<EVSE_Id, EVSEDataRecord>();
+            if (EVSEs is not null)
+            {
+                foreach (var evse in EVSEs)
+                {
+                    this.EVSEs.Add(
+                        evse.Id,
+                        evse
+                    );
+                }
+            }
 
         }
 
@@ -85,11 +95,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public void AddOrUpdateEVSE(EVSEDataRecord EVSE)
         {
 
-            if (!EVSEs.ContainsKey(EVSE.Id))
-                EVSEs.Add(EVSE.Id, EVSE);
-
-            else
-                DebugX.Log("Duplicate EVSE identification: '" + EVSE.Id + "'!");
+            if (!EVSEs.TryAdd(EVSE.Id, EVSE))
+                DebugX.Log($"Duplicate EVSE identification: '{EVSE.Id}'!");
 
         }
 
@@ -104,9 +111,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ChargingStationInfo">The parsed charging station info.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                   JSON,
-                                       out ChargingStationInfo?  ChargingStationInfo,
-                                       out String?               ErrorResponse)
+        public static Boolean TryParse(JObject                                        JSON,
+                                       [NotNullWhen(true)]  out ChargingStationInfo?  ChargingStationInfo,
+                                       [NotNullWhen(false)] out String?               ErrorResponse)
         {
 
             try
@@ -138,7 +145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("address",
                                            "charging station address",
                                            OICPv2_3.Address.TryParse,
-                                           out Address Address,
+                                           out Address? Address,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -176,11 +183,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingStationInfo = new ChargingStationInfo(null,
-                                                              StationId,
-                                                              Address,
-                                                              GeoCoordinates,
-                                                              EVSEDataRecords);
+                ChargingStationInfo = new ChargingStationInfo(
+                                          null,
+                                          StationId,
+                                          Address,
+                                          GeoCoordinates,
+                                          EVSEDataRecords
+                                      );
 
                 return true;
 
@@ -284,7 +293,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
-            => String.Concat("'", StationId, "' / '", StationId, "' => ", EVSEs.Count, " EVSEs");
+
+            => $"'{ChargePoolInfo.PoolId}' / '{StationId}' => {EVSEs.Count} EVSEs";
 
         #endregion
 

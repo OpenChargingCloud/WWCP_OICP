@@ -47,27 +47,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new PullEVSEDataRequest(ProviderId:                             Provider_Id.Parse("DE-GDF"),
-                                                  LastCall:                               null,
-                                                  OperatorIdFilter:                       null,
-                                                  CountryCodeFilter:                      null,
-                                                  AccessibilityFilter:                    null,
-                                                  AuthenticationModeFilter:               null,
-                                                  CalibrationLawDataAvailabilityFilter:   null,
-                                                  RenewableEnergyFilter:                  null,
-                                                  IsHubjectCompatibleFilter:              null,
-                                                  IsOpen24HoursFilter:                    null,
+            var request = new PullEVSEDataRequest(
+                              ProviderId:                             Provider_Id.Parse("DE-GDF"),
+                              LastCall:                               null,
+                              OperatorIdFilter:                       null,
+                              CountryCodeFilter:                      null,
+                              AccessibilityFilter:                    null,
+                              AuthenticationModeFilter:               null,
+                              CalibrationLawDataAvailabilityFilter:   null,
+                              RenewableEnergyFilter:                  null,
+                              IsHubjectCompatibleFilter:              null,
+                              IsOpen24HoursFilter:                    null,
 
-                                                  SearchCenter:                           null,
-                                                  DistanceKM:                             null,
-                                                  GeoCoordinatesResponseFormat:           GeoCoordinatesFormats.DecimalDegree,
+                              SearchCenter:                           null,
+                              DistanceKM:                             null,
+                              GeoCoordinatesResponseFormat:           GeoCoordinatesFormats.DecimalDegree,
 
-                                                  Page:                                   null,
-                                                  Size:                                   null,
-                                                  SortOrder:                              null,
-                                                  CustomData:                             null,
+                              Page:                                   null,
+                              Size:                                   null,
+                              SortOrder:                              null,
+                              CustomData:                             null,
 
-                                                  RequestTimeout:                         TimeSpan.FromSeconds(10));
+                              RequestTimeout:                         TimeSpan.FromSeconds(10)
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -127,17 +129,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new PullEVSEStatusRequest(ProviderId:           Provider_Id.Parse("DE-GDF"),
-                                                    SearchCenter:         null,
-                                                    DistanceKM:           null,
-                                                    EVSEStatusFilter:     EVSEStatusTypes.Reserved,
+            var request = new PullEVSEStatusRequest(
+                              ProviderId:           Provider_Id.Parse("DE-GDF"),
+                              SearchCenter:         null,
+                              DistanceKM:           null,
+                              EVSEStatusFilter:     EVSEStatusTypes.Reserved,
 
-                                                    //Page:                 null,
-                                                    //Size:                 null,
-                                                    //SortOrder:            null,
-                                                    //CustomStatus:         null,
+                              //Page:                 null,
+                              //Size:                 null,
+                              //SortOrder:            null,
+                              //CustomStatus:         null,
 
-                                                    RequestTimeout:       TimeSpan.FromSeconds(10));
+                              RequestTimeout:       TimeSpan.FromSeconds(10)
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -196,17 +200,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new PullEVSEStatusRequest(ProviderId:           Provider_Id.Parse("DE-GDF"),
-                                                    SearchCenter:         null,
-                                                    DistanceKM:           null,
-                                                    EVSEStatusFilter:     null,
+            var request = new PullEVSEStatusRequest(
+                              ProviderId:           Provider_Id.Parse("DE-GDF"),
+                              SearchCenter:         null,
+                              DistanceKM:           null,
+                              EVSEStatusFilter:     null,
 
-                                                    //Page:                 null,
-                                                    //Size:                 null,
-                                                    //SortOrder:            null,
-                                                    //CustomStatus:         null,
+                              //Page:                 null,
+                              //Size:                 null,
+                              //SortOrder:            null,
+                              //CustomStatus:         null,
 
-                                                    RequestTimeout:       TimeSpan.FromSeconds(10));
+                              RequestTimeout:       TimeSpan.FromSeconds(10)
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -235,27 +241,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
 
                 var operatorEVSEStatus  = oicpResult.Response?.OperatorEVSEStatus.FirstOrDefault();
                 ClassicAssert.IsNotNull(operatorEVSEStatus);
-                ClassicAssert.AreEqual ("GraphDefined",                         operatorEVSEStatus.OperatorName);
-                ClassicAssert.AreEqual (2,                                      operatorEVSEStatus.EVSEStatusRecords.Count());
 
-                var operatorEVSEStatus1 = operatorEVSEStatus.EVSEStatusRecords.ElementAt(0);
-                ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   operatorEVSEStatus1.Id);
-                ClassicAssert.AreEqual (EVSEStatusTypes.Available,              operatorEVSEStatus1.Status);
+                if (operatorEVSEStatus is not null)
+                {
 
-                var operatorEVSEStatus2 = operatorEVSEStatus.EVSEStatusRecords.ElementAt(1);
-                ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*2"),   operatorEVSEStatus2.Id);
-                ClassicAssert.AreEqual (EVSEStatusTypes.Occupied,               operatorEVSEStatus2.Status);
+                    ClassicAssert.AreEqual ("GraphDefined",                         operatorEVSEStatus.OperatorName);
+                    ClassicAssert.AreEqual (2,                                      operatorEVSEStatus.EVSEStatusRecords.Count());
+
+                    var operatorEVSEStatus1 = operatorEVSEStatus.EVSEStatusRecords.ElementAt(0);
+                    ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   operatorEVSEStatus1.Id);
+                    ClassicAssert.AreEqual (EVSEStatusTypes.Available,              operatorEVSEStatus1.Status);
+
+                    var operatorEVSEStatus2 = operatorEVSEStatus.EVSEStatusRecords.ElementAt(1);
+                    ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*2"),   operatorEVSEStatus2.Id);
+                    ClassicAssert.AreEqual (EVSEStatusTypes.Occupied,               operatorEVSEStatus2.Status);
 
 
-                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Requests_OK);
-                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
-                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Responses_OK);
-                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
+                    ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Requests_OK);
+                    ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Requests_Error);
+                    ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatus.Responses_OK);
+                    ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatus.Responses_Error);
 
-                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
-                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
-                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
-                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
+                    ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_OK);
+                    ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Requests_Error);
+                    ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_OK);
+                    ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatus.Responses_Error);
+
+                }
 
             }
             else
@@ -279,11 +291,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new PullEVSEStatusByIdRequest(ProviderId:             Provider_Id.Parse("DE-GDF"),
-                                                        EVSEIds:                new EVSE_Id[] {
-                                                                                    EVSE_Id.Parse("DE*XXX*E1234567*A*X")
-                                                                                },
-                                                        RequestTimeout:         TimeSpan.FromSeconds(10));
+            var request = new PullEVSEStatusByIdRequest(
+                              ProviderId:      Provider_Id.Parse("DE-GDF"),
+                              EVSEIds:         [ EVSE_Id.Parse("DE*XXX*E1234567*A*X") ],
+                              RequestTimeout:  TimeSpan.FromSeconds(10)
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -342,11 +354,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 return;
             }
 
-            var request = new PullEVSEStatusByIdRequest(ProviderId:             Provider_Id.Parse("DE-GDF"),
-                                                        EVSEIds:                new EVSE_Id[] {
-                                                                                    EVSE_Id.Parse("DE*GEF*E1234567*A*1")
-                                                                                },
-                                                        RequestTimeout:         TimeSpan.FromSeconds(10));
+            var request = new PullEVSEStatusByIdRequest(
+                              ProviderId:             Provider_Id.Parse("DE-GDF"),
+                              EVSEIds:                [ EVSE_Id.Parse("DE*GEF*E1234567*A*1") ],
+                              RequestTimeout:         TimeSpan.FromSeconds(10)
+                          );
 
             ClassicAssert.IsNotNull(request);
 
@@ -374,19 +386,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 ClassicAssert.IsTrue   (oicpResult.Response?.EVSEStatusRecords.Any());
 
                 var evseStatusRecord1 = oicpResult.Response?.EVSEStatusRecords.ElementAt(0);
-                ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   evseStatusRecord1.Value.Id);
-                ClassicAssert.AreEqual (EVSEStatusTypes.Available,              evseStatusRecord1.Value.Status);
+                ClassicAssert.IsNotNull(evseStatusRecord1);
+
+                if (evseStatusRecord1 is not null)
+                {
+
+                    ClassicAssert.AreEqual (EVSE_Id.Parse("DE*GEF*E1234567*A*1"),   evseStatusRecord1.Value.Id);
+                    ClassicAssert.AreEqual (EVSEStatusTypes.Available,              evseStatusRecord1.Value.Status);
 
 
-                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Requests_OK);
-                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
-                ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Responses_OK);
-                ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
+                    ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Requests_OK);
+                    ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Requests_Error);
+                    ClassicAssert.AreEqual(1, empClient.                Counters.PullEVSEStatusById.Responses_OK);
+                    ClassicAssert.AreEqual(0, empClient.                Counters.PullEVSEStatusById.Responses_Error);
 
-                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
-                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
-                ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
-                ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+                    ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_OK);
+                    ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Requests_Error);
+                    ClassicAssert.AreEqual(1, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_OK);
+                    ClassicAssert.AreEqual(0, cpoP2P_DEGEF.EMPClientAPI.Counters.PullEVSEStatusById.Responses_Error);
+
+                }
 
             }
             else

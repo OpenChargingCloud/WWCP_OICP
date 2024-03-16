@@ -95,8 +95,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                hashCode = this.EVSEStatusRecords.Aggregate(0, (hashCode, evseStatusRecord) => hashCode ^ evseStatusRecord.GetHashCode()) ^
-                          (this.StatusCode?.GetHashCode() ?? 0);
+                hashCode = this.EVSEStatusRecords.CalcHashCode() * 3 ^
+                           this.StatusCode?.      GetHashCode() ?? 0;
 
             }
 
@@ -252,6 +252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PullEVSEStatusByIdResponse = new PullEVSEStatusByIdResponse(
+
                                                  ResponseTimestamp,
                                                  EventTrackingId,
                                                  ProcessId ?? Process_Id.NewRandom(),
@@ -262,6 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  StatusCode,
                                                  HTTPResponse,
                                                  customData
+
                                              );
 
                 if (CustomPullEVSEStatusByIdResponseParser is not null)
@@ -330,11 +332,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PullEVSEStatusByIdResponse PullEVSEStatusByIdResponse2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullEVSEStatusByIdResponse1, PullEVSEStatusByIdResponse2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PullEVSEStatusByIdResponse1 is null || PullEVSEStatusByIdResponse2 is null)
                 return false;
 

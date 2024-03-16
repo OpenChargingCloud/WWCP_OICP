@@ -1067,11 +1067,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            AuthorizationStopResponse AuthorizationStop2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(AuthorizationStop1, AuthorizationStop2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (AuthorizationStop1 is null || AuthorizationStop2 is null)
                 return false;
 

@@ -471,11 +471,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PricingProductData? PricingProductData2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PricingProductData1, PricingProductData2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PricingProductData1 is null || PricingProductData2 is null)
                 return false;
 

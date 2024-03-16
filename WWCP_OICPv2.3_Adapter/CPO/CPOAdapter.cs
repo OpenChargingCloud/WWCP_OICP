@@ -46,11 +46,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Data
 
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
         private static readonly  Regex                                             pattern                             = new (@"\s=\s");
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
         public  static readonly  WWCP.ChargingStationOperatorNameSelectorDelegate  DefaultOperatorNameSelector         = I18N => I18N.FirstText();
 
-        private readonly         HashSet<WWCP.EVSE_Id>                             successfullyUploadedEVSEs           = new ();
+        private readonly         HashSet<WWCP.EVSE_Id>                             successfullyUploadedEVSEs           = [];
 
 
         /// <summary>
@@ -382,43 +384,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 #region Request transformation
 
-                TimeSpan?           Duration           = null;
-                DateTime?           ReservationStartTime          = null;
-                PartnerProduct_Id?  PartnerProductId   = Request.PartnerProductId;
+                TimeSpan?           Duration               = null;
+                DateTime?           ReservationStartTime   = null;
+                PartnerProduct_Id?  PartnerProductId       = Request.PartnerProductId;
 
                 // Analyse the ChargingProductId field and apply the found key/value-pairs
-                if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
+                if (PartnerProductId?.ToString() is String partnerProductId)
                 {
 
-                    var Elements = pattern.Replace(PartnerProductId.ToString(), "=").Split('|').ToArray();
+                    var elements = pattern.Replace(partnerProductId, "=").Split('|').ToArray();
 
-                    if (Elements.Length > 0)
+                    if (elements.Length > 0)
                     {
 
-                        var DurationText = Elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
-                        if (DurationText.IsNotNullOrEmpty())
+                        var durationText = elements.FirstOrDefault(element => element.StartsWith("D=", StringComparison.InvariantCulture));
+                        if (durationText is not null && durationText.IsNotNullOrEmpty())
                         {
 
-                            DurationText = DurationText.Substring(2);
+                            durationText = durationText[2..];
 
-                            if (DurationText.EndsWith("sec", StringComparison.InvariantCulture))
-                                Duration = TimeSpan.FromSeconds(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+                            if (durationText.EndsWith("sec", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromSeconds(UInt32.Parse(durationText[..^3]));
 
-                            if (DurationText.EndsWith("min", StringComparison.InvariantCulture))
-                                Duration = TimeSpan.FromMinutes(UInt32.Parse(DurationText.Substring(0, DurationText.Length - 3)));
+                            if (durationText.EndsWith("min", StringComparison.InvariantCulture))
+                                Duration = TimeSpan.FromMinutes(UInt32.Parse(durationText[..^3]));
 
                         }
 
-                        var PartnerProductText = Elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
-                        if (PartnerProductText.IsNotNullOrEmpty())
+                        var partnerProductText = elements.FirstOrDefault(element => element.StartsWith("P=", StringComparison.InvariantCulture));
+                        if (partnerProductText is not null && partnerProductText.IsNotNullOrEmpty())
                         {
-                            PartnerProductId = PartnerProduct_Id.Parse(PartnerProductText.Substring(2));
+                            PartnerProductId = PartnerProduct_Id.Parse(partnerProductText[2..]);
                         }
 
-                        var StartTimeText = Elements.FirstOrDefault(element => element.StartsWith("S=", StringComparison.InvariantCulture));
-                        if (StartTimeText.IsNotNullOrEmpty())
+                        var startTimeText = elements.FirstOrDefault(element => element.StartsWith("S=", StringComparison.InvariantCulture));
+                        if (startTimeText is not null && startTimeText.IsNotNullOrEmpty())
                         {
-                            ReservationStartTime = DateTime.Parse(StartTimeText.Substring(2));
+                            ReservationStartTime = DateTime.Parse(startTimeText[2..]);
                         }
 
                     }
@@ -475,12 +477,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         case WWCP.ReservationResultType.Success:
                             return Acknowledgement<AuthorizeRemoteReservationStartRequest>.Success(
                                        Request,
-                                       response.Reservation != null
+                                       response.Reservation is not null
                                            ? Session_Id.Parse(response.Reservation.Id.Suffix)
                                            : new Session_Id?(),
 
                                        StatusCodeDescription :    "Reservation successful!",
-                                       StatusCodeAdditionalInfo:  response.Reservation != null ? "ReservationId: " + response.Reservation.Id : null
+                                       StatusCodeAdditionalInfo:  response.Reservation is not null ? "ReservationId: " + response.Reservation.Id : null
 
                                    );
 
@@ -601,10 +603,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     TimeSpan?                     MinDuration        = null;
                     Single?                       PlannedEnergy      = null;
                     WWCP.ChargingProduct_Id?      ProductId          = WWCP.ChargingProduct_Id.Parse("AC1");
-                    WWCP.ChargingProduct          ChargingProduct    = null;
+                    WWCP.ChargingProduct?         ChargingProduct    = null;
                     PartnerProduct_Id?            PartnerProductId   = Request.PartnerProductId;
 
-                    if (PartnerProductId != null && PartnerProductId.ToString().IsNotNullOrEmpty())
+                    if (PartnerProductId is not null && PartnerProductId.ToString().IsNotNullOrEmpty())
                     {
 
                         // The PartnerProductId is a simple string...
@@ -618,40 +620,49 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         else
                         {
 
-                            var ProductIdElements = PartnerProductId.ToString().DoubleSplit('|', '=');
+                            var operatorId         = Request.EVSEId.OperatorId.ToWWCP();
+                            var productIdElements  = PartnerProductId?.ToString().DoubleSplit('|', '=') ?? [];
 
-                            if (ProductIdElements.Any())
+                            if (productIdElements.Count != 0)
                             {
 
-                                if (ProductIdElements.ContainsKey("R") &&
-                                    WWCP.ChargingReservation_Id.TryParse(Request.EVSEId.OperatorId.ToWWCP().Value,
-                                                                         ProductIdElements["R"],
-                                                                         out WWCP.ChargingReservation_Id _ReservationId))
-                                    ReservationId = _ReservationId;
+                                if (productIdElements.TryGetValue("R", out var reservationIdText) &&
+                                    operatorId.HasValue &&
+                                    WWCP.ChargingReservation_Id.TryParse(operatorId.Value,
+                                                                         reservationIdText,
+                                                                         out var reservationId))
+                                {
+                                    ReservationId = reservationId;
+                                }
 
-
-                                if (ProductIdElements.ContainsKey("D"))
+                                if (productIdElements.TryGetValue("D", out var minDurationText))
                                 {
 
-                                    var MinDurationText = ProductIdElements["D"];
+                                    if (minDurationText.EndsWith('s'))
+                                        MinDuration = TimeSpan.FromSeconds(UInt32.Parse(minDurationText[..^1]));
 
-                                    if (MinDurationText.EndsWith("sec", StringComparison.InvariantCulture))
-                                        MinDuration = TimeSpan.FromSeconds(uint.Parse(MinDurationText[..^3]));
+                                    if (minDurationText.EndsWith("sec", StringComparison.InvariantCulture))
+                                        MinDuration = TimeSpan.FromSeconds(UInt32.Parse(minDurationText[..^3]));
 
-                                    if (MinDurationText.EndsWith("min", StringComparison.InvariantCulture))
-                                        MinDuration = TimeSpan.FromMinutes(uint.Parse(MinDurationText[..^3]));
+                                    if (minDurationText.EndsWith('m'))
+                                        MinDuration = TimeSpan.FromMinutes(UInt32.Parse(minDurationText[..^1]));
+
+                                    if (minDurationText.EndsWith("min", StringComparison.InvariantCulture))
+                                        MinDuration = TimeSpan.FromMinutes(UInt32.Parse(minDurationText[..^3]));
 
                                 }
 
+                                if (productIdElements.TryGetValue("E", out var value) &&
+                                    Single.TryParse(value, out var plannedEnergy))
+                                {
+                                    PlannedEnergy = plannedEnergy;
+                                }
 
-                                if (ProductIdElements.ContainsKey("E") &&
-                                    float.TryParse(ProductIdElements["E"], out Single _PlannedEnergy))
-                                    PlannedEnergy = _PlannedEnergy;
-
-
-                                if (ProductIdElements.ContainsKey("P") &&
-                                    WWCP.ChargingProduct_Id.TryParse(ProductIdElements["P"], out WWCP.ChargingProduct_Id _ProductId))
-                                    ProductId = _ProductId;
+                                if (productIdElements.TryGetValue("P", out var productIdText) &&
+                                    WWCP.ChargingProduct_Id.TryParse(productIdText, out var productId))
+                                {
+                                    ProductId = productId;
+                                }
 
 
                                 ChargingProduct = new WWCP.ChargingProduct(
@@ -858,7 +869,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Response mapping
 
-                    if (response != null)
+                    if (response is not null)
                     {
                         switch (response.Result)
                         {
@@ -1229,7 +1240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = PushEVSEDataRecordResult.Error(Id,
                                                                         evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
                                                                         //FullLoadResponse.HTTPStatusCode.ToString(),
-                                                                        //FullLoadResponse.HTTPBody != null
+                                                                        //FullLoadResponse.HTTPBody is not null
                                                                         //    ? Warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.HTTPBody.ToUTF8String()))
                                                                         //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                                                         Runtime: runtime);
@@ -1248,7 +1259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            Id,
                                            evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
                                            //response.HTTPStatusCode.ToString(),
-                                           //response.HTTPBody != null
+                                           //response.HTTPBody is not null
                                            //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
                                            //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                            Runtime: runtime
@@ -1268,7 +1279,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Id,
                                    evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
                                    //response.HTTPStatusCode.ToString(),
-                                   //response.HTTPBody != null
+                                   //response.HTTPBody is not null
                                    //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
                                    //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                    Runtime: runtime
@@ -1440,7 +1451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
 
-            if (evseStatusList.Any())
+            if (evseStatusList.Count != 0)
             {
 
                 var operatorId  = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
@@ -1495,7 +1506,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                              this,
                                                              EVSEStatusUpdates,
                                                              //response.HTTPStatusCode.ToString(),
-                                                             //response.HTTPBody != null
+                                                             //response.HTTPBody is not null
                                                              //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
                                                              //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
                                                              Runtime: runtime);
@@ -1639,7 +1650,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
             var result = await PushEVSEData(
-                                   new[] { EVSE },
+                                   [ EVSE ],
                                    ActionTypes.Insert,
                                    null,
 
@@ -1748,7 +1759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
             var result = await PushEVSEData(
-                                   new[] { EVSE },
+                                   [ EVSE ],
                                    ActionTypes.Insert,
                                    null,
 
@@ -1857,7 +1868,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
             var result = await PushEVSEData(
-                                   new[] { EVSE },
+                                   [ EVSE ],
                                    ActionTypes.FullLoad,
                                    null,
 
@@ -1954,7 +1965,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     {
 
                         if (!evsesUpdateLog.TryGetValue(EVSE, out var propertyUpdateInfo))
-                            propertyUpdateInfo = evsesUpdateLog.AddAndReturnValue(EVSE, new List<PropertyUpdateInfo>());
+                            propertyUpdateInfo = evsesUpdateLog.AddAndReturnValue(EVSE, []);
 
                         propertyUpdateInfo.Add(new PropertyUpdateInfo(
                                                    PropertyName,
@@ -1988,7 +1999,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
             var result = await PushEVSEData(
-                                   new[] { EVSE },
+                                   [ EVSE ],
                                    ActionTypes.Update,
                                    null,
 
@@ -2096,7 +2107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
             var result = await PushEVSEData(
-                                   new[] { EVSE },
+                                   [ EVSE ],
                                    ActionTypes.Delete,
                                    null,
 
@@ -2198,7 +2209,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                 IncludeEVSEIds(evse.Id)).
                                                   ToArray();
 
-                        if (filteredEVSEs.Any())
+                        if (filteredEVSEs.Length != 0)
                         {
 
                             foreach (var EVSE in filteredEVSEs)
@@ -2358,7 +2369,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                 IncludeEVSEIds(evse.Id)).
                                                   ToArray();
 
-                        if (filteredEVSEs.Any())
+                        if (filteredEVSEs.Length != 0)
                         {
 
                             foreach (var EVSE in filteredEVSEs)
@@ -2518,7 +2529,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                 IncludeEVSEIds(evse.Id)).
                                                   ToArray();
 
-                        if (filteredEVSEs.Any())
+                        if (filteredEVSEs.Length != 0)
                         {
 
                             foreach (var EVSE in filteredEVSEs)
@@ -2678,7 +2689,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                 IncludeEVSEIds(evse.Id)).
                                                   ToArray();
 
-                        if (filteredEVSEs.Any())
+                        if (filteredEVSEs.Length != 0)
                         {
 
                             foreach (var EVSE in filteredEVSEs)
@@ -2838,7 +2849,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                 IncludeEVSEIds(evse.Id)).
                                                   ToArray();
 
-                        if (filteredEVSEs.Any())
+                        if (filteredEVSEs.Length != 0)
                         {
 
                             //foreach (var EVSE in filteredEVSEs)
@@ -2998,7 +3009,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                 IncludeEVSEIds(evse.Id)).
                                                   ToArray();
 
-                        if (filteredEVSEs.Any())
+                        if (filteredEVSEs.Length != 0)
                         {
 
                             foreach (var EVSE in filteredEVSEs)
@@ -3285,7 +3296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                 ChargingProduct,
                                                 SessionId,
                                                 CPOPartnerSessionId,
-                                                Array.Empty<WWCP.ISendAuthorizeStartStop>(),
+                                                [],
                                                 RequestTimeout);
 
             }
@@ -3447,7 +3458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  ChargingProduct,
                                                  SessionId,
                                                  CPOPartnerSessionId,
-                                                 Array.Empty<WWCP.ISendAuthorizeStartStop>(),
+                                                 [],
                                                  RequestTimeout,
                                                  authStartResult,
                                                  runtime);
@@ -4173,15 +4184,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     evsesToRemoveQueue.Clear();
 
                     // Copy EVSE property updates
-                    evsesUpdateLog.           ForEach(_ => evsesUpdateLogCopy.           Add(_.Key, _.Value.ToArray()));
+                    evsesUpdateLog.           ForEach(_ => evsesUpdateLogCopy.           Add(_.Key, [.. _.Value]));
                     evsesUpdateLog.Clear();
 
                     // Copy charging station property updates
-                    chargingStationsUpdateLog.ForEach(_ => chargingStationsUpdateLogCopy.Add(_.Key, _.Value.ToArray()));
+                    chargingStationsUpdateLog.ForEach(_ => chargingStationsUpdateLogCopy.Add(_.Key, [.. _.Value]));
                     chargingStationsUpdateLog.Clear();
 
                     // Copy charging pool property updates
-                    chargingPoolsUpdateLog.   ForEach(_ => chargingPoolsUpdateLogCopy.   Add(_.Key, _.Value.ToArray()));
+                    chargingPoolsUpdateLog.   ForEach(_ => chargingPoolsUpdateLogCopy.   Add(_.Key, [.. _.Value]));
                     chargingPoolsUpdateLog.Clear();
 
 
@@ -4224,7 +4235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send new EVSE data
 
-            if (evsesToAddQueueCopy.Any())
+            if (evsesToAddQueueCopy.Count != 0)
             {
 
                 var result = await PushEVSEData(evsesToAddQueueCopy,
@@ -4260,14 +4271,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send changed EVSE data
 
-            if (evsesToUpdateQueueCopy.Any())
+            if (evsesToUpdateQueueCopy.Count != 0)
             {
 
                 // Surpress EVSE data updates for all newly added EVSEs
                 foreach (var _evse in evsesToUpdateQueueCopy.Where(evse => evsesToAddQueueCopy.Contains(evse)).ToArray())
                     evsesToUpdateQueueCopy.Remove(_evse);
 
-                if (evsesToUpdateQueueCopy.Any())
+                if (evsesToUpdateQueueCopy.Count != 0)
                 {
 
                     var EVSEsToUpdateResult = await PushEVSEData(evsesToUpdateQueueCopy,

@@ -102,9 +102,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public AuthorizeRemoteReservationStartRequest(Provider_Id            ProviderId,
                                                       EVSE_Id                EVSEId,
                                                       Identification         Identification,
@@ -117,9 +117,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       JObject?               CustomData            = null,
 
                                                       DateTime?              Timestamp             = null,
-                                                      CancellationToken      CancellationToken     = default,
                                                       EventTracking_Id?      EventTrackingId       = null,
-                                                      TimeSpan?              RequestTimeout        = null)
+                                                      TimeSpan?              RequestTimeout        = null,
+                                                      CancellationToken      CancellationToken     = default)
 
             : base(ProcessId,
                    CustomData,
@@ -138,6 +138,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EMPPartnerSessionId  = EMPPartnerSessionId;
             this.PartnerProductId     = PartnerProductId;
             this.Duration             = Duration;
+
+
+            unchecked
+            {
+
+                hashCode = this.ProviderId.          GetHashCode()       * 17 ^
+                           this.EVSEId.              GetHashCode()       * 13 ^
+                           this.Identification.      GetHashCode()       * 11 ^
+                          (this.SessionId?.          GetHashCode() ?? 0) *  9 ^
+                          (this.CPOPartnerSessionId?.GetHashCode() ?? 0) *  7 ^
+                          (this.EMPPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
+                          (this.PartnerProductId?.   GetHashCode() ?? 0) *  3 ^
+                          (this.Duration?.           GetHashCode() ?? 0);
+
+            }
 
         }
 
@@ -198,20 +213,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ProviderIdURL">The provider identification given in the URL of the HTTP request.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+        /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart JSON objects.</param>
         public static AuthorizeRemoteReservationStartRequest Parse(JObject                                                               JSON,
                                                                    Provider_Id                                                           ProviderIdURL,
                                                                    Process_Id?                                                           ProcessId                                            = null,
 
                                                                    DateTime?                                                             Timestamp                                            = null,
-                                                                   CancellationToken                                                     CancellationToken                                    = default,
                                                                    EventTracking_Id?                                                     EventTrackingId                                      = null,
                                                                    TimeSpan?                                                             RequestTimeout                                       = null,
-
-                                                                   CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser   = null)
+                                                                   CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser   = null,
+                                                                   CancellationToken                                                     CancellationToken                                    = default)
         {
 
             if (TryParse(JSON,
@@ -220,10 +235,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomAuthorizeRemoteReservationStartRequestParser))
+                         CustomAuthorizeRemoteReservationStartRequestParser,
+                         CancellationToken))
             {
                 return authorizeRemoteReservationStartRequest;
             }
@@ -245,6 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="AuthorizeRemoteReservationStartRequest">The parsed AuthorizeRemoteReservationStart request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
+        /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
@@ -255,11 +271,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        Process_Id?                                                           ProcessId                                            = null,
 
                                        DateTime?                                                             Timestamp                                            = null,
-                                       CancellationToken                                                     CancellationToken                                    = default,
                                        EventTracking_Id?                                                     EventTrackingId                                      = null,
                                        TimeSpan?                                                             RequestTimeout                                       = null,
-
-                                       CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser   = null)
+                                       CustomJObjectParserDelegate<AuthorizeRemoteReservationStartRequest>?  CustomAuthorizeRemoteReservationStartRequestParser   = null,
+                                       CancellationToken                                                     CancellationToken                                    = default)
         {
 
             try
@@ -415,9 +430,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                              customData,
 
                                                              Timestamp,
-                                                             CancellationToken,
                                                              EventTrackingId,
-                                                             RequestTimeout
+                                                             RequestTimeout,
+                                                             CancellationToken
                                                          );
 
                 if (CustomAuthorizeRemoteReservationStartRequestParser is not null)
@@ -451,9 +466,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ProviderID",                  ProviderId.               ToString()),
-                           new JProperty("EvseID",                      EVSEId.                   ToString()),
-                           new JProperty("Identification",              Identification.           ToJSON(CustomIdentificationSerializer)),
+                                 new JProperty("ProviderID",            ProviderId.               ToString()),
+                                 new JProperty("EvseID",                EVSEId.                   ToString()),
+                                 new JProperty("Identification",        Identification.           ToJSON(CustomIdentificationSerializer)),
 
                            SessionId.HasValue
                                ? new JProperty("SessionID",             SessionId.          Value.ToString())
@@ -504,11 +519,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            AuthorizeRemoteReservationStartRequest AuthorizeRemoteReservationStartRequest2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(AuthorizeRemoteReservationStartRequest1, AuthorizeRemoteReservationStartRequest2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (AuthorizeRemoteReservationStartRequest1 is null || AuthorizeRemoteReservationStartRequest2 is null)
                 return false;
 
@@ -587,27 +600,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderId.          GetHashCode()       * 17 ^
-                       EVSEId.              GetHashCode()       * 13 ^
-                       Identification.      GetHashCode()       * 11 ^
-
-                      (SessionId?.          GetHashCode() ?? 0) *  9 ^
-                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  7 ^
-                      (EMPPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
-                      (PartnerProductId?.   GetHashCode() ?? 0) *  3 ^
-                      (Duration?.           GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -618,9 +618,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(EVSEId,
-                             " for ", Identification,
-                             " (", ProviderId, ")");
+            => $"{EVSEId} for {Identification} ({ProviderId})";
 
         #endregion
 

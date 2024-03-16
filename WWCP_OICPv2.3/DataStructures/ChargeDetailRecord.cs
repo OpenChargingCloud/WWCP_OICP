@@ -228,30 +228,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.HubOperatorId                   = HubOperatorId;
             this.HubProviderId                   = HubProviderId;
 
+
             unchecked
             {
 
-                hashCode = SessionId.                      GetHashCode()       * 61 ^
-                           EVSEId.                         GetHashCode()       * 59 ^
-                           Identification.                 GetHashCode()       * 53 ^
-                           SessionStart.                   GetHashCode()       * 47 ^
-                           SessionEnd.                     GetHashCode()       * 43 ^
-                           ChargingStart.                  GetHashCode()       * 41 ^
-                           ChargingEnd.                    GetHashCode()       * 37 ^
-                           ConsumedEnergy.                 GetHashCode()       * 31 ^
+                hashCode = SessionId.                      GetHashCode()        * 61 ^
+                           EVSEId.                         GetHashCode()        * 59 ^
+                           Identification.                 GetHashCode()        * 53 ^
+                           SessionStart.                   GetHashCode()        * 47 ^
+                           SessionEnd.                     GetHashCode()        * 43 ^
+                           ChargingStart.                  GetHashCode()        * 41 ^
+                           ChargingEnd.                    GetHashCode()        * 37 ^
+                           ConsumedEnergy.                 GetHashCode()        * 31 ^
 
-                          (PartnerProductId?.              GetHashCode() ?? 0) * 29 ^
-                          (CPOPartnerSessionId?.           GetHashCode() ?? 0) * 23 ^
-                          (EMPPartnerSessionId?.           GetHashCode() ?? 0) * 19 ^
-                          (MeterValueStart?.               GetHashCode() ?? 0) * 17 ^
-                          (MeterValueEnd?.                 GetHashCode() ?? 0) * 13 ^
+                          (PartnerProductId?.              GetHashCode()  ?? 0) * 29 ^
+                          (CPOPartnerSessionId?.           GetHashCode()  ?? 0) * 23 ^
+                          (EMPPartnerSessionId?.           GetHashCode()  ?? 0) * 19 ^
+                          (MeterValueStart?.               GetHashCode()  ?? 0) * 17 ^
+                          (MeterValueEnd?.                 GetHashCode()  ?? 0) * 13 ^
 
-                          (MeterValuesInBetween?.Aggregate(0, (hashCode,       meterValue) => hashCode ^ meterValue.      GetHashCode()) ?? 0) ^
-                          (SignedMeteringValues?.Aggregate(0, (hashCode, signedMeterValue) => hashCode ^ signedMeterValue.GetHashCode()) ?? 0) ^
+                          (MeterValuesInBetween?.          CalcHashCode() ?? 0) * 11 ^
+                          (SignedMeteringValues?.          CalcHashCode() ?? 0) *  7 ^
 
-                          (CalibrationLawVerificationInfo?.GetHashCode() ?? 0) *  5 ^
-                          (HubOperatorId?.                 GetHashCode() ?? 0) *  3 ^
-                          (HubProviderId?.                 GetHashCode() ?? 0);
+                          (CalibrationLawVerificationInfo?.GetHashCode()  ?? 0) *  5 ^
+                          (HubOperatorId?.                 GetHashCode()  ?? 0) *  3 ^
+                          (HubProviderId?.                 GetHashCode()  ?? 0);
 
             }
 
@@ -838,11 +839,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            ChargeDetailRecord ChargeDetailRecord2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(ChargeDetailRecord1, ChargeDetailRecord2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (ChargeDetailRecord1 is null || ChargeDetailRecord2 is null)
                 return false;
 

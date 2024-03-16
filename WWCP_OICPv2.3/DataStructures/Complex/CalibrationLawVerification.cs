@@ -401,11 +401,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            CalibrationLawVerification? CalibrationLawVerification2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(CalibrationLawVerification1, CalibrationLawVerification2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (CalibrationLawVerification1 is null || CalibrationLawVerification2 is null)
                 return false;
 

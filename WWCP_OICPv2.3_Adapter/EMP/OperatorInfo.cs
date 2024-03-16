@@ -17,6 +17,7 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 using Newtonsoft.Json.Linq;
@@ -33,7 +34,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Data
 
-        private static Regex InvalidCharactersRegEx = new Regex("[^A-Z0-9]");
+        private readonly        Dictionary<ChargingPool_Id, ChargingPoolInfo>  chargingPools            = [];
+
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+        private readonly static Regex                                          InvalidCharactersRegEx   = new ("[^A-Z0-9]");
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
         #endregion
 
@@ -50,12 +55,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public String?      OperatorName    { get; }
 
 
-        private readonly Dictionary<ChargingPool_Id, ChargingPoolInfo> chargingPools;
-
         /// <summary>
         /// All charging pools.
         /// </summary>
-        public IEnumerable<ChargingPoolInfo> ChargingPools
+        public IEnumerable<ChargingPoolInfo>  ChargingPools
             => chargingPools.Select(v => v.Value);
 
         #endregion
@@ -70,11 +73,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (OperatorId.IsNullOrEmpty)
                 throw new ArgumentNullException(nameof(OperatorId), "The given parameter must not be null!");
 
-            this.OperatorId     = OperatorId;
-            this.OperatorName   = OperatorName;
-            this.chargingPools  = ChargingPools is not null
-                                      ? ChargingPools.ToDictionary(pool => pool.PoolId)
-                                      : new Dictionary<ChargingPool_Id, ChargingPoolInfo>();
+            this.OperatorId    = OperatorId;
+            this.OperatorName  = OperatorName;
+
+            if (ChargingPools is not null)
+            {
+                foreach (var chargingPool in ChargingPools)
+                {
+                    chargingPools.Add(
+                        chargingPool.PoolId,
+                        chargingPool
+                    );
+                }
+            }
 
         }
 
@@ -95,13 +106,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (!chargingPools.TryGetValue(chargingPoolId, out var chargingPoolInfo))
             {
 
-                chargingPoolInfo = new ChargingPoolInfo(this,
-                                                        chargingPoolId,
-                                                        EVSE.Address,
-                                                        EVSE.GeoCoordinates);
+                chargingPoolInfo = new ChargingPoolInfo(
+                                       this,
+                                       chargingPoolId,
+                                       EVSE.Address,
+                                       EVSE.GeoCoordinates
+                                   );
 
-                chargingPools.Add(chargingPoolInfo.PoolId,
-                                  chargingPoolInfo);
+                chargingPools.Add(
+                    chargingPoolInfo.PoolId,
+                    chargingPoolInfo
+                );
 
             }
 
@@ -225,9 +240,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OperatorInfo">The parsed operator info.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject            JSON,
-                                       out OperatorInfo?  OperatorInfo,
-                                       out String?        ErrorResponse)
+        public static Boolean TryParse(JObject                                 JSON,
+                                       [NotNullWhen(true)]  out OperatorInfo?  OperatorInfo,
+                                       [NotNullWhen(false)] out String?        ErrorResponse)
         {
 
             try
@@ -241,7 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse OperatorId      [mandatory]
+                #region Parse OperatorId       [mandatory]
 
                 if (!JSON.ParseMandatory("operatorId",
                                          "operator identification",
@@ -254,11 +269,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse OperatorName    [optional]
+                #region Parse OperatorName     [optional]
 
                 if (JSON.ParseOptional("operatorName",
                                        "operator name",
-                                       out String OperatorName,
+                                       out String? OperatorName,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -267,7 +282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ChargingPools   [optional]
+                #region Parse ChargingPools    [optional]
 
                 if (JSON.ParseOptionalJSON("chargingPools",
                                            "charging pools",
@@ -282,9 +297,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                OperatorInfo = new OperatorInfo(OperatorId,
-                                                OperatorName,
-                                                ChargingPools);
+                OperatorInfo = new OperatorInfo(
+                                   OperatorId,
+                                   OperatorName,
+                                   ChargingPools
+                               );
 
                 return true;
 
@@ -335,10 +352,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorName, " (", OperatorId.ToString(), ") ", " => ",
-                             chargingPools.Values.                                                                                           Count(), " charging pools, ",
-                             chargingPools.Values.SelectMany(pool => pool.ChargingStations).                                                 Count(), " charging stations, ",
-                             chargingPools.Values.SelectMany(pool => pool.ChargingStations.SelectMany(stations => stations.EVSEDataRecords)).Count(), " EVSEs.");
+            => String.Concat(
+
+                   $"{OperatorName} ({OperatorId}) => ",
+
+                   $"{chargingPools.Values.Count} charging pools, ",
+                   $"{chargingPools.Values.SelectMany(pool => pool.ChargingStations).                                                 Count()} charging stations, ",
+                   $"{chargingPools.Values.SelectMany(pool => pool.ChargingStations.SelectMany(stations => stations.EVSEDataRecords)).Count()} EVSEs."
+
+               );
 
         #endregion
 

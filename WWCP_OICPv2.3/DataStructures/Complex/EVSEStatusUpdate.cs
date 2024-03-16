@@ -220,10 +220,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse EVSEStatus     [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("EvseStatus",
-                                             "EVSE status",
-                                             out EVSEStatusTypes EVSEStatus,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("EvseStatus",
+                                         "EVSE status",
+                                         EVSEStatusTypesExtensions.TryParse,
+                                         out EVSEStatusTypes EVSEStatus,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

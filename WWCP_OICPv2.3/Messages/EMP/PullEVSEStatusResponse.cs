@@ -54,8 +54,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
-#pragma warning disable IDE0290 // Use primary constructor
-
         /// <summary>
         /// Create a new PullEVSEStatus response.
         /// </summary>
@@ -93,9 +91,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.OperatorEVSEStatus  = OperatorEVSEStatus ?? throw new ArgumentNullException(nameof(OperatorEVSEStatus), "The given OperatorEVSEStatus must not be null or empty!");
             this.StatusCode          = StatusCode;
 
-        }
+            unchecked
+            {
 
-#pragma warning restore IDE0290 // Use primary constructor
+                hashCode = this.OperatorEVSEStatus.CalcHashCode() * 3 ^
+                           this.StatusCode?.       GetHashCode() ?? 0;
+
+            }
+
+        }
 
         #endregion
 
@@ -253,6 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PullEVSEStatusResponse = new PullEVSEStatusResponse(
+
                                              ResponseTimestamp,
                                              EventTrackingId,
                                              ProcessId ?? Process_Id.NewRandom(),
@@ -263,6 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              StatusCode,
                                              HTTPResponse,
                                              customData
+
                                          );
 
                 if (CustomPullEVSEStatusResponseParser is not null)
@@ -402,20 +408,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return OperatorEVSEStatus.Aggregate(0, (hashCode, operatorEVSEStatus) => hashCode ^ operatorEVSEStatus.GetHashCode()) ^
-                       (StatusCode?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -426,10 +426,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorEVSEStatus.Count() + " operator EVSE status record(s)",
-                             StatusCode is not null
-                                 ? " -> " + StatusCode.Code
-                                 : "");
+            => String.Concat(
+
+                   $"{OperatorEVSEStatus.Count()} operator EVSE status record(s)",
+
+                   StatusCode is not null
+                       ? $" -> {StatusCode.Code}"
+                       : ""
+
+               );
 
         #endregion
 

@@ -113,9 +113,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -147,9 +149,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            JObject?           CustomData          = null,
 
                            DateTime?          Timestamp           = null,
-                           CancellationToken  CancellationToken   = default,
                            EventTracking_Id?  EventTrackingId     = null,
-                           TimeSpan?          RequestTimeout      = null)
+                           TimeSpan?          RequestTimeout      = null,
+                           CancellationToken  CancellationToken   = default)
 
                 => EMPClient.PullEVSEStatus(
                        new PullEVSEStatusRequest(
@@ -161,9 +163,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -190,9 +194,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                JObject?              CustomData          = null,
 
                                DateTime?             Timestamp           = null,
-                               CancellationToken     CancellationToken   = default,
                                EventTracking_Id?     EventTrackingId     = null,
-                               TimeSpan?             RequestTimeout      = null)
+                               TimeSpan?             RequestTimeout      = null,
+                               CancellationToken     CancellationToken   = default)
 
                 => EMPClient.PullEVSEStatusById(
                        new PullEVSEStatusByIdRequest(
@@ -202,9 +206,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -231,9 +237,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        JObject?                  CustomData          = null,
 
                                        DateTime?                 Timestamp           = null,
-                                       CancellationToken         CancellationToken   = default,
                                        EventTracking_Id?         EventTrackingId     = null,
-                                       TimeSpan?                 RequestTimeout      = null)
+                                       TimeSpan?                 RequestTimeout      = null,
+                                       CancellationToken         CancellationToken   = default)
 
                 => EMPClient.PullEVSEStatusByOperatorId(
                        new PullEVSEStatusByOperatorIdRequest(
@@ -243,9 +249,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -265,9 +273,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<PullPricingProductDataResponse>>
 
             PullPricingProductData(this IEMPClient           EMPClient,
@@ -282,9 +290,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    JObject?                  CustomData          = null,
 
                                    DateTime?                 Timestamp           = null,
-                                   CancellationToken         CancellationToken   = default,
                                    EventTracking_Id?         EventTrackingId     = null,
-                                   TimeSpan?                 RequestTimeout      = null)
+                                   TimeSpan?                 RequestTimeout      = null,
+                                   CancellationToken         CancellationToken   = default)
 
                 => EMPClient.PullPricingProductData(
                        new PullPricingProductDataRequest(
@@ -299,9 +307,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -355,7 +365,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            Timestamp,
                            EventTrackingId,
                            RequestTimeout ?? EMPClient.RequestTimeout,
-                           CancellationToken));
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -382,9 +394,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    JObject?                    CustomData          = null,
 
                                    DateTime?                   Timestamp           = null,
-                                   CancellationToken           CancellationToken   = default,
                                    EventTracking_Id?           EventTrackingId     = null,
-                                   TimeSpan?                   RequestTimeout      = null)
+                                   TimeSpan?                   RequestTimeout      = null,
+                                   CancellationToken           CancellationToken   = default)
 
                 => EMPClient.PushAuthenticationData(
                        new PushAuthenticationDataRequest(
@@ -394,9 +406,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -419,9 +433,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>>
 
             AuthorizeRemoteReservationStart(this IEMPClient        EMPClient,
@@ -436,9 +450,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                             JObject?               CustomData            = null,
 
                                             DateTime?              Timestamp             = null,
-                                            CancellationToken      CancellationToken     = default,
                                             EventTracking_Id?      EventTrackingId       = null,
-                                            TimeSpan?              RequestTimeout        = null)
+                                            TimeSpan?              RequestTimeout        = null,
+                                            CancellationToken      CancellationToken     = default)
 
 
                 => EMPClient.AuthorizeRemoteReservationStart(
@@ -455,9 +469,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -476,9 +492,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>>
 
             AuthorizeRemoteReservationStop(this IEMPClient        EMPClient,
@@ -490,9 +506,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                            JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
-                                           CancellationToken      CancellationToken     = default,
                                            EventTracking_Id?      EventTrackingId       = null,
-                                           TimeSpan?              RequestTimeout        = null)
+                                           TimeSpan?              RequestTimeout        = null,
+                                           CancellationToken      CancellationToken     = default)
 
                 => EMPClient.AuthorizeRemoteReservationStop(
                        new AuthorizeRemoteReservationStopRequest(
@@ -505,9 +521,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -528,9 +546,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>>
 
             AuthorizeRemoteStart(this IEMPClient        EMPClient,
@@ -544,9 +562,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  JObject?               CustomData            = null,
 
                                  DateTime?              Timestamp             = null,
-                                 CancellationToken      CancellationToken     = default,
                                  EventTracking_Id?      EventTrackingId       = null,
-                                 TimeSpan?              RequestTimeout        = null)
+                                 TimeSpan?              RequestTimeout        = null,
+                                 CancellationToken      CancellationToken     = default)
 
                 => EMPClient.AuthorizeRemoteStart(
                        new AuthorizeRemoteStartRequest(
@@ -561,9 +579,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -582,9 +602,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>>
 
             AuthorizeRemoteStop(this IEMPClient        EMPClient,
@@ -596,9 +616,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 JObject?               CustomData            = null,
 
                                 DateTime?              Timestamp             = null,
-                                CancellationToken      CancellationToken     = default,
                                 EventTracking_Id?      EventTrackingId       = null,
-                                TimeSpan?              RequestTimeout        = null)
+                                TimeSpan?              RequestTimeout        = null,
+                                CancellationToken      CancellationToken     = default)
 
                 => EMPClient.AuthorizeRemoteStop(
                        new AuthorizeRemoteStopRequest(
@@ -611,9 +631,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
@@ -639,9 +661,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<GetChargeDetailRecordsResponse>>
 
             GetChargeDetailRecords(this IEMPClient            EMPClient,
@@ -658,9 +680,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    JObject?                   CustomData          = null,
 
                                    DateTime?                  Timestamp           = null,
-                                   CancellationToken          CancellationToken   = default,
                                    EventTracking_Id?          EventTrackingId     = null,
-                                   TimeSpan?                  RequestTimeout      = null)
+                                   TimeSpan?                  RequestTimeout      = null,
+                                   CancellationToken          CancellationToken   = default)
 
                 => EMPClient.GetChargeDetailRecords(
                        new GetChargeDetailRecordsRequest(
@@ -678,9 +700,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? EMPClient.RequestTimeout));
+                           RequestTimeout ?? EMPClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 

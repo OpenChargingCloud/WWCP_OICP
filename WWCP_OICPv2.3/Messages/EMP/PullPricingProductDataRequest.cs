@@ -70,9 +70,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public PullPricingProductDataRequest(Provider_Id               ProviderId,
                                              IEnumerable<Operator_Id>  OperatorIds,
                                              DateTime?                 LastCall            = null,
@@ -84,9 +84,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              JObject?                  CustomData          = null,
 
                                              DateTime?                 Timestamp           = null,
-                                             CancellationToken         CancellationToken   = default,
                                              EventTracking_Id?         EventTrackingId     = null,
-                                             TimeSpan?                 RequestTimeout      = null)
+                                             TimeSpan?                 RequestTimeout      = null,
+                                             CancellationToken         CancellationToken   = default)
 
             : base(ProcessId,
                    Page,
@@ -95,15 +95,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    CustomData,
 
                    Timestamp,
-                   CancellationToken,
                    EventTrackingId,
-                   RequestTimeout)
+                   RequestTimeout,
+                   CancellationToken)
 
         {
 
             this.ProviderId   = ProviderId;
             this.OperatorIds  = OperatorIds;
             this.LastCall     = LastCall;
+
+            unchecked
+            {
+
+                hashCode = this.ProviderId. GetHashCode() * 5 ^
+                           this.OperatorIds.GetHashCode() * 3 ^
+                           this.LastCall?.  GetHashCode() ?? 0;
+
+            }
 
         }
 
@@ -139,11 +148,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
 
                                                           DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken                                            CancellationToken                           = default,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null)
+                                                          CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null,
+                                                          CancellationToken                                            CancellationToken                           = default)
         {
 
             if (TryParse(JSON,
@@ -155,10 +163,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPullPricingProductDataRequestParser))
+                         CustomPullPricingProductDataRequestParser,
+                         CancellationToken))
             {
                 return pullEVSEDataResponse;
             }
@@ -190,11 +198,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        IEnumerable<String>?                                         SortOrder                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken                                            CancellationToken                           = default,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null)
+                                       CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null,
+                                       CancellationToken                                            CancellationToken                           = default)
         {
 
             try
@@ -235,7 +242,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-
                 #region Parse CustomData     [optional]
 
                 var customData = JSON[nameof(CustomData)] as JObject;
@@ -243,21 +249,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullPricingProductDataRequest = new PullPricingProductDataRequest(ProviderId,
-                                                                                  OperatorIds,
-                                                                                  LastCall,
+                PullPricingProductDataRequest = new PullPricingProductDataRequest(
 
-                                                                                  ProcessId,
-                                                                                  Page,
-                                                                                  Size,
-                                                                                  SortOrder,
+                                                    ProviderId,
+                                                    OperatorIds,
+                                                    LastCall,
 
-                                                                                  customData,
+                                                    ProcessId,
+                                                    Page,
+                                                    Size,
+                                                    SortOrder,
 
-                                                                                  Timestamp,
-                                                                                  CancellationToken,
-                                                                                  EventTrackingId,
-                                                                                  RequestTimeout);
+                                                    customData,
+
+                                                    Timestamp,
+                                                    EventTrackingId,
+                                                    RequestTimeout,
+                                                    CancellationToken
+
+                                                );
 
                 if (CustomPullPricingProductDataRequestParser is not null)
                     PullPricingProductDataRequest = CustomPullPricingProductDataRequestParser(JSON,
@@ -288,14 +298,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("OperatorIDs",       new JArray(OperatorIds.Select(operatorId => operatorId.ToString()))),
+                                 new JProperty("OperatorIDs",   new JArray(OperatorIds.Select(operatorId => operatorId.ToString()))),
 
                            LastCall.HasValue
-                               ? new JProperty("LastCall",    LastCall.Value.ToIso8601())
+                               ? new JProperty("LastCall",      LastCall.Value.ToIso8601())
                                : null,
 
                            CustomData is not null
-                               ? new JProperty("CustomData",  CustomData)
+                               ? new JProperty("CustomData",    CustomData)
                                : null
 
                        );
@@ -393,24 +403,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderId. GetHashCode() * 5 ^
-                       OperatorIds.GetHashCode() * 3 ^
-
-                       (!LastCall.HasValue
-                            ? LastCall.GetHashCode() *  5
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -421,11 +421,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(ProviderId.ToString(), " => ",
-                             "Operators: ", OperatorIds.AggregateWith(", "),
-                             LastCall.HasValue
-                                 ? "; last call: " + LastCall.Value.ToIso8601()
-                                 : "");
+            => String.Concat(
+
+                   $"{ProviderId} => Operators: {OperatorIds.AggregateWith(", ")}",
+
+                   LastCall.HasValue
+                       ? $"; last call: {LastCall}"
+                       : ""
+
+               );
 
         #endregion
 

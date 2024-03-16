@@ -64,6 +64,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new PushAuthenticationData request.
         /// </summary>
@@ -81,9 +83,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              JObject?                    CustomData          = null,
 
                                              DateTime?                   Timestamp           = null,
-                                             CancellationToken           CancellationToken   = default,
                                              EventTracking_Id?           EventTrackingId     = null,
-                                             TimeSpan?                   RequestTimeout      = null)
+                                             TimeSpan?                   RequestTimeout      = null,
+                                             CancellationToken           CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -98,6 +100,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Action                      = Action;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -195,10 +199,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ActionType                    [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("ActionType",
-                                             "action type",
-                                             out ActionTypes ActionType,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("ActionType",
+                                         "action type",
+                                         ActionTypesExtensions.TryParse,
+                                         out ActionTypes ActionType,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -226,15 +231,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PushAuthenticationDataRequest = new PushAuthenticationDataRequest(
+
                                                     ProviderAuthenticationData,
                                                     ActionType,
                                                     ProcessId,
                                                     customData,
 
                                                     Timestamp,
-                                                    CancellationToken,
                                                     EventTrackingId,
-                                                    RequestTimeout
+                                                    RequestTimeout,
+                                                    CancellationToken
+
                                                 );
 
                 if (CustomPushAuthenticationDataRequestParser is not null)
@@ -270,13 +277,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ActionType",                  Action.AsString()),
+                                 new JProperty("ActionType",                   Action.AsString()),
 
-                           new JProperty("ProviderAuthenticationData",  ProviderAuthenticationData.ToJSON(CustomProviderAuthenticationDataSerializer,
-                                                                                                          CustomIdentificationSerializer)),
+                                 new JProperty("ProviderAuthenticationData",   ProviderAuthenticationData.ToJSON(CustomProviderAuthenticationDataSerializer,
+                                                                                                                 CustomIdentificationSerializer)),
 
                            CustomData is not null
-                               ? new JProperty("CustomData",            CustomData)
+                               ? new JProperty("CustomData",                   CustomData)
                                : null
 
                        );
@@ -304,11 +311,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PushAuthenticationDataRequest PushAuthenticationData2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PushAuthenticationData1, PushAuthenticationData2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PushAuthenticationData1 is null || PushAuthenticationData2 is null)
                 return false;
 
@@ -346,8 +351,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <returns>true|false</returns>
         public override Boolean Equals(Object? Object)
 
-            => Object is PushAuthenticationDataRequest pullEVSEStatusRequest &&
-                   Equals(pullEVSEStatusRequest);
+            => Object is PushAuthenticationDataRequest pushAuthenticationDataRequest &&
+                   Equals(pushAuthenticationDataRequest);
 
         #endregion
 
@@ -381,7 +386,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 return ProviderAuthenticationData.GetHashCode() * 3 ^
-                       Action.GetHashCode();
+                       Action.                    GetHashCode();
 
             }
         }
@@ -395,9 +400,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Action, " of ",
-                             Identifications.Count(), " provider authentication data record(s)",
-                             " by ", ProviderId);
+            => $"{Action} of {Identifications.Count()} provider authentication data record(s) by {ProviderId}";
 
         #endregion
 

@@ -242,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public TimeSpan MaxReservationDuration { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 
-        private Dictionary<WWCP.EVSE_Id, WWCP.EVSEStatusUpdate> evseStatusUpdates = new ();
+        private readonly Dictionary<WWCP.EVSE_Id, WWCP.EVSEStatusUpdate> evseStatusUpdates = [];
         public IEnumerable<WWCP.EVSEStatusUpdate> EVSEStatusUpdates
 
             => evseStatusUpdates.Values;
@@ -592,45 +592,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region OnAuthorizeStart
 
-            this.EMPRoaming.OnAuthorizeStart += async (Timestamp,
-                                                       Sender,
-                                                       Request) => {
+            this.EMPRoaming.OnAuthorizeStart += async (timestamp,
+                                                       sender,
+                                                       request) => {
 
                 #region Verify local authentication
 
-                var localAuthentication  = Request.Identification.ToWWCP()?.ToLocal;
+                var localAuthentication  = request.Identification.ToWWCP()?.ToLocal;
 
                 if (localAuthentication is null)
                     return AuthorizationStartResponse.NotAuthorized(
-                               Request,
+                               request,
                                new StatusCode(
                                    StatusCodes.NoValidContract,
                                    "No valid authentication!"
                                ),
-                               Request.SessionId,
-                               Request.CPOPartnerSessionId,
+                               request.SessionId,
+                               request.CPOPartnerSessionId,
                                null, // EMPPartnerSessionId
                                null, // ProviderId
                                org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
-                               Request.EventTrackingId,
+                               request.EventTrackingId,
                                null, // Runtime
-                               Request.ProcessId
+                               request.ProcessId
                            );
 
                 #endregion
 
                 #region Map parameter values
 
-                var operatorId           = Request.OperatorId.         ToWWCP();
-                var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
-                var chargingProductId    = Request.PartnerProductId.HasValue
-                                               ? Request.PartnerProductId.Value.ToWWCP()
+                var operatorId           = request.OperatorId.         ToWWCP();
+                var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(request.EVSEId?.ToWWCP());
+                var chargingProductId    = request.PartnerProductId.HasValue
+                                               ? request.PartnerProductId.Value.ToWWCP()
                                                : null;
                 var chargingProduct      = chargingProductId.HasValue
                                                ? WWCP.ChargingProduct.FromId(chargingProductId.Value)
                                                : null;
-                var sessionId            = Request.SessionId.          ToWWCP();
-                var cpoPartnerSessionId  = Request.CPOPartnerSessionId.ToWWCP();
+                var sessionId            = request.SessionId.          ToWWCP();
+                var cpoPartnerSessionId  = request.CPOPartnerSessionId.ToWWCP();
 
                 #endregion
 
@@ -643,10 +643,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
 
                     OnAuthorizeStartRequest?.Invoke(startTime,
-                                                    Timestamp,
+                                                    timestamp,
                                                     this,
                                                     Id.ToString(),
-                                                    Request.EventTrackingId,
+                                                    request.EventTrackingId,
                                                     RoamingNetwork.Id,
                                                     Id,
                                                     null,
@@ -656,8 +656,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                     chargingProduct,
                                                     sessionId,
                                                     cpoPartnerSessionId,
-                                                    new WWCP.ISendAuthorizeStartStop[0],
-                                                    Request.RequestTimeout);
+                                                    [],
+                                                    request.RequestTimeout);
 
                 }
                 catch (Exception e)
@@ -668,17 +668,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #endregion
 
 
-                var response = await RoamingNetwork.AuthorizeStart(localAuthentication,
-                                                                   chargingLocation,
-                                                                   chargingProduct,
-                                                                   sessionId,
-                                                                   cpoPartnerSessionId,
-                                                                   operatorId,
+                var response = await RoamingNetwork.AuthorizeStart(
+                                         localAuthentication,
+                                         chargingLocation,
+                                         chargingProduct,
+                                         sessionId,
+                                         cpoPartnerSessionId,
+                                         operatorId,
 
-                                                                   Timestamp,
-                                                                   Request.EventTrackingId,
-                                                                   Request.RequestTimeout,
-                                                                   Request.CancellationToken);
+                                         timestamp,
+                                         request.EventTrackingId,
+                                         request.RequestTimeout,
+                                         request.CancellationToken
+                                     );
 
 
                 #region Send OnAuthorizeStartResponse event
@@ -689,10 +691,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
 
                     OnAuthorizeStartResponse?.Invoke(endTime,
-                                                     Timestamp,
+                                                     timestamp,
                                                      this,
                                                      Id.ToString(),
-                                                     Request.EventTrackingId,
+                                                     request.EventTrackingId,
                                                      RoamingNetwork.Id,
                                                      Id,
                                                      null,
@@ -702,8 +704,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                      chargingProduct,
                                                      sessionId,
                                                      cpoPartnerSessionId,
-                                                     new WWCP.ISendAuthorizeStartStop[0],
-                                                     Request.RequestTimeout,
+                                                     [],
+                                                     request.RequestTimeout,
                                                      response,
                                                      endTime - startTime);
 
@@ -736,7 +738,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         case WWCP.AuthStartResultTypes.Authorized:
-                            return AuthorizationStartResponse.Authorized               (Request,
+                            return AuthorizationStartResponse.Authorized               (request,
                                                                                         response.SessionId. ToOICP(),
                                                                                         default,
                                                                                         default,
@@ -747,7 +749,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.NotAuthorized:
-                            return AuthorizationStartResponse.NotAuthorized            (Request,
+                            return AuthorizationStartResponse.NotAuthorized            (request,
                                                                                         new StatusCode(
                                                                                             StatusCodes.RFIDAuthenticationfailed_InvalidUID,
                                                                                             "RFID Authentication failed - invalid UID"
@@ -755,34 +757,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                         InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.InvalidSessionId:
-                            return AuthorizationStartResponse.SessionIsInvalid         (Request,
-                                                                                        SessionId:            Request.SessionId,
-                                                                                        CPOPartnerSessionId:  Request.CPOPartnerSessionId,
-                                                                                        EMPPartnerSessionId:  Request.EMPPartnerSessionId,
+                            return AuthorizationStartResponse.SessionIsInvalid         (request,
+                                                                                        SessionId:            request.SessionId,
+                                                                                        CPOPartnerSessionId:  request.CPOPartnerSessionId,
+                                                                                        EMPPartnerSessionId:  request.EMPPartnerSessionId,
                                                                                         InternalData:         internalData);
 
                         case WWCP.AuthStartResultTypes.CommunicationTimeout:
-                            return AuthorizationStartResponse.CommunicationToEVSEFailed(Request,
+                            return AuthorizationStartResponse.CommunicationToEVSEFailed(request,
                                                                                         InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.StartChargingTimeout:
-                            return AuthorizationStartResponse.NoEVConnectedToEVSE      (Request,
+                            return AuthorizationStartResponse.NoEVConnectedToEVSE      (request,
                                                                                         InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.Reserved:
-                            return AuthorizationStartResponse.EVSEAlreadyReserved      (Request,
+                            return AuthorizationStartResponse.EVSEAlreadyReserved      (request,
                                                                                         InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.UnknownLocation:
-                            return AuthorizationStartResponse.UnknownEVSEID            (Request,
+                            return AuthorizationStartResponse.UnknownEVSEID            (request,
                                                                                         InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.OutOfService:
-                            return AuthorizationStartResponse.EVSEOutOfService         (Request,
+                            return AuthorizationStartResponse.EVSEOutOfService         (request,
                                                                                         InternalData:  internalData);
 
                         case WWCP.AuthStartResultTypes.RateLimitReached:
-                            return AuthorizationStartResponse.NotAuthorized            (Request,
+                            return AuthorizationStartResponse.NotAuthorized            (request,
                                                                                         new StatusCode(
                                                                                             StatusCodes.NoPositiveAuthenticationResponse,
                                                                                             "Authentication rate limit reached!"
@@ -795,8 +797,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #endregion
 
                 return AuthorizationStartResponse.ServiceNotAvailable(
-                           Request,
-                           SessionId:   response?.SessionId. ToOICP() ?? Request.SessionId,
+                           request,
+                           SessionId:   response?.SessionId. ToOICP() ?? request.SessionId,
                            ProviderId:  response?.ProviderId.ToOICP()
                        );
 
@@ -806,17 +808,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region OnAuthorizeStop
 
-            this.EMPRoaming.OnAuthorizeStop += async (Timestamp,
-                                                      Sender,
-                                                      Request) => {
+            this.EMPRoaming.OnAuthorizeStop += async (timestamp,
+                                                      sender,
+                                                      request) => {
 
                 #region Map parameter values
 
-                var sessionId            = Request.SessionId.          ToWWCP();
-                var localAuthentication  = Request.Identification.     ToWWCP()?.ToLocal;
-                var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(Request.EVSEId?.ToWWCP());
-                var CPOPartnerSessionId  = Request.CPOPartnerSessionId.ToWWCP();
-                var operatorId           = Request.OperatorId.         ToWWCP();
+                var sessionId            = request.SessionId.          ToWWCP();
+                var localAuthentication  = request.Identification.     ToWWCP()?.ToLocal;
+                var chargingLocation     = WWCP.ChargingLocation.FromEVSEId(request.EVSEId?.ToWWCP());
+                var CPOPartnerSessionId  = request.CPOPartnerSessionId.ToWWCP();
+                var operatorId           = request.OperatorId.         ToWWCP();
 
                 #endregion
 
@@ -828,10 +830,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
 
                     OnAuthorizeStopRequest?.Invoke(startTime,
-                                                   Timestamp,
+                                                   timestamp,
                                                    this,
                                                    Id.ToString(),
-                                                   Request.EventTrackingId,
+                                                   request.EventTrackingId,
                                                    RoamingNetwork.Id,
                                                    Id,
                                                    null,
@@ -840,7 +842,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                    sessionId,
                                                    CPOPartnerSessionId,
                                                    localAuthentication,
-                                                   Request.RequestTimeout);
+                                                   request.RequestTimeout);
 
                 }
                 catch (Exception e)
@@ -851,16 +853,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #endregion
 
 
-                var response = await RoamingNetwork.AuthorizeStop(sessionId.Value,
-                                                                  localAuthentication,
-                                                                  chargingLocation,
-                                                                  CPOPartnerSessionId,
-                                                                  operatorId,
+                var response = await RoamingNetwork.AuthorizeStop(
+                                         sessionId.Value,
+                                         localAuthentication,
+                                         chargingLocation,
+                                         CPOPartnerSessionId,
+                                         operatorId,
 
-                                                                  Request.Timestamp,
-                                                                  Request.EventTrackingId,
-                                                                  Request.RequestTimeout,
-                                                                  Request.CancellationToken);
+                                         request.Timestamp,
+                                         request.EventTrackingId,
+                                         request.RequestTimeout,
+                                         request.CancellationToken
+                                     );
 
 
                 #region Send OnAuthorizeStopResponse event
@@ -871,10 +875,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
 
                     OnAuthorizeStopResponse?.Invoke(endTime,
-                                                    Timestamp,
+                                                    timestamp,
                                                     this,
                                                     Id.ToString(),
-                                                    Request.EventTrackingId,
+                                                    request.EventTrackingId,
                                                     RoamingNetwork.Id,
                                                     Id,
                                                     null,
@@ -883,7 +887,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                     sessionId,
                                                     CPOPartnerSessionId,
                                                     localAuthentication,
-                                                    Request.RequestTimeout,
+                                                    request.RequestTimeout,
                                                     response,
                                                     endTime - startTime);
 
@@ -916,7 +920,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         case WWCP.AuthStopResultTypes.Authorized:
-                            return AuthorizationStopResponse.Authorized               (Request,
+                            return AuthorizationStopResponse.Authorized               (request,
                                                                                        response.SessionId. ToOICP(),
                                                                                        default,
                                                                                        default,
@@ -925,27 +929,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.InvalidSessionId:
-                            return AuthorizationStopResponse.SessionIsInvalid         (Request,
+                            return AuthorizationStopResponse.SessionIsInvalid         (request,
                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.CommunicationTimeout:
-                            return AuthorizationStopResponse.CommunicationToEVSEFailed(Request,
+                            return AuthorizationStopResponse.CommunicationToEVSEFailed(request,
                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.StopChargingTimeout:
-                            return AuthorizationStopResponse.NoEVConnectedToEVSE      (Request,
+                            return AuthorizationStopResponse.NoEVConnectedToEVSE      (request,
                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.UnknownLocation:
-                            return AuthorizationStopResponse.UnknownEVSEID            (Request,
+                            return AuthorizationStopResponse.UnknownEVSEID            (request,
                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.OutOfService:
-                            return AuthorizationStopResponse.EVSEOutOfService         (Request,
+                            return AuthorizationStopResponse.EVSEOutOfService         (request,
                                                                                        InternalData:  internalData);
 
                         case WWCP.AuthStopResultTypes.RateLimitReached:
-                            return AuthorizationStopResponse.NotAuthorized            (Request,
+                            return AuthorizationStopResponse.NotAuthorized            (request,
                                                                                        new StatusCode(
                                                                                            StatusCodes.NoPositiveAuthenticationResponse,
                                                                                            "Authentication rate limit reached!"
@@ -958,8 +962,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #endregion
 
                 return AuthorizationStopResponse.ServiceNotAvailable(
-                            Request,
-                            SessionId:  response?.SessionId. ToOICP() ?? Request.SessionId,
+                            request,
+                            SessionId:  response?.SessionId. ToOICP() ?? request.SessionId,
                             ProviderId: response?.ProviderId.ToOICP()
                         );
 
@@ -969,17 +973,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region OnChargeDetailRecord
 
-            this.EMPRoaming.OnChargeDetailRecord += async (Timestamp,
-                                                           Sender,
-                                                           ChargeDetailRecordRequest) => {
+            this.EMPRoaming.OnChargeDetailRecord += async (timestamp,
+                                                           sender,
+                                                           request) => {
 
                 #region Map parameter values
 
-                var cdr  = ChargeDetailRecordRequest.ChargeDetailRecord.ToWWCP();
+                var cdr  = request.ChargeDetailRecord.ToWWCP();
                 if (cdr is null)
                     return Acknowledgement<ChargeDetailRecordRequest>.DataError(
-                        ChargeDetailRecordRequest,
-                        SessionId: ChargeDetailRecordRequest.ChargeDetailRecord.SessionId
+                        request,
+                        SessionId: request.ChargeDetailRecord.SessionId
                     );
 
                 var CDRs = new WWCP.ChargeDetailRecord[] { cdr };
@@ -994,13 +998,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
 
                     OnChargeDetailRecordRequest?.Invoke(startTime,
-                                                        Timestamp,
+                                                        timestamp,
                                                         this,
                                                         Id.ToString(),
-                                                        ChargeDetailRecordRequest.EventTrackingId,
+                                                        request.EventTrackingId,
                                                         RoamingNetwork.Id,
                                                         CDRs,
-                                                        ChargeDetailRecordRequest.RequestTimeout);
+                                                        request.RequestTimeout);
 
                 }
                 catch (Exception e)
@@ -1011,13 +1015,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #endregion
 
 
-                var response = await RoamingNetwork.SendChargeDetailRecords(CDRs,
-                                                                            WWCP.TransmissionTypes.Direct,
+                var response = await RoamingNetwork.SendChargeDetailRecords(
+                                         CDRs,
+                                         WWCP.TransmissionTypes.Direct,
 
-                                                                            ChargeDetailRecordRequest.Timestamp,
-                                                                            ChargeDetailRecordRequest.EventTrackingId,
-                                                                            ChargeDetailRecordRequest.RequestTimeout,
-                                                                            ChargeDetailRecordRequest.CancellationToken);
+                                         request.Timestamp,
+                                         request.EventTrackingId,
+                                         request.RequestTimeout,
+                                         request.CancellationToken
+                                     );
 
 
                 #region Send OnChargeDetailRecordResponse event
@@ -1028,13 +1034,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 {
 
                     OnChargeDetailRecordResponse?.Invoke(endTime,
-                                                         Timestamp,
+                                                         timestamp,
                                                          this,
                                                          Id.ToString(),
-                                                         ChargeDetailRecordRequest.EventTrackingId,
+                                                         request.EventTrackingId,
                                                          RoamingNetwork.Id,
                                                          CDRs,
-                                                         ChargeDetailRecordRequest.RequestTimeout,
+                                                         request.RequestTimeout,
                                                          response,
                                                          endTime - startTime);
 
@@ -1053,10 +1059,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     if (response.Result == WWCP.SendCDRsResultTypes.Success)
                         return Acknowledgement<ChargeDetailRecordRequest>.Success(
-                                   ChargeDetailRecordRequest,
-                                   ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                   ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
-                                   ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId,
+                                   request,
+                                   request.ChargeDetailRecord.SessionId,
+                                   request.ChargeDetailRecord.CPOPartnerSessionId,
+                                   request.ChargeDetailRecord.EMPPartnerSessionId,
                                    "Charge detail record forwarded!"
                                );
 
@@ -1077,26 +1083,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                             case WWCP.SendCDRResultTypes.InvalidSessionId:
                                 return Acknowledgement<ChargeDetailRecordRequest>.SessionIsInvalid(
-                                           ChargeDetailRecordRequest,
-                                           SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                           CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
-                                           EMPPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId
+                                           request,
+                                           SessionId:            request.ChargeDetailRecord.SessionId,
+                                           CPOPartnerSessionId:  request.ChargeDetailRecord.CPOPartnerSessionId,
+                                           EMPPartnerSessionId:  request.ChargeDetailRecord.EMPPartnerSessionId
                                        );
 
                             case WWCP.SendCDRResultTypes.UnknownLocation:
                                 return Acknowledgement<ChargeDetailRecordRequest>.UnknownEVSEID(
-                                           ChargeDetailRecordRequest,
-                                           SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                           CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
-                                           EMPPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId
+                                           request,
+                                           SessionId:            request.ChargeDetailRecord.SessionId,
+                                           CPOPartnerSessionId:  request.ChargeDetailRecord.CPOPartnerSessionId,
+                                           EMPPartnerSessionId:  request.ChargeDetailRecord.EMPPartnerSessionId
                                        );
 
                             case WWCP.SendCDRResultTypes.Error:
                                 return Acknowledgement<ChargeDetailRecordRequest>.DataError(
-                                           ChargeDetailRecordRequest,
-                                           SessionId:            ChargeDetailRecordRequest.ChargeDetailRecord.SessionId,
-                                           CPOPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.CPOPartnerSessionId,
-                                           EMPPartnerSessionId:  ChargeDetailRecordRequest.ChargeDetailRecord.EMPPartnerSessionId
+                                           request,
+                                           SessionId:            request.ChargeDetailRecord.SessionId,
+                                           CPOPartnerSessionId:  request.ChargeDetailRecord.CPOPartnerSessionId,
+                                           EMPPartnerSessionId:  request.ChargeDetailRecord.EMPPartnerSessionId
                                        );
 
                         }
@@ -1107,8 +1113,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 #endregion
 
                 return Acknowledgement<ChargeDetailRecordRequest>.ServiceNotAvailable(
-                           ChargeDetailRecordRequest,
-                           SessionId: ChargeDetailRecordRequest.ChargeDetailRecord.SessionId
+                           request,
+                           SessionId: request.ChargeDetailRecord.SessionId
                        );
 
             };
@@ -1266,9 +1272,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                          null, // CustomData
 
                                          Timestamp,
-                                         CancellationToken,
                                          EventTrackingId,
-                                         RequestTimeout)).
+                                         RequestTimeout,
+                                         CancellationToken)).
                                      ConfigureAwait(false);
 
 
@@ -1588,7 +1594,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         //                                    ConfigureAwait(false);
 
         //    if (response.HTTPStatusCode == HTTPStatusCode.OK &&
-        //        response.Content        != null)
+        //        response.Content        is not null)
         //    {
 
         //        result = response.Content.Result
@@ -1614,10 +1620,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         //        result = PushAuthenticationDataResult.Error(Id,
         //                                                    this,
         //                                                    null,
-        //                                                    response.Content != null
+        //                                                    response.Content is not null
         //                                                        ? response.Content.StatusCode.Description
         //                                                        : null,
-        //                                                    response.Content != null
+        //                                                    response.Content is not null
         //                                                        ? response.Content.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
         //                                                              ? new String[] { response.Content.StatusCode.AdditionalInfo }
         //                                                              : null
@@ -1753,7 +1759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var PartnerProductIdElements = new Dictionary<String, String>();
 
-            if (ChargingProduct != null)
+            if (ChargingProduct is not null)
                 PartnerProductIdElements.Add("P", ChargingProduct.Id.ToString());
 
             #endregion
@@ -1800,14 +1806,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Add the eMAId to the list of valid eMAIds
 
             if (eMAIds == null && RemoteAuthentication?.RemoteIdentification.HasValue == true)
-                eMAIds = new List<WWCP.EMobilityAccount_Id> { RemoteAuthentication.RemoteIdentification.Value };
+                eMAIds = [ RemoteAuthentication.RemoteIdentification.Value ];
 
-            if (eMAIds != null && RemoteAuthentication?.RemoteIdentification.HasValue == true && !eMAIds.Contains(RemoteAuthentication.RemoteIdentification.Value))
-            {
-                var _eMAIds = new List<WWCP.EMobilityAccount_Id>(eMAIds);
-                _eMAIds.Add(RemoteAuthentication.RemoteIdentification.Value);
-                eMAIds = _eMAIds;
-            }
+            if (eMAIds is not null && RemoteAuthentication?.RemoteIdentification.HasValue == true && !eMAIds.Contains(RemoteAuthentication.RemoteIdentification.Value))
+                eMAIds = new List<WWCP.EMobilityAccount_Id>(eMAIds) {
+                             RemoteAuthentication.RemoteIdentification.Value
+                         };
 
             #endregion
 
@@ -1820,7 +1824,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              ProviderId:            ProviderId.ToOICP() ?? DefaultProviderId,
                                              Identification:        RemoteAuthentication.ToOICP(),
                                              Duration:              Duration,
-                                             SessionId:             ReservationId != null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
+                                             SessionId:             ReservationId is not null ? Session_Id.Parse(ReservationId.ToString()) : new Session_Id?(),
                                              CPOPartnerSessionId:   null,
                                              EMPPartnerSessionId:   null,
                                              PartnerProductId:      PartnerProductIdElements.Count > 0
@@ -2088,7 +2092,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var PartnerProductIdElements = new Dictionary<String, String>();
 
-            if (ChargingProduct != null)
+            if (ChargingProduct is not null)
                 PartnerProductIdElements.Add("P", ChargingProduct.Id.ToString());
 
             #endregion
@@ -2145,7 +2149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Copy the 'ReservationId' value into the PartnerProductId
 
-            if (ReservationId != null)
+            if (ReservationId is not null)
             {
 
                 if (!PartnerProductIdElements.ContainsKey("R"))
@@ -2480,9 +2484,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                         null, // CustomData
 
                                         Timestamp,
-                                        CancellationToken,
                                         EventTrackingId,
-                                        RequestTimeout)).
+                                        RequestTimeout,
+                                        CancellationToken)).
                                     ConfigureAwait(false);
 
 
@@ -2721,7 +2725,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                         #region OICP StatusCode is not 'Success'
 
-                        //else if (PullEVSEDataTask.Result.Content.StatusCode != null &&
+                        //else if (PullEVSEDataTask.Result.Content.StatusCode is not null &&
                         //        !PullEVSEDataTask.Result.Content.StatusCode.HasResult)
                         //{
                         //
@@ -2877,7 +2881,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     TimestampOfLastPullDataRun = timestampBeforeLastPullDataRun;
 
-                    if (invalidOperatorsIds.Any())
+                    if (invalidOperatorsIds.Count != 0)
                         DebugX.Log(invalidOperatorsIds.Count + " invalid EVSE operator identifications");
 
                     //if (operatorsSkipped.   Any())
@@ -3056,7 +3060,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                 #region Send OnEVSEStatusChanges event
 
-                                if (updates.Any())
+                                if (updates.Count != 0)
                                 {
                                     try
                                     {
@@ -3089,7 +3093,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                         pullEVSEStatusResult.Response.OperatorEVSEStatus,
                                                                         IncludeEVSEOperatorId);
 
-                                if (update.ValidStatusList.Any())
+                                if (update.ValidStatusList.Count != 0)
                                 {
                                     try
                                     {
@@ -3336,9 +3340,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         else
                         {
                             // An existing charging station operator: Update name (via events)!
-                            if (wwcpChargingStationOperator is not null)
-                                wwcpChargingStationOperator.Name.Set(Languages.unknown,
-                                                                     CurrentOperatorEVSEStatus.OperatorName);
+                            wwcpChargingStationOperator?.Name.Set(Languages.unknown,
+                                                                  CurrentOperatorEVSEStatus.OperatorName);
                         }
 
                         if (wwcpChargingStationOperator is not null)
@@ -3407,13 +3410,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             }
 
 
-            if (operatorsSkipped.   Any())
+            if (operatorsSkipped.   Count != 0)
                 DebugX.Log(operatorsSkipped.Count    + " EVSE operators skipped");
 
-            if (illegalOperatorsIds.Any())
+            if (illegalOperatorsIds.Count != 0)
                 DebugX.Log(illegalOperatorsIds.Count + " invalid EVSE operator identifications");
 
-            if (validStatusList.      Any())
+            if (validStatusList.    Count != 0)
                 DebugX.Log(validStatusList.Count     + " EVSE status received");
 
             if (totalEVSEsUpdated   > 0)
@@ -3580,7 +3583,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             //            //_ChargingPool.Description           = CurrentEVSEDataRecord.AdditionalInfo;
             //            chargingPool.LocationLanguage      = LocationLanguage;
             //            chargingPool.EntranceLocation      = CurrentEVSEDataRecord.GeoChargingPointEntrance.ToWWCP();
-            //            //_ChargingPool.OpeningTimes          = CurrentEVSEDataRecord.OpeningTimes != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTimes) : null;
+            //            //_ChargingPool.OpeningTimes          = CurrentEVSEDataRecord.OpeningTimes is not null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTimes) : null;
             //            chargingPool.AuthenticationModes   = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.SafeSelect(mode   => mode.  ToWWCP()));
             //            chargingPool.PaymentOptions        = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     SafeSelect(option => option.ToWWCP()));
             //            chargingPool.Accessibility         = CurrentEVSEDataRecord.Accessibility.ToWWCP();
@@ -3613,7 +3616,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             //                                    pool.GeoLocation                 = CurrentEVSEDataRecord.GeoCoordinates.ToWWCP();
             //                                    pool.LocationLanguage            = LocationLanguage;
             //                                    pool.EntranceLocation            = CurrentEVSEDataRecord.GeoChargingPointEntrance.ToWWCP();
-            //                                    //pool.OpeningTimes                = CurrentEVSEDataRecord.OpeningTimes != null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTimes) : null;
+            //                                    //pool.OpeningTimes                = CurrentEVSEDataRecord.OpeningTimes is not null ? OpeningTimes.Parse(CurrentEVSEDataRecord.OpeningTimes) : null;
             //                                    pool.AuthenticationModes         = new ReactiveSet<WWCP.AuthenticationModes>(CurrentEVSEDataRecord.AuthenticationModes.SafeSelect(mode   => mode.  ToWWCP()));
             //                                    pool.PaymentOptions              = new ReactiveSet<WWCP.PaymentOptions>     (CurrentEVSEDataRecord.PaymentOptions.     SafeSelect(option => option.ToWWCP()));
             //                                    pool.Accessibility               = CurrentEVSEDataRecord.Accessibility.ToWWCP();

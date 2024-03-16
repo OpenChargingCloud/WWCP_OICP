@@ -285,11 +285,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            AdditionalReferences? AdditionalReferences2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (Object.ReferenceEquals(AdditionalReferences1, AdditionalReferences2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (AdditionalReferences1 is null || AdditionalReferences2 is null)
                 return false;
 

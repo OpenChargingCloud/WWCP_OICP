@@ -599,7 +599,7 @@
 //            if (!UpdateEVSEStatusTimeout.HasValue)
 //                this._UpdateEVSEStatusTimeout  = DefaultUpdateEVSEStatusTimeout;
 
-//            this.DNSClient                    = DNSClient != null
+//            this.DNSClient                    = DNSClient is not null
 //                                                     ? DNSClient
 //                                                     : new DNSClient();
 
@@ -708,7 +708,7 @@
 //            if (!UpdateEVSEStatusTimeout.HasValue)
 //                this._UpdateEVSEStatusTimeout  = DefaultUpdateEVSEStatusTimeout;
 
-//            this.DNSClient                    = DNSClient != null
+//            this.DNSClient                    = DNSClient is not null
 //                                                     ? DNSClient
 //                                                     : new DNSClient();
 
@@ -829,7 +829,7 @@
 //                    {
 
 //                        var UpdateContextCreatorLocal = _UpdateContextCreator;
-//                        if (UpdateContextCreatorLocal != null)
+//                        if (UpdateContextCreatorLocal is not null)
 //                            UpdateContext = UpdateContextCreatorLocal();
 
 //                    }
@@ -842,7 +842,7 @@
 //                    {
 
 //                        var StartBulkUpdateLocal = _StartBulkUpdate;
-//                        if (StartBulkUpdateLocal != null)
+//                        if (StartBulkUpdateLocal is not null)
 //                            StartBulkUpdateLocal(UpdateContext);
 
 //                    }
@@ -855,7 +855,7 @@
 
 //                    #region Load static EVSE data from stream...
 
-//                    if (_LoadStaticDataFromStream != null)
+//                    if (_LoadStaticDataFromStream is not null)
 //                    {
 
 //                        try
@@ -868,25 +868,25 @@
 //                                                        FirstOrDefault();
 
 //                            // Either with SOAP-XML tags or without...
-//                            var OperatorEvseDataXMLs  = (SOAPXML != null ? SOAPXML : XML).
+//                            var OperatorEvseDataXMLs  = (SOAPXML is not null ? SOAPXML : XML).
 //                                                            Element (OICPNS.EVSEData + "EvseData").
 //                                                            Elements(OICPNS.EVSEData + "OperatorEvseData");
 
-//                            if (OperatorEvseDataXMLs != null)
+//                            if (OperatorEvseDataXMLs is not null)
 //                            {
 
-//                                if (_EVSEDataXMLHandler != null)
+//                                if (_EVSEDataXMLHandler is not null)
 //                                    _EVSEDataXMLHandler(UpdateContext,
 //                                                        org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
 //                                                        OperatorEvseDataXMLs);
 
 //                                var _OperatorEVSEData = OperatorEvseDataXMLs.
 //                                                            Select    (OperatorEvseDataXML => OperatorEVSEData.Parse(OperatorEvseDataXML)).
-//                                                            Where     (_OperatorEvseData   => _OperatorEvseData != null).
+//                                                            Where     (_OperatorEvseData   => _OperatorEvseData is not null).
 //                                                            ToArray();
 
 //                                if (_OperatorEVSEData.Length  > 0 &&
-//                                    _EVSEDataXMLHandler      != null)
+//                                    _EVSEDataXMLHandler      is not null)
 //                                    _EVSEDataHandler(UpdateContext,
 //                                                     org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
 //                                                     _OperatorEVSEData);
@@ -916,7 +916,7 @@
 //                                if (PullEVSEDataTask.Result.Content.StatusCode.Value.Code == 0)
 //                                {
 
-//                                    //if (_EVSEDataXMLHandler != null)
+//                                    //if (_EVSEDataXMLHandler is not null)
 //                                    //    _EVSEDataXMLHandler(UpdateContext,
 //                                    //                        org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
 //                                    //                        PullEVSEDataTask.Result.Content.OperatorEVSEData);
@@ -936,7 +936,7 @@
 //                    {
 
 //                        var StopBulkUpdateLocal = _StopBulkUpdate;
-//                        if (StopBulkUpdateLocal != null)
+//                        if (StopBulkUpdateLocal is not null)
 //                            StopBulkUpdateLocal(UpdateContext);
 
 //                    }
@@ -949,7 +949,7 @@
 //                    {
 
 //                        var UpdateContextDisposerLocal = _UpdateContextDisposer;
-//                        if (UpdateContextDisposerLocal != null)
+//                        if (UpdateContextDisposerLocal is not null)
 //                            UpdateContextDisposerLocal(UpdateContext);
 
 //                    }
@@ -1034,7 +1034,7 @@
 //                    {
 
 //                        var UpdateContextCreatorLocal = _UpdateContextCreator;
-//                        if (UpdateContextCreatorLocal != null)
+//                        if (UpdateContextCreatorLocal is not null)
 //                            UpdateContext = UpdateContextCreatorLocal();
 
 //                    }
@@ -1047,7 +1047,7 @@
 //                    {
 
 //                        var StartBulkUpdateLocal = _StartBulkUpdate;
-//                        if (StartBulkUpdateLocal != null)
+//                        if (StartBulkUpdateLocal is not null)
 //                            StartBulkUpdateLocal(UpdateContext);
 
 //                    }
@@ -1060,7 +1060,7 @@
 
 //                    #region Load static EVSE data from stream...
 
-//                    if (_LoadStaticDataFromStream != null)
+//                    if (_LoadStaticDataFromStream is not null)
 //                    {
 
 //                        try
@@ -1073,7 +1073,7 @@
 //                                                  FirstOrDefault();
 
 //                            // Either with SOAP-XML tags or without...
-//                            var EvseStatus  = (SOAPXML != null ? SOAPXML : XML).
+//                            var EvseStatus  = (SOAPXML is not null ? SOAPXML : XML).
 //                                                        Element (OICPNS.EVSEStatus + "EvseStatusRecords").
 //                                                        Elements(OICPNS.EVSEStatus + "EvseStatusRecord").
 //                                                        Select(v => new KeyValuePair<EVSE_Id, EVSEStatusTypes>(EVSE_Id.Parse(v.Element(OICPNS.EVSEStatus + "EvseId").Value),
@@ -1138,8 +1138,8 @@
 //                                                                                    PullEVSEStatusById(_ProviderId, EVSEPartition).
 //                                                                                    ContinueWith(NewEVSEStatusTask => {
 
-//                                                                                        if (NewEVSEStatusTask.Result != null)
-//                                                                                            if (NewEVSEStatusTask.Result.Content != null)
+//                                                                                        if (NewEVSEStatusTask.Result is not null)
+//                                                                                            if (NewEVSEStatusTask.Result.Content is not null)
 //                                                                                                NewEVSEStatusTask.Result.Content.EVSEStatusRecords.ForEach(NewEVSEStatusRecord =>
 //                                                                                                    _EVSEStatusHandler(UpdateContext,
 //                                                                                                                       org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
@@ -1177,7 +1177,7 @@
 //                    {
 
 //                        var StopBulkUpdateLocal = _StopBulkUpdate;
-//                        if (StopBulkUpdateLocal != null)
+//                        if (StopBulkUpdateLocal is not null)
 //                            StopBulkUpdateLocal(UpdateContext);
 
 //                    }
@@ -1190,7 +1190,7 @@
 //                    {
 
 //                        var UpdateContextDisposerLocal = _UpdateContextDisposer;
-//                        if (UpdateContextDisposerLocal != null)
+//                        if (UpdateContextDisposerLocal is not null)
 //                            UpdateContextDisposerLocal(UpdateContext);
 
 //                    }
@@ -1248,7 +1248,7 @@
 //        {
 
 //            var OnExceptionLocal = OnException;
-//            if (OnExceptionLocal != null)
+//            if (OnExceptionLocal is not null)
 //                OnExceptionLocal(Timestamp, Sender, Exception);
 
 //        }
@@ -1269,7 +1269,7 @@
 //        {
 
 //            var OnHTTPErrorLocal = OnHTTPError;
-//            if (OnHTTPErrorLocal != null)
+//            if (OnHTTPErrorLocal is not null)
 //                OnHTTPErrorLocal(Timestamp, Sender, HttpResponse);
 
 //        }
@@ -1290,7 +1290,7 @@
 //        {
 
 //            var OnSOAPErrorLocal = OnSOAPError;
-//            if (OnSOAPErrorLocal != null)
+//            if (OnSOAPErrorLocal is not null)
 //                OnSOAPErrorLocal(Timestamp, Sender, SOAPXML);
 
 //        }

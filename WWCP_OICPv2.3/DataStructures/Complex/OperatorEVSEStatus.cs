@@ -324,11 +324,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            OperatorEVSEStatus? OperatorEVSEStatus2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(OperatorEVSEStatus1, OperatorEVSEStatus2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (OperatorEVSEStatus1 is null || OperatorEVSEStatus2 is null)
                 return false;
 

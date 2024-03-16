@@ -625,11 +625,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            Identification? Identification2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(Identification1, Identification2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (Identification1 is null || Identification2 is null)
                 return false;
 

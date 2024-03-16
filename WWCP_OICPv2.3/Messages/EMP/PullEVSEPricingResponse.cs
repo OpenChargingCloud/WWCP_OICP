@@ -131,8 +131,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             unchecked
             {
 
-                hashCode = this.OperatorEVSEPricings.Aggregate(0, (hashCode, operatorEVSEPricing) => hashCode ^ operatorEVSEPricing.GetHashCode()) ^
-                          (this.StatusCode?.GetHashCode() ?? 0);
+                hashCode = this.OperatorEVSEPricings.CalcHashCode() * 3 ^
+                           this.StatusCode?.         GetHashCode() ?? 0;
 
             }
 
@@ -506,11 +506,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PullEVSEPricingResponse PullEVSEPricingResponse2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullEVSEPricingResponse1, PullEVSEPricingResponse2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PullEVSEPricingResponse1 is null || PullEVSEPricingResponse2 is null)
                 return false;
 

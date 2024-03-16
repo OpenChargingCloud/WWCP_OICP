@@ -30,8 +30,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// An abstract generic OICP request.
     /// </summary>
     /// <typeparam name="TRequest">The type of the OICP request.</typeparam>
-    public abstract class ARequest<TRequest> : IRequest,
-                                               IEquatable<TRequest>
+    /// <param name="ProcessId">The optional unique OICP process identification.</param>
+    /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+    /// <param name="Timestamp">The optional timestamp of the request.</param>
+    /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
+    /// <param name="RequestTimeout">The timeout for this request.</param>
+    /// <param name="CancellationToken">An optional token to cancel this request.</param>
+    public abstract class ARequest<TRequest>(Process_Id?        ProcessId           = null,
+                                             JObject?           CustomData          = null,
+                                             DateTime?          Timestamp           = null,
+                                             EventTracking_Id?  EventTrackingId     = null,
+                                             TimeSpan?          RequestTimeout      = null,
+                                             CancellationToken  CancellationToken   = default) : IRequest,
+                                                                                                 IEquatable<TRequest>
 
         where TRequest : class, IRequest
 
@@ -51,63 +62,33 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The unique OICP process identification.
         /// </summary>
-        public Process_Id?               ProcessId                  { get; }
+        public Process_Id?        ProcessId            { get; }      = ProcessId;
 
         /// <summary>
         /// The optional timestamp of the request.
         /// </summary>
-        public DateTime                  Timestamp                  { get; }
+        public DateTime           Timestamp            { get; }      = Timestamp ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
         /// <summary>
         /// An optional event tracking identification for correlating this request with other events.
         /// </summary>
-        public EventTracking_Id          EventTrackingId            { get; }
+        public EventTracking_Id   EventTrackingId      { get; }      = EventTrackingId ?? EventTracking_Id.New;
 
         /// <summary>
         /// An optional timeout for this request.
         /// </summary>
-        public TimeSpan?                 RequestTimeout             { get; }
+        public TimeSpan?          RequestTimeout       { get; }      = RequestTimeout ?? DefaultRequestTimeout;
 
         /// <summary>
         /// Optional custom data, e.g. in combination with custom parsers and serializers.
         /// </summary>
         [Optional]
-        public JObject?                  CustomData                 { get; set; }
+        public JObject?           CustomData           { get; set; } = CustomData;
 
         /// <summary>
         /// An optional token to cancel this request.
         /// </summary>
-        public CancellationToken         CancellationToken          { get; }
-
-        #endregion
-
-        #region Constructor(s)
-
-        /// <summary>
-        /// Create a new generic request message.
-        /// </summary>
-        /// <param name="ProcessId">The optional unique OICP process identification.</param>
-        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
-        /// <param name="RequestTimeout">The timeout for this request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
-        public ARequest(Process_Id?         ProcessId           = null,
-                        JObject?            CustomData          = null,
-                        DateTime?           Timestamp           = null,
-                        EventTracking_Id?   EventTrackingId     = null,
-                        TimeSpan?           RequestTimeout      = null,
-                        CancellationToken   CancellationToken   = default)
-        {
-
-            this.ProcessId          = ProcessId;
-            this.CustomData         = CustomData;
-            this.Timestamp          = Timestamp         ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            this.EventTrackingId    = EventTrackingId   ?? EventTracking_Id.New;
-            this.RequestTimeout     = RequestTimeout    ?? DefaultRequestTimeout;
-            this.CancellationToken  = CancellationToken;
-
-        }
+        public CancellationToken  CancellationToken    { get; }      = CancellationToken;
 
         #endregion
 

@@ -206,10 +206,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ActionType     [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("ActionType",
-                                             "action type",
-                                             out ActionTypes ActionType,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("ActionType",
+                                         "action type",
+                                         ActionTypesExtensions.TryParse,
+                                         out ActionTypes ActionType,
+                                         out ErrorResponse))
                 {
                     return false;
                 }

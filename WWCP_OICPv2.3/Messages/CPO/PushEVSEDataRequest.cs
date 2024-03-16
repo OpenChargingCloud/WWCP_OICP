@@ -207,10 +207,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse ActionType          [mandatory]
 
-                if (!JSON.ParseMandatoryEnum("ActionType",
-                                             "action type",
-                                             out ActionTypes ActionType,
-                                             out ErrorResponse))
+                if (!JSON.ParseMandatory("ActionType",
+                                         "action type",
+                                         ActionTypesExtensions.TryParse,
+                                         out ActionTypes ActionType,
+                                         out ErrorResponse))
                 {
                     return false;
                 }
@@ -355,11 +356,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PushEVSEDataRequest PushEVSEData2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PushEVSEData1, PushEVSEData2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PushEVSEData1 is null || PushEVSEData2 is null)
                 return false;
 

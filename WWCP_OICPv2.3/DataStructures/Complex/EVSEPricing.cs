@@ -392,11 +392,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            EVSEPricing? EVSEPricing2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(EVSEPricing1, EVSEPricing2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (EVSEPricing1 is null || EVSEPricing2 is null)
                 return false;
 

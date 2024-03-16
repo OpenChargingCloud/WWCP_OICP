@@ -160,9 +160,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                    JObject?                                        CustomData                             = null,
 
                                    DateTime?                                       Timestamp                              = null,
-                                   CancellationToken                               CancellationToken                      = default,
                                    EventTracking_Id?                               EventTrackingId                        = null,
-                                   TimeSpan?                                       RequestTimeout                         = null)
+                                   TimeSpan?                                       RequestTimeout                         = null,
+                                   CancellationToken                               CancellationToken                      = default)
 
             : base(ProcessId,
                    Page,
@@ -171,9 +171,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    CustomData,
 
                    Timestamp,
-                   CancellationToken,
                    EventTrackingId,
-                   RequestTimeout)
+                   RequestTimeout,
+                   CancellationToken)
 
         {
 
@@ -192,6 +192,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.SearchCenter                          = SearchCenter;
             this.DistanceKM                            = DistanceKM;
             this.GeoCoordinatesResponseFormat          = GeoCoordinatesResponseFormat                     ?? GeoCoordinatesFormats.DecimalDegree;
+
+
+            unchecked
+            {
+
+                hashCode = this.ProviderId.                  GetHashCode()       * 11 ^
+                           this.DistanceKM.                  GetHashCode()       *  7 ^
+                           this.GeoCoordinatesResponseFormat.GetHashCode()       *  5 ^
+                          (this.SearchCenter?.               GetHashCode() ?? 0) *  3 ^
+                           this.LastCall?.                   GetHashCode() ?? 0;
+
+            }
 
         }
 
@@ -258,11 +270,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 IEnumerable<String>?                               SortOrder                         = null,
 
                                                 DateTime?                                          Timestamp                         = null,
-                                                CancellationToken                                  CancellationToken                 = default,
                                                 EventTracking_Id?                                  EventTrackingId                   = null,
                                                 TimeSpan?                                          RequestTimeout                    = null,
-
-                                                CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
+                                                CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null,
+                                                CancellationToken                                  CancellationToken                 = default)
         {
 
             if (TryParse(JSON,
@@ -273,10 +284,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPullEVSEDataRequestParser))
+                         CustomPullEVSEDataRequestParser,
+                         CancellationToken))
             {
                 return pullEVSEDataRequest;
             }
@@ -306,11 +317,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        IEnumerable<String>?                               SortOrder                         = null,
 
                                        DateTime?                                          Timestamp                         = null,
-                                       CancellationToken                                  CancellationToken                 = default,
                                        EventTracking_Id?                                  EventTrackingId                   = null,
                                        TimeSpan?                                          RequestTimeout                    = null,
-
-                                       CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null)
+                                       CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null,
+                                       CancellationToken                                  CancellationToken                 = default)
         {
 
             try
@@ -522,6 +532,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
                 PullEVSEDataRequest = new PullEVSEDataRequest(
+
                                           ProviderId,
                                           LastCall,
 
@@ -546,9 +557,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           customData,
 
                                           Timestamp,
-                                          CancellationToken,
                                           EventTrackingId,
-                                          RequestTimeout
+                                          RequestTimeout,
+                                          CancellationToken
+
                                       );
 
                 if (CustomPullEVSEDataRequestParser is not null)
@@ -582,54 +594,54 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ProviderID",                    ProviderId.                  ToString()),
-                           new JProperty("GeoCoordinatesResponseFormat",  GeoCoordinatesResponseFormat.AsString()),
+                                 new JProperty("ProviderID",                       ProviderId.                  ToString()),
+                                 new JProperty("GeoCoordinatesResponseFormat",     GeoCoordinatesResponseFormat.AsString()),
 
                            LastCall.HasValue
-                               ? new JProperty("LastCall", LastCall.Value.ToIso8601())
+                               ? new JProperty("LastCall",                         LastCall.              Value.ToIso8601())
                                : null,
 
                            OperatorIdFilter                     is not null && OperatorIdFilter.Any()
-                               ? new JProperty("OperatorIds",                     new JArray(OperatorIdFilter.                    Select(operatorId                     => operatorId.                    ToString())))
+                               ? new JProperty("OperatorIds",                      new JArray(OperatorIdFilter.                    Select(operatorId                     => operatorId.                    ToString())))
                                : null,
 
                            CountryCodeFilter                    is not null && CountryCodeFilter.Any()
-                               ? new JProperty("CountryCodes",                    new JArray(CountryCodeFilter.                   Select(countryCode                    => countryCode.                   Alpha3Code)))
+                               ? new JProperty("CountryCodes",                     new JArray(CountryCodeFilter.                   Select(countryCode                    => countryCode.                   Alpha3Code)))
                                : null,
 
                            AccessibilityFilter                  is not null && AccessibilityFilter.Any()
-                               ? new JProperty("Accessibility",                   new JArray(AccessibilityFilter.                 Select(accessibility                  => accessibility.                 AsString())))
+                               ? new JProperty("Accessibility",                    new JArray(AccessibilityFilter.                 Select(accessibility                  => accessibility.                 AsString())))
                                : null,
 
                            AuthenticationModeFilter             is not null && AuthenticationModeFilter.Any()
-                               ? new JProperty("AuthenticationModes",             new JArray(AuthenticationModeFilter.            Select(authenticationMode             => authenticationMode.            AsString())))
+                               ? new JProperty("AuthenticationModes",              new JArray(AuthenticationModeFilter.            Select(authenticationMode             => authenticationMode.            AsString())))
                                : null,
 
                            CalibrationLawDataAvailabilityFilter is not null && CalibrationLawDataAvailabilityFilter.Any()
-                               ? new JProperty("CalibrationLawDataAvailability",  new JArray(CalibrationLawDataAvailabilityFilter.Select(calibrationLawDataAvailability => calibrationLawDataAvailability.AsString())))
+                               ? new JProperty("CalibrationLawDataAvailability",   new JArray(CalibrationLawDataAvailabilityFilter.Select(calibrationLawDataAvailability => calibrationLawDataAvailability.AsString())))
                                : null,
 
                            IsHubjectCompatibleFilter.HasValue
-                               ? new JProperty("IsHubjectCompatible",             IsHubjectCompatibleFilter.Value)
+                               ? new JProperty("IsHubjectCompatible",              IsHubjectCompatibleFilter.Value)
                                : null,
 
                            IsOpen24HoursFilter.HasValue
-                               ? new JProperty("IsOpen24Hours",                   IsOpen24HoursFilter.      Value)
+                               ? new JProperty("IsOpen24Hours",                    IsOpen24HoursFilter.      Value)
                                : null,
 
                            RenewableEnergyFilter.HasValue
-                               ? new JProperty("RenewableEnergy",                 RenewableEnergyFilter.    Value)
+                               ? new JProperty("RenewableEnergy",                  RenewableEnergyFilter.    Value)
                                : null,
 
                            SearchCenter.HasValue && DistanceKM.HasValue
-                               ? new JProperty("SearchCenter",                    new JObject(
-                                                                                      new JProperty("GeoCoordinates",  SearchCenter.Value.ToJSON(CustomGeoCoordinatesSerializer)),
-                                                                                      new JProperty("Radius",          DistanceKM.Value)
-                                                                                  ))
+                               ? new JProperty("SearchCenter",                     new JObject(
+                                                                                       new JProperty("GeoCoordinates",  SearchCenter.Value.ToJSON(CustomGeoCoordinatesSerializer)),
+                                                                                       new JProperty("Radius",          DistanceKM.Value)
+                                                                                   ))
                                : null,
 
                            CustomData is not null
-                               ? new JProperty("CustomData",                      CustomData)
+                               ? new JProperty("CustomData",                       CustomData)
                                : null
 
                        );
@@ -653,7 +665,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEData1">An pull EVSE data request.</param>
         /// <param name="PullEVSEData2">Another pull EVSE data request.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (PullEVSEDataRequest PullEVSEData1, PullEVSEDataRequest PullEVSEData2)
+        public static Boolean operator == (PullEVSEDataRequest PullEVSEData1,
+                                           PullEVSEDataRequest PullEVSEData2)
         {
 
             if (ReferenceEquals(PullEVSEData1, PullEVSEData2))
@@ -676,7 +689,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullEVSEData1">An pull EVSE data request.</param>
         /// <param name="PullEVSEData2">Another pull EVSE data request.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (PullEVSEDataRequest PullEVSEData1, PullEVSEDataRequest PullEVSEData2)
+        public static Boolean operator != (PullEVSEDataRequest PullEVSEData1,
+                                           PullEVSEDataRequest PullEVSEData2)
 
             => !(PullEVSEData1 == PullEVSEData2);
 
@@ -727,29 +741,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderId.                  GetHashCode() * 17 ^
-                       DistanceKM.                  GetHashCode() * 13 ^
-                       GeoCoordinatesResponseFormat.GetHashCode() * 11 ^
-
-                       (SearchCenter.        HasValue
-                            ? SearchCenter.       GetHashCode()   *  7
-                            : 0) ^
-
-                       (!LastCall.HasValue
-                            ? LastCall.GetHashCode()              *  5
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -761,15 +760,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public override String ToString()
 
             => new String[] {
+
                    SearchCenter.HasValue
-                       ? SearchCenter.ToString() + " / " + DistanceKM + "km"
+                       ? $"{SearchCenter} / {DistanceKM} km"
                        : "",
+
                    LastCall.HasValue
-                       ? LastCall.Value.ToIso8601()
+                       ? LastCall.Value.ToString()
                        : "",
-                   " (", ProviderId.ToString(), ")"
+
+                   $" ({ProviderId})"
+
                }.Where(text => text.IsNotNullOrEmpty()).
-                    AggregateWith(", ");
+                 AggregateWith(", ");
 
         #endregion
 
