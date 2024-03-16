@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -89,6 +91,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.CustomData       = CustomData;
 
+
+            unchecked
+            {
+
+                hashCode = this.OperatorId.     GetHashCode() * 5 ^
+                           this.OperatorName.   GetHashCode() * 3 ^
+                           this.EVSEDataRecords.CalcHashCode();
+
+            }
+
         }
 
         #endregion
@@ -126,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomOperatorEVSEDataParser))
             {
-                return operatorEVSEData!;
+                return operatorEVSEData;
             }
 
             throw new ArgumentException("The given JSON representation of operator EVSE data is invalid: " + errorResponse,
@@ -146,9 +158,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OperatorEVSEData">The parsed operator EVSE data.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                JSON,
-                                       out OperatorEVSEData?  OperatorEVSEData,
-                                       out String?            ErrorResponse)
+        public static Boolean TryParse(JObject                                     JSON,
+                                       [NotNullWhen(true)]  out OperatorEVSEData?  OperatorEVSEData,
+                                       [NotNullWhen(false)] out String?            ErrorResponse)
 
             => TryParse(JSON,
                         out OperatorEVSEData,
@@ -164,8 +176,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOperatorEVSEDataParser">A delegate to parse custom operator EVSE datas JSON objects.</param>
         public static Boolean TryParse(JObject                                         JSON,
-                                       out OperatorEVSEData?                           OperatorEVSEData,
-                                       out String?                                     ErrorResponse,
+                                       [NotNullWhen(true)]  out OperatorEVSEData?      OperatorEVSEData,
+                                       [NotNullWhen(false)] out String?                ErrorResponse,
                                        CustomJObjectParserDelegate<OperatorEVSEData>?  CustomOperatorEVSEDataParser)
         {
 
@@ -210,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("OperatorName",
                                              "operator name",
-                                             out String OperatorName,
+                                             out var OperatorName,
                                              out ErrorResponse))
                 {
                     return false;
@@ -226,11 +238,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                OperatorEVSEData = new OperatorEVSEData(EvseDataRecords,
-                                                        OperatorId,
-                                                        OperatorName,
+                OperatorEVSEData = new OperatorEVSEData(
 
-                                                        customData);
+                                       EvseDataRecords,
+                                       OperatorId,
+                                       OperatorName,
+
+                                       customData
+
+                                   );
 
 
                 if (CustomOperatorEVSEDataParser is not null)
@@ -533,24 +549,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return OperatorId.   GetHashCode()       * 5 ^
-                      (OperatorName?.GetHashCode() ?? 0) * 3 ^
-
-                       (EVSEDataRecords.Any()
-                            ? EVSEDataRecords.GetHashCode()
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -561,9 +567,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorId,
-                             OperatorName.IsNotNullOrEmpty() ? ", " + OperatorName : "",
-                             ", ",  EVSEDataRecords.Count(), " EVSE data record(s)");
+            => $"'{OperatorName}' ({OperatorId}): {EVSEDataRecords.Count()} EVSE data record(s)";
 
         #endregion
 

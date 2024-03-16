@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -69,12 +71,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           JObject?                     CustomData   = null)
         {
 
-            if (!Identifications.SafeAny())
+            if (!Identifications.Any())
                 throw new ArgumentNullException(nameof(Identifications),  "The given enumeration of user identification data records must not be null or empty!");
 
             this.Identifications  = Identifications.Distinct();
             this.ProviderId       = ProviderId;
             this.CustomData       = CustomData;
+
+
+            unchecked
+            {
+
+                hashCode = this.ProviderId.     GetHashCode() * 3 ^
+                           this.Identifications.CalcHashCode();
+
+            }
 
         }
 
@@ -114,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomProviderAuthenticationDataParser))
             {
-                return providerAuthenticationData!;
+                return providerAuthenticationData;
             }
 
             throw new ArgumentException("The given JSON representation of provider user identification data is invalid: " + errorResponse,
@@ -134,9 +145,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ProviderAuthenticationData">The parsed provider user identification data.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                          JSON,
-                                       out ProviderAuthenticationData?  ProviderAuthenticationData,
-                                       out String?                      ErrorResponse)
+        public static Boolean TryParse(JObject                                               JSON,
+                                       [NotNullWhen(true)]  out ProviderAuthenticationData?  ProviderAuthenticationData,
+                                       [NotNullWhen(false)] out String?                      ErrorResponse)
 
             => TryParse(JSON,
                         out ProviderAuthenticationData,
@@ -152,8 +163,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomProviderAuthenticationDataParser">A delegate to parse custom provider user identification datas JSON objects.</param>
         public static Boolean TryParse(JObject                                                   JSON,
-                                       out ProviderAuthenticationData?                           ProviderAuthenticationData,
-                                       out String?                                               ErrorResponse,
+                                       [NotNullWhen(true)]  out ProviderAuthenticationData?      ProviderAuthenticationData,
+                                       [NotNullWhen(false)] out String?                          ErrorResponse,
                                        CustomJObjectParserDelegate<ProviderAuthenticationData>?  CustomProviderAuthenticationDataParser)
         {
 
@@ -178,19 +189,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     {
                         if (authenticationDataRecordJSON is JObject authenticationDataRecordJObject)
                         {
+
                             if (authenticationDataRecordJObject.ParseMandatoryJSON("Identification",
                                                                                    "user identification data record",
                                                                                    Identification.TryParse,
                                                                                    out Identification? identification,
-                                                                                   out ErrorResponse) &&
-                                identification is not null)
+                                                                                   out ErrorResponse))
                             {
-                                Identifications.Add(identification!);
+                                Identifications.Add(identification);
                             }
+
                             else
-                            {
                                 return false;
-                            }
+
                         }
                     }
                 }
@@ -217,9 +228,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ProviderAuthenticationData = new ProviderAuthenticationData(Identifications,
-                                                                            ProviderId,
-                                                                            customData);
+                ProviderAuthenticationData = new ProviderAuthenticationData(
+                                                 Identifications,
+                                                 ProviderId,
+                                                 customData
+                                             );
 
 
                 if (CustomProviderAuthenticationDataParser is not null)
@@ -490,23 +503,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderId.GetHashCode() * 3 ^
-
-                       (Identifications.Any()
-                            ? Identifications.GetHashCode()
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -517,8 +521,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(ProviderId,
-                             ", ", Identifications.Count(), " user identification data record(s)");
+            => $"{ProviderId}, {Identifications.Count()} user identification data record(s)";
 
         #endregion
 

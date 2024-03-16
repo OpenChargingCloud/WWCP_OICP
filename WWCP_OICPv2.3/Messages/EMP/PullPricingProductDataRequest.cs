@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -158,7 +160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomPullPricingProductDataRequestParser))
             {
-                return pullEVSEDataResponse!;
+                return pullEVSEDataResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullPricingProductData request is invalid: " + errorResponse,
@@ -180,8 +182,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullPricingProductDataRequestParser">A delegate to parse custom PullPricingProductData request JSON objects.</param>
         public static Boolean TryParse(JObject                                                      JSON,
                                        Provider_Id                                                  ProviderId,
-                                       out PullPricingProductDataRequest?                           PullPricingProductDataRequest,
-                                       out String?                                                  ErrorResponse,
+                                       [NotNullWhen(true)]  out PullPricingProductDataRequest?      PullPricingProductDataRequest,
+                                       [NotNullWhen(false)] out String?                             ErrorResponse,
                                        Process_Id?                                                  ProcessId                                   = null,
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,
@@ -317,15 +319,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullPricingProductData1">An pull EVSE data request.</param>
         /// <param name="PullPricingProductData2">Another pull EVSE data request.</param>
         /// <returns>True if both match; False otherwise.</returns>
-        public static Boolean operator == (PullPricingProductDataRequest PullPricingProductData1, PullPricingProductDataRequest PullPricingProductData2)
+        public static Boolean operator == (PullPricingProductDataRequest PullPricingProductData1,
+                                           PullPricingProductDataRequest PullPricingProductData2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullPricingProductData1, PullPricingProductData2))
                 return true;
 
-            // If one is null, but not both, return false.
-            if (((Object) PullPricingProductData1 == null) || ((Object) PullPricingProductData2 == null))
+            if (PullPricingProductData1 is null || PullPricingProductData2 is null)
                 return false;
 
             return PullPricingProductData1.Equals(PullPricingProductData2);
@@ -342,7 +343,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="PullPricingProductData1">An pull EVSE data request.</param>
         /// <param name="PullPricingProductData2">Another pull EVSE data request.</param>
         /// <returns>False if both match; True otherwise.</returns>
-        public static Boolean operator != (PullPricingProductDataRequest PullPricingProductData1, PullPricingProductDataRequest PullPricingProductData2)
+        public static Boolean operator != (PullPricingProductDataRequest PullPricingProductData1,
+                                           PullPricingProductDataRequest PullPricingProductData2)
 
             => !(PullPricingProductData1 == PullPricingProductData2);
 

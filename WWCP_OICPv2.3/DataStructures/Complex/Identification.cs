@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -134,6 +136,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.CustomData                   = CustomData;
 
+
+            unchecked
+            {
+
+                hashCode = (this.RFIDId?.                     GetHashCode() ?? 0) * 11 ^
+                           (this.RFIDIdentification?.         GetHashCode() ?? 0) *  7 ^
+                           (this.QRCodeIdentification?.       GetHashCode() ?? 0) *  5 ^
+                           (this.PlugAndChargeIdentification?.GetHashCode() ?? 0) *  3 ^
+                           (this.RemoteIdentification?.       GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -164,8 +178,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Identification FromRFIDIdentification(RFIDIdentification  RFIDIdentification,
                                                             JObject?            CustomData  = null)
 
-            => new (RFIDIdentification: RFIDIdentification,
-                    CustomData:         CustomData);
+            => new (RFIDIdentification:  RFIDIdentification,
+                    CustomData:          CustomData);
 
         #endregion
 
@@ -334,7 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomIdentificationParser))
             {
-                return identification!;
+                return identification;
             }
 
             throw new ArgumentException("The given JSON representation of an identification is invalid: " + errorResponse,
@@ -354,9 +368,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Identification">The parsed identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject              JSON,
-                                       out Identification?  Identification,
-                                       out String?          ErrorResponse)
+        public static Boolean TryParse(JObject                                   JSON,
+                                       [NotNullWhen(true)]  out Identification?  Identification,
+                                       [NotNullWhen(false)] out String?          ErrorResponse)
 
             => TryParse(JSON,
                         out Identification,
@@ -372,8 +386,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomIdentificationParser">A delegate to parse custom identification JSON objects.</param>
         public static Boolean TryParse(JObject                                       JSON,
-                                       out Identification?                           Identification,
-                                       out String?                                   ErrorResponse,
+                                       [NotNullWhen(true)]  out Identification?      Identification,
+                                       [NotNullWhen(false)] out String?              ErrorResponse,
                                        CustomJObjectParserDelegate<Identification>?  CustomIdentificationParser)
         {
 
@@ -421,7 +435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("RFIDIdentification",
                                            "RFID identification",
                                            OICPv2_3.RFIDIdentification.TryParse,
-                                           out RFIDIdentification RFIDIdentification,
+                                           out RFIDIdentification? RFIDIdentification,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -501,11 +515,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                Identification = new Identification(UID,
-                                                    RFIDIdentification,
-                                                    QRCodeIdentification,
-                                                    PnC_EVCOId,
-                                                    Remote_EVCOId);
+                Identification = new Identification(
+                                     UID,
+                                     RFIDIdentification,
+                                     QRCodeIdentification,
+                                     PnC_EVCOId,
+                                     Remote_EVCOId
+                                 );
 
 
                 if (CustomIdentificationParser is not null)
@@ -634,7 +650,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator != (Identification? Identification1,
                                            Identification? Identification2)
 
-            => !Identification1.Equals(Identification2);
+            => !(Identification1 == Identification2);
 
         #endregion
 
@@ -811,17 +827,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-
-            => (RFIDId?.                     GetHashCode() ?? 0) * 11 ^
-               (RFIDIdentification?.         GetHashCode() ?? 0) *  7 ^
-               (QRCodeIdentification?.       GetHashCode() ?? 0) *  5 ^
-               (PlugAndChargeIdentification?.GetHashCode() ?? 0) *  3 ^
-               (RemoteIdentification?.       GetHashCode() ?? 0);
+            => hashCode;
 
         #endregion
 

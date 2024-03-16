@@ -68,8 +68,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="Context">A context of this API.</param>
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public HTTP_Logger(CPOClient                CPOClient,
-                               String                   LoggingPath,
-                               String                   Context         = DefaultContext,
+                               String?                  LoggingPath     = null,
+                               String?                  Context         = DefaultContext,
                                LogfileCreatorDelegate?  LogfileCreator  = null)
 
                 : this(CPOClient,
@@ -112,8 +112,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// 
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public HTTP_Logger(CPOClient                    CPOClient,
-                               String                       LoggingPath,
-                               String                       Context,
+                               String?                      LoggingPath                 = null,
+                               String?                      Context                     = null,
 
                                HTTPRequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
                                HTTPResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,
@@ -134,7 +134,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 : base(CPOClient,
                        LoggingPath,
-                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                       Context is not null && Context.IsNotNullOrEmpty()
+                           ? Context
+                           : DefaultContext,
 
                        LogHTTPRequest_toConsole,
                        LogHTTPResponse_toConsole,

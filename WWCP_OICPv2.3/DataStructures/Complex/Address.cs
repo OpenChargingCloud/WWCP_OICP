@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -146,6 +148,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.TimeZone         = TimeZone;
             this.CustomData       = CustomData;
 
+            unchecked
+            {
+
+                hashCode = this.Country.         GetHashCode()       * 27 ^
+                           this.City.            GetHashCode()       * 23 ^
+                           this.Street.          GetHashCode()       * 19 ^
+                           this.PostalCode.      GetHashCode()       * 17^
+                           this.HouseNumber.     GetHashCode()       * 13 ^
+                          (this.Floor?.          GetHashCode() ?? 0) * 11 ^
+                          (this.Region?.         GetHashCode() ?? 0) *  7 ^
+                          (this.ParkingFacility?.GetHashCode() ?? 0) *  5 ^
+                          (this.ParkingSpot?.    GetHashCode() ?? 0) *  3 ^
+                          (this.TimeZone?.       GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -186,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomAddressParser))
             {
-                return address!;
+                return address;
             }
 
             throw new ArgumentException("The given JSON representation of an address is invalid: " + errorResponse,
@@ -206,9 +224,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Address">The parsed address.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject       JSON,
-                                       out Address?  Address,
-                                       out String?   ErrorResponse)
+        public static Boolean TryParse(JObject                            JSON,
+                                       [NotNullWhen(true)]  out Address?  Address,
+                                       [NotNullWhen(false)] out String?   ErrorResponse)
 
             => TryParse(JSON,
                         out Address,
@@ -224,8 +242,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomAddressParser">A delegate to parse custom addresss JSON objects.</param>
         public static Boolean TryParse(JObject                                JSON,
-                                       out Address?                           Address,
-                                       out String?                            ErrorResponse,
+                                       [NotNullWhen(true)]  out Address?      Address,
+                                       [NotNullWhen(false)] out String?       ErrorResponse,
                                        CustomJObjectParserDelegate<Address>?  CustomAddressParser)
         {
 
@@ -257,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("City",
                                              "city",
-                                             out String City,
+                                             out var City,
                                              out ErrorResponse))
                 {
                     return false;
@@ -269,7 +287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("Street",
                                              "street",
-                                             out String Street,
+                                             out var Street,
                                              out ErrorResponse))
                 {
                     return false;
@@ -281,7 +299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("PostalCode",
                                              "postal code",
-                                             out String PostalCode,
+                                             out var PostalCode,
                                              out ErrorResponse))
                 {
                     PostalCode = "";
@@ -294,7 +312,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("HouseNum",
                                              "house number",
-                                             out String HouseNumber,
+                                             out var HouseNumber,
                                              out ErrorResponse))
                 {
                     HouseNumber = "";
@@ -307,7 +325,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("Floor",
                                        "floor",
-                                       out String Floor,
+                                       out String? Floor,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -320,7 +338,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("Region",
                                        "region",
-                                       out String Region,
+                                       out String? Region,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -346,7 +364,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("ParkingSpot",
                                        "parking spot",
-                                       out String ParkingSpot,
+                                       out String? ParkingSpot,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -376,17 +394,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                Address = new Address(Country,
-                                      City,
-                                      Street,
-                                      PostalCode,
-                                      HouseNumber,
-                                      Floor,
-                                      Region,
-                                      ParkingFacility,
-                                      ParkingSpot,
-                                      TimeZone,
-                                      customData);
+                Address = new Address(
+                              Country,
+                              City,
+                              Street,
+                              PostalCode,
+                              HouseNumber,
+                              Floor,
+                              Region,
+                              ParkingFacility,
+                              ParkingSpot,
+                              TimeZone,
+                              customData
+                          );
 
                 if (CustomAddressParser is not null)
                     Address = CustomAddressParser(JSON,
@@ -710,29 +730,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Country.         GetHashCode()       * 27 ^
-                       City.            GetHashCode()       * 23 ^
-                       Street.          GetHashCode()       * 19 ^
-                       PostalCode.      GetHashCode()       * 17^
-                       HouseNumber.     GetHashCode()       * 13 ^
-
-                      (Floor?.          GetHashCode() ?? 0) * 11 ^
-                      (Region?.         GetHashCode() ?? 0) *  7 ^
-                      (ParkingFacility?.GetHashCode() ?? 0) *  5 ^
-                      (ParkingSpot?.    GetHashCode() ?? 0) *  3 ^
-                      (TimeZone?.       GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -743,10 +748,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Country, " ",
-                             City,    " ",
-                             Street,  " ",
-                             HouseNumber);
+            => $"'{Country}' '{City}' '{Street} {HouseNumber}'";
 
         #endregion
 

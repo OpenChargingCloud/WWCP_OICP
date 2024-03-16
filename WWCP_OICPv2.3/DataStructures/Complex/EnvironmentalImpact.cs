@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -50,6 +52,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new environmental impact.
         /// </summary>
@@ -63,6 +67,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.NuclearWaste  = NuclearWaste;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -116,7 +122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EnvironmentalImpact environmentalImpact,
+                         out var environmentalImpact,
                          out _,
                          CustomEnvironmentalImpactParser))
             {
@@ -139,9 +145,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EnvironmentalImpact">The parsed environmental impact.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                  JSON,
-                                       out EnvironmentalImpact  EnvironmentalImpact,
-                                       out String?              ErrorResponse)
+        public static Boolean TryParse(JObject                                       JSON,
+                                       [NotNullWhen(true)]  out EnvironmentalImpact  EnvironmentalImpact,
+                                       [NotNullWhen(false)] out String?              ErrorResponse)
 
             => TryParse(JSON,
                         out EnvironmentalImpact,
@@ -157,8 +163,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnvironmentalImpactParser">A delegate to parse custom environmental impacts JSON objects.</param>
         public static Boolean TryParse(JObject                                            JSON,
-                                       out EnvironmentalImpact                            EnvironmentalImpact,
-                                       out String?                                        ErrorResponse,
+                                       [NotNullWhen(true)]  out EnvironmentalImpact       EnvironmentalImpact,
+                                       [NotNullWhen(false)] out String?                   ErrorResponse,
                                        CustomJObjectParserDelegate<EnvironmentalImpact>?  CustomEnvironmentalImpactParser)
         {
 
@@ -194,8 +200,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                EnvironmentalImpact = new EnvironmentalImpact(CO2Emission,
-                                                              NuclearWaste);
+                EnvironmentalImpact = new EnvironmentalImpact(
+                                          CO2Emission,
+                                          NuclearWaste
+                                      );
 
                 if (CustomEnvironmentalImpactParser is not null)
                     EnvironmentalImpact = CustomEnvironmentalImpactParser(JSON,
@@ -454,9 +462,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(CO2Emission,
-                             ", ",
-                             NuclearWaste);
+            => $"{CO2Emission}, {NuclearWaste}";
 
         #endregion
 

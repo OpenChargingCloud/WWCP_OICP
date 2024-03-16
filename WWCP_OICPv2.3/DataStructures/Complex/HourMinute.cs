@@ -18,6 +18,7 @@
 #region Usings
 
 using org.GraphDefined.Vanaheimr.Illias;
+using System.Diagnostics.CodeAnalysis;
 
 #endregion
 
@@ -37,12 +38,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The hour.
         /// </summary>
-        public readonly Byte Hour      { get; }
+        public readonly Byte  Hour      { get; }
 
         /// <summary>
         /// The minute.
         /// </summary>
-        public readonly Byte Minute    { get; }
+        public readonly Byte  Minute    { get; }
 
         #endregion
 
@@ -80,13 +81,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static HourMinute Parse(String Text)
         {
 
-            if (TryParse(Text, out HourMinute hourMinute))
+            if (TryParse(Text, out var hourMinute))
                 return hourMinute;
 
-            if (Text.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(Text), "The given text representation of a HourMinute must not be null or empty!");
-
-            throw new ArgumentException("The given text representation of a HourMinute is invalid!", nameof(Text));
+            throw new ArgumentException("The given text representation of a HourMinute is invalid!",
+                                        nameof(Text));
 
         }
 
@@ -101,7 +100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static HourMinute? TryParse(String Text)
         {
 
-            if (TryParse(Text, out HourMinute hourMinute))
+            if (TryParse(Text, out var hourMinute))
                 return hourMinute;
 
             return null;
@@ -112,7 +111,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(Text, out HourMinute)
 
-        public static Boolean TryParse(String Text, out HourMinute HourMinute)
+        public static Boolean TryParse(String                              Text,
+                                       [NotNullWhen(true)] out HourMinute  HourMinute)
         {
 
             Text        = Text.Trim();
@@ -128,13 +128,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (Splited.Length != 2)
                         return false;
 
-                    if (!Byte.TryParse(Splited[0], out Byte Hour))
+                    if (!Byte.TryParse(Splited[0], out var Hour))
                         return false;
 
-                    if (!Byte.TryParse(Splited[1], out Byte Minute))
+                    if (!Byte.TryParse(Splited[1], out var Minute))
                         return false;
 
-                    HourMinute = new HourMinute(Hour, Minute);
+                    HourMinute = new HourMinute(
+                                     Hour,
+                                     Minute
+                                 );
 
                     return true;
 
@@ -349,9 +352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Hour.ToString("D2"),
-                             ":",
-                             Minute.ToString("D2"));
+            => $"{Hour:D2}:{Minute:D2}";
 
         #endregion
 

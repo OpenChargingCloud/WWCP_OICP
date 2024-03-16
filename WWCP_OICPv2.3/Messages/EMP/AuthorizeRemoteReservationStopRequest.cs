@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -196,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomAuthorizeRemoteReservationStopRequestParser))
             {
-                return authorizeRemoteReservationStopRequest!;
+                return authorizeRemoteReservationStopRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a AuthorizeRemoteReservationStop request is invalid: " + errorResponse,
@@ -221,8 +223,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteReservationStopRequestParser">A delegate to parse custom AuthorizeRemoteReservationStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                                              JSON,
                                        Provider_Id                                                          ProviderIdURL,
-                                       out AuthorizeRemoteReservationStopRequest?                           AuthorizeRemoteReservationStopRequest,
-                                       out String?                                                          ErrorResponse,
+                                       [NotNullWhen(true)]  out AuthorizeRemoteReservationStopRequest?      AuthorizeRemoteReservationStopRequest,
+                                       [NotNullWhen(false)] out String?                                     ErrorResponse,
                                        Process_Id?                                                          ProcessId                                           = null,
 
                                        DateTime?                                                            Timestamp                                           = null,

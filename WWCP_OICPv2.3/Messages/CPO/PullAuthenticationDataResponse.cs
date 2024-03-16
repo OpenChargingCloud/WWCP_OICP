@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -125,6 +127,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.StatusCode                  = StatusCode;
             this.Warnings                    = Warnings;
 
+
+            unchecked
+            {
+
+                hashCode = ProviderAuthenticationData.Aggregate(0, (hashCode, operatorEVSEPricing) => hashCode ^ operatorEVSEPricing.GetHashCode()) ^
+                          (StatusCode?.GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -174,7 +185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomPullAuthenticationDataResponseParser))
             {
-                return pullAuthenticationDataResponse!;
+                return pullAuthenticationDataResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullAuthenticationData response is invalid: " + errorResponse,
@@ -204,8 +215,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        DateTime                                                      ResponseTimestamp,
                                        EventTracking_Id                                              EventTrackingId,
                                        TimeSpan                                                      Runtime,
-                                       out PullAuthenticationDataResponse?                           PullAuthenticationDataResponse,
-                                       out String?                                                   ErrorResponse,
+                                       [NotNullWhen(true)]  out PullAuthenticationDataResponse?      PullAuthenticationDataResponse,
+                                       [NotNullWhen(false)] out String?                              ErrorResponse,
                                        Process_Id?                                                   ProcessId                                    = null,
                                        HTTPResponse?                                                 HTTPResponse                                 = null,
                                        CustomJObjectParserDelegate<PullAuthenticationDataResponse>?  CustomPullAuthenticationDataResponseParser   = null)
@@ -214,7 +225,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             try
             {
 
-                PullAuthenticationDataResponse = default;
+                PullAuthenticationDataResponse = null;
 
                 if (JSON?.HasValues != true)
                 {
@@ -386,7 +397,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
                                            OICPv2_3.StatusCode.TryParse,
-                                           out StatusCode StatusCode,
+                                           out StatusCode? StatusCode,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -402,25 +413,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullAuthenticationDataResponse = new PullAuthenticationDataResponse(ResponseTimestamp,
-                                                                                    EventTrackingId,
-                                                                                    ProcessId ?? Process_Id.NewRandom(),
-                                                                                    Runtime,
-                                                                                    operatorEVSEPricings,
+                PullAuthenticationDataResponse = new PullAuthenticationDataResponse(
+                                                     ResponseTimestamp,
+                                                     EventTrackingId,
+                                                     ProcessId ?? Process_Id.NewRandom(),
+                                                     Runtime,
+                                                     operatorEVSEPricings,
 
-                                                                                    Request,
-                                                                                    Number,
-                                                                                    Size,
-                                                                                    TotalElements,
-                                                                                    LastPage,
-                                                                                    FirstPage,
-                                                                                    TotalPages,
-                                                                                    NumberOfElements,
+                                                     Request,
+                                                     Number,
+                                                     Size,
+                                                     TotalElements,
+                                                     LastPage,
+                                                     FirstPage,
+                                                     TotalPages,
+                                                     NumberOfElements,
 
-                                                                                    StatusCode,
-                                                                                    HTTPResponse,
-                                                                                    customData,
-                                                                                    warnings);
+                                                     StatusCode,
+                                                     HTTPResponse,
+                                                     customData,
+                                                     warnings
+                                                 );
 
                 if (CustomPullAuthenticationDataResponseParser is not null)
                     PullAuthenticationDataResponse = CustomPullAuthenticationDataResponseParser(JSON,
@@ -563,20 +576,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderAuthenticationData.Aggregate(0, (hashCode, operatorEVSEPricing) => hashCode ^ operatorEVSEPricing.GetHashCode()) ^
-                      (StatusCode?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -654,6 +661,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new PullAuthenticationData response builder.
             /// </summary>
@@ -697,7 +706,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 this.ProviderAuthenticationData  = ProviderAuthenticationData is not null
                                                        ? new HashSet<ProviderAuthenticationData>(ProviderAuthenticationData)
-                                                       : new HashSet<ProviderAuthenticationData>();
+                                                       : [];
 
                 this.Number                      = Number;
                 this.Size                        = Size;
@@ -712,6 +721,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                        : new StatusCode.Builder();
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -103,9 +105,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Voltage        = Voltage;
             this.Amperage       = Amperage;
-            this.ChargingModes  = ChargingModes?.Distinct() ?? Array.Empty<ChargingModes>();
+            this.ChargingModes  = ChargingModes?.Distinct() ?? [];
 
             this.CustomData     = CustomData;
+
+
+            unchecked
+            {
+
+                hashCode = this.PowerType.    GetHashCode()       * 11 ^
+                           this.Power.        GetHashCode()       *  7 ^
+                          (this.Voltage?.     GetHashCode() ?? 0) *  5 ^
+                          (this.Amperage?.    GetHashCode() ?? 0) *  3 ^
+                           this.ChargingModes.Aggregate(0, (hashCode, chargingMode) => hashCode ^ chargingMode.GetHashCode());
+
+            }
 
         }
 
@@ -160,13 +174,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a charging facility.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facility JSON objects.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
         public static ChargingFacility? TryParse(JObject                                         JSON,
                                                  CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser   = null)
         {
 
             if (TryParse(JSON,
-                         out ChargingFacility chargingFacility,
+                         out var chargingFacility,
                          out _,
                          CustomChargingFacilityParser))
             {
@@ -189,9 +203,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ChargingFacility">The parsed charging facility.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject               JSON,
-                                       out ChargingFacility  ChargingFacility,
-                                       out String?           ErrorResponse)
+        public static Boolean TryParse(JObject                                    JSON,
+                                       [NotNullWhen(true)]  out ChargingFacility  ChargingFacility,
+                                       [NotNullWhen(false)] out String?           ErrorResponse)
 
             => TryParse(JSON,
                         out ChargingFacility,
@@ -207,8 +221,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
         public static Boolean TryParse(JObject                                         JSON,
-                                       out ChargingFacility                            ChargingFacility,
-                                       out String?                                     ErrorResponse,
+                                       [NotNullWhen(true)]  out ChargingFacility       ChargingFacility,
+                                       [NotNullWhen(false)] out String?                ErrorResponse,
                                        CustomJObjectParserDelegate<ChargingFacility>?  CustomChargingFacilityParser)
         {
 
@@ -295,12 +309,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingFacility = new ChargingFacility(PowerType,
-                                                        Power,
-                                                        Voltage,
-                                                        Amperage,
-                                                        ChargingModes,
-                                                        customData);
+                ChargingFacility = new ChargingFacility(
+                                       PowerType,
+                                       Power,
+                                       Voltage,
+                                       Amperage,
+                                       ChargingModes,
+                                       customData
+                                   );
 
                 if (CustomChargingFacilityParser is not null)
                     ChargingFacility = CustomChargingFacilityParser(JSON,
@@ -554,23 +570,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return PowerType.    GetHashCode()       * 11 ^
-                       Power.        GetHashCode()       *  7 ^
-                      (Voltage?.     GetHashCode() ?? 0) *  5 ^
-                      (Amperage?.    GetHashCode() ?? 0) *  3 ^
-                       ChargingModes.Aggregate(0, (hashCode, chargingMode) => hashCode ^ chargingMode.GetHashCode());
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -581,10 +588,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(PowerType, ", ",
-                             Power,     " kW, ",
-                             Voltage. HasValue ? Voltage. Value + " V " : "",
-                             Amperage.HasValue ? Amperage.Value + " A " : "");
+            => String.Concat(
+
+                   $"{PowerType}, {Power} kW",
+
+                   Voltage.HasValue
+                       ? $", {Voltage} V"
+                       : "",
+
+                   Amperage.HasValue
+                       ? $", {Amperage} A"
+                       : ""
+
+               );
 
         #endregion
 

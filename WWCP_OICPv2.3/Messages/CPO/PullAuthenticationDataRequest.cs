@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -44,6 +46,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new PullAuthenticationData request.
         /// </summary>
@@ -52,17 +56,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public PullAuthenticationDataRequest(Operator_Id        OperatorId,
                                              Process_Id?        ProcessId           = null,
                                              JObject?           CustomData          = null,
 
                                              DateTime?          Timestamp           = null,
-                                             CancellationToken  CancellationToken   = default,
                                              EventTracking_Id?  EventTrackingId     = null,
-                                             TimeSpan?          RequestTimeout      = null)
+                                             TimeSpan?          RequestTimeout      = null,
+                                             CancellationToken  CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -76,6 +80,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.OperatorId = OperatorId;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -100,11 +106,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           Process_Id?                                                  ProcessId                                   = null,
 
                                                           DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken                                            CancellationToken                           = default,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<PullAuthenticationDataRequest>?  CustomPullAuthenticationDataRequestParser   = null)
+                                                          CustomJObjectParserDelegate<PullAuthenticationDataRequest>?  CustomPullAuthenticationDataRequestParser   = null,
+                                                          CancellationToken                                            CancellationToken                           = default)
         {
 
             if (TryParse(JSON,
@@ -112,12 +117,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPullAuthenticationDataRequestParser))
+                         CustomPullAuthenticationDataRequestParser,
+                         CancellationToken))
             {
-                return pullAuthenticationDataRequest!;
+                return pullAuthenticationDataRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a PullAuthenticationData request is invalid: " + errorResponse,
@@ -137,16 +142,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullAuthenticationDataRequestParser">A delegate to parse custom PullAuthenticationData request JSON objects.</param>
         public static Boolean TryParse(JObject                                                      JSON,
-                                       out PullAuthenticationDataRequest?                           PullAuthenticationDataRequest,
-                                       out String?                                                  ErrorResponse,
+                                       [NotNullWhen(true)]  out PullAuthenticationDataRequest?      PullAuthenticationDataRequest,
+                                       [NotNullWhen(false)] out String?                             ErrorResponse,
                                        Process_Id?                                                  ProcessId                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken                                            CancellationToken                           = default,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<PullAuthenticationDataRequest>?  CustomPullAuthenticationDataRequestParser   = null)
+                                       CustomJObjectParserDelegate<PullAuthenticationDataRequest>?  CustomPullAuthenticationDataRequestParser   = null,
+                                       CancellationToken                                            CancellationToken                           = default)
         {
 
             try
@@ -180,14 +184,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullAuthenticationDataRequest = new PullAuthenticationDataRequest(OperatorId,
-                                                                                  ProcessId,
-                                                                                  customData,
+                PullAuthenticationDataRequest = new PullAuthenticationDataRequest(
+                                                    OperatorId,
+                                                    ProcessId,
+                                                    customData,
 
-                                                                                  Timestamp,
-                                                                                  CancellationToken,
-                                                                                  EventTrackingId,
-                                                                                  RequestTimeout);
+                                                    Timestamp,
+                                                    EventTrackingId,
+                                                    RequestTimeout,
+                                                    CancellationToken
+                                                );
 
                 if (CustomPullAuthenticationDataRequestParser is not null)
                     PullAuthenticationDataRequest = CustomPullAuthenticationDataRequestParser(JSON,
@@ -219,10 +225,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("OperatorID",          OperatorId.ToString()),
+                                 new JProperty("OperatorID",   OperatorId.ToString()),
 
                            CustomData is not null
-                               ? new JProperty("CustomData",    CustomData)
+                               ? new JProperty("CustomData",   CustomData)
                                : null
 
                        );
@@ -324,9 +330,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
             unchecked
             {
-
                 return OperatorId.GetHashCode();
-
             }
         }
 

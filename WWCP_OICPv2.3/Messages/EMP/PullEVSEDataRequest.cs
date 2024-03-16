@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -178,11 +180,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ProviderId                            = ProviderId;
             this.LastCall                              = LastCall;
 
-            this.OperatorIdFilter                      = OperatorIdFilter?.                    Distinct() ?? Array.Empty<Operator_Id>();
-            this.CountryCodeFilter                     = CountryCodeFilter?.                   Distinct() ?? Array.Empty<Country>();
-            this.AccessibilityFilter                   = AccessibilityFilter?.                 Distinct() ?? Array.Empty<AccessibilityTypes>();
-            this.AuthenticationModeFilter              = AuthenticationModeFilter?.            Distinct() ?? Array.Empty<AuthenticationModes>();
-            this.CalibrationLawDataAvailabilityFilter  = CalibrationLawDataAvailabilityFilter?.Distinct() ?? Array.Empty<CalibrationLawDataAvailabilities>();
+            this.OperatorIdFilter                      = OperatorIdFilter?.                    Distinct() ?? [];
+            this.CountryCodeFilter                     = CountryCodeFilter?.                   Distinct() ?? [];
+            this.AccessibilityFilter                   = AccessibilityFilter?.                 Distinct() ?? [];
+            this.AuthenticationModeFilter              = AuthenticationModeFilter?.            Distinct() ?? [];
+            this.CalibrationLawDataAvailabilityFilter  = CalibrationLawDataAvailabilityFilter?.Distinct() ?? [];
             this.RenewableEnergyFilter                 = RenewableEnergyFilter;
             this.IsHubjectCompatibleFilter             = IsHubjectCompatibleFilter;
             this.IsOpen24HoursFilter                   = IsOpen24HoursFilter;
@@ -276,7 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomPullEVSEDataRequestParser))
             {
-                return pullEVSEDataRequest!;
+                return pullEVSEDataRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEData request is invalid: " + errorResponse,
@@ -296,8 +298,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEDataRequestParser">A delegate to parse custom PullEVSEData request JSON objects.</param>
         public static Boolean TryParse(JObject                                            JSON,
-                                       out PullEVSEDataRequest?                           PullEVSEDataRequest,
-                                       out String?                                        ErrorResponse,
+                                       [NotNullWhen(true)]  out PullEVSEDataRequest?      PullEVSEDataRequest,
+                                       [NotNullWhen(false)] out String?                   ErrorResponse,
                                        Process_Id?                                        ProcessId                         = null,
                                        UInt32?                                            Page                              = null,
                                        UInt32?                                            Size                              = null,
@@ -519,33 +521,35 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEDataRequest = new PullEVSEDataRequest(ProviderId,
-                                                              LastCall,
+                PullEVSEDataRequest = new PullEVSEDataRequest(
+                                          ProviderId,
+                                          LastCall,
 
-                                                              OperatorIdFilter,
-                                                              CountryCodeFilter,
-                                                              AccessibilityFilter,
-                                                              AuthenticationModeFilter,
-                                                              CalibrationLawDataAvailabilityFilter,
-                                                              RenewableEnergyFilter,
-                                                              IsHubjectCompatibleFilter,
-                                                              IsOpen24HoursFilter,
+                                          OperatorIdFilter,
+                                          CountryCodeFilter,
+                                          AccessibilityFilter,
+                                          AuthenticationModeFilter,
+                                          CalibrationLawDataAvailabilityFilter,
+                                          RenewableEnergyFilter,
+                                          IsHubjectCompatibleFilter,
+                                          IsOpen24HoursFilter,
 
-                                                              SearchCenter,
-                                                              DistanceKM,
-                                                              GeoCoordinatesResponseFormat,
+                                          SearchCenter,
+                                          DistanceKM,
+                                          GeoCoordinatesResponseFormat,
 
-                                                              ProcessId,
-                                                              Page,
-                                                              Size,
-                                                              SortOrder,
+                                          ProcessId,
+                                          Page,
+                                          Size,
+                                          SortOrder,
 
-                                                              customData,
+                                          customData,
 
-                                                              Timestamp,
-                                                              CancellationToken,
-                                                              EventTrackingId,
-                                                              RequestTimeout);
+                                          Timestamp,
+                                          CancellationToken,
+                                          EventTrackingId,
+                                          RequestTimeout
+                                      );
 
                 if (CustomPullEVSEDataRequestParser is not null)
                     PullEVSEDataRequest = CustomPullEVSEDataRequestParser(JSON,
@@ -652,12 +656,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Boolean operator == (PullEVSEDataRequest PullEVSEData1, PullEVSEDataRequest PullEVSEData2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PullEVSEData1, PullEVSEData2))
                 return true;
 
-            // If one is null, but not both, return false.
-            if (((Object) PullEVSEData1 == null) || ((Object) PullEVSEData2 == null))
+            if (PullEVSEData1 is null || PullEVSEData2 is null)
                 return false;
 
             return PullEVSEData1.Equals(PullEVSEData2);
@@ -713,11 +715,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                DistanceKM.                  Equals(PullEVSEData.DistanceKM)                   &&
                GeoCoordinatesResponseFormat.Equals(PullEVSEData.GeoCoordinatesResponseFormat) &&
 
-               ((!SearchCenter.    HasValue && !PullEVSEData.SearchCenter.    HasValue) ||
-                 (SearchCenter.    HasValue &&  PullEVSEData.SearchCenter.    HasValue && SearchCenter.    Value.Equals(PullEVSEData.SearchCenter.Value))) &&
+               ((!SearchCenter.HasValue && !PullEVSEData.SearchCenter.HasValue) ||
+                 (SearchCenter.HasValue &&  PullEVSEData.SearchCenter.HasValue && SearchCenter.Value.Equals(PullEVSEData.SearchCenter.Value))) &&
 
-               ((!LastCall.        HasValue && !PullEVSEData.LastCall.        HasValue) ||
-                 (LastCall.        HasValue &&  PullEVSEData.LastCall.        HasValue && LastCall.        Value.Equals(PullEVSEData.LastCall.    Value)));
+               ((!LastCall.    HasValue && !PullEVSEData.LastCall.    HasValue) ||
+                 (LastCall.    HasValue &&  PullEVSEData.LastCall.    HasValue && LastCall.    Value.Equals(PullEVSEData.LastCall.    Value)));
 
         #endregion
 

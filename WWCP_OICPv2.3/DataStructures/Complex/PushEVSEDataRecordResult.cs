@@ -18,32 +18,22 @@
 #region Usings
 
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Runtime.CompilerServices;
 
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
-    public class PushSingleEVSEDataResult
+    public class PushSingleEVSEDataResult(EVSEDataRecord             EVSE,
+                                          PushSingleDataResultTypes  Result,
+                                          IEnumerable<Warning>?      Warnings   = null)
     {
 
-        public EVSEDataRecord             EVSE        { get; }
-        public PushSingleDataResultTypes  Result      { get; }
-        public IEnumerable<Warning>       Warnings    { get; }
-
-        public PushSingleEVSEDataResult(EVSEDataRecord             EVSE,
-                                        PushSingleDataResultTypes  Result,
-                                        IEnumerable<Warning>?      Warnings   = null)
-        {
-
-            this.EVSE      = EVSE;
-            this.Result    = Result;
-            this.Warnings  = Warnings is not null
-                                 ? Warnings.Where(warning => warning.IsNeitherNullNorEmpty())
-                                 : Array.Empty<Warning>();
-
-        }
+        public EVSEDataRecord             EVSE       { get; } = EVSE;
+        public PushSingleDataResultTypes  Result     { get; } = Result;
+        public IEnumerable<Warning>       Warnings   { get; } = Warnings is not null
+                                                                    ? Warnings.Where(warning => warning.IsNeitherNullNorEmpty())
+                                                                    : [];
 
     }
 
@@ -95,6 +85,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new PushEVSEData result.
         /// </summary>
@@ -123,19 +115,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.SuccessfulEVSEs  = SuccessfulEVSEs is not null
                                         ? SuccessfulEVSEs.Where(evse    => evse is not null)
-                                        : Array.Empty<PushSingleEVSEDataResult>();
+                                        : [];
 
             this.RejectedEVSEs    = RejectedEVSEs   is not null
                                         ? RejectedEVSEs.  Where(evse    => evse is not null)
-                                        : Array.Empty<PushSingleEVSEDataResult>();
+                                        : [];
 
             this.Warnings         = Warnings        is not null
                                         ? Warnings.       Where(warning => warning.IsNeitherNullNorEmpty())
-                                        : Array.Empty<Warning>();
+                                        : [];
 
             this.Runtime          = Runtime;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -152,7 +146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (AuthId,
                         PushDataResultTypes.AdminDown,
-                        Array.Empty<PushSingleEVSEDataResult>(),
+                        [],
                         RejectedEVSEs.Select(evse => new PushSingleEVSEDataResult(evse, PushSingleDataResultTypes.AdminDown, Warnings)),
                         Description,
                         Warnings,
@@ -173,7 +167,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 => new (AuthId,
                         PushDataResultTypes.Success,
                         SuccessfulEVSEs.Select(evse => new PushSingleEVSEDataResult(evse, PushSingleDataResultTypes.Success, Warnings)),
-                        Array.Empty<PushSingleEVSEDataResult>(),
+                        [],
                         Description,
                         Warnings,
                         Runtime);
@@ -193,7 +187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 => new (AuthId,
                         PushDataResultTypes.Enqueued,
                         EnqueuedEVSEs.Select(evse => new PushSingleEVSEDataResult(evse, PushSingleDataResultTypes.Enqueued, Warnings)),
-                        Array.Empty<PushSingleEVSEDataResult>(),
+                        [],
                         Description,
                         Warnings,
                         Runtime);
@@ -212,7 +206,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (AuthId,
                         PushDataResultTypes.NoOperation,
-                        Array.Empty<PushSingleEVSEDataResult>(),
+                        [],
                         RejectedEVSEs.Select(evse => new PushSingleEVSEDataResult(evse, PushSingleDataResultTypes.NoOperation, Warnings)),
                         Description,
                         Warnings,
@@ -233,7 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (AuthId,
                         PushDataResultTypes.LockTimeout,
-                        Array.Empty<PushSingleEVSEDataResult>(),
+                        [],
                         RejectedEVSEs.Select(evse => new PushSingleEVSEDataResult(evse, PushSingleDataResultTypes.Timeout, Warnings)),
                         Description,
                         Warnings,
@@ -254,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 => new (AuthId,
                         PushDataResultTypes.Timeout,
-                        Array.Empty<PushSingleEVSEDataResult>(),
+                        [],
                         RejectedEVSEs.Select(evse => new PushSingleEVSEDataResult(evse, PushSingleDataResultTypes.Timeout, Warnings)),
                         Description,
                         Warnings,
@@ -274,7 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (AuthId,
                     PushDataResultTypes.Error,
-                    Array.Empty<PushSingleEVSEDataResult>(),
+                    [],
                     RejectedEVSEs,
                     Description,
                     Warnings,

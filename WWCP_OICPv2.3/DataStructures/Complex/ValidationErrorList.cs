@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -68,6 +70,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Message           = Message;
             this.ValidationErrors  = ValidationErrors.Distinct();
 
+
+            unchecked
+            {
+
+                hashCode = (Message?.GetHashCode() ?? 0) * 3 ^
+                            ValidationErrors.Select(error => error.GetHashCode()).Aggregate((a,b) => a ^ b);
+
+            }
+
         }
 
         #endregion
@@ -86,7 +97,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var validationErrorList,
                          out var errorResponse))
             { 
-                return validationErrorList!;
+                return validationErrorList;
             }
 
             throw new ArgumentException("The given JSON representation of a validation error list is invalid: " + errorResponse,
@@ -98,53 +109,53 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out ValidationErrorList, out ErrorResponse)
 
-        public static Boolean TryParse(JObject                   JSON,
-                                       out ValidationErrorList?  ValidationErrorList,
-                                       out String?               ErrorResponse)
+        public static Boolean TryParse(JObject                                        JSON,
+                                       [NotNullWhen(true)]  out ValidationErrorList?  ValidationErrorList,
+                                       [NotNullWhen(false)] out String?               ErrorResponse)
         {
 
-            ValidationErrorList  = default;
-            ErrorResponse        = default;
+            ValidationErrorList = null;
 
-            if (JSON is not null)
+            try
             {
-                try
+
+                #region Parse Message             [mandatory]
+
+                if (!JSON.ParseMandatoryText("message",
+                                             "message",
+                                             out var Message,
+                                             out ErrorResponse))
                 {
-
-                    #region Parse Message             [mandatory]
-
-                    if (!JSON.ParseMandatoryText("message",
-                                                 "message",
-                                                 out String Message,
-                                                 out ErrorResponse))
-                    {
-                        return false;
-                    }
-
-                    #endregion
-
-                    #region Parse ValidationErrors    [mandatory]
-
-                    if (!JSON.ParseMandatoryJSON("validationErrors",
-                                                 "validation errors",
-                                                 ValidationError.TryParse,
-                                                 out IEnumerable<ValidationError> ValidationErrors,
-                                                 out ErrorResponse))
-                    {
-                        return false;
-                    }
-
-                    #endregion
-
-
-                    ValidationErrorList = new ValidationErrorList(Message,
-                                                                  ValidationErrors);
-
-                    return true;
-
+                    return false;
                 }
-                catch
-                { }
+
+                #endregion
+
+                #region Parse ValidationErrors    [mandatory]
+
+                if (!JSON.ParseMandatoryJSON("validationErrors",
+                                             "validation errors",
+                                             ValidationError.TryParse,
+                                             out IEnumerable<ValidationError> ValidationErrors,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+
+                ValidationErrorList = new ValidationErrorList(
+                                          Message,
+                                          ValidationErrors
+                                      );
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ErrorResponse = e.Message;
             }
 
             return false;
@@ -363,18 +374,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-                return (Message?.GetHashCode() ?? 0) * 3 ^
-                       ValidationErrors.Select(error => error.GetHashCode()).Aggregate((a,b) => a ^ b);
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -387,7 +394,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => String.Concat(
 
-                   Message, ": ", Environment.NewLine,
+                   $"{Message}: ", Environment.NewLine,
 
                    ValidationErrors.AggregateWith(Environment.NewLine)
 

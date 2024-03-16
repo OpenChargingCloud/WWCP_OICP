@@ -15,24 +15,20 @@
  * limitations under the License.
  */
 
-#region Usings
-
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
-#endregion
-
 namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
     /// Tag a struct, class or property as 'non-standard'.
     /// </summary>
+    /// <remarks>
+    /// Create a new 'non-standard'-tag having the given tags.
+    /// </remarks>
+    /// <param name="Tags">Some tags.</param>
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class | AttributeTargets.Property,
                     AllowMultiple = false,
                     Inherited = true)]
-    public class NonStandardAttribute : Attribute
+    public class NonStandardAttribute(params String[] Tags) : Attribute
     {
 
         #region Tags
@@ -40,18 +36,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Additional tags of the 'non-standard'-tag.
         /// </summary>
-        public IEnumerable<String>  Tags    { get; }
+        public IEnumerable<String>  Tags    { get; } = Tags?.Where(tag => !String.IsNullOrEmpty(tag)).Distinct().ToArray() ?? [];
 
         #endregion
-
-        /// <summary>
-        /// Create a new 'non-standard'-tag having the given tags.
-        /// </summary>
-        /// <param name="Tags">Some tags.</param>
-        public NonStandardAttribute(params String[] Tags)
-        {
-            this.Tags = Tags?.Where(tag => !String.IsNullOrEmpty(tag)).Distinct().ToArray();
-        }
 
     }
 

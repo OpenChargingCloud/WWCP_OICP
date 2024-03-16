@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -51,6 +53,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new ChargeDetailRecord request.
         /// </summary>
@@ -59,18 +63,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers. This means: Not the sub operator or the operator of the EVSE!</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public ChargeDetailRecordRequest(ChargeDetailRecord  ChargeDetailRecord,
                                          Operator_Id         OperatorId,
                                          Process_Id?         ProcessId           = null,
                                          JObject?            CustomData          = null,
 
                                          DateTime?           Timestamp           = null,
-                                         CancellationToken   CancellationToken   = default,
                                          EventTracking_Id?   EventTrackingId     = null,
-                                         TimeSpan?           RequestTimeout      = null)
+                                         TimeSpan?           RequestTimeout      = null,
+                                         CancellationToken   CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -85,6 +89,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.OperatorId          = OperatorId;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -177,11 +183,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       Process_Id?                                              ProcessId                               = null,
 
                                                       DateTime?                                                Timestamp                               = null,
-                                                      CancellationToken                                        CancellationToken                       = default,
                                                       EventTracking_Id?                                        EventTrackingId                         = null,
                                                       TimeSpan?                                                RequestTimeout                          = null,
-
-                                                      CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null)
+                                                      CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null,
+                                                      CancellationToken                                        CancellationToken                       = default)
         {
 
             if (TryParse(JSON,
@@ -190,12 +195,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomChargeDetailRecordRequestParser))
+                         CustomChargeDetailRecordRequestParser,
+                         CancellationToken))
             {
-                return authorizeRemoteStopRequest!;
+                return authorizeRemoteStopRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a ChargeDetailRecord request is invalid: " + errorResponse,
@@ -220,16 +225,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomChargeDetailRecordRequestParser">A delegate to parse custom ChargeDetailRecord request JSON objects.</param>
         public static Boolean TryParse(JObject                                                  JSON,
                                        Operator_Id                                              OperatorIdURL,
-                                       out ChargeDetailRecordRequest?                           ChargeDetailRecordRequest,
-                                       out String?                                              ErrorResponse,
+                                       [NotNullWhen(true)]  out ChargeDetailRecordRequest?      ChargeDetailRecordRequest,
+                                       [NotNullWhen(false)] out String?                         ErrorResponse,
                                        Process_Id?                                              ProcessId                               = null,
 
                                        DateTime?                                                Timestamp                               = null,
-                                       CancellationToken                                        CancellationToken                       = default,
                                        EventTracking_Id?                                        EventTrackingId                         = null,
                                        TimeSpan?                                                RequestTimeout                          = null,
-
-                                       CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null)
+                                       CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null,
+                                       CancellationToken                                        CancellationToken                       = default)
         {
 
             try
@@ -246,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #region Parse ChargeDetailRecord     [mandatory]
 
                 if (!OICPv2_3.ChargeDetailRecord.TryParse(JSON,
-                                                          out ChargeDetailRecord? ChargeDetailRecord,
+                                                          out var ChargeDetailRecord,
                                                           out ErrorResponse))
                 {
                     return false;
@@ -261,15 +265,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargeDetailRecordRequest = new ChargeDetailRecordRequest(ChargeDetailRecord!,
-                                                                          OperatorIdURL,
-                                                                          ProcessId,
-                                                                          customData,
+                ChargeDetailRecordRequest = new ChargeDetailRecordRequest(
+                                                ChargeDetailRecord,
+                                                OperatorIdURL,
+                                                ProcessId,
+                                                customData,
 
-                                                                          Timestamp,
-                                                                          CancellationToken,
-                                                                          EventTrackingId,
-                                                                          RequestTimeout);
+                                                Timestamp,
+                                                EventTrackingId,
+                                                RequestTimeout,
+                                                CancellationToken
+                                            );
 
                 if (CustomChargeDetailRecordRequestParser is not null)
                     ChargeDetailRecordRequest = CustomChargeDetailRecordRequestParser(JSON,

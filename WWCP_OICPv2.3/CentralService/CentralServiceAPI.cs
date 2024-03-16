@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System.Net.Security;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -26,12 +25,12 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
-using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -208,10 +207,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
             httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
                                       HTTPMethod.GET,
-                                      new HTTPPath[] {
+                                      [
                                           URLPathPrefix + "/",
                                           URLPathPrefix + "/{FileName}"
-                                      },
+                                      ],
                                       HTTPDelegate: Request => {
                                           return Task.FromResult(
                                               new HTTPResponse.Builder(Request) {
@@ -229,16 +228,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             this.CPOClientAPI          = new CPOClientAPI(httpAPI);
 
             // Link HTTP events...
-            EMPClientAPI.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            EMPClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            EMPClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
+            EMPClientAPI.RequestLog   += RequestLog. WhenAll;
+            EMPClientAPI.ResponseLog  += ResponseLog.WhenAll;
+            EMPClientAPI.ErrorLog     += ErrorLog.   WhenAll;
 
-            CPOClientAPI.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            CPOClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            CPOClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
+            CPOClientAPI.RequestLog   += RequestLog. WhenAll;
+            CPOClientAPI.ResponseLog  += ResponseLog.WhenAll;
+            CPOClientAPI.ErrorLog     += ErrorLog.   WhenAll;
 
-            this.EMPServerAPIClients   = new Dictionary<Provider_Id, EMPServerAPIClient>();
-            this.CPOServerAPIClients   = new Dictionary<Operator_Id, CPOServerAPIClient>();
+            this.EMPServerAPIClients   = [];
+            this.CPOServerAPIClients   = [];
 
             if (AutoStart)
                 httpAPI.Start();
@@ -262,16 +261,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
             this.CPOClientAPI          = CPOClientAPI ?? throw new ArgumentNullException(nameof(CPOClientAPI), "The given CPOClientAPI must not be null!");
 
             // Link HTTP events...
-            EMPClientAPI.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            EMPClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            EMPClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
+            EMPClientAPI.RequestLog   += RequestLog. WhenAll;
+            EMPClientAPI.ResponseLog  += ResponseLog.WhenAll;
+            EMPClientAPI.ErrorLog     += ErrorLog.   WhenAll;
 
-            CPOClientAPI.RequestLog   += (HTTPProcessor, ServerTimestamp, Request)                                 => RequestLog. WhenAll(HTTPProcessor, ServerTimestamp, Request);
-            CPOClientAPI.ResponseLog  += (HTTPProcessor, ServerTimestamp, Request, Response)                       => ResponseLog.WhenAll(HTTPProcessor, ServerTimestamp, Request, Response);
-            CPOClientAPI.ErrorLog     += (HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException) => ErrorLog.   WhenAll(HTTPProcessor, ServerTimestamp, Request, Response, Error, LastException);
+            CPOClientAPI.RequestLog   += RequestLog. WhenAll;
+            CPOClientAPI.ResponseLog  += ResponseLog.WhenAll;
+            CPOClientAPI.ErrorLog     += ErrorLog.   WhenAll;
 
-            this.EMPServerAPIClients   = new Dictionary<Provider_Id, EMPServerAPIClient>();
-            this.CPOServerAPIClients   = new Dictionary<Operator_Id, CPOServerAPIClient>();
+            this.EMPServerAPIClients   = [];
+            this.CPOServerAPIClients   = [];
 
         }
 
@@ -327,13 +326,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
             else
             {
-
-                if (EMPClientAPI is not null)
-                    EMPClientAPI.Dispose();
-
-                if (CPOClientAPI is not null)
-                    CPOClientAPI.Dispose();
-
+                EMPClientAPI?.Dispose();
+                CPOClientAPI?.Dispose();
             }
 
             foreach (var empServerAPIClient in EMPServerAPIClients.Values)

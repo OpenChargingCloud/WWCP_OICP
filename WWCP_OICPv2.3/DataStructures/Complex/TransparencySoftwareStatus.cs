@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -103,6 +105,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.NotBefore             = NotBefore;
             this.NotAfter              = NotAfter;
 
+
+            unchecked
+            {
+
+                hashCode = this.TransparencySoftware.GetHashCode()       * 13 ^
+                           this.LegalStatus.         GetHashCode()       * 11 ^
+                          (this.Certificate?.        GetHashCode() ?? 0) * 7 ^
+                          (this.CertificateIssuer?.  GetHashCode() ?? 0) * 5 ^
+                          (this.NotBefore?.          GetHashCode() ?? 0) * 3 ^
+                          (this.NotAfter?.           GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -124,7 +139,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomTransparencySoftwareStatusParser))
             {
-                return transparencySoftwareStatus!;
+                return transparencySoftwareStatus;
             }
 
             throw new ArgumentException("The given JSON representation of a transparency software status is invalid: " + errorResponse,
@@ -144,9 +159,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="TransparencySoftware">The parsed transparency software.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                          JSON,
-                                       out TransparencySoftwareStatus?  TransparencySoftware,
-                                       out String?                      ErrorResponse)
+        public static Boolean TryParse(JObject                                               JSON,
+                                       [NotNullWhen(true)]  out TransparencySoftwareStatus?  TransparencySoftware,
+                                       [NotNullWhen(false)] out String?                      ErrorResponse)
 
             => TryParse(JSON,
                         out TransparencySoftware,
@@ -162,8 +177,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomTransparencySoftwareStatusParser">A delegate to parse custom transparency software status JSON objects.</param>
         public static Boolean TryParse(JObject                                                   JSON,
-                                       out TransparencySoftwareStatus?                           TransparencySoftwareStatus,
-                                       out String?                                               ErrorResponse,
+                                       [NotNullWhen(true)]  out TransparencySoftwareStatus?      TransparencySoftwareStatus,
+                                       [NotNullWhen(false)] out String?                          ErrorResponse,
                                        CustomJObjectParserDelegate<TransparencySoftwareStatus>?  CustomTransparencySoftwareStatusParser   = null)
         {
 
@@ -188,9 +203,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 {
                     return false;
                 }
-
-                if (TransparencySoftware is null)
-                    return false;
 
                 #endregion
 
@@ -245,12 +257,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                TransparencySoftwareStatus = new TransparencySoftwareStatus(TransparencySoftware,
-                                                                            LegalStatus,
-                                                                            Certificate,
-                                                                            CertificateIssuer,
-                                                                            NotBefore,
-                                                                            NotAfter);
+                TransparencySoftwareStatus = new TransparencySoftwareStatus(
+                                                 TransparencySoftware,
+                                                 LegalStatus,
+                                                 Certificate,
+                                                 CertificateIssuer,
+                                                 NotBefore,
+                                                 NotAfter
+                                             );
 
                 if (CustomTransparencySoftwareStatusParser is not null)
                     TransparencySoftwareStatus = CustomTransparencySoftwareStatusParser(JSON,
@@ -459,11 +473,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two transparency software status for equality.
         /// </summary>
         /// <param name="TransparencySoftwareStatus">A transparency software status to compare with.</param>
-        public Int32 CompareTo(TransparencySoftwareStatus TransparencySoftwareStatus)
+        public Int32 CompareTo(TransparencySoftwareStatus? TransparencySoftwareStatus)
         {
 
-            if (TransparencySoftware is null)
-                throw new ArgumentNullException(nameof(TransparencySoftware), "The give transparency software must not be null!");
+            if (TransparencySoftwareStatus is null)
+                throw new ArgumentNullException(nameof(TransparencySoftwareStatus), "The give transparency software must not be null!");
 
             var c = TransparencySoftware.Name.CompareTo(TransparencySoftwareStatus.TransparencySoftware.Name);
 
@@ -529,24 +543,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return TransparencySoftware.GetHashCode()       * 13 ^
-                       LegalStatus.         GetHashCode()       * 11 ^
-                      (Certificate?.        GetHashCode() ?? 0) * 7 ^
-                      (CertificateIssuer?.  GetHashCode() ?? 0) * 5 ^
-                      (NotBefore?.          GetHashCode() ?? 0) * 3 ^
-                      (NotAfter?.           GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -559,24 +563,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => String.Concat(
 
-                   TransparencySoftware.Name,
-                   ": ",
-                   LegalStatus.ToString(),
+                   $"{TransparencySoftware.Name}: {LegalStatus}",
 
                    CertificateIssuer is not null
-                       ? " by " + CertificateIssuer
+                       ? $" by {CertificateIssuer}"
                        : "",
 
-                   Certificate is not null
-                       ? ", certificate: " + Certificate.SubstringMax(20)
+                   Certificate is not null && Certificate.IsNotNullOrEmpty()
+                       ? $", certificate: {Certificate.SubstringMax(20)}"
                        : "",
 
                    NotBefore.HasValue
-                       ? ", not before: " + NotBefore.Value.ToIso8601()
+                       ? $", not before: {NotBefore}"
                        : "",
 
                    NotAfter.HasValue
-                       ? ", not after: "  + NotAfter. Value.ToIso8601()
+                       ? $", not after: {NotAfter}"
                        : ""
 
                );

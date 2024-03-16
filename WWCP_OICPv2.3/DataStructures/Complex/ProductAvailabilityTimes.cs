@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -52,6 +54,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new energy source.
         /// </summary>
@@ -63,6 +67,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Period  = Period;
             this.On      = On;
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -133,7 +139,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out ProductAvailabilityTimes productAvailabilityTimes,
+                         out var productAvailabilityTimes,
                          out _,
                          CustomProductAvailabilityTimesParser))
             {
@@ -156,9 +162,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="ProductAvailabilityTimes">The parsed energy source.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                       JSON,
-                                       out ProductAvailabilityTimes  ProductAvailabilityTimes,
-                                       out String?                   ErrorResponse)
+        public static Boolean TryParse(JObject                                            JSON,
+                                       [NotNullWhen(true)]  out ProductAvailabilityTimes  ProductAvailabilityTimes,
+                                       [NotNullWhen(false)] out String?                   ErrorResponse)
 
             => TryParse(JSON,
                         out ProductAvailabilityTimes,
@@ -174,8 +180,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomProductAvailabilityTimesParser">A delegate to parse custom energy sources JSON objects.</param>
         public static Boolean TryParse(JObject                                                 JSON,
-                                       out ProductAvailabilityTimes                            ProductAvailabilityTimes,
-                                       out String?                                             ErrorResponse,
+                                       [NotNullWhen(true)]  out ProductAvailabilityTimes       ProductAvailabilityTimes,
+                                       [NotNullWhen(false)] out String?                        ErrorResponse,
                                        CustomJObjectParserDelegate<ProductAvailabilityTimes>?  CustomProductAvailabilityTimesParser)
         {
 
@@ -217,8 +223,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ProductAvailabilityTimes = new ProductAvailabilityTimes(Period,
-                                                                        WeekDay);
+                ProductAvailabilityTimes = new ProductAvailabilityTimes(
+                                               Period,
+                                               WeekDay
+                                           );
 
 
                 if (CustomProductAvailabilityTimesParser is not null)
@@ -465,7 +473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(On, ": ", Period);
+            => $"{On}: {Period}";
 
         #endregion
 

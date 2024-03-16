@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -121,9 +123,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public ChargingStartNotificationRequest(Session_Id             SessionId,
                                                 Identification         Identification,
                                                 EVSE_Id                EVSEId,
@@ -139,9 +141,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 JObject?               CustomData            = null,
 
                                                 DateTime?              Timestamp             = null,
-                                                CancellationToken      CancellationToken     = default,
                                                 EventTracking_Id?      EventTrackingId       = null,
-                                                TimeSpan?              RequestTimeout        = null)
+                                                TimeSpan?              RequestTimeout        = null,
+                                                CancellationToken      CancellationToken     = default)
 
             : base(ProcessId,
                    CustomData,
@@ -164,6 +166,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.MeterValueStart      = MeterValueStart;
             this.OperatorId           = OperatorId;
             this.PartnerProductId     = PartnerProductId;
+
+
+            unchecked
+            {
+
+                hashCode = this.Type.                GetHashCode()       * 31 ^
+                           this.SessionId.           GetHashCode()       * 29 ^
+                           this.Identification.      GetHashCode()       * 23 ^
+                           this.EVSEId.              GetHashCode()       * 19 ^
+                           this.ChargingStart.       GetHashCode()       * 17 ^
+                          (this.CPOPartnerSessionId?.GetHashCode() ?? 0) * 13 ^
+                          (this.EMPPartnerSessionId?.GetHashCode() ?? 0) * 11 ^
+                          (this.SessionStart?.       GetHashCode() ?? 0) *  7 ^
+                          (this.MeterValueStart?.    GetHashCode() ?? 0) *  5 ^
+                          (this.OperatorId?.         GetHashCode() ?? 0) *  3 ^
+                          (this.PartnerProductId?.   GetHashCode() ?? 0);
+
+            }
 
         }
 
@@ -194,11 +214,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                              Process_Id?                                                     ProcessId                                      = null,
 
                                                              DateTime?                                                       Timestamp                                      = null,
-                                                             CancellationToken                                               CancellationToken                              = default,
                                                              EventTracking_Id?                                               EventTrackingId                                = null,
                                                              TimeSpan?                                                       RequestTimeout                                 = null,
-
-                                                             CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null)
+                                                             CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null,
+                                                             CancellationToken                                               CancellationToken                              = default)
         {
 
             if (TryParse(JSON,
@@ -206,12 +225,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomChargingStartNotificationRequestParser))
+                         CustomChargingStartNotificationRequestParser,
+                         CancellationToken))
             {
-                return chargingStartNotificationRequest!;
+                return chargingStartNotificationRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a charging notification start request is invalid: " + errorResponse,
@@ -234,16 +253,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingStartNotificationRequestParser">A delegate to parse custom charging notification start request JSON objects.</param>
         public static Boolean TryParse(JObject                                                         JSON,
-                                       out ChargingStartNotificationRequest?                           ChargingStartNotificationRequest,
-                                       out String?                                                     ErrorResponse,
+                                       [NotNullWhen(true)]  out ChargingStartNotificationRequest?      ChargingStartNotificationRequest,
+                                       [NotNullWhen(false)] out String?                                ErrorResponse,
                                        Process_Id?                                                     ProcessId                                      = null,
 
                                        DateTime?                                                       Timestamp                                      = null,
-                                       CancellationToken                                               CancellationToken                              = default,
                                        EventTracking_Id?                                               EventTrackingId                                = null,
                                        TimeSpan?                                                       RequestTimeout                                 = null,
-
-                                       CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null)
+                                       CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null,
+                                       CancellationToken                                               CancellationToken                              = default)
         {
 
             try
@@ -316,8 +334,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "identification",
                                              OICPv2_3.Identification.TryParse,
                                              out Identification? Identification,
-                                             out ErrorResponse) ||
-                     Identification is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -410,24 +427,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingStartNotificationRequest = new ChargingStartNotificationRequest(SessionId,
-                                                                                        Identification!,
-                                                                                        EVSEId,
-                                                                                        ChargingStart,
+                ChargingStartNotificationRequest = new ChargingStartNotificationRequest(
+                                                       SessionId,
+                                                       Identification,
+                                                       EVSEId,
+                                                       ChargingStart,
 
-                                                                                        CPOPartnerSessionId,
-                                                                                        EMPPartnerSessionId,
-                                                                                        SessionStart,
-                                                                                        MeterValueStart,
-                                                                                        OperatorId,
-                                                                                        PartnerProductId,
-                                                                                        ProcessId,
-                                                                                        customData,
+                                                       CPOPartnerSessionId,
+                                                       EMPPartnerSessionId,
+                                                       SessionStart,
+                                                       MeterValueStart,
+                                                       OperatorId,
+                                                       PartnerProductId,
+                                                       ProcessId,
+                                                       customData,
 
-                                                                                        Timestamp,
-                                                                                        CancellationToken,
-                                                                                        EventTrackingId,
-                                                                                        RequestTimeout);
+                                                       Timestamp,
+                                                       EventTrackingId,
+                                                       RequestTimeout,
+                                                       CancellationToken
+                                                   );
 
                 if (CustomChargingStartNotificationRequestParser is not null)
                     ChargingStartNotificationRequest = CustomChargingStartNotificationRequestParser(JSON,
@@ -525,9 +544,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CustomData,
 
                     Timestamp,
-                    CancellationToken,
                     EventTrackingId,
-                    RequestTimeout);
+                    RequestTimeout,
+                    CancellationToken);
 
         #endregion
 
@@ -616,30 +635,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Type.                GetHashCode()       * 31 ^
-                       SessionId.           GetHashCode()       * 29 ^
-                       Identification.      GetHashCode()       * 23 ^
-                       EVSEId.              GetHashCode()       * 19 ^
-                       ChargingStart.       GetHashCode()       * 17 ^
-
-                      (CPOPartnerSessionId?.GetHashCode() ?? 0) * 13 ^
-                      (EMPPartnerSessionId?.GetHashCode() ?? 0) * 11 ^
-                      (SessionStart?.       GetHashCode() ?? 0) *  7 ^
-                      (MeterValueStart?.    GetHashCode() ?? 0) *  5 ^
-                      (OperatorId?.         GetHashCode() ?? 0) *  3 ^
-                      (PartnerProductId?.   GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -650,17 +653,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Type,
-                             " at ",  EVSEId,
-                             " for ", Identification,
+            => String.Concat(
 
-                             " (" + SessionId + ")",
+                   $"{Type} at {EVSEId} for {Identification} ({SessionId})",
 
-                             PartnerProductId.HasValue
-                                 ? " of " + PartnerProductId.Value
-                                 : null,
+                   PartnerProductId.HasValue
+                       ? $" of {PartnerProductId}"
+                       : null,
 
-                             " at " + ChargingStart.ToIso8601());
+                   $" at {ChargingStart}"
+
+               );
 
         #endregion
 

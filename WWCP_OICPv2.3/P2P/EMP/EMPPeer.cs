@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System.Net.Security;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -28,12 +27,12 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using cloud.charging.open.protocols.OICPv2_3.EMP;
 using cloud.charging.open.protocols.OICPv2_3.CPO;
-using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -49,59 +48,39 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  PullEVSEData                      = null,
+                                 APICounterValues?  PullEVSEStatus                    = null,
+                                 APICounterValues?  PullEVSEStatusById                = null,
+
+                                 APICounterValues?  PullPricingProductData            = null,
+                                 APICounterValues?  PullEVSEPricing                   = null,
+
+                                 APICounterValues?  PushAuthenticationData            = null,
+
+                                 APICounterValues?  AuthorizeRemoteReservationStart   = null,
+                                 APICounterValues?  AuthorizeRemoteReservationStop    = null,
+                                 APICounterValues?  AuthorizeRemoteStart              = null,
+                                 APICounterValues?  AuthorizeRemoteStop               = null,
+
+                                 APICounterValues?  GetChargeDetailRecords            = null)
         {
 
-            public APICounterValues  PullEVSEData                       { get; }
-            public APICounterValues  PullEVSEStatus                     { get; }
-            public APICounterValues  PullEVSEStatusById                 { get; }
+            public APICounterValues PullEVSEData                       { get; } = PullEVSEData                    ?? new APICounterValues();
+            public APICounterValues PullEVSEStatus                     { get; } = PullEVSEStatus                  ?? new APICounterValues();
+            public APICounterValues PullEVSEStatusById                 { get; } = PullEVSEStatusById              ?? new APICounterValues();
 
-            public APICounterValues  PullPricingProductData             { get; }
-            public APICounterValues  PullEVSEPricing                    { get; }
+            public APICounterValues PullPricingProductData             { get; } = PullPricingProductData          ?? new APICounterValues();
+            public APICounterValues PullEVSEPricing                    { get; } = PullEVSEPricing                 ?? new APICounterValues();
 
-            public APICounterValues  PushAuthenticationData             { get; }
+            public APICounterValues PushAuthenticationData             { get; } = PushAuthenticationData          ?? new APICounterValues();
 
-            public APICounterValues  AuthorizeRemoteReservationStart    { get; }
-            public APICounterValues  AuthorizeRemoteReservationStop     { get; }
-            public APICounterValues  AuthorizeRemoteStart               { get; }
-            public APICounterValues  AuthorizeRemoteStop                { get; }
+            public APICounterValues AuthorizeRemoteReservationStart    { get; } = AuthorizeRemoteReservationStart ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteReservationStop     { get; } = AuthorizeRemoteReservationStop  ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteStart               { get; } = AuthorizeRemoteStart            ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteStop                { get; } = AuthorizeRemoteStop             ?? new APICounterValues();
 
-            public APICounterValues  GetChargeDetailRecords             { get; }
+            public APICounterValues GetChargeDetailRecords             { get; } = GetChargeDetailRecords          ?? new APICounterValues();
 
-            public APICounters(APICounterValues? PullEVSEData                       = null,
-                               APICounterValues? PullEVSEStatus                     = null,
-                               APICounterValues? PullEVSEStatusById                 = null,
-
-                               APICounterValues? PullPricingProductData             = null,
-                               APICounterValues? PullEVSEPricing                    = null,
-
-                               APICounterValues? PushAuthenticationData             = null,
-
-                               APICounterValues? AuthorizeRemoteReservationStart    = null,
-                               APICounterValues? AuthorizeRemoteReservationStop     = null,
-                               APICounterValues? AuthorizeRemoteStart               = null,
-                               APICounterValues? AuthorizeRemoteStop                = null,
-
-                               APICounterValues? GetChargeDetailRecords             = null)
-            {
-
-                this.PullEVSEData                     = PullEVSEData                    ?? new APICounterValues();
-                this.PullEVSEStatus                   = PullEVSEStatus                  ?? new APICounterValues();
-                this.PullEVSEStatusById               = PullEVSEStatusById              ?? new APICounterValues();
-
-                this.PullPricingProductData           = PullPricingProductData          ?? new APICounterValues();
-                this.PullEVSEPricing                  = PullEVSEPricing                 ?? new APICounterValues();
-
-                this.PushAuthenticationData           = PushAuthenticationData          ?? new APICounterValues();
-
-                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
-                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
-                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
-                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
-
-                this.GetChargeDetailRecords           = GetChargeDetailRecords          ?? new APICounterValues();
-
-            }
 
             public JObject ToJSON()
 
@@ -172,20 +151,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public HTTPRequestLogEvent   RequestLog
-            => httpAPI.RequestLog;
+        public HTTPRequestLogEvent?   RequestLog
+            => httpAPI?.RequestLog;
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public HTTPResponseLogEvent  ResponseLog
-            => httpAPI.ResponseLog;
+        public HTTPResponseLogEvent?  ResponseLog
+            => httpAPI?.ResponseLog;
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public HTTPErrorLogEvent     ErrorLog
-            => httpAPI.ErrorLog;
+        public HTTPErrorLogEvent?     ErrorLog
+            => httpAPI?.ErrorLog;
 
         #endregion
 
@@ -567,15 +546,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             this.ProviderId    = ProviderId;
             this.CPOClientAPI  = new CPOClientAPI(httpAPI);
-            this.empClients    = new Dictionary<Operator_Id, EMPClient>();
+            this.empClients    = [];
             this.Counters      = new APICounters();
 
             httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
                                       HTTPMethod.GET,
-                                      new HTTPPath[] {
+                                      [
                                           URLPathPrefix + "/",
                                           URLPathPrefix + "/{FileName}"
-                                      },
+                                      ],
                                       HTTPDelegate: Request => {
                                           return Task.FromResult(
                                               new HTTPResponse.Builder(Request) {
@@ -620,16 +599,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             this.ProviderId    = ProviderId;
             this.httpAPI       = HTTPAPI;
             this.CPOClientAPI  = new CPOClientAPI(httpAPI);
-            this.empClients    = new Dictionary<Operator_Id, EMPClient>();
+            this.empClients    = [];
             this.Counters      = new APICounters();
 
             if (URLPathPrefix.HasValue)
                 httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
                                           HTTPMethod.GET,
-                                          new HTTPPath[] {
+                                          [
                                               URLPathPrefix + "/",
                                               URLPathPrefix + "/{FileName}"
-                                          },
+                                          ],
                                           HTTPDelegate: Request => {
                                               return Task.FromResult(
                                                   new HTTPResponse.Builder(Request) {
@@ -758,7 +737,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  processId,
                                  TimeSpan.FromMilliseconds(23),
-                                 Array.Empty<EVSEDataRecord>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.NoValidContract,
@@ -865,7 +844,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  processId,
                                  TimeSpan.FromMilliseconds(23),
-                                 Array.Empty<OperatorEVSEStatus>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.NoValidContract,
@@ -971,7 +950,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  processId,
                                  TimeSpan.FromMilliseconds(23),
-                                 Array.Empty<EVSEStatusRecord>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.NoValidContract,
@@ -1079,7 +1058,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  processId,
                                  TimeSpan.FromMilliseconds(23),
-                                 Array.Empty<PricingProductData>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.NoValidContract,
@@ -1186,7 +1165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  processId,
                                  TimeSpan.FromMilliseconds(23),
-                                 Array.Empty<OperatorEVSEPricing>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.NoValidContract,
@@ -1765,7 +1744,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  processId,
                                  TimeSpan.FromMilliseconds(23),
-                                 Array.Empty<ChargeDetailRecord>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.NoValidContract,
@@ -1857,12 +1836,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
                 httpAPI.Dispose();
 
             else
-            {
-
-                if (CPOClientAPI is not null)
-                    CPOClientAPI.Dispose();
-
-            }
+                CPOClientAPI?.Dispose();
 
             foreach (var cpoClient in empClients.Values)
                 cpoClient.Dispose();

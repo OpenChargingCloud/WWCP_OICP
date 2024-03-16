@@ -42,82 +42,57 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  PushEVSEData                       = null,
+                                 APICounterValues?  PushEVSEStatus                     = null,
+
+                                 APICounterValues?  PushPricingProductData             = null,
+                                 APICounterValues?  PushEVSEPricing                    = null,
+
+                                 APICounterValues?  PullAuthenticationData             = null,
+
+                                 APICounterValues?  AuthorizeStart                     = null,
+                                 APICounterValues?  AuthorizeStop                      = null,
+
+                                 APICounterValues?  SendChargingStartNotification      = null,
+                                 APICounterValues?  SendChargingProgressNotification   = null,
+                                 APICounterValues?  SendChargingEndNotification        = null,
+                                 APICounterValues?  SendChargingErrorNotification      = null,
+
+                                 APICounterValues?  SendChargeDetailRecord             = null)
         {
 
-            public APICounterValues  PushEVSEData                        { get; }
-            public APICounterValues  PushEVSEStatus                      { get; }
+            public APICounterValues PushEVSEData                        { get; } = PushEVSEData                     ?? new APICounterValues();
+            public APICounterValues PushEVSEStatus                      { get; } = PushEVSEStatus                   ?? new APICounterValues();
 
-            public APICounterValues  PushPricingProductData              { get; }
-            public APICounterValues  PushEVSEPricing                     { get; }
-
-
-            public APICounterValues  PullAuthenticationData              { get; }
-
-            public APICounterValues  AuthorizeStart                      { get; }
-            public APICounterValues  AuthorizeStop                       { get; }
-
-            public APICounterValues  SendChargingStartNotification       { get; }
-            public APICounterValues  SendChargingProgressNotification    { get; }
-            public APICounterValues  SendChargingEndNotification         { get; }
-            public APICounterValues  SendChargingErrorNotification       { get; }
-
-            public APICounterValues  SendChargeDetailRecord              { get; }
+            public APICounterValues PushPricingProductData              { get; } = PushPricingProductData           ?? new APICounterValues();
+            public APICounterValues PushEVSEPricing                     { get; } = PushEVSEPricing                  ?? new APICounterValues();
 
 
-            public APICounters(APICounterValues? PushEVSEData                       = null,
-                               APICounterValues? PushEVSEStatus                     = null,
+            public APICounterValues PullAuthenticationData              { get; } = PullAuthenticationData           ?? new APICounterValues();
 
-                               APICounterValues? PushPricingProductData             = null,
-                               APICounterValues? PushEVSEPricing                    = null,
+            public APICounterValues AuthorizeStart                      { get; } = AuthorizeStart                   ?? new APICounterValues();
+            public APICounterValues AuthorizeStop                       { get; } = AuthorizeStop                    ?? new APICounterValues();
 
-                               APICounterValues? PullAuthenticationData             = null,
+            public APICounterValues SendChargingStartNotification       { get; } = SendChargingStartNotification    ?? new APICounterValues();
+            public APICounterValues SendChargingProgressNotification    { get; } = SendChargingProgressNotification ?? new APICounterValues();
+            public APICounterValues SendChargingEndNotification         { get; } = SendChargingEndNotification      ?? new APICounterValues();
+            public APICounterValues SendChargingErrorNotification       { get; } = SendChargingErrorNotification    ?? new APICounterValues();
 
-                               APICounterValues? AuthorizeStart                     = null,
-                               APICounterValues? AuthorizeStop                      = null,
-
-                               APICounterValues? SendChargingStartNotification      = null,
-                               APICounterValues? SendChargingProgressNotification   = null,
-                               APICounterValues? SendChargingEndNotification        = null,
-                               APICounterValues? SendChargingErrorNotification      = null,
-
-                               APICounterValues? SendChargeDetailRecord             = null)
-
-            {
-
-                this.PushEVSEData                      = PushEVSEData                     ?? new APICounterValues();
-                this.PushEVSEStatus                    = PushEVSEStatus                   ?? new APICounterValues();
-
-                this.PushPricingProductData            = PushPricingProductData           ?? new APICounterValues();
-                this.PushEVSEPricing                   = PushEVSEPricing                  ?? new APICounterValues();
-
-                this.PullAuthenticationData            = PullAuthenticationData           ?? new APICounterValues();
-
-                this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
-                this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
-
-                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new APICounterValues();
-                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new APICounterValues();
-                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new APICounterValues();
-                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new APICounterValues();
-
-                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new APICounterValues();
-
-            }
+            public APICounterValues SendChargeDetailRecord              { get; } = SendChargeDetailRecord           ?? new APICounterValues();
 
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("PushEVSEData",                 PushEVSEData.                ToJSON()),
-                       new JProperty("PushEVSEStatus",               PushEVSEStatus.              ToJSON()),
+                       new JProperty("PushEVSEData",                 PushEVSEData.                    ToJSON()),
+                       new JProperty("PushEVSEStatus",               PushEVSEStatus.                  ToJSON()),
 
-                       new JProperty("PushPricingProductData",       PushPricingProductData.      ToJSON()),
-                       new JProperty("PushEVSEPricing",              PushEVSEPricing.             ToJSON()),
+                       new JProperty("PushPricingProductData",       PushPricingProductData.          ToJSON()),
+                       new JProperty("PushEVSEPricing",              PushEVSEPricing.                 ToJSON()),
 
-                       new JProperty("PullAuthenticationData",       PullAuthenticationData.      ToJSON()),
+                       new JProperty("PullAuthenticationData",       PullAuthenticationData.          ToJSON()),
 
-                       new JProperty("AuthorizeStart",               AuthorizeStart.              ToJSON()),
-                       new JProperty("AuthorizeStop",                AuthorizeStop.               ToJSON()),
+                       new JProperty("AuthorizeStart",               AuthorizeStart.                  ToJSON()),
+                       new JProperty("AuthorizeStop",                AuthorizeStop.                   ToJSON()),
 
                        new JProperty("ChargingStartNotification",    SendChargingStartNotification.   ToJSON()),
                        new JProperty("ChargingProgressNotification", SendChargingProgressNotification.ToJSON()),
@@ -832,17 +807,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
             base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext,
-                                                         LogfileCreator)
+                                       ? new HTTP_Logger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext,
+                                             LogfileCreator
+                                         )
                                        : null;
 
             this.Logger          = this.DisableLogging == false
-                                       ? new CPOClientLogger(this,
-                                                             LoggingPath,
-                                                             LoggingContext,
-                                                             LogfileCreator)
+                                       ? new CPOClientLogger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext,
+                                             LogfileCreator
+                                         )
                                        : null;
 
         }
@@ -952,7 +931,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v23/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/data-records"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEDataRequestSerializer,
                                                                                                                                         CustomOperatorEVSEDataSerializer,
@@ -1490,7 +1469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEStatusRequestSerializer,
                                                                                                                                         CustomOperatorEVSEStatusSerializer,
@@ -2017,7 +1996,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pricing-products"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushPricingProductDataRequestSerializer,
                                                                                                                                         CustomPricingProductDataSerializer,
@@ -2546,7 +2525,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                   Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/evse-pricing"),
                                                                                        requestbuilder => {
-                                                                                           requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                            requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                            requestbuilder.Content      = Request.ToJSON(CustomPushEVSEPricingRequestSerializer,
                                                                                                                                         CustomEVSEPricingSerializer).
@@ -3056,7 +3035,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                 Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/authdata/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pull-request"),
                                                                                      requestbuilder => {
-                                                                                         requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                         requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                          requestbuilder.Content      = Request.ToJSON(CustomPullAuthenticationDataRequestSerializer).
                                                                                                                                ToString(JSONFormatting).
@@ -3140,7 +3119,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -3275,7 +3254,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      HTTPResponse.EventTrackingId,
                                                      processId,
                                                      HTTPResponse.Runtime,
-                                                     Array.Empty<ProviderAuthenticationData>(),
+                                                     [],
                                                      Request,
                                                      StatusCode: statusCode
                                                  ),
@@ -3295,7 +3274,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -3358,7 +3337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      HTTPResponse.EventTrackingId,
                                                      processId,
                                                      HTTPResponse.Runtime,
-                                                     Array.Empty<ProviderAuthenticationData>(),
+                                                     [],
                                                      Request,
                                                      StatusCode: statusCode
                                                  ),
@@ -3378,7 +3357,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -3439,7 +3418,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      HTTPResponse.EventTrackingId,
                                                      processId,
                                                      HTTPResponse.Runtime,
-                                                     Array.Empty<ProviderAuthenticationData>(),
+                                                     [],
                                                      Request,
                                                      StatusCode: statusCode
                                                  ),
@@ -3459,7 +3438,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<ProviderAuthenticationData>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -3493,7 +3472,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<ProviderAuthenticationData>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.SystemError,
@@ -3512,7 +3491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 Request.EventTrackingId ?? EventTracking_Id.New,
                                 Process_Id.NewRandom(),
                                 Timestamp.Now - Request.Timestamp,
-                                Array.Empty<ProviderAuthenticationData>(),
+                                [],
                                 Request,
                                 StatusCode: new StatusCode(
                                                 StatusCodes.SystemError,
@@ -3633,7 +3612,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStartRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -4044,7 +4023,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStopRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -4485,7 +4464,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
@@ -4973,7 +4952,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
@@ -5461,7 +5440,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
@@ -5949,7 +5928,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                                  Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                       requestbuilder => {
-                                                                                          requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                           requestbuilder.Content      = Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
                                                                                                                                        CustomIdentificationSerializer).
@@ -6513,7 +6492,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
                                                                                                                                     CustomChargeDetailRecordSerializer,

@@ -61,7 +61,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                               CustomTransparencySoftwareSerializer)).
                                              Where         (energyMeter => energyMeter is not null))
 
-                   : new JArray();
+                   : [];
 
         #endregion
 
@@ -201,9 +201,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.FirmwareVersion            = FirmwareVersion;
             this.Manufacturer               = Manufacturer;
             this.ManufacturerURL            = ManufacturerURL;
-            this.PublicKeys                 = PublicKeys?.           Distinct() ?? Array.Empty<PublicKey>();
+            this.PublicKeys                 = PublicKeys?.           Distinct() ?? [];
             this.PublicKeyCertificateChain  = PublicKeyCertificateChain;
-            this.TransparencySoftwares      = TransparencySoftwares?.Distinct() ?? Array.Empty<TransparencySoftwareStatus>();
+            this.TransparencySoftwares      = TransparencySoftwares?.Distinct() ?? [];
             this.Description                = Description                       ?? I18NString.Empty;
             this.LastUpdate                 = LastUpdate                        ?? Timestamp.Now;
 

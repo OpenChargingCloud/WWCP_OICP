@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -70,9 +72,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public PullEVSEPricingRequest(Provider_Id               ProviderId,
                                       IEnumerable<Operator_Id>  OperatorIds,
                                       DateTime?                 LastCall            = null,
@@ -84,9 +86,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       JObject?                  CustomData          = null,
 
                                       DateTime?                 Timestamp           = null,
-                                      CancellationToken         CancellationToken   = default,
                                       EventTracking_Id?         EventTrackingId     = null,
-                                      TimeSpan?                 RequestTimeout      = null)
+                                      TimeSpan?                 RequestTimeout      = null,
+                                      CancellationToken         CancellationToken   = default)
 
             : base(ProcessId,
                    Page,
@@ -104,6 +106,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ProviderId   = ProviderId;
             this.OperatorIds  = OperatorIds;
             this.LastCall     = LastCall;
+
+            unchecked
+            {
+
+                hashCode = ProviderId. GetHashCode()  * 5 ^
+                           OperatorIds.CalcHashCode() * 3 ^
+                           LastCall?.  GetHashCode() ?? 0;
+
+            }
 
         }
 
@@ -138,11 +149,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                    IEnumerable<String>?                                  SortOrder                            = null,
 
                                                    DateTime?                                             Timestamp                            = null,
-                                                   CancellationToken                                     CancellationToken                    = default,
                                                    EventTracking_Id?                                     EventTrackingId                      = null,
                                                    TimeSpan?                                             RequestTimeout                       = null,
-
-                                                   CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
+                                                   CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null,
+                                                   CancellationToken                                     CancellationToken                    = default)
         {
 
             if (TryParse(JSON,
@@ -153,12 +163,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          Size,
                          SortOrder,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPullEVSEPricingRequestParser))
+                         CustomPullEVSEPricingRequestParser,
+                         CancellationToken))
             {
-                return pullEVSEPricingRequest!;
+                return pullEVSEPricingRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEPricing request is invalid: " + errorResponse,
@@ -178,19 +188,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEPricingRequestParser">A delegate to parse custom PullEVSEPricing request JSON objects.</param>
         public static Boolean TryParse(JObject                                               JSON,
-                                       out PullEVSEPricingRequest?                           PullEVSEPricingRequest,
-                                       out String?                                           ErrorResponse,
+                                       [NotNullWhen(true)]  out PullEVSEPricingRequest?      PullEVSEPricingRequest,
+                                       [NotNullWhen(false)] out String?                      ErrorResponse,
                                        Process_Id?                                           ProcessId                            = null,
                                        UInt32?                                               Page                                 = null,
                                        UInt32?                                               Size                                 = null,
                                        IEnumerable<String>?                                  SortOrder                            = null,
 
                                        DateTime?                                             Timestamp                            = null,
-                                       CancellationToken                                     CancellationToken                    = default,
                                        EventTracking_Id?                                     EventTrackingId                      = null,
                                        TimeSpan?                                             RequestTimeout                       = null,
-
-                                       CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null)
+                                       CustomJObjectParserDelegate<PullEVSEPricingRequest>?  CustomPullEVSEPricingRequestParser   = null,
+                                       CancellationToken                                     CancellationToken                    = default)
         {
 
             try
@@ -252,21 +261,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEPricingRequest = new PullEVSEPricingRequest(ProviderId,
-                                                                    OperatorIds,
-                                                                    LastCall,
+                PullEVSEPricingRequest = new PullEVSEPricingRequest(
+                                             ProviderId,
+                                             OperatorIds,
+                                             LastCall,
 
-                                                                    ProcessId,
-                                                                    Page,
-                                                                    Size,
-                                                                    SortOrder,
+                                             ProcessId,
+                                             Page,
+                                             Size,
+                                             SortOrder,
 
-                                                                    customData,
+                                             customData,
 
-                                                                    Timestamp,
-                                                                    CancellationToken,
-                                                                    EventTrackingId,
-                                                                    RequestTimeout);
+                                             Timestamp,
+                                             EventTrackingId,
+                                             RequestTimeout,
+                                             CancellationToken
+                                         );
 
                 if (CustomPullEVSEPricingRequestParser is not null)
                     PullEVSEPricingRequest = CustomPullEVSEPricingRequestParser(JSON,
@@ -403,24 +414,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return ProviderId. GetHashCode() * 5 ^
-                       OperatorIds.GetHashCode() * 3 ^
-
-                       (!LastCall.HasValue
-                            ? LastCall.GetHashCode() *  5
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -431,11 +432,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(ProviderId.ToString(), " => ",
-                             "Operators: ", OperatorIds.AggregateWith(", "),
-                             LastCall.HasValue
-                                 ? "; last call: " + LastCall.Value.ToIso8601()
-                                 : "");
+            => String.Concat(
+
+                   $"{ProviderId} => Operators: {OperatorIds.AggregateWith(", ")}",
+
+                   LastCall.HasValue
+                       ? $"; last call: {LastCall}"
+                       : ""
+
+               );
 
         #endregion
 

@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -127,6 +129,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.OperatorName                 = OperatorName;
 
+
+            unchecked
+            {
+
+                hashCode = this.OperatorId.                 GetHashCode()       * 17 ^
+                          (this.OperatorName?.              GetHashCode() ?? 0) * 13 ^
+                          (this.ProviderId?.                GetHashCode() ?? 0) * 11 ^
+                           this.PricingDefaultPrice.        GetHashCode()       *  7 ^
+                           this.PricingDefaultPriceCurrency.GetHashCode()       *  5 ^
+                           this.PricingDefaultReferenceUnit.GetHashCode()       *  3 ^
+
+                          (this.PricingProductDataRecords.Any()
+                               ? this.PricingProductDataRecords.GetHashCode()
+                               : 0);
+
+            }
+
         }
 
         #endregion
@@ -191,7 +210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomPricingProductDataParser))
             {
-                return pricingProductData!;
+                return pricingProductData;
             }
 
             throw new ArgumentException("The given JSON representation of pricing product data object is invalid: " + errorResponse,
@@ -211,9 +230,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="PricingProductData">The parsed pricing product data object.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                  JSON,
-                                       out PricingProductData?  PricingProductData,
-                                       out String?              ErrorResponse)
+        public static Boolean TryParse(JObject                                       JSON,
+                                       [NotNullWhen(true)]  out PricingProductData?  PricingProductData,
+                                       [NotNullWhen(false)] out String?              ErrorResponse)
 
             => TryParse(JSON,
                         out PricingProductData,
@@ -229,8 +248,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPricingProductDataParser">A delegate to parse custom pricing product data objects JSON objects.</param>
         public static Boolean TryParse(JObject                                           JSON,
-                                       out PricingProductData?                           PricingProductData,
-                                       out String?                                       ErrorResponse,
+                                       [NotNullWhen(true)]  out PricingProductData?      PricingProductData,
+                                       [NotNullWhen(false)] out String?                  ErrorResponse,
                                        CustomJObjectParserDelegate<PricingProductData>?  CustomPricingProductDataParser)
         {
 
@@ -336,16 +355,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PricingProductData = new PricingProductData(OperatorId,
-                                                            ProviderId,
-                                                            PricingDefaultPrice,
-                                                            PricingDefaultPriceCurrency,
-                                                            PricingDefaultReferenceUnit,
-                                                            PricingProductDataRecords,
+                PricingProductData = new PricingProductData(
 
-                                                            OperatorName,
+                                         OperatorId,
+                                         ProviderId,
+                                         PricingDefaultPrice,
+                                         PricingDefaultPriceCurrency,
+                                         PricingDefaultReferenceUnit,
+                                         PricingProductDataRecords,
 
-                                                            customData);
+                                         OperatorName,
+
+                                         customData
+
+                                     );
 
 
                 if (CustomPricingProductDataParser is not null)
@@ -379,24 +402,24 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("OperatorID",                   OperatorId.ToString()),
+                                 new JProperty("OperatorID",                    OperatorId.ToString()),
 
                            OperatorName is not null && OperatorName.IsNotNullOrEmpty()
-                               ? new JProperty("OperatorName",           OperatorName)
+                               ? new JProperty("OperatorName",                  OperatorName)
                                : null,
 
                            ProviderId.HasValue
-                               ? new JProperty("ProviderID",             ProviderId.Value.ToString())
-                               : new JProperty("ProviderID",             "*"),
+                               ? new JProperty("ProviderID",                    ProviderId.Value.ToString())
+                               : new JProperty("ProviderID",                    "*"),
 
-                           new JProperty("PricingDefaultPrice",          PricingDefaultPrice),
-                           new JProperty("PricingDefaultPriceCurrency",  PricingDefaultPriceCurrency.ToString()),
-                           new JProperty("PricingDefaultReferenceUnit",  PricingDefaultReferenceUnit.ToString()),
+                                 new JProperty("PricingDefaultPrice",           PricingDefaultPrice),
+                                 new JProperty("PricingDefaultPriceCurrency",   PricingDefaultPriceCurrency.ToString()),
+                                 new JProperty("PricingDefaultReferenceUnit",   PricingDefaultReferenceUnit.ToString()),
 
-                           new JProperty("PricingProductDataRecords",    new JArray(PricingProductDataRecords.Select(pricingProductDataRecord => pricingProductDataRecord.ToJSON(CustomPricingProductDataRecordSerializer)))),
+                                 new JProperty("PricingProductDataRecords",     new JArray(PricingProductDataRecords.Select(pricingProductDataRecord => pricingProductDataRecord.ToJSON(CustomPricingProductDataRecordSerializer)))),
 
                            CustomData?.HasValues == true
-                               ? new JProperty("CustomData",             CustomData)
+                               ? new JProperty("CustomData",                    CustomData)
                                : null
 
                        );
@@ -611,28 +634,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return OperatorId.                 GetHashCode()       * 17 ^
-                      (OperatorName?.              GetHashCode() ?? 0) * 13 ^
-                      (ProviderId?.                GetHashCode() ?? 0) * 11 ^
-                       PricingDefaultPrice.        GetHashCode()       *  7 ^
-                       PricingDefaultPriceCurrency.GetHashCode()       *  5 ^
-                       PricingDefaultReferenceUnit.GetHashCode()       *  3 ^
-
-                       (PricingProductDataRecords.Any()
-                            ? PricingProductDataRecords.GetHashCode()
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -643,11 +652,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorId,
-                             OperatorName.IsNotNullOrEmpty() ? " (" + OperatorName+ ")" : "",
-                             ProviderId.HasValue ? " for provider " + ProviderId.Value.ToString() : " for all providers",
-                             ": ", PricingDefaultPrice, " ", PricingDefaultPriceCurrency, " per ", PricingDefaultReferenceUnit,
-                             " => ", PricingProductDataRecords.Count(), " pricing product data record(s)");
+            => String.Concat(
+
+                   OperatorName.IsNotNullOrEmpty()
+                       ? $"'{OperatorName}' ({OperatorId})"
+                       : OperatorId,
+
+                   ProviderId.HasValue
+                       ? $" for provider {ProviderId}"
+                       : " for all providers",
+
+                   $": {PricingDefaultPrice} {PricingDefaultPriceCurrency} per {PricingDefaultReferenceUnit} => {PricingProductDataRecords.Count()} pricing product data record(s)"
+
+               );
 
         #endregion
 

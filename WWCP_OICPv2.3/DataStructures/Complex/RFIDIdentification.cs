@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -100,6 +102,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ExpiryDate     = ExpiryDate;
             this.CustomData     = CustomData;
 
+
+            unchecked
+            {
+
+                hashCode = this.EVCOId.             GetHashCode() * 11 ^
+                           this.RFIDType.           GetHashCode() *  7 ^
+
+                          (this.EVCOId.       HasValue
+                               ? this.EVCOId.       GetHashCode() *  5
+                               : 0) ^
+
+                          (this.PrintedNumber is not null
+                               ? this.PrintedNumber.GetHashCode() *  3
+                               : 0) ^
+
+                          (this.EVCOId.       HasValue
+                               ? this.EVCOId.       GetHashCode()
+                               : 0);
+
+            }
+
         }
 
         #endregion
@@ -135,7 +158,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomRFIDIdentificationParser))
             {
-                return calibrationLawVerification!;
+                return calibrationLawVerification;
             }
 
             throw new ArgumentException("The given JSON representation of a RFID identification is invalid: " + errorResponse,
@@ -155,9 +178,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="RFIDIdentification">The parsed RFID identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                  JSON,
-                                       out RFIDIdentification?  RFIDIdentification,
-                                       out String?              ErrorResponse)
+        public static Boolean TryParse(JObject                                       JSON,
+                                       [NotNullWhen(true)]  out RFIDIdentification?  RFIDIdentification,
+                                       [NotNullWhen(false)] out String?              ErrorResponse)
 
             => TryParse(JSON,
                         out RFIDIdentification,
@@ -173,8 +196,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomRFIDIdentificationParser">A delegate to parse custom RFID identifications JSON objects.</param>
         public static Boolean TryParse(JObject                                           JSON,
-                                       out RFIDIdentification?                           RFIDIdentification,
-                                       out String?                                       ErrorResponse,
+                                       [NotNullWhen(true)]  out RFIDIdentification?      RFIDIdentification,
+                                       [NotNullWhen(false)] out String?                  ErrorResponse,
                                        CustomJObjectParserDelegate<RFIDIdentification>?  CustomRFIDIdentificationParser)
         {
 
@@ -255,12 +278,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                RFIDIdentification = new RFIDIdentification(UID,
-                                                            RFIDType,
-                                                            EVCOId,
-                                                            PrintedNumber,
-                                                            ExpiryDate,
-                                                            CustomData);
+                RFIDIdentification = new RFIDIdentification(
+                                         UID,
+                                         RFIDType,
+                                         EVCOId,
+                                         PrintedNumber,
+                                         ExpiryDate,
+                                         CustomData
+                                     );
 
 
                 if (CustomRFIDIdentificationParser is not null)
@@ -557,31 +582,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Get the hashcode of this object.
+        /// Return the hash code of this object.
         /// </summary>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return EVCOId.  GetHashCode() * 11 ^
-                       RFIDType.GetHashCode() *  7 ^
-
-                       (EVCOId.HasValue
-                            ? EVCOId.GetHashCode() * 5
-                            : 0) ^
-
-                       (PrintedNumber != null
-                            ? PrintedNumber.GetHashCode() * 3
-                            : 0) ^
-
-                       (EVCOId.HasValue
-                            ? EVCOId.GetHashCode()
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -592,20 +600,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(UID.ToString(),
-                             " (", RFIDType, ") ",
+            => String.Concat(
 
-                             PrintedNumber is not null && PrintedNumber.IsNeitherNullNorEmpty()
-                                 ? ", '" + PrintedNumber + "'"
-                                 : "",
+                   $"{UID} ({RFIDType}) ",
 
-                             EVCOId.HasValue
-                                 ? ", ContractId: '" + EVCOId + "'"
-                                 : "",
+                   PrintedNumber is not null && PrintedNumber.IsNeitherNullNorEmpty()
+                       ? $", '{PrintedNumber}'"
+                       : "",
 
-                             ExpiryDate.HasValue
-                                 ? ", expires: " + ExpiryDate
-                                 : "");
+                   EVCOId.HasValue
+                       ? $", ContractId: '{EVCOId}'"
+                       : "",
+
+                   ExpiryDate.HasValue
+                       ? $", expires: {ExpiryDate}"
+                       : ""
+
+               );
 
         #endregion
 

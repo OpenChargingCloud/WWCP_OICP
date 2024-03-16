@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -68,6 +70,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new PushPricingProductData request.
         /// </summary>
@@ -75,18 +79,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Action">The server-side data management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public PushPricingProductDataRequest(PricingProductData  PricingProductData,
                                              ActionTypes         Action              = ActionTypes.FullLoad,
                                              Process_Id?         ProcessId           = null,
                                              JObject?            CustomData          = null,
 
                                              DateTime?           Timestamp           = null,
-                                             CancellationToken   CancellationToken   = default,
                                              EventTracking_Id?   EventTrackingId     = null,
-                                             TimeSpan?           RequestTimeout      = null)
+                                             TimeSpan?           RequestTimeout      = null,
+                                             CancellationToken   CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -101,6 +105,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Action              = Action;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -134,11 +140,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           Process_Id?                                                  ProcessId                                   = null,
 
                                                           DateTime?                                                    Timestamp                                   = null,
-                                                          CancellationToken                                            CancellationToken                           = default,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
-
-                                                          CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
+                                                          CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null,
+                                                          CancellationToken                                            CancellationToken                           = default)
         {
 
             if (TryParse(JSON,
@@ -146,12 +151,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPushPricingProductDataRequestParser))
+                         CustomPushPricingProductDataRequestParser,
+                         CancellationToken))
             {
-                return pushEVSEDataRequest!;
+                return pushEVSEDataRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a push pricing product data request is invalid: " + errorResponse,
@@ -174,16 +179,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushPricingProductDataRequestParser">A delegate to parse custom push pricing product data request JSON objects.</param>
         public static Boolean TryParse(JObject                                                      JSON,
-                                       out PushPricingProductDataRequest?                           PushPricingProductDataRequest,
-                                       out String?                                                  ErrorResponse,
+                                       [NotNullWhen(true)]  out PushPricingProductDataRequest?      PushPricingProductDataRequest,
+                                       [NotNullWhen(false)] out String?                             ErrorResponse,
                                        Process_Id?                                                  ProcessId                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
-                                       CancellationToken                                            CancellationToken                           = default,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,
-
-                                       CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null)
+                                       CustomJObjectParserDelegate<PushPricingProductDataRequest>?  CustomPushPricingProductDataRequestParser   = null,
+                                       CancellationToken                                            CancellationToken                           = default)
         {
 
             try
@@ -215,8 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "pricing product data",
                                              OICPv2_3.PricingProductData.TryParse,
                                              out PricingProductData? PricingProductData,
-                                             out ErrorResponse) ||
-                     PricingProductData is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -230,15 +233,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PushPricingProductDataRequest = new PushPricingProductDataRequest(PricingProductData!,
-                                                                                  ActionType,
-                                                                                  ProcessId,
-                                                                                  customData,
+                PushPricingProductDataRequest = new PushPricingProductDataRequest(
+                                                    PricingProductData,
+                                                    ActionType,
+                                                    ProcessId,
+                                                    customData,
 
-                                                                                  Timestamp,
-                                                                                  CancellationToken,
-                                                                                  EventTrackingId,
-                                                                                  RequestTimeout);
+                                                    Timestamp,
+                                                    EventTrackingId,
+                                                    RequestTimeout,
+                                                    CancellationToken
+                                                );
 
                 if (CustomPushPricingProductDataRequestParser is not null)
                     PushPricingProductDataRequest = CustomPushPricingProductDataRequestParser(JSON,
@@ -273,13 +278,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ActionType",          Action.AsString()),
+                                 new JProperty("ActionType",           Action.AsString()),
 
-                           new JProperty("PricingProductData",  PricingProductData.ToJSON(CustomPricingProductDataSerializer,
-                                                                                          CustomPricingProductDataRecordSerializer)),
+                                 new JProperty("PricingProductData",   PricingProductData.ToJSON(CustomPricingProductDataSerializer,
+                                                                                                 CustomPricingProductDataRecordSerializer)),
 
                            CustomData is not null
-                               ? new JProperty("CustomData",    CustomData)
+                               ? new JProperty("CustomData",           CustomData)
                                : null
 
                        );
@@ -319,11 +324,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PushPricingProductDataRequest PushPricingProductData2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PushPricingProductData1, PushPricingProductData2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PushPricingProductData1 is null || PushPricingProductData2 is null)
                 return false;
 
@@ -410,9 +413,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Action, " of ",
-                             PricingProductDataRecords.Count(), " pricing product data record(s)",
-                             " by ", OperatorName, " (", OperatorId, ")");
+            => $"{Action} of {PricingProductDataRecords.Count()} pricing product data record(s) by {OperatorName} ({OperatorId})";
 
         #endregion
 

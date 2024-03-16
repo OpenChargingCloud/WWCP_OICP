@@ -417,14 +417,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.SubOperatorName                   = SubOperatorName;
             this.EnergyMeter                       = EnergyMeter;
             this.DynamicPowerLevel                 = DynamicPowerLevel;
-            this.EnergySources                     = EnergySources?.      Distinct() ?? Array.Empty<EnergySource>();
+            this.EnergySources                     = EnergySources?.      Distinct() ?? [];
             this.EnvironmentalImpact               = EnvironmentalImpact;
             this.MaxCapacity                       = MaxCapacity;
             this.AccessibilityLocationType         = AccessibilityLocationType;
             this.AdditionalInfo                    = AdditionalInfo;
             this.ChargingStationLocationReference  = ChargingStationLocationReference;
             this.GeoChargingPointEntrance          = GeoChargingPointEntrance;
-            this.OpeningTimes                      = OpeningTimes?.       Distinct() ?? Array.Empty<OpeningTime>();
+            this.OpeningTimes                      = OpeningTimes?.       Distinct() ?? [];
             this.HubOperatorId                     = HubOperatorId;
             this.ClearingHouseId                   = ClearingHouseId;
 
@@ -663,7 +663,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("OperatorName",
                                              "operator name",
-                                             out String OperatorName,
+                                             out var OperatorName,
                                              out ErrorResponse))
                 {
                     return false;
@@ -694,8 +694,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "address",
                                              OICPv2_3.Address.TryParse,
                                              out Address? Address,
-                                             out ErrorResponse) ||
-                     Address is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -708,8 +707,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "geo coordinates",
                                              OICPv2_3.GeoCoordinates.TryParse,
                                              out GeoCoordinates? GeoCoordinates,
-                                             out ErrorResponse) ||
-                     !GeoCoordinates.HasValue)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -738,12 +736,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              out ErrorResponse))
                 {
 
-                    ChargingFacilities = new ChargingFacility[] {
+                    ChargingFacilities = [
                                              new ChargingFacility(
                                                  PowerTypes.Unspecified,
                                                  0
                                              )
-                                         };
+                                         ];
 
                     //return false;
 
@@ -806,9 +804,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          out ErrorResponse))
                 {
 
-                    PaymentOptions = new PaymentOptions[] {
-                                         OICPv2_3.PaymentOptions.Contract
-                                     };
+                    PaymentOptions = [ OICPv2_3.PaymentOptions.Contract ];
 
                     //return false;
 
@@ -1435,18 +1431,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         : null,
                     EnergyMeter?.Clone(),
                     DynamicPowerLevel,
-                    EnergySources        is not null
-                        ? EnergySources.SafeSelect(enerygSource => enerygSource.Clone).ToArray()
-                        : null,
+                    EnergySources?.Select(enerygSource => enerygSource.Clone).ToArray(),
                     EnvironmentalImpact?.             Clone,
                     MaxCapacity,
                     AccessibilityLocationType,
                     AdditionalInfo?.                  Clone,
                     ChargingStationLocationReference?.Clone,
                     GeoChargingPointEntrance?.        Clone,
-                    OpeningTimes         is not null
-                        ? OpeningTimes. SafeSelect(openingTime  => openingTime. Clone).ToArray()
-                        : null,
+                    OpeningTimes?. Select(openingTime  => openingTime. Clone).ToArray(),
                     HubOperatorId?.                   Clone,
                     ClearingHouseId?.                 Clone,
 
@@ -1962,6 +1954,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new EVSE data record builder.
             /// </summary>
@@ -2058,13 +2052,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.OperatorName                      = OperatorName;
                 this.ChargingStationName               = ChargingStationName;
                 this.Address                           = Address;
-                this.PlugTypes                         = PlugTypes           is not null && PlugTypes.          Any() ? new HashSet<PlugTypes>          (PlugTypes.          Distinct()) : new HashSet<PlugTypes>();
-                this.ChargingFacilities                = ChargingFacilities  is not null && ChargingFacilities. Any() ? new HashSet<ChargingFacility>   (ChargingFacilities. Distinct()) : new HashSet<ChargingFacility>();
+                this.PlugTypes                         = PlugTypes           is not null && PlugTypes.          Any() ? new HashSet<PlugTypes>          (PlugTypes.          Distinct()) : [];
+                this.ChargingFacilities                = ChargingFacilities  is not null && ChargingFacilities. Any() ? new HashSet<ChargingFacility>   (ChargingFacilities. Distinct()) : [];
                 this.RenewableEnergy                   = RenewableEnergy;
                 this.CalibrationLawDataAvailability    = CalibrationLawDataAvailability;
-                this.AuthenticationModes               = AuthenticationModes is not null && AuthenticationModes.Any() ? new HashSet<AuthenticationModes>(AuthenticationModes.Distinct()) : new HashSet<AuthenticationModes>();
-                this.PaymentOptions                    = PaymentOptions      is not null && PaymentOptions.     Any() ? new HashSet<PaymentOptions>     (PaymentOptions.     Distinct()) : new HashSet<PaymentOptions>();
-                this.ValueAddedServices                = ValueAddedServices  is not null && ValueAddedServices. Any() ? new HashSet<ValueAddedServices> (ValueAddedServices. Distinct()) : new HashSet<ValueAddedServices>();
+                this.AuthenticationModes               = AuthenticationModes is not null && AuthenticationModes.Any() ? new HashSet<AuthenticationModes>(AuthenticationModes.Distinct()) : [];
+                this.PaymentOptions                    = PaymentOptions      is not null && PaymentOptions.     Any() ? new HashSet<PaymentOptions>     (PaymentOptions.     Distinct()) : [];
+                this.ValueAddedServices                = ValueAddedServices  is not null && ValueAddedServices. Any() ? new HashSet<ValueAddedServices> (ValueAddedServices. Distinct()) : [];
                 this.Accessibility                     = Accessibility;
                 this.HotlinePhoneNumber                = HotlinePhoneNumber;
                 this.IsOpen24Hours                     = IsOpen24Hours;
@@ -2081,18 +2075,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.SubOperatorName                   = SubOperatorName;
                 this.GeoCoordinates                    = GeoCoordinates;
                 this.DynamicPowerLevel                 = DynamicPowerLevel;
-                this.EnergySources                     = EnergySources       is not null && EnergySources.      Any() ? new HashSet<EnergySource>       (EnergySources.      Distinct()) : new HashSet<EnergySource>();
+                this.EnergySources                     = EnergySources       is not null && EnergySources.      Any() ? new HashSet<EnergySource>       (EnergySources.      Distinct()) : [];
                 this.EnvironmentalImpact               = EnvironmentalImpact;
                 this.MaxCapacity                       = MaxCapacity;
                 this.AccessibilityLocationType         = AccessibilityLocationType;
                 this.AdditionalInfo                    = AdditionalInfo;
                 this.ChargingStationLocationReference  = ChargingStationLocationReference;
                 this.GeoChargingPointEntrance          = GeoChargingPointEntrance;
-                this.OpeningTimes                      = OpeningTimes        is not null && OpeningTimes.       Any() ? new HashSet<OpeningTime>        (OpeningTimes.       Distinct()) : new HashSet<OpeningTime>();
+                this.OpeningTimes                      = OpeningTimes        is not null && OpeningTimes.       Any() ? new HashSet<OpeningTime>        (OpeningTimes.       Distinct()) : [];
                 this.HubOperatorId                     = HubOperatorId;
                 this.ClearingHouseId                   = ClearingHouseId;
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

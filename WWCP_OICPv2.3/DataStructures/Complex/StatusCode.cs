@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -77,6 +79,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Description     = Description;
             this.AdditionalInfo  = AdditionalInfo;
 
+
+            unchecked
+            {
+
+                hashCode = this.Code.           GetHashCode()       * 5 ^
+                          (this.Description?.   GetHashCode() ?? 0) * 3 ^
+                          (this.AdditionalInfo?.GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -110,7 +122,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomStatusCodeParser))
             {
-                return statusCode!;
+                return statusCode;
             }
 
             throw new ArgumentException("The given JSON representation of a status code is invalid: " + errorResponse,
@@ -130,9 +142,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="StatusCode">The parsed status code.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject          JSON,
-                                       out StatusCode?  StatusCode,
-                                       out String?      ErrorResponse)
+        public static Boolean TryParse(JObject                               JSON,
+                                       [NotNullWhen(true)]  out StatusCode?  StatusCode,
+                                       [NotNullWhen(false)] out String?      ErrorResponse)
 
             => TryParse(JSON,
                         out StatusCode,
@@ -148,8 +160,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomStatusCodeParser">A delegate to parse custom status codes JSON objects.</param>
         public static Boolean TryParse(JObject                                   JSON,
-                                       out StatusCode?                           StatusCode,
-                                       out String?                               ErrorResponse,
+                                       [NotNullWhen(true)]  out StatusCode?      StatusCode,
+                                       [NotNullWhen(false)] out String?          ErrorResponse,
                                        CustomJObjectParserDelegate<StatusCode>?  CustomStatusCodeParser)
         {
 
@@ -184,9 +196,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                StatusCode  = new StatusCode(StatusCodeValue,
-                                             Description,
-                                             AdditionalInfo);
+                StatusCode  = new StatusCode(
+                                  StatusCodeValue,
+                                  Description,
+                                  AdditionalInfo
+                              );
 
                 if (CustomStatusCodeParser is not null)
                     StatusCode = CustomStatusCodeParser(JSON,
@@ -218,14 +232,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("Code",                  ((Int32) Code).ToString("D3")),
+                                 new JProperty("Code",             ((Int32) Code).ToString("D3")),
 
                            Description.   IsNotNullOrEmpty()
-                               ? new JProperty("Description",     Description)
+                               ? new JProperty("Description",      Description)
                                : null,
 
                            AdditionalInfo.IsNotNullOrEmpty()
-                               ? new JProperty("AdditionalInfo",  AdditionalInfo)
+                               ? new JProperty("AdditionalInfo",   AdditionalInfo)
                                : null
 
                        );
@@ -336,19 +350,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-                return  Code.           GetHashCode()       * 5 ^
-                       (Description?.   GetHashCode() ?? 0) * 3 ^
-                       (AdditionalInfo?.GetHashCode() ?? 0);
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -423,6 +432,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new status code builder.
             /// </summary>
@@ -439,6 +450,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.AdditionalInfo  = AdditionalInfo;
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 
@@ -466,9 +479,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                return new StatusCode(Code.Value,
-                                      Description,
-                                      AdditionalInfo);
+                return new (Code.Value,
+                            Description,
+                            AdditionalInfo);
 
             }
 

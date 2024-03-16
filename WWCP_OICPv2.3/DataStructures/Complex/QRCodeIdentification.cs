@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -74,6 +76,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EVCOId     = EVCOId;
             this.HashedPIN  = HashedPIN;
             this.PIN        = PIN;
+
+            unchecked
+            {
+
+                hashCode = this.EVCOId.   GetHashCode() * 5 ^
+                           this.HashedPIN.GetHashCode() * 3 ^
+                           this.PIN.      GetHashCode();
+
+            }
 
         }
 
@@ -176,7 +187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out QRCodeIdentification qrCodeIdentification,
+                         out var qrCodeIdentification,
                          out _,
                          CustomQRCodeIdentificationParser))
             {
@@ -199,9 +210,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="QRCodeIdentification">The parsed QR code identification.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                   JSON,
-                                       out QRCodeIdentification  QRCodeIdentification,
-                                       out String?               ErrorResponse)
+        public static Boolean TryParse(JObject                                        JSON,
+                                       [NotNullWhen(true)]  out QRCodeIdentification  QRCodeIdentification,
+                                       [NotNullWhen(false)] out String?               ErrorResponse)
 
             => TryParse(JSON,
                         out QRCodeIdentification,
@@ -217,8 +228,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomQRCodeIdentificationParser">A delegate to parse custom QR code identification JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
-                                       out QRCodeIdentification                            QRCodeIdentification,
-                                       out String?                                         ErrorResponse,
+                                       [NotNullWhen(true)]  out QRCodeIdentification       QRCodeIdentification,
+                                       [NotNullWhen(false)] out String?                    ErrorResponse,
                                        CustomJObjectParserDelegate<QRCodeIdentification>?  CustomQRCodeIdentificationParser)
         {
 
@@ -268,15 +279,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        out PIN? PIN,
                                        out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse is not null)
+                        return false;
                 }
 
                 #endregion
 
 
-                QRCodeIdentification = new QRCodeIdentification(EVCOId,
-                                                                HashedPIN,
-                                                                PIN);
+                QRCodeIdentification = new QRCodeIdentification(
+                                           EVCOId,
+                                           HashedPIN,
+                                           PIN
+                                       );
 
 
                 if (CustomQRCodeIdentificationParser is not null)
@@ -513,18 +527,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Get the hashcode of this object.
+        /// Return the hash code of this object.
         /// </summary>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-                return EVCOId.   GetHashCode() * 5 ^
-                       HashedPIN.GetHashCode() * 3 ^
-                       PIN.      GetHashCode();
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -535,9 +545,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(EVCOId.ToString(),
-                             HashedPIN.HasValue ? ", hashed PIN: " + HashedPIN.ToString() : "",
-                             PIN.      HasValue ? ", PIN: "        + PIN.      ToString() : "");
+            => String.Concat(
+
+                   EVCOId.ToString(),
+
+                   HashedPIN.HasValue
+                       ? $", hashed PIN: {HashedPIN}"
+                       : "",
+
+                   PIN.      HasValue
+                       ? $", PIN: {PIN}"
+                       : ""
+
+               );
 
         #endregion
 

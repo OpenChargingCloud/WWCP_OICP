@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -52,6 +54,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new hashed PIN.
         /// </summary>
@@ -65,6 +69,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Function  = Function;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -123,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out HashedPIN hashedPIN,
+                         out var hashedPIN,
                          out _,
                          CustomHashedPINParser))
             {
@@ -146,9 +152,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="HashedPIN">The parsed hashed PIN.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject        JSON,
-                                       out HashedPIN  HashedPIN,
-                                       out String?    ErrorResponse)
+        public static Boolean TryParse(JObject                             JSON,
+                                       [NotNullWhen(true)]  out HashedPIN  HashedPIN,
+                                       [NotNullWhen(false)] out String?    ErrorResponse)
 
             => TryParse(JSON,
                         out HashedPIN,
@@ -164,8 +170,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomHashedPINParser">A delegate to parse custom hashed PIN JSON objects.</param>
         public static Boolean TryParse(JObject                                  JSON,
-                                       out HashedPIN                            HashedPIN,
-                                       out String?                              ErrorResponse,
+                                       [NotNullWhen(true)]  out HashedPIN       HashedPIN,
+                                       [NotNullWhen(false)] out String?         ErrorResponse,
                                        CustomJObjectParserDelegate<HashedPIN>?  CustomHashedPINParser)
         {
 
@@ -206,8 +212,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                HashedPIN = new HashedPIN(Value,
-                                          Function);
+                HashedPIN = new HashedPIN(
+                                Value,
+                                Function
+                            );
 
 
                 if (CustomHashedPINParser is not null)
@@ -449,8 +457,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Value.ToString().Substring(15),
-                             " (", Function.ToString(), ")");
+            => $"{Value.ToString()[15..]} ({Function})";
 
         #endregion
 

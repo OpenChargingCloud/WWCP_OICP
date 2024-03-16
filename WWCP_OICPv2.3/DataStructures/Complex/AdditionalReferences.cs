@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -71,6 +73,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.AdditionalReferenceUnit          = AdditionalReferenceUnit;
             this.PricePerAdditionalReferenceUnit  = PricePerAdditionalReferenceUnit;
 
+            unchecked
+            {
+
+                hashCode = this.AdditionalReference.            GetHashCode() * 5 ^
+                           this.AdditionalReferenceUnit.        GetHashCode() * 3 ^
+                           this.PricePerAdditionalReferenceUnit.GetHashCode();
+
+            }
+
         }
 
         #endregion
@@ -104,36 +115,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomAdditionalReferencesParser))
             {
-                return additionalReferences!;
+                return additionalReferences;
             }
 
             throw new ArgumentException("The given JSON representation of an additional reference is invalid: " + errorResponse,
                                         nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(JSON, CustomAdditionalReferencesParser = null)
-
-        /// <summary>
-        /// Try to parse the given JSON representation of an additional reference.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom additional references JSON objects.</param>
-        public static AdditionalReferences? TryParse(JObject                                             JSON,
-                                                     CustomJObjectParserDelegate<AdditionalReferences>?  CustomAdditionalReferencesParser   = null)
-        {
-
-            if (TryParse(JSON,
-                         out AdditionalReferences? additionalReferences,
-                         out _,
-                         CustomAdditionalReferencesParser))
-            {
-                return additionalReferences;
-            }
-
-            return null;
 
         }
 
@@ -149,9 +135,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="AdditionalReferences">The parsed additional reference.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                    JSON,
-                                       out AdditionalReferences?  AdditionalReferences,
-                                       out String?                ErrorResponse)
+        public static Boolean TryParse(JObject                                         JSON,
+                                       [NotNullWhen(true)]  out AdditionalReferences?  AdditionalReferences,
+                                       [NotNullWhen(false)] out String?                ErrorResponse)
 
             => TryParse(JSON,
                         out AdditionalReferences,
@@ -167,8 +153,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomAdditionalReferencesParser">A delegate to parse custom additional references JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
-                                       out AdditionalReferences?                           AdditionalReferences,
-                                       out String?                                         ErrorResponse,
+                                       [NotNullWhen(true)]  out AdditionalReferences?      AdditionalReferences,
+                                       [NotNullWhen(false)] out String?                    ErrorResponse,
                                        CustomJObjectParserDelegate<AdditionalReferences>?  CustomAdditionalReferencesParser)
         {
 
@@ -223,9 +209,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AdditionalReferences = new AdditionalReferences(AdditionalReference,
-                                                                AdditionalReferenceUnit,
-                                                                PricePerAdditionalReferenceUnit);
+                AdditionalReferences = new AdditionalReferences(
+                                           AdditionalReference,
+                                           AdditionalReferenceUnit,
+                                           PricePerAdditionalReferenceUnit
+                                       );
 
 
                 if (CustomAdditionalReferencesParser is not null)
@@ -363,21 +351,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return AdditionalReference.            GetHashCode() * 7 ^
-                       AdditionalReferenceUnit.        GetHashCode() * 5 ^
-                       PricePerAdditionalReferenceUnit.GetHashCode() * 3;
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -388,9 +369,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(AdditionalReference,     ", ",
-                             AdditionalReferenceUnit, ", ",
-                             PricePerAdditionalReferenceUnit);
+            => $"{AdditionalReference}, {AdditionalReferenceUnit}, {PricePerAdditionalReferenceUnit}";
 
         #endregion
 

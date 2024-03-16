@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -174,7 +176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomPullPricingProductDataResponseParser))
             {
-                return pullPricingProductDataResponse!;
+                return pullPricingProductDataResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullPricingProductData response is invalid: " + errorResponse,
@@ -204,8 +206,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        DateTime                                                      ResponseTimestamp,
                                        EventTracking_Id                                              EventTrackingId,
                                        TimeSpan                                                      Runtime,
-                                       out PullPricingProductDataResponse?                           PullPricingProductDataResponse,
-                                       out String?                                                   ErrorResponse,
+                                       [NotNullWhen(true)]  out PullPricingProductDataResponse?      PullPricingProductDataResponse,
+                                       [NotNullWhen(false)] out String?                              ErrorResponse,
                                        Process_Id?                                                   ProcessId                                    = null,
                                        HTTPResponse?                                                 HTTPResponse                                 = null,
                                        CustomJObjectParserDelegate<PullPricingProductDataResponse>?  CustomPullPricingProductDataResponseParser   = null)
@@ -386,7 +388,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
                                            OICPv2_3.StatusCode.TryParse,
-                                           out StatusCode StatusCode,
+                                           out StatusCode? StatusCode,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -402,25 +404,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullPricingProductDataResponse = new PullPricingProductDataResponse(ResponseTimestamp,
-                                                                                    EventTrackingId,
-                                                                                    ProcessId ?? Process_Id.NewRandom(),
-                                                                                    Runtime,
-                                                                                    PricingProductData,
+                PullPricingProductDataResponse = new PullPricingProductDataResponse(
+                                                     ResponseTimestamp,
+                                                     EventTrackingId,
+                                                     ProcessId ?? Process_Id.NewRandom(),
+                                                     Runtime,
+                                                     PricingProductData,
 
-                                                                                    Request,
-                                                                                    Number,
-                                                                                    Size,
-                                                                                    TotalElements,
-                                                                                    LastPage,
-                                                                                    FirstPage,
-                                                                                    TotalPages,
-                                                                                    NumberOfElements,
+                                                     Request,
+                                                     Number,
+                                                     Size,
+                                                     TotalElements,
+                                                     LastPage,
+                                                     FirstPage,
+                                                     TotalPages,
+                                                     NumberOfElements,
 
-                                                                                    StatusCode,
-                                                                                    HTTPResponse,
-                                                                                    customData,
-                                                                                    Warnings);
+                                                     StatusCode,
+                                                     HTTPResponse,
+                                                     customData,
+                                                     Warnings
+                                                 );
 
                 if (CustomPullPricingProductDataResponseParser is not null)
                     PullPricingProductDataResponse = CustomPullPricingProductDataResponseParser(JSON,
@@ -654,6 +658,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new PullPricingProductData response builder.
             /// </summary>
@@ -697,7 +703,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 this.PricingProductData  = PricingProductData is not null
                                                ? new HashSet<PricingProductData>(PricingProductData)
-                                               : new HashSet<PricingProductData>();
+                                               : [];
 
                 this.Number              = Number;
                 this.Size                = Size;
@@ -712,6 +718,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                : new StatusCode.Builder();
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

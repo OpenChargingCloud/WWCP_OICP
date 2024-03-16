@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -223,7 +225,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomAuthorizeRemoteReservationStartRequestParser))
             {
-                return authorizeRemoteReservationStartRequest!;
+                return authorizeRemoteReservationStartRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a AuthorizeRemoteReservationStart request is invalid: " + errorResponse,
@@ -248,8 +250,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteReservationStartRequestParser">A delegate to parse custom AuthorizeRemoteReservationStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                                               JSON,
                                        Provider_Id                                                           ProviderIdURL,
-                                       out AuthorizeRemoteReservationStartRequest?                           AuthorizeRemoteReservationStartRequest,
-                                       out String?                                                           ErrorResponse,
+                                       [NotNullWhen(true)]  out AuthorizeRemoteReservationStartRequest?      AuthorizeRemoteReservationStartRequest,
+                                       [NotNullWhen(false)] out String?                                      ErrorResponse,
                                        Process_Id?                                                           ProcessId                                            = null,
 
                                        DateTime?                                                             Timestamp                                            = null,
@@ -309,8 +311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "identification",
                                              OICPv2_3.Identification.TryParse,
                                              out Identification? Identification,
-                                             out ErrorResponse) ||
-                     Identification is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -401,21 +402,23 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AuthorizeRemoteReservationStartRequest = new AuthorizeRemoteReservationStartRequest(ProviderId,
-                                                                                                    EVSEId,
-                                                                                                    Identification!,
-                                                                                                    SessionId,
-                                                                                                    CPOPartnerSessionId,
-                                                                                                    EMPPartnerSessionId,
-                                                                                                    PartnerProductId,
-                                                                                                    Duration,
-                                                                                                    ProcessId,
-                                                                                                    customData,
+                AuthorizeRemoteReservationStartRequest = new AuthorizeRemoteReservationStartRequest(
+                                                             ProviderId,
+                                                             EVSEId,
+                                                             Identification,
+                                                             SessionId,
+                                                             CPOPartnerSessionId,
+                                                             EMPPartnerSessionId,
+                                                             PartnerProductId,
+                                                             Duration,
+                                                             ProcessId,
+                                                             customData,
 
-                                                                                                    Timestamp,
-                                                                                                    CancellationToken,
-                                                                                                    EventTrackingId,
-                                                                                                    RequestTimeout);
+                                                             Timestamp,
+                                                             CancellationToken,
+                                                             EventTrackingId,
+                                                             RequestTimeout
+                                                         );
 
                 if (CustomAuthorizeRemoteReservationStartRequestParser is not null)
                     AuthorizeRemoteReservationStartRequest = CustomAuthorizeRemoteReservationStartRequestParser(JSON,

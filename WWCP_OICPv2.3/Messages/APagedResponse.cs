@@ -32,8 +32,44 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// </summary>
     /// <typeparam name="TRequest">The type of the request.</typeparam>
     /// <typeparam name="TResponse">The type of the response.</typeparam>
-    public abstract class APagedResponse<TRequest, TResponse> : AResponse<TRequest, TResponse>,
-                                                                IPagedResponse
+    /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+    /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+    /// <param name="ProcessId">The server side process identification of the request.</param>
+    /// <param name="Runtime">The runtime of the request/response.</param>
+    /// 
+    /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
+    /// 
+    /// <param name="HTTPResponse">The optional HTTP response.</param>
+    /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+    /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+    public abstract class APagedResponse<TRequest, TResponse>(DateTime                ResponseTimestamp,
+                                                              EventTracking_Id        EventTrackingId,
+                                                              Process_Id              ProcessId,
+                                                              TimeSpan                Runtime,
+
+                                                              TRequest?               Request            = null,
+                                                              Boolean?                FirstPage          = null,
+                                                              Boolean?                LastPage           = null,
+                                                              UInt64?                 Number             = null,
+                                                              UInt64?                 NumberOfElements   = null,
+                                                              UInt64?                 Size               = null,
+                                                              UInt64?                 TotalElements      = null,
+                                                              UInt64?                 TotalPages         = null,
+                                                              StatusCode?             StatusCode         = null,
+
+                                                              HTTPResponse?           HTTPResponse       = null,
+                                                              JObject?                CustomData         = null,
+                                                              UserDefinedDictionary?  InternalData       = null) : AResponse<TRequest, TResponse>(
+                                                                                                                       ResponseTimestamp,
+                                                                                                                       EventTrackingId,
+                                                                                                                       ProcessId,
+                                                                                                                       Runtime,
+                                                                                                                       Request,
+                                                                                                                       HTTPResponse,
+                                                                                                                       CustomData,
+                                                                                                                       InternalData
+                                                                                                                   ),
+                                                                                                                   IPagedResponse
 
         where TRequest  : class, IRequest
         where TResponse : class, IResponse
@@ -46,108 +82,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode?  StatusCode          { get; }
+        public StatusCode?  StatusCode          { get; } = StatusCode;
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?     FirstPage           { get; }
+        public Boolean?     FirstPage           { get; } = FirstPage;
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?     LastPage            { get; }
+        public Boolean?     LastPage            { get; } = LastPage;
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?      Number              { get; }
+        public UInt64?      Number              { get; } = Number;
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?      NumberOfElements    { get; }
+        public UInt64?      NumberOfElements    { get; } = NumberOfElements;
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?      Size                { get; }
+        public UInt64?      Size                { get; } = Size;
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?      TotalElements       { get; }
+        public UInt64?      TotalElements       { get; } = TotalElements;
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?      TotalPages          { get; }
-
-        #endregion
-
-        #region Constructor(s)
-
-        /// <summary>
-        /// Create a new generic response.
-        /// </summary>
-        /// 
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="ProcessId">The server side process identification of the request.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// 
-        /// <param name="Request">The request leading to this result. Might be null, when the request e.g. was not parsable!</param>
-        /// 
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
-        protected APagedResponse(DateTime                ResponseTimestamp,
-                                 EventTracking_Id        EventTrackingId,
-                                 Process_Id              ProcessId,
-                                 TimeSpan                Runtime,
-
-                                 TRequest?               Request            = null,
-                                 Boolean?                FirstPage          = null,
-                                 Boolean?                LastPage           = null,
-                                 UInt64?                 Number             = null,
-                                 UInt64?                 NumberOfElements   = null,
-                                 UInt64?                 Size               = null,
-                                 UInt64?                 TotalElements      = null,
-                                 UInt64?                 TotalPages         = null,
-                                 StatusCode?             StatusCode         = null,
-
-                                 HTTPResponse?           HTTPResponse       = null,
-                                 JObject?                CustomData         = null,
-                                 UserDefinedDictionary?  InternalData       = null)
-
-            : base(ResponseTimestamp,
-                   EventTrackingId,
-                   ProcessId,
-                   Runtime,
-                   Request,
-                   HTTPResponse,
-                   CustomData,
-                   InternalData)
-
-        {
-
-            this.StatusCode        = StatusCode;
-            this.FirstPage         = FirstPage;
-            this.LastPage          = LastPage;
-            this.Number            = Number;
-            this.NumberOfElements  = NumberOfElements;
-            this.Size              = Size;
-            this.TotalElements     = TotalElements;
-            this.TotalPages        = TotalPages;
-
-        }
+        public UInt64?      TotalPages          { get; } = TotalPages;
 
         #endregion
 
@@ -213,7 +190,45 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// An abstract generic paged response builder.
         /// </summary>
-        public new abstract class Builder : AResponse<TRequest, TResponse>.Builder
+        /// <remarks>
+        /// Create a new generic response.
+        /// </remarks>
+        /// <param name="Request">The request leading to this result.</param>
+        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
+        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
+        /// <param name="Runtime">The runtime of the request/response.</param>
+        /// <param name="HTTPResponse">The optional HTTP response.</param>
+        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
+        /// 
+        /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
+        /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
+        public new abstract class Builder(TRequest?               Request             = null,
+                                          DateTime?               ResponseTimestamp   = null,
+                                          EventTracking_Id?       EventTrackingId     = null,
+                                          TimeSpan?               Runtime             = null,
+
+                                          HTTPResponse?           HTTPResponse        = null,
+                                          Process_Id?             ProcessId           = null,
+                                          StatusCode?             StatusCode          = null,
+                                          Boolean?                FirstPage           = null,
+                                          Boolean?                LastPage            = null,
+                                          UInt64?                 Number              = null,
+                                          UInt64?                 NumberOfElements    = null,
+                                          UInt64?                 Size                = null,
+                                          UInt64?                 TotalElements       = null,
+                                          UInt64?                 TotalPages          = null,
+
+                                          JObject?                CustomData          = null,
+                                          UserDefinedDictionary?  InternalData        = null) : AResponse<TRequest, TResponse>.Builder(
+                                                                                                    ResponseTimestamp,
+                                                                                                    EventTrackingId,
+                                                                                                    Runtime,
+                                                                                                    Request,
+                                                                                                    HTTPResponse,
+                                                                                                    ProcessId,
+                                                                                                    CustomData,
+                                                                                                    InternalData
+                                                                                                )
         {
 
             #region Properties
@@ -222,114 +237,58 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The optional status code of this response.
             /// </summary>
             [Optional]
-            public StatusCode.Builder  StatusCode          { get; }
+            public StatusCode.Builder  StatusCode          { get; }      = StatusCode is not null
+                                                                               ? StatusCode.ToBuilder()
+                                                                               : new StatusCode.Builder();
+
+            /// <summary>
+            /// Whether this is the first page of responses.
+            /// </summary>
+            [Optional]
+            public Boolean?            FirstPage           { get; set; } = FirstPage;
+
+            /// <summary>
+            /// Whether this is the last page of responses.
+            /// </summary>
+            [Optional]
+            public Boolean?            LastPage            { get; set; } = LastPage;
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public Boolean?            FirstPage           { get; set; }
+            public UInt64?             Number              { get; set; } = Number;
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public Boolean?            LastPage            { get; set; }
+            public UInt64?             NumberOfElements    { get; set; } = NumberOfElements;
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt64?             Number              { get; set; }
+            public UInt64?             Size                { get; set; } = Size;
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt64?             NumberOfElements    { get; set; }
+            public UInt64?             TotalElements       { get; set; } = TotalElements;
 
             /// <summary>
             /// 
             /// </summary>
             [Optional]
-            public UInt64?             Size                { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            [Optional]
-            public UInt64?             TotalElements       { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            [Optional]
-            public UInt64?             TotalPages          { get; set; }
-
-            #endregion
-
-            #region Constructor(s)
-
-            /// <summary>
-            /// Create a new generic response.
-            /// </summary>
-            /// <param name="Request">The request leading to this result.</param>
-            /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-            /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-            /// <param name="Runtime">The runtime of the request/response.</param>
-            /// <param name="HTTPResponse">The optional HTTP response.</param>
-            /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-            /// 
-            /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-            /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
-            protected Builder(TRequest?               Request             = null,
-                              DateTime?               ResponseTimestamp   = null,
-                              EventTracking_Id?       EventTrackingId     = null,
-                              TimeSpan?               Runtime             = null,
-
-                              HTTPResponse?           HTTPResponse        = null,
-                              Process_Id?             ProcessId           = null,
-                              StatusCode?             StatusCode          = null,
-                              Boolean?                FirstPage           = null,
-                              Boolean?                LastPage            = null,
-                              UInt64?                 Number              = null,
-                              UInt64?                 NumberOfElements    = null,
-                              UInt64?                 Size                = null,
-                              UInt64?                 TotalElements       = null,
-                              UInt64?                 TotalPages          = null,
-
-                              JObject?                CustomData          = null,
-                              UserDefinedDictionary?  InternalData        = null)
-
-            : base(ResponseTimestamp,
-                   EventTrackingId,
-                   Runtime,
-                   Request,
-                   HTTPResponse,
-                   ProcessId,
-                   CustomData,
-                   InternalData)
-
-            {
-
-                this.StatusCode        = StatusCode is not null
-                                             ? StatusCode.ToBuilder()
-                                             : new StatusCode.Builder();
-                this.FirstPage         = FirstPage;
-                this.LastPage          = LastPage;
-                this.Number            = Number;
-                this.NumberOfElements  = NumberOfElements;
-                this.Size              = Size;
-                this.TotalElements     = TotalElements;
-                this.TotalPages        = TotalPages;
-
-            }
+            public UInt64?             TotalPages          { get; set; } = TotalPages;
 
             #endregion
 
         }
 
         #endregion
+
 
     }
 

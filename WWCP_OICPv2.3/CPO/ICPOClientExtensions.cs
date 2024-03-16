@@ -32,7 +32,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     public static class ICPOClientExtensions
     {
 
-        #region PushEVSEData(OperatorEVSEData, Action = fullLoad, ...)
+        #region PushEVSEData                      (OperatorEVSEData, Action = fullLoad, ...)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -43,9 +43,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Action">The server-side data management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(this ICPOClient     CPOClient,
@@ -54,9 +54,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          JObject?            CustomData          = null,
 
                          DateTime?           Timestamp           = null,
-                         CancellationToken   CancellationToken   = default,
                          EventTracking_Id?   EventTrackingId     = null,
-                         TimeSpan?           RequestTimeout      = null)
+                         TimeSpan?           RequestTimeout      = null,
+                         CancellationToken   CancellationToken   = default)
 
 
                 => CPOClient.PushEVSEData(
@@ -67,13 +67,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region PushEVSEData(EVSEDataRecords, OperatorId, OperatorName = null, Action = fullLoad, ...)
+        #region PushEVSEData                      (EVSEDataRecords, OperatorId, OperatorName = null, Action = fullLoad, ...)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -87,9 +89,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(this ICPOClient                  CPOClient,
@@ -101,30 +103,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          JObject?                         CustomData               = null,
 
                          DateTime?                        Timestamp                = null,
-                         CancellationToken                CancellationToken        = default,
                          EventTracking_Id?                EventTrackingId          = null,
-                         TimeSpan?                        RequestTimeout           = null)
+                         TimeSpan?                        RequestTimeout           = null,
+                         CancellationToken                CancellationToken        = default)
 
 
                 => CPOClient.PushEVSEData(
                        new PushEVSEDataRequest(
-                           new OperatorEVSEData(IncludeEVSEDataRecords != null
-                                                    ? EVSEDataRecords.Where(evsedatarecord => IncludeEVSEDataRecords(evsedatarecord))
-                                                    : EVSEDataRecords,
-                                                OperatorId,
-                                                OperatorName),
+                           new OperatorEVSEData(
+                               IncludeEVSEDataRecords is not null
+                                   ? EVSEDataRecords.Where(evsedatarecord => IncludeEVSEDataRecords(evsedatarecord))
+                                   : EVSEDataRecords,
+                               OperatorId,
+                               OperatorName),
                            Action,
                            null,
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region PushEVSEData(EVSEDataRecord,  OperatorId, OperatorName = null, Action = insert, ...)
+        #region PushEVSEData                      (EVSEDataRecord,  OperatorId, OperatorName = null, Action = insert, ...)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -137,9 +142,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE data records.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
 
             PushEVSEData(this ICPOClient     CPOClient,
@@ -150,61 +155,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          JObject?            CustomData          = null,
 
                          DateTime?           Timestamp           = null,
-                         CancellationToken   CancellationToken   = default,
                          EventTracking_Id?   EventTrackingId     = null,
-                         TimeSpan?           RequestTimeout      = null)
+                         TimeSpan?           RequestTimeout      = null,
+                         CancellationToken   CancellationToken   = default)
 
 
                 => CPOClient.PushEVSEData(
                        new PushEVSEDataRequest(
-                           new OperatorEVSEData(new EVSEDataRecord[] { EVSEDataRecord },
-                                                OperatorId,
-                                                OperatorName),
+                           new OperatorEVSEData(
+                               [ EVSEDataRecord ],
+                               OperatorId,
+                               OperatorName
+                           ),
                            Action,
                            null,
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
-
-        #endregion
-
-        #region PushEVSEData(OperatorId, Action, params EVSEDataRecords)
-
-        /// <summary>
-        /// Upload the given EVSE data records.
-        /// </summary>
-        /// <param name="CPOClient">A CPO client.</param>
-        /// 
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
-        /// <param name="OperatorName">The name of the EVSE operator maintaining the given EVSE data records.</param>
-        /// <param name="Action">The server-side data management operation.</param>
-        /// <param name="EVSEDataRecords">An array of EVSE data records.</param>
-        public static Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
-
-            PushEVSEData(this ICPOClient          CPOClient,
-                         Operator_Id              OperatorId,
-                         String                   OperatorName,
-                         ActionTypes              Action,
-                         params EVSEDataRecord[]  EVSEDataRecords)
-
-
-            => CPOClient.PushEVSEData(
-                   new PushEVSEDataRequest(
-                       new OperatorEVSEData(
-                           EVSEDataRecords,
-                           OperatorId,
-                           OperatorName
-                       ),
-                       Action,
-                       RequestTimeout: CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
 
-        #region PushEVSEStatus(OperatorEVSEStatus, Action = update, ...)
+        #region PushEVSEStatus                    (OperatorEVSEStatus, Action = update, ...)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -215,9 +192,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Action">The server-side status management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(this ICPOClient     CPOClient,
@@ -226,9 +203,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?            CustomData          = null,
 
                            DateTime?           Timestamp           = null,
-                           CancellationToken   CancellationToken   = default,
                            EventTracking_Id?   EventTrackingId     = null,
-                           TimeSpan?           RequestTimeout      = null)
+                           TimeSpan?           RequestTimeout      = null,
+                           CancellationToken   CancellationToken   = default)
 
 
                 => CPOClient.PushEVSEStatus(
@@ -239,13 +216,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region PushEVSEStatus(EVSEStatusRecords, OperatorId, OperatorName = null, Action = update, ...)
+        #region PushEVSEStatus                    (EVSEStatusRecords, OperatorId, OperatorName = null, Action = update, ...)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -259,9 +238,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(this ICPOClient                    CPOClient,
@@ -273,15 +252,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?                           CustomData                 = null,
 
                            DateTime?                          Timestamp                  = null,
-                           CancellationToken                  CancellationToken          = default,
                            EventTracking_Id?                  EventTrackingId            = null,
-                           TimeSpan?                          RequestTimeout             = null)
+                           TimeSpan?                          RequestTimeout             = null,
+                           CancellationToken                  CancellationToken          = default)
 
 
                 => CPOClient.PushEVSEStatus(
                        new PushEVSEStatusRequest(
                            new OperatorEVSEStatus(
-                               IncludeEVSEStatusRecords != null
+                               IncludeEVSEStatusRecords is not null
                                    ? EVSEStatusRecords.Where(evsestatusrecord => IncludeEVSEStatusRecords(evsestatusrecord))
                                    : EVSEStatusRecords,
                                OperatorId,
@@ -292,13 +271,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region PushEVSEStatus(EVSEStatusRecord,  OperatorId, OperatorName = null, Action = insert, ...)
+        #region PushEVSEStatus                    (EVSEStatusRecord,  OperatorId, OperatorName = null, Action = insert, ...)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -311,9 +292,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE status records.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
             PushEVSEStatus(this ICPOClient     CPOClient,
@@ -324,15 +305,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?            CustomData          = null,
 
                            DateTime?           Timestamp           = null,
-                           CancellationToken   CancellationToken   = default,
                            EventTracking_Id?   EventTrackingId     = null,
-                           TimeSpan?           RequestTimeout      = null)
+                           TimeSpan?           RequestTimeout      = null,
+                           CancellationToken   CancellationToken   = default)
 
 
                 => CPOClient.PushEVSEStatus(
                        new PushEVSEStatusRequest(
                            new OperatorEVSEStatus(
-                               new EVSEStatusRecord[] { EVSEStatusRecord },
+                               [ EVSEStatusRecord ],
                                OperatorId,
                                OperatorName
                            ),
@@ -341,46 +322,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
-
-        #endregion
-
-        #region PushEVSEStatus(OperatorId, Action, params EVSEStatusRecords)
-
-        /// <summary>
-        /// Upload the given EVSE status records.
-        /// </summary>
-        /// <param name="CPOClient">A CPO client.</param>
-        /// 
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
-        /// <param name="OperatorName">The name of the EVSE operator maintaining the given EVSE data records.</param>
-        /// <param name="Action">The server-side status management operation.</param>
-        /// <param name="EVSEStatusRecords">An array of EVSE status records.</param>
-        public static Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
-
-            PushEVSEStatus(this ICPOClient            CPOClient,
-                           Operator_Id                OperatorId,
-                           String                     OperatorName,
-                           ActionTypes                Action,
-                           params EVSEStatusRecord[]  EVSEStatusRecords)
-
-
-            => CPOClient.PushEVSEStatus(
-                   new PushEVSEStatusRequest(
-                       new OperatorEVSEStatus(
-                           EVSEStatusRecords,
-                           OperatorId,
-                           OperatorName
-                       ),
-                       Action,
-                       RequestTimeout: CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
 
-        #region PushPricingProductData           (PricingProductData, Action = fullLoad, ...)
+        #region PushPricingProductData            (PricingProductData, Action = fullLoad, ...)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -389,9 +340,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Action">The server-side data management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
 
             PushPricingProductData(this ICPOClient     CPOClient,
@@ -401,9 +352,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    JObject?            CustomData          = null,
 
                                    DateTime?           Timestamp           = null,
-                                   CancellationToken   CancellationToken   = default,
                                    EventTracking_Id?   EventTrackingId     = null,
-                                   TimeSpan?           RequestTimeout      = null)
+                                   TimeSpan?           RequestTimeout      = null,
+                                   CancellationToken   CancellationToken   = default)
 
                 => CPOClient.PushPricingProductData(
                        new PushPricingProductDataRequest(
@@ -413,14 +364,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
-
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region PushEVSEPricing                  (OperatorId, EVSEPricing, Action = fullLoad, ...)
+        #region PushEVSEPricing                   (OperatorId, EVSEPricing, Action = fullLoad, ...)
 
         /// <summary>
         /// Upload the given EVSE pricing data.
@@ -429,9 +381,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Action">The server-side data management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
 
             PushEVSEPricing(this ICPOClient           CPOClient,
@@ -442,9 +394,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             JObject?                  CustomData          = null,
 
                             DateTime?                 Timestamp           = null,
-                            CancellationToken         CancellationToken   = default,
                             EventTracking_Id?         EventTrackingId     = null,
-                            TimeSpan?                 RequestTimeout      = null)
+                            TimeSpan?                 RequestTimeout      = null,
+                            CancellationToken         CancellationToken   = default)
 
                 => CPOClient.PushEVSEPricing(
                        new PushEVSEPricingRequest(
@@ -455,15 +407,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
-
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
 
-        #region PullAuthenticationData          (Request)
+        #region PullAuthenticationData            (Request)
 
         /// <summary>
         /// Download provider authentication data.
@@ -473,9 +426,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<PullAuthenticationDataResponse>>
 
             PullAuthenticationData(this ICPOClient    CPOClient,
@@ -484,9 +437,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    JObject?           CustomData          = null,
 
                                    DateTime?          Timestamp           = null,
-                                   CancellationToken  CancellationToken   = default,
                                    EventTracking_Id?  EventTrackingId     = null,
-                                   TimeSpan?          RequestTimeout      = null)
+                                   TimeSpan?          RequestTimeout      = null,
+                                   CancellationToken  CancellationToken   = default)
 
                 => CPOClient.PullAuthenticationData(
                        new PullAuthenticationDataRequest(
@@ -495,14 +448,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
 
-        #region AuthorizeStart                   (OperatorId, Identification, EVSEId = null, ...)
+        #region AuthorizeStart                    (OperatorId, Identification, EVSEId = null, ...)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -516,9 +471,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<AuthorizationStartResponse>>
 
             AuthorizeStart(this ICPOClient        CPOClient,
@@ -530,9 +485,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            JObject?               CustomData            = null,
 
                            DateTime?              Timestamp             = null,
-                           CancellationToken      CancellationToken     = default,
                            EventTracking_Id?      EventTrackingId       = null,
-                           TimeSpan?              RequestTimeout        = null)
+                           TimeSpan?              RequestTimeout        = null,
+                           CancellationToken      CancellationToken     = default)
 
             => CPOClient.AuthorizeStart(
                    new AuthorizeStartRequest(
@@ -547,13 +502,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        CustomData,
 
                        Timestamp,
-                       CancellationToken,
                        EventTrackingId,
-                       RequestTimeout ?? CPOClient.RequestTimeout));
+                       RequestTimeout ?? CPOClient.RequestTimeout,
+                       CancellationToken
+                   )
+               );
 
         #endregion
 
-        #region AuthorizeStop                    (OperatorId, SessionId, Identification, EVSEId = null, ...)
+        #region AuthorizeStop                     (OperatorId, SessionId, Identification, EVSEId = null, ...)
 
         /// <summary>
         /// Authorize for stopping a charging session.
@@ -568,9 +525,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<AuthorizationStopResponse>>
 
             AuthorizeStop(this ICPOClient        CPOClient,
@@ -583,9 +540,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           JObject?               CustomData            = null,
 
                           DateTime?              Timestamp             = null,
-                          CancellationToken      CancellationToken     = default,
                           EventTracking_Id?      EventTrackingId       = null,
-                          TimeSpan?              RequestTimeout        = null)
+                          TimeSpan?              RequestTimeout        = null,
+                          CancellationToken      CancellationToken     = default)
 
             => CPOClient.AuthorizeStop(
                    new AuthorizeStopRequest(
@@ -599,14 +556,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                        CustomData,
 
                        Timestamp,
-                       CancellationToken,
                        EventTrackingId,
-                       RequestTimeout ?? CPOClient.RequestTimeout));
+                       RequestTimeout ?? CPOClient.RequestTimeout,
+                       CancellationToken
+                   )
+               );
 
         #endregion
 
 
-        #region SendChargingNotificationsStart   (SessionId, Identification, EVSEId, ChargingStart, ...)
+        #region SendChargingNotificationsStart    (SessionId, Identification, EVSEId, ChargingStart, ...)
 
         /// <summary>
         /// Send a charging start notification.
@@ -627,9 +586,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
 
             SendChargingNotificationsStart(this ICPOClient        CPOClient,
@@ -647,9 +606,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
-                                           CancellationToken      CancellationToken     = default,
                                            EventTracking_Id?      EventTrackingId       = null,
-                                           TimeSpan?              RequestTimeout        = null)
+                                           TimeSpan?              RequestTimeout        = null,
+                                           CancellationToken      CancellationToken     = default)
 
 
                 => CPOClient.SendChargingStartNotification(
@@ -669,13 +628,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region SendChargingNotificationsProgress(SessionId, Identification, EVSEId, ChargingStart, EventOcurred, ...)
+        #region SendChargingNotificationsProgress (SessionId, Identification, EVSEId, ChargingStart, EventOcurred, ...)
 
         /// <summary>
         /// Send a charging progress notification.
@@ -700,9 +661,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
             SendChargingNotificationsProgress(this ICPOClient        CPOClient,
@@ -724,9 +685,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               JObject?               CustomData               = null,
 
                                               DateTime?              Timestamp                = null,
-                                              CancellationToken      CancellationToken        = default,
                                               EventTracking_Id?      EventTrackingId          = null,
-                                              TimeSpan?              RequestTimeout           = null)
+                                              TimeSpan?              RequestTimeout           = null,
+                                              CancellationToken      CancellationToken        = default)
 
 
                 => CPOClient.SendChargingProgressNotification(
@@ -750,13 +711,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region SendChargingNotificationsEnd     (SessionId, Identification, EVSEId, ChargingStart, ChargingEnd, ...)
+        #region SendChargingNotificationsEnd      (SessionId, Identification, EVSEId, ChargingStart, ChargingEnd, ...)
 
         /// <summary>
         /// Send a charging end notification.
@@ -783,9 +746,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
             SendChargingNotificationsEnd(this ICPOClient         CPOClient,
@@ -809,9 +772,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          JObject?                CustomData               = null,
 
                                          DateTime?               Timestamp                = null,
-                                         CancellationToken       CancellationToken        = default,
                                          EventTracking_Id?       EventTrackingId          = null,
-                                         TimeSpan?               RequestTimeout           = null)
+                                         TimeSpan?               RequestTimeout           = null,
+                                         CancellationToken       CancellationToken        = default)
 
 
                 => CPOClient.SendChargingEndNotification(
@@ -837,13 +800,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
-        #region SendChargingNotificationsError   (SessionId, Identification, OperatorId, EVSEId, ErrorType, ...)
+        #region SendChargingNotificationsError    (SessionId, Identification, OperatorId, EVSEId, ErrorType, ...)
 
         /// <summary>
         /// Send a charging error notification.
@@ -862,9 +827,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
 
             SendChargingNotificationsError(this ICPOClient        CPOClient,
@@ -880,9 +845,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            JObject?               CustomData            = null,
 
                                            DateTime?              Timestamp             = null,
-                                           CancellationToken      CancellationToken     = default,
                                            EventTracking_Id?      EventTrackingId       = null,
-                                           TimeSpan?              RequestTimeout        = null)
+                                           TimeSpan?              RequestTimeout        = null,
+                                           CancellationToken      CancellationToken     = default)
 
 
                 => CPOClient.SendChargingErrorNotification(
@@ -900,14 +865,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 
 
-        #region SendChargeDetailRecord           (ChargeDetailRecord, OperatorId, ...)
+        #region SendChargeDetailRecord            (ChargeDetailRecord, OperatorId, ...)
 
         /// <summary>
         /// Send a charge detail record.
@@ -919,9 +886,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public static Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
             SendChargeDetailRecord(this ICPOClient     CPOClient,
@@ -930,9 +897,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    JObject?            CustomData         = null,
 
                                    DateTime?           Timestamp          = null,
-                                   CancellationToken   CancellationToken  = default,
                                    EventTracking_Id?   EventTrackingId    = null,
-                                   TimeSpan?           RequestTimeout     = null)
+                                   TimeSpan?           RequestTimeout     = null,
+                                   CancellationToken   CancellationToken  = default)
 
 
                 => CPOClient.SendChargeDetailRecord(
@@ -943,9 +910,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CustomData,
 
                            Timestamp,
-                           CancellationToken,
                            EventTrackingId,
-                           RequestTimeout ?? CPOClient.RequestTimeout));
+                           RequestTimeout ?? CPOClient.RequestTimeout,
+                           CancellationToken
+                       )
+                   );
 
         #endregion
 

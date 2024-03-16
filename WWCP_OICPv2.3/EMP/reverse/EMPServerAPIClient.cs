@@ -42,46 +42,32 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  AuthorizeStart                     = null,
+                                 APICounterValues?  AuthorizeStop                      = null,
+
+                                 APICounterValues?  SendChargingStartNotification      = null,
+                                 APICounterValues?  SendChargingProgressNotification   = null,
+                                 APICounterValues?  SendChargingEndNotification        = null,
+                                 APICounterValues?  SendChargingErrorNotification      = null,
+
+                                 APICounterValues?  SendChargeDetailRecord             = null)
         {
 
-            public APICounterValues  AuthorizeStart                       { get; }
-            public APICounterValues  AuthorizeStop                        { get; }
+            public APICounterValues AuthorizeStart                      { get; } = AuthorizeStart                   ?? new APICounterValues();
+            public APICounterValues AuthorizeStop                       { get; } = AuthorizeStop                    ?? new APICounterValues();
 
 
-            public APICounterValues  SendChargingStartNotification        { get; }
+            public APICounterValues SendChargingStartNotification       { get; } = SendChargingStartNotification    ?? new APICounterValues();
 
-            public APICounterValues  SendChargingProgressNotification     { get; }
+            public APICounterValues SendChargingProgressNotification    { get; } = SendChargingProgressNotification ?? new APICounterValues();
 
-            public APICounterValues  SendChargingEndNotification          { get; }
+            public APICounterValues SendChargingEndNotification         { get; } = SendChargingEndNotification      ?? new APICounterValues();
 
-            public APICounterValues  SendChargingErrorNotification        { get; }
+            public APICounterValues SendChargingErrorNotification       { get; } = SendChargingErrorNotification    ?? new APICounterValues();
 
 
-            public APICounterValues  SendChargeDetailRecord               { get; }
+            public APICounterValues SendChargeDetailRecord              { get; } = SendChargeDetailRecord           ?? new APICounterValues();
 
-            public APICounters(APICounterValues? AuthorizeStart                     = null,
-                               APICounterValues? AuthorizeStop                      = null,
-
-                               APICounterValues? SendChargingStartNotification      = null,
-                               APICounterValues? SendChargingProgressNotification   = null,
-                               APICounterValues? SendChargingEndNotification        = null,
-                               APICounterValues? SendChargingErrorNotification      = null,
-
-                               APICounterValues? SendChargeDetailRecord             = null)
-            {
-
-                this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
-                this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
-
-                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new APICounterValues();
-                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new APICounterValues();
-                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new APICounterValues();
-                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new APICounterValues();
-
-                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new APICounterValues();
-
-            }
 
             public JObject ToJSON()
 
@@ -640,7 +626,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStartRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -669,7 +655,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -732,7 +718,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -814,7 +800,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1037,7 +1023,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStopRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -1066,7 +1052,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1129,7 +1115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -1211,7 +1197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1435,7 +1421,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -1464,7 +1450,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1526,7 +1512,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -1608,7 +1594,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1827,7 +1813,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -1856,7 +1842,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1918,7 +1904,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -2000,7 +1986,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2219,7 +2205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -2248,7 +2234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2310,7 +2296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -2392,7 +2378,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2611,7 +2597,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -2640,7 +2626,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2702,7 +2688,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -2784,7 +2770,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3004,7 +2990,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
                                                                                                                                     CustomChargeDetailRecordSerializer,
@@ -3036,7 +3022,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3098,7 +3084,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -3180,7 +3166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try

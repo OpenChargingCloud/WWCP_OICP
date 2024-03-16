@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -127,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomPullEVSEStatusByIdRequestParser))
             {
-                return pullEVSEStatusResponse!;
+                return pullEVSEStatusResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEStatusById request is invalid: " + errorResponse,
@@ -147,8 +149,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPullEVSEStatusByIdRequestParser">A delegate to parse custom PullEVSEStatusById request JSON objects.</param>
         public static Boolean TryParse(JObject                                                  JSON,
-                                       out PullEVSEStatusByIdRequest?                           PullEVSEStatusByIdRequest,
-                                       out String?                                              ErrorResponse,
+                                       [NotNullWhen(true)]  out PullEVSEStatusByIdRequest?      PullEVSEStatusByIdRequest,
+                                       [NotNullWhen(false)] out String?                         ErrorResponse,
                                        Process_Id?                                              ProcessId                               = null,
 
                                        DateTime?                                                Timestamp                               = null,

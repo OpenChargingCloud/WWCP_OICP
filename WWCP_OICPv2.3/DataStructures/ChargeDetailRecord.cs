@@ -222,8 +222,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EMPPartnerSessionId             = EMPPartnerSessionId;
             this.MeterValueStart                 = MeterValueStart;
             this.MeterValueEnd                   = MeterValueEnd;
-            this.MeterValuesInBetween            = MeterValuesInBetween?.Distinct() ?? Array.Empty<Decimal>();
-            this.SignedMeteringValues            = SignedMeteringValues?.Distinct() ?? Array.Empty<SignedMeteringValue>();
+            this.MeterValuesInBetween            = MeterValuesInBetween?.Distinct() ?? [];
+            this.SignedMeteringValues            = SignedMeteringValues?.Distinct() ?? [];
             this.CalibrationLawVerificationInfo  = CalibrationLawVerificationInfo;
             this.HubOperatorId                   = HubOperatorId;
             this.HubProviderId                   = HubProviderId;
@@ -427,8 +427,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "identification",
                                              OICPv2_3.Identification.TryParse,
                                              out Identification? Identification,
-                                             out ErrorResponse) ||
-                     Identification is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -611,7 +610,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("CalibrationLawVerificationInfo",
                                            "calibration law verification info",
                                            OICPv2_3.CalibrationLawVerification.TryParse,
-                                           out CalibrationLawVerification CalibrationLawVerification,
+                                           out CalibrationLawVerification? CalibrationLawVerification,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -660,7 +659,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                          SessionId,
                                          EVSEId,
-                                         Identification!,
+                                         Identification,
                                          SessionStart,
                                          SessionEnd,
                                          ChargingStart ?? SessionStart,
@@ -813,7 +812,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     MeterValuesInBetween?.ToArray(),
                     SignedMeteringValues is not null && SignedMeteringValues.Any()
                         ? SignedMeteringValues.SafeSelect(signedMeteringValue => signedMeteringValue.Clone).ToArray()
-                        : Array.Empty<SignedMeteringValue>(),
+                        : [],
                     CalibrationLawVerificationInfo?.Clone,
                     HubOperatorId?.                 Clone,
                     HubProviderId?.                 Clone,
@@ -1293,6 +1292,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new charge detail record builder.
             /// </summary>
@@ -1371,6 +1372,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.HubProviderId                   = HubProviderId;
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

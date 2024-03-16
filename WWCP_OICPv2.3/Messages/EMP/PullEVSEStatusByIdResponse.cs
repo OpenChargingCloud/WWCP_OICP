@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -90,6 +92,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EVSEStatusRecords  = EVSEStatusRecords ?? throw new ArgumentNullException(nameof(EVSEStatusRecords), "The given enumeration of EVSE status records must not be null!");
             this.StatusCode         = StatusCode;
 
+            unchecked
+            {
+
+                hashCode = this.EVSEStatusRecords.Aggregate(0, (hashCode, evseStatusRecord) => hashCode ^ evseStatusRecord.GetHashCode()) ^
+                          (this.StatusCode?.GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -151,7 +161,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomPullEVSEStatusByIdResponseParser))
             {
-                return pullEVSEStatusByIdResponse!;
+                return pullEVSEStatusByIdResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEStatusById response is invalid: " + errorResponse,
@@ -181,8 +191,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        DateTime                                                  ResponseTimestamp,
                                        EventTracking_Id                                          EventTrackingId,
                                        TimeSpan                                                  Runtime,
-                                       out PullEVSEStatusByIdResponse?                           PullEVSEStatusByIdResponse,
-                                       out String?                                               ErrorResponse,
+                                       [NotNullWhen(true)]  out PullEVSEStatusByIdResponse?      PullEVSEStatusByIdResponse,
+                                       [NotNullWhen(false)] out String?                          ErrorResponse,
                                        Process_Id?                                               ProcessId                                = null,
                                        HTTPResponse?                                             HTTPResponse                             = null,
                                        CustomJObjectParserDelegate<PullEVSEStatusByIdResponse>?  CustomPullEVSEStatusByIdResponseParser   = null)
@@ -225,7 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
                                            OICPv2_3.StatusCode.TryParse,
-                                           out StatusCode StatusCode,
+                                           out StatusCode? StatusCode,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -241,16 +251,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEStatusByIdResponse = new PullEVSEStatusByIdResponse(ResponseTimestamp,
-                                                                            EventTrackingId,
-                                                                            ProcessId ?? Process_Id.NewRandom(),
-                                                                            Runtime,
-                                                                            EVSEStatusRecords,
+                PullEVSEStatusByIdResponse = new PullEVSEStatusByIdResponse(
+                                                 ResponseTimestamp,
+                                                 EventTrackingId,
+                                                 ProcessId ?? Process_Id.NewRandom(),
+                                                 Runtime,
+                                                 EVSEStatusRecords,
 
-                                                                            Request,
-                                                                            StatusCode,
-                                                                            HTTPResponse,
-                                                                            customData);
+                                                 Request,
+                                                 StatusCode,
+                                                 HTTPResponse,
+                                                 customData
+                                             );
 
                 if (CustomPullEVSEStatusByIdResponseParser is not null)
                     PullEVSEStatusByIdResponse = CustomPullEVSEStatusByIdResponseParser(JSON,
@@ -388,20 +400,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return EVSEStatusRecords.Aggregate(0, (hashCode, evseStatusRecord) => hashCode ^ evseStatusRecord.GetHashCode()) ^
-                       (StatusCode?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -412,10 +418,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(EVSEStatusRecords.Count() + " EVSE status record(s)",
-                             StatusCode is not null
-                                 ? " -> " + StatusCode.Code
-                                 : "");
+            => String.Concat(
+
+                   $"{EVSEStatusRecords.Count()} EVSE status record(s)",
+
+                   StatusCode is not null
+                       ? $" -> {StatusCode.Code}"
+                       : ""
+
+               );
 
         #endregion
 
@@ -464,6 +475,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new PullEVSEStatusById response builder.
             /// </summary>
@@ -498,13 +511,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 this.EVSEStatusRecords  = EVSEStatusRecords is not null
                                               ? new HashSet<EVSEStatusRecord>(EVSEStatusRecords)
-                                              : new HashSet<EVSEStatusRecord>();
+                                              : [];
 
                 this.StatusCode         = StatusCode is not null
                                               ? StatusCode.ToBuilder()
                                               : new StatusCode.Builder();
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -68,6 +70,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new PushEVSEData request.
         /// </summary>
@@ -84,9 +88,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                    JObject?            CustomData          = null,
 
                                    DateTime?           Timestamp           = null,
-                                   CancellationToken   CancellationToken   = default,
                                    EventTracking_Id?   EventTrackingId     = null,
-                                   TimeSpan?           RequestTimeout      = null)
+                                   TimeSpan?           RequestTimeout      = null,
+                                   CancellationToken   CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -101,6 +105,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Action            = Action;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -138,11 +144,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 Process_Id?                                        ProcessId                         = null,
 
                                                 DateTime?                                          Timestamp                         = null,
-                                                CancellationToken                                  CancellationToken                 = default,
                                                 EventTracking_Id?                                  EventTrackingId                   = null,
                                                 TimeSpan?                                          RequestTimeout                    = null,
-
-                                                CustomJObjectParserDelegate<PushEVSEDataRequest>?  CustomPushEVSEDataRequestParser   = null)
+                                                CustomJObjectParserDelegate<PushEVSEDataRequest>?  CustomPushEVSEDataRequestParser   = null,
+                                                CancellationToken                                  CancellationToken                 = default)
         {
 
             if (TryParse(JSON,
@@ -150,12 +155,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPushEVSEDataRequestParser))
+                         CustomPushEVSEDataRequestParser,
+                         CancellationToken))
             {
-                return pushEVSEDataRequest!;
+                return pushEVSEDataRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a push EVSE data request is invalid: " + errorResponse,
@@ -178,16 +183,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushEVSEDataRequestParser">A delegate to parse custom push EVSE data request JSON objects.</param>
         public static Boolean TryParse(JObject                                            JSON,
-                                       out PushEVSEDataRequest?                           PushEVSEDataRequest,
-                                       out String?                                        ErrorResponse,
+                                       [NotNullWhen(true)]  out PushEVSEDataRequest?      PushEVSEDataRequest,
+                                       [NotNullWhen(false)] out String?                   ErrorResponse,
                                        Process_Id?                                        ProcessId                         = null,
 
                                        DateTime?                                          Timestamp                         = null,
-                                       CancellationToken                                  CancellationToken                 = default,
                                        EventTracking_Id?                                  EventTrackingId                   = null,
                                        TimeSpan?                                          RequestTimeout                    = null,
-
-                                       CustomJObjectParserDelegate<PushEVSEDataRequest>?  CustomPushEVSEDataRequestParser   = null)
+                                       CustomJObjectParserDelegate<PushEVSEDataRequest>?  CustomPushEVSEDataRequestParser   = null,
+                                       CancellationToken                                  CancellationToken                 = default)
         {
 
             try
@@ -219,8 +223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "operator EVSE data",
                                              OICPv2_3.OperatorEVSEData.TryParse,
                                              out OperatorEVSEData? OperatorEVSEData,
-                                             out ErrorResponse) ||
-                     OperatorEVSEData is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -234,15 +237,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PushEVSEDataRequest = new PushEVSEDataRequest(OperatorEVSEData!,
-                                                              ActionType,
-                                                              ProcessId,
-                                                              customData,
+                PushEVSEDataRequest = new PushEVSEDataRequest(
+                                          OperatorEVSEData,
+                                          ActionType,
+                                          ProcessId,
+                                          customData,
 
-                                                              Timestamp,
-                                                              CancellationToken,
-                                                              EventTrackingId,
-                                                              RequestTimeout);
+                                          Timestamp,
+                                          EventTrackingId,
+                                          RequestTimeout,
+                                          CancellationToken
+                                      );
 
                 if (CustomPushEVSEDataRequestParser is not null)
                     PushEVSEDataRequest = CustomPushEVSEDataRequestParser(JSON,
@@ -441,9 +446,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Action, " of ",
-                             EVSEDataRecords.Count(), " EVSE data record(s)",
-                             " by ", OperatorName, " (", OperatorId, ")");
+            => $"{Action} of {EVSEDataRecords.Count()} EVSE data record(s) by {OperatorName} ({OperatorId})";
 
         #endregion
 

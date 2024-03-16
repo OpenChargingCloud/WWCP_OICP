@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -66,6 +68,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
         #region Constructor(s)
+
+#pragma warning disable IDE0290 // Use primary constructor
 
         /// <summary>
         /// Create a new PullEVSEData response.
@@ -126,6 +130,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Warnings          = Warnings;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -210,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomPullEVSEDataResponseParser))
             {
-                return pullEVSEDataResponse!;
+                return pullEVSEDataResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEData response is invalid: " + errorResponse,
@@ -240,8 +246,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        DateTime                                            ResponseTimestamp,
                                        EventTracking_Id                                    EventTrackingId,
                                        TimeSpan                                            Runtime,
-                                       out PullEVSEDataResponse?                           PullEVSEDataResponse,
-                                       out String?                                         ErrorResponse,
+                                       [NotNullWhen(true)]  out PullEVSEDataResponse?      PullEVSEDataResponse,
+                                       [NotNullWhen(false)] out String?                    ErrorResponse,
                                        Process_Id?                                         ProcessId                          = null,
                                        HTTPResponse?                                       HTTPResponse                       = null,
                                        CustomJObjectParserDelegate<PullEVSEDataResponse>?  CustomPullEVSEDataResponseParser   = null)
@@ -422,7 +428,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
                                            OICPv2_3.StatusCode.TryParse,
-                                           out StatusCode StatusCode,
+                                           out StatusCode? StatusCode,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -438,25 +444,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEDataResponse = new PullEVSEDataResponse(ResponseTimestamp,
-                                                                EventTrackingId,
-                                                                ProcessId ?? Process_Id.NewRandom(),
-                                                                Runtime,
-                                                                EVSEDataRecords,
+                PullEVSEDataResponse = new PullEVSEDataResponse(
+                                           ResponseTimestamp,
+                                           EventTrackingId,
+                                           ProcessId ?? Process_Id.NewRandom(),
+                                           Runtime,
+                                           EVSEDataRecords,
 
-                                                                Request,
-                                                                Number,
-                                                                Size,
-                                                                TotalElements,
-                                                                LastPage,
-                                                                FirstPage,
-                                                                TotalPages,
-                                                                NumberOfElements,
+                                           Request,
+                                           Number,
+                                           Size,
+                                           TotalElements,
+                                           LastPage,
+                                           FirstPage,
+                                           TotalPages,
+                                           NumberOfElements,
 
-                                                                StatusCode,
-                                                                HTTPResponse,
-                                                                customData,
-                                                                Warnings);
+                                           StatusCode,
+                                           HTTPResponse,
+                                           customData,
+                                           Warnings
+                                       );
 
                 if (CustomPullEVSEDataResponseParser is not null)
                     PullEVSEDataResponse = CustomPullEVSEDataResponseParser(JSON,
@@ -714,6 +722,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new PullEVSEData response builder.
             /// </summary>
@@ -757,7 +767,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 this.EVSEDataRecords   = EVSEDataRecords is not null
                                              ? new HashSet<EVSEDataRecord>(EVSEDataRecords)
-                                             : new HashSet<EVSEDataRecord>();
+                                             : [];
 
                 this.Number            = Number;
                 this.Size              = Size;
@@ -772,6 +782,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              : new StatusCode.Builder();
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

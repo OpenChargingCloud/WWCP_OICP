@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -126,12 +128,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EMPPartnerSessionId  = EMPPartnerSessionId;
             this.ProviderId           = ProviderId;
 
+
+            unchecked
+            {
+
+                hashCode = this.AuthorizationStatus. GetHashCode()       * 13 ^
+                           this.StatusCode.          GetHashCode()       * 11 ^
+                          (this.SessionId?.          GetHashCode() ?? 0) *  7 ^
+                          (this.CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
+                          (this.EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                          (this.ProviderId?.         GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
 
 
-        #region (static) Authorized               (Request, ...)
+        #region (static) Authorized                (Request, ...)
 
         /// <summary>
         /// Create a new 'Authorized' AuthorizationStop result.
@@ -187,7 +202,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) NotAuthorized            (Request, StatusCode, ...)
+        #region (static) NotAuthorized             (Request, StatusCode, ...)
 
         /// <summary>
         /// Create a new 'NotAuthorized' AuthorizationStop result.
@@ -236,7 +251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) SessionIsInvalid         (Request, ...)
+        #region (static) SessionIsInvalid          (Request, ...)
 
         /// <summary>
         /// Create a new 'SessionIsInvalid' AuthorizationStop result.
@@ -291,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) CommunicationToEVSEFailed(Request, ...)
+        #region (static) CommunicationToEVSEFailed (Request, ...)
 
         /// <summary>
         /// Create a new 'CommunicationToEVSEFailed' AuthorizationStop result.
@@ -346,7 +361,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) NoEVConnectedToEVSE      (Request, ...)
+        #region (static) NoEVConnectedToEVSE       (Request, ...)
 
         /// <summary>
         /// Create a new 'NoEVConnectedToEVSE' AuthorizationStop result.
@@ -401,7 +416,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) EVSEAlreadyReserved      (Request, ...)
+        #region (static) EVSEAlreadyReserved       (Request, ...)
 
         /// <summary>
         /// Create a new 'EVSEAlreadyReserved' AuthorizationStop result.
@@ -456,7 +471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) UnknownEVSEID            (Request, ...)
+        #region (static) UnknownEVSEID             (Request, ...)
 
         /// <summary>
         /// Create a new 'UnknownEVSEID' AuthorizationStop result.
@@ -511,7 +526,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) EVSEOutOfService         (Request, ...)
+        #region (static) EVSEOutOfService          (Request, ...)
 
         /// <summary>
         /// Create a new 'EVSEOutOfService' AuthorizationStop result.
@@ -566,7 +581,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) ServiceNotAvailable      (Request, ...)
+        #region (static) ServiceNotAvailable       (Request, ...)
 
         /// <summary>
         /// Create a new 'ServiceNotAvailable' AuthorizationStop result.
@@ -621,7 +636,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) DataError                (Request, ...)
+        #region (static) DataError                 (Request, ...)
 
         /// <summary>
         /// Create a new 'DataError' AuthorizationStop result.
@@ -676,7 +691,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) SystemError              (Request, ...)
+        #region (static) SystemError               (Request, ...)
 
         /// <summary>
         /// Create a new 'SystemError' AuthorizationStop result.
@@ -818,7 +833,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomAuthorizationStopResponseParser))
             {
-                return authorizationStopResponse!;
+                return authorizationStopResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a AuthorizationStop response is invalid: " + errorResponse,
@@ -845,8 +860,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizationStopResponseParser">A delegate to parse custom AuthorizationStop response JSON objects.</param>
         public static Boolean TryParse(AuthorizeStopRequest                                     Request,
                                        JObject                                                  JSON,
-                                       out AuthorizationStopResponse?                           AuthorizationStopResponse,
-                                       out String?                                              ErrorResponse,
+                                       [NotNullWhen(true)]  out AuthorizationStopResponse?      AuthorizationStopResponse,
+                                       [NotNullWhen(false)] out String?                         ErrorResponse,
                                        DateTime?                                                ResponseTimestamp                       = null,
                                        EventTracking_Id?                                        EventTrackingId                         = null,
                                        TimeSpan?                                                Runtime                                 = null,
@@ -885,8 +900,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "status code",
                                              OICPv2_3.StatusCode.TryParse,
                                              out StatusCode? StatusCode,
-                                             out ErrorResponse) ||
-                     StatusCode is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -956,19 +970,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AuthorizationStopResponse  = new AuthorizationStopResponse(ResponseTimestamp ?? Timestamp.Now,
-                                                                           EventTrackingId   ?? Request.EventTrackingId,
-                                                                           ProcessId         ?? Process_Id.NewRandom(),
-                                                                           Runtime           ?? Timestamp.Now - Request.Timestamp,
-                                                                           AuthorizationStatus,
-                                                                           StatusCode!,
-                                                                           Request,
-                                                                           SessionId,
-                                                                           CPOPartnerSessionId,
-                                                                           EMPPartnerSessionId,
-                                                                           ProviderId,
-                                                                           HTTPResponse,
-                                                                           customData);
+                AuthorizationStopResponse  = new AuthorizationStopResponse(
+                                                 ResponseTimestamp ?? Timestamp.Now,
+                                                 EventTrackingId   ?? Request.EventTrackingId,
+                                                 ProcessId         ?? Process_Id.NewRandom(),
+                                                 Runtime           ?? Timestamp.Now - Request.Timestamp,
+                                                 AuthorizationStatus,
+                                                 StatusCode,
+                                                 Request,
+                                                 SessionId,
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId,
+                                                 ProviderId,
+                                                 HTTPResponse,
+                                                 customData
+                                             );
 
                 if (CustomAuthorizationStopResponseParser is not null)
                     AuthorizationStopResponse = CustomAuthorizationStopResponseParser(JSON,
@@ -1130,25 +1146,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return AuthorizationStatus. GetHashCode()       * 13 ^
-                       StatusCode.          GetHashCode()       * 11 ^
-
-                      (SessionId?.          GetHashCode() ?? 0) *  7 ^
-                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
-                      (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
-                      (ProviderId?.         GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -1242,6 +1247,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new AuthorizationStop response builder.
             /// </summary>
@@ -1293,6 +1300,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.ProviderId           = ProviderId;
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

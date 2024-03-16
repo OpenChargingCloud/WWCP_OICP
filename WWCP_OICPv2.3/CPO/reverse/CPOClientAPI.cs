@@ -43,70 +43,46 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  PushEVSEData                   = null,
+                                 APICounterValues?  PushEVSEStatus                 = null,
+
+                                 APICounterValues?  PushPricingProductData         = null,
+                                 APICounterValues?  PushEVSEPricing                = null,
+
+                                 APICounterValues?  PullAuthenticationData         = null,
+
+                                 APICounterValues?  AuthorizeStart                 = null,
+                                 APICounterValues?  AuthorizeStop                  = null,
+
+                                 APICounterValues?  ChargingNotifications          = null,
+                                 APICounterValues?  ChargingStartNotification      = null,
+                                 APICounterValues?  ChargingProgressNotification   = null,
+                                 APICounterValues?  ChargingEndNotification        = null,
+                                 APICounterValues?  ChargingErrorNotification      = null,
+
+                                 APICounterValues?  ChargeDetailRecord             = null)
         {
 
-            public APICounterValues  PushEVSEData                    { get; }
-            public APICounterValues  PushEVSEStatus                  { get; }
+            public APICounterValues PushEVSEData                    { get; } = PushEVSEData                 ?? new APICounterValues();
+            public APICounterValues PushEVSEStatus                  { get; } = PushEVSEStatus               ?? new APICounterValues();
 
-            public APICounterValues  PushPricingProductData          { get; }
-            public APICounterValues  PushEVSEPricing                 { get; }
+            public APICounterValues PushPricingProductData          { get; } = PushPricingProductData       ?? new APICounterValues();
+            public APICounterValues PushEVSEPricing                 { get; } = PushEVSEPricing              ?? new APICounterValues();
 
-            public APICounterValues  PullAuthenticationData          { get; }
+            public APICounterValues PullAuthenticationData          { get; } = PullAuthenticationData       ?? new APICounterValues();
 
-            public APICounterValues  AuthorizeStart                  { get; }
-            public APICounterValues  AuthorizeStop                   { get; }
-
-
-            public APICounterValues  ChargingNotifications           { get; }
-            public APICounterValues  ChargingStartNotification       { get; }
-            public APICounterValues  ChargingProgressNotification    { get; }
-            public APICounterValues  ChargingEndNotification         { get; }
-            public APICounterValues  ChargingErrorNotification       { get; }
-
-            public APICounterValues  ChargeDetailRecord              { get; }
+            public APICounterValues AuthorizeStart                  { get; } = AuthorizeStart               ?? new APICounterValues();
+            public APICounterValues AuthorizeStop                   { get; } = AuthorizeStop                ?? new APICounterValues();
 
 
-            public APICounters(APICounterValues? PushEVSEData                   = null,
-                               APICounterValues? PushEVSEStatus                 = null,
+            public APICounterValues ChargingNotifications           { get; } = ChargingNotifications        ?? new APICounterValues();
+            public APICounterValues ChargingStartNotification       { get; } = ChargingStartNotification    ?? new APICounterValues();
+            public APICounterValues ChargingProgressNotification    { get; } = ChargingProgressNotification ?? new APICounterValues();
+            public APICounterValues ChargingEndNotification         { get; } = ChargingEndNotification      ?? new APICounterValues();
+            public APICounterValues ChargingErrorNotification       { get; } = ChargingErrorNotification    ?? new APICounterValues();
 
-                               APICounterValues? PushPricingProductData         = null,
-                               APICounterValues? PushEVSEPricing                = null,
+            public APICounterValues ChargeDetailRecord              { get; } = ChargeDetailRecord           ?? new APICounterValues();
 
-                               APICounterValues? PullAuthenticationData         = null,
-
-                               APICounterValues? AuthorizeStart                 = null,
-                               APICounterValues? AuthorizeStop                  = null,
-
-                               APICounterValues? ChargingNotifications          = null,
-                               APICounterValues? ChargingStartNotification      = null,
-                               APICounterValues? ChargingProgressNotification   = null,
-                               APICounterValues? ChargingEndNotification        = null,
-                               APICounterValues? ChargingErrorNotification      = null,
-
-                               APICounterValues? ChargeDetailRecord             = null)
-            {
-
-                this.PushEVSEData                  = PushEVSEData                 ?? new APICounterValues();
-                this.PushEVSEStatus                = PushEVSEStatus               ?? new APICounterValues();
-
-                this.PushPricingProductData        = PushPricingProductData       ?? new APICounterValues();
-                this.PushEVSEPricing               = PushEVSEPricing              ?? new APICounterValues();
-
-                this.PullAuthenticationData        = PullAuthenticationData       ?? new APICounterValues();
-
-                this.AuthorizeStart                = AuthorizeStart               ?? new APICounterValues();
-                this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
-
-                this.ChargingNotifications         = ChargingNotifications        ?? new APICounterValues();
-                this.ChargingStartNotification     = ChargingStartNotification    ?? new APICounterValues();
-                this.ChargingProgressNotification  = ChargingProgressNotification ?? new APICounterValues();
-                this.ChargingEndNotification       = ChargingEndNotification      ?? new APICounterValues();
-                this.ChargingErrorNotification     = ChargingErrorNotification    ?? new APICounterValues();
-
-                this.ChargeDetailRecord            = ChargeDetailRecord           ?? new APICounterValues();
-
-            }
 
             public JObject ToJSON()
 
@@ -1303,10 +1279,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (RegisterRootService)
                 AddMethodCallback(HTTPHostname.Any,
                                   HTTPMethod.GET,
-                                  new HTTPPath[] {
+                                  [
                                       URLPathPrefix + "/",
                                       URLPathPrefix + "/{FileName}"
-                                  },
+                                  ],
                                   HTTPDelegate: Request => {
                                       return Task.FromResult(
                                           new HTTPResponse.Builder(Request) {
@@ -1372,7 +1348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushEVSEDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PushEVSEDataRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                             //     operatorId ????
                                                                             out var                           pullEVSEDataRequest,
                                                                             out var                           errorResponse,
@@ -1550,14 +1526,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                 CustomStatusCodeSerializer).
                                                                                                          ToString(JSONFormatting).
                                                                                                          ToUTF8Bytes()
-                                                                                               ?? Array.Empty<Byte>(),
+                                                                                               ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -1612,7 +1588,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushEVSEStatusRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PushEVSEStatusRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                               //     operatorId ????
                                                                               out var                             pullEVSEStatusRequest,
                                                                               out var                             errorResponse,
@@ -1790,14 +1766,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                   CustomStatusCodeSerializer).
                                                                                                            ToString(JSONFormatting).
                                                                                                            ToUTF8Bytes()
-                                                                                                 ?? Array.Empty<Byte>(),
+                                                                                                 ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -1853,7 +1829,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushPricingProductDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PushPricingProductDataRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                       //     operatorId ????
                                                                                       out var                                     pullEVSEDataRequest,
                                                                                       out var                                     errorResponse,
@@ -2031,14 +2007,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pushPricingProductDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                           CustomStatusCodeSerializer).
                                                                                                                    ToString(JSONFormatting).
                                                                                                                    ToUTF8Bytes()
-                                                                                                         ?? Array.Empty<Byte>(),
+                                                                                                         ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2093,7 +2069,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PushEVSEPricingRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PushEVSEPricingRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                operatorId,
                                                                                out var                              pullEVSEDataRequest,
                                                                                out var                              errorResponse,
@@ -2271,14 +2247,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pushEVSEPricingResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                    CustomStatusCodeSerializer).
                                                                                                             ToString(JSONFormatting).
                                                                                                             ToUTF8Bytes()
-                                                                                                  ?? Array.Empty<Byte>(),
+                                                                                                  ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2323,7 +2299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<ProviderAuthenticationData>(),
+                                                                                   [],
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.SystemError,
                                                                                                    "The expected 'operatorId' URL parameter could not be parsed!"
@@ -2335,7 +2311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (PullAuthenticationDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PullAuthenticationDataRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                       //operatorId,
                                                                                       out var                                     pullAuthenticationDataRequest,
                                                                                       out var                                     errorResponse,
@@ -2401,7 +2377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                            Request.EventTrackingId,
                                                                                            processId,
                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                           Array.Empty<ProviderAuthenticationData>(),
+                                                                                           [],
                                                                                            pullAuthenticationDataRequest,
                                                                                            StatusCode: new StatusCode(
                                                                                                            StatusCodes.DataError,
@@ -2426,7 +2402,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                        Request.EventTrackingId,
                                                                                        processId,
                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                       Array.Empty<ProviderAuthenticationData>(),
+                                                                                       [],
                                                                                        pullAuthenticationDataRequest,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.SystemError,
@@ -2475,7 +2451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<ProviderAuthenticationData>(),
+                                                                                   [],
                                                                                    pullAuthenticationDataRequest,
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.DataError,
@@ -2500,7 +2476,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                Request.EventTrackingId,
                                                                                processId,
                                                                                Timestamp.Now - Request.Timestamp,
-                                                                               Array.Empty<ProviderAuthenticationData>(),
+                                                                               [],
                                                                                StatusCode: new StatusCode(
                                                                                                StatusCodes.SystemError,
                                                                                                e.Message,
@@ -2517,8 +2493,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullAuthenticationDataResponse.Response?.ToJSON(CustomPullAuthenticationDataResponseSerializer,
                                                                                                                           CustomProviderAuthenticationDataSerializer,
@@ -2526,7 +2502,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                           CustomStatusCodeSerializer).
                                                                                                                    ToString(JSONFormatting).
                                                                                                                    ToUTF8Bytes()
-                                                                                                         ?? Array.Empty<Byte>(),
+                                                                                                         ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2579,7 +2555,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                               operatorId,
                                                                               out var                             authorizeStartRequest,
                                                                               out var                             errorResponse,
@@ -2746,15 +2722,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizationStartResponse.Response?.ToJSON(CustomAuthorizationStartSerializer,
                                                                                                                       CustomStatusCodeSerializer,
                                                                                                                       CustomIdentificationSerializer).
                                                                                                                ToString(JSONFormatting).
                                                                                                                ToUTF8Bytes()
-                                                                                                     ?? Array.Empty<Byte>(),
+                                                                                                     ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2806,7 +2782,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                              operatorId,
                                                                              out var                            authorizeStopRequest,
                                                                              out var                            errorResponse,
@@ -2973,14 +2949,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizationStopResponse.Response?.ToJSON(CustomAuthorizationStopSerializer,
                                                                                                                      CustomStatusCodeSerializer).
                                                                                                               ToString(JSONFormatting).
                                                                                                               ToUTF8Bytes()
-                                                                                                    ?? Array.Empty<Byte>(),
+                                                                                                    ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -3011,7 +2987,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   try
                                   {
 
-                                      if (Request.TryParseJSONObjectRequestBody(out JObject JSONRequest, out _) &&
+                                      if (Request.TryParseJSONObjectRequestBody(out var JSONRequest, out _) &&
                                           JSONRequest.ParseMandatory("Type",
                                                                      "charging notification type",
                                                                      ChargingNotificationTypesExtensions.TryParse,
@@ -3785,14 +3761,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = chargingNotificationResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
                                                                                                                  ToString(JSONFormatting).
                                                                                                                  ToUTF8Bytes()
-                                                                                                       ?? Array.Empty<Byte>(),
+                                                                                                       ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -3848,7 +3824,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (ChargeDetailRecordRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (ChargeDetailRecordRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                   operatorId,
                                                                                   out var                                 chargeDetailRecordRequest,
                                                                                   out var                                 errorResponse,
@@ -4026,14 +4002,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = chargeDetailRecordResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                       CustomStatusCodeSerializer).
                                                                                                                ToString(JSONFormatting).
                                                                                                                ToUTF8Bytes()
-                                                                                                     ?? Array.Empty<Byte>(),
+                                                                                                     ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;

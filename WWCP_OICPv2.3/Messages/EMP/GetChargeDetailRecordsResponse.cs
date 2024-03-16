@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -45,6 +47,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
         #region Constructor(s)
+
+#pragma warning disable IDE0290 // Use primary constructor
 
         /// <summary>
         /// Create a new GetChargeDetailRecords response.
@@ -103,6 +107,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.ChargeDetailRecords = ChargeDetailRecords ?? throw new ArgumentNullException(nameof(ChargeDetailRecords), "The given enumeration of charge detail records must not be null!");
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -167,7 +173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ProcessId,
                          CustomGetChargeDetailRecordsResponseParser))
             {
-                return getChargeDetailRecordsResponse!;
+                return getChargeDetailRecordsResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords response is invalid: " + errorResponse,
@@ -197,8 +203,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        DateTime                                                      ResponseTimestamp,
                                        EventTracking_Id                                              EventTrackingId,
                                        TimeSpan                                                      Runtime,
-                                       out GetChargeDetailRecordsResponse?                           GetChargeDetailRecordsResponse,
-                                       out String?                                                   ErrorResponse,
+                                       [NotNullWhen(true)]  out GetChargeDetailRecordsResponse?      GetChargeDetailRecordsResponse,
+                                       [NotNullWhen(false)] out String?                              ErrorResponse,
                                        HTTPResponse?                                                 HTTPResponse                                 = null,
                                        Process_Id?                                                   ProcessId                                    = null,
                                        CustomJObjectParserDelegate<GetChargeDetailRecordsResponse>?  CustomGetChargeDetailRecordsResponseParser   = null)
@@ -234,7 +240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
                                            OICPv2_3.StatusCode.TryParse,
-                                           out StatusCode StatusCode,
+                                           out StatusCode? StatusCode,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -341,24 +347,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                GetChargeDetailRecordsResponse = new GetChargeDetailRecordsResponse(ResponseTimestamp,
-                                                                                    EventTrackingId,
-                                                                                    ProcessId           ?? Process_Id.NewRandom(),
-                                                                                    Runtime,
-                                                                                    ChargeDetailRecords ?? Array.Empty<ChargeDetailRecord>(),
+                GetChargeDetailRecordsResponse = new GetChargeDetailRecordsResponse(
+                                                     ResponseTimestamp,
+                                                     EventTrackingId,
+                                                     ProcessId           ?? Process_Id.NewRandom(),
+                                                     Runtime,
+                                                     ChargeDetailRecords ?? [],
 
-                                                                                    Request,
-                                                                                    First,
-                                                                                    Last,
-                                                                                    Number,
-                                                                                    NumberOfElements,
-                                                                                    Size,
-                                                                                    TotalElements,
-                                                                                    TotalPages,
-                                                                                    StatusCode,
+                                                     Request,
+                                                     First,
+                                                     Last,
+                                                     Number,
+                                                     NumberOfElements,
+                                                     Size,
+                                                     TotalElements,
+                                                     TotalPages,
+                                                     StatusCode,
 
-                                                                                    HTTPResponse,
-                                                                                    customData);
+                                                     HTTPResponse,
+                                                     customData
+                                                 );
 
                 if (CustomGetChargeDetailRecordsResponseParser is not null)
                     GetChargeDetailRecordsResponse = CustomGetChargeDetailRecordsResponseParser(JSON,
@@ -578,6 +586,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new GetChargeDetailRecords response builder.
             /// </summary>
@@ -631,9 +641,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 this.ChargeDetailRecords = ChargeDetailRecords is not null
                                                ? new HashSet<ChargeDetailRecord>(ChargeDetailRecords)
-                                               : new HashSet<ChargeDetailRecord>();
+                                               : [];
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

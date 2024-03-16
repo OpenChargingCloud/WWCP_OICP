@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -152,6 +154,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EMPPartnerSessionId  = EMPPartnerSessionId;
             this.ProcessId            = ProcessId;
             this.CustomData           = CustomData;
+
+
+            unchecked
+            {
+
+                hashCode = this.StatusCode.          GetHashCode()       * 11 ^
+                          (this.Result?.             GetHashCode() ?? 0) *  7 ^
+                          (this.SessionId?.          GetHashCode() ?? 0) *  5 ^
+                          (this.CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                          (this.EMPPartnerSessionId?.GetHashCode() ?? 0);
+
+            }
 
         }
 
@@ -360,8 +374,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out Acknowledgement?  acknowledgement,
-                         out String?           errorResponse,
+                         out var acknowledgement,
+                         out var errorResponse,
                          HTTPResponse,
                          RequestTimestamp,
                          ResponseTimestamp,
@@ -370,53 +384,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          ProcessId,
                          CustomAcknowledgementParser))
             {
-                return acknowledgement!;
+                return acknowledgement;
             }
 
             throw new ArgumentException("The given JSON representation of an acknowledgement is invalid: " + errorResponse, nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) Parse   (Text, CustomAcknowledgementParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an acknowledgement.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="RequestTimestamp">The timestamp of the request.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
-        public static Acknowledgement Parse(String                                         Text,
-                                            HTTPResponse?                                  HTTPResponse                  = null,
-                                            DateTime?                                      RequestTimestamp              = null,
-                                            DateTime?                                      ResponseTimestamp             = null,
-                                            EventTracking_Id?                              EventTrackingId               = null,
-                                            TimeSpan?                                      Runtime                       = null,
-                                            Process_Id?                                    ProcessId                     = null,
-                                            CustomJObjectParserDelegate<Acknowledgement>?  CustomAcknowledgementParser   = null)
-        {
-
-            if (TryParse(Text,
-                         out Acknowledgement?  acknowledgement,
-                         out String?           errorResponse,
-                         HTTPResponse,
-                         RequestTimestamp,
-                         ResponseTimestamp,
-                         EventTrackingId,
-                         Runtime,
-                         ProcessId,
-                         CustomAcknowledgementParser))
-            {
-                return acknowledgement!;
-            }
-
-            throw new ArgumentException("The given text representation of an acknowledgement is invalid: " + errorResponse, nameof(Text));
 
         }
 
@@ -438,8 +409,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Boolean TryParse(JObject                                        JSON,
-                                       out Acknowledgement?                           Acknowledgement,
-                                       out String?                                    ErrorResponse,
+                                       [NotNullWhen(true)]  out Acknowledgement?      Acknowledgement,
+                                       [NotNullWhen(false)] out String?               ErrorResponse,
                                        HTTPResponse?                                  HTTPResponse                  = null,
                                        DateTime?                                      RequestTimestamp              = null,
                                        DateTime?                                      ResponseTimestamp             = null,
@@ -460,21 +431,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse StatusCode              [mandatory]
+                #region Parse StatusCode             [mandatory]
 
                 if (!JSON.ParseMandatoryJSON("StatusCode",
                                              "StatusCode",
                                              OICPv2_3.StatusCode.TryParse,
                                              out StatusCode? StatusCode,
-                                             out ErrorResponse) ||
-                     StatusCode is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
 
-                #region Parse Result                  [optional]
+                #region Parse Result                 [optional]
 
                 if (JSON.ParseOptional("Result",
                                        "result",
@@ -487,7 +457,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse SessionId               [optional]
+                #region Parse SessionId              [optional]
 
                 if (JSON.ParseOptional("SessionID",
                                        "session identification",
@@ -501,7 +471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CPOPartnerSessionId     [optional]
+                #region Parse CPOPartnerSessionId    [optional]
 
                 if (JSON.ParseOptional("CPOPartnerSessionID",
                                        "CPO partner session identification",
@@ -515,7 +485,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse EMPPartnerSessionId     [optional]
+                #region Parse EMPPartnerSessionId    [optional]
 
                 if (JSON.ParseOptional("EMPPartnerSessionID",
                                        "EMP partner session identification",
@@ -529,25 +499,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CustomData              [optional]
+                #region Parse CustomData             [optional]
 
                 var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
-                Acknowledgement = new Acknowledgement(RequestTimestamp  ?? Timestamp.Now,
-                                                      ResponseTimestamp ?? Timestamp.Now,
-                                                      EventTrackingId   ?? EventTracking_Id.New,
-                                                      Runtime           ?? Timestamp.Now - (RequestTimestamp ?? Timestamp.Now),
-                                                      StatusCode!,
-                                                      HTTPResponse,
-                                                      Result,
-                                                      SessionId,
-                                                      CPOPartnerSessionId,
-                                                      EMPPartnerSessionId,
-                                                      ProcessId,
-                                                      customData);
+                Acknowledgement = new Acknowledgement(
+                                      RequestTimestamp  ?? Timestamp.Now,
+                                      ResponseTimestamp ?? Timestamp.Now,
+                                      EventTrackingId   ?? EventTracking_Id.New,
+                                      Runtime           ?? Timestamp.Now - (RequestTimestamp ?? Timestamp.Now),
+                                      StatusCode,
+                                      HTTPResponse,
+                                      Result,
+                                      SessionId,
+                                      CPOPartnerSessionId,
+                                      EMPPartnerSessionId,
+                                      ProcessId,
+                                      customData
+                                  );
 
                 if (CustomAcknowledgementParser is not null)
                     Acknowledgement = CustomAcknowledgementParser(JSON,
@@ -560,59 +532,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 Acknowledgement  = default;
                 ErrorResponse    = "The given JSON representation of an acknowledgement is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out Acknowledgement, out ErrorResponse, CustomAcknowledgementParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an acknowledgement.
-        /// </summary>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="Acknowledgement">The parsed acknowledgement.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="RequestTimestamp">The timestamp of the request.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
-        public static Boolean TryParse(String                                         Text,
-                                       out Acknowledgement?                           Acknowledgement,
-                                       out String?                                    ErrorResponse,
-                                       HTTPResponse?                                  HTTPResponse                  = null,
-                                       DateTime?                                      RequestTimestamp              = null,
-                                       DateTime?                                      ResponseTimestamp             = null,
-                                       EventTracking_Id?                              EventTrackingId               = null,
-                                       TimeSpan?                                      Runtime                       = null,
-                                       Process_Id?                                    ProcessId                     = null,
-                                       CustomJObjectParserDelegate<Acknowledgement>?  CustomAcknowledgementParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(JObject.Parse(Text),
-                                out Acknowledgement,
-                                out ErrorResponse,
-                                HTTPResponse,
-                                RequestTimestamp,
-                                ResponseTimestamp,
-                                EventTrackingId,
-                                Runtime,
-                                ProcessId,
-                                CustomAcknowledgementParser);
-
-            }
-            catch (Exception e)
-            {
-                Acknowledgement  = default;
-                ErrorResponse    = "The given text representation of an acknowledgement is invalid: " + e.Message;
                 return false;
             }
 
@@ -633,7 +552,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("StatusCode", StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
+                                 new JProperty("StatusCode",            StatusCode.               ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
 
                            Result.             HasValue
                                ? new JProperty("Result",                Result.             Value)
@@ -754,23 +673,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return StatusCode.          GetHashCode()       * 11 ^
-                      (Result?.             GetHashCode() ?? 0) *  7 ^
-                      (SessionId?.          GetHashCode() ?? 0) *  5 ^
-                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
-                      (EMPPartnerSessionId?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -902,6 +812,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new acknowledgement builder.
             /// </summary>
@@ -947,6 +859,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.CustomData           = CustomData;
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 
@@ -997,6 +911,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         where TRequest : class, IRequest
 
+
     {
 
         #region Properties
@@ -1032,6 +947,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
         #region Constructor(s)
+
+#pragma warning disable IDE0290 // Use primary constructor
 
         /// <summary>
         /// Create a new acknowledgement.
@@ -1079,10 +996,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         }
 
+#pragma warning restore IDE0290 // Use primary constructor
+
         #endregion
 
 
-        #region (static) Success                    (Request, SessionId = null, ...)
+        #region (static) Success                     (Request, SessionId = null, ...)
 
         /// <summary>
         /// Create a new 'positive' acknowledgement.
@@ -1133,7 +1052,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) DataError                  (Request, StatusCodeDescription = null, ...)
+        #region (static) DataError                   (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'DataError' acknowledgement.
@@ -1184,7 +1103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) SystemError                (Request, StatusCodeDescription = null, ...)
+        #region (static) SystemError                 (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'SystemError' acknowledgement.
@@ -1235,7 +1154,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) ServiceNotAvailable        (Request, StatusCodeDescription = null, ...)
+        #region (static) ServiceNotAvailable         (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'ServiceNotAvailable' acknowledgement.
@@ -1286,7 +1205,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) SessionIsInvalid           (Request, StatusCodeDescription = null, ...)
+        #region (static) SessionIsInvalid            (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'SessionIsInvalid' acknowledgement.
@@ -1337,7 +1256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) CommunicationToEVSEFailed  (Request, StatusCodeDescription = null, ...)
+        #region (static) CommunicationToEVSEFailed   (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'CommunicationToEVSEFailed' acknowledgement.
@@ -1388,7 +1307,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) EVSEAlreadyReserved        (Request, StatusCodeDescription = null, ...)
+        #region (static) EVSEAlreadyReserved         (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'EVSEAlreadyReserved' acknowledgement.
@@ -1439,7 +1358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) EVSEAlreadyInUse_WrongToken(Request, StatusCodeDescription = null, ...)
+        #region (static) EVSEAlreadyInUse_WrongToken (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'EVSEAlreadyInUse_WrongToken' acknowledgement.
@@ -1490,7 +1409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) UnknownEVSEID              (Request, StatusCodeDescription = null, ...)
+        #region (static) UnknownEVSEID               (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'UnknownEVSEID' acknowledgement.
@@ -1541,7 +1460,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) EVSEOutOfService           (Request, StatusCodeDescription = null, ...)
+        #region (static) EVSEOutOfService            (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'EVSEOutOfService' acknowledgement.
@@ -1592,7 +1511,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) NoValidContract            (Request, StatusCodeDescription = null, ...)
+        #region (static) NoValidContract             (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'NoValidContract' acknowledgement.
@@ -1643,7 +1562,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) NoEVConnectedToEVSE        (Request, StatusCodeDescription = null, ...)
+        #region (static) NoEVConnectedToEVSE         (Request, StatusCodeDescription = null, ...)
 
         /// <summary>
         /// Create a new 'NoEVConnectedToEVSE' acknowledgement.
@@ -1796,49 +1715,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) Parse   (Text, CustomAcknowledgementParser = null)
-
-        /// <summary>
-        /// Parse the given text representation of an acknowledgement.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
-        public static Acknowledgement<TRequest> Parse(TRequest                                                 Request,
-                                                      String                                                   Text,
-                                                      HTTPResponse?                                            HTTPResponse                  = null,
-                                                      DateTime?                                                ResponseTimestamp             = null,
-                                                      EventTracking_Id?                                        EventTrackingId               = null,
-                                                      TimeSpan?                                                Runtime                       = null,
-                                                      Process_Id?                                              ProcessId                     = null,
-                                                      CustomJObjectParserDelegate<Acknowledgement<TRequest>>?  CustomAcknowledgementParser   = null)
-        {
-
-            if (TryParse(Request,
-                         Text,
-                         out Acknowledgement<TRequest>?  acknowledgement,
-                         out String?                     errorResponse,
-                         HTTPResponse,
-                         ResponseTimestamp,
-                         EventTrackingId,
-                         Runtime,
-                         ProcessId,
-                         CustomAcknowledgementParser))
-            {
-                return acknowledgement!;
-            }
-
-            throw new ArgumentException("The given text representation of an acknowledgement is invalid: " + errorResponse, nameof(Text));
-
-        }
-
-        #endregion
-
         #region (static) TryParse(JSON, out Acknowledgement, out ErrorResponse, CustomAcknowledgementParser = null)
 
         /// <summary>
@@ -1856,8 +1732,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Boolean TryParse(TRequest                                                 Request,
                                        JObject                                                  JSON,
-                                       out Acknowledgement<TRequest>?                           Acknowledgement,
-                                       out String?                                              ErrorResponse,
+                                       [NotNullWhen(true)]  out Acknowledgement<TRequest>?      Acknowledgement,
+                                       [NotNullWhen(false)] out String?                         ErrorResponse,
                                        HTTPResponse?                                            HTTPResponse                  = null,
                                        DateTime?                                                ResponseTimestamp             = null,
                                        EventTracking_Id?                                        EventTrackingId               = null,
@@ -1883,8 +1759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "StatusCode",
                                              OICPv2_3.StatusCode.TryParse,
                                              out StatusCode? StatusCode,
-                                             out ErrorResponse) ||
-                     StatusCode is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -1953,18 +1828,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                Acknowledgement = new Acknowledgement<TRequest>(ResponseTimestamp ?? Timestamp.Now,
-                                                                EventTrackingId   ?? Request.EventTrackingId,
-                                                                ProcessId         ?? Process_Id.NewRandom(),
-                                                                Runtime           ?? Timestamp.Now - Request.Timestamp,
-                                                                StatusCode!,
-                                                                Request,
-                                                                HTTPResponse,
-                                                                Result,
-                                                                SessionId,
-                                                                CPOPartnerSessionId,
-                                                                EMPPartnerSessionId,
-                                                                customData);
+                Acknowledgement = new Acknowledgement<TRequest>(
+                                      ResponseTimestamp ?? Timestamp.Now,
+                                      EventTrackingId   ?? Request.EventTrackingId,
+                                      ProcessId         ?? Process_Id.NewRandom(),
+                                      Runtime           ?? Timestamp.Now - Request.Timestamp,
+                                      StatusCode,
+                                      Request,
+                                      HTTPResponse,
+                                      Result,
+                                      SessionId,
+                                      CPOPartnerSessionId,
+                                      EMPPartnerSessionId,
+                                      customData
+                                  );
 
                 if (CustomAcknowledgementParser is not null)
                     Acknowledgement = CustomAcknowledgementParser(JSON,
@@ -1977,59 +1854,6 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
                 Acknowledgement  = default;
                 ErrorResponse    = "The given JSON representation of an acknowledgement is invalid: " + e.Message;
-                return false;
-            }
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(Text, out Acknowledgement, out ErrorResponse, CustomAcknowledgementParser = null)
-
-        /// <summary>
-        /// Try to parse the given text representation of an acknowledgement.
-        /// </summary>
-        /// <param name="Request">The request leading to this response.</param>
-        /// <param name="Text">The text to parse.</param>
-        /// <param name="Acknowledgement">The parsed acknowledgement.</param>
-        /// <param name="ErrorResponse">An optional error response.</param>
-        /// <param name="HTTPResponse">The optional HTTP response.</param>
-        /// <param name="ResponseTimestamp">The timestamp of the response creation.</param>
-        /// <param name="EventTrackingId">An optional event tracking identification for correlating this response with other events.</param>
-        /// <param name="Runtime">The runtime of the request/response.</param>
-        /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
-        /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
-        public static Boolean TryParse(TRequest                                                 Request,
-                                       String                                                   Text,
-                                       out Acknowledgement<TRequest>?                           Acknowledgement,
-                                       out String?                                              ErrorResponse,
-                                       HTTPResponse?                                            HTTPResponse                  = null,
-                                       DateTime?                                                ResponseTimestamp             = null,
-                                       EventTracking_Id?                                        EventTrackingId               = null,
-                                       TimeSpan?                                                Runtime                       = null,
-                                       Process_Id?                                              ProcessId                     = null,
-                                       CustomJObjectParserDelegate<Acknowledgement<TRequest>>?  CustomAcknowledgementParser   = null)
-        {
-
-            try
-            {
-
-                return TryParse(Request,
-                                JObject.Parse(Text),
-                                out Acknowledgement,
-                                out ErrorResponse,
-                                HTTPResponse,
-                                ResponseTimestamp,
-                                EventTrackingId,
-                                Runtime,
-                                ProcessId,
-                                CustomAcknowledgementParser);
-
-            }
-            catch (Exception e)
-            {
-                Acknowledgement  = default;
-                ErrorResponse    = "The given text representation of an acknowledgement is invalid: " + e.Message;
                 return false;
             }
 
@@ -2050,7 +1874,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("StatusCode", StatusCode.ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
+                                 new JProperty("StatusCode",            StatusCode.               ToJSON(CustomStatusCodeSerializer: CustomStatusCodeSerializer)),
 
                            Result.             HasValue
                                ? new JProperty("Result",                Result.             Value)
@@ -2278,6 +2102,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new acknowledgement builder.
             /// </summary>
@@ -2325,6 +2151,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.EMPPartnerSessionId  = EMPPartnerSessionId;
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

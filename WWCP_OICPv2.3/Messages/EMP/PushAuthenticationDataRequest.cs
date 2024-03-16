@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -148,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomPushAuthenticationDataRequestParser))
             {
-                return pullEVSEStatusResponse!;
+                return pullEVSEStatusResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PushAuthenticationData request is invalid: " + errorResponse,
@@ -168,8 +170,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPushAuthenticationDataRequestParser">A delegate to parse custom PushAuthenticationData request JSON objects.</param>
         public static Boolean TryParse(JObject                                                      JSON,
-                                       out PushAuthenticationDataRequest?                           PushAuthenticationDataRequest,
-                                       out String?                                                  ErrorResponse,
+                                       [NotNullWhen(true)]  out PushAuthenticationDataRequest?      PushAuthenticationDataRequest,
+                                       [NotNullWhen(false)] out String?                             ErrorResponse,
                                        Process_Id?                                                  ProcessId                                   = null,
 
                                        DateTime?                                                    Timestamp                                   = null,
@@ -209,8 +211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "provider authentication data",
                                              OICPv2_3.ProviderAuthenticationData.TryParse,
                                              out ProviderAuthenticationData? ProviderAuthenticationData,
-                                             out ErrorResponse) ||
-                     ProviderAuthenticationData is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -224,15 +225,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PushAuthenticationDataRequest = new PushAuthenticationDataRequest(ProviderAuthenticationData!,
-                                                                                  ActionType,
-                                                                                  ProcessId,
-                                                                                  customData,
+                PushAuthenticationDataRequest = new PushAuthenticationDataRequest(
+                                                    ProviderAuthenticationData,
+                                                    ActionType,
+                                                    ProcessId,
+                                                    customData,
 
-                                                                                  Timestamp,
-                                                                                  CancellationToken,
-                                                                                  EventTrackingId,
-                                                                                  RequestTimeout);
+                                                    Timestamp,
+                                                    CancellationToken,
+                                                    EventTrackingId,
+                                                    RequestTimeout
+                                                );
 
                 if (CustomPushAuthenticationDataRequestParser is not null)
                     PushAuthenticationDataRequest = CustomPushAuthenticationDataRequestParser(JSON,

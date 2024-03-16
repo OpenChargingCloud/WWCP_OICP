@@ -42,62 +42,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  PullEVSEData                      = null,
+                                 APICounterValues?  PullEVSEStatus                    = null,
+                                 APICounterValues?  PullEVSEStatusById                = null,
+                                 APICounterValues?  PullEVSEStatusByOperatorId        = null,
+
+                                 APICounterValues?  PullPricingProductData            = null,
+                                 APICounterValues?  PullEVSEPricing                   = null,
+
+                                 APICounterValues?  PushAuthenticationData            = null,
+
+                                 APICounterValues?  AuthorizeRemoteReservationStart   = null,
+                                 APICounterValues?  AuthorizeRemoteReservationStop    = null,
+                                 APICounterValues?  AuthorizeRemoteStart              = null,
+                                 APICounterValues?  AuthorizeRemoteStop               = null,
+
+                                 APICounterValues?  GetChargeDetailRecords            = null)
         {
 
-            public APICounterValues  PullEVSEData                       { get; }
-            public APICounterValues  PullEVSEStatus                     { get; }
-            public APICounterValues  PullEVSEStatusById                 { get; }
-            public APICounterValues  PullEVSEStatusByOperatorId         { get; }
+            public APICounterValues PullEVSEData                       { get; } = PullEVSEData                    ?? new APICounterValues();
+            public APICounterValues PullEVSEStatus                     { get; } = PullEVSEStatus                  ?? new APICounterValues();
+            public APICounterValues PullEVSEStatusById                 { get; } = PullEVSEStatusById              ?? new APICounterValues();
+            public APICounterValues PullEVSEStatusByOperatorId         { get; } = PullEVSEStatusByOperatorId      ?? new APICounterValues();
 
-            public APICounterValues  PullPricingProductData             { get; }
-            public APICounterValues  PullEVSEPricing                    { get; }
+            public APICounterValues PullPricingProductData             { get; } = PullPricingProductData          ?? new APICounterValues();
+            public APICounterValues PullEVSEPricing                    { get; } = PullEVSEPricing                 ?? new APICounterValues();
 
-            public APICounterValues  PushAuthenticationData             { get; }
+            public APICounterValues PushAuthenticationData             { get; } = PushAuthenticationData          ?? new APICounterValues();
 
-            public APICounterValues  AuthorizeRemoteReservationStart    { get; }
-            public APICounterValues  AuthorizeRemoteReservationStop     { get; }
-            public APICounterValues  AuthorizeRemoteStart               { get; }
-            public APICounterValues  AuthorizeRemoteStop                { get; }
+            public APICounterValues AuthorizeRemoteReservationStart    { get; } = AuthorizeRemoteReservationStart ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteReservationStop     { get; } = AuthorizeRemoteReservationStop  ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteStart               { get; } = AuthorizeRemoteStart            ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteStop                { get; } = AuthorizeRemoteStop             ?? new APICounterValues();
 
-            public APICounterValues  GetChargeDetailRecords             { get; }
+            public APICounterValues GetChargeDetailRecords             { get; } = GetChargeDetailRecords          ?? new APICounterValues();
 
-            public APICounters(APICounterValues? PullEVSEData                       = null,
-                               APICounterValues? PullEVSEStatus                     = null,
-                               APICounterValues? PullEVSEStatusById                 = null,
-                               APICounterValues? PullEVSEStatusByOperatorId         = null,
-
-                               APICounterValues? PullPricingProductData             = null,
-                               APICounterValues? PullEVSEPricing                    = null,
-
-                               APICounterValues? PushAuthenticationData             = null,
-
-                               APICounterValues? AuthorizeRemoteReservationStart    = null,
-                               APICounterValues? AuthorizeRemoteReservationStop     = null,
-                               APICounterValues? AuthorizeRemoteStart               = null,
-                               APICounterValues? AuthorizeRemoteStop                = null,
-
-                               APICounterValues? GetChargeDetailRecords             = null)
-            {
-
-                this.PullEVSEData                     = PullEVSEData                    ?? new APICounterValues();
-                this.PullEVSEStatus                   = PullEVSEStatus                  ?? new APICounterValues();
-                this.PullEVSEStatusById               = PullEVSEStatusById              ?? new APICounterValues();
-                this.PullEVSEStatusByOperatorId       = PullEVSEStatusByOperatorId      ?? new APICounterValues();
-
-                this.PullPricingProductData           = PullPricingProductData          ?? new APICounterValues();
-                this.PullEVSEPricing                  = PullEVSEPricing                 ?? new APICounterValues();
-
-                this.PushAuthenticationData           = PushAuthenticationData          ?? new APICounterValues();
-
-                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
-                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
-                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
-                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
-
-                this.GetChargeDetailRecords           = GetChargeDetailRecords          ?? new APICounterValues();
-
-            }
 
             public JObject ToJSON()
 
@@ -836,17 +815,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
             base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext,
-                                                         LogfileCreator)
+                                       ? new HTTP_Logger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext,
+                                             LogfileCreator
+                                         )
                                        : null;
 
             this.Logger          = this.DisableLogging == false
-                                       ? new EMPClientLogger(this,
-                                                             LoggingPath,
-                                                             LoggingContext,
-                                                             LogfileCreator)
+                                       ? new EMPClientLogger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext,
+                                             LogfileCreator
+                                         )
                                        : null;
 
         }
@@ -954,7 +937,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v23/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/data-records" + queryString),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEDataRequestSerializer,
                                                                                                                                     CustomGeoCoordinatesSerializer).
@@ -980,7 +963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1017,7 +1000,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<EVSEDataRecord>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -1040,7 +1023,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -1120,7 +1103,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1142,7 +1125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                          HTTPResponse.EventTrackingId,
                                                                                          processId,
                                                                                          HTTPResponse.Runtime,
-                                                                                         Array.Empty<EVSEDataRecord>(),
+                                                                                         [],
                                                                                          Request,
                                                                                          StatusCode:   statusCode,
                                                                                          HTTPResponse: HTTPResponse
@@ -1162,7 +1145,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<EVSEDataRecord>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -1197,7 +1180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<EVSEDataRecord>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.SystemError,
@@ -1216,7 +1199,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
-                               Array.Empty<EVSEDataRecord>(),
+                               [],
                                Request,
                                StatusCode: new StatusCode(
                                                StatusCodes.SystemError,
@@ -1337,7 +1320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEStatusRequestSerializer,
                                                                                                                                     CustomGeoCoordinatesSerializer).
@@ -1363,7 +1346,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1400,7 +1383,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 [],
                                                  Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -1423,7 +1406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -1520,7 +1503,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1542,7 +1525,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            HTTPResponse.EventTrackingId,
                                                                                            processId,
                                                                                            HTTPResponse.Runtime,
-                                                                                           Array.Empty<OperatorEVSEStatus>(),
+                                                                                           [],
                                                                                            Request,
                                                                                            statusCode,
                                                                                            HTTPResponse
@@ -1562,7 +1545,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 [],
                                                  Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -1597,7 +1580,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<OperatorEVSEStatus>(),
+                                 [],
                                  Request,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -1616,7 +1599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
-                               Array.Empty<OperatorEVSEStatus>(),
+                               [],
                                Request,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -1736,7 +1719,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records-by-id"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEStatusByIdRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -1761,7 +1744,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1798,7 +1781,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<EVSEStatusRecord>(),
+                                                 [],
                                                  Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -1821,7 +1804,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -1903,7 +1886,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -1925,7 +1908,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            HTTPResponse.EventTrackingId,
                                                                                            processId,
                                                                                            HTTPResponse.Runtime,
-                                                                                           Array.Empty<EVSEStatusRecord>(),
+                                                                                           [],
                                                                                            Request,
                                                                                            statusCode,
                                                                                            HTTPResponse
@@ -1945,7 +1928,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<EVSEStatusRecord>(),
+                                                 [],
                                                  Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -1980,7 +1963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<EVSEStatusRecord>(),
+                                 [],
                                  Request,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -1999,7 +1982,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
-                               Array.Empty<EVSEStatusRecord>(),
+                               [],
                                Request,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -2119,7 +2102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepull/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/status-records-by-operator-id"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEStatusByOperatorIdRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -2144,7 +2127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2181,7 +2164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 [],
                                                  Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -2204,7 +2187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -2286,7 +2269,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2308,7 +2291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                        HTTPResponse.EventTrackingId,
                                                                                                        processId,
                                                                                                        HTTPResponse.Runtime,
-                                                                                                       Array.Empty<OperatorEVSEStatus>(),
+                                                                                                       [],
                                                                                                        Request,
                                                                                                        statusCode,
                                                                                                        HTTPResponse
@@ -2328,7 +2311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                 [],
                                                  Request,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
@@ -2363,7 +2346,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<OperatorEVSEStatus>(),
+                                 [],
                                  Request,
                                  new StatusCode(
                                      StatusCodes.SystemError,
@@ -2382,7 +2365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
-                               Array.Empty<OperatorEVSEStatus>(),
+                               [],
                                Request,
                                new StatusCode(
                                    StatusCodes.SystemError,
@@ -2521,7 +2504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/pricing-products" + queryString),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullPricingProductDataRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -2546,7 +2529,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2583,7 +2566,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<PricingProductData>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -2606,7 +2589,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -2683,7 +2666,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2705,7 +2688,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    HTTPResponse.EventTrackingId,
                                                                                                    processId,
                                                                                                    HTTPResponse.Runtime,
-                                                                                                   Array.Empty<PricingProductData>(),
+                                                                                                   [],
                                                                                                    Request,
                                                                                                    StatusCode:   statusCode,
                                                                                                    HTTPResponse: HTTPResponse
@@ -2725,7 +2708,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<PricingProductData>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -2765,7 +2748,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -2787,7 +2770,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    HTTPResponse.EventTrackingId,
                                                                                                    processId,
                                                                                                    HTTPResponse.Runtime,
-                                                                                                   Array.Empty<PricingProductData>(),
+                                                                                                   [],
                                                                                                    Request,
                                                                                                    StatusCode:   statusCode,
                                                                                                    HTTPResponse: HTTPResponse
@@ -2807,7 +2790,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<PricingProductData>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -2842,7 +2825,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<PricingProductData>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.SystemError,
@@ -2861,7 +2844,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
-                               Array.Empty<PricingProductData>(),
+                               [],
                                Request,
                                StatusCode: new StatusCode(
                                                StatusCodes.SystemError,
@@ -2999,7 +2982,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/evse-pricing" + queryString),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPullEVSEPricingRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -3024,7 +3007,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3061,7 +3044,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<OperatorEVSEPricing>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -3084,7 +3067,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -3161,7 +3144,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3183,7 +3166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             HTTPResponse.EventTrackingId,
                                                                                             processId,
                                                                                             HTTPResponse.Runtime,
-                                                                                            Array.Empty<OperatorEVSEPricing>(),
+                                                                                            [],
                                                                                             Request,
                                                                                             StatusCode:   statusCode,
                                                                                             HTTPResponse: HTTPResponse
@@ -3203,7 +3186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<OperatorEVSEPricing>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -3243,7 +3226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3265,7 +3248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                             HTTPResponse.EventTrackingId,
                                                                                             processId,
                                                                                             HTTPResponse.Runtime,
-                                                                                            Array.Empty<OperatorEVSEPricing>(),
+                                                                                            [],
                                                                                             Request,
                                                                                             StatusCode:   statusCode,
                                                                                             HTTPResponse: HTTPResponse
@@ -3285,7 +3268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<OperatorEVSEPricing>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -3320,7 +3303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<OperatorEVSEPricing>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.SystemError,
@@ -3339,7 +3322,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
-                               Array.Empty<OperatorEVSEPricing>(),
+                               [],
                                Request,
                                StatusCode: new StatusCode(
                                                StatusCodes.SystemError,
@@ -3460,7 +3443,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/authdata/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/push-request"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomPushAuthenticationDataRequestSerializer,
                                                                                                                                     CustomProviderAuthenticationDataSerializer,
@@ -3487,7 +3470,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3552,7 +3535,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -3626,7 +3609,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3719,7 +3702,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3811,7 +3794,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // }
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4047,7 +4030,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote-reservation/start"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStartRequestSerializer,
                                                                                                                                     CustomIdentificationSerializer).
@@ -4073,7 +4056,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4138,7 +4121,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -4220,7 +4203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4455,7 +4438,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote-reservation/stop"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStopRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -4480,7 +4463,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4545,7 +4528,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -4627,7 +4610,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4862,7 +4845,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote/start"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStartRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -4887,7 +4870,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4952,7 +4935,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -5034,7 +5017,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5269,7 +5252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote/stop"),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStopRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -5294,7 +5277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5359,7 +5342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -5441,7 +5424,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5695,7 +5678,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                               Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/get-charge-detail-records-request" + queryString),
                                                                                    requestbuilder => {
-                                                                                       requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
                                                                                        requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
                                                                                        requestbuilder.Content      = Request.ToJSON(CustomGetChargeDetailRecordsRequestSerializer).
                                                                                                                              ToString(JSONFormatting).
@@ -5720,7 +5703,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5757,7 +5740,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<ChargeDetailRecord>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                                  StatusCodes.SystemError,
@@ -5780,7 +5763,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     {
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -5862,7 +5845,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         // Operator/provider identification is not linked to the TLS client certificate!
 
                         if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody.Length > 0)
+                            HTTPResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5884,7 +5867,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                    HTTPResponse.EventTrackingId,
                                                                                                    processId,
                                                                                                    HTTPResponse.Runtime,
-                                                                                                   Array.Empty<ChargeDetailRecord>(),
+                                                                                                   [],
                                                                                                    Request,
                                                                                                    StatusCode: statusCode
                                                                                                ),
@@ -5903,7 +5886,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                  HTTPResponse.EventTrackingId,
                                                  processId,
                                                  HTTPResponse.Runtime,
-                                                 Array.Empty<ChargeDetailRecord>(),
+                                                 [],
                                                  Request,
                                                  StatusCode: new StatusCode(
                                                      StatusCodes.SystemError,
@@ -5938,7 +5921,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  Timestamp.Now - Request.Timestamp,
-                                 Array.Empty<ChargeDetailRecord>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.SystemError,
@@ -5957,7 +5940,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                Request.EventTrackingId ?? EventTracking_Id.New,
                                Process_Id.NewRandom(),
                                Timestamp.Now - Request.Timestamp,
-                               Array.Empty<ChargeDetailRecord>(),
+                               [],
                                Request,
                                StatusCode: new StatusCode(
                                                StatusCodes.SystemError,

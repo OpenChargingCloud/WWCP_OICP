@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -52,6 +54,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new time period.
         /// </summary>
@@ -65,6 +69,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.End    = End;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -141,9 +147,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="Period">The parsed time period.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject      JSON,
-                                       out Period   Period,
-                                       out String?  ErrorResponse)
+        public static Boolean TryParse(JObject                           JSON,
+                                       [NotNullWhen(true)]  out Period   Period,
+                                       [NotNullWhen(false)] out String?  ErrorResponse)
 
             => TryParse(JSON,
                         out Period,
@@ -159,8 +165,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomPeriodParser">A delegate to parse custom time periods JSON objects.</param>
         public static Boolean TryParse(JObject                               JSON,
-                                       out Period                            Period,
-                                       out String?                           ErrorResponse,
+                                       [NotNullWhen(true)]  out Period       Period,
+                                       [NotNullWhen(false)] out String?      ErrorResponse,
                                        CustomJObjectParserDelegate<Period>?  CustomPeriodParser)
         {
 
@@ -202,8 +208,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                Period = new Period(Begin,
-                                    End);
+                Period = new Period(
+                             Begin,
+                             End
+                         );
 
                 if (CustomPeriodParser is not null)
                     Period = CustomPeriodParser(JSON,
@@ -445,9 +453,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Begin,
-                             " -> ",
-                             End);
+            => $"{Begin} -> {End}";
 
         #endregion
 

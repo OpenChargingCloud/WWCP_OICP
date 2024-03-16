@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -86,9 +88,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public AuthorizeStopRequest(Operator_Id            OperatorId,
                                     Session_Id             SessionId,
                                     Identification         Identification,
@@ -99,9 +101,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                     JObject?               CustomData            = null,
 
                                     DateTime?              Timestamp             = null,
-                                    CancellationToken      CancellationToken     = default,
                                     EventTracking_Id?      EventTrackingId       = null,
-                                    TimeSpan?              RequestTimeout        = null)
+                                    TimeSpan?              RequestTimeout        = null,
+                                    CancellationToken      CancellationToken     = default)
 
             : base(ProcessId,
                    CustomData,
@@ -118,6 +120,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.SessionId            = SessionId;
             this.CPOPartnerSessionId  = CPOPartnerSessionId;
             this.EMPPartnerSessionId  = EMPPartnerSessionId;
+
+
+            unchecked
+            {
+
+                hashCode = this.OperatorId.          GetHashCode()       * 13 ^
+                           this.SessionId.           GetHashCode()       * 11 ^
+                           this.Identification.      GetHashCode()       *  7 ^
+                          (this.EVSEId?.             GetHashCode() ?? 0) *  5 ^
+                          (this.CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                          (this.EMPPartnerSessionId?.GetHashCode() ?? 0);
+
+            }
 
         }
 
@@ -186,11 +201,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  Process_Id?                                         ProcessId                          = null,
 
                                                  DateTime?                                           Timestamp                          = null,
-                                                 CancellationToken                                   CancellationToken                  = default,
                                                  EventTracking_Id?                                   EventTrackingId                    = null,
                                                  TimeSpan?                                           RequestTimeout                     = null,
-
-                                                 CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
+                                                 CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null,
+                                                 CancellationToken                                   CancellationToken                  = default)
         {
 
             if (TryParse(JSON,
@@ -199,12 +213,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomAuthorizeStopRequestParser))
+                         CustomAuthorizeStopRequestParser,
+                         CancellationToken))
             {
-                return auhorizeStopRequest!;
+                return auhorizeStopRequest;
             }
 
             throw new ArgumentException("The given JSON representation of an AuthorizeStop request is invalid: " + errorResponse,
@@ -229,16 +243,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeStopRequestParser">A delegate to parse custom AuthorizeStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
                                        Operator_Id                                         OperatorIdURL,
-                                       out AuthorizeStopRequest?                           AuthorizeStopRequest,
-                                       out String?                                         ErrorResponse,
+                                       [NotNullWhen(true)]  out AuthorizeStopRequest?      AuthorizeStopRequest,
+                                       [NotNullWhen(false)] out String?                    ErrorResponse,
                                        Process_Id?                                         ProcessId                          = null,
 
                                        DateTime?                                           Timestamp                          = null,
-                                       CancellationToken                                   CancellationToken                  = default,
                                        EventTracking_Id?                                   EventTrackingId                    = null,
                                        TimeSpan?                                           RequestTimeout                     = null,
-
-                                       CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null)
+                                       CustomJObjectParserDelegate<AuthorizeStopRequest>?  CustomAuthorizeStopRequestParser   = null,
+                                       CancellationToken                                   CancellationToken                  = default)
         {
 
             try
@@ -290,8 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "identification",
                                              OICPv2_3.Identification.TryParse,
                                              out Identification? Identification,
-                                             out ErrorResponse) ||
-                     Identification is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -347,19 +359,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AuthorizeStopRequest = new AuthorizeStopRequest(OperatorId,
-                                                                SessionId,
-                                                                Identification!,
-                                                                EVSEId,
-                                                                CPOPartnerSessionId,
-                                                                EMPPartnerSessionId,
-                                                                ProcessId,
-                                                                customData,
+                AuthorizeStopRequest = new AuthorizeStopRequest(
+                                           OperatorId,
+                                           SessionId,
+                                           Identification,
+                                           EVSEId,
+                                           CPOPartnerSessionId,
+                                           EMPPartnerSessionId,
+                                           ProcessId,
+                                           customData,
 
-                                                                Timestamp,
-                                                                CancellationToken,
-                                                                EventTrackingId,
-                                                                RequestTimeout);
+                                           Timestamp,
+                                           EventTrackingId,
+                                           RequestTimeout,
+                                           CancellationToken
+                                       );
 
                 if (CustomAuthorizeStopRequestParser is not null)
                     AuthorizeStopRequest = CustomAuthorizeStopRequestParser(JSON,
@@ -514,25 +528,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return OperatorId.          GetHashCode()       * 13 ^
-                       SessionId.           GetHashCode()       * 11 ^
-                       Identification.      GetHashCode()       *  7 ^
-
-                      (EVSEId?.             GetHashCode() ?? 0) *  5 ^
-                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
-                      (EMPPartnerSessionId?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -543,13 +546,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Identification,
+            => String.Concat(
 
-                             EVSEId.HasValue
-                                 ? " at " + EVSEId
-                                 : "",
+                   Identification,
 
-                             " (", OperatorId, ")");
+                   EVSEId.HasValue
+                       ? $" at {EVSEId}"
+                       : "",
+
+                   $" ({OperatorId})"
+
+               );
 
         #endregion
 

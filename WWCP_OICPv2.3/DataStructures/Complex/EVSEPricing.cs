@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -88,6 +90,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.CustomData         = CustomData;
 
+
+            unchecked
+            {
+
+                hashCode = this.EVSEId.     GetHashCode()       * 5 ^
+
+                          (this.ProviderId?.GetHashCode() ?? 0) * 3 ^
+
+                          (this.EVSEIdProductList.Any()
+                               ? this.EVSEIdProductList.GetHashCode()
+                               : 0);
+
+            }
+
         }
 
         #endregion
@@ -116,6 +132,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.EVSEIdProductList  = EVSEIdProductList.Distinct();
 
             this.CustomData         = CustomData;
+
+
+            unchecked
+            {
+
+                hashCode = this.EVSEId.     GetHashCode()       * 5 ^
+
+                          (this.ProviderId?.GetHashCode() ?? 0) * 3 ^
+
+                          (this.EVSEIdProductList.Any()
+                               ? this.EVSEIdProductList.GetHashCode()
+                               : 0);
+
+            }
 
         }
 
@@ -149,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomEVSEPricingParser))
             {
-                return evsePricing!;
+                return evsePricing;
             }
 
             throw new ArgumentException("The given JSON representation of EVSE pricing information is invalid: " + errorResponse,
@@ -169,9 +199,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EVSEPricing">The parsed EVSE pricing information.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject           JSON,
-                                       out EVSEPricing?  EVSEPricing,
-                                       out String?       ErrorResponse)
+        public static Boolean TryParse(JObject                                JSON,
+                                       [NotNullWhen(true)]  out EVSEPricing?  EVSEPricing,
+                                       [NotNullWhen(false)] out String?       ErrorResponse)
 
             => TryParse(JSON,
                         out EVSEPricing,
@@ -187,8 +217,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEPricingParser">A delegate to parse custom EVSE pricing information JSON objects.</param>
         public static Boolean TryParse(JObject                                    JSON,
-                                       out EVSEPricing?                           EVSEPricing,
-                                       out String?                                ErrorResponse,
+                                       [NotNullWhen(true)]  out EVSEPricing?      EVSEPricing,
+                                       [NotNullWhen(false)] out String?           ErrorResponse,
                                        CustomJObjectParserDelegate<EVSEPricing>?  CustomEVSEPricingParser)
         {
 
@@ -261,14 +291,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 EVSEPricing = ProviderId.HasValue
 
-                                  ? new EVSEPricing(EVSEId,
-                                                    ProviderId.Value,
-                                                    EVSEIdProductList,
-                                                    customData)
+                                  ? new EVSEPricing(
+                                        EVSEId,
+                                        ProviderId.Value,
+                                        EVSEIdProductList,
+                                        customData
+                                    )
 
-                                  : new EVSEPricing(EVSEId,
-                                                    EVSEIdProductList,
-                                                    customData);
+                                  : new EVSEPricing(
+                                        EVSEId,
+                                        EVSEIdProductList,
+                                        customData
+                                    );
 
 
                 if (CustomEVSEPricingParser is not null)
@@ -560,25 +594,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return EVSEId.      GetHashCode()       * 5 ^
-
-                       (ProviderId?.GetHashCode() ?? 0) * 3 ^
-
-                       (EVSEIdProductList.Any()
-                            ? EVSEIdProductList.GetHashCode()
-                            : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -589,9 +612,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(EVSEId,
-                             ProviderId.HasValue ? " for provider " + ProviderId.Value.ToString() : " for all providers",
-                             ", ", EVSEIdProductList.Count(), " product id(s)");
+            => String.Concat(
+
+                   EVSEId,
+
+                   ProviderId.HasValue
+                       ? $" for provider {ProviderId}"
+                       : " for all providers",
+
+                   $", {EVSEIdProductList.Count()} product id(s)"
+
+               );
 
         #endregion
 

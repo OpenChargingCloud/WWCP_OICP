@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -134,14 +136,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.CPOPartnerSessionId               = CPOPartnerSessionId;
             this.EMPPartnerSessionId               = EMPPartnerSessionId;
             this.ProviderId                        = ProviderId;
-            this.AuthorizationStopIdentifications  = AuthorizationStopIdentifications?.Distinct() ?? Array.Empty<Identification>();
+            this.AuthorizationStopIdentifications  = AuthorizationStopIdentifications?.Distinct() ?? [];
+
+
+            unchecked
+            {
+
+                hashCode = this.AuthorizationStatus. GetHashCode()       * 13 ^
+                           this.StatusCode.          GetHashCode()       * 11 ^
+                          (this.SessionId?.          GetHashCode() ?? 0) *  7 ^
+                          (this.CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
+                          (this.EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
+                          (this.ProviderId?.         GetHashCode() ?? 0);
+
+            }
 
         }
 
         #endregion
 
 
-        #region (static) Authorized               (Request, ...)
+        #region (static) Authorized                (Request, ...)
 
         /// <summary>
         /// Create a new 'Authorized' AuthorizationStart result.
@@ -200,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) NotAuthorized            (Request, StatusCode, ...)
+        #region (static) NotAuthorized             (Request, StatusCode, ...)
 
         /// <summary>
         /// Create a new 'NotAuthorized' AuthorizationStart result.
@@ -250,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) SessionIsInvalid         (Request, ...)
+        #region (static) SessionIsInvalid          (Request, ...)
 
         /// <summary>
         /// Create a new 'SessionIsInvalid' AuthorizationStart result.
@@ -306,7 +321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) CommunicationToEVSEFailed(Request, ...)
+        #region (static) CommunicationToEVSEFailed (Request, ...)
 
         /// <summary>
         /// Create a new 'CommunicationToEVSEFailed' AuthorizationStart result.
@@ -362,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) NoEVConnectedToEVSE      (Request, ...)
+        #region (static) NoEVConnectedToEVSE       (Request, ...)
 
         /// <summary>
         /// Create a new 'NoEVConnectedToEVSE' AuthorizationStart result.
@@ -418,7 +433,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) EVSEAlreadyReserved      (Request, ...)
+        #region (static) EVSEAlreadyReserved       (Request, ...)
 
         /// <summary>
         /// Create a new 'EVSEAlreadyReserved' AuthorizationStart result.
@@ -474,7 +489,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) UnknownEVSEID            (Request, ...)
+        #region (static) UnknownEVSEID             (Request, ...)
 
         /// <summary>
         /// Create a new 'UnknownEVSEID' AuthorizationStart result.
@@ -530,7 +545,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) EVSEOutOfService         (Request, ...)
+        #region (static) EVSEOutOfService          (Request, ...)
 
         /// <summary>
         /// Create a new 'EVSEOutOfService' AuthorizationStart result.
@@ -586,7 +601,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) ServiceNotAvailable      (Request, ...)
+        #region (static) ServiceNotAvailable       (Request, ...)
 
         /// <summary>
         /// Create a new 'ServiceNotAvailable' AuthorizationStart result.
@@ -642,7 +657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) DataError                (Request, ...)
+        #region (static) DataError                 (Request, ...)
 
         /// <summary>
         /// Create a new 'DataError' AuthorizationStart result.
@@ -700,7 +715,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) SystemError              (Request, ...)
+        #region (static) SystemError               (Request, ...)
 
         /// <summary>
         /// Create a new 'SystemError' AuthorizationStart result.
@@ -845,7 +860,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomAuthorizationStartResponseParser))
             {
-                return authorizationStartResponse!;
+                return authorizationStartResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a AuthorizationStart response is invalid: " + errorResponse,
@@ -872,8 +887,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizationStartResponseParser">A delegate to parse custom AuthorizationStart response JSON objects.</param>
         public static Boolean TryParse(AuthorizeStartRequest                                     Request,
                                        JObject                                                   JSON,
-                                       out AuthorizationStartResponse?                           AuthorizationStartResponse,
-                                       out String?                                               ErrorResponse,
+                                       [NotNullWhen(true)]  out AuthorizationStartResponse?      AuthorizationStartResponse,
+                                       [NotNullWhen(false)] out String?                          ErrorResponse,
                                        DateTime?                                                 ResponseTimestamp                        = null,
                                        EventTracking_Id?                                         EventTrackingId                          = null,
                                        TimeSpan?                                                 Runtime                                  = null,
@@ -893,7 +908,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     return false;
                 }
 
-                #region Parse AuthorizationStatus                   [mandatory]
+                #region Parse AuthorizationStatus                 [mandatory]
 
                 if (!JSON.ParseMandatory("AuthorizationStatus",
                                          "authorization status",
@@ -906,21 +921,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse StatusCode                            [mandatory]
+                #region Parse StatusCode                          [mandatory]
 
                 if (!JSON.ParseMandatoryJSON("StatusCode",
                                              "status code",
                                              OICPv2_3.StatusCode.TryParse,
                                              out StatusCode? StatusCode,
-                                             out ErrorResponse) ||
-                     StatusCode is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
 
                 #endregion
 
-                #region Parse SessionId                             [optional]
+                #region Parse SessionId                           [optional]
 
                 if (JSON.ParseOptional("SessionID",
                                        "session identification",
@@ -934,7 +948,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CPOPartnerSessionId                   [optional]
+                #region Parse CPOPartnerSessionId                 [optional]
 
                 if (JSON.ParseOptional("CPOPartnerSessionID",
                                        "CPO product session identification",
@@ -948,7 +962,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse EMPPartnerSessionId                   [optional]
+                #region Parse EMPPartnerSessionId                 [optional]
 
                 if (JSON.ParseOptional("EMPPartnerSessionID",
                                        "EMP product session identification",
@@ -962,7 +976,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse ProviderId                            [optional]
+                #region Parse ProviderId                          [optional]
 
                 if (JSON.ParseOptional("ProviderID",
                                        "provider identification",
@@ -976,7 +990,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse AuthorizationStopIdentifications      [optional]
+                #region Parse AuthorizationStopIdentifications    [optional]
 
                 if (JSON.ParseOptionalJSON("AuthorizationStopIdentifications",
                                            "authorization stop identifications",
@@ -990,27 +1004,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #endregion
 
-                #region Parse CustomData                            [optional]
+                #region Parse CustomData                          [optional]
 
                 var customData = JSON[nameof(CustomData)] as JObject;
 
                 #endregion
 
 
-                AuthorizationStartResponse = new AuthorizationStartResponse(ResponseTimestamp ?? Timestamp.Now,
-                                                                            EventTrackingId   ?? Request.EventTrackingId,
-                                                                            ProcessId         ?? Process_Id.NewRandom(),
-                                                                            Runtime           ?? Timestamp.Now - Request.Timestamp,
-                                                                            AuthorizationStatus,
-                                                                            StatusCode!,
-                                                                            Request,
-                                                                            SessionId,
-                                                                            CPOPartnerSessionId,
-                                                                            EMPPartnerSessionId,
-                                                                            ProviderId,
-                                                                            AuthorizationStopIdentifications,
-                                                                            HTTPResponse,
-                                                                            customData);
+                AuthorizationStartResponse = new AuthorizationStartResponse(
+                                                 ResponseTimestamp ?? Timestamp.Now,
+                                                 EventTrackingId   ?? Request.EventTrackingId,
+                                                 ProcessId         ?? Process_Id.NewRandom(),
+                                                 Runtime           ?? Timestamp.Now - Request.Timestamp,
+                                                 AuthorizationStatus,
+                                                 StatusCode,
+                                                 Request,
+                                                 SessionId,
+                                                 CPOPartnerSessionId,
+                                                 EMPPartnerSessionId,
+                                                 ProviderId,
+                                                 AuthorizationStopIdentifications,
+                                                 HTTPResponse,
+                                                 customData
+                                             );
 
                 if (CustomAuthorizationStartResponseParser is not null)
                     AuthorizationStartResponse = CustomAuthorizationStartResponseParser(JSON,
@@ -1176,25 +1192,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return AuthorizationStatus. GetHashCode()       * 13 ^
-                       StatusCode.          GetHashCode()       * 11 ^
-
-                      (SessionId?.          GetHashCode() ?? 0) *  7 ^
-                      (CPOPartnerSessionId?.GetHashCode() ?? 0) *  5 ^
-                      (EMPPartnerSessionId?.GetHashCode() ?? 0) *  3 ^
-                      (ProviderId?.         GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -1205,10 +1210,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(AuthorizationStatus,
-                             StatusCode.HasResult
-                                 ? ", " + StatusCode
-                                 : "");
+            => String.Concat(
+
+                   AuthorizationStatus,
+
+                   StatusCode.HasResult
+                       ? $", {StatusCode}"
+                       : ""
+
+               );
 
         #endregion
 
@@ -1295,6 +1305,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new AuthorizationStart response builder.
             /// </summary>
@@ -1348,9 +1360,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.ProviderId                        = ProviderId;
                 this.AuthorizationStopIdentifications  = AuthorizationStopIdentifications is not null
                                                              ? new HashSet<Identification>(AuthorizationStopIdentifications)
-                                                             : new HashSet<Identification>();
+                                                             : [];
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

@@ -17,6 +17,9 @@
 
 #region Usings
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -81,6 +84,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Status      = Status;
             this.CustomData  = CustomData;
 
+
+            unchecked
+            {
+
+                hashCode = this.Id.       GetHashCode() * 5 ^
+                           this.Status.   GetHashCode() * 3 ^
+                           this.Timestamp.GetHashCode();
+
+            }
+
         }
 
         #endregion
@@ -111,6 +124,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
+        #region (static) TryParse(JSON, CustomEVSEStatusUpdateParser = null)
+
+        /// <summary>
+        /// Try to parse the given JSON representation of an EVSE status update.
+        /// </summary>
+        /// <param name="JSON">The JSON to parse.</param>
+        /// <param name="CustomChargingFacilityParser">A delegate to parse custom charging facilitys JSON objects.</param>
+        public static EVSEStatusUpdate? TryParse(JObject                                         JSON,
+                                                 CustomJObjectParserDelegate<EVSEStatusUpdate>?  CustomEVSEStatusUpdateParser   = null)
+        {
+
+            if (TryParse(JSON,
+                         out var evseStatusUpdate,
+                         out _,
+                         CustomEVSEStatusUpdateParser))
+            {
+                return evseStatusUpdate;
+            }
+
+            return null;
+
+        }
+
+        #endregion
+
         #region (static) TryParse(JSON, out EVSEStatusUpdate, out ErrorResponse, CustomEVSEStatusUpdateParser = null)
 
         // Note: The following is needed to satisfy pattern matching delegates! Do not refactor it!
@@ -121,9 +159,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EVSEStatusUpdate">The parsed EVSE status update.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject               JSON,
-                                       out EVSEStatusUpdate  EVSEStatusUpdate,
-                                       out String?           ErrorResponse)
+        public static Boolean TryParse(JObject                                    JSON,
+                                       [NotNullWhen(true)]  out EVSEStatusUpdate  EVSEStatusUpdate,
+                                       [NotNullWhen(false)] out String?           ErrorResponse)
 
             => TryParse(JSON,
                         out EVSEStatusUpdate,
@@ -139,8 +177,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEVSEStatusUpdateParser">A delegate to parse custom EVSE status updates JSON objects.</param>
         public static Boolean TryParse(JObject                                         JSON,
-                                       out EVSEStatusUpdate                            EVSEStatusUpdate,
-                                       out String?                                     ErrorResponse,
+                                       [NotNullWhen(true)]  out EVSEStatusUpdate       EVSEStatusUpdate,
+                                       [NotNullWhen(false)] out String?                ErrorResponse,
                                        CustomJObjectParserDelegate<EVSEStatusUpdate>?  CustomEVSEStatusUpdateParser)
         {
 
@@ -199,10 +237,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                EVSEStatusUpdate = new EVSEStatusUpdate(Timestamp,
-                                                        EVSEId,
-                                                        EVSEStatus,
-                                                        customData);
+                EVSEStatusUpdate = new EVSEStatusUpdate(
+                                       Timestamp,
+                                       EVSEId,
+                                       EVSEStatus,
+                                       customData
+                                   );
 
 
                 if (CustomEVSEStatusUpdateParser is not null)
@@ -437,21 +477,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Id.       GetHashCode() * 5 ^
-                       Status.   GetHashCode() * 3 ^
-                       Timestamp.GetHashCode();
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

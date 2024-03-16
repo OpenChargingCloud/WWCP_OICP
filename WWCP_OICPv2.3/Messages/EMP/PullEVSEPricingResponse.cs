@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -125,6 +127,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.StatusCode            = StatusCode;
             this.Warnings              = Warnings;
 
+
+            unchecked
+            {
+
+                hashCode = this.OperatorEVSEPricings.Aggregate(0, (hashCode, operatorEVSEPricing) => hashCode ^ operatorEVSEPricing.GetHashCode()) ^
+                          (this.StatusCode?.GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -174,7 +185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomPullEVSEPricingResponseParser))
             {
-                return pullEVSEPricingResponse!;
+                return pullEVSEPricingResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEPricing response is invalid: " + errorResponse,
@@ -204,8 +215,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        DateTime                                               ResponseTimestamp,
                                        EventTracking_Id                                       EventTrackingId,
                                        TimeSpan                                               Runtime,
-                                       out PullEVSEPricingResponse?                           PullEVSEPricingResponse,
-                                       out String?                                            ErrorResponse,
+                                       [NotNullWhen(true)]  out PullEVSEPricingResponse?      PullEVSEPricingResponse,
+                                       [NotNullWhen(false)] out String?                       ErrorResponse,
                                        Process_Id?                                            ProcessId                             = null,
                                        HTTPResponse?                                          HTTPResponse                          = null,
                                        CustomJObjectParserDelegate<PullEVSEPricingResponse>?  CustomPullEVSEPricingResponseParser   = null)
@@ -214,7 +225,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             try
             {
 
-                PullEVSEPricingResponse = default;
+                PullEVSEPricingResponse = null;
 
                 if (JSON?.HasValues != true)
                 {
@@ -386,7 +397,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
                                            OICPv2_3.StatusCode.TryParse,
-                                           out StatusCode StatusCode,
+                                           out StatusCode? StatusCode,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -402,25 +413,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEPricingResponse = new PullEVSEPricingResponse(ResponseTimestamp,
-                                                                      EventTrackingId,
-                                                                      ProcessId ?? Process_Id.NewRandom(),
-                                                                      Runtime,
-                                                                      operatorEVSEPricings,
+                PullEVSEPricingResponse = new PullEVSEPricingResponse(
+                                              ResponseTimestamp,
+                                              EventTrackingId,
+                                              ProcessId ?? Process_Id.NewRandom(),
+                                              Runtime,
+                                              operatorEVSEPricings,
 
-                                                                      Request,
-                                                                      Number,
-                                                                      Size,
-                                                                      TotalElements,
-                                                                      LastPage,
-                                                                      FirstPage,
-                                                                      TotalPages,
-                                                                      NumberOfElements,
+                                              Request,
+                                              Number,
+                                              Size,
+                                              TotalElements,
+                                              LastPage,
+                                              FirstPage,
+                                              TotalPages,
+                                              NumberOfElements,
 
-                                                                      StatusCode,
-                                                                      HTTPResponse,
-                                                                      customData,
-                                                                      warnings);
+                                              StatusCode,
+                                              HTTPResponse,
+                                              customData,
+                                              warnings
+                                          );
 
                 if (CustomPullEVSEPricingResponseParser is not null)
                     PullEVSEPricingResponse = CustomPullEVSEPricingResponseParser(JSON,
@@ -440,14 +453,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region ToJSON(CustomPullEVSEPricingResponseSerializer = null, CustomOperatorEVSEPricingsSerializer = null,...)
+        #region ToJSON(CustomPullEVSEPricingResponseSerializer = null, CustomOperatorEVSEPricingSerializer = null,...)
 
         /// <summary>
         /// Return a JSON-representation of this object.
         /// </summary>
         /// <param name="CustomPullEVSEPricingResponseSerializer">A delegate to customize the serialization of PullEVSEPricing responses.</param>
-        /// <param name="CustomOperatorEVSEPricingsSerializer">A delegate to serialize custom pricing product data JSON objects.</param>
-        /// <param name="CustomOperatorEVSEPricingsRecordSerializer">A delegate to serialize custom pricing product data record JSON objects.</param>
+        /// <param name="CustomOperatorEVSEPricingSerializer">A delegate to serialize custom operator EVSE pricing JSON objects.</param>
+        /// <param name="CustomEVSEPricingSerializer">A delegate to serialize custom EVSE pricing JSON objects.</param>
         /// <param name="CustomStatusCodeSerializer">A delegate to serialize custom StatusCode JSON elements.</param>
         public JObject ToJSON(CustomJObjectSerializerDelegate<PullEVSEPricingResponse>?  CustomPullEVSEPricingResponseSerializer   = null,
                               CustomJObjectSerializerDelegate<OperatorEVSEPricing>?      CustomOperatorEVSEPricingSerializer       = null,
@@ -457,15 +470,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("OperatorEVSEPricing",  new JArray(OperatorEVSEPricings.Select(operatorEVSEPricing => operatorEVSEPricing.ToJSON(CustomOperatorEVSEPricingSerializer,
-                                                                                                                                                          CustomEVSEPricingSerializer)))),
+                                 new JProperty("OperatorEVSEPricing",   new JArray(OperatorEVSEPricings.Select(operatorEVSEPricing => operatorEVSEPricing.ToJSON(CustomOperatorEVSEPricingSerializer,
+                                                                                                                                                                 CustomEVSEPricingSerializer)))),
 
                            StatusCode is not null
-                               ? new JProperty("StatusCode",     StatusCode.ToJSON(CustomStatusCodeSerializer))
+                               ? new JProperty("StatusCode",            StatusCode.ToJSON(CustomStatusCodeSerializer))
                                : null,
 
                            CustomData is not null
-                               ? new JProperty("CustomData",     CustomData)
+                               ? new JProperty("CustomData",            CustomData)
                                : null
 
                        );
@@ -563,20 +576,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
-        /// Return the HashCode of this object.
+        /// Return the hash code of this object.
         /// </summary>
-        /// <returns>The HashCode of this object.</returns>
+        /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return OperatorEVSEPricings.Aggregate(0, (hashCode, operatorEVSEPricing) => hashCode ^ operatorEVSEPricing.GetHashCode()) ^
-                      (StatusCode?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -587,10 +594,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(OperatorEVSEPricings.Count() + " operator EVSE pricing record(s)",
-                             StatusCode is not null
-                                 ? " -> " + StatusCode.Code
-                                 : "");
+            => String.Concat(
+
+                   $"{OperatorEVSEPricings.Count()} operator EVSE pricing record(s)",
+
+                   StatusCode is not null
+                       ? $" -> {StatusCode.Code}"
+                       : ""
+
+               );
 
         #endregion
 
@@ -654,6 +666,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new PullEVSEPricing response builder.
             /// </summary>
@@ -696,8 +710,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             {
 
                 this.OperatorEVSEPricings  = OperatorEVSEPricings is not null
-                                               ? new HashSet<OperatorEVSEPricing>(OperatorEVSEPricings)
-                                               : new HashSet<OperatorEVSEPricing>();
+                                                 ? new HashSet<OperatorEVSEPricing>(OperatorEVSEPricings)
+                                                 : [];
 
                 this.Number                = Number;
                 this.Size                  = Size;
@@ -712,6 +726,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  : new StatusCode.Builder();
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

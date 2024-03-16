@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -43,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public readonly EnergyTypes  EnergyType    { get; }
 
         /// <summary>
-        /// Percentage of EnergyType being used by the charging stations.
+        /// Percentage of energy type being used by the charging stations.
         /// </summary>
         [Optional]
         public readonly Byte?        Percentage    { get; }
@@ -52,11 +54,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new energy source.
         /// </summary>
         /// <param name="EnergyType">The energy type.</param>
-        /// <param name="Percentage">Percentage of EnergyType being used by the charging stations.</param>
+        /// <param name="Percentage">Percentage of energy type being used by the charging stations.</param>
         public EnergySource(EnergyTypes  EnergyType,
                             Byte?        Percentage   = null)
         {
@@ -68,6 +72,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                    : new Byte?();
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -121,7 +127,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (TryParse(JSON,
-                         out EnergySource energySource,
+                         out var energySource,
                          out _,
                          CustomEnergySourceParser))
             {
@@ -144,9 +150,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="EnergySource">The parsed energy source.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject           JSON,
-                                       out EnergySource  EnergySource,
-                                       out String?       ErrorResponse)
+        public static Boolean TryParse(JObject                                JSON,
+                                       [NotNullWhen(true)]  out EnergySource  EnergySource,
+                                       [NotNullWhen(false)] out String?       ErrorResponse)
 
             => TryParse(JSON,
                         out EnergySource,
@@ -162,8 +168,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomEnergySourceParser">A delegate to parse custom energy sources JSON objects.</param>
         public static Boolean TryParse(JObject                                     JSON,
-                                       out EnergySource                            EnergySource,
-                                       out String?                                 ErrorResponse,
+                                       [NotNullWhen(true)]  out EnergySource       EnergySource,
+                                       [NotNullWhen(false)] out String?            ErrorResponse,
                                        CustomJObjectParserDelegate<EnergySource>?  CustomEnergySourceParser)
         {
 
@@ -204,8 +210,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                EnergySource = new EnergySource(EnergyType,
-                                                Percentage);
+                EnergySource = new EnergySource(
+                                   EnergyType,
+                                   Percentage
+                               );
 
 
                 if (CustomEnergySourceParser is not null)
@@ -457,10 +465,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(EnergyType,
-                             Percentage.HasValue
-                                 ? " " + Percentage.Value + "%"
-                                 : "");
+            => String.Concat(
+
+                   EnergyType,
+
+                   Percentage.HasValue
+                       ? $" {Percentage} %"
+                       : ""
+
+               );
 
         #endregion
 

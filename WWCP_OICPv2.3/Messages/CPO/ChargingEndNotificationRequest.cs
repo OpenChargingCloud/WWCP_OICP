@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using System.Globalization;
 
 using Newtonsoft.Json.Linq;
@@ -189,9 +191,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                               JObject?               CustomData             = null,
 
                                               DateTime?              Timestamp              = null,
-                                              CancellationToken      CancellationToken      = default,
                                               EventTracking_Id?      EventTrackingId        = null,
-                                              TimeSpan?              RequestTimeout         = null)
+                                              TimeSpan?              RequestTimeout         = null,
+                                              CancellationToken      CancellationToken      = default)
 
             : base(ProcessId,
                    CustomData,
@@ -202,24 +204,48 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         {
 
-            this.Type                    = ChargingNotificationTypes.End;
-            this.SessionId               = SessionId;
-            this.Identification          = Identification;
-            this.EVSEId                  = EVSEId;
-            this.ChargingStart           = ChargingStart;
-            this.ChargingEnd             = ChargingEnd;
+            this.Type                  = ChargingNotificationTypes.End;
+            this.SessionId             = SessionId;
+            this.Identification        = Identification;
+            this.EVSEId                = EVSEId;
+            this.ChargingStart         = ChargingStart;
+            this.ChargingEnd           = ChargingEnd;
 
-            this.CPOPartnerSessionId     = CPOPartnerSessionId;
-            this.EMPPartnerSessionId     = EMPPartnerSessionId;
-            this.SessionStart            = SessionStart;
-            this.SessionEnd              = SessionEnd;
-            this.ConsumedEnergy          = ConsumedEnergy;
-            this.MeterValueStart         = MeterValueStart;
-            this.MeterValueEnd           = MeterValueEnd;
-            this.MeterValuesInBetween    = MeterValuesInBetween;
-            this.OperatorId              = OperatorId;
-            this.PartnerProductId        = PartnerProductId;
-            this.PenaltyTimeStart        = PenaltyTimeStart;
+            this.CPOPartnerSessionId   = CPOPartnerSessionId;
+            this.EMPPartnerSessionId   = EMPPartnerSessionId;
+            this.SessionStart          = SessionStart;
+            this.SessionEnd            = SessionEnd;
+            this.ConsumedEnergy        = ConsumedEnergy;
+            this.MeterValueStart       = MeterValueStart;
+            this.MeterValueEnd         = MeterValueEnd;
+            this.MeterValuesInBetween  = MeterValuesInBetween;
+            this.OperatorId            = OperatorId;
+            this.PartnerProductId      = PartnerProductId;
+            this.PenaltyTimeStart      = PenaltyTimeStart;
+
+
+            unchecked
+            {
+
+                hashCode = this.Type.                 GetHashCode()       * 59 ^
+                           this.SessionId.            GetHashCode()       * 53 ^
+                           this.Identification.       GetHashCode()       * 47 ^
+                           this.EVSEId.               GetHashCode()       * 43 ^
+                           this.ChargingStart.        GetHashCode()       * 41 ^
+                           this.ChargingEnd.          GetHashCode()       * 37 ^
+                          (this.CPOPartnerSessionId?. GetHashCode() ?? 0) * 31 ^
+                          (this.EMPPartnerSessionId?. GetHashCode() ?? 0) * 29 ^
+                          (this.SessionStart?.        GetHashCode() ?? 0) * 23 ^
+                          (this.SessionEnd?.          GetHashCode() ?? 0) * 19 ^
+                          (this.ConsumedEnergy?.      GetHashCode() ?? 0) * 17 ^
+                          (this.MeterValueStart?.     GetHashCode() ?? 0) * 13 ^
+                          (this.MeterValueEnd?.       GetHashCode() ?? 0) * 11 ^
+                          (this.MeterValuesInBetween?.GetHashCode() ?? 0) *  7 ^
+                          (this.OperatorId?.          GetHashCode() ?? 0) *  5 ^
+                          (this.PartnerProductId?.    GetHashCode() ?? 0) *  3 ^
+                          (this.PenaltyTimeStart?.    GetHashCode() ?? 0);
+
+            }
 
         }
 
@@ -274,11 +300,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                            Process_Id?                                                   ProcessId                                    = null,
 
                                                            DateTime?                                                     Timestamp                                    = null,
-                                                           CancellationToken                                             CancellationToken                            = default,
                                                            EventTracking_Id?                                             EventTrackingId                              = null,
                                                            TimeSpan?                                                     RequestTimeout                               = null,
-
-                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null)
+                                                           CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null,
+                                                           CancellationToken                                             CancellationToken                            = default)
         {
 
             if (TryParse(JSON,
@@ -286,12 +311,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomChargingEndNotificationRequestParser))
+                         CustomChargingEndNotificationRequestParser,
+                         CancellationToken))
             {
-                return chargingNotificationsEndRequest!;
+                return chargingNotificationsEndRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a charging notification end request is invalid: " + errorResponse,
@@ -314,16 +339,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomChargingEndNotificationRequestParser">A delegate to parse custom charging notification end request JSON objects.</param>
         public static Boolean TryParse(JObject                                                       JSON,
-                                       out ChargingEndNotificationRequest?                           ChargingEndNotificationRequest,
-                                       out String?                                                   ErrorResponse,
+                                       [NotNullWhen(true)]  out ChargingEndNotificationRequest?      ChargingEndNotificationRequest,
+                                       [NotNullWhen(false)] out String?                              ErrorResponse,
                                        Process_Id?                                                   ProcessId                                    = null,
 
                                        DateTime?                                                     Timestamp                                    = null,
-                                       CancellationToken                                             CancellationToken                            = default,
                                        EventTracking_Id?                                             EventTrackingId                              = null,
                                        TimeSpan?                                                     RequestTimeout                               = null,
-
-                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null)
+                                       CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null,
+                                       CancellationToken                                             CancellationToken                            = default)
         {
 
             try
@@ -396,8 +420,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "identification",
                                              OICPv2_3.Identification.TryParse,
                                              out Identification? Identification,
-                                             out ErrorResponse) ||
-                     Identification is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -581,30 +604,32 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                ChargingEndNotificationRequest = new ChargingEndNotificationRequest(SessionId,
-                                                                                    Identification!,
-                                                                                    EVSEId,
-                                                                                    ChargingStart,
-                                                                                    ChargingEnd,
+                ChargingEndNotificationRequest = new ChargingEndNotificationRequest(
+                                                     SessionId,
+                                                     Identification,
+                                                     EVSEId,
+                                                     ChargingStart,
+                                                     ChargingEnd,
 
-                                                                                    CPOPartnerSessionId,
-                                                                                    EMPPartnerSessionId,
-                                                                                    SessionStart,
-                                                                                    SessionEnd,
-                                                                                    ConsumedEnergy,
-                                                                                    MeterValueStart,
-                                                                                    MeterValueEnd,
-                                                                                    MeterValuesInBetween,
-                                                                                    OperatorId,
-                                                                                    PartnerProductId,
-                                                                                    PenaltyTimeStart,
-                                                                                    ProcessId,
-                                                                                    customData,
+                                                     CPOPartnerSessionId,
+                                                     EMPPartnerSessionId,
+                                                     SessionStart,
+                                                     SessionEnd,
+                                                     ConsumedEnergy,
+                                                     MeterValueStart,
+                                                     MeterValueEnd,
+                                                     MeterValuesInBetween,
+                                                     OperatorId,
+                                                     PartnerProductId,
+                                                     PenaltyTimeStart,
+                                                     ProcessId,
+                                                     customData,
 
-                                                                                    Timestamp,
-                                                                                    CancellationToken,
-                                                                                    EventTrackingId,
-                                                                                    RequestTimeout);
+                                                     Timestamp,
+                                                     EventTrackingId,
+                                                     RequestTimeout,
+                                                     CancellationToken
+                                                 );
 
                 if (CustomChargingEndNotificationRequestParser is not null)
                     ChargingEndNotificationRequest = CustomChargingEndNotificationRequestParser(JSON,
@@ -735,9 +760,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     CustomData,
 
                     Timestamp,
-                    CancellationToken,
                     EventTrackingId,
-                    RequestTimeout);
+                    RequestTimeout,
+                    CancellationToken);
 
         #endregion
 
@@ -827,36 +852,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Type.                   GetHashCode()       * 59 ^
-                       SessionId.              GetHashCode()       * 53 ^
-                       Identification.         GetHashCode()       * 47 ^
-                       EVSEId.                 GetHashCode()       * 43 ^
-                       ChargingStart.          GetHashCode()       * 41 ^
-                       ChargingEnd.            GetHashCode()       * 37 ^
-
-                      (CPOPartnerSessionId?.   GetHashCode() ?? 0) * 31 ^
-                      (EMPPartnerSessionId?.   GetHashCode() ?? 0) * 29 ^
-                      (SessionStart?.          GetHashCode() ?? 0) * 23 ^
-                      (SessionEnd?.            GetHashCode() ?? 0) * 19 ^
-                      (ConsumedEnergy?.        GetHashCode() ?? 0) * 17 ^
-                      (MeterValueStart?.       GetHashCode() ?? 0) * 13 ^
-                      (MeterValueEnd?.         GetHashCode() ?? 0) * 11 ^
-                      (MeterValuesInBetween?.  GetHashCode() ?? 0) *  7 ^
-                      (OperatorId?.            GetHashCode() ?? 0) *  5 ^
-                      (PartnerProductId?.      GetHashCode() ?? 0) *  3 ^
-                      (PenaltyTimeStart?.      GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -867,17 +870,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Type,
-                             " at ",  EVSEId,
-                             " for ", Identification,
+            => String.Concat(
 
-                             " (" + SessionId + ")",
+                   $"{Type} at {EVSEId} for {Identification} ({SessionId})",
 
-                             PartnerProductId.HasValue
-                                 ? " of " + PartnerProductId.Value
-                                 : null,
+                   PartnerProductId.HasValue
+                       ? $" of {PartnerProductId.Value}"
+                       : "",
 
-                             " at " + ChargingEnd.ToIso8601());
+                   $" at {ChargingEnd}"
+
+               );
 
         #endregion
 

@@ -81,7 +81,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Value">An optional signed metering value for a transparency software.</param>
         /// <param name="MeteringStatus">An optional status of the given signed metering value.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public SignedMeteringValue(String?              Value,
+        public SignedMeteringValue(String?              Value            = null,
                                    MeteringStatusType?  MeteringStatus   = null,
                                    JObject?             CustomData       = null)
 
@@ -90,6 +90,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Value           = Value?.TrimToNull();
             this.MeteringStatus  = MeteringStatus;
             this.CustomData      = CustomData;
+
+
+            unchecked
+            {
+
+                hashCode = (this.Value?.         GetHashCode() ?? 0) * 3 ^
+                           (this.MeteringStatus?.GetHashCode() ?? 0);
+
+            }
 
         }
 
@@ -481,18 +490,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-                return (Value?.         GetHashCode() ?? 0) * 3 ^
-                       (MeteringStatus?.GetHashCode() ?? 0);
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -503,7 +508,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => $"{Value?.SubstringMax(20) ?? ""}, {MeteringStatus}";
+            => $"{MeteringStatus?.ToString() ?? "-"}: {Value?.SubstringMax(20) ?? ""}";
 
         #endregion
 

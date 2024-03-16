@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -191,7 +193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomGetChargeDetailRecordsRequestParser))
             {
-                return getChargeDetailRecordsRequest!;
+                return getChargeDetailRecordsRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a GetChargeDetailRecords request is invalid: " + errorResponse,
@@ -214,8 +216,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="SortOrder">Optional sorting criteria in the format: property(,asc|desc).</param>
         /// <param name="CustomGetChargeDetailRecordsRequestParser">A delegate to parse custom GetChargeDetailRecords request JSON objects.</param>
         public static Boolean TryParse(JObject                                                      JSON,
-                                       out GetChargeDetailRecordsRequest?                           GetChargeDetailRecordsRequest,
-                                       out String?                                                  ErrorResponse,
+                                       [NotNullWhen(true)]  out GetChargeDetailRecordsRequest?      GetChargeDetailRecordsRequest,
+                                       [NotNullWhen(false)] out String?                             ErrorResponse,
                                        Process_Id?                                                  ProcessId                                   = null,
                                        UInt32?                                                      Page                                        = null,
                                        UInt32?                                                      Size                                        = null,

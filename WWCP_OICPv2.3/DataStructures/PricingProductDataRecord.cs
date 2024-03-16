@@ -134,7 +134,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.IsValid24hours               = IsValid24hours;
             this.ProductAvailabilityTimes     = ProductAvailabilityTimes.Distinct();
 
-            this.AdditionalReferences         = AdditionalReferences?.   Distinct() ?? Array.Empty<AdditionalReferences>();
+            this.AdditionalReferences         = AdditionalReferences?.   Distinct() ?? [];
 
 
             unchecked
@@ -462,9 +462,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     IsValid24hours,
                     ProductAvailabilityTimes.Select(productAvailabilityTime => productAvailabilityTime.Clone).ToArray(),
 
-                    AdditionalReferences is not null
-                        ? AdditionalReferences.Select(additionalReference => additionalReference.Clone).ToArray()
-                        : null,
+                    AdditionalReferences?.Select(additionalReference => additionalReference.Clone).ToArray(),
 
                     CustomData is not null
                         ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))

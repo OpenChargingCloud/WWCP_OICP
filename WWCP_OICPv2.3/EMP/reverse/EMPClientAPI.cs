@@ -1585,7 +1585,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                          Request.EventTrackingId,
                                                                          processId,
                                                                          Timestamp.Now - Request.Timestamp,
-                                                                         Array.Empty<EVSEDataRecord>(),
+                                                                         [],
                                                                          StatusCode: new StatusCode(
                                                                                          StatusCodes.SystemError,
                                                                                          "The expected 'providerId' URL parameter could not be parsed!"
@@ -1597,7 +1597,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PullEVSEDataRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                             //     providerId ????
                                                                             out var                           pullEVSEDataRequest,
                                                                             out var                           errorResponse,
@@ -1666,7 +1666,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                  Request.EventTrackingId,
                                                                                  processId,
                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                 Array.Empty<EVSEDataRecord>(),
+                                                                                 [],
                                                                                  pullEVSEDataRequest,
                                                                                  StatusCode: new StatusCode(
                                                                                                  StatusCodes.DataError,
@@ -1691,7 +1691,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                              Request.EventTrackingId,
                                                                              processId,
                                                                              Timestamp.Now - Request.Timestamp,
-                                                                             Array.Empty<EVSEDataRecord>(),
+                                                                             [],
                                                                              pullEVSEDataRequest,
                                                                              StatusCode: new StatusCode(
                                                                                              StatusCodes.SystemError,
@@ -1740,7 +1740,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                          Request.EventTrackingId,
                                                                          processId,
                                                                          Timestamp.Now - Request.Timestamp,
-                                                                         Array.Empty<EVSEDataRecord>(),
+                                                                         [],
                                                                          pullEVSEDataRequest,
                                                                          StatusCode: new StatusCode(
                                                                                          StatusCodes.DataError,
@@ -1765,7 +1765,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      Request.EventTrackingId,
                                                                      processId,
                                                                      Timestamp.Now - Request.Timestamp,
-                                                                     Array.Empty<EVSEDataRecord>(),
+                                                                     [],
                                                                      StatusCode: new StatusCode(
                                                                                      StatusCodes.SystemError,
                                                                                      e.Message,
@@ -1782,8 +1782,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEDataResponse.Response?.ToJSON(CustomPullEVSEDataResponseSerializer,
                                                                                                                 CustomEVSEDataRecordSerializer,
@@ -1799,7 +1799,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                 CustomStatusCodeSerializer).
                                                                                                          ToString(JSONFormatting).
                                                                                                          ToUTF8Bytes()
-                                                                                               ?? Array.Empty<Byte>(),
+                                                                                               ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -1843,7 +1843,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                            Request.EventTrackingId,
                                                                            processId,
                                                                            Timestamp.Now - Request.Timestamp,
-                                                                           Array.Empty<OperatorEVSEStatus>(),
+                                                                           [],
                                                                            StatusCode: new StatusCode(
                                                                                            StatusCodes.SystemError,
                                                                                            "The expected 'providerId' URL parameter could not be parsed!"
@@ -1855,7 +1855,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEStatusRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PullEVSEStatusRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                               //     providerId ????
                                                                               out var                             pullEVSEStatusRequest,
                                                                               out var                             errorResponse,
@@ -1921,7 +1921,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                  Request.EventTrackingId,
                                                                                  processId,
                                                                                  Timestamp.Now - Request.Timestamp,
-                                                                                 Array.Empty<OperatorEVSEStatus>(),
+                                                                                 [],
                                                                                  pullEVSEStatusRequest,
                                                                                  StatusCode: new StatusCode(
                                                                                                  StatusCodes.DataError,
@@ -1946,7 +1946,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                Request.EventTrackingId,
                                                                                processId,
                                                                                Timestamp.Now - Request.Timestamp,
-                                                                               Array.Empty<OperatorEVSEStatus>(),
+                                                                               [],
                                                                                pullEVSEStatusRequest,
                                                                                StatusCode: new StatusCode(
                                                                                                StatusCodes.SystemError,
@@ -1995,7 +1995,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                            Request.EventTrackingId,
                                                                            processId,
                                                                            Timestamp.Now - Request.Timestamp,
-                                                                           Array.Empty<OperatorEVSEStatus>(),
+                                                                           [],
                                                                            pullEVSEStatusRequest,
                                                                            StatusCode: new StatusCode(
                                                                                            StatusCodes.DataError,
@@ -2020,7 +2020,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                        Request.EventTrackingId,
                                                                        processId,
                                                                        Timestamp.Now - Request.Timestamp,
-                                                                       Array.Empty<OperatorEVSEStatus>(),
+                                                                       [],
                                                                        StatusCode: new StatusCode(
                                                                                        StatusCodes.SystemError,
                                                                                        e.Message,
@@ -2037,8 +2037,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusResponse.Response?.ToJSON(CustomPullEVSEStatusResponseSerializer,
                                                                                                                   CustomOperatorEVSEStatusSerializer,
@@ -2046,7 +2046,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                   CustomStatusCodeSerializer).
                                                                                                            ToString(JSONFormatting).
                                                                                                            ToUTF8Bytes()
-                                                                                                 ?? Array.Empty<Byte>(),
+                                                                                                 ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2090,7 +2090,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                            Request.EventTrackingId,
                                                                            processId,
                                                                            Timestamp.Now - Request.Timestamp,
-                                                                           Array.Empty<EVSEStatusRecord>(),
+                                                                           [],
                                                                            StatusCode: new StatusCode(
                                                                                            StatusCodes.SystemError,
                                                                                            "The expected 'providerId' URL parameter could not be parsed!"
@@ -2102,7 +2102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEStatusByIdRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PullEVSEStatusByIdRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                   //     providerId ????
                                                                                   out var                                 pullEVSEStatusByIdRequest,
                                                                                   out var                                 errorResponse,
@@ -2168,7 +2168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        Request.EventTrackingId,
                                                                                        processId,
                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                       Array.Empty<EVSEStatusRecord>(),
+                                                                                       [],
                                                                                        pullEVSEStatusByIdRequest,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.DataError,
@@ -2193,7 +2193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<EVSEStatusRecord>(),
+                                                                                   [],
                                                                                    pullEVSEStatusByIdRequest,
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.SystemError,
@@ -2242,7 +2242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                Request.EventTrackingId,
                                                                                processId,
                                                                                Timestamp.Now - Request.Timestamp,
-                                                                               Array.Empty<EVSEStatusRecord>(),
+                                                                               [],
                                                                                pullEVSEStatusByIdRequest,
                                                                                StatusCode: new StatusCode(
                                                                                                StatusCodes.DataError,
@@ -2267,7 +2267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                            Request.EventTrackingId,
                                                                            processId,
                                                                            Timestamp.Now - Request.Timestamp,
-                                                                           Array.Empty<EVSEStatusRecord>(),
+                                                                           [],
                                                                            StatusCode: new StatusCode(
                                                                                            StatusCodes.SystemError,
                                                                                            e.Message,
@@ -2284,15 +2284,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusByIdResponse.Response?.ToJSON(CustomPullEVSEStatusByIdResponseSerializer,
                                                                                                                       CustomEVSEStatusRecordSerializer,
                                                                                                                       CustomStatusCodeSerializer).
                                                                                                                ToString(JSONFormatting).
                                                                                                                ToUTF8Bytes()
-                                                                                                     ?? Array.Empty<Byte>(),
+                                                                                                     ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2336,7 +2336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        Request.EventTrackingId,
                                                                                        Process_Id.NewRandom(),
                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                       Array.Empty<OperatorEVSEStatus>(),
+                                                                                       [],
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.SystemError,
                                                                                                        "The expected 'providerId' URL parameter could not be parsed!"
@@ -2348,7 +2348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEStatusByOperatorIdRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PullEVSEStatusByOperatorIdRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                           //     providerId ????
                                                                                           out var                                         pullEVSEStatusByOperatorIdRequest,
                                                                                           out var                                         errorResponse,
@@ -2414,7 +2414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                Request.EventTrackingId,
                                                                                                processId,
                                                                                                Timestamp.Now - Request.Timestamp,
-                                                                                               Array.Empty<OperatorEVSEStatus>(),
+                                                                                               [],
                                                                                                pullEVSEStatusByOperatorIdRequest,
                                                                                                StatusCode: new StatusCode(
                                                                                                                StatusCodes.DataError,
@@ -2439,7 +2439,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            Request.EventTrackingId,
                                                                                            processId,
                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                           Array.Empty<OperatorEVSEStatus>(),
+                                                                                           [],
                                                                                            pullEVSEStatusByOperatorIdRequest,
                                                                                            StatusCode: new StatusCode(
                                                                                                            StatusCodes.SystemError,
@@ -2488,7 +2488,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        Request.EventTrackingId,
                                                                                        processId,
                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                       Array.Empty<OperatorEVSEStatus>(),
+                                                                                       [],
                                                                                        pullEVSEStatusByOperatorIdRequest,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.DataError,
@@ -2513,7 +2513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<OperatorEVSEStatus>(),
+                                                                                   [],
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.SystemError,
                                                                                                    e.Message,
@@ -2530,8 +2530,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEStatusByOperatorIdResponse.Response?.ToJSON(CustomPullEVSEStatusByOperatorIdResponseSerializer,
                                                                                                                               CustomOperatorEVSEStatusSerializer,
@@ -2539,7 +2539,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                               CustomStatusCodeSerializer).
                                                                                                                        ToString(JSONFormatting).
                                                                                                                        ToUTF8Bytes()
-                                                                                                             ?? Array.Empty<Byte>(),
+                                                                                                             ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2587,7 +2587,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<PricingProductData>(),
+                                                                                   [],
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.SystemError,
                                                                                                    "The expected 'providerId' URL parameter could not be parsed!"
@@ -2599,7 +2599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullPricingProductDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PullPricingProductDataRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                       providerId,
                                                                                       out var                                     pullPricingProductDataRequest,
                                                                                       out var                                     errorResponse,
@@ -2668,7 +2668,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            Request.EventTrackingId,
                                                                                            processId,
                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                           Array.Empty<PricingProductData>(),
+                                                                                           [],
                                                                                            pullPricingProductDataRequest,
                                                                                            StatusCode: new StatusCode(
                                                                                                            StatusCodes.DataError,
@@ -2693,7 +2693,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        Request.EventTrackingId,
                                                                                        processId,
                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                       Array.Empty<PricingProductData>(),
+                                                                                       [],
                                                                                        pullPricingProductDataRequest,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.SystemError,
@@ -2742,7 +2742,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<PricingProductData>(),
+                                                                                   [],
                                                                                    pullPricingProductDataRequest,
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.DataError,
@@ -2767,7 +2767,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                Request.EventTrackingId,
                                                                                processId,
                                                                                Timestamp.Now - Request.Timestamp,
-                                                                               Array.Empty<PricingProductData>(),
+                                                                               [],
                                                                                StatusCode: new StatusCode(
                                                                                                StatusCodes.SystemError,
                                                                                                e.Message,
@@ -2784,8 +2784,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullPricingProductDataResponse.Response?.ToJSON(CustomPullPricingProductDataResponseSerializer,
                                                                                                                           CustomPricingProductDataSerializer,
@@ -2793,7 +2793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                           CustomStatusCodeSerializer).
                                                                                                                    ToString(JSONFormatting).
                                                                                                                    ToUTF8Bytes()
-                                                                                                         ?? Array.Empty<Byte>(),
+                                                                                                         ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -2840,7 +2840,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             Request.EventTrackingId,
                                                                             processId,
                                                                             Timestamp.Now - Request.Timestamp,
-                                                                            Array.Empty<OperatorEVSEPricing>(),
+                                                                            [],
                                                                             StatusCode: new StatusCode(
                                                                                             StatusCodes.SystemError,
                                                                                             "The expected 'providerId' URL parameter could not be parsed!"
@@ -2852,7 +2852,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PullEVSEPricingRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PullEVSEPricingRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                //     providerId ????
                                                                                out var                              pullEVSEPricingRequest,
                                                                                out var                              errorResponse,
@@ -2921,7 +2921,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                     Request.EventTrackingId,
                                                                                     processId,
                                                                                     Timestamp.Now - Request.Timestamp,
-                                                                                    Array.Empty<OperatorEVSEPricing>(),
+                                                                                    [],
                                                                                     pullEVSEPricingRequest,
                                                                                     StatusCode: new StatusCode(
                                                                                                     StatusCodes.DataError,
@@ -2946,7 +2946,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 Request.EventTrackingId,
                                                                                 processId,
                                                                                 Timestamp.Now - Request.Timestamp,
-                                                                                Array.Empty<OperatorEVSEPricing>(),
+                                                                                [],
                                                                                 pullEVSEPricingRequest,
                                                                                 StatusCode: new StatusCode(
                                                                                                 StatusCodes.SystemError,
@@ -2995,7 +2995,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             Request.EventTrackingId,
                                                                             processId,
                                                                             Timestamp.Now - Request.Timestamp,
-                                                                            Array.Empty<OperatorEVSEPricing>(),
+                                                                            [],
                                                                             pullEVSEPricingRequest,
                                                                             StatusCode: new StatusCode(
                                                                                             StatusCodes.DataError,
@@ -3020,7 +3020,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                         Request.EventTrackingId,
                                                                         processId,
                                                                         Timestamp.Now - Request.Timestamp,
-                                                                        Array.Empty<OperatorEVSEPricing>(),
+                                                                        [],
                                                                         StatusCode: new StatusCode(
                                                                                         StatusCodes.SystemError,
                                                                                         e.Message,
@@ -3037,8 +3037,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pullEVSEPricingResponse.Response?.ToJSON(CustomPullEVSEPricingResponseSerializer,
                                                                                                                    CustomOperatorEVSEPricingSerializer,
@@ -3046,7 +3046,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                    CustomStatusCodeSerializer).
                                                                                                             ToString(JSONFormatting).
                                                                                                             ToUTF8Bytes()
-                                                                                                  ?? Array.Empty<Byte>(),
+                                                                                                  ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -3102,7 +3102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (PushAuthenticationDataRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (PushAuthenticationDataRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                       //     providerId ????
                                                                                       out var                                     pushAuthenticationDataRequest,
                                                                                       out var                                     errorResponse,
@@ -3274,14 +3274,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = pushAuthenticationDataResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                           CustomStatusCodeSerializer).
                                                                                                                    ToString(JSONFormatting).
                                                                                                                    ToUTF8Bytes()
-                                                                                                         ?? Array.Empty<Byte>(),
+                                                                                                         ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -3337,7 +3337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                                providerId,
                                                                                                out var                                              authorizeRemoteReservationStartRequest,
                                                                                                out var                                              errorResponse,
@@ -3512,14 +3512,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStartResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                                    CustomStatusCodeSerializer).
                                                                                                                             ToString(JSONFormatting).
                                                                                                                             ToUTF8Bytes()
-                                                                                                                  ?? Array.Empty<Byte>(),
+                                                                                                                  ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -3574,7 +3574,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                               providerId,
                                                                                               out var                                             authorizeRemoteReservationStopRequest,
                                                                                               out var                                             errorResponse,
@@ -3749,14 +3749,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStopResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                                   CustomStatusCodeSerializer).
                                                                                                                            ToString(JSONFormatting).
                                                                                                                            ToUTF8Bytes()
-                                                                                                                 ?? Array.Empty<Byte>(),
+                                                                                                                 ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -3811,7 +3811,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                     providerId,
                                                                                     out var                                   authorizeRemoteStartRequest,
                                                                                     out var                                   errorResponse,
@@ -3986,14 +3986,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStartResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
                                                                                                                  ToString(JSONFormatting).
                                                                                                                  ToUTF8Bytes()
-                                                                                                       ?? Array.Empty<Byte>(),
+                                                                                                       ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -4048,7 +4048,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                    providerId,
                                                                                    out var                                  authorizeRemoteStopRequest,
                                                                                    out var                                  errorResponse,
@@ -4223,14 +4223,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStopResponse.Response?.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                        CustomStatusCodeSerializer).
                                                                                                                 ToString(JSONFormatting).
                                                                                                                 ToUTF8Bytes()
-                                                                                                      ?? Array.Empty<Byte>(),
+                                                                                                      ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;
@@ -4278,7 +4278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<ChargeDetailRecord>(),
+                                                                                   [],
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.SystemError,
                                                                                                    "The expected 'providerId' URL parameter could not be parsed!"
@@ -4290,7 +4290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (GetChargeDetailRecordsRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (GetChargeDetailRecordsRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                       //     providerId ????
                                                                                       out var                                     getChargeDetailRecordsRequest,
                                                                                       out var                                     errorResponse,
@@ -4359,7 +4359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            Request.EventTrackingId,
                                                                                            processId,
                                                                                            Timestamp.Now - Request.Timestamp,
-                                                                                           Array.Empty<ChargeDetailRecord>(),
+                                                                                           [],
                                                                                            getChargeDetailRecordsRequest,
                                                                                            StatusCode: new StatusCode(
                                                                                                            StatusCodes.DataError,
@@ -4384,7 +4384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                        Request.EventTrackingId,
                                                                                        processId,
                                                                                        Timestamp.Now - Request.Timestamp,
-                                                                                       Array.Empty<ChargeDetailRecord>(),
+                                                                                       [],
                                                                                        getChargeDetailRecordsRequest,
                                                                                        StatusCode: new StatusCode(
                                                                                                        StatusCodes.SystemError,
@@ -4433,7 +4433,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                    Request.EventTrackingId,
                                                                                    processId,
                                                                                    Timestamp.Now - Request.Timestamp,
-                                                                                   Array.Empty<ChargeDetailRecord>(),
+                                                                                   [],
                                                                                    getChargeDetailRecordsRequest,
                                                                                    StatusCode: new StatusCode(
                                                                                                    StatusCodes.DataError,
@@ -4458,7 +4458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                Request.EventTrackingId,
                                                                                processId,
                                                                                Timestamp.Now - Request.Timestamp,
-                                                                               Array.Empty<ChargeDetailRecord>(),
+                                                                               [],
                                                                                StatusCode: new StatusCode(
                                                                                                StatusCodes.SystemError,
                                                                                                e.Message,
@@ -4475,8 +4475,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = getChargeDetailRecordsResponse.Response?.ToJSON(CustomGetChargeDetailRecordsResponseSerializer,
                                                                                                                           CustomIPagedResponseSerializer,
@@ -4487,7 +4487,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                           CustomStatusCodeSerializer).
                                                                                                                    ToString(JSONFormatting).
                                                                                                                    ToUTF8Bytes()
-                                                                                                         ?? Array.Empty<Byte>(),
+                                                                                                         ?? [],
                                              ProcessID                  = processId.ToString(),
                                              Connection                 = "close"
                                          }.AsImmutable;

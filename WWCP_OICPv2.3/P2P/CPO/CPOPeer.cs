@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System.Net.Security;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -28,12 +27,12 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 using cloud.charging.open.protocols.OICPv2_3.CPO;
 using cloud.charging.open.protocols.OICPv2_3.EMP;
-using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -49,89 +48,65 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  PushEVSEData                       = null,
+                                 APICounterValues?  PushEVSEStatus                     = null,
+
+                                 APICounterValues?  PushPricingProductData             = null,
+                                 APICounterValues?  PushEVSEPricing                    = null,
+
+                                 APICounterValues?  PullAuthenticationData             = null,
+
+                                 APICounterValues?  AuthorizeStart                     = null,
+                                 APICounterValues?  AuthorizeStop                      = null,
+
+                                 APICounterValues?  SendChargingStartNotification      = null,
+                                 APICounterValues?  SendChargingProgressNotification   = null,
+                                 APICounterValues?  SendChargingEndNotification        = null,
+                                 APICounterValues?  SendChargingErrorNotification      = null,
+
+                                 APICounterValues?  SendChargeDetailRecord             = null)
         {
 
-            public APICounterValues  PushEVSEData                        { get; }
-            public APICounterValues  PushEVSEStatus                      { get; }
+            public APICounterValues PushEVSEData                        { get; } = PushEVSEData                     ?? new APICounterValues();
+            public APICounterValues PushEVSEStatus                      { get; } = PushEVSEStatus                   ?? new APICounterValues();
 
-            public APICounterValues  PushPricingProductData              { get; }
-            public APICounterValues  PushEVSEPricing                     { get; }
-
-
-            public APICounterValues  PullAuthenticationData              { get; }
-
-            public APICounterValues  AuthorizeStart                      { get; }
-            public APICounterValues  AuthorizeStop                       { get; }
-
-            public APICounterValues  SendChargingStartNotification       { get; }
-            public APICounterValues  SendChargingProgressNotification    { get; }
-            public APICounterValues  SendChargingEndNotification         { get; }
-            public APICounterValues  SendChargingErrorNotification       { get; }
-
-            public APICounterValues  SendChargeDetailRecord              { get; }
+            public APICounterValues PushPricingProductData              { get; } = PushPricingProductData           ?? new APICounterValues();
+            public APICounterValues PushEVSEPricing                     { get; } = PushEVSEPricing                  ?? new APICounterValues();
 
 
-            public APICounters(APICounterValues? PushEVSEData                       = null,
-                               APICounterValues? PushEVSEStatus                     = null,
+            public APICounterValues PullAuthenticationData              { get; } = PullAuthenticationData           ?? new APICounterValues();
 
-                               APICounterValues? PushPricingProductData             = null,
-                               APICounterValues? PushEVSEPricing                    = null,
+            public APICounterValues AuthorizeStart                      { get; } = AuthorizeStart                   ?? new APICounterValues();
+            public APICounterValues AuthorizeStop                       { get; } = AuthorizeStop                    ?? new APICounterValues();
 
-                               APICounterValues? PullAuthenticationData             = null,
+            public APICounterValues SendChargingStartNotification       { get; } = SendChargingStartNotification    ?? new APICounterValues();
+            public APICounterValues SendChargingProgressNotification    { get; } = SendChargingProgressNotification ?? new APICounterValues();
+            public APICounterValues SendChargingEndNotification         { get; } = SendChargingEndNotification      ?? new APICounterValues();
+            public APICounterValues SendChargingErrorNotification       { get; } = SendChargingErrorNotification    ?? new APICounterValues();
 
-                               APICounterValues? AuthorizeStart                     = null,
-                               APICounterValues? AuthorizeStop                      = null,
+            public APICounterValues SendChargeDetailRecord              { get; } = SendChargeDetailRecord           ?? new APICounterValues();
 
-                               APICounterValues? SendChargingStartNotification      = null,
-                               APICounterValues? SendChargingProgressNotification   = null,
-                               APICounterValues? SendChargingEndNotification        = null,
-                               APICounterValues? SendChargingErrorNotification      = null,
-
-                               APICounterValues? SendChargeDetailRecord             = null)
-
-            {
-
-                this.PushEVSEData                      = PushEVSEData                     ?? new APICounterValues();
-                this.PushEVSEStatus                    = PushEVSEStatus                   ?? new APICounterValues();
-
-                this.PushPricingProductData            = PushPricingProductData           ?? new APICounterValues();
-                this.PushEVSEPricing                   = PushEVSEPricing                  ?? new APICounterValues();
-
-                this.PullAuthenticationData            = PullAuthenticationData           ?? new APICounterValues();
-
-                this.AuthorizeStart                    = AuthorizeStart                   ?? new APICounterValues();
-                this.AuthorizeStop                     = AuthorizeStop                    ?? new APICounterValues();
-
-                this.SendChargingStartNotification     = SendChargingStartNotification    ?? new APICounterValues();
-                this.SendChargingProgressNotification  = SendChargingProgressNotification ?? new APICounterValues();
-                this.SendChargingEndNotification       = SendChargingEndNotification      ?? new APICounterValues();
-                this.SendChargingErrorNotification     = SendChargingErrorNotification    ?? new APICounterValues();
-
-                this.SendChargeDetailRecord            = SendChargeDetailRecord           ?? new APICounterValues();
-
-            }
 
             public JObject ToJSON()
 
                 => JSONObject.Create(
-                       new JProperty("PushEVSEData",                 PushEVSEData.                ToJSON()),
-                       new JProperty("PushEVSEStatus",               PushEVSEStatus.              ToJSON()),
+                       new JProperty("PushEVSEData",                  PushEVSEData.                    ToJSON()),
+                       new JProperty("PushEVSEStatus",                PushEVSEStatus.                  ToJSON()),
 
-                       new JProperty("PushPricingProductData",       PushPricingProductData.      ToJSON()),
-                       new JProperty("PushEVSEPricing",              PushEVSEPricing.             ToJSON()),
+                       new JProperty("PushPricingProductData",        PushPricingProductData.          ToJSON()),
+                       new JProperty("PushEVSEPricing",               PushEVSEPricing.                 ToJSON()),
 
-                       new JProperty("PullAuthenticationData",       PullAuthenticationData.      ToJSON()),
+                       new JProperty("PullAuthenticationData",        PullAuthenticationData.          ToJSON()),
 
-                       new JProperty("AuthorizeStart",               AuthorizeStart.              ToJSON()),
-                       new JProperty("AuthorizeStop",                AuthorizeStop.               ToJSON()),
+                       new JProperty("AuthorizeStart",                AuthorizeStart.                  ToJSON()),
+                       new JProperty("AuthorizeStop",                 AuthorizeStop.                   ToJSON()),
 
-                       new JProperty("ChargingStartNotification",    SendChargingStartNotification.   ToJSON()),
-                       new JProperty("ChargingProgressNotification", SendChargingProgressNotification.ToJSON()),
-                       new JProperty("ChargingEndNotification",      SendChargingEndNotification.     ToJSON()),
-                       new JProperty("ChargingErrorNotification",    SendChargingErrorNotification.   ToJSON()),
+                       new JProperty("ChargingStartNotification",     SendChargingStartNotification.   ToJSON()),
+                       new JProperty("ChargingProgressNotification",  SendChargingProgressNotification.ToJSON()),
+                       new JProperty("ChargingEndNotification",       SendChargingEndNotification.     ToJSON()),
+                       new JProperty("ChargingErrorNotification",     SendChargingErrorNotification.   ToJSON()),
 
-                       new JProperty("SendChargeDetailRecord",       SendChargeDetailRecord.          ToJSON())
+                       new JProperty("SendChargeDetailRecord",        SendChargeDetailRecord.          ToJSON())
                    );
 
         }
@@ -183,20 +158,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         /// <summary>
         /// An event called whenever a HTTP request came in.
         /// </summary>
-        public HTTPRequestLogEvent   RequestLog
-            => httpAPI.RequestLog;
+        public HTTPRequestLogEvent?   RequestLog
+            => httpAPI?.RequestLog;
 
         /// <summary>
         /// An event called whenever a HTTP request could successfully be processed.
         /// </summary>
-        public HTTPResponseLogEvent  ResponseLog
-            => httpAPI.ResponseLog;
+        public HTTPResponseLogEvent?  ResponseLog
+            => httpAPI?.ResponseLog;
 
         /// <summary>
         /// An event called whenever a HTTP request resulted in an error.
         /// </summary>
-        public HTTPErrorLogEvent     ErrorLog
-            => httpAPI.ErrorLog;
+        public HTTPErrorLogEvent?     ErrorLog
+            => httpAPI?.ErrorLog;
 
         #endregion
 
@@ -603,15 +578,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             this.OperatorId    = OperatorId;
             this.EMPClientAPI  = new EMPClientAPI(httpAPI);
-            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
+            this.cpoClients    = [];
             this.Counters      = new APICounters();
 
             httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
                                       HTTPMethod.GET,
-                                      new HTTPPath[] {
+                                      [
                                           URLPathPrefix + "/",
                                           URLPathPrefix + "/{FileName}"
-                                      },
+                                      ],
                                       HTTPDelegate: Request => {
                                           return Task.FromResult(
                                               new HTTPResponse.Builder(Request) {
@@ -657,16 +632,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
             this.OperatorId    = OperatorId;
             this.httpAPI       = HTTPAPI;
             this.EMPClientAPI  = new EMPClientAPI(httpAPI);
-            this.cpoClients    = new Dictionary<Provider_Id, CPOClient>();
+            this.cpoClients    = [];
             this.Counters      = new APICounters();
 
             if (URLPathPrefix.HasValue)
                 httpAPI.AddMethodCallback(org.GraphDefined.Vanaheimr.Hermod.HTTP.HTTPHostname.Any,
                                           HTTPMethod.GET,
-                                          new HTTPPath[] {
+                                          [
                                               URLPathPrefix + "/",
                                               URLPathPrefix + "/{FileName}"
-                                          },
+                                          ],
                                           HTTPDelegate: Request => {
                                               return Task.FromResult(
                                                   new HTTPResponse.Builder(Request) {
@@ -735,7 +710,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-        #region PushEVSEData                    (            Request)
+        #region PushEVSEData                     (            Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -747,10 +722,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.Any())
+            if (cpoClients.Count != 0)
                 return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushEVSEData(Request)));
 
-            return new OICPResult<Acknowledgement<PushEVSEDataRequest>>[] {
+            return [
                        OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                               Request,
                               Acknowledgement<PushEVSEDataRequest>.NoValidContract(
@@ -758,13 +733,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                   "No e-mobility providers registered!"
                               )
                           )
-                   };
+                   ];
 
         }
 
         #endregion
 
-        #region PushEVSEData                    (ProviderId, Request)
+        #region PushEVSEData                     (ProviderId, Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -806,12 +781,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<PushEVSEDataRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.PushEVSEData(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
@@ -859,7 +830,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region PushEVSEStatus                  (            Request)
+        #region PushEVSEStatus                   (            Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -871,10 +842,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.Any())
+            if (cpoClients.Count != 0)
                 return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushEVSEStatus(Request)));
 
-            return new OICPResult<Acknowledgement<PushEVSEStatusRequest>>[] {
+            return [
                        OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                               Request,
                               Acknowledgement<PushEVSEStatusRequest>.NoValidContract(
@@ -882,13 +853,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                   "No e-mobility providers registered!"
                               )
                           )
-                   };
+                   ];
 
         }
 
         #endregion
 
-        #region PushEVSEStatus                  (ProviderId, Request)
+        #region PushEVSEStatus                   (ProviderId, Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -930,12 +901,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<PushEVSEStatusRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.PushEVSEStatus(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
@@ -984,7 +951,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-        #region PushPricingProductData          (            Request)
+        #region PushPricingProductData           (            Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -996,10 +963,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.Any())
+            if (cpoClients.Count != 0)
                 return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushPricingProductData(Request)));
 
-            return new OICPResult<Acknowledgement<PushPricingProductDataRequest>>[] {
+            return [
                        OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                               Request,
                               Acknowledgement<PushPricingProductDataRequest>.NoValidContract(
@@ -1007,13 +974,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                   "No e-mobility providers registered!"
                               )
                           )
-                   };
+                   ];
 
         }
 
         #endregion
 
-        #region PushPricingProductData          (ProviderId, Request)
+        #region PushPricingProductData           (ProviderId, Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -1055,12 +1022,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<PushPricingProductDataRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.PushPricingProductData(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
@@ -1108,7 +1071,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region PushEVSEPricing                 (            Request)
+        #region PushEVSEPricing                  (            Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -1120,10 +1083,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.Any())
+            if (cpoClients.Count != 0)
                 return await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.PushEVSEPricing(Request)));
 
-            return new OICPResult<Acknowledgement<PushEVSEPricingRequest>>[] {
+            return [
                        OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                               Request,
                               Acknowledgement<PushEVSEPricingRequest>.NoValidContract(
@@ -1131,13 +1094,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                   "No e-mobility providers registered!"
                               )
                           )
-                   };
+                   ];
 
         }
 
         #endregion
 
-        #region PushEVSEPricing                 (ProviderId, Request)
+        #region PushEVSEPricing                  (ProviderId, Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -1179,12 +1142,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<PushEVSEPricingRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.PushEVSEPricing(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
@@ -1233,13 +1192,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-        #region PullAuthenticationData          (ProviderId, Request)
+        #region PullAuthenticationData           (ProviderId, Request)
 
         /// <summary>
         /// Download provider authentication data.
         /// </summary>
         /// <param name="ProviderId">The unique identification of a registered e-mobility provider.</param>
         /// <param name="Request">A PullAuthenticationData request.</param>
+        [Obsolete("PullAuthenticationData was removed from OICP.")]
         public async Task<OICPResult<PullAuthenticationDataResponse>>
 
             PullAuthenticationData(Provider_Id                    ProviderId,
@@ -1275,12 +1235,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<PullAuthenticationDataResponse> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.PullAuthenticationData(Request);
-
-            }
 
             else
                 result = OICPResult<PullAuthenticationDataResponse>.Failed(
@@ -1290,7 +1246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                  Request.EventTrackingId ?? EventTracking_Id.New,
                                  Process_Id.NewRandom(),
                                  TimeSpan.FromMilliseconds(23),
-                                 Array.Empty<ProviderAuthenticationData>(),
+                                 [],
                                  Request,
                                  StatusCode: new StatusCode(
                                                  StatusCodes.NoValidContract,
@@ -1337,7 +1293,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-        #region AuthorizeStart                  (            Request)
+        #region AuthorizeStart                   (            Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -1349,7 +1305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.Any())
+            if (cpoClients.Count != 0)
             {
 
                 var responses = await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.AuthorizeStart(Request)));
@@ -1378,7 +1334,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region AuthorizeStart                  (ProviderId, Request)
+        #region AuthorizeStart                   (ProviderId, Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -1420,12 +1376,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<AuthorizationStartResponse> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.AuthorizeStart(Request);
-
-            }
 
             else
                 result = OICPResult<AuthorizationStartResponse>.Failed(
@@ -1476,7 +1428,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region AuthorizeStop                   (            Request)
+        #region AuthorizeStop                    (            Request)
 
         /// <summary>
         /// Authorize for stopping a charging session.
@@ -1488,7 +1440,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         {
 
-            if (cpoClients.Any())
+            if (cpoClients.Count != 0)
             {
 
                 var responses = await Task.WhenAll(cpoClients.Values.Select(cpoClient => cpoClient.AuthorizeStop(Request)));
@@ -1517,7 +1469,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region AuthorizeStop                   (ProviderId, Request)
+        #region AuthorizeStop                    (ProviderId, Request)
 
         /// <summary>
         /// Authorize for stopping a charging session.
@@ -1559,12 +1511,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<AuthorizationStopResponse> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.AuthorizeStop(Request);
-
-            }
 
             else
                 result = OICPResult<AuthorizationStopResponse>.Failed(
@@ -1616,7 +1564,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-        #region SendChargingStartNotification   (ProviderId, Request)
+        #region SendChargingStartNotification    (ProviderId, Request)
 
         /// <summary>
         /// Send a charging start notification.
@@ -1658,12 +1606,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<ChargingStartNotificationRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.SendChargingStartNotification(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
@@ -1711,7 +1655,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region SendChargingProgressNotification(ProviderId, Request)
+        #region SendChargingProgressNotification (ProviderId, Request)
 
         /// <summary>
         /// Send a charging progress notification.
@@ -1753,12 +1697,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<ChargingProgressNotificationRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.SendChargingProgressNotification(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
@@ -1806,7 +1746,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region SendChargingEndNotification     (ProviderId, Request)
+        #region SendChargingEndNotification      (ProviderId, Request)
 
         /// <summary>
         /// Send a charging end notification.
@@ -1848,12 +1788,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<ChargingEndNotificationRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.SendChargingEndNotification(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
@@ -1901,7 +1837,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #endregion
 
-        #region SendChargingErrorNotification   (ProviderId, Request)
+        #region SendChargingErrorNotification    (ProviderId, Request)
 
         /// <summary>
         /// Send a charging error notification.
@@ -1943,12 +1879,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<ChargingErrorNotificationRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.SendChargingErrorNotification(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
@@ -1997,7 +1929,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-        #region SendChargeDetailRecord          (ProviderId, Request)
+        #region SendChargeDetailRecord           (ProviderId, Request)
 
         /// <summary>
         /// Send a charge detail record.
@@ -2039,12 +1971,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             OICPResult<Acknowledgement<ChargeDetailRecordRequest>> result;
 
-            if (cpoClients.TryGetValue(ProviderId, out CPOClient? cpoClient))
-            {
-
+            if (cpoClients.TryGetValue(ProviderId, out var cpoClient))
                 result = await cpoClient.SendChargeDetailRecord(Request);
-
-            }
 
             else
                 result = OICPResult<Acknowledgement<ChargeDetailRecordRequest>>.Failed(
@@ -2138,10 +2066,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
             else
             {
-
-                if (EMPClientAPI is not null)
-                    EMPClientAPI.Dispose();
-
+                EMPClientAPI?.Dispose();
             }
 
             foreach (var cpoClient in cpoClients.Values)

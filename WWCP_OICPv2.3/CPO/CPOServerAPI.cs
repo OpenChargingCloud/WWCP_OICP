@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System.Net.Security;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -26,9 +25,9 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
-using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -43,29 +42,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  AuthorizeRemoteReservationStart   = null,
+                                 APICounterValues?  AuthorizeRemoteReservationStop    = null,
+
+                                 APICounterValues?  AuthorizeRemoteStart              = null,
+                                 APICounterValues?  AuthorizeRemoteStop               = null)
         {
 
-            public APICounterValues  AuthorizeRemoteReservationStart    { get; }
-            public APICounterValues  AuthorizeRemoteReservationStop     { get; }
+            public APICounterValues AuthorizeRemoteReservationStart    { get; } = AuthorizeRemoteReservationStart ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteReservationStop     { get; } = AuthorizeRemoteReservationStop  ?? new APICounterValues();
 
-            public APICounterValues  AuthorizeRemoteStart               { get; }
-            public APICounterValues  AuthorizeRemoteStop                { get; }
-
-            public APICounters(APICounterValues? AuthorizeRemoteReservationStart   = null,
-                               APICounterValues? AuthorizeRemoteReservationStop    = null,
-
-                               APICounterValues? AuthorizeRemoteStart              = null,
-                               APICounterValues? AuthorizeRemoteStop               = null)
-            {
-
-                this.AuthorizeRemoteReservationStart  = AuthorizeRemoteReservationStart ?? new APICounterValues();
-                this.AuthorizeRemoteReservationStop   = AuthorizeRemoteReservationStop  ?? new APICounterValues();
-
-                this.AuthorizeRemoteStart             = AuthorizeRemoteStart            ?? new APICounterValues();
-                this.AuthorizeRemoteStop              = AuthorizeRemoteStop             ?? new APICounterValues();
-
-            }
+            public APICounterValues AuthorizeRemoteStart               { get; } = AuthorizeRemoteStart            ?? new APICounterValues();
+            public APICounterValues AuthorizeRemoteStop                { get; } = AuthorizeRemoteStop             ?? new APICounterValues();
 
             public JObject ToJSON()
 
@@ -676,10 +664,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (RegisterRootService)
                 AddMethodCallback(HTTPHostname.Any,
                                   HTTPMethod.GET,
-                                  new HTTPPath[] {
+                                  [
                                       URLPathPrefix + "/",
                                       URLPathPrefix + "/{FileName}"
-                                  },
+                                  ],
                                   HTTPDelegate: Request => {
                                       return Task.FromResult(
                                           new HTTPResponse.Builder(Request) {
@@ -756,7 +744,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                                providerId,
                                                                                                out var authorizeRemoteReservationStartRequest,
                                                                                                out var errorResponse,
@@ -898,8 +886,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStartResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                          CustomStatusCodeSerializer).
@@ -971,7 +959,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                               providerId,
                                                                                               out var authorizeRemoteReservationStopRequest,
                                                                                               out var errorResponse,
@@ -1114,8 +1102,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteReservationStopResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                         CustomStatusCodeSerializer).
@@ -1188,7 +1176,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                     providerId,
                                                                                     out var authorizeRemoteStartRequest,
                                                                                     out var errorResponse,
@@ -1331,8 +1319,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStartResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                               CustomStatusCodeSerializer).
@@ -1404,7 +1392,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                       #endregion
 
-                                      else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                    providerId,
                                                                                    out var authorizeRemoteStopRequest,
                                                                                    out var errorResponse,
@@ -1547,8 +1535,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizeRemoteStopResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                              CustomStatusCodeSerializer).

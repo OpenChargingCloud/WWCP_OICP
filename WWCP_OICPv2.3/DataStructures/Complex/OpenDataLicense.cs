@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -49,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => OpenDataLicense is null || !OpenDataLicense.Any()
 
-                   ? new JArray()
+                   ? []
 
                    : new JArray(OpenDataLicense.
                                     Where         (openDataLicense => openDataLicense is not null).
@@ -109,13 +111,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="URLs">Optional URLs for more information on the Open Data license.</param>
         public OpenDataLicense(OpenDataLicense_Id  Id,
                                params URL[]        URLs)
-        {
 
-            this.Id           = Id;
-            this.Description  = I18NString.Empty;
-            this.URLs         = URLs?.Distinct() ?? Array.Empty<URL>();
+            : this(Id,
+                   I18NString.Empty,
+                   URLs)
 
-        }
+        { }
 
         #endregion
 
@@ -134,7 +135,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             this.Id           = Id;
             this.Description  = Description      ?? I18NString.Empty;
-            this.URLs         = URLs?.Distinct() ?? Array.Empty<URL>();
+            this.URLs         = URLs?.Distinct() ?? [];
+
+            unchecked
+            {
+
+                hashCode = this.Id.         GetHashCode() * 5 ^
+                           this.Description.GetHashCode() * 3 ^
+                           this.URLs.       CalcHashCode();
+
+            }
 
         }
 
@@ -159,7 +169,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomOpenDataLicenseParser))
             {
-                return openDataLicense!;
+                return openDataLicense;
             }
 
             throw new ArgumentException("The given JSON representation of an Open Data license is invalid: " + errorResponse,
@@ -179,9 +189,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OpenDataLicense">The parsed Open Data license.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject               JSON,
-                                       out OpenDataLicense?  OpenDataLicense,
-                                       out String?           ErrorResponse)
+        public static Boolean TryParse(JObject                                    JSON,
+                                       [NotNullWhen(true)]  out OpenDataLicense?  OpenDataLicense,
+                                       [NotNullWhen(false)] out String?           ErrorResponse)
 
             => TryParse(JSON,
                         out OpenDataLicense,
@@ -197,8 +207,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpenDataLicenseParser">A delegate to parse custom Open Data license JSON objects.</param>
         public static Boolean TryParse(JObject                                        JSON,
-                                       out OpenDataLicense?                           OpenDataLicense,
-                                       out String?                                    ErrorResponse,
+                                       [NotNullWhen(true)]  out OpenDataLicense?      OpenDataLicense,
+                                       [NotNullWhen(false)] out String?               ErrorResponse,
                                        CustomJObjectParserDelegate<OpenDataLicense>?  CustomOpenDataLicenseParser   = null)
         {
 
@@ -256,9 +266,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                OpenDataLicense = new OpenDataLicense(Id,
-                                                      Description ?? I18NString.Empty,
-                                                      URLs.ToArray());
+                OpenDataLicense = new OpenDataLicense(
+                                      Id,
+                                      Description ?? I18NString.Empty,
+                                      [.. URLs]
+                                  );
 
                 if (CustomOpenDataLicenseParser is not null)
                     OpenDataLicense = CustomOpenDataLicenseParser(JSON,
@@ -607,21 +619,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Id.          GetHashCode()        * 5 ^
-                      (Description?.GetHashCode()  ?? 0) * 3 ^
-                       URLs?.       CalcHashCode() ?? 0;
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -637,8 +642,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    Id.ToString(),
 
                    Description.IsNotNullOrEmpty()
-                       ? ": " + Description
-                       : String.Empty
+                       ? $": {Description}"
+                       : ""
 
                );
 

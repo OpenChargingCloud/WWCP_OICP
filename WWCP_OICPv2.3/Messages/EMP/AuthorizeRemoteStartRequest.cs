@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -213,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomAuthorizeRemoteStartRequestParser))
             {
-                return authorizeRemoteStartRequest!;
+                return authorizeRemoteStartRequest;
             }
 
             throw new ArgumentException("The given JSON representation of an AuthorizeRemoteStart request is invalid: " + errorResponse,
@@ -238,8 +240,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStartRequestParser">A delegate to parse custom AuthorizeRemoteStart request JSON objects.</param>
         public static Boolean TryParse(JObject                                                    JSON,
                                        Provider_Id                                                ProviderIdURL,
-                                       out AuthorizeRemoteStartRequest?                           AuthorizeRemoteStartRequest,
-                                       out String?                                                ErrorResponse,
+                                       [NotNullWhen(true)]  out AuthorizeRemoteStartRequest?      AuthorizeRemoteStartRequest,
+                                       [NotNullWhen(false)] out String?                           ErrorResponse,
                                        Process_Id?                                                ProcessId                                 = null,
 
                                        DateTime?                                                  Timestamp                                 = null,
@@ -299,8 +301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "identification",
                                              OICPv2_3.Identification.TryParse,
                                              out Identification? Identification,
-                                             out ErrorResponse) ||
-                     Identification is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -370,20 +371,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                AuthorizeRemoteStartRequest = new AuthorizeRemoteStartRequest(ProviderId,
-                                                                              EVSEId,
-                                                                              Identification!,
-                                                                              SessionId,
-                                                                              CPOPartnerSessionId,
-                                                                              EMPPartnerSessionId,
-                                                                              PartnerProductId,
-                                                                              ProcessId,
-                                                                              customData,
+                AuthorizeRemoteStartRequest = new AuthorizeRemoteStartRequest(
+                                                  ProviderId,
+                                                  EVSEId,
+                                                  Identification,
+                                                  SessionId,
+                                                  CPOPartnerSessionId,
+                                                  EMPPartnerSessionId,
+                                                  PartnerProductId,
+                                                  ProcessId,
+                                                  customData,
 
-                                                                              Timestamp,
-                                                                              CancellationToken,
-                                                                              EventTrackingId,
-                                                                              RequestTimeout);
+                                                  Timestamp,
+                                                  CancellationToken,
+                                                  EventTrackingId,
+                                                  RequestTimeout
+                                              );
 
                 if (CustomAuthorizeRemoteStartRequestParser is not null)
                     AuthorizeRemoteStartRequest = CustomAuthorizeRemoteStartRequestParser(JSON,

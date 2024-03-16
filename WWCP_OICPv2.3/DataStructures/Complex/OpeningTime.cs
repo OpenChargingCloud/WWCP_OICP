@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -83,6 +85,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.UnstructuredOpeningTime  = UnstructuredText;
             this.CustomData               = CustomData;
 
+
+            unchecked
+            {
+
+                hashCode = this.Periods.Aggregate(0, (hashCode, period) => hashCode ^ period.GetHashCode()) ^
+                           this.On.     GetHashCode() * 3 ^
+
+                           (this.UnstructuredOpeningTime is not null && this.UnstructuredOpeningTime.IsNullOrEmpty()
+                               ? this.UnstructuredOpeningTime.GetHashCode()
+                               : 0);
+
+            }
+
         }
 
         #endregion
@@ -121,36 +136,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomOpeningTimesParser))
             {
-                return openingTime!;
+                return openingTime;
             }
 
             throw new ArgumentException("The given JSON representation of an opening time is invalid: " + errorResponse,
                                         nameof(JSON));
-
-        }
-
-        #endregion
-
-        #region (static) TryParse(JSON, CustomOpeningTimesParser = null)
-
-        /// <summary>
-        /// Try to parse the given JSON representation of an opening time.
-        /// </summary>
-        /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
-        public static OpeningTime? TryParse(JObject                                    JSON,
-                                            CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser   = null)
-        {
-
-            if (TryParse(JSON,
-                         out var openingTime,
-                         out _,
-                         CustomOpeningTimesParser))
-            {
-                return openingTime;
-            }
-
-            return default;
 
         }
 
@@ -166,9 +156,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="OpeningTimes">The parsed opening time.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject           JSON,
-                                       out OpeningTime?  OpeningTimes,
-                                       out String?       ErrorResponse)
+        public static Boolean TryParse(JObject                                JSON,
+                                       [NotNullWhen(true)]  out OpeningTime?  OpeningTimes,
+                                       [NotNullWhen(false)] out String?       ErrorResponse)
 
             => TryParse(JSON,
                         out OpeningTimes,
@@ -184,8 +174,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomOpeningTimesParser">A delegate to parse custom opening times JSON objects.</param>
         public static Boolean TryParse(JObject                                    JSON,
-                                       out OpeningTime?                           OpeningTimes,
-                                       out String?                                ErrorResponse,
+                                       [NotNullWhen(true)]  out OpeningTime?      OpeningTimes,
+                                       [NotNullWhen(false)] out String?           ErrorResponse,
                                        CustomJObjectParserDelegate<OpeningTime>?  CustomOpeningTimesParser)
         {
 
@@ -233,15 +223,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse CustomData            [optional]
 
+#pragma warning disable CA1507 // Use nameof to express symbol names
                 var CustomData        = JSON["CustomData"] as JObject;
+#pragma warning restore CA1507 // Use nameof to express symbol names
 
                 #endregion
 
 
-                OpeningTimes = new OpeningTime(Periods,
-                                               On,
-                                               UnstructuredText,
-                                               CustomData);
+                OpeningTimes = new OpeningTime(
+                                   Periods,
+                                   On,
+                                   UnstructuredText,
+                                   CustomData
+                               );
 
 
                 if (CustomOpeningTimesParser is not null)
@@ -395,24 +389,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Periods.Aggregate(0, (hashCode, period) => hashCode ^ period.GetHashCode()) ^
-                       On.     GetHashCode() * 3 ^
-
-                       (UnstructuredOpeningTime is not null && UnstructuredOpeningTime.IsNullOrEmpty()
-                           ? UnstructuredOpeningTime.GetHashCode()
-                           : 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 

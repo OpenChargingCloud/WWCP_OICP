@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -60,17 +62,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
         {
 
             if (FieldReference is null)
-                throw new ArgumentException(nameof(FieldReference), "The given field reference must not be null!");
+                throw new ArgumentException("The given field reference must not be null!", nameof(FieldReference));
 
             if (FieldReference.Trim().IsNullOrEmpty())
-                throw new ArgumentException("The given field reference is invalid!", nameof(FieldReference));
+                throw new ArgumentException("The given field reference is invalid!",       nameof(FieldReference));
 
 
             if (ErrorMessage   is null)
                 throw new ArgumentNullException(nameof(ErrorMessage), "The given error message must not be null!");
 
             if (ErrorMessage.  Trim().IsNullOrEmpty())
-                throw new ArgumentException    ("The given error message is invalid!", nameof(ErrorMessage));
+                throw new ArgumentException    ("The given error message is invalid!",     nameof(ErrorMessage));
 
 
             this.FieldReference  = FieldReference;
@@ -128,52 +130,52 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (static) TryParse(JSON, out ValidationError, out ErrorResponse)
 
-        public static Boolean TryParse(JObject              JSON,
-                                       out ValidationError  ValidationError,
-                                       out String?          ErrorResponse)
+        public static Boolean TryParse(JObject                                   JSON,
+                                       [NotNullWhen(true)]  out ValidationError  ValidationError,
+                                       [NotNullWhen(false)] out String?          ErrorResponse)
         {
 
-            ErrorResponse    = default;
-            ValidationError  = default;
+            ValidationError = default;
 
-            if (JSON is not null)
+            try
             {
-                try
+
+                #region Parse FieldReference    [mandatory]
+
+                if (!JSON.ParseMandatoryText("fieldReference",
+                                             "field reference",
+                                             out var FieldReference,
+                                             out ErrorResponse))
                 {
-
-                    #region Parse FieldReference    [mandatory]
-
-                    if (!JSON.ParseMandatoryText("fieldReference",
-                                                 "field reference",
-                                                 out String FieldReference,
-                                                 out ErrorResponse))
-                    {
-                        return false;
-                    }
-
-                    #endregion
-
-                    #region Parse ErrorMessage      [mandatory]
-
-                    if (!JSON.ParseMandatoryText("errorMessage",
-                                                 "error message",
-                                                 out String ErrorMessage,
-                                                 out ErrorResponse))
-                    {
-                        return false;
-                    }
-
-                    #endregion
-
-
-                    ValidationError = new ValidationError(FieldReference,
-                                                          ErrorMessage);
-
-                    return true;
-
+                    return false;
                 }
-                catch
-                { }
+
+                #endregion
+
+                #region Parse ErrorMessage      [mandatory]
+
+                if (!JSON.ParseMandatoryText("errorMessage",
+                                             "error message",
+                                             out var ErrorMessage,
+                                             out ErrorResponse))
+                {
+                    return false;
+                }
+
+                #endregion
+
+
+                ValidationError = new ValidationError(
+                                      FieldReference,
+                                      ErrorMessage
+                                  );
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ErrorResponse = e.Message;
             }
 
             return false;
@@ -396,9 +398,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat("Field '",
-                             FieldReference, "' ",
-                             ErrorMessage, "!");
+            => $"'{FieldReference}': '{ErrorMessage}'!";
 
         #endregion
 

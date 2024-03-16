@@ -32,7 +32,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// The EMP roaming object combines the EMP client and EMP server.
     /// </summary>
-    public class EMPRoaming : IEMPClient
+    /// <remarks>
+    /// Create a new EMP roaming.
+    /// </remarks>
+    /// <param name="EMPClient">An EMP client.</param>
+    /// <param name="EMPServer">An optional EMP Server.</param>
+    public class EMPRoaming(EMPClient      EMPClient,
+                            EMPServerAPI?  EMPServer   = null) : IEMPClient
     {
 
         #region Properties
@@ -40,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP client part.
         /// </summary>
-        public EMPClient     EMPClient    { get; }
+        public EMPClient     EMPClient    { get; } = EMPClient;
 
         #region IEMPClient
 
@@ -143,7 +149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The CPO client (HTTP client) logger.
         /// </summary>
-        HTTPClientLogger                     IHTTPClient.HTTPLogger
+        HTTPClientLogger?                    IHTTPClient.HTTPLogger
             => EMPClient.HTTPLogger;
 
         /// <summary>
@@ -158,7 +164,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        public EMPServerAPI  EMPServer    { get; }
+        public EMPServerAPI  EMPServer    { get; } = EMPServer ?? new EMPServerAPI(AutoStart: false);
 
         #endregion
 
@@ -1519,22 +1525,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         public HTTPErrorLogEvent     ErrorLog
             => EMPServer.ErrorLog;
-
-        #endregion
-
-        #region Constructor(s)
-
-        /// <summary>
-        /// Create a new EMP roaming.
-        /// </summary>
-        /// <param name="EMPClient">An EMP client.</param>
-        /// <param name="EMPServer">An optional EMP Server.</param>
-        public EMPRoaming(EMPClient      EMPClient,
-                          EMPServerAPI?  EMPServer   = null)
-        {
-            this.EMPClient  = EMPClient;
-            this.EMPServer  = EMPServer ?? new EMPServerAPI(AutoStart: false);
-        }
 
         #endregion
 

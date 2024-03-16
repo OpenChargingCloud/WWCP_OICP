@@ -43,39 +43,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region (class) APICounters
 
-        public class APICounters
+        public class APICounters(APICounterValues?  AuthorizeStart                 = null,
+                                 APICounterValues?  AuthorizeStop                  = null,
+                                 APICounterValues?  ChargingNotifications          = null,
+                                 APICounterValues?  ChargingStartNotification      = null,
+                                 APICounterValues?  ChargingProgressNotification   = null,
+                                 APICounterValues?  ChargingEndNotification        = null,
+                                 APICounterValues?  ChargingErrorNotification      = null,
+                                 APICounterValues?  ChargeDetailRecord             = null)
         {
 
-            public APICounterValues  AuthorizeStart                  { get; }
-            public APICounterValues  AuthorizeStop                   { get; }
-            public APICounterValues  ChargingNotifications           { get; }
-            public APICounterValues  ChargingStartNotification       { get; }
-            public APICounterValues  ChargingProgressNotification    { get; }
-            public APICounterValues  ChargingEndNotification         { get; }
-            public APICounterValues  ChargingErrorNotification       { get; }
-            public APICounterValues  ChargeDetailRecord              { get; }
-
-
-            public APICounters(APICounterValues? AuthorizeStart                 = null,
-                               APICounterValues? AuthorizeStop                  = null,
-                               APICounterValues? ChargingNotifications          = null,
-                               APICounterValues? ChargingStartNotification      = null,
-                               APICounterValues? ChargingProgressNotification   = null,
-                               APICounterValues? ChargingEndNotification        = null,
-                               APICounterValues? ChargingErrorNotification      = null,
-                               APICounterValues? ChargeDetailRecord             = null)
-            {
-
-                this.AuthorizeStart                = AuthorizeStart               ?? new APICounterValues();
-                this.AuthorizeStop                 = AuthorizeStop                ?? new APICounterValues();
-                this.ChargingNotifications         = ChargingNotifications        ?? new APICounterValues();
-                this.ChargingStartNotification     = ChargingStartNotification    ?? new APICounterValues();
-                this.ChargingProgressNotification  = ChargingProgressNotification ?? new APICounterValues();
-                this.ChargingEndNotification       = ChargingEndNotification      ?? new APICounterValues();
-                this.ChargingErrorNotification     = ChargingErrorNotification    ?? new APICounterValues();
-                this.ChargeDetailRecord            = ChargeDetailRecord           ?? new APICounterValues();
-
-            }
+            public APICounterValues AuthorizeStart                  { get; } = AuthorizeStart               ?? new APICounterValues();
+            public APICounterValues AuthorizeStop                   { get; } = AuthorizeStop                ?? new APICounterValues();
+            public APICounterValues ChargingNotifications           { get; } = ChargingNotifications        ?? new APICounterValues();
+            public APICounterValues ChargingStartNotification       { get; } = ChargingStartNotification    ?? new APICounterValues();
+            public APICounterValues ChargingProgressNotification    { get; } = ChargingProgressNotification ?? new APICounterValues();
+            public APICounterValues ChargingEndNotification         { get; } = ChargingEndNotification      ?? new APICounterValues();
+            public APICounterValues ChargingErrorNotification       { get; } = ChargingErrorNotification    ?? new APICounterValues();
+            public APICounterValues ChargeDetailRecord              { get; } = ChargeDetailRecord           ?? new APICounterValues();
 
             public JObject ToJSON()
 
@@ -751,10 +736,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (RegisterRootService)
                 AddMethodCallback(HTTPHostname.Any,
                                   HTTPMethod.GET,
-                                  new HTTPPath[] {
+                                  [
                                       URLPathPrefix + "/",
                                       URLPathPrefix + "/{FileName}"
-                                  },
+                                  ],
                                   HTTPDelegate: Request => {
                                       return Task.FromResult(
                                           new HTTPResponse.Builder(Request) {
@@ -810,16 +795,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeStartRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                               operatorId,
                                                                               out var authorizeStartRequest,
                                                                               out var errorResponse,
                                                                               processId,
                                                                               Request.Timestamp,
-                                                                              Request.CancellationToken,
                                                                               Request.EventTrackingId,
                                                                               Request.Timeout ?? DefaultRequestTimeout,
-                                                                              CustomAuthorizeStartRequestParser))
+                                                                              CustomAuthorizeStartRequestParser,
+                                                                              Request.CancellationToken))
                                       {
 
                                           Counters.AuthorizeStart.IncRequests_OK();
@@ -951,8 +936,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizationStartResponse.ToJSON(CustomAuthorizationStartSerializer,
                                                                                                             CustomStatusCodeSerializer).
@@ -1001,16 +986,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (AuthorizeStopRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (AuthorizeStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                              operatorId,
                                                                              out var authorizeStopRequest,
                                                                              out var errorResponse,
                                                                              processId,
                                                                              Request.Timestamp,
-                                                                             Request.CancellationToken,
                                                                              Request.EventTrackingId,
                                                                              Request.Timeout ?? DefaultRequestTimeout,
-                                                                             CustomAuthorizeStopRequestParser))
+                                                                             CustomAuthorizeStopRequestParser,
+                                                                             Request.CancellationToken))
                                       {
 
                                           Counters.AuthorizeStop.IncRequests_OK();
@@ -1142,8 +1127,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = authorizationStopResponse.ToJSON(CustomAuthorizationStopSerializer,
                                                                                                            CustomStatusCodeSerializer).
@@ -1178,7 +1163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                   try
                                   {
 
-                                      if (Request.TryParseJSONObjectRequestBody(out JObject JSONRequest, out _) &&
+                                      if (Request.TryParseJSONObjectRequestBody(out var JSONRequest, out _) &&
                                           JSONRequest.ParseMandatory("Type",
                                                                      "charging notification type",
                                                                      ChargingNotificationTypesExtensions.TryParse,
@@ -1196,14 +1181,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               case ChargingNotificationTypes.Start:
 
                                                   if (ChargingStartNotificationRequest.TryParse(JSONRequest,
-                                                                                                out ChargingStartNotificationRequest?  chargingStartNotificationRequest,
-                                                                                                out String?                            errorResponse,
+                                                                                                out var chargingStartNotificationRequest,
+                                                                                                out var errorResponse,
                                                                                                 processId,
                                                                                                 Request.Timestamp,
-                                                                                                Request.CancellationToken,
                                                                                                 Request.EventTrackingId,
                                                                                                 Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                CustomChargingStartNotificationRequestParser))
+                                                                                                CustomChargingStartNotificationRequestParser,
+                                                                                                Request.CancellationToken))
                                                   {
 
                                                       Counters.ChargingStartNotification.IncRequests_OK();
@@ -1332,14 +1317,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               case ChargingNotificationTypes.Progress:
 
                                                   if (ChargingProgressNotificationRequest.TryParse(JSONRequest,
-                                                                                                   out ChargingProgressNotificationRequest?  chargingProgressNotificationRequest,
-                                                                                                   out                                       errorResponse,
+                                                                                                   out var chargingProgressNotificationRequest,
+                                                                                                   out errorResponse,
                                                                                                    processId,
                                                                                                    Request.Timestamp,
-                                                                                                   Request.CancellationToken,
                                                                                                    Request.EventTrackingId,
                                                                                                    Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                   CustomChargingProgressNotificationRequestParser))
+                                                                                                   CustomChargingProgressNotificationRequestParser,
+                                                                                                   Request.CancellationToken))
                                                   {
 
                                                       Counters.ChargingProgressNotification.IncRequests_OK();
@@ -1468,14 +1453,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               case ChargingNotificationTypes.End:
 
                                                   if (ChargingEndNotificationRequest.TryParse(JSONRequest,
-                                                                                              out ChargingEndNotificationRequest?  chargingEndNotificationRequest,
-                                                                                              out                                  errorResponse,
+                                                                                              out var chargingEndNotificationRequest,
+                                                                                              out errorResponse,
                                                                                               processId,
                                                                                               Request.Timestamp,
-                                                                                              Request.CancellationToken,
                                                                                               Request.EventTrackingId,
                                                                                               Request.Timeout ?? DefaultRequestTimeout,
-                                                                                              CustomChargingEndNotificationRequestParser))
+                                                                                              CustomChargingEndNotificationRequestParser,
+                                                                                              Request.CancellationToken))
                                                   {
 
                                                       Counters.ChargingEndNotification.IncRequests_OK();
@@ -1604,14 +1589,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               case ChargingNotificationTypes.Error:
 
                                                   if (ChargingErrorNotificationRequest.TryParse(JSONRequest,
-                                                                                                out ChargingErrorNotificationRequest?  chargingErrorNotificationRequest,
-                                                                                                out                                    errorResponse,
+                                                                                                out var chargingErrorNotificationRequest,
+                                                                                                out errorResponse,
                                                                                                 processId,
                                                                                                 Request.Timestamp,
-                                                                                                Request.CancellationToken,
                                                                                                 Request.EventTrackingId,
                                                                                                 Request.Timeout ?? DefaultRequestTimeout,
-                                                                                                CustomChargingErrorNotificationRequestParser))
+                                                                                                CustomChargingErrorNotificationRequestParser,
+                                                                                                Request.CancellationToken))
                                                   {
 
                                                       Counters.ChargingErrorNotification.IncRequests_OK();
@@ -1788,9 +1773,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                       Counters.ChargingNotifications.IncResponses_Error();
 
                                       chargingNotificationsResponse = Acknowledgement.SystemError(
-                                                                          StatusCodeDescription: "Could not process the received ChargingNotifications request!",
-                                                                          RequestTimestamp:       Request.Timestamp,
-                                                                          EventTrackingId:        Request.EventTrackingId
+                                                                          StatusCodeDescription:  "Could not process the received ChargingNotifications request!",
+                                                                          RequestTimestamp:        Request.Timestamp,
+                                                                          EventTrackingId:         Request.EventTrackingId
                                                                       );
 
                                   }
@@ -1801,8 +1786,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = chargingNotificationsResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                                CustomStatusCodeSerializer).
@@ -1852,16 +1837,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                       #endregion
 
-                                      else if (ChargeDetailRecordRequest.TryParse(JObject.Parse(Request.HTTPBody.ToUTF8String()),
+                                      else if (ChargeDetailRecordRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
                                                                                   operatorId,
                                                                                   out var chargeDetailRecordRequest,
                                                                                   out var errorResponse,
                                                                                   processId,
                                                                                   Request.Timestamp,
-                                                                                  Request.CancellationToken,
                                                                                   Request.EventTrackingId,
                                                                                   Request.Timeout ?? DefaultRequestTimeout,
-                                                                                  CustomChargeDetailRecordRequestParser))
+                                                                                  CustomChargeDetailRecordRequestParser,
+                                                                                  Request.CancellationToken))
                                       {
 
                                           Counters.ChargeDetailRecord.IncRequests_OK();
@@ -1993,8 +1978,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              Server                     = HTTPServer.DefaultServerName,
                                              Date                       = Timestamp.Now,
                                              AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = new[] { "POST" },
-                                             AccessControlAllowHeaders  = new[] { "Content-Type", "Accept", "Authorization" },
+                                             AccessControlAllowMethods  = [ "POST" ],
+                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
                                              ContentType                = HTTPContentType.Application.JSON_UTF8,
                                              Content                    = chargeDetailRecordResponse.ToJSON(CustomAcknowledgementSerializer,
                                                                                                             CustomStatusCodeSerializer).

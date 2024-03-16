@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -51,6 +53,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
         #region Constructor(s)
+
+#pragma warning disable IDE0290 // Use primary constructor
 
         /// <summary>
         /// Create a new PullEVSEStatus response.
@@ -90,6 +94,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.StatusCode          = StatusCode;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -156,7 +162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          HTTPResponse,
                          CustomPullEVSEStatusResponseParser))
             {
-                return pullEVSEStatusResponse!;
+                return pullEVSEStatusResponse;
             }
 
             throw new ArgumentException("The given JSON representation of a PullEVSEStatus response is invalid: " + errorResponse,
@@ -186,8 +192,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        DateTime                                              ResponseTimestamp,
                                        EventTracking_Id                                      EventTrackingId,
                                        TimeSpan                                              Runtime,
-                                       out PullEVSEStatusResponse?                           PullEVSEStatusResponse,
-                                       out String?                                           ErrorResponse,
+                                       [NotNullWhen(true)]  out PullEVSEStatusResponse?      PullEVSEStatusResponse,
+                                       [NotNullWhen(false)] out String?                      ErrorResponse,
                                        Process_Id?                                           ProcessId                            = null,
                                        HTTPResponse?                                         HTTPResponse                         = null,
                                        CustomJObjectParserDelegate<PullEVSEStatusResponse>?  CustomPullEVSEStatusResponseParser   = null)
@@ -230,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 if (JSON.ParseOptionalJSON("StatusCode",
                                            "StatusCode",
                                            OICPv2_3.StatusCode.TryParse,
-                                           out StatusCode StatusCode,
+                                           out StatusCode? StatusCode,
                                            out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -246,16 +252,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PullEVSEStatusResponse = new PullEVSEStatusResponse(ResponseTimestamp,
-                                                                    EventTrackingId,
-                                                                    ProcessId ?? Process_Id.NewRandom(),
-                                                                    Runtime,
-                                                                    OperatorEVSEStatus,
+                PullEVSEStatusResponse = new PullEVSEStatusResponse(
+                                             ResponseTimestamp,
+                                             EventTrackingId,
+                                             ProcessId ?? Process_Id.NewRandom(),
+                                             Runtime,
+                                             OperatorEVSEStatus,
 
-                                                                    Request,
-                                                                    StatusCode,
-                                                                    HTTPResponse,
-                                                                    customData);
+                                             Request,
+                                             StatusCode,
+                                             HTTPResponse,
+                                             customData
+                                         );
 
                 if (CustomPullEVSEStatusResponseParser is not null)
                     PullEVSEStatusResponse = CustomPullEVSEStatusResponseParser(JSON,
@@ -470,6 +478,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
             /// <summary>
             /// Create a new EVSEStatus response builder.
             /// </summary>
@@ -504,13 +514,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 this.OperatorEVSEStatus  = OperatorEVSEStatus is not null
                                                ? new HashSet<OperatorEVSEStatus>(OperatorEVSEStatus)
-                                               : new HashSet<OperatorEVSEStatus>();
+                                               : [];
 
                 this.StatusCode          = StatusCode is not null
                                                ? StatusCode.ToBuilder()
                                                : new StatusCode.Builder();
 
             }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
             #endregion
 

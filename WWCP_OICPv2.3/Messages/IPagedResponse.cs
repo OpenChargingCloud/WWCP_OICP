@@ -34,49 +34,49 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional status code of this response.
         /// </summary>
         [Optional]
-        public StatusCode  StatusCode          { get; }
+        public StatusCode?  StatusCode          { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    FirstPage           { get; }
+        public Boolean?     FirstPage           { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public Boolean?    LastPage            { get; }
+        public Boolean?     LastPage            { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?     Number              { get; }
+        public UInt64?      Number              { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?     NumberOfElements    { get; }
+        public UInt64?      NumberOfElements    { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?     Size                { get; }
+        public UInt64?      Size                { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?     TotalElements       { get; }
+        public UInt64?      TotalElements       { get; }
 
         /// <summary>
         /// 
         /// </summary>
         [Optional]
-        public UInt64?     TotalPages          { get; }
+        public UInt64?      TotalPages          { get; }
 
     }
 

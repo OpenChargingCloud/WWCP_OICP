@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -68,6 +70,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region Constructor(s)
 
+#pragma warning disable IDE0290 // Use primary constructor
+
         /// <summary>
         /// Create a new PushEVSEStatus request.
         /// </summary>
@@ -75,18 +79,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Action">The server-side status management operation.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public PushEVSEStatusRequest(OperatorEVSEStatus  OperatorEVSEStatus,
                                      ActionTypes         Action              = ActionTypes.FullLoad,
                                      Process_Id?         ProcessId           = null,
                                      JObject?            CustomData          = null,
 
                                      DateTime?           Timestamp           = null,
-                                     CancellationToken   CancellationToken   = default,
                                      EventTracking_Id?   EventTrackingId     = null,
-                                     TimeSpan?           RequestTimeout      = null)
+                                     TimeSpan?           RequestTimeout      = null,
+                                     CancellationToken   CancellationToken   = default)
 
             : base(ProcessId,
                    CustomData,
@@ -101,6 +105,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.Action              = Action;
 
         }
+
+#pragma warning restore IDE0290 // Use primary constructor
 
         #endregion
 
@@ -138,11 +144,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                   Process_Id?                                          ProcessId                           = null,
 
                                                   DateTime?                                            Timestamp                           = null,
-                                                  CancellationToken                                    CancellationToken                   = default,
                                                   EventTracking_Id?                                    EventTrackingId                     = null,
                                                   TimeSpan?                                            RequestTimeout                      = null,
-
-                                                  CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
+                                                  CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null,
+                                                  CancellationToken                                    CancellationToken                   = default)
         {
 
             if (TryParse(JSON,
@@ -150,12 +155,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          ProcessId,
                          Timestamp,
-                         CancellationToken,
                          EventTrackingId,
                          RequestTimeout,
-                         CustomPushEVSEStatusRequestParser))
+                         CustomPushEVSEStatusRequestParser,
+                         CancellationToken))
             {
-                return pushEVSEStatusRequest!;
+                return pushEVSEStatusRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a push EVSE status request is invalid: " + errorResponse,
@@ -178,16 +183,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="CustomPushEVSEStatusRequestParser">A delegate to parse custom push EVSE status request JSON objects.</param>
         public static Boolean TryParse(JObject                                              JSON,
-                                       out PushEVSEStatusRequest?                           PushEVSEStatusRequest,
-                                       out String?                                          ErrorResponse,
+                                       [NotNullWhen(true)]  out PushEVSEStatusRequest?      PushEVSEStatusRequest,
+                                       [NotNullWhen(false)] out String?                     ErrorResponse,
                                        Process_Id?                                          ProcessId                           = null,
 
                                        DateTime?                                            Timestamp                           = null,
-                                       CancellationToken                                    CancellationToken                   = default,
                                        EventTracking_Id?                                    EventTrackingId                     = null,
                                        TimeSpan?                                            RequestTimeout                      = null,
-
-                                       CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null)
+                                       CustomJObjectParserDelegate<PushEVSEStatusRequest>?  CustomPushEVSEStatusRequestParser   = null,
+                                       CancellationToken                                    CancellationToken                   = default)
         {
 
             try
@@ -219,8 +223,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "operator EVSE status",
                                              OICPv2_3.OperatorEVSEStatus.TryParse,
                                              out OperatorEVSEStatus? OperatorEVSEStatus,
-                                             out ErrorResponse) ||
-                     OperatorEVSEStatus is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -234,15 +237,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                PushEVSEStatusRequest = new PushEVSEStatusRequest(OperatorEVSEStatus!,
-                                                                  ActionType,
-                                                                  ProcessId,
-                                                                  customData,
+                PushEVSEStatusRequest = new PushEVSEStatusRequest(
+                                            OperatorEVSEStatus,
+                                            ActionType,
+                                            ProcessId,
+                                            customData,
 
-                                                                  Timestamp,
-                                                                  CancellationToken,
-                                                                  EventTrackingId,
-                                                                  RequestTimeout);
+                                            Timestamp,
+                                            EventTrackingId,
+                                            RequestTimeout,
+                                            CancellationToken
+                                        );
 
                 if (CustomPushEVSEStatusRequestParser is not null)
                     PushEVSEStatusRequest = CustomPushEVSEStatusRequestParser(JSON,
@@ -277,13 +282,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var json = JSONObject.Create(
 
-                           new JProperty("ActionType",          Action.AsString()),
+                                 new JProperty("ActionType",           Action.AsString()),
 
-                           new JProperty("OperatorEvseStatus",  OperatorEVSEStatus.ToJSON(CustomOperatorEVSEStatusSerializer,
-                                                                                          CustomEVSEStatusRecordSerializer)),
+                                 new JProperty("OperatorEvseStatus",   OperatorEVSEStatus.ToJSON(CustomOperatorEVSEStatusSerializer,
+                                                                                                 CustomEVSEStatusRecordSerializer)),
 
                            CustomData is not null
-                               ? new JProperty("CustomData",    CustomData)
+                               ? new JProperty("CustomData",           CustomData)
                                : null
 
                        );
@@ -323,11 +328,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                            PushEVSEStatusRequest PushEVSEStatus2)
         {
 
-            // If both are null, or both are same instance, return true.
             if (ReferenceEquals(PushEVSEStatus1, PushEVSEStatus2))
                 return true;
 
-            // If one is null, but not both, return false.
             if (PushEVSEStatus1 is null || PushEVSEStatus2 is null)
                 return false;
 
@@ -414,9 +417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(Action, " of ",
-                             EVSEStatusRecords.Count(), " EVSE status record(s)",
-                             " by ", OperatorName, " (", OperatorId, ")");
+            => $"{Action} of {EVSEStatusRecords.Count()} EVSE status record(s) by {OperatorName} ({OperatorId})";
 
         #endregion
 

@@ -111,22 +111,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="URLs">Optional URLs for more information on the Open Source license.</param>
         public OpenSourceLicense(OpenSourceLicense_Id  Id,
                                  params URL[]          URLs)
-        {
 
-            this.Id           = Id;
-            this.Description  = I18NString.Empty;
-            this.URLs         = URLs?.Distinct() ?? [];
+            : this(Id,
+                   I18NString.Empty,
+                   URLs)
 
-            unchecked
-            {
-
-                hashCode = this.Id.         GetHashCode() * 5 ^
-                           this.Description.GetHashCode() * 3 ^
-                           this.URLs.       CalcHashCode();
-
-            }
-
-        }
+        { }
 
         #endregion
 
@@ -623,8 +613,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    Id.ToString(),
 
                    Description.IsNotNullOrEmpty()
-                       ? ": " + Description
-                       : String.Empty
+                       ? $": {Description}"
+                       : ""
 
                );
 

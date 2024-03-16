@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -124,6 +126,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
             this.MoreInformation       = MoreInformation;
             this.SourceCodeRepository  = SourceCodeRepository;
 
+
+            unchecked
+            {
+
+                hashCode = this.Name.                 GetHashCode()       * 23 ^
+                           this.Version.              GetHashCode()       * 19 ^
+                           this.OpenSourceLicense.    GetHashCode()       * 13 ^
+                           this.Vendor.               GetHashCode()       * 11 ^
+                          (this.Logo?.                GetHashCode() ?? 0) * 7 ^
+                          (this.HowToUse?.            GetHashCode() ?? 0) * 5 ^
+                          (this.MoreInformation?.     GetHashCode() ?? 0) * 3 ^
+                          (this.SourceCodeRepository?.GetHashCode() ?? 0);
+
+            }
+
         }
 
         #endregion
@@ -145,7 +162,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          out var errorResponse,
                          CustomTransparencySoftwareParser))
             {
-                return transparencySoftware!;
+                return transparencySoftware;
             }
 
             throw new ArgumentException("The given JSON representation of a transparency software is invalid: " + errorResponse,
@@ -165,9 +182,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="JSON">The JSON to parse.</param>
         /// <param name="TransparencySoftware">The parsed transparency software.</param>
         /// <param name="ErrorResponse">An optional error response.</param>
-        public static Boolean TryParse(JObject                    JSON,
-                                       out TransparencySoftware?  TransparencySoftware,
-                                       out String?                ErrorResponse)
+        public static Boolean TryParse(JObject                                         JSON,
+                                       [NotNullWhen(true)]  out TransparencySoftware?  TransparencySoftware,
+                                       [NotNullWhen(false)] out String?                ErrorResponse)
 
             => TryParse(JSON,
                         out TransparencySoftware,
@@ -183,8 +200,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ErrorResponse">An optional error response.</param>
         /// <param name="CustomTransparencySoftwareParser">A delegate to parse custom transparency software JSON objects.</param>
         public static Boolean TryParse(JObject                                             JSON,
-                                       out TransparencySoftware?                           TransparencySoftware,
-                                       out String?                                         ErrorResponse,
+                                       [NotNullWhen(true)]  out TransparencySoftware?      TransparencySoftware,
+                                       [NotNullWhen(false)] out String?                    ErrorResponse,
                                        CustomJObjectParserDelegate<TransparencySoftware>?  CustomTransparencySoftwareParser   = null)
         {
 
@@ -203,7 +220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("name",
                                              "name",
-                                             out String Name,
+                                             out var Name,
                                              out ErrorResponse))
                 {
                     return false;
@@ -215,7 +232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("version",
                                              "version",
-                                             out String Version,
+                                             out var Version,
                                              out ErrorResponse))
                 {
                     return false;
@@ -229,8 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              "Open Source License",
                                              OICPv2_3.OpenSourceLicense.TryParse,
                                              out OpenSourceLicense? OpenSourceLicense,
-                                             out ErrorResponse) ||
-                    OpenSourceLicense is null)
+                                             out ErrorResponse))
                 {
                     return false;
                 }
@@ -241,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatoryText("vendor",
                                              "vendor",
-                                             out String Vendor,
+                                             out var Vendor,
                                              out ErrorResponse))
                 {
                     return false;
@@ -306,14 +322,16 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
-                TransparencySoftware = new TransparencySoftware(Name,
-                                                                Version,
-                                                                OpenSourceLicense,
-                                                                Vendor,
-                                                                Logo,
-                                                                HowToUse,
-                                                                MoreInformation,
-                                                                SourceCodeRepository);
+                TransparencySoftware = new TransparencySoftware(
+                                           Name,
+                                           Version,
+                                           OpenSourceLicense,
+                                           Vendor,
+                                           Logo,
+                                           HowToUse,
+                                           MoreInformation,
+                                           SourceCodeRepository
+                                       );
 
                 if (CustomTransparencySoftwareParser is not null)
                     TransparencySoftware = CustomTransparencySoftwareParser(JSON,
@@ -384,12 +402,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             => new (new String(Name.   ToCharArray()),
                     new String(Version.ToCharArray()),
-                    OpenSourceLicense.Clone(),
+                    OpenSourceLicense.    Clone(),
                     new String(Vendor. ToCharArray()),
-                    Logo                 is not null ? Logo.Value.                Clone : null,
-                    HowToUse             is not null ? HowToUse.Value.            Clone : null,
-                    MoreInformation      is not null ? MoreInformation.Value.     Clone : null,
-                    SourceCodeRepository is not null ? SourceCodeRepository.Value.Clone : null);
+                    Logo?.                Clone,
+                    HowToUse?.            Clone,
+                    MoreInformation?.     Clone,
+                    SourceCodeRepository?.Clone);
 
         #endregion
 
@@ -609,26 +627,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region (override) GetHashCode()
 
+        private readonly Int32 hashCode;
+
         /// <summary>
         /// Return the hash code of this object.
         /// </summary>
         /// <returns>The hash code of this object.</returns>
         public override Int32 GetHashCode()
-        {
-            unchecked
-            {
-
-                return Name.                 GetHashCode()       * 23 ^
-                       Version.              GetHashCode()       * 19 ^
-                       OpenSourceLicense.    GetHashCode()       * 13 ^
-                       Vendor.               GetHashCode()       * 11 ^
-                      (Logo?.                GetHashCode() ?? 0) * 7 ^
-                      (HowToUse?.            GetHashCode() ?? 0) * 5 ^
-                      (MoreInformation?.     GetHashCode() ?? 0) * 3 ^
-                      (SourceCodeRepository?.GetHashCode() ?? 0);
-
-            }
-        }
+            => hashCode;
 
         #endregion
 
@@ -639,14 +645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         public override String ToString()
 
-            => String.Concat(
-
-                   Name,    ", ",
-                   Version, ", ",
-                   Vendor,  ", ",
-                   OpenSourceLicense
-
-               );
+            => $"{Name}, {Version}, {Vendor}, {OpenSourceLicense}";
 
         #endregion
 

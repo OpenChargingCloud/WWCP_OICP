@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -163,7 +165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                          RequestTimeout,
                          CustomAuthorizeRemoteStopRequestParser))
             {
-                return authorizeRemoteStopRequest!;
+                return authorizeRemoteStopRequest;
             }
 
             throw new ArgumentException("The given JSON representation of a AuthorizeRemoteStop request is invalid: " + errorResponse,
@@ -188,8 +190,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAuthorizeRemoteStopRequestParser">A delegate to parse custom AuthorizeRemoteStop request JSON objects.</param>
         public static Boolean TryParse(JObject                                                   JSON,
                                        Provider_Id                                               ProviderIdURL,
-                                       out AuthorizeRemoteStopRequest?                           AuthorizeRemoteStopRequest,
-                                       out String?                                               ErrorResponse,
+                                       [NotNullWhen(true)]  out AuthorizeRemoteStopRequest?      AuthorizeRemoteStopRequest,
+                                       [NotNullWhen(false)] out String?                          ErrorResponse,
                                        Process_Id?                                               ProcessId                                = null,
 
                                        DateTime?                                                 Timestamp                                = null,
