@@ -1553,8 +1553,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
             if (ChargeDetailRecord.MeterValuesInBetween           is not null && ChargeDetailRecord.MeterValuesInBetween.Any())
                 internalData.Set(OICP_MeterValuesInBetween,            ChargeDetailRecord.MeterValuesInBetween.ToArray());
 
-            if (ChargeDetailRecord.SignedMeteringValues           is not null && ChargeDetailRecord.SignedMeteringValues.Any())
+            if (ChargeDetailRecord.SignedMeteringValues.Any())
                 internalData.Set(OICP_SignedMeteringValues,            JSONArray.Create(ChargeDetailRecord.SignedMeteringValues.Select(signedMeteringValue => signedMeteringValue.ToJSON())));
+
+            if (ChargeDetailRecord.SignedMeteringValues.Count() > 2)
+            {
+
+
+            }
 
             if (ChargeDetailRecord.CalibrationLawVerificationInfo is not null)
                 internalData.Set(OICP_CalibrationLawVerificationInfo,  ChargeDetailRecord.CalibrationLawVerificationInfo.ToJSON());
@@ -1605,7 +1611,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       new WWCP.EnergyMeteringValue(
                                                           ChargeDetailRecord.ChargingStart,
                                                           ChargeDetailRecord.MeterValueStart ?? 0,
-                                                          WWCP.EnergyMeteringValueTypes.Start
+                                                          WWCP.EnergyMeteringValueTypes.Start,
+                                                          ChargeDetailRecord.SignedMeteringValues.
+                                                                             Where (smv => smv.MeteringStatus == MeteringStatusType.Start).
+                                                                             Select(smv => smv.Value).
+                                                                             FirstOrDefault()
                                                       ),
 
                                                       //ToDo: Meter values in between... but we don't have timestamps for them!
@@ -1613,7 +1623,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       new WWCP.EnergyMeteringValue(
                                                           ChargeDetailRecord.ChargingEnd,
                                                           ChargeDetailRecord.MeterValueEnd   ?? ChargeDetailRecord.ConsumedEnergy,
-                                                          WWCP.EnergyMeteringValueTypes.Stop
+                                                          WWCP.EnergyMeteringValueTypes.Stop,
+                                                          ChargeDetailRecord.SignedMeteringValues.
+                                                                             Where (smv => smv.MeteringStatus == MeteringStatusType.End).
+                                                                             Select(smv => smv.Value).
+                                                                             FirstOrDefault()
                                                       )
 
                                                   ],

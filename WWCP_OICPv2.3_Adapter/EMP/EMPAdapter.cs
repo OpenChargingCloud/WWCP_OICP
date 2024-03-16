@@ -557,7 +557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             this.PullEVSEStatus_Timer                               = new Timer(
                                                                           PullStatusService,
                                                                           null,
-                                                                          PullEVSEStatus_InitialDelay         ?? TimeSpan.FromSeconds(30),
+                                                                          PullEVSEStatus_InitialDelay               ?? TimeSpan.FromSeconds(30),
                                                                           this.PullEVSEStatus_Every
                                                                       );
 
@@ -566,12 +566,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             this.GetChargeDetailRecords_IsDisabled                  = GetChargeDetailRecords_IsDisabled;
             this.GetChargeDetailRecords_Every                       = GetChargeDetailRecords_Every                  ?? Default_GetChargeDetailRecords_Every;
-            this.GetChargeDetailRecords_LastRunTimestamp            = GetChargeDetailRecords_LastRunTimestamp       ?? Timestamp.Now - TimeSpan.FromDays(3);
+            this.GetChargeDetailRecords_LastRunTimestamp            = GetChargeDetailRecords_LastRunTimestamp       ?? Timestamp.Now - TimeSpan.FromDays(89); // Hubject Maximum!
             this.GetChargeDetailRecords_RequestTimeout              = GetChargeDetailRecords_RequestTimeout         ?? Default_GetChargeDetailRecords_RequestTimeout;
             this.GetChargeDetailRecords_Timer                       = new Timer(
                                                                           GetChargeDetailRecordsService,
                                                                           null,
-                                                                          GetChargeDetailRecords_InitialDelay ?? TimeSpan.FromSeconds(10),
+                                                                          GetChargeDetailRecords_InitialDelay       ?? TimeSpan.FromSeconds(10),
                                                                           this.GetChargeDetailRecords_Every
                                                                       );
 
@@ -611,7 +611,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                request.CPOPartnerSessionId,
                                null, // EMPPartnerSessionId
                                null, // ProviderId
-                               org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
+                               Timestamp.Now,
                                request.EventTrackingId,
                                null, // Runtime
                                request.ProcessId
@@ -637,7 +637,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region Send OnAuthorizeStartRequest event
 
-                var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                var startTime = Timestamp.Now;
 
                 try
                 {
@@ -685,7 +685,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region Send OnAuthorizeStartResponse event
 
-                var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                var endTime = Timestamp.Now;
 
                 try
                 {
@@ -824,7 +824,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region Send OnAuthorizeStopRequest event
 
-                var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                var startTime = Timestamp.Now;
 
                 try
                 {
@@ -869,7 +869,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region Send OnAuthorizeStopResponse event
 
-                var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                var endTime = Timestamp.Now;
 
                 try
                 {
@@ -992,7 +992,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region Send OnChargeDetailRecordRequest event
 
-                var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                var startTime = Timestamp.Now;
 
                 try
                 {
@@ -1028,7 +1028,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 #region Send OnChargeDetailRecordResponse event
 
-                var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+                var endTime = Timestamp.Now;
 
                 try
                 {
@@ -3182,7 +3182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         private async Task GetChargeDetailRecords(Object? State)
         {
 
-            DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service', as every " + GetChargeDetailRecords_Every.TotalSeconds + " seconds!");
+            DebugX.LogT($"[{Id}] 'GetChargeDetailRecords service', as every {GetChargeDetailRecords_Every.TotalSeconds} seconds!");
 
             if (await GetChargeDetailRecordsLock.WaitAsync(SemaphoreSlimTimeout))
             {
@@ -3192,25 +3192,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 var startTime                                   = Timestamp.Now;
                 GetChargeDetailRecords_LastRunTimestamp         = startTime;
 
-                DebugX.LogT("[" + Id + "] 'GetChargeDetailRecords service' started at " + startTime.ToIso8601());
+                DebugX.LogT($"[{Id}] 'GetChargeDetailRecords service' started at '{startTime}'!");
 
                 try
                 {
 
                     var getChargeDetailRecordsResult = await EMPRoaming.GetChargeDetailRecords(
                                                                  new GetChargeDetailRecordsRequest(
-                                                                     ProviderId:         DefaultProviderId,
-                                                                     From:               oldGetChargeDetailRecords_LastRunTimestamp,
-                                                                     To:                 Timestamp.Now,
-                                                                     OperatorIds:        null,
-                                                                     CDRForwarded:       null,
-                                                                     Page:               0,
-                                                                     Size:               2000,
-                                                                     SortOrder:          null,
+                                                                     ProviderId:          DefaultProviderId,
+                                                                     From:                oldGetChargeDetailRecords_LastRunTimestamp,
+                                                                     To:                  Timestamp.Now,
+                                                                     OperatorIds:         null,
+                                                                     CDRForwarded:        null,
+                                                                     Page:                0,
+                                                                     Size:                2000,
+                                                                     SortOrder:           null,
 
-                                                                     CancellationToken:  new CancellationTokenSource().Token,
-                                                                     EventTrackingId:    EventTracking_Id.New,
-                                                                     RequestTimeout:     GetChargeDetailRecords_RequestTimeout)
+                                                                     CancellationToken:   new CancellationTokenSource().Token,
+                                                                     EventTrackingId:     EventTracking_Id.New,
+                                                                     RequestTimeout:      GetChargeDetailRecords_RequestTimeout)
                                                                  );
 
                     var downloadTime = Timestamp.Now;
@@ -3258,7 +3258,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     var endTime = Timestamp.Now;
 
-                    DebugX.Log("[" + Id + "] 'GetChargeDetailRecords service' finished after " + (endTime - startTime).TotalSeconds + " seconds (" + (downloadTime - startTime).TotalSeconds + "/" + (endTime - downloadTime).TotalSeconds + ")");
+                    DebugX.Log($"[{Id}] 'GetChargeDetailRecords service' finished after {(endTime - startTime).TotalSeconds} seconds ({(downloadTime - startTime).TotalSeconds}/{(endTime - downloadTime).TotalSeconds})");
 
                 }
                 catch (Exception e)
@@ -3267,7 +3267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                     while (e.InnerException is not null)
                         e = e.InnerException;
 
-                    DebugX.Log(nameof(EMPAdapter) + " '" + Id + "' led to an exception: " + e.Message + Environment.NewLine + e.StackTrace);
+                    DebugX.LogException(e, $"{nameof(EMPAdapter)}.{Id}");
 
                 }
                 finally

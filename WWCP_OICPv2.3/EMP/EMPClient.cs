@@ -5723,9 +5723,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                     Counters.GetChargeDetailRecords.IncResponses_OK();
 
-                                    result = OICPResult<GetChargeDetailRecordsResponse>.Success(Request,
-                                                                                                getChargeDetailRecordsResponse!,
-                                                                                                processId);
+                                    result = OICPResult<GetChargeDetailRecordsResponse>.Success(
+                                                 Request,
+                                                 getChargeDetailRecordsResponse!,
+                                                 processId
+                                             );
 
                                 }
 
@@ -5797,14 +5799,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             //     ]
                             // }
 
+                            // { "message":"Error parsing/validating JSON. Object errors: ERoamingGetChargeDetailRecords23: The difference between \"From\" and \"To\" can't be more than 90 days." }
+
                             if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrorList,
                                                              out var errorResponse))
                             {
 
-                                result = OICPResult<GetChargeDetailRecordsResponse>.BadRequest(Request,
-                                                                                               validationErrorList,
-                                                                                               processId);
+                                result = OICPResult<GetChargeDetailRecordsResponse>.BadRequest(
+                                             Request,
+                                             validationErrorList,
+                                             processId
+                                         );
 
                             }
 
@@ -5861,17 +5867,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                         CustomStatusCodeParser))
                                 {
 
-                                    result = OICPResult<GetChargeDetailRecordsResponse>.Failed(Request,
-                                                                                               new GetChargeDetailRecordsResponse(
-                                                                                                   HTTPResponse.Timestamp,
-                                                                                                   HTTPResponse.EventTrackingId,
-                                                                                                   processId,
-                                                                                                   HTTPResponse.Runtime,
-                                                                                                   [],
-                                                                                                   Request,
-                                                                                                   StatusCode: statusCode
-                                                                                               ),
-                                                                                               processId);
+                                    result = OICPResult<GetChargeDetailRecordsResponse>.Failed(
+                                                 Request,
+                                                 new GetChargeDetailRecordsResponse(
+                                                     HTTPResponse.Timestamp,
+                                                     HTTPResponse.EventTrackingId,
+                                                     processId,
+                                                     HTTPResponse.Runtime,
+                                                     [],
+                                                     Request,
+                                                     StatusCode: statusCode
+                                                 ),
+                                                 processId
+                                             );
 
                                 }
 
