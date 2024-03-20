@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Diagnostics.CodeAnalysis;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -37,11 +39,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <typeparam name="T">The type of the result.</typeparam>
         /// <param name="OICPResult">The OICP result.</param>
-        public static Boolean IsSuccess<T>(this OICPResult<T> OICPResult)
+        public static Boolean IsSuccess<T>([NotNullWhen(true)] this OICPResult<T> OICPResult)
             where T : IResponse
 
             => OICPResult is not null &&
-                   OICPResult.IsSuccessful;
+               OICPResult.IsSuccessful;
 
     }
 

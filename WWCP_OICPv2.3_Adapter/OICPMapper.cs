@@ -17,9 +17,8 @@
 
 #region Usings
 
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Illias;
-using System.Runtime.InteropServices;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -296,12 +295,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSE">A WWCP EVSE.</param>
         /// <param name="EVSE2EVSEDataRecord">A delegate to process an EVSE data record, e.g. before pushing it to a roaming provider.</param>
-        public static EVSEDataRecord ToOICP(this WWCP.IEVSE                           EVSE,
-                                            String                                    OperatorName,
+        public static EVSEDataRecord? ToOICP(this WWCP.IEVSE                           EVSE,
+                                             String                                    OperatorName,
 
-                                            EVSE2EVSEDataRecordDelegate?              EVSE2EVSEDataRecord      = null,
-                                            DeltaTypes?                               DeltaType                = null,
-                                            DateTime?                                 LastUpdate               = null)
+                                             EVSE2EVSEDataRecordDelegate?              EVSE2EVSEDataRecord      = null,
+                                             DeltaTypes?                               DeltaType                = null,
+                                             DateTime?                                 LastUpdate               = null)
 
         {
 
@@ -315,15 +314,26 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     throw new InvalidEVSEIdentificationException(EVSE.Id.ToString());
 
                 if (EVSE.ChargingStation is null)
-                    throw new ArgumentNullException(nameof(EVSE.ChargingStation),                "Within OICP v2.3 some charging station information is mandatory!");
+                    throw new ArgumentException("Within OICP v2.3 some charging station information is mandatory!");
 
-                var geoLocation    = (EVSE.ChargingStation.GeoLocation ?? EVSE.ChargingPool?.GeoLocation)?.ToOICP();
+                if (EVSE.ChargingPool    is null)
+                    throw new ArgumentException("Within OICP v2.3 some charging pool information is mandatory!");
+
+                var geoLocation    = (EVSE.ChargingStation.GeoLocation ?? EVSE.ChargingPool.GeoLocation)?.ToOICP();
                 if (!geoLocation.HasValue)
-                    throw new ArgumentNullException(nameof(EVSE.ChargingStation.GeoLocation),    "Within OICP v2.3 the geo coordinates of an EVSE are mandatory!");
+                    throw new ArgumentException("Within OICP v2.3 the geo coordinates of an EVSE are mandatory!");
 
                 var accessibility  = EVSE.ChargingStation.Accessibility?.ToOICP();
                 if (!accessibility.HasValue)
-                    throw new ArgumentNullException(nameof(EVSE.ChargingStation.Accessibility),  "Within OICP v2.3 the accessibility of an EVSE is mandatory!");
+                    throw new ArgumentException("Within OICP v2.3 the accessibility of an EVSE is mandatory!");
+
+#pragma warning disable IDE0270 // Use coalesce expression
+                var address        = (EVSE.ChargingStation.Address ??
+                                      EVSE.ChargingPool.   Address)?.ToOICP();
+
+                if (address is null)
+                    throw new ArgumentException("Within OICP v2.3 the address of an EVSE is mandatory!");
+#pragma warning restore IDE0270 // Use coalesce expression
 
                 #endregion
 
@@ -337,13 +347,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 #endregion
 
 
+
                 var evseDataRecord = new EVSEDataRecord(
                                          Id:                                 evseId.Value,
                                          OperatorId:                         evseId.Value.OperatorId,
                                          OperatorName:                       OperatorName,
                                          ChargingStationName:                EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
-                                         Address:                            (EVSE.ChargingStation.Address ??
-                                                                              EVSE.ChargingPool.   Address).ToOICP(),
+                                         Address:                            address,
                                          GeoCoordinates:                     geoLocation.Value,
                                          PlugTypes:                          EVSE.ChargingConnectors.SafeSelect(chargingConnector => chargingConnector.Plug.ToOICP()),
                                          ChargingFacilities:                 EVSE.AsChargingFacilities(),
@@ -356,11 +366,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          ValueAddedServices:                 [ ValueAddedServices.None ],
                                          Accessibility:                      accessibility.Value,
                                          HotlinePhoneNumber:                 EVSE.ChargingStation.HotlinePhoneNumber.HasValue ? Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.Value.ToString()) : null,
+#pragma warning disable IDE0075 // Simplify conditional expression
                                          IsOpen24Hours:                      EVSE.ChargingStation.OpeningTimes is not null
                                                                                  ? EVSE.ChargingStation.OpeningTimes?.ToOICP()?.Any() == true  // OpeningTimes == false AND an empty list is invalid at Hubject!
                                                                                        ? EVSE.ChargingStation.OpeningTimes.IsOpen24Hours
                                                                                        : true
                                                                                  : true,
+#pragma warning restore IDE0075 // Simplify conditional expression
                                          IsHubjectCompatible:                EVSE.ChargingStation.Features.Contains(WWCP.ChargingStationFeature.HubjectCompatible),
                                          DynamicInfoAvailable:               EVSE.ChargingStation.Features.Contains(WWCP.ChargingStationFeature.StatusInfoAvailable)
                                                                                  ? FalseTrueAuto.True
@@ -370,10 +382,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          LastUpdate:                         LastUpdate,
 
                                          ChargingStationId:                  ChargingStation_Id.TryParse(EVSE.ChargingStation.Id.ToString()),
-                                         ChargingPoolId:                     ChargingPool_Id.   TryParse(EVSE.ChargingPool?.  Id.ToString()),
+                                         ChargingPoolId:                     ChargingPool_Id.   TryParse(EVSE.ChargingPool.   Id.ToString()),
                                          HardwareManufacturer:               null,
                                          ChargingStationImageURL:            null,
-                                         SubOperatorName:                    EVSE.ChargingPool?.SubOperator?.Name?.FirstText(),
+                                         SubOperatorName:                    EVSE.ChargingPool.SubOperator?.Name?.FirstText(),
                                          DynamicPowerLevel:                  null,
                                          EnergySources:                      null,
                                          EnvironmentalImpact:                null,
@@ -395,6 +407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          CustomData:                         EVSE.CustomData,
                                          InternalData:                       internalData
                                      );
+
 
                 return EVSE2EVSEDataRecord is not null
                            ? EVSE2EVSEDataRecord(EVSE, evseDataRecord)
@@ -550,7 +563,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         WWCPAddress.City.FirstText(),
                         WWCPAddress.Street,
                         WWCPAddress.PostalCode,
-                        WWCPAddress.HouseNumber,
+                        WWCPAddress.HouseNumber ?? "",
                         WWCPAddress.FloorLevel,
                         null,
                         null,

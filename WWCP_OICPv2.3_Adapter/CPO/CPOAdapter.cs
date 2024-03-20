@@ -1014,6 +1014,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             PushEVSEDataRecordResult? result = null;
 
+            var defaultOperatorId = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
+            if (!defaultOperatorId.HasValue)
+                throw new ArgumentException($"The default OperatorId '{DefaultOperator.Id}' could not be converted to OICP!");
+
+            if (DefaultOperatorName.IsNotNullOrEmpty())
+                throw new ArgumentException($"The default OperatorName must not be null or empty!");
+
             #endregion
 
             #region Get effective list of EVSEs/EVSEDataRecords to upload
@@ -1027,14 +1034,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 try
                 {
 
-                    if (evse is null)
+                    if (evse?.Operator is null)
                         continue;
 
                     if (IncludeEVSEs(evse) && IncludeEVSEIds(evse.Id))
-                        // WWCP EVSE will be added as internal data "WWCP.EVSE"...
-                        evseDataRecords.Add(evse.ToOICP(evse.Operator.Name.FirstText(),
-                                                        EVSE2EVSEDataRecord));
+                    {
 
+                        var mappedEVSE = evse.ToOICP(evse.Operator.Name.FirstText(),
+                                                     EVSE2EVSEDataRecord);
+
+                        // WWCP EVSE will be added as internal data "WWCP.EVSE"...
+                        if (mappedEVSE is not null)
+                            evseDataRecords.Add(mappedEVSE);
+
+                    }
                     else
                         DebugX.Log(evse.Id + " was filtered!");
 
@@ -1058,6 +1071,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
             #region Send OnPushEVSEDataWWCPRequest event
+
+            DateTime endtime;
+            TimeSpan runtime;
 
             var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
@@ -1083,38 +1099,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #endregion
 
-            DateTime endtime;
-            TimeSpan runtime;
-
 
             if (evseDataRecords.Count > 0)
             {
 
-                var operatorId  = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
+                var response = await CPORoaming.PushEVSEData(
+                                         new PushEVSEDataRequest(
+                                             new OperatorEVSEData(
+                                                 evseDataRecords,
+                                                 defaultOperatorId.Value,
+                                                 DefaultOperatorName
+                                             ),
+                                             ServerAction,
+                                             null, // ProcessId
+                                             CustomData,
 
-                var response    = await CPORoaming.PushEVSEData(
-                                            new PushEVSEDataRequest(
-                                                new OperatorEVSEData(
-                                                    evseDataRecords,
-                                                    operatorId.Value,
-                                                    DefaultOperatorName
-                                                ),
-                                                ServerAction,
-                                                null, // ProcessId
-                                                CustomData,
-
-                                                Timestamp,
-                                                EventTrackingId,
-                                                RequestTimeout,
-                                                CancellationToken
-                                            )
-                                        ).ConfigureAwait(false);
+                                             Timestamp,
+                                             EventTrackingId,
+                                             RequestTimeout,
+                                             CancellationToken
+                                         )
+                                     ).ConfigureAwait(false);
 
                 if (response.IsSuccess())
                 {
 
                     // Success...
-                    if (response.Response.Result == true)
+                    if (response.Response?.Result == true)
                     {
 
                         endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
@@ -1146,12 +1157,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             #region Add warnings...
 
-                            warnings.Add(Warning.Create(ServerAction.ToString() + " of " + evseDataRecords.Count + " EVSEs failed!"));
-                            warnings.Add(Warning.Create(response.Response.StatusCode.Code.ToString()));
-                            warnings.Add(Warning.Create(response.Response.StatusCode.Description));
+                            warnings.Add(Warning.Create($"{ServerAction} of {evseDataRecords.Count} EVSEs failed!"));
 
-                            if (response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty())
-                                warnings.Add(Warning.Create(response.Response.StatusCode.AdditionalInfo));
+                            if (response.Response is not null)
+                            {
+
+                                warnings.Add(Warning.Create(response.Response.StatusCode.Code.ToString()));
+
+                                if (response.Response.StatusCode.Description.IsNotNullOrEmpty())
+                                    warnings.Add(Warning.Create(response.Response.StatusCode.Description));
+
+                                if (response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty())
+                                    warnings.Add(Warning.Create(response.Response.StatusCode.AdditionalInfo));
+
+                            }
 
                             warnings.Add(Warning.Create("Will try to fix this issue via a 'fullLoad' of all EVSEs!"));
 
@@ -1159,41 +1178,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             #region Get all EVSEs from the roaming network
 
-                            var FullLoadEVSEs = RoamingNetwork.EVSEs.Where(evse => evse is not null &&
-                                                                           IncludeEVSEs(evse) &&
-                                                                           IncludeEVSEIds(evse.Id)).
-                                                        Select(evse =>
-                                                        {
+                            var fullLoadEVSEs = RoamingNetwork.EVSEs.Where (evse => evse is not null &&
+                                                                            IncludeEVSEs  (evse) &&
+                                                                            IncludeEVSEIds(evse.Id)).
+                                                                     Select(evse =>
+                                                                     {
 
-                                                            try
-                                                            {
+                                                                         try
+                                                                         {
 
-                                                                return evse.ToOICP(evse.Operator.Name.FirstText(),
-                                                                                   EVSE2EVSEDataRecord);
+                                                                             var operatorName = evse.Operator?.Name.FirstText();
 
-                                                            }
-                                                            catch (Exception e)
-                                                            {
-                                                                DebugX.Log(e.Message);
-                                                                warnings.Add(Warning.Create(e.Message, evse));
-                                                            }
+                                                                             if (operatorName.IsNotNullOrEmpty())
+                                                                                 return evse.ToOICP(operatorName,
+                                                                                                    EVSE2EVSEDataRecord);
 
-                                                            return null;
+                                                                         }
+                                                                         catch (Exception e)
+                                                                         {
+                                                                             DebugX.Log(e.Message);
+                                                                             warnings.Add(Warning.Create(e.Message, evse));
+                                                                         }
 
-                                                        }).
-                                                        Where(evsedatarecord => evsedatarecord is not null).
-                                                        ToArray();
+                                                                         return null;
+
+                                                                     }).
+                                                                     Where(evseDataRecord => evseDataRecord is not null).
+                                                                     Cast<EVSEDataRecord>().
+                                                                     ToArray();
 
                             #endregion
 
                             #region Send request
 
-                            var FullLoadResponse = await CPORoaming.PushEVSEData(
+                            var fullLoadResponse = await CPORoaming.PushEVSEData(
                                                              new PushEVSEDataRequest(
                                                                  new OperatorEVSEData(
-                                                                     FullLoadEVSEs,
-                                                                     operatorId.Value,
-                                                                     DefaultOperatorName.IsNotNullOrEmpty() ? DefaultOperatorName : null
+                                                                     fullLoadEVSEs,
+                                                                     defaultOperatorId.Value,
+                                                                     DefaultOperatorName
                                                                  ),
                                                                  ActionTypes.FullLoad,
                                                                  null, // ProcessId
@@ -1213,37 +1236,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
                             runtime = endtime - startTime;
 
-                            if (FullLoadResponse.IsSuccess())
+                            if (fullLoadResponse.IsSuccess())
                             {
 
-                                if (FullLoadResponse.Response.Result == true)
-                                    result = PushEVSEDataRecordResult.Success(Id,
-                                                                              evseDataRecords.Select(evseDataRecord => evseDataRecord),
-                                                                              FullLoadResponse.Response.StatusCode.Description,
-                                                                              FullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                                  ? warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.Response.StatusCode.AdditionalInfo))
-                                                                                  : warnings,
-                                                                              runtime);
+                                if (fullLoadResponse.Response?.Result == true)
+                                    result = PushEVSEDataRecordResult.Success(
+                                                 Id,
+                                                 evseDataRecords.Select(evseDataRecord => evseDataRecord),
+                                                 fullLoadResponse.Response.StatusCode.Description,
+                                                 fullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                                     ? warnings.AddAndReturnList(I18NString.Create(fullLoadResponse.Response.StatusCode.AdditionalInfo))
+                                                     : warnings,
+                                                 runtime
+                                             );
 
                                 else
-                                    result = PushEVSEDataRecordResult.Error(Id,
-                                                                            evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
-                                                                            FullLoadResponse.Response.StatusCode.Description,
-                                                                            FullLoadResponse.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                                ? warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.Response.StatusCode.AdditionalInfo))
-                                                                                : warnings,
-                                                                            runtime);
+                                    result = PushEVSEDataRecordResult.Error(
+                                                 Id,
+                                                 evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
+                                                 fullLoadResponse.Response?.StatusCode.Description,
+                                                 fullLoadResponse.Response?.StatusCode.AdditionalInfo.IsNotNullOrEmpty() == true
+                                                     ? warnings.AddAndReturnList(I18NString.Create(fullLoadResponse.Response.StatusCode.AdditionalInfo))
+                                                     : warnings,
+                                                 runtime
+                                             );
 
                             }
 
                             else
-                                result = PushEVSEDataRecordResult.Error(Id,
-                                                                        evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
-                                                                        //FullLoadResponse.HTTPStatusCode.ToString(),
-                                                                        //FullLoadResponse.HTTPBody is not null
-                                                                        //    ? Warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.HTTPBody.ToUTF8String()))
-                                                                        //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
-                                                                        Runtime: runtime);
+                                result = PushEVSEDataRecordResult.Error(
+                                             Id,
+                                             evseDataRecords.Select(evseDataRecord => new PushSingleEVSEDataResult(evseDataRecord, PushSingleDataResultTypes.Error)),
+                                             //FullLoadResponse.HTTPStatusCode.ToString(),
+                                             //FullLoadResponse.HTTPBody is not null
+                                             //    ? Warnings.AddAndReturnList(I18NString.Create(FullLoadResponse.HTTPBody.ToUTF8String()))
+                                             //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
+                                             Runtime: runtime
+                                         );
 
                             #endregion
 
@@ -1315,16 +1344,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 OnPushDataResponse?.Invoke(endtime,
-                                                   Timestamp.Value,
-                                                   this,
-                                                   Id,
-                                                   EventTrackingId,
-                                                   RoamingNetwork.Id,
-                                                   ServerAction,
-                                                   evseDataRecords,
-                                                   RequestTimeout,
-                                                   result,
-                                                   runtime);
+                                           Timestamp.Value,
+                                           this,
+                                           Id,
+                                           EventTrackingId,
+                                           RoamingNetwork.Id,
+                                           ServerAction,
+                                           evseDataRecords,
+                                           RequestTimeout,
+                                           result,
+                                           runtime);
 
             }
             catch (Exception e)
@@ -1373,12 +1402,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             WWCP.PushEVSEStatusResult? result = null;
 
+            var defaultOperatorId = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
+            if (!defaultOperatorId.HasValue)
+                throw new ArgumentException($"The default OperatorId '{DefaultOperator.Id}' could not be converted to OICP!");
+
+            if (DefaultOperatorName.IsNotNullOrEmpty())
+                throw new ArgumentException($"The default OperatorName must not be null or empty!");
+
             #endregion
 
             #region Get effective number of EVSEStatus/EVSEStatusRecords to upload
 
-            var warnings        = new List<Warning>();
-            var evseStatusList  = new List<EVSEStatusRecord>();
+            var warnings           = new List<Warning>();
+            var evseStatusRecords  = new List<EVSEStatusRecord>();
 
             foreach (var evseStatusUpdate in EVSEStatusUpdates.
                                                  Where       (evseStatusUpdate => IncludeEVSEIds(evseStatusUpdate.Id)).
@@ -1397,10 +1433,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                     var status  = evseStatusUpdate.Value.First().NewStatus.Value.ToOICP();
 
                     if (evseId.HasValue && status.HasValue)
-                        evseStatusList.Add(new EVSEStatusRecord(
-                                               evseId.Value,
-                                               status.Value
-                                           ));
+                        evseStatusRecords.Add(new EVSEStatusRecord(
+                                                  evseId.Value,
+                                                  status.Value
+                                              ));
 
                 }
                 catch (Exception e)
@@ -1426,19 +1462,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             DateTime endtime;
             TimeSpan runtime;
 
-            var StartTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
             try
             {
 
-                OnPushEVSEStatusWWCPRequest?.Invoke(StartTime,
+                OnPushEVSEStatusWWCPRequest?.Invoke(startTime,
                                                     Timestamp.Value,
                                                     this,
                                                     Id,
                                                     EventTrackingId,
                                                     RoamingNetwork.Id,
                                                     ServerAction,
-                                                    evseStatusList,
+                                                    evseStatusRecords,
                                                     warnings.Where(warning => warning.IsNeitherNullNorEmpty()),
                                                     RequestTimeout);
 
@@ -1451,65 +1487,69 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #endregion
 
 
-            if (evseStatusList.Count != 0)
+            if (evseStatusRecords.Count > 0)
             {
 
-                var operatorId  = DefaultOperator.Id.ToOICP(DefaultOperatorIdFormat);
+                var response = await CPORoaming.PushEVSEStatus(
+                                         new PushEVSEStatusRequest(
+                                             new OperatorEVSEStatus(
+                                                 evseStatusRecords,
+                                                 defaultOperatorId.Value,
+                                                 DefaultOperatorName
+                                             ),
+                                             ServerAction,
+                                             null, // ProcessId
+                                             CustomData,
 
-                var response    = await CPORoaming.PushEVSEStatus(
-                                            new PushEVSEStatusRequest(
-                                                new OperatorEVSEStatus(
-                                                    evseStatusList,
-                                                    operatorId.Value,
-                                                    DefaultOperatorName
-                                                ),
-                                                ServerAction,
-                                                null, // ProcessId
-                                                CustomData,
-
-                                                Timestamp,
-                                                EventTrackingId,
-                                                RequestTimeout,
-                                                CancellationToken
-                                            )
-                                        );
+                                             Timestamp,
+                                             EventTrackingId,
+                                             RequestTimeout,
+                                             CancellationToken
+                                         )
+                                     );
 
 
                 endtime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                runtime = endtime - StartTime;
+                runtime = endtime - startTime;
 
                 if (response.IsSuccess())
                 {
 
-                    if (response.Response.Result == true)
-                        result = WWCP.PushEVSEStatusResult.Success(Id,
-                                                                   this,
-                                                                   response.Response.StatusCode.Description,
-                                                                   response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                       ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
-                                                                       : warnings,
-                                                                   runtime);
+                    if (response.Response?.Result == true)
+                        result = WWCP.PushEVSEStatusResult.Success(
+                                     Id,
+                                     this,
+                                     response.Response.StatusCode.Description,
+                                     response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
+                                         ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
+                                         : warnings,
+                                     runtime
+                                 );
 
                     else
-                        result = WWCP.PushEVSEStatusResult.Error(Id,
-                                                                 this,
-                                                                 EVSEStatusUpdates,
-                                                                 response.Response.StatusCode.Description,
-                                                                 response.Response.StatusCode.AdditionalInfo.IsNotNullOrEmpty()
-                                                                     ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
-                                                                     : warnings,
-                                                                 runtime);
+                        result = WWCP.PushEVSEStatusResult.Error(
+                                     Id,
+                                     this,
+                                     EVSEStatusUpdates,
+                                     response.Response?.StatusCode.Description,
+                                     response.Response?.StatusCode.AdditionalInfo.IsNotNullOrEmpty() == true
+                                         ? warnings.AddAndReturnList(I18NString.Create(response.Response.StatusCode.AdditionalInfo))
+                                         : warnings,
+                                     runtime
+                                 );
 
                 }
                 else
-                    result = WWCP.PushEVSEStatusResult.Error(Id,
-                                                             this,
-                                                             EVSEStatusUpdates,
-                                                             //response.HTTPStatusCode.ToString(),
-                                                             //response.HTTPBody is not null
-                                                             //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
-                                                             //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
-                                                             Runtime: runtime);
+                    result = WWCP.PushEVSEStatusResult.Error(
+                                 Id,
+                                 this,
+                                 EVSEStatusUpdates,
+                                 //response.HTTPStatusCode.ToString(),
+                                 //response.HTTPBody is not null
+                                 //    ? Warnings.AddAndReturnList(I18NString.Create(response.HTTPBody.ToUTF8String()))
+                                 //    : Warnings.AddAndReturnList(I18NString.Create("No HTTP body received!")),
+                                 Runtime: runtime
+                             );
 
             }
 
@@ -1519,13 +1559,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             {
 
                 endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-                runtime  = endtime - StartTime;
-                result   = WWCP.PushEVSEStatusResult.NoOperation(Id,
-                                                                 this,
-                                                                 "No EVSEStatusRecords to push!",
-                                                                 EVSEStatusUpdates,
-                                                                 warnings,
-                                                                 Runtime: TimeSpan.Zero);
+                runtime  = endtime - startTime;
+                result   = WWCP.PushEVSEStatusResult.NoOperation(
+                               Id,
+                               this,
+                               "No EVSEStatusRecords to push!",
+                               EVSEStatusUpdates,
+                               warnings,
+                               Runtime: TimeSpan.Zero
+                           );
 
             }
 
@@ -1544,7 +1586,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                      EventTrackingId,
                                                      RoamingNetwork.Id,
                                                      ServerAction,
-                                                     evseStatusList,
+                                                     evseStatusRecords,
                                                      RequestTimeout,
                                                      result,
                                                      runtime);
