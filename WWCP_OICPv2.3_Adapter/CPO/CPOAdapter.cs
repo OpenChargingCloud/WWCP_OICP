@@ -1018,7 +1018,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!defaultOperatorId.HasValue)
                 throw new ArgumentException($"The default OperatorId '{DefaultOperator.Id}' could not be converted to OICP!");
 
-            if (DefaultOperatorName.IsNotNullOrEmpty())
+            if (DefaultOperatorName.IsNullOrEmpty())
                 throw new ArgumentException($"The default OperatorName must not be null or empty!");
 
             #endregion
@@ -1406,7 +1406,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             if (!defaultOperatorId.HasValue)
                 throw new ArgumentException($"The default OperatorId '{DefaultOperator.Id}' could not be converted to OICP!");
 
-            if (DefaultOperatorName.IsNotNullOrEmpty())
+            if (DefaultOperatorName.IsNullOrEmpty())
                 throw new ArgumentException($"The default OperatorName must not be null or empty!");
 
             #endregion
