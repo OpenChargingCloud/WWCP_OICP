@@ -204,6 +204,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  null,          // ServiceIdentification
                                                  null,          // ModelCode
 
+                                                 null,          // Published
+                                                 null,          // Disabled
+
                                                  null,          // Brands
                                                  null,          // Mobility Root CAs
 
