@@ -566,7 +566,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             this.GetChargeDetailRecords_IsDisabled                  = GetChargeDetailRecords_IsDisabled;
             this.GetChargeDetailRecords_Every                       = GetChargeDetailRecords_Every                  ?? Default_GetChargeDetailRecords_Every;
-            this.GetChargeDetailRecords_LastRunTimestamp            = GetChargeDetailRecords_LastRunTimestamp       ?? Timestamp.Now - TimeSpan.FromDays(89); // Hubject Maximum!
+            this.GetChargeDetailRecords_LastRunTimestamp            = GetChargeDetailRecords_LastRunTimestamp       ?? Timestamp.Now - TimeSpan.FromDays(3); // 89 is Hubject's Maximum!
             this.GetChargeDetailRecords_RequestTimeout              = GetChargeDetailRecords_RequestTimeout         ?? Default_GetChargeDetailRecords_RequestTimeout;
             this.GetChargeDetailRecords_Timer                       = new Timer(
                                                                           GetChargeDetailRecordsService,
