@@ -46,26 +46,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP client part.
         /// </summary>
-        public EMPClient     EMPClient    { get; } = EMPClient;
+        public EMPClient     EMPClient    { get; } = EMPClient ?? throw new ArgumentNullException(nameof(EMPClient), "The given EMPClient must not be null!");
+
+        /// <summary>
+        /// The EMP server part.
+        /// </summary>
+        public EMPServerAPI  EMPServer    { get; } = EMPServer ?? new EMPServerAPI(AutoStart: false);
 
         #region IEMPClient
 
         /// <summary>
         /// The remote URL of the OICP HTTP endpoint to connect to.
         /// </summary>
-        URL                                  IHTTPClient.RemoteURL
+        URL                                                         IHTTPClient.RemoteURL
             => EMPClient.RemoteURL;
 
         /// <summary>
         /// The virtual HTTP hostname to connect to.
         /// </summary>
-        HTTPHostname?                        IHTTPClient.VirtualHostname
+        HTTPHostname?                                               IHTTPClient.VirtualHostname
             => EMPClient.VirtualHostname;
 
         /// <summary>
         /// An optional description of this CPO client.
         /// </summary>
-        String?                              IHTTPClient.Description
+        String?                                                     IHTTPClient.Description
         {
 
             get
@@ -83,37 +88,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The remote TLS certificate validator.
         /// </summary>
-        RemoteCertificateValidationHandler?  IHTTPClient.RemoteCertificateValidator
+        RemoteTLSServerCertificateValidationHandler<IHTTPClient>?   IHTTPClient.RemoteCertificateValidator
             => EMPClient.RemoteCertificateValidator;
 
         /// <summary>
         /// The TLS client certificate to use of HTTP authentication.
         /// </summary>
-        X509Certificate?                     IHTTPClient.ClientCert
+        X509Certificate?                                            IHTTPClient.ClientCert
             => EMPClient.ClientCert;
 
         /// <summary>
         /// The TLS protocol to use.
         /// </summary>
-        SslProtocols                         IHTTPClient.TLSProtocol
+        SslProtocols                                                IHTTPClient.TLSProtocol
             => EMPClient.TLSProtocol;
 
         /// <summary>
         /// Prefer IPv4 instead of IPv6.
         /// </summary>
-        Boolean                              IHTTPClient.PreferIPv4
+        Boolean                                                     IHTTPClient.PreferIPv4
             => EMPClient.PreferIPv4;
 
         /// <summary>
         /// The HTTP user agent identification.
         /// </summary>
-        String                               IHTTPClient.HTTPUserAgent
+        String                                                      IHTTPClient.HTTPUserAgent
             => EMPClient.HTTPUserAgent;
 
         /// <summary>
         /// The timeout for upstream requests.
         /// </summary>
-        TimeSpan                             IHTTPClient.RequestTimeout
+        TimeSpan                                                    IHTTPClient.RequestTimeout
         {
 
             get
@@ -131,40 +136,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The delay between transmission retries.
         /// </summary>
-        TransmissionRetryDelayDelegate       IHTTPClient.TransmissionRetryDelay
+        TransmissionRetryDelayDelegate                              IHTTPClient.TransmissionRetryDelay
             => EMPClient.TransmissionRetryDelay;
 
         /// <summary>
         /// The maximum number of retries when communicationg with the remote OICP service.
         /// </summary>
-        UInt16                               IHTTPClient.MaxNumberOfRetries
+        UInt16                                                      IHTTPClient.MaxNumberOfRetries
             => EMPClient.MaxNumberOfRetries;
 
         /// <summary>
         /// Make use of HTTP pipelining.
         /// </summary>
-        Boolean                              IHTTPClient.UseHTTPPipelining
+        Boolean                                                     IHTTPClient.UseHTTPPipelining
             => EMPClient.UseHTTPPipelining;
 
         /// <summary>
         /// The CPO client (HTTP client) logger.
         /// </summary>
-        HTTPClientLogger?                    IHTTPClient.HTTPLogger
+        HTTPClientLogger?                                           IHTTPClient.HTTPLogger
             => EMPClient.HTTPLogger;
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
-        DNSClient                            IHTTPClient.DNSClient
+        DNSClient                                                   IHTTPClient.DNSClient
             => EMPClient.DNSClient;
 
         #endregion
-
-
-        /// <summary>
-        /// The EMP server part.
-        /// </summary>
-        public EMPServerAPI  EMPServer    { get; } = EMPServer ?? new EMPServerAPI(AutoStart: false);
 
         #endregion
 
