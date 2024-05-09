@@ -4078,12 +4078,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 }
 
                                 sendCDRsResults.Add(result);
-                                RoamingNetwork.SessionsStore.CDRForwarded(chargeDetailRecord.SessionId, result);
 
                             }
 
                             endtime  = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
                             runtime  = endtime - startTime;
+
+                            await RoamingNetwork.ReceiveSendChargeDetailRecordResults(sendCDRsResults);
 
                             if (sendCDRsResults.All(cdrresult => cdrresult.Result == WWCP.SendCDRResultTypes.Success))
                                 sendCDRsResult = WWCP.SendCDRsResult.Success(
@@ -4591,7 +4592,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 }
 
-                await RoamingNetwork.SessionsStore.CDRForwarded(chargeDetailRecord.SessionId.ToWWCP().Value, result);
+                await RoamingNetwork.ReceiveSendChargeDetailRecordResult(result);
 
             }
 

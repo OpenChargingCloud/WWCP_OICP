@@ -1156,7 +1156,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// Whether the given charging session identification is known within the roaming network.
         /// </summary>
         /// <param name="ChargingSessionId">The charging session identification.</param>
-        public Boolean Contains(WWCP.ChargingSession_Id ChargingSessionId)
+        public Boolean ContainsChargingSessionId(WWCP.ChargingSession_Id ChargingSessionId)
             => false;
 
         /// <summary>
@@ -2320,7 +2320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #endregion
 
 
-            RoamingNetwork.SessionsStore.TryGet(SessionId, out var session);
+            RoamingNetwork.TryGetChargingSessionById(SessionId, out var session);
 
             var sessionId           = SessionId.      ToOICP();
             var evseId              = session?.EVSEId.ToOICP();
