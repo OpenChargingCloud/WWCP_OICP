@@ -33,7 +33,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// The CPO roaming object combines the CPO client and CPO server
     /// and adds additional logging for both.
     /// </summary>
-    public class CPORoaming : ICPOClient
+    /// <param name="CPOClient">A CPO client.</param>
+    /// <param name="CPOServer">A CPO sever.</param>
+    public class CPORoaming(CPOClient     CPOClient,
+                            CPOServerAPI  CPOServer) : ICPOClient
     {
 
         #region Properties
@@ -41,26 +44,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The CPO client.
         /// </summary>
-        public CPOClient     CPOClient    { get; }
+        public CPOClient     CPOClient    { get; } = CPOClient ?? throw new ArgumentNullException(nameof(CPOClient), "The given CPOClient must not be null!");
+
+        /// <summary>
+        /// The CPO server.
+        /// </summary>
+        public CPOServerAPI  CPOServer    { get; } = CPOServer ?? new CPOServerAPI(AutoStart: false);
 
         #region ICPOClient
 
         /// <summary>
         /// The remote URL of the OICP HTTP endpoint to connect to.
         /// </summary>
-        URL                                  IHTTPClient.RemoteURL
+        URL                                                         IHTTPClient.RemoteURL
             => CPOClient.RemoteURL;
 
         /// <summary>
         /// The virtual HTTP hostname to connect to.
         /// </summary>
-        HTTPHostname?                        IHTTPClient.VirtualHostname
+        HTTPHostname?                                               IHTTPClient.VirtualHostname
             => CPOClient.VirtualHostname;
 
         /// <summary>
         /// An optional description of this CPO client.
         /// </summary>
-        String?                              IHTTPClient.Description
+        String?                                                     IHTTPClient.Description
         {
 
             get
@@ -78,37 +86,37 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The remote TLS certificate validator.
         /// </summary>
-        RemoteCertificateValidationHandler?  IHTTPClient.RemoteCertificateValidator
+        RemoteTLSServerCertificateValidationHandler<IHTTPClient>?   IHTTPClient.RemoteCertificateValidator
             => CPOClient.RemoteCertificateValidator;
 
         /// <summary>
         /// The TLS client certificate to use of HTTP authentication.
         /// </summary>
-        X509Certificate?                     IHTTPClient.ClientCert
+        X509Certificate?                                            IHTTPClient.ClientCert
             => CPOClient.ClientCert;
 
         /// <summary>
         /// The TLS protocol to use.
         /// </summary>
-        SslProtocols                         IHTTPClient.TLSProtocol
+        SslProtocols                                                IHTTPClient.TLSProtocol
             => CPOClient.TLSProtocol;
 
         /// <summary>
         /// Prefer IPv4 instead of IPv6.
         /// </summary>
-        Boolean                              IHTTPClient.PreferIPv4
+        Boolean                                                     IHTTPClient.PreferIPv4
             => CPOClient.PreferIPv4;
 
         /// <summary>
         /// The HTTP user agent identification.
         /// </summary>
-        String                               IHTTPClient.HTTPUserAgent
+        String                                                      IHTTPClient.HTTPUserAgent
             => CPOClient.HTTPUserAgent;
 
         /// <summary>
         /// The timeout for upstream requests.
         /// </summary>
-        TimeSpan                             IHTTPClient.RequestTimeout
+        TimeSpan                                                    IHTTPClient.RequestTimeout
         {
 
             get
@@ -126,40 +134,34 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The delay between transmission retries.
         /// </summary>
-        TransmissionRetryDelayDelegate       IHTTPClient.TransmissionRetryDelay
+        TransmissionRetryDelayDelegate                              IHTTPClient.TransmissionRetryDelay
             => CPOClient.TransmissionRetryDelay;
 
         /// <summary>
         /// The maximum number of retries when communicationg with the remote OICP service.
         /// </summary>
-        UInt16                               IHTTPClient.MaxNumberOfRetries
+        UInt16                                                      IHTTPClient.MaxNumberOfRetries
             => CPOClient.MaxNumberOfRetries;
 
         /// <summary>
         /// Make use of HTTP pipelining.
         /// </summary>
-        Boolean                              IHTTPClient.UseHTTPPipelining
+        Boolean                                                     IHTTPClient.UseHTTPPipelining
             => CPOClient.UseHTTPPipelining;
 
         /// <summary>
         /// The CPO client (HTTP client) logger.
         /// </summary>
-        HTTPClientLogger                     IHTTPClient.HTTPLogger
+        HTTPClientLogger                                            IHTTPClient.HTTPLogger
             => CPOClient.HTTPLogger;
 
         /// <summary>
         /// The DNS client defines which DNS servers to use.
         /// </summary>
-        DNSClient                            IHTTPClient.DNSClient
+        DNSClient                                                   IHTTPClient.DNSClient
             => CPOClient.DNSClient;
 
         #endregion
-
-
-        /// <summary>
-        /// The CPO server.
-        /// </summary>
-        public CPOServerAPI  CPOServer    { get; }
 
         #endregion
 
@@ -1121,24 +1123,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         public HTTPErrorLogEvent     ErrorLog
             => CPOServer.ErrorLog;
-
-        #endregion
-
-        #region Constructor(s)
-
-        /// <summary>
-        /// Create a new CPO roaming.
-        /// </summary>
-        /// <param name="CPOClient">A CPO client.</param>
-        /// <param name="CPOServer">A CPO sever.</param>
-        public CPORoaming(CPOClient     CPOClient,
-                          CPOServerAPI  CPOServer)
-        {
-
-            this.CPOClient  = CPOClient ?? throw new ArgumentNullException(nameof(CPOClient), "The given CPOClient must not be null!");
-            this.CPOServer  = CPOServer ?? throw new ArgumentNullException(nameof(CPOServer), "The given CPOServer must not be null!");
-
-        }
 
         #endregion
 
