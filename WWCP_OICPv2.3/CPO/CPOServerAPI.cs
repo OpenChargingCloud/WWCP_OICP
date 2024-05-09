@@ -512,7 +512,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// 
         /// <param name="ServerCertificateSelector">An optional delegate to select a TLS server certificate.</param>
         /// <param name="ClientCertificateValidator">An optional delegate to verify the TLS client certificate used for authentication.</param>
-        /// <param name="ClientCertificateSelector">An optional delegate to select the TLS client certificate used for authentication.</param>
+        /// <param name="LocalCertificateSelector">An optional delegate to select the TLS client certificate used for authentication.</param>
         /// <param name="AllowedTLSProtocols">The TLS protocol(s) allowed for this connection.</param>
         /// 
         /// <param name="ServerThreadName">The optional name of the TCP server thread.</param>
@@ -549,7 +549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             JObject?                                                   APIVersionHashes             = null,
 
                             ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                            LocalCertificateSelectionHandler?                          ClientCertificateSelector    = null,
+                            LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
                             RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
                             SslProtocols?                                              AllowedTLSProtocols          = null,
                             Boolean?                                                   ClientCertificateRequired    = null,
@@ -593,7 +593,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                    ServerCertificateSelector,
                    ClientCertificateValidator,
-                   ClientCertificateSelector,
+                   LocalCertificateSelector,
                    AllowedTLSProtocols,
                    ClientCertificateRequired,
                    CheckCertificateRevocation,
@@ -631,17 +631,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
 
             base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext ?? DefaultLoggingContext,
-                                                         LogfileCreator)
+                                       ? new HTTP_Logger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext ?? DefaultLoggingContext,
+                                             LogfileCreator
+                                         )
                                        : null;
 
             this.Logger          = this.DisableLogging == false
-                                       ? new ServerAPILogger(this,
-                                                             LoggingPath,
-                                                             LoggingContext ?? DefaultLoggingContext,
-                                                             LogfileCreator)
+                                       ? new ServerAPILogger(
+                                             this,
+                                             LoggingPath,
+                                             LoggingContext ?? DefaultLoggingContext,
+                                             LogfileCreator
+                                         )
                                        : null;
 
             RegisterURLTemplates();
