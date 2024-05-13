@@ -625,7 +625,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             try
             {
 
-                EVSEDataRecord = default;
+                EVSEDataRecord = null;
 
                 if (JSON?.HasValues != true)
                 {
@@ -1241,7 +1241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             }
             catch (Exception e)
             {
-                EVSEDataRecord  = default;
+                EVSEDataRecord  = null;
                 ErrorResponse   = "The given JSON representation of an EVSE data record is invalid: " + e.Message;
                 return false;
             }

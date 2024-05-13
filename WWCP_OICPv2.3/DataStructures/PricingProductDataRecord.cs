@@ -352,13 +352,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse AdditionalReferences           [optional]
 
-                if (!JSON.ParseOptionalJSON("AdditionalReferences",
-                                            "additional references",
-                                            OICPv2_3.AdditionalReferences.TryParse,
-                                            out IEnumerable<AdditionalReferences> AdditionalReferences,
-                                            out ErrorResponse))
+                if (JSON.ParseOptionalJSON("AdditionalReferences",
+                                           "additional references",
+                                           OICPv2_3.AdditionalReferences.TryParse,
+                                           out IEnumerable<AdditionalReferences> AdditionalReferences,
+                                           out ErrorResponse))
                 {
-                    return false;
+                    if (ErrorResponse is not null)
+                        return false;
                 }
 
                 #endregion

@@ -2195,8 +2195,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              remoteStartResponse.Response.SessionId.HasValue
                                  ? new WWCP.ChargingSession(
                                        remoteStartResponse.Response.SessionId.ToWWCP().Value,
-                                       RoamingNetwork,
-                                       EventTrackingId
+                                       EventTrackingId,
+                                       RoamingNetwork
                                    )
                                  : null,
                              System_Id.Local,
