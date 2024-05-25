@@ -177,9 +177,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 ClassicAssert.AreEqual(3,                                                                           cdr?.MeterValueStart);
                 ClassicAssert.AreEqual(38,                                                                          cdr?.MeterValueEnd);
                 ClassicAssert.AreEqual(3,                                                                           cdr?.MeterValuesInBetween?.Count());
-                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(4));
-                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(5));
-                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(6));
+                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseKWh(4)));
+                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseKWh(5)));
+                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseKWh(6)));
 
                 ClassicAssert.AreEqual(3,                                                                           cdr?.SignedMeteringValues?.Count());
                 ClassicAssert.AreEqual("loooong start...",                                                          cdr?.SignedMeteringValues?.ElementAt(0).Value);

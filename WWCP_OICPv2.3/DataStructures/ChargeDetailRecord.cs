@@ -23,6 +23,7 @@ using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
 
@@ -86,7 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The amount of consumed energy [kWh].
         /// </summary>
         [Mandatory]
-        public Decimal                           ConsumedEnergy                     { get; }
+        public WattHour                          ConsumedEnergy                     { get; }
 
         /// <summary>
         /// The optional pricing product name (for identifying a tariff) that must be unique.
@@ -110,19 +111,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional starting value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                          MeterValueStart                    { get; }
+        public WattHour?                         MeterValueStart                    { get; }
 
         /// <summary>
         /// The optional ending value of the energy meter [kWh].
         /// </summary>
         [Optional]
-        public Decimal?                          MeterValueEnd                      { get; }
+        public WattHour?                         MeterValueEnd                      { get; }
 
         /// <summary>
         /// The optional enumeration of meter values during the charging session.
         /// </summary>
         [Optional]
-        public IEnumerable<Decimal>              MeterValuesInBetween               { get; }
+        public IEnumerable<WattHour>             MeterValuesInBetween               { get; }
 
         /// <summary>
         /// Optional signed metering values, with can e.g. verified via a transparency software.
@@ -185,14 +186,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                   DateTime                           SessionEnd,
                                   DateTime                           ChargingStart,
                                   DateTime                           ChargingEnd,
-                                  Decimal                            ConsumedEnergy,
+                                  WattHour                           ConsumedEnergy,
 
                                   PartnerProduct_Id?                 PartnerProductId                 = null,
                                   CPOPartnerSession_Id?              CPOPartnerSessionId              = null,
                                   EMPPartnerSession_Id?              EMPPartnerSessionId              = null,
-                                  Decimal?                           MeterValueStart                  = null,
-                                  Decimal?                           MeterValueEnd                    = null,
-                                  IEnumerable<Decimal>?              MeterValuesInBetween             = null,
+                                  WattHour?                          MeterValueStart                  = null,
+                                  WattHour?                          MeterValueEnd                    = null,
+                                  IEnumerable<WattHour>?             MeterValuesInBetween             = null,
                                   IEnumerable<SignedMeteringValue>?  SignedMeteringValues             = null,
                                   CalibrationLawVerification?        CalibrationLawVerificationInfo   = null,
                                   Operator_Id?                       HubOperatorId                    = null,
@@ -489,7 +490,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (!JSON.ParseMandatory("ConsumedEnergy",
                                          "consumed energy",
-                                         out Decimal ConsumedEnergy,
+                                         WattHour.TryParseKWh,
+                                         out WattHour ConsumedEnergy,
                                          out ErrorResponse))
                 {
                     return false;
@@ -543,7 +545,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("MeterValueStart",
                                        "meter value start",
-                                       out Decimal? MeterValueStart,
+                                       WattHour.TryParseKWh,
+                                       out WattHour? MeterValueStart,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -556,7 +559,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("MeterValueEnd",
                                        "meter value end",
-                                       out Decimal? MeterValueEnd,
+                                       WattHour.TryParseKWh,
+                                       out WattHour? MeterValueEnd,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -567,7 +571,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 #region Parse MeterValuesInBetween              [optional]
 
-                IEnumerable<Decimal>? MeterValuesInBetween = null;
+                List<WattHour>? MeterValuesInBetween = null;
 
                 if (JSON.ParseOptional("MeterValueInBetween",
                                        "meter values in between",
@@ -578,15 +582,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     if (ErrorResponse is not null)
                         return false;
 
-                    if (MeterValuesInBetweenJSON.ParseOptionalJSON("meterValues",
-                                                                   "meter values",
-                                                                   (String input, out Decimal number) => Decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number),
-                                                                   out MeterValuesInBetween,
-                                                                   out ErrorResponse))
+                    if (MeterValuesInBetweenJSON["meterValues"] is JArray meterValuesArray)
                     {
-                        if (ErrorResponse is not null)
-                            return false;
+
+                        MeterValuesInBetween = [];
+
+                        foreach (var meterValueJSON in meterValuesArray)
+                        {
+                            if (WattHour.TryParse(meterValueJSON.ToString(), out var meterValue))
+                                MeterValuesInBetween.Add(meterValue);
+                        }
+
                     }
+
+                    //if (MeterValuesInBetweenJSON.ParseOptionalJSONArray("meterValues",
+                    //                                                    "meter values",
+                    //                                                    //(String input, out WattHour number) => WattHour.TryParseKWh(input, NumberStyles.Any, CultureInfo.InvariantCulture, out number),
+                    //                                                    WattHour.TryParseKWh,
+                    //                                                    out MeterValuesInBetween,
+                    //                                                    out ErrorResponse))
+                    //{
+                    //    if (ErrorResponse is not null)
+                    //        return false;
+                    //}
 
                 }
 
@@ -725,7 +743,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  new JProperty("SessionEnd",                       SessionEnd.         ToIso8601()),
                                  new JProperty("ChargingStart",                    ChargingStart.      ToIso8601()),
                                  new JProperty("ChargingEnd",                      ChargingEnd.        ToIso8601()),
-                                 new JProperty("ConsumedEnergy",                   String.Format("{0:0.###}", ConsumedEnergy).Replace(",", ".")),
+                                 new JProperty("ConsumedEnergy",                   String.Format("{0:0.###}", ConsumedEnergy.kWh).Replace(",", ".")),
 
                            PartnerProductId.   HasValue
                                ? new JProperty("PartnerProductID",                 PartnerProductId.   Value.ToString())
@@ -751,7 +769,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                ? new JProperty("MeterValueInBetween",
                                      new JObject(  // OICP is crazy!
                                          new JProperty("meterValues",              new JArray(MeterValuesInBetween.
-                                                                                                  SafeSelect(meterValue => String.Format("{0:0.###}", meterValue).Replace(",", ".")))
+                                                                                                  SafeSelect(meterValue => String.Format("{0:0.###}", meterValue.kWh).Replace(",", ".")))
                                          )
                                      )
                                  )
@@ -1223,7 +1241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The amount of consumed energy [kWh].
             /// </summary>
             [Mandatory]
-            public Decimal?                          ConsumedEnergy                     { get; set; }
+            public WattHour?                         ConsumedEnergy                     { get; set; }
 
             /// <summary>
             /// An optional pricing product name (for identifying a tariff) that must be unique.
@@ -1248,19 +1266,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The optional starting value of the energy meter [kWh].
             /// </summary>
             [Optional]
-            public Decimal?                          MeterValueStart                    { get; set; }
+            public WattHour?                         MeterValueStart                    { get; set; }
 
             /// <summary>
             /// The optional final value of the energy meter [kWh].
             /// </summary>
             [Optional]
-            public Decimal?                          MeterValueEnd                      { get; set; }
+            public WattHour?                         MeterValueEnd                      { get; set; }
 
             /// <summary>
             /// An optional enumeration of meter values during the charging session.
             /// </summary>
             [Optional]
-            public List<Decimal>                     MeterValuesInBetween               { get; }
+            public List<WattHour>                    MeterValuesInBetween               { get; }
 
             /// <summary>
             /// Optional signed metering values, with can e.g. verified via a transparency software.
@@ -1325,14 +1343,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            DateTime?                          SessionEnd                       = null,
                            DateTime?                          ChargingStart                    = null,
                            DateTime?                          ChargingEnd                      = null,
-                           Decimal?                           ConsumedEnergy                   = null,
+                           WattHour?                          ConsumedEnergy                   = null,
 
                            PartnerProduct_Id?                 PartnerProductId                 = null,
                            CPOPartnerSession_Id?              CPOPartnerSessionId              = null,
                            EMPPartnerSession_Id?              EMPPartnerSessionId              = null,
-                           Decimal?                           MeterValueStart                  = null,
-                           Decimal?                           MeterValueEnd                    = null,
-                           IEnumerable<Decimal>?              MeterValuesInBetween             = null,
+                           WattHour?                          MeterValueStart                  = null,
+                           WattHour?                          MeterValueEnd                    = null,
+                           IEnumerable<WattHour>?             MeterValuesInBetween             = null,
                            IEnumerable<SignedMeteringValue>?  SignedMeteringValues             = null,
                            CalibrationLawVerification?        CalibrationLawVerificationInfo   = null,
                            Operator_Id?                       HubOperatorId                    = null,
@@ -1361,7 +1379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 this.MeterValueStart                 = MeterValueStart;
                 this.MeterValueEnd                   = MeterValueEnd;
                 this.MeterValuesInBetween            = MeterValuesInBetween is not null && MeterValuesInBetween.Any()
-                                                           ? new List<Decimal>            (MeterValuesInBetween)
+                                                           ? new List<WattHour>           (MeterValuesInBetween)
                                                            : [];
                 this.SignedMeteringValues            = SignedMeteringValues is not null && SignedMeteringValues.Any()
                                                            ? new List<SignedMeteringValue>(SignedMeteringValues)

@@ -1626,7 +1626,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                       new WWCP.EnergyMeteringValue(
                                                           ChargeDetailRecord.ChargingStart,
-                                                          ChargeDetailRecord.MeterValueStart ?? 0,
+                                                          ChargeDetailRecord.MeterValueStart ?? WattHour.Zero,
                                                           WWCP.EnergyMeteringValueTypes.Start,
                                                           ChargeDetailRecord.SignedMeteringValues.
                                                                              Where (smv => smv.MeteringStatus == MeteringStatusType.Start).
@@ -1747,15 +1747,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           SessionStart:                     ChargeDetailRecord.SessionTime.StartTime,
                           SessionEnd:                       sessionEndTime.Value,
                           Identification:                   ChargeDetailRecord.AuthenticationStart?.ToOICP(),
-                          PartnerProductId:                 ChargeDetailRecord.ChargingProduct?.Id.ToOICP(),
+                          PartnerProductId:                 ChargeDetailRecord.ChargingProduct?.Id. ToOICP(),
                           CPOPartnerSessionId:              ChargeDetailRecord.GetInternalDataAs<CPOPartnerSession_Id?>(OICP_CPOPartnerSessionId),
                           EMPPartnerSessionId:              ChargeDetailRecord.GetInternalDataAs<EMPPartnerSession_Id?>(OICP_EMPPartnerSessionId),
                           ChargingStart:                    ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Timestamp : ChargeDetailRecord.SessionTime.StartTime,
                           ChargingEnd:                      ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Timestamp : sessionEndTime.Value,
-                          MeterValueStart:                  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().Value     : null,
-                          MeterValueEnd:                    ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). Value     : null,
-                          MeterValuesInBetween:             ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select(energyMeteringValue => energyMeteringValue.Value) : null,
-                          ConsumedEnergy:                   ChargeDetailRecord.ConsumedEnergy ?? 0,
+                          MeterValueStart:                  ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.First().WattHours     : null,
+                          MeterValueEnd:                    ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Last(). WattHours     : null,
+                          MeterValuesInBetween:             ChargeDetailRecord.EnergyMeteringValues?.Any() == true ? ChargeDetailRecord.EnergyMeteringValues.Select(energyMeteringValue => energyMeteringValue.WattHours) : null,
+                          ConsumedEnergy:                   ChargeDetailRecord.ConsumedEnergy ?? WattHour.Zero,
                           SignedMeteringValues:             signedMeteringValues,
                           CalibrationLawVerificationInfo:   calibrationLawVerificationInfo,
                           HubOperatorId:                    ChargeDetailRecord.GetInternalDataAs<Operator_Id?>(OICP_HubOperatorId),

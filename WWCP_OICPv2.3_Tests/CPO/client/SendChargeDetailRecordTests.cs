@@ -20,6 +20,7 @@
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 
 #endregion
@@ -57,15 +58,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.client
                                   SessionEnd:                      DateTime.Parse("2022-08-09T11:18:25.229Z"),
                                   ChargingStart:                   DateTime.Parse("2022-08-09T10:20:25.229Z"),
                                   ChargingEnd:                     DateTime.Parse("2022-08-09T11:13:25.229Z"),
-                                  ConsumedEnergy:                  35,
+                                  ConsumedEnergy:                  WattHour.Parse(35),
 
-                                  PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
+                                  PartnerProductId:                PartnerProduct_Id.   Parse("AC3"),
                                   CPOPartnerSessionId:             CPOPartnerSession_Id.Parse("e9c6faad-75c8-4f5b-9b5c-164ae7459804"),
                                   EMPPartnerSessionId:             EMPPartnerSession_Id.Parse("290b96b3-57df-4021-b8f8-50d9c211c767"),
-                                  MeterValueStart:                 3,
-                                  MeterValueEnd:                   38,
+                                  MeterValueStart:                 WattHour.ParseKWh( 3),
+                                  MeterValueEnd:                   WattHour.ParseKWh(38),
                                   MeterValuesInBetween:            [
-                                                                       4, 5 ,6
+                                                                       WattHour.ParseKWh(4),
+                                                                       WattHour.ParseKWh(5),
+                                                                       WattHour.ParseKWh(6)
                                                                    ],
                                   SignedMeteringValues:            [
                                                                        new SignedMeteringValue(
