@@ -17,7 +17,6 @@
 
 #region Usings
 
-using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
 
 using Newtonsoft.Json.Linq;
@@ -758,11 +757,11 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            MeterValueStart.    HasValue
-                               ? new JProperty("MeterValueStart",                  String.Format("{0:0.###}", MeterValueStart.Value).Replace(",", "."))
+                               ? new JProperty("MeterValueStart",                  String.Format("{0:0.###}", MeterValueStart.Value.kWh).Replace(",", "."))
                                : null,
 
                            MeterValueEnd.      HasValue
-                               ? new JProperty("MeterValueEnd",                    String.Format("{0:0.###}", MeterValueEnd.  Value).Replace(",", "."))
+                               ? new JProperty("MeterValueEnd",                    String.Format("{0:0.###}", MeterValueEnd.  Value.kWh).Replace(",", "."))
                                : null,
 
                            MeterValuesInBetween is not null && MeterValuesInBetween.Any()
