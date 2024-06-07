@@ -1690,13 +1690,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             var signedMeteringValues = new List<SignedMeteringValue>();
 
-            foreach (var smv in ChargeDetailRecord.EnergyMeteringValues)
+            #region Work-Around when there is only a single (OCMF) end metering value
+
+            if (ChargeDetailRecord.EnergyMeteringValues.Count() == 1 &&
+                ChargeDetailRecord.EnergyMeteringValues.First().Type == WWCP.EnergyMeteringValueTypes.Stop)
             {
-                if (smv.SignedData is not null)
+                signedMeteringValues.Add(
+                    new SignedMeteringValue(
+                        null,
+                        MeteringStatusType.Start
+                    )
+                );
+            }
+
+            #endregion
+
+            foreach (var energyMeteringValue in ChargeDetailRecord.EnergyMeteringValues)
+            {
+                if (energyMeteringValue.SignedData is not null)
                     signedMeteringValues.Add(
                         new SignedMeteringValue(
-                            smv.SignedData.ToString(),
-                            smv.Type switch {
+                            energyMeteringValue.SignedData,
+                            energyMeteringValue.Type switch {
                                 WWCP.EnergyMeteringValueTypes.Start         => MeteringStatusType.Start,
                                 WWCP.EnergyMeteringValueTypes.Intermediate  => MeteringStatusType.Progress,
                                 WWCP.EnergyMeteringValueTypes.TariffChange  => MeteringStatusType.Progress,
