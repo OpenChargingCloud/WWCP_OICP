@@ -742,7 +742,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                  new JProperty("SessionEnd",                       SessionEnd.         ToIso8601()),
                                  new JProperty("ChargingStart",                    ChargingStart.      ToIso8601()),
                                  new JProperty("ChargingEnd",                      ChargingEnd.        ToIso8601()),
-                                 new JProperty("ConsumedEnergy",                   String.Format("{0:0.###}", ConsumedEnergy.kWh).Replace(",", ".")),
+                                 new JProperty("ConsumedEnergy",                   Math.Round(ConsumedEnergy.kWh, 3)),
 
                            PartnerProductId.   HasValue
                                ? new JProperty("PartnerProductID",                 PartnerProductId.   Value.ToString())
@@ -757,18 +757,18 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            MeterValueStart.    HasValue
-                               ? new JProperty("MeterValueStart",                  String.Format("{0:0.###}", MeterValueStart.Value.kWh).Replace(",", "."))
+                               ? new JProperty("MeterValueStart",                  Math.Round(MeterValueStart.Value.kWh, 3))
                                : null,
 
                            MeterValueEnd.      HasValue
-                               ? new JProperty("MeterValueEnd",                    String.Format("{0:0.###}", MeterValueEnd.  Value.kWh).Replace(",", "."))
+                               ? new JProperty("MeterValueEnd",                    Math.Round(MeterValueEnd.  Value.kWh, 3))
                                : null,
 
                            MeterValuesInBetween is not null && MeterValuesInBetween.Any()
                                ? new JProperty("MeterValueInBetween",
                                      new JObject(  // OICP is crazy!
                                          new JProperty("meterValues",              new JArray(MeterValuesInBetween.
-                                                                                                  SafeSelect(meterValue => String.Format("{0:0.###}", meterValue.kWh).Replace(",", ".")))
+                                                                                                  SafeSelect(meterValue => Math.Round(meterValue.kWh, 3)))
                                          )
                                      )
                                  )
