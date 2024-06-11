@@ -461,7 +461,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenDataLicense1">An Open Data license.</param>
         /// <param name="OpenDataLicense2">Another Open Data license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (OpenDataLicense OpenDataLicense1,
                                            OpenDataLicense OpenDataLicense2)
 
@@ -476,7 +476,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenDataLicense1">An Open Data license.</param>
         /// <param name="OpenDataLicense2">Another Open Data license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (OpenDataLicense OpenDataLicense1,
                                            OpenDataLicense OpenDataLicense2)
 
@@ -491,7 +491,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenDataLicense1">An Open Data license.</param>
         /// <param name="OpenDataLicense2">Another Open Data license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (OpenDataLicense OpenDataLicense1,
                                           OpenDataLicense OpenDataLicense2)
 
@@ -506,7 +506,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenDataLicense1">An Open Data license.</param>
         /// <param name="OpenDataLicense2">Another Open Data license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (OpenDataLicense OpenDataLicense1,
                                            OpenDataLicense OpenDataLicense2)
 
@@ -521,7 +521,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenDataLicense1">An Open Data license.</param>
         /// <param name="OpenDataLicense2">Another Open Data license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (OpenDataLicense OpenDataLicense1,
                                           OpenDataLicense OpenDataLicense2)
 
@@ -536,7 +536,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenDataLicense1">An Open Data license.</param>
         /// <param name="OpenDataLicense2">Another Open Data license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (OpenDataLicense OpenDataLicense1,
                                            OpenDataLicense OpenDataLicense2)
 

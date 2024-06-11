@@ -352,7 +352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
         /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (ProviderAuthenticationData? ProviderAuthenticationData1,
                                           ProviderAuthenticationData? ProviderAuthenticationData2)
         {
@@ -373,7 +373,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
         /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (ProviderAuthenticationData? ProviderAuthenticationData1,
                                            ProviderAuthenticationData? ProviderAuthenticationData2)
 
@@ -388,7 +388,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
         /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (ProviderAuthenticationData? ProviderAuthenticationData1,
                                           ProviderAuthenticationData? ProviderAuthenticationData2)
         {
@@ -409,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderAuthenticationData1">Provider authentication data.</param>
         /// <param name="ProviderAuthenticationData2">Other provider authentication data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (ProviderAuthenticationData? ProviderAuthenticationData1,
                                            ProviderAuthenticationData? ProviderAuthenticationData2)
 

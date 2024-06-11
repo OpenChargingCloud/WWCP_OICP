@@ -231,7 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReference1">A additional reference.</param>
         /// <param name="AdditionalReference2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Additional_Reference AdditionalReference1,
                                            Additional_Reference AdditionalReference2)
 
@@ -246,7 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReference1">A additional reference.</param>
         /// <param name="AdditionalReference2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Additional_Reference AdditionalReference1,
                                            Additional_Reference AdditionalReference2)
 
@@ -261,7 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReference1">A additional reference.</param>
         /// <param name="AdditionalReference2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Additional_Reference AdditionalReference1,
                                           Additional_Reference AdditionalReference2)
 
@@ -276,7 +276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReference1">A additional reference.</param>
         /// <param name="AdditionalReference2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Additional_Reference AdditionalReference1,
                                            Additional_Reference AdditionalReference2)
 
@@ -291,7 +291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReference1">A additional reference.</param>
         /// <param name="AdditionalReference2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Additional_Reference AdditionalReference1,
                                           Additional_Reference AdditionalReference2)
 
@@ -306,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReference1">A additional reference.</param>
         /// <param name="AdditionalReference2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Additional_Reference AdditionalReference1,
                                            Additional_Reference AdditionalReference2)
 

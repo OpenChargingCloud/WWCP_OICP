@@ -200,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (CPOPartnerSession_Id SessionId1,
                                            CPOPartnerSession_Id SessionId2)
 
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (CPOPartnerSession_Id SessionId1,
                                            CPOPartnerSession_Id SessionId2)
 
@@ -230,7 +230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (CPOPartnerSession_Id SessionId1,
                                           CPOPartnerSession_Id SessionId2)
 
@@ -245,7 +245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (CPOPartnerSession_Id SessionId1,
                                            CPOPartnerSession_Id SessionId2)
 
@@ -260,7 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (CPOPartnerSession_Id SessionId1,
                                           CPOPartnerSession_Id SessionId2)
 
@@ -275,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SessionId1">A charging session identification.</param>
         /// <param name="SessionId2">Another charging session identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (CPOPartnerSession_Id SessionId1,
                                            CPOPartnerSession_Id SessionId2)
 

@@ -202,7 +202,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Time_Zone TimeZone1,
                                            Time_Zone TimeZone2)
 
@@ -217,7 +217,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Time_Zone TimeZone1,
                                            Time_Zone TimeZone2)
 
@@ -232,7 +232,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Time_Zone TimeZone1,
                                           Time_Zone TimeZone2)
 
@@ -247,7 +247,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Time_Zone TimeZone1,
                                            Time_Zone TimeZone2)
 
@@ -262,7 +262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Time_Zone TimeZone1,
                                           Time_Zone TimeZone2)
 
@@ -277,7 +277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TimeZone1">A time zone identification.</param>
         /// <param name="TimeZone2">Another time zone identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Time_Zone TimeZone1,
                                            Time_Zone TimeZone2)
 

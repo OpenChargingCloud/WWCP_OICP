@@ -202,7 +202,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PhoneNumber1">A phone number.</param>
         /// <param name="PhoneNumber2">Another phone number.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Phone_Number PhoneNumber1, Phone_Number PhoneNumber2)
             => PhoneNumber1.Equals(PhoneNumber2);
 
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PhoneNumber1">A phone number.</param>
         /// <param name="PhoneNumber2">Another phone number.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Phone_Number PhoneNumber1, Phone_Number PhoneNumber2)
             => !PhoneNumber1.Equals(PhoneNumber2);
 
@@ -228,7 +228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PhoneNumber1">A phone number.</param>
         /// <param name="PhoneNumber2">Another phone number.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Phone_Number PhoneNumber1, Phone_Number PhoneNumber2)
             => PhoneNumber1.CompareTo(PhoneNumber2) < 0;
 
@@ -241,7 +241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PhoneNumber1">A phone number.</param>
         /// <param name="PhoneNumber2">Another phone number.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Phone_Number PhoneNumber1, Phone_Number PhoneNumber2)
             => PhoneNumber1.CompareTo(PhoneNumber2) <= 0;
 
@@ -254,7 +254,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PhoneNumber1">A phone number.</param>
         /// <param name="PhoneNumber2">Another phone number.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Phone_Number PhoneNumber1, Phone_Number PhoneNumber2)
             => PhoneNumber1.CompareTo(PhoneNumber2) > 0;
 
@@ -267,7 +267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PhoneNumber1">A phone number.</param>
         /// <param name="PhoneNumber2">Another phone number.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Phone_Number PhoneNumber1, Phone_Number PhoneNumber2)
             => PhoneNumber1.CompareTo(PhoneNumber2) >= 0;
 

@@ -186,7 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicenseIdId1">A Open Source license identification.</param>
         /// <param name="OpenSourceLicenseIdId2">Another Open Source license identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (OpenSourceLicense_Id OpenSourceLicenseIdId1,
                                            OpenSourceLicense_Id OpenSourceLicenseIdId2)
 
@@ -201,7 +201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicenseIdId1">A Open Source license identification.</param>
         /// <param name="OpenSourceLicenseIdId2">Another Open Source license identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (OpenSourceLicense_Id OpenSourceLicenseIdId1,
                                            OpenSourceLicense_Id OpenSourceLicenseIdId2)
 
@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicenseIdId1">A Open Source license identification.</param>
         /// <param name="OpenSourceLicenseIdId2">Another Open Source license identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (OpenSourceLicense_Id OpenSourceLicenseIdId1,
                                           OpenSourceLicense_Id OpenSourceLicenseIdId2)
 
@@ -231,7 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicenseIdId1">A Open Source license identification.</param>
         /// <param name="OpenSourceLicenseIdId2">Another Open Source license identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (OpenSourceLicense_Id OpenSourceLicenseIdId1,
                                            OpenSourceLicense_Id OpenSourceLicenseIdId2)
 
@@ -246,7 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicenseIdId1">A Open Source license identification.</param>
         /// <param name="OpenSourceLicenseIdId2">Another Open Source license identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (OpenSourceLicense_Id OpenSourceLicenseIdId1,
                                           OpenSourceLicense_Id OpenSourceLicenseIdId2)
 
@@ -261,7 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicenseIdId1">A Open Source license identification.</param>
         /// <param name="OpenSourceLicenseIdId2">Another Open Source license identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (OpenSourceLicense_Id OpenSourceLicenseIdId1,
                                            OpenSourceLicense_Id OpenSourceLicenseIdId2)
 
@@ -312,7 +312,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(Object? Object)
 
             => Object is OpenSourceLicense_Id openSourceLicenseId &&

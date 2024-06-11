@@ -185,7 +185,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (ClearingHouse_Id ClearingHouseIdId1,
                                            ClearingHouse_Id ClearingHouseIdId2)
 
@@ -200,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (ClearingHouse_Id ClearingHouseIdId1,
                                            ClearingHouse_Id ClearingHouseIdId2)
 
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (ClearingHouse_Id ClearingHouseIdId1,
                                           ClearingHouse_Id ClearingHouseIdId2)
 
@@ -230,7 +230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (ClearingHouse_Id ClearingHouseIdId1,
                                            ClearingHouse_Id ClearingHouseIdId2)
 
@@ -245,7 +245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (ClearingHouse_Id ClearingHouseIdId1,
                                           ClearingHouse_Id ClearingHouseIdId2)
 
@@ -260,7 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ClearingHouseIdId1">A clearing house identification.</param>
         /// <param name="ClearingHouseIdId2">Another clearing house identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (ClearingHouse_Id ClearingHouseIdId1,
                                            ClearingHouse_Id ClearingHouseIdId2)
 

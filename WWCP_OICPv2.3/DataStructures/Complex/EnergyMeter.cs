@@ -574,7 +574,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergyMeter1">An energy meter.</param>
         /// <param name="EnergyMeter2">Another energy meter.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EnergyMeter EnergyMeter1,
                                            EnergyMeter EnergyMeter2)
         {
@@ -598,7 +598,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergyMeter1">An energy meter.</param>
         /// <param name="EnergyMeter2">Another energy meter.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EnergyMeter EnergyMeter1,
                                            EnergyMeter EnergyMeter2)
 
@@ -613,7 +613,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergyMeter1">An energy meter.</param>
         /// <param name="EnergyMeter2">Another energy meter.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (EnergyMeter EnergyMeter1,
                                           EnergyMeter EnergyMeter2)
 
@@ -630,7 +630,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergyMeter1">An energy meter.</param>
         /// <param name="EnergyMeter2">Another energy meter.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (EnergyMeter EnergyMeter1,
                                            EnergyMeter EnergyMeter2)
 
@@ -645,7 +645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergyMeter1">An energy meter.</param>
         /// <param name="EnergyMeter2">Another energy meter.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (EnergyMeter EnergyMeter1,
                                           EnergyMeter EnergyMeter2)
 
@@ -662,7 +662,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergyMeter1">An energy meter.</param>
         /// <param name="EnergyMeter2">Another energy meter.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (EnergyMeter EnergyMeter1,
                                            EnergyMeter EnergyMeter2)
 

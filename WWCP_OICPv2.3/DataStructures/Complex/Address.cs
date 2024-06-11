@@ -548,7 +548,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Address1">An address.</param>
         /// <param name="Address2">Another address.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Address? Address1,
                                           Address? Address2)
         {
@@ -569,7 +569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Address1">An address.</param>
         /// <param name="Address2">Another address.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Address? Address1,
                                            Address? Address2)
 
@@ -584,7 +584,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Address1">An address.</param>
         /// <param name="Address2">Another address.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Address? Address1,
                                           Address? Address2)
         {
@@ -605,7 +605,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Address1">An address.</param>
         /// <param name="Address2">Another address.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Address? Address1,
                                            Address? Address2)
 

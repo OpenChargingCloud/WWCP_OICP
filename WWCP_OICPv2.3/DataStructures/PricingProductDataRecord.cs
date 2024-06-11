@@ -481,7 +481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PricingProductDataRecord1">An EVSE data record.</param>
         /// <param name="PricingProductDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (PricingProductDataRecord PricingProductDataRecord1,
                                            PricingProductDataRecord PricingProductDataRecord2)
         {
@@ -505,7 +505,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PricingProductDataRecord1">An EVSE data record.</param>
         /// <param name="PricingProductDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (PricingProductDataRecord PricingProductDataRecord1,
                                            PricingProductDataRecord PricingProductDataRecord2)
 

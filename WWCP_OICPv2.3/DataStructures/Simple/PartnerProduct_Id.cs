@@ -227,7 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (PartnerProduct_Id PartnerProductId1,
                                            PartnerProduct_Id PartnerProductId2)
 
@@ -242,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (PartnerProduct_Id PartnerProductId1,
                                            PartnerProduct_Id PartnerProductId2)
 
@@ -257,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (PartnerProduct_Id PartnerProductId1,
                                           PartnerProduct_Id PartnerProductId2)
 
@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (PartnerProduct_Id PartnerProductId1,
                                            PartnerProduct_Id PartnerProductId2)
 
@@ -287,7 +287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (PartnerProduct_Id PartnerProductId1,
                                           PartnerProduct_Id PartnerProductId2)
 
@@ -302,7 +302,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PartnerProductId1">A partner product identification.</param>
         /// <param name="PartnerProductId2">Another partner product identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (PartnerProduct_Id PartnerProductId1,
                                            PartnerProduct_Id PartnerProductId2)
 

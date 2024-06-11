@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CertificateChain1">A certificate chain.</param>
         /// <param name="CertificateChain2">Another certificate chain.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (CertificateChain CertificateChain1,
                                            CertificateChain CertificateChain2)
 
@@ -203,7 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CertificateChain1">A certificate chain.</param>
         /// <param name="CertificateChain2">Another certificate chain.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (CertificateChain CertificateChain1,
                                            CertificateChain CertificateChain2)
 
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CertificateChain1">A certificate chain.</param>
         /// <param name="CertificateChain2">Another certificate chain.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (CertificateChain CertificateChain1,
                                           CertificateChain CertificateChain2)
 
@@ -233,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CertificateChain1">A certificate chain.</param>
         /// <param name="CertificateChain2">Another certificate chain.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (CertificateChain CertificateChain1,
                                            CertificateChain CertificateChain2)
 
@@ -248,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CertificateChain1">A certificate chain.</param>
         /// <param name="CertificateChain2">Another certificate chain.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (CertificateChain CertificateChain1,
                                           CertificateChain CertificateChain2)
 
@@ -263,7 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CertificateChain1">A certificate chain.</param>
         /// <param name="CertificateChain2">Another certificate chain.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (CertificateChain CertificateChain1,
                                            CertificateChain CertificateChain2)
 

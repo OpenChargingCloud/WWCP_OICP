@@ -390,7 +390,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (OperatorEVSEData? OperatorEVSEData1,
                                           OperatorEVSEData? OperatorEVSEData2)
         {
@@ -411,7 +411,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (OperatorEVSEData? OperatorEVSEData1,
                                            OperatorEVSEData? OperatorEVSEData2)
 
@@ -426,7 +426,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (OperatorEVSEData? OperatorEVSEData1,
                                           OperatorEVSEData? OperatorEVSEData2)
         {
@@ -447,7 +447,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEData1">An operator EVSE data.</param>
         /// <param name="OperatorEVSEData2">Another operator EVSE data.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (OperatorEVSEData? OperatorEVSEData1,
                                            OperatorEVSEData? OperatorEVSEData2)
 

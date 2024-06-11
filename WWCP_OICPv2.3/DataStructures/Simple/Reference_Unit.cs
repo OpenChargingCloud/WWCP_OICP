@@ -212,7 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ReferenceUnit1">A reference unit identification.</param>
         /// <param name="ReferenceUnit2">Another reference unit identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Reference_Unit ReferenceUnit1,
                                            Reference_Unit ReferenceUnit2)
 
@@ -227,7 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ReferenceUnit1">A reference unit identification.</param>
         /// <param name="ReferenceUnit2">Another reference unit identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Reference_Unit ReferenceUnit1,
                                            Reference_Unit ReferenceUnit2)
 
@@ -242,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ReferenceUnit1">A reference unit identification.</param>
         /// <param name="ReferenceUnit2">Another reference unit identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Reference_Unit ReferenceUnit1,
                                           Reference_Unit ReferenceUnit2)
 
@@ -257,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ReferenceUnit1">A reference unit identification.</param>
         /// <param name="ReferenceUnit2">Another reference unit identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Reference_Unit ReferenceUnit1,
                                            Reference_Unit ReferenceUnit2)
 
@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ReferenceUnit1">A reference unit identification.</param>
         /// <param name="ReferenceUnit2">Another reference unit identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Reference_Unit ReferenceUnit1,
                                           Reference_Unit ReferenceUnit2)
 
@@ -287,7 +287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ReferenceUnit1">A reference unit identification.</param>
         /// <param name="ReferenceUnit2">Another reference unit identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Reference_Unit ReferenceUnit1,
                                            Reference_Unit ReferenceUnit2)
 

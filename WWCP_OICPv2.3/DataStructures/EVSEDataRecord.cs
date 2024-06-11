@@ -1458,7 +1458,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EVSEDataRecord EVSEDataRecord1,
                                            EVSEDataRecord EVSEDataRecord2)
         {
@@ -1482,7 +1482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EVSEDataRecord EVSEDataRecord1,
                                            EVSEDataRecord EVSEDataRecord2)
 
@@ -1497,7 +1497,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (EVSEDataRecord EVSEDataRecord1,
                                           EVSEDataRecord EVSEDataRecord2)
         {
@@ -1518,7 +1518,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (EVSEDataRecord EVSEDataRecord1,
                                            EVSEDataRecord EVSEDataRecord2)
 
@@ -1533,7 +1533,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (EVSEDataRecord EVSEDataRecord1,
                                           EVSEDataRecord EVSEDataRecord2)
         {
@@ -1554,7 +1554,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEDataRecord1">An EVSE data record.</param>
         /// <param name="EVSEDataRecord2">Another EVSE data record.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (EVSEDataRecord EVSEDataRecord1,
                                            EVSEDataRecord EVSEDataRecord2)
 

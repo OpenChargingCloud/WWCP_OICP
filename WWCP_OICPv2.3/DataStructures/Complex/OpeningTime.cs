@@ -313,7 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpeningTimes1">An opening time.</param>
         /// <param name="OpeningTimes2">Another opening time.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (OpeningTime? OpeningTimes1,
                                            OpeningTime? OpeningTimes2)
         {
@@ -338,7 +338,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpeningTimes1">An opening time.</param>
         /// <param name="OpeningTimes2">Another opening time.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (OpeningTime? OpeningTimes1,
                                            OpeningTime? OpeningTimes2)
 

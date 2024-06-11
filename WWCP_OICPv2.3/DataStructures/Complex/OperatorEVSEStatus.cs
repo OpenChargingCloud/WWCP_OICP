@@ -358,7 +358,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (OperatorEVSEStatus? OperatorEVSEStatus1,
                                           OperatorEVSEStatus? OperatorEVSEStatus2)
         {
@@ -379,7 +379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (OperatorEVSEStatus? OperatorEVSEStatus1,
                                            OperatorEVSEStatus? OperatorEVSEStatus2)
 
@@ -394,7 +394,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (OperatorEVSEStatus? OperatorEVSEStatus1,
                                           OperatorEVSEStatus? OperatorEVSEStatus2)
         {
@@ -415,7 +415,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEStatus1">An operator EVSE status.</param>
         /// <param name="OperatorEVSEStatus2">Another operator EVSE status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (OperatorEVSEStatus? OperatorEVSEStatus1,
                                            OperatorEVSEStatus? OperatorEVSEStatus2)
 

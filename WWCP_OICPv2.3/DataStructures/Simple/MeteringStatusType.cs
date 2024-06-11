@@ -222,7 +222,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeteringStatusType1">A metering status type.</param>
         /// <param name="MeteringStatusType2">Another metering status type.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (MeteringStatusType MeteringStatusType1,
                                            MeteringStatusType MeteringStatusType2)
 
@@ -237,7 +237,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeteringStatusType1">A metering status type.</param>
         /// <param name="MeteringStatusType2">Another metering status type.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (MeteringStatusType MeteringStatusType1,
                                            MeteringStatusType MeteringStatusType2)
 
@@ -252,7 +252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeteringStatusType1">A metering status type.</param>
         /// <param name="MeteringStatusType2">Another metering status type.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (MeteringStatusType MeteringStatusType1,
                                           MeteringStatusType MeteringStatusType2)
 
@@ -267,7 +267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeteringStatusType1">A metering status type.</param>
         /// <param name="MeteringStatusType2">Another metering status type.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (MeteringStatusType MeteringStatusType1,
                                            MeteringStatusType MeteringStatusType2)
 
@@ -282,7 +282,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeteringStatusType1">A metering status type.</param>
         /// <param name="MeteringStatusType2">Another metering status type.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (MeteringStatusType MeteringStatusType1,
                                           MeteringStatusType MeteringStatusType2)
 
@@ -297,7 +297,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeteringStatusType1">A metering status type.</param>
         /// <param name="MeteringStatusType2">Another metering status type.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (MeteringStatusType MeteringStatusType1,
                                            MeteringStatusType MeteringStatusType2)
 

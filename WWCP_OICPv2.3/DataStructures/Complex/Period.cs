@@ -275,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Period Period1,
                                            Period Period2)
 
@@ -290,7 +290,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Period Period1,
                                            Period Period2)
 
@@ -305,7 +305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Period Period1,
                                           Period Period2)
 
@@ -320,7 +320,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Period Period1,
                                            Period Period2)
 
@@ -335,7 +335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Period Period1,
                                           Period Period2)
 
@@ -350,7 +350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Period1">A time period.</param>
         /// <param name="Period2">Another time period.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Period Period1,
                                            Period Period2)
 

@@ -280,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnvironmentalImpact1">An environmental impact.</param>
         /// <param name="EnvironmentalImpact2">Another environmental impact.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EnvironmentalImpact EnvironmentalImpact1,
                                            EnvironmentalImpact EnvironmentalImpact2)
 
@@ -295,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnvironmentalImpact1">An environmental impact.</param>
         /// <param name="EnvironmentalImpact2">Another environmental impact.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EnvironmentalImpact EnvironmentalImpact1,
                                            EnvironmentalImpact EnvironmentalImpact2)
 
@@ -310,7 +310,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnvironmentalImpact1">An environmental impact.</param>
         /// <param name="EnvironmentalImpact2">Another environmental impact.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (EnvironmentalImpact EnvironmentalImpact1,
                                           EnvironmentalImpact EnvironmentalImpact2)
 
@@ -325,7 +325,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnvironmentalImpact1">An environmental impact.</param>
         /// <param name="EnvironmentalImpact2">Another environmental impact.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (EnvironmentalImpact EnvironmentalImpact1,
                                            EnvironmentalImpact EnvironmentalImpact2)
 
@@ -340,7 +340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnvironmentalImpact1">An environmental impact.</param>
         /// <param name="EnvironmentalImpact2">Another environmental impact.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (EnvironmentalImpact EnvironmentalImpact1,
                                           EnvironmentalImpact EnvironmentalImpact2)
 
@@ -355,7 +355,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnvironmentalImpact1">An environmental impact.</param>
         /// <param name="EnvironmentalImpact2">Another environmental impact.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (EnvironmentalImpact EnvironmentalImpact1,
                                            EnvironmentalImpact EnvironmentalImpact2)
 

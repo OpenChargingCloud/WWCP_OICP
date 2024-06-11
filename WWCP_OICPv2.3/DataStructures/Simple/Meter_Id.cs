@@ -189,7 +189,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Meter_Id MeterId1,
                                            Meter_Id MeterId2)
 
@@ -204,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Meter_Id MeterId1,
                                            Meter_Id MeterId2)
 
@@ -219,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Meter_Id MeterId1,
                                           Meter_Id MeterId2)
 
@@ -234,7 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Meter_Id MeterId1,
                                            Meter_Id MeterId2)
 
@@ -249,7 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Meter_Id MeterId1,
                                           Meter_Id MeterId2)
 
@@ -264,7 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="MeterId1">A meter identification.</param>
         /// <param name="MeterId2">Another meter identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Meter_Id MeterId1,
                                            Meter_Id MeterId2)
 

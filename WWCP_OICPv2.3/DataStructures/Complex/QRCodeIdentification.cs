@@ -397,7 +397,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="QRCodeIdentification1">A QR code identification.</param>
         /// <param name="QRCodeIdentification2">Another QR code identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (QRCodeIdentification QRCodeIdentification1,
                                           QRCodeIdentification QRCodeIdentification2)
 
@@ -412,7 +412,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="QRCodeIdentification1">A QR code identification.</param>
         /// <param name="QRCodeIdentification2">Another QR code identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (QRCodeIdentification QRCodeIdentification1,
                                            QRCodeIdentification QRCodeIdentification2)
 
@@ -427,7 +427,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="QRCodeIdentification1">A QR code identification.</param>
         /// <param name="QRCodeIdentification2">Another QR code identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (QRCodeIdentification QRCodeIdentification1,
                                           QRCodeIdentification QRCodeIdentification2)
 
@@ -442,7 +442,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="QRCodeIdentification1">A QR code identification.</param>
         /// <param name="QRCodeIdentification2">Another QR code identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (QRCodeIdentification QRCodeIdentification1,
                                            QRCodeIdentification QRCodeIdentification2)
 

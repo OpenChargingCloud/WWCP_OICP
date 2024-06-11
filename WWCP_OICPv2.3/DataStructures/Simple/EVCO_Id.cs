@@ -301,7 +301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId1">A contract identification.</param>
         /// <param name="EVCOId2">Another contract identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EVCO_Id EVCOId1,
                                            EVCO_Id EVCOId2)
 
@@ -316,7 +316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId1">A contract identification.</param>
         /// <param name="EVCOId2">Another contract identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EVCO_Id EVCOId1,
                                            EVCO_Id EVCOId2)
 
@@ -331,7 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId1">A contract identification.</param>
         /// <param name="EVCOId2">Another contract identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (EVCO_Id EVCOId1,
                                           EVCO_Id EVCOId2)
 
@@ -346,7 +346,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId1">A contract identification.</param>
         /// <param name="EVCOId2">Another contract identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (EVCO_Id EVCOId1,
                                            EVCO_Id EVCOId2)
 
@@ -361,7 +361,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId1">A contract identification.</param>
         /// <param name="EVCOId2">Another contract identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (EVCO_Id EVCOId1,
                                           EVCO_Id EVCOId2)
 
@@ -376,7 +376,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVCOId1">A contract identification.</param>
         /// <param name="EVCOId2">Another contract identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (EVCO_Id EVCOId1,
                                            EVCO_Id EVCOId2)
 

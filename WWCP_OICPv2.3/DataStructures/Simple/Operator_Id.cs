@@ -374,7 +374,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Operator_Id OperatorId1,
                                            Operator_Id OperatorId2)
 
@@ -389,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Operator_Id OperatorId1,
                                            Operator_Id OperatorId2)
 
@@ -404,7 +404,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Operator_Id OperatorId1,
                                           Operator_Id OperatorId2)
 
@@ -419,7 +419,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Operator_Id OperatorId1,
                                            Operator_Id OperatorId2)
 
@@ -434,7 +434,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Operator_Id OperatorId1,
                                           Operator_Id OperatorId2)
 
@@ -449,7 +449,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorId1">An charging station operator identification.</param>
         /// <param name="OperatorId2">Another charging station operator identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Operator_Id OperatorId1,
                                            Operator_Id OperatorId2)
 

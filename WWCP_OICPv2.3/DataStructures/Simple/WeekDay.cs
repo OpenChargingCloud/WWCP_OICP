@@ -254,7 +254,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="WeekDay1">A week day.</param>
         /// <param name="WeekDay2">Another week day.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (WeekDay WeekDay1,
                                            WeekDay WeekDay2)
 
@@ -269,7 +269,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="WeekDay1">A week day.</param>
         /// <param name="WeekDay2">Another week day.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (WeekDay WeekDay1,
                                            WeekDay WeekDay2)
 
@@ -284,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="WeekDay1">A week day.</param>
         /// <param name="WeekDay2">Another week day.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (WeekDay WeekDay1,
                                           WeekDay WeekDay2)
 
@@ -299,7 +299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="WeekDay1">A week day.</param>
         /// <param name="WeekDay2">Another week day.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (WeekDay WeekDay1,
                                            WeekDay WeekDay2)
 
@@ -314,7 +314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="WeekDay1">A week day.</param>
         /// <param name="WeekDay2">Another week day.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (WeekDay WeekDay1,
                                           WeekDay WeekDay2)
 
@@ -329,7 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="WeekDay1">A week day.</param>
         /// <param name="WeekDay2">Another week day.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (WeekDay WeekDay1,
                                            WeekDay WeekDay2)
 

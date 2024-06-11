@@ -291,7 +291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProductAvailabilityTimes1">An energy source.</param>
         /// <param name="ProductAvailabilityTimes2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (ProductAvailabilityTimes ProductAvailabilityTimes1,
                                            ProductAvailabilityTimes ProductAvailabilityTimes2)
 
@@ -306,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProductAvailabilityTimes1">An energy source.</param>
         /// <param name="ProductAvailabilityTimes2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (ProductAvailabilityTimes ProductAvailabilityTimes1,
                                            ProductAvailabilityTimes ProductAvailabilityTimes2)
 
@@ -321,7 +321,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProductAvailabilityTimes1">An energy source.</param>
         /// <param name="ProductAvailabilityTimes2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (ProductAvailabilityTimes ProductAvailabilityTimes1,
                                           ProductAvailabilityTimes ProductAvailabilityTimes2)
 
@@ -336,7 +336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProductAvailabilityTimes1">An energy source.</param>
         /// <param name="ProductAvailabilityTimes2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (ProductAvailabilityTimes ProductAvailabilityTimes1,
                                            ProductAvailabilityTimes ProductAvailabilityTimes2)
 
@@ -351,7 +351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProductAvailabilityTimes1">An energy source.</param>
         /// <param name="ProductAvailabilityTimes2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (ProductAvailabilityTimes ProductAvailabilityTimes1,
                                           ProductAvailabilityTimes ProductAvailabilityTimes2)
 
@@ -366,7 +366,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProductAvailabilityTimes1">An energy source.</param>
         /// <param name="ProductAvailabilityTimes2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (ProductAvailabilityTimes ProductAvailabilityTimes1,
                                            ProductAvailabilityTimes ProductAvailabilityTimes2)
 
@@ -423,7 +423,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(Object? Object)
 
             => Object is ProductAvailabilityTimes productAvailabilityTimes &&

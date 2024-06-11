@@ -319,7 +319,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEStatusUpdate1">An EVSE status update.</param>
         /// <param name="EVSEStatusUpdate2">Another EVSE status update.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EVSEStatusUpdate EVSEStatusUpdate1,
                                            EVSEStatusUpdate EVSEStatusUpdate2)
 
@@ -334,7 +334,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEStatusUpdate1">An EVSE status update.</param>
         /// <param name="EVSEStatusUpdate2">Another EVSE status update.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EVSEStatusUpdate EVSEStatusUpdate1,
                                            EVSEStatusUpdate EVSEStatusUpdate2)
 
@@ -349,7 +349,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEStatusUpdate1">An EVSE status update.</param>
         /// <param name="EVSEStatusUpdate2">Another EVSE status update.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (EVSEStatusUpdate EVSEStatusUpdate1,
                                           EVSEStatusUpdate EVSEStatusUpdate2)
 
@@ -364,7 +364,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEStatusUpdate1">An EVSE status update.</param>
         /// <param name="EVSEStatusUpdate2">Another EVSE status update.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (EVSEStatusUpdate EVSEStatusUpdate1,
                                            EVSEStatusUpdate EVSEStatusUpdate2)
 
@@ -379,7 +379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEStatusUpdate1">An EVSE status update.</param>
         /// <param name="EVSEStatusUpdate2">Another EVSE status update.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (EVSEStatusUpdate EVSEStatusUpdate1,
                                           EVSEStatusUpdate EVSEStatusUpdate2)
 
@@ -394,7 +394,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEStatusUpdate1">An EVSE status update.</param>
         /// <param name="EVSEStatusUpdate2">Another EVSE status update.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (EVSEStatusUpdate EVSEStatusUpdate1,
                                           EVSEStatusUpdate EVSEStatusUpdate2)
 

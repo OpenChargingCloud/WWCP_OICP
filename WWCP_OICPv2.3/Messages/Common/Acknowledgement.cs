@@ -632,7 +632,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(Object? Object)
 
             => Object is Acknowledgement acknowledgement &&
@@ -1952,7 +1952,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Compares two instances of this object.
         /// </summary>
         /// <param name="Object">An object to compare with.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public override Boolean Equals(Object? Object)
 
             => Object is Acknowledgement<TRequest> acknowledgement &&

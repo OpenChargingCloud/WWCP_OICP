@@ -199,7 +199,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProcessIdId1">A process identification.</param>
         /// <param name="ProcessIdId2">Another process identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Process_Id ProcessIdId1,
                                            Process_Id ProcessIdId2)
 
@@ -214,7 +214,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProcessIdId1">A process identification.</param>
         /// <param name="ProcessIdId2">Another process identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Process_Id ProcessIdId1,
                                            Process_Id ProcessIdId2)
 
@@ -229,7 +229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProcessIdId1">A process identification.</param>
         /// <param name="ProcessIdId2">Another process identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Process_Id ProcessIdId1,
                                           Process_Id ProcessIdId2)
 
@@ -244,7 +244,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProcessIdId1">A process identification.</param>
         /// <param name="ProcessIdId2">Another process identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Process_Id ProcessIdId1,
                                            Process_Id ProcessIdId2)
 
@@ -259,7 +259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProcessIdId1">A process identification.</param>
         /// <param name="ProcessIdId2">Another process identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Process_Id ProcessIdId1,
                                           Process_Id ProcessIdId2)
 
@@ -274,7 +274,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProcessIdId1">A process identification.</param>
         /// <param name="ProcessIdId2">Another process identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Process_Id ProcessIdId1,
                                            Process_Id ProcessIdId2)
 

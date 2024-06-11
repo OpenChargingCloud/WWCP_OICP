@@ -466,7 +466,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PricingProductData1">An pricing product data object.</param>
         /// <param name="PricingProductData2">Another pricing product data object.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (PricingProductData? PricingProductData1,
                                            PricingProductData? PricingProductData2)
         {
@@ -490,7 +490,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PricingProductData1">An pricing product data object.</param>
         /// <param name="PricingProductData2">Another pricing product data object.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (PricingProductData? PricingProductData1,
                                            PricingProductData? PricingProductData2)
 

@@ -612,7 +612,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CurrencyId1">A currency identification.</param>
         /// <param name="CurrencyId2">Another currency identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Currency_Id CurrencyId1,
                                            Currency_Id CurrencyId2)
 
@@ -627,7 +627,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CurrencyId1">A currency identification.</param>
         /// <param name="CurrencyId2">Another currency identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Currency_Id CurrencyId1,
                                            Currency_Id CurrencyId2)
 
@@ -642,7 +642,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CurrencyId1">A currency identification.</param>
         /// <param name="CurrencyId2">Another currency identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Currency_Id CurrencyId1,
                                           Currency_Id CurrencyId2)
 
@@ -657,7 +657,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CurrencyId1">A currency identification.</param>
         /// <param name="CurrencyId2">Another currency identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Currency_Id CurrencyId1,
                                            Currency_Id CurrencyId2)
 
@@ -672,7 +672,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CurrencyId1">A currency identification.</param>
         /// <param name="CurrencyId2">Another currency identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Currency_Id CurrencyId1,
                                           Currency_Id CurrencyId2)
 
@@ -687,7 +687,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="CurrencyId1">A currency identification.</param>
         /// <param name="CurrencyId2">Another currency identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Currency_Id CurrencyId1,
                                            Currency_Id CurrencyId2)
 

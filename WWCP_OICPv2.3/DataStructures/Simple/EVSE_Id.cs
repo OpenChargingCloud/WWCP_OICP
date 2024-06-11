@@ -324,7 +324,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEId1">An EVSE identification.</param>
         /// <param name="EVSEId2">Another EVSE identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => EVSEId1.Equals(EVSEId2);
 
@@ -337,7 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEId1">An EVSE identification.</param>
         /// <param name="EVSEId2">Another EVSE identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => !EVSEId1.Equals(EVSEId2);
 
@@ -350,7 +350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEId1">An EVSE identification.</param>
         /// <param name="EVSEId2">Another EVSE identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => EVSEId1.CompareTo(EVSEId2) < 0;
 
@@ -363,7 +363,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEId1">An EVSE identification.</param>
         /// <param name="EVSEId2">Another EVSE identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => EVSEId1.CompareTo(EVSEId2) <= 0;
 
@@ -376,7 +376,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEId1">An EVSE identification.</param>
         /// <param name="EVSEId2">Another EVSE identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => EVSEId1.CompareTo(EVSEId2) > 0;
 
@@ -389,7 +389,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EVSEId1">An EVSE identification.</param>
         /// <param name="EVSEId2">Another EVSE identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (EVSE_Id EVSEId1, EVSE_Id EVSEId2)
             => EVSEId1.CompareTo(EVSEId2) >= 0;
 

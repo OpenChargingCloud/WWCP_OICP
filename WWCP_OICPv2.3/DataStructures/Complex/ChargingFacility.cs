@@ -435,7 +435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (ChargingFacility ChargingFacility1,
                                           ChargingFacility ChargingFacility2)
 
@@ -450,7 +450,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (ChargingFacility ChargingFacility1,
                                            ChargingFacility ChargingFacility2)
 
@@ -465,7 +465,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (ChargingFacility ChargingFacility1,
                                           ChargingFacility ChargingFacility2)
 
@@ -480,7 +480,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ChargingFacility1">A charging facility.</param>
         /// <param name="ChargingFacility2">Another charging facility.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (ChargingFacility ChargingFacility1,
                                            ChargingFacility ChargingFacility2)
 

@@ -197,7 +197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
         /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (LanguageCode LanguageCode1,
                                            LanguageCode LanguageCode2)
 
@@ -212,7 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
         /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (LanguageCode LanguageCode1,
                                            LanguageCode LanguageCode2)
 
@@ -227,7 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
         /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (LanguageCode LanguageCode1,
                                           LanguageCode LanguageCode2)
 
@@ -242,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
         /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (LanguageCode LanguageCode1,
                                            LanguageCode LanguageCode2)
 
@@ -257,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
         /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (LanguageCode LanguageCode1,
                                           LanguageCode LanguageCode2)
 
@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LanguageCode1">A ISO-639-1 or ISO-639-2/T language code.</param>
         /// <param name="LanguageCode2">Another ISO-639-1 or ISO-639-2/T language code.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (LanguageCode LanguageCode1,
                                            LanguageCode LanguageCode2)
 

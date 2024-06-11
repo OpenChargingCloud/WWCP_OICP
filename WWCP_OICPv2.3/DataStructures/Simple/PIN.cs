@@ -201,7 +201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PIN1">A PIN.</param>
         /// <param name="PIN2">Another PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (PIN PIN1,
                                            PIN PIN2)
 
@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PIN1">A PIN.</param>
         /// <param name="PIN2">Another PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (PIN PIN1,
                                            PIN PIN2)
 
@@ -231,7 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PIN1">A PIN.</param>
         /// <param name="PIN2">Another PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (PIN PIN1,
                                           PIN PIN2)
 
@@ -246,7 +246,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PIN1">A PIN.</param>
         /// <param name="PIN2">Another PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (PIN PIN1,
                                            PIN PIN2)
 
@@ -261,7 +261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PIN1">A PIN.</param>
         /// <param name="PIN2">Another PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (PIN PIN1,
                                           PIN PIN2)
 
@@ -276,7 +276,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PIN1">A PIN.</param>
         /// <param name="PIN2">Another PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (PIN PIN1,
                                            PIN PIN2)
 

@@ -620,7 +620,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Identification? Identification1,
                                            Identification? Identification2)
         {
@@ -644,7 +644,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Identification? Identification1,
                                            Identification? Identification2)
 
@@ -659,7 +659,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Identification? Identification1,
                                           Identification? Identification2)
         {
@@ -680,7 +680,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Identification? Identification1,
                                            Identification? Identification2)
 
@@ -695,7 +695,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Identification? Identification1,
                                           Identification? Identification2)
         {
@@ -716,7 +716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Identification1">An identification.</param>
         /// <param name="Identification2">Another identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Identification? Identification1,
                                            Identification? Identification2)
 

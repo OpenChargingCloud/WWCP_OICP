@@ -360,7 +360,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Provider_Id ProviderId1,
                                            Provider_Id ProviderId2)
 
@@ -375,7 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Provider_Id ProviderId1,
                                            Provider_Id ProviderId2)
 
@@ -390,7 +390,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Provider_Id ProviderId1,
                                           Provider_Id ProviderId2)
 
@@ -405,7 +405,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Provider_Id ProviderId1,
                                            Provider_Id ProviderId2)
 
@@ -420,7 +420,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Provider_Id ProviderId1,
                                           Provider_Id ProviderId2)
 
@@ -435,7 +435,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ProviderId1">An e-mobility provider identification.</param>
         /// <param name="ProviderId2">Another e-mobility provider identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Provider_Id ProviderId1,
                                            Provider_Id ProviderId2)
 

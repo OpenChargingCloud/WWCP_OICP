@@ -212,7 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LegalStatus1">A legal status.</param>
         /// <param name="LegalStatus2">Another legal status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (LegalStatus LegalStatus1,
                                            LegalStatus LegalStatus2)
 
@@ -227,7 +227,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LegalStatus1">A legal status.</param>
         /// <param name="LegalStatus2">Another legal status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (LegalStatus LegalStatus1,
                                            LegalStatus LegalStatus2)
 
@@ -242,7 +242,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LegalStatus1">A legal status.</param>
         /// <param name="LegalStatus2">Another legal status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (LegalStatus LegalStatus1,
                                           LegalStatus LegalStatus2)
 
@@ -257,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LegalStatus1">A legal status.</param>
         /// <param name="LegalStatus2">Another legal status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (LegalStatus LegalStatus1,
                                            LegalStatus LegalStatus2)
 
@@ -272,7 +272,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LegalStatus1">A legal status.</param>
         /// <param name="LegalStatus2">Another legal status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (LegalStatus LegalStatus1,
                                           LegalStatus LegalStatus2)
 
@@ -287,7 +287,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="LegalStatus1">A legal status.</param>
         /// <param name="LegalStatus2">Another legal status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (LegalStatus LegalStatus1,
                                            LegalStatus LegalStatus2)
 

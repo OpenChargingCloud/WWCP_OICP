@@ -303,7 +303,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (SignedMeteringValue? SignedMeteringValue1,
                                            SignedMeteringValue? SignedMeteringValue2)
         {
@@ -327,7 +327,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (SignedMeteringValue? SignedMeteringValue1,
                                            SignedMeteringValue? SignedMeteringValue2)
 
@@ -342,7 +342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (SignedMeteringValue? SignedMeteringValue1,
                                           SignedMeteringValue? SignedMeteringValue2)
         {
@@ -363,7 +363,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (SignedMeteringValue? SignedMeteringValue1,
                                            SignedMeteringValue? SignedMeteringValue2)
 
@@ -378,7 +378,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (SignedMeteringValue? SignedMeteringValue1,
                                           SignedMeteringValue? SignedMeteringValue2)
         {
@@ -399,7 +399,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="SignedMeteringValue1">A signed metering value.</param>
         /// <param name="SignedMeteringValue2">Another signed metering value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (SignedMeteringValue? SignedMeteringValue1,
                                            SignedMeteringValue? SignedMeteringValue2)
 

@@ -284,7 +284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergySource1">An energy source.</param>
         /// <param name="EnergySource2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (EnergySource EnergySource1,
                                            EnergySource EnergySource2)
 
@@ -299,7 +299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergySource1">An energy source.</param>
         /// <param name="EnergySource2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (EnergySource EnergySource1,
                                            EnergySource EnergySource2)
 
@@ -314,7 +314,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergySource1">An energy source.</param>
         /// <param name="EnergySource2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (EnergySource EnergySource1,
                                           EnergySource EnergySource2)
 
@@ -329,7 +329,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergySource1">An energy source.</param>
         /// <param name="EnergySource2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (EnergySource EnergySource1,
                                            EnergySource EnergySource2)
 
@@ -344,7 +344,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergySource1">An energy source.</param>
         /// <param name="EnergySource2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (EnergySource EnergySource1,
                                           EnergySource EnergySource2)
 
@@ -359,7 +359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="EnergySource1">An energy source.</param>
         /// <param name="EnergySource2">Another energy source.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (EnergySource EnergySource1,
                                            EnergySource EnergySource2)
 

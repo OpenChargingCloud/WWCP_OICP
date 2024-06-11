@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PublicKey1">A public key.</param>
         /// <param name="PublicKey2">Another public key.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (PublicKey PublicKey1,
                                            PublicKey PublicKey2)
 
@@ -203,7 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PublicKey1">A public key.</param>
         /// <param name="PublicKey2">Another public key.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (PublicKey PublicKey1,
                                            PublicKey PublicKey2)
 
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PublicKey1">A public key.</param>
         /// <param name="PublicKey2">Another public key.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (PublicKey PublicKey1,
                                           PublicKey PublicKey2)
 
@@ -233,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PublicKey1">A public key.</param>
         /// <param name="PublicKey2">Another public key.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (PublicKey PublicKey1,
                                            PublicKey PublicKey2)
 
@@ -248,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PublicKey1">A public key.</param>
         /// <param name="PublicKey2">Another public key.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (PublicKey PublicKey1,
                                           PublicKey PublicKey2)
 
@@ -263,7 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="PublicKey1">A public key.</param>
         /// <param name="PublicKey2">Another public key.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (PublicKey PublicKey1,
                                            PublicKey PublicKey2)
 

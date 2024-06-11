@@ -188,7 +188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="VersionId1">A version identification.</param>
         /// <param name="VersionId2">Another version identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Version_Id VersionId1,
                                            Version_Id VersionId2)
 
@@ -203,7 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="VersionId1">A version identification.</param>
         /// <param name="VersionId2">Another version identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Version_Id VersionId1,
                                            Version_Id VersionId2)
 
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="VersionId1">A version identification.</param>
         /// <param name="VersionId2">Another version identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Version_Id VersionId1,
                                           Version_Id VersionId2)
 
@@ -233,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="VersionId1">A version identification.</param>
         /// <param name="VersionId2">Another version identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Version_Id VersionId1,
                                            Version_Id VersionId2)
 
@@ -248,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="VersionId1">A version identification.</param>
         /// <param name="VersionId2">Another version identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Version_Id VersionId1,
                                           Version_Id VersionId2)
 
@@ -263,7 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="VersionId1">A version identification.</param>
         /// <param name="VersionId2">Another version identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Version_Id VersionId1,
                                            Version_Id VersionId2)
 

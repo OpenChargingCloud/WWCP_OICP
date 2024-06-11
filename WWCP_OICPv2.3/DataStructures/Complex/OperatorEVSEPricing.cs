@@ -359,7 +359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (OperatorEVSEPricing? OperatorEVSEPricing1,
                                           OperatorEVSEPricing? OperatorEVSEPricing2)
         {
@@ -380,7 +380,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (OperatorEVSEPricing? OperatorEVSEPricing1,
                                            OperatorEVSEPricing? OperatorEVSEPricing2)
 
@@ -395,7 +395,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (OperatorEVSEPricing? OperatorEVSEPricing1,
                                           OperatorEVSEPricing? OperatorEVSEPricing2)
         {
@@ -416,7 +416,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OperatorEVSEPricing1">An operator EVSE pricing.</param>
         /// <param name="OperatorEVSEPricing2">Another operator EVSE pricing.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (OperatorEVSEPricing? OperatorEVSEPricing1,
                                            OperatorEVSEPricing? OperatorEVSEPricing2)
 

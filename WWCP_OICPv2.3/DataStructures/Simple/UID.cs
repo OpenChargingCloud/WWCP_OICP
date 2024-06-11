@@ -236,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="UID1">A RFID card (user) identification.</param>
         /// <param name="UID2">Another RFID card (user) identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (UID UID1,
                                            UID UID2)
 
@@ -251,7 +251,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="UID1">A RFID card (user) identification.</param>
         /// <param name="UID2">Another RFID card (user) identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (UID UID1,
                                            UID UID2)
 
@@ -266,7 +266,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="UID1">A RFID card (user) identification.</param>
         /// <param name="UID2">Another RFID card (user) identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (UID UID1,
                                           UID UID2)
 
@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="UID1">A RFID card (user) identification.</param>
         /// <param name="UID2">Another RFID card (user) identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (UID UID1,
                                            UID UID2)
 
@@ -296,7 +296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="UID1">A RFID card (user) identification.</param>
         /// <param name="UID2">Another RFID card (user) identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (UID UID1,
                                           UID UID2)
 
@@ -311,7 +311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="UID1">A RFID card (user) identification.</param>
         /// <param name="UID2">Another RFID card (user) identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (UID UID1,
                                            UID UID2)
 

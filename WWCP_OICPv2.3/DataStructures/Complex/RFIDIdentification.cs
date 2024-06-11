@@ -416,7 +416,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (RFIDIdentification? RFIDIdentification1,
                                           RFIDIdentification? RFIDIdentification2)
         {
@@ -437,7 +437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (RFIDIdentification? RFIDIdentification1,
                                            RFIDIdentification? RFIDIdentification2)
 
@@ -452,7 +452,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (RFIDIdentification? RFIDIdentification1,
                                           RFIDIdentification? RFIDIdentification2)
         {
@@ -473,7 +473,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="RFIDIdentification1">A RFID identification.</param>
         /// <param name="RFIDIdentification2">Another RFID identification.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (RFIDIdentification? RFIDIdentification1,
                                            RFIDIdentification? RFIDIdentification2)
 

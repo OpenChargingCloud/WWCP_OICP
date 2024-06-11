@@ -432,7 +432,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicense1">An Open Source license.</param>
         /// <param name="OpenSourceLicense2">Another Open Source license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (OpenSourceLicense OpenSourceLicense1,
                                            OpenSourceLicense OpenSourceLicense2)
 
@@ -447,7 +447,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicense1">An Open Source license.</param>
         /// <param name="OpenSourceLicense2">Another Open Source license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (OpenSourceLicense OpenSourceLicense1,
                                            OpenSourceLicense OpenSourceLicense2)
 
@@ -462,7 +462,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicense1">An Open Source license.</param>
         /// <param name="OpenSourceLicense2">Another Open Source license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (OpenSourceLicense OpenSourceLicense1,
                                           OpenSourceLicense OpenSourceLicense2)
 
@@ -477,7 +477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicense1">An Open Source license.</param>
         /// <param name="OpenSourceLicense2">Another Open Source license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (OpenSourceLicense OpenSourceLicense1,
                                            OpenSourceLicense OpenSourceLicense2)
 
@@ -492,7 +492,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicense1">An Open Source license.</param>
         /// <param name="OpenSourceLicense2">Another Open Source license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (OpenSourceLicense OpenSourceLicense1,
                                           OpenSourceLicense OpenSourceLicense2)
 
@@ -507,7 +507,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="OpenSourceLicense1">An Open Source license.</param>
         /// <param name="OpenSourceLicense2">Another Open Source license.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (OpenSourceLicense OpenSourceLicense1,
                                            OpenSourceLicense OpenSourceLicense2)
 

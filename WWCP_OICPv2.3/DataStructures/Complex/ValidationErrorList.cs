@@ -200,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationErrorList1">An enumeration of validation errors.</param>
         /// <param name="ValidationErrorList2">Another enumeration of validation errors.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (ValidationErrorList ValidationErrorList1,
                                            ValidationErrorList ValidationErrorList2)
 
@@ -215,7 +215,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationErrorList1">An enumeration of validation errors.</param>
         /// <param name="ValidationErrorList2">Another enumeration of validation errors.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (ValidationErrorList ValidationErrorList1,
                                            ValidationErrorList ValidationErrorList2)
 
@@ -230,7 +230,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationErrorList1">An enumeration of validation errors.</param>
         /// <param name="ValidationErrorList2">Another enumeration of validation errors.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (ValidationErrorList ValidationErrorList1,
                                           ValidationErrorList ValidationErrorList2)
 
@@ -245,7 +245,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationErrorList1">An enumeration of validation errors.</param>
         /// <param name="ValidationErrorList2">Another enumeration of validation errors.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (ValidationErrorList ValidationErrorList1,
                                            ValidationErrorList ValidationErrorList2)
 
@@ -260,7 +260,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationErrorList1">An enumeration of validation errors.</param>
         /// <param name="ValidationErrorList2">Another enumeration of validation errors.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (ValidationErrorList ValidationErrorList1,
                                           ValidationErrorList ValidationErrorList2)
 
@@ -275,7 +275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationErrorList1">An enumeration of validation errors.</param>
         /// <param name="ValidationErrorList2">Another enumeration of validation errors.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (ValidationErrorList ValidationErrorList1,
                                            ValidationErrorList ValidationErrorList2)
 

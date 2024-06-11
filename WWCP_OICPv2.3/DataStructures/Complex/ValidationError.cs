@@ -220,7 +220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationError1">A validation error.</param>
         /// <param name="ValidationError2">Another validation error.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (ValidationError ValidationError1,
                                            ValidationError ValidationError2)
 
@@ -235,7 +235,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationError1">A validation error.</param>
         /// <param name="ValidationError2">Another validation error.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (ValidationError ValidationError1,
                                            ValidationError ValidationError2)
 
@@ -250,7 +250,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationError1">A validation error.</param>
         /// <param name="ValidationError2">Another validation error.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (ValidationError ValidationError1,
                                           ValidationError ValidationError2)
 
@@ -265,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationError1">A validation error.</param>
         /// <param name="ValidationError2">Another validation error.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (ValidationError ValidationError1,
                                            ValidationError ValidationError2)
 
@@ -280,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationError1">A validation error.</param>
         /// <param name="ValidationError2">Another validation error.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (ValidationError ValidationError1,
                                           ValidationError ValidationError2)
 
@@ -295,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="ValidationError1">A validation error.</param>
         /// <param name="ValidationError2">Another validation error.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (ValidationError ValidationError1,
                                            ValidationError ValidationError2)
 

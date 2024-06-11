@@ -353,7 +353,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TransparencySoftwareStatus1">A transparency software status.</param>
         /// <param name="TransparencySoftwareStatus2">Another transparency software status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (TransparencySoftwareStatus TransparencySoftwareStatus1,
                                            TransparencySoftwareStatus TransparencySoftwareStatus2)
         {
@@ -377,7 +377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TransparencySoftwareStatus1">A transparency software status.</param>
         /// <param name="TransparencySoftwareStatus2">Another transparency software status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (TransparencySoftwareStatus TransparencySoftwareStatus1,
                                            TransparencySoftwareStatus TransparencySoftwareStatus2)
 
@@ -392,7 +392,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TransparencySoftwareStatus1">A transparency software status.</param>
         /// <param name="TransparencySoftwareStatus2">Another transparency software status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (TransparencySoftwareStatus TransparencySoftwareStatus1,
                                           TransparencySoftwareStatus TransparencySoftwareStatus2)
 
@@ -409,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TransparencySoftwareStatus1">A transparency software status.</param>
         /// <param name="TransparencySoftwareStatus2">Another transparency software status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (TransparencySoftwareStatus TransparencySoftwareStatus1,
                                            TransparencySoftwareStatus TransparencySoftwareStatus2)
 
@@ -424,7 +424,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TransparencySoftwareStatus1">A transparency software status.</param>
         /// <param name="TransparencySoftwareStatus2">Another transparency software status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (TransparencySoftwareStatus TransparencySoftwareStatus1,
                                           TransparencySoftwareStatus TransparencySoftwareStatus2)
 
@@ -441,7 +441,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="TransparencySoftwareStatus1">A transparency software status.</param>
         /// <param name="TransparencySoftwareStatus2">Another transparency software status.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (TransparencySoftwareStatus TransparencySoftwareStatus1,
                                            TransparencySoftwareStatus TransparencySoftwareStatus2)
 

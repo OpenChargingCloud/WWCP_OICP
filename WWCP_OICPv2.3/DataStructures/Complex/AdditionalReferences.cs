@@ -280,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReferences1">An additional reference.</param>
         /// <param name="AdditionalReferences2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (AdditionalReferences? AdditionalReferences1,
                                            AdditionalReferences? AdditionalReferences2)
         {
@@ -304,7 +304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="AdditionalReferences1">An additional reference.</param>
         /// <param name="AdditionalReferences2">Another additional reference.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (AdditionalReferences? AdditionalReferences1,
                                            AdditionalReferences? AdditionalReferences2)
 

@@ -174,7 +174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HourMinute1">A HourMinute.</param>
         /// <param name="HourMinute2">Another HourMinute.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (HourMinute HourMinute1,
                                            HourMinute HourMinute2)
 
@@ -189,7 +189,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HourMinute1">A HourMinute.</param>
         /// <param name="HourMinute2">Another HourMinute.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (HourMinute HourMinute1,
                                            HourMinute HourMinute2)
 
@@ -204,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HourMinute1">A HourMinute.</param>
         /// <param name="HourMinute2">Another HourMinute.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (HourMinute HourMinute1,
                                           HourMinute HourMinute2)
 
@@ -219,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HourMinute1">A HourMinute.</param>
         /// <param name="HourMinute2">Another HourMinute.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (HourMinute HourMinute1,
                                            HourMinute HourMinute2)
 
@@ -234,7 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HourMinute1">A HourMinute.</param>
         /// <param name="HourMinute2">Another HourMinute.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (HourMinute HourMinute1,
                                           HourMinute HourMinute2)
 
@@ -249,7 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HourMinute1">A HourMinute.</param>
         /// <param name="HourMinute2">Another HourMinute.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (HourMinute HourMinute1,
                                            HourMinute HourMinute2)
 

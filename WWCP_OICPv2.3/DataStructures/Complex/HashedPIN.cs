@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashedPIN1">A hashed PIN.</param>
         /// <param name="HashedPIN2">Another hashed PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (HashedPIN HashedPIN1,
                                            HashedPIN HashedPIN2)
 
@@ -296,7 +296,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashedPIN1">A hashed PIN.</param>
         /// <param name="HashedPIN2">Another hashed PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (HashedPIN HashedPIN1,
                                            HashedPIN HashedPIN2)
 
@@ -311,7 +311,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashedPIN1">A hashed PIN.</param>
         /// <param name="HashedPIN2">Another hashed PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (HashedPIN HashedPIN1,
                                           HashedPIN HashedPIN2)
 
@@ -326,7 +326,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashedPIN1">A hashed PIN.</param>
         /// <param name="HashedPIN2">Another hashed PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (HashedPIN HashedPIN1,
                                            HashedPIN HashedPIN2)
 
@@ -341,7 +341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashedPIN1">A hashed PIN.</param>
         /// <param name="HashedPIN2">Another hashed PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (HashedPIN HashedPIN1,
                                           HashedPIN HashedPIN2)
 
@@ -356,7 +356,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashedPIN1">A hashed PIN.</param>
         /// <param name="HashedPIN2">Another hashed PIN.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (HashedPIN HashedPIN1,
                                            HashedPIN HashedPIN2)
 

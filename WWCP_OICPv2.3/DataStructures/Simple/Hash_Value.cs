@@ -189,7 +189,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator == (Hash_Value HashValue1,
                                            Hash_Value HashValue2)
 
@@ -204,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>False if both match; True otherwise.</returns>
         public static Boolean operator != (Hash_Value HashValue1,
                                            Hash_Value HashValue2)
 
@@ -219,7 +219,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator < (Hash_Value HashValue1,
                                           Hash_Value HashValue2)
 
@@ -234,7 +234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator <= (Hash_Value HashValue1,
                                            Hash_Value HashValue2)
 
@@ -249,7 +249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator > (Hash_Value HashValue1,
                                           Hash_Value HashValue2)
 
@@ -264,7 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="HashValue1">A hash value.</param>
         /// <param name="HashValue2">Another hash value.</param>
-        /// <returns>true|false</returns>
+        /// <returns>True if both match; False otherwise.</returns>
         public static Boolean operator >= (Hash_Value HashValue1,
                                            Hash_Value HashValue2)
 
