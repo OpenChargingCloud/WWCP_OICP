@@ -1359,7 +1359,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
                                                                   ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
                                                                   ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
-                                                                  ConsumedEnergy:                  WattHour.Parse(35),
+                                                                  ConsumedEnergy:                  WattHour.ParseKWh(35),
 
                                                                   PartnerProductId:                PartnerProduct_Id.Parse("AC1"),
                                                                   CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom(),
@@ -1384,7 +1384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                                                   SessionEnd:                      Timestamp.Now - TimeSpan.FromMinutes(10),
                                                                   ChargingStart:                   Timestamp.Now - TimeSpan.FromMinutes(50),
                                                                   ChargingEnd:                     Timestamp.Now - TimeSpan.FromMinutes(20),
-                                                                  ConsumedEnergy:                  WattHour.Parse(35),
+                                                                  ConsumedEnergy:                  WattHour.ParseKWh(35),
 
                                                                   PartnerProductId:                PartnerProduct_Id.Parse("AC3"),
                                                                   CPOPartnerSessionId:             CPOPartnerSession_Id.NewRandom(),

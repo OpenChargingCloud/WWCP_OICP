@@ -701,7 +701,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P
                                                                       SessionEnd:                       DateTime.Parse("2022-08-09T11:18:25.229Z"),
                                                                       ChargingStart:                    DateTime.Parse("2022-08-09T10:20:25.229Z"),
                                                                       ChargingEnd:                      DateTime.Parse("2022-08-09T11:13:25.229Z"),
-                                                                      ConsumedEnergy:                   WattHour.Parse(35),
+                                                                      ConsumedEnergy:                   WattHour.ParseKWh(35),
 
                                                                       PartnerProductId:                 PartnerProduct_Id.Parse("AC3"),
                                                                       CPOPartnerSessionId:              CPOPartnerSession_Id.Parse("e9c6faad-75c8-4f5b-9b5c-164ae7459804"),
