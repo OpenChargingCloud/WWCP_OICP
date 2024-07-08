@@ -17,6 +17,8 @@
 
 #region Usings
 
+using Newtonsoft.Json.Linq;
+
 using org.GraphDefined.Vanaheimr.Aegir;
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
@@ -1163,6 +1165,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// Return the charging session specified by the given charging session identification.
         /// </summary>
         /// <param name="ChargingSessionId">The charging session identification.</param>
+        WWCP.ChargingSession? WWCP.IChargingSessions.GetChargingSessionById(WWCP.ChargingSession_Id ChargingSessionId)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Return the charging session specified by the given charging session identification.
+        /// </summary>
+        /// <param name="ChargingSessionId">The charging session identification.</param>
         /// <param name="ChargingSession">The charging session.</param>
         Boolean WWCP.IChargingSessions.TryGetChargingSessionById(WWCP.ChargingSession_Id    ChargingSessionId,
                                                                  out WWCP.ChargingSession?  ChargingSession)
@@ -2028,12 +2039,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         async Task<WWCP.RemoteStartResult>
 
             WWCP.IRemoteStartStop.RemoteStart(WWCP.ChargingLocation         ChargingLocation,
-                                              WWCP.ChargingProduct?         ChargingProduct,       // = null,
-                                              WWCP.ChargingReservation_Id?  ReservationId,         // = null,
-                                              WWCP.ChargingSession_Id?      SessionId,             // = null,
-                                              WWCP.EMobilityProvider_Id?    ProviderId,            // = null,
-                                              WWCP.RemoteAuthentication?    RemoteAuthentication,  // = null,
-                                              WWCP.Auth_Path?               AuthenticationPath,    // = null,
+                                              WWCP.ChargingProduct?         ChargingProduct,         // = null,
+                                              WWCP.ChargingReservation_Id?  ReservationId,           // = null,
+                                              WWCP.ChargingSession_Id?      SessionId,               // = null,
+                                              WWCP.EMobilityProvider_Id?    ProviderId,              // = null,
+                                              WWCP.RemoteAuthentication?    RemoteAuthentication,    // = null,
+                                              JObject?                      AdditionalSessionInfos,  // = null,
+                                              WWCP.Auth_Path?               AuthenticationPath,      // = null,
 
                                               DateTime?                     Timestamp,
                                               EventTracking_Id?             EventTrackingId,
