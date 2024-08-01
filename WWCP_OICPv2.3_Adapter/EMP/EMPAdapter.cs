@@ -2080,13 +2080,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              EventTrackingId,
                                              RoamingNetwork.Id,
                                              ChargingLocation,
-                                             ChargingProduct,
-                                             ReservationId,
+                                             RemoteAuthentication,
                                              SessionId,
+                                             ReservationId,
+                                             ChargingProduct,
                                              Id,
                                              null,
                                              ProviderId,
-                                             RemoteAuthentication,
                                              RequestTimeout);
 
             }
@@ -2239,13 +2239,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               EventTrackingId,
                                               RoamingNetwork.Id,
                                               ChargingLocation,
-                                              ChargingProduct,
-                                              ReservationId,
+                                              RemoteAuthentication,
                                               SessionId,
+                                              ReservationId,
+                                              ChargingProduct,
                                               Id,
                                               null,
                                               ProviderId,
-                                              RemoteAuthentication,
                                               RequestTimeout,
                                               result,
                                               endTime - startTime);
