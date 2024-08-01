@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Runtime.CompilerServices;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Aegir;
@@ -2032,7 +2034,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
         /// <param name="RemoteAuthentication">An optional identification of the e-mobility account who wants to charge.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2047,7 +2049,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               JObject?                      AdditionalSessionInfos,  // = null,
                                               WWCP.Auth_Path?               AuthenticationPath,      // = null,
 
-                                              DateTime?                     Timestamp,
+                                              DateTime?                     RequestTimestamp,
                                               EventTracking_Id?             EventTrackingId,
                                               TimeSpan?                     RequestTimeout,
                                               CancellationToken             CancellationToken)
@@ -2059,9 +2061,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (RemoteAuthentication is null || !RemoteAuthentication.RemoteIdentification.HasValue)
                 throw new ArgumentNullException(nameof(RemoteAuthentication),  "The e-mobility account identification is mandatory in OICP!");
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= EMPClient?.RequestTimeout;
+            RequestTimestamp ??= Timestamp.Now;
+            EventTrackingId  ??= EventTracking_Id.New;
+            RequestTimeout   ??= EMPClient?.RequestTimeout;
 
             WWCP.RemoteStartResult? result = null;
 
@@ -2069,31 +2071,27 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnRemoteStartRequest event
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = Timestamp.Now;
 
-            try
-            {
-
-                OnRemoteStartRequest?.Invoke(startTime,
-                                             Timestamp.Value,
-                                             this,
-                                             EventTrackingId,
-                                             RoamingNetwork.Id,
-                                             ChargingLocation,
-                                             ChargingProduct,
-                                             ReservationId,
-                                             SessionId,
-                                             Id,
-                                             null,
-                                             ProviderId,
-                                             RemoteAuthentication,
-                                             RequestTimeout);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnRemoteStartRequest));
-            }
+            await LogEvent(
+                      OnRemoteStartRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ChargingLocation,
+                          RemoteAuthentication,
+                          SessionId,
+                          ReservationId,
+                          ChargingProduct,
+                          null,
+                          null,
+                          ProviderId,
+                          RequestTimeout
+                      )
+                  );
 
             #endregion
 
@@ -2190,15 +2188,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                             AggregateWith("|")))
                                                                            : null,
 
-                                                 Timestamp:            Timestamp,
+                                                 Timestamp:            RequestTimestamp,
                                                  CancellationToken:    CancellationToken,
                                                  EventTrackingId:      EventTrackingId,
                                                  RequestTimeout:       RequestTimeout)).
                                              ConfigureAwait(false);
 
 
-            var Now      = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            var Runtime  = Now - Timestamp.Value;
+            var now      = Timestamp.Now;
+            var runtime  = now - RequestTimestamp.Value;
 
             if (remoteStartResponse.IsSuccess())
             {
@@ -2212,7 +2210,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    )
                                  : null,
                              System_Id.Local,
-                             Runtime
+                             runtime
                          );
 
             }
@@ -2222,39 +2220,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                              remoteStartResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
                              System_Id.Local,
                              remoteStartResponse.Response.HTTPResponse.HTTPBodyAsUTF8String,
-                             Runtime
+                             runtime
                          );
 
 
             #region Send OnRemoteStartResponse event
 
-            var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var endTime = Timestamp.Now;
 
-            try
-            {
-
-                OnRemoteStartResponse?.Invoke(endTime,
-                                              Timestamp.Value,
-                                              this,
-                                              EventTrackingId,
-                                              RoamingNetwork.Id,
-                                              ChargingLocation,
-                                              ChargingProduct,
-                                              ReservationId,
-                                              SessionId,
-                                              Id,
-                                              null,
-                                              ProviderId,
-                                              RemoteAuthentication,
-                                              RequestTimeout,
-                                              result,
-                                              endTime - startTime);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnRemoteStartResponse));
-            }
+            await LogEvent(
+                      OnRemoteStartResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endTime,
+                          RequestTimestamp.Value,
+                          this,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ChargingLocation,
+                          RemoteAuthentication,
+                          SessionId,
+                          ReservationId,
+                          ChargingProduct,
+                          null,
+                          null,
+                          ProviderId,
+                          RequestTimeout,
+                          result,
+                          endTime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -3764,6 +3758,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #endregion
 
         }
+
+        #endregion
+
+
+        #region (private) LogEvent(Logger, LogHandler, ...)
+
+        private Task LogEvent<TDelegate>(TDelegate?                                         Logger,
+                                         Func<TDelegate, Task>                              LogHandler,
+                                         [CallerArgumentExpression(nameof(Logger))] String  EventName   = "",
+                                         [CallerMemberName()]                       String  Command     = "")
+
+            where TDelegate : Delegate
+
+                => LogEvent(
+                       nameof(EMPAdapter),
+                       Logger,
+                       LogHandler,
+                       EventName,
+                       Command
+                   );
 
         #endregion
 
