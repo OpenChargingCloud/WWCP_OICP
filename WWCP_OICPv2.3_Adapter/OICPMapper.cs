@@ -358,17 +358,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          ChargingStationName:                EVSE.ChargingStation.Name.ToOICP(MaxLength: 150),
                                          Address:                            address,
                                          GeoCoordinates:                     geoLocation.Value,
-                                         PlugTypes:                          EVSE.ChargingConnectors.SafeSelect(chargingConnector => chargingConnector.Plug.ToOICP()),
+                                         PlugTypes:                          EVSE.ChargingConnectors.Select(chargingConnector => chargingConnector.Plug.ToOICP()),
                                          ChargingFacilities:                 EVSE.AsChargingFacilities(),
                                          RenewableEnergy:                    false,
                                          CalibrationLawDataAvailability:     CalibrationLawDataAvailabilities.NotAvailable,
                                          AuthenticationModes:                EVSE.ChargingStation.AuthenticationModes.ToOICP(),
                                          PaymentOptions:                     EVSE.IsFreeOfCharge
                                                                                  ? [ PaymentOptions.NoPayment ]
-                                                                                 : EVSE.ChargingStation.PaymentOptions.SafeSelect(paymentOption => paymentOption.ToOICP()),
+                                                                                 : EVSE.ChargingStation.PaymentOptions.Select(paymentOption => paymentOption.ToOICP()),
                                          ValueAddedServices:                 [ ValueAddedServices.None ],
                                          Accessibility:                      accessibility.Value,
-                                         HotlinePhoneNumber:                 EVSE.ChargingStation.HotlinePhoneNumber.HasValue ? Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.Value.ToString()) : null,
+                                         HotlinePhoneNumber:                 EVSE.ChargingStation.HotlinePhoneNumber.HasValue
+                                                                                 ? Phone_Number.Parse(EVSE.ChargingStation.HotlinePhoneNumber.Value.ToString())
+                                                                                 : null,
 #pragma warning disable IDE0075 // Simplify conditional expression
                                          IsOpen24Hours:                      EVSE.ChargingStation.OpeningTimes is not null
                                                                                  ? EVSE.ChargingStation.OpeningTimes?.ToOICP()?.Any() == true  // OpeningTimes == false AND an empty list is invalid at Hubject!
@@ -1265,7 +1267,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                    WWCP.ChargingPlugTypes.CCSCombo2Plug_CableAttached   => PlugTypes.CCSCombo2Plug_CableAttached,
                    WWCP.ChargingPlugTypes.CCSCombo1Plug_CableAttached   => PlugTypes.CCSCombo1Plug_CableAttached,
                    WWCP.ChargingPlugTypes.CHAdeMO                       => PlugTypes.CHAdeMO,
-                   _                                            => throw new ArgumentException("Invalid plug type!")
+                   _                                                    => throw new ArgumentException("Invalid plug type!")
                };
 
         #endregion
@@ -1293,9 +1295,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             return new ChargingFacility(
                        powerType,
-                       Convert.ToUInt32(EVSE.MaxPower),
-                       EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage)) : null,
-                       EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent))     : null,
+                                                                  Convert.ToUInt32(EVSE.MaxPower.      Value.Value),
+                       EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage.Value.Value)) : null,
+                       EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent.    Value.Value)) : null,
                        EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
                    );
 
@@ -1342,9 +1344,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
             return [
                        new ChargingFacility(
                            powerType,
-                           Convert.ToUInt32(EVSE.MaxPower.Value),
-                           EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage)) : null,
-                           EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent))     : null,
+                                                                      Convert.ToUInt32(EVSE.MaxPower.      Value.Value),
+                           EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage.Value.Value)) : null,
+                           EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent.    Value.Value)) : null,
                            EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
                        )
                    ];
