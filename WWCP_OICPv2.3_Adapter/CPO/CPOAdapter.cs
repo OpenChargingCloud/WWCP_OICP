@@ -3390,7 +3390,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                      Runtime:    runtime);
             }
 
-            else if (DisableAuthentication)
+            else if (DisableAuthorization)
             {
                 endtime          = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
                 runtime          = endtime - startTime;
@@ -3638,7 +3638,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                    Runtime:    runtime);
             }
 
-            else if (DisableAuthentication)
+            else if (DisableAuthorization)
             {
                 endtime         = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
                 runtime         = endtime - startTime;
