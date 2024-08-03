@@ -1724,6 +1724,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     );
             }
 
+            // Maybe only a signle OCMF container!
+            if (signedMeteringValues.Count == 1 &&
+                signedMeteringValues.First().MeteringStatus == MeteringStatusType.End)
+            {
+                signedMeteringValues.Add(new SignedMeteringValue("", MeteringStatusType.Start));
+                signedMeteringValues.Reverse();
+            }
+
 
             var calibrationLawCertificateID                  = ChargeDetailRecord.GetInternalDataAs<String>("OICP.CalibrationLawCertificateID");
             var meteringSignatureUrl                         = ChargeDetailRecord.GetInternalDataAs<String>("OICP.MeteringSignatureUrl");
