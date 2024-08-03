@@ -17,6 +17,8 @@
 
 #region Usings
 
+using System.Runtime.CompilerServices;
+
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Aegir;
@@ -2032,7 +2034,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="ProviderId">An optional identification of the e-mobility service provider, whenever this identification is different from the current message sender.</param>
         /// <param name="RemoteAuthentication">An optional identification of the e-mobility account who wants to charge.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2047,7 +2049,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               JObject?                      AdditionalSessionInfos,  // = null,
                                               WWCP.Auth_Path?               AuthenticationPath,      // = null,
 
-                                              DateTime?                     Timestamp,
+                                              DateTime?                     RequestTimestamp,
                                               EventTracking_Id?             EventTrackingId,
                                               TimeSpan?                     RequestTimeout,
                                               CancellationToken             CancellationToken)
@@ -2059,9 +2061,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             if (RemoteAuthentication is null || !RemoteAuthentication.RemoteIdentification.HasValue)
                 throw new ArgumentNullException(nameof(RemoteAuthentication),  "The e-mobility account identification is mandatory in OICP!");
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= EMPClient?.RequestTimeout;
+            RequestTimestamp ??= Timestamp.Now;
+            EventTrackingId  ??= EventTracking_Id.New;
+            RequestTimeout   ??= EMPClient?.RequestTimeout;
 
             WWCP.RemoteStartResult? result = null;
 
@@ -2069,192 +2071,221 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnRemoteStartRequest event
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = Timestamp.Now;
 
-            try
-            {
-
-                OnRemoteStartRequest?.Invoke(startTime,
-                                             Timestamp.Value,
-                                             this,
-                                             EventTrackingId,
-                                             RoamingNetwork.Id,
-                                             ChargingLocation,
-                                             RemoteAuthentication,
-                                             SessionId,
-                                             ReservationId,
-                                             ChargingProduct,
-                                             Id,
-                                             null,
-                                             ProviderId,
-                                             RequestTimeout);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnRemoteStartRequest));
-            }
+            await LogEvent(
+                      OnRemoteStartRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ChargingLocation,
+                          RemoteAuthentication,
+                          SessionId,
+                          ReservationId,
+                          ChargingProduct,
+                          null,
+                          null,
+                          ProviderId,
+                          RequestTimeout
+                      )
+                  );
 
             #endregion
 
 
-            var EVSEId = ChargingLocation.EVSEId.Value;
+            var evseId                = ChargingLocation.EVSEId?.ToOICP();
+            var sessionId             = SessionId.               ToOICP();
+            var remoteAuthentication  = RemoteAuthentication.    ToOICP();
 
-            #region Check if the PartnerProductId has a special format like 'R=12345-1234...|P=AC1'
-
-            var PartnerProductIdElements = new Dictionary<String, String>();
-
-            if (ChargingProduct is not null)
-                PartnerProductIdElements.Add("P", ChargingProduct.Id.ToString());
-
-            #endregion
-
-            #region Copy the 'PlannedDuration' value into the PartnerProductId "D=...min"
-
-            //if (PlannedDuration.HasValue && PlannedDuration.Value >= TimeSpan.FromSeconds(1))
-            //{
-            //
-            //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
-            //    {
-            //        if (!PartnerProductIdElements.ContainsKey("D"))
-            //            PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
-            //        else
-            //            PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
-            //    }
-            //
-            //    else
-            //    {
-            //        if (!PartnerProductIdElements.ContainsKey("D"))
-            //            PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
-            //        else
-            //            PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
-            //    }
-            //
-            //}
-
-            #endregion
-
-            #region Copy the 'PlannedEnergy' value into the PartnerProductId
-
-            //if (PlannedEnergy.HasValue && PlannedEnergy.Value > 0))
-            //{
-            //
-            //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
-            //    {
-            //        if (!PartnerProductIdElements.ContainsKey("D"))
-            //            PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
-            //        else
-            //            PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
-            //    }
-            //
-            //    else
-            //    {
-            //        if (!PartnerProductIdElements.ContainsKey("D"))
-            //            PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
-            //        else
-            //            PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
-            //    }
-            //
-            //}
-
-            #endregion
-
-            #region Copy the 'ReservationId' value into the PartnerProductId
-
-            if (ReservationId is not null)
-            {
-
-                if (!PartnerProductIdElements.ContainsKey("R"))
-                    PartnerProductIdElements.Add("R", ReservationId.Value.Suffix);
-                else
-                    PartnerProductIdElements["R"] = ReservationId.Value.Suffix;
-
-            }
-
-            #endregion
-
-
-            //var providerId           = ProviderId.ToOICP() ?? DefaultProviderId;
-
-            var remoteStartResponse  = await EMPRoaming.AuthorizeRemoteStart(
-                                             new AuthorizeRemoteStartRequest(
-                                                 ProviderId:           ProviderId.ToOICP() ?? DefaultProviderId,
-                                                 EVSEId:               EVSEId.ToOICP().Value,
-                                                 Identification:       RemoteAuthentication.ToOICP(),
-                                                 SessionId:            SessionId.           ToOICP(),
-                                                 CPOPartnerSessionId:  null,
-                                                 EMPPartnerSessionId:  null,
-                                                 PartnerProductId:     PartnerProductIdElements.Count > 0
-                                                                           ? new PartnerProduct_Id?(PartnerProduct_Id.Parse(PartnerProductIdElements.
-                                                                                                                            Select(kvp => kvp.Key + "=" + kvp.Value).
-                                                                                                                            AggregateWith("|")))
-                                                                           : null,
-
-                                                 Timestamp:            Timestamp,
-                                                 CancellationToken:    CancellationToken,
-                                                 EventTrackingId:      EventTrackingId,
-                                                 RequestTimeout:       RequestTimeout)).
-                                             ConfigureAwait(false);
-
-
-            var Now      = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            var Runtime  = Now - Timestamp.Value;
-
-            if (remoteStartResponse.IsSuccess())
-            {
-
-                result = WWCP.RemoteStartResult.Success(
-                             remoteStartResponse.Response.SessionId.HasValue
-                                 ? new WWCP.ChargingSession(
-                                       remoteStartResponse.Response.SessionId.ToWWCP().Value,
-                                       EventTrackingId,
-                                       RoamingNetwork
-                                   )
-                                 : null,
+            if (!evseId.HasValue)
+                result = WWCP.RemoteStartResult.Error(
                              System_Id.Local,
-                             Runtime
+                             $"Invalid EVSE identification '{ChargingLocation?.EVSEId?.ToString() ?? "-"}'!",
+                             Runtime: Timestamp.Now - startTime
                          );
 
-            }
+            else if (!sessionId.HasValue)
+                result = WWCP.RemoteStartResult.Error(
+                             System_Id.Local,
+                             $"Invalid charging session identification '{SessionId}'!",
+                             Runtime: Timestamp.Now - startTime
+                         );
+
+            else if (remoteAuthentication is null || remoteAuthentication.IsNullOrEmpty)
+                result = WWCP.RemoteStartResult.Error(
+                             System_Id.Local,
+                             $"Invalid remote authentication '{RemoteAuthentication?.ToString() ?? "-"}'!",
+                             Runtime: Timestamp.Now - startTime
+                         );
 
             else
-                result = WWCP.RemoteStartResult.Error(
-                             remoteStartResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
-                             System_Id.Local,
-                             remoteStartResponse.Response.HTTPResponse.HTTPBodyAsUTF8String,
-                             Runtime
-                         );
+            {
+
+                #region Check if the PartnerProductId has a special format like 'R=12345-1234...|P=AC1'
+
+                var PartnerProductIdElements = new Dictionary<String, String>();
+
+                if (ChargingProduct is not null)
+                    PartnerProductIdElements.Add("P", ChargingProduct.Id.ToString());
+
+                #endregion
+
+                #region Copy the 'PlannedDuration' value into the PartnerProductId "D=...min"
+
+                //if (PlannedDuration.HasValue && PlannedDuration.Value >= TimeSpan.FromSeconds(1))
+                //{
+                //
+                //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
+                //    {
+                //        if (!PartnerProductIdElements.ContainsKey("D"))
+                //            PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
+                //        else
+                //            PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
+                //    }
+                //
+                //    else
+                //    {
+                //        if (!PartnerProductIdElements.ContainsKey("D"))
+                //            PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
+                //        else
+                //            PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
+                //    }
+                //
+                //}
+
+                #endregion
+
+                #region Copy the 'PlannedEnergy' value into the PartnerProductId
+
+                //if (PlannedEnergy.HasValue && PlannedEnergy.Value > 0))
+                //{
+                //
+                //    if (Duration.Value.Minutes > 0 && Duration.Value.Seconds == 0)
+                //    {
+                //        if (!PartnerProductIdElements.ContainsKey("D"))
+                //            PartnerProductIdElements.Add("D", Duration.Value.TotalMinutes + "min");
+                //        else
+                //            PartnerProductIdElements["D"] = Duration.Value.TotalMinutes + "min";
+                //    }
+                //
+                //    else
+                //    {
+                //        if (!PartnerProductIdElements.ContainsKey("D"))
+                //            PartnerProductIdElements.Add("D", Duration.Value.TotalSeconds + "sec");
+                //        else
+                //            PartnerProductIdElements["D"] = Duration.Value.TotalSeconds + "sec";
+                //    }
+                //
+                //}
+
+                #endregion
+
+                #region Copy the 'ReservationId' value into the PartnerProductId
+
+                if (ReservationId is not null)
+                {
+
+                    if (!PartnerProductIdElements.ContainsKey("R"))
+                        PartnerProductIdElements.Add("R", ReservationId.Value.Suffix);
+                    else
+                        PartnerProductIdElements["R"] = ReservationId.Value.Suffix;
+
+                }
+
+                #endregion
+
+
+                var remoteStartResponse  = await EMPRoaming.AuthorizeRemoteStart(
+                                                 new AuthorizeRemoteStartRequest(
+                                                     ProviderId:           ProviderId.ToOICP() ?? DefaultProviderId,
+                                                     EVSEId:               evseId.Value,
+                                                     Identification:       remoteAuthentication,
+                                                     SessionId:            sessionId,
+                                                     CPOPartnerSessionId:  null,
+                                                     EMPPartnerSessionId:  null,
+                                                     PartnerProductId:     PartnerProductIdElements.Count > 0
+                                                                               ? PartnerProduct_Id.Parse(
+                                                                                     PartnerProductIdElements.
+                                                                                         Select(kvp => kvp.Key + "=" + kvp.Value).
+                                                                                         AggregateWith("|")
+                                                                                 )
+                                                                               : null,
+
+                                                     Timestamp:            RequestTimestamp,
+                                                     CancellationToken:    CancellationToken,
+                                                     EventTrackingId:      EventTrackingId,
+                                                     RequestTimeout:       RequestTimeout)).
+                                                 ConfigureAwait(false);
+
+
+                var now      = Timestamp.Now;
+                var runtime  = now - RequestTimestamp.Value;
+
+                if (remoteStartResponse.IsSuccess() &&
+                    remoteStartResponse.Response is not null)
+                {
+
+                    var chargingSessionId = remoteStartResponse.Response.SessionId.ToWWCP();
+
+                    result = chargingSessionId.HasValue
+
+                                 ? WWCP.RemoteStartResult.Success(
+                                       new WWCP.ChargingSession(
+                                           chargingSessionId.Value,
+                                           EventTrackingId,
+                                           RoamingNetwork
+                                       ),
+                                       System_Id.Local,
+                                       runtime
+                                   )
+
+                                 : WWCP.RemoteStartResult.Error(
+                                       System_Id.Local,
+                                       $"The returned charging session identificaiton is invalid '{remoteStartResponse.Response.SessionId?.ToString() ?? "-"}'!",
+                                       Runtime: runtime
+                                   );
+
+                }
+
+                else
+                    result = WWCP.RemoteStartResult.Error(
+                                 remoteStartResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
+                                 System_Id.Local,
+                                 remoteStartResponse.Response.HTTPResponse.HTTPBodyAsUTF8String,
+                                 runtime
+                             );
+
+            }
 
 
             #region Send OnRemoteStartResponse event
 
-            var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var endTime = Timestamp.Now;
 
-            try
-            {
-
-                OnRemoteStartResponse?.Invoke(endTime,
-                                              Timestamp.Value,
-                                              this,
-                                              EventTrackingId,
-                                              RoamingNetwork.Id,
-                                              ChargingLocation,
-                                              RemoteAuthentication,
-                                              SessionId,
-                                              ReservationId,
-                                              ChargingProduct,
-                                              Id,
-                                              null,
-                                              ProviderId,
-                                              RequestTimeout,
-                                              result,
-                                              endTime - startTime);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnRemoteStartResponse));
-            }
+            await LogEvent(
+                      OnRemoteStartResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endTime,
+                          RequestTimestamp.Value,
+                          this,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          ChargingLocation,
+                          RemoteAuthentication,
+                          SessionId,
+                          ReservationId,
+                          ChargingProduct,
+                          null,
+                          null,
+                          ProviderId,
+                          RequestTimeout,
+                          result,
+                          endTime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -2274,7 +2305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="ProviderId">The unique identification of the e-mobility service provider.</param>
         /// <param name="RemoteAuthentication">The unique identification of the e-mobility account.</param>
         /// 
-        /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="RequestTimestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
@@ -2286,7 +2317,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              WWCP.RemoteAuthentication?  RemoteAuthentication,  // = null,
                                              WWCP.Auth_Path?             AuthenticationPath,    // = null,
 
-                                             DateTime?                   Timestamp,
+                                             DateTime?                   RequestTimestamp,
                                              EventTracking_Id?           EventTrackingId,
                                              TimeSpan?                   RequestTimeout,
                                              CancellationToken           CancellationToken)
@@ -2295,9 +2326,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            Timestamp       ??= org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
-            EventTrackingId ??= EventTracking_Id.New;
-            RequestTimeout  ??= EMPClient?.RequestTimeout;
+            RequestTimestamp ??= Timestamp.Now;
+            EventTrackingId  ??= EventTracking_Id.New;
+            RequestTimeout   ??= EMPClient?.RequestTimeout;
 
             WWCP.RemoteStopResult? result = null;
 
@@ -2305,95 +2336,122 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnRemoteStopRequest event
 
-            var startTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var startTime = Timestamp.Now;
 
-            try
-            {
-
-                OnRemoteStopRequest?.Invoke(startTime,
-                                            Timestamp.Value,
-                                            this,
-                                            EventTrackingId,
-                                            RoamingNetwork.Id,
-                                            SessionId,
-                                            ReservationHandling,
-                                            Id,
-                                            null,
-                                            ProviderId,
-                                            RemoteAuthentication,
-                                            RequestTimeout);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnRemoteStopRequest));
-            }
+            await LogEvent(
+                      OnRemoteStopRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          RequestTimestamp.Value,
+                          this,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          SessionId,
+                          ReservationHandling,
+                          Id,
+                          null,
+                          ProviderId,
+                          RemoteAuthentication,
+                          RequestTimeout
+                      )
+                  );
 
             #endregion
 
 
-            RoamingNetwork.TryGetChargingSessionById(SessionId, out var session);
-
-            var sessionId           = SessionId.      ToOICP();
-            var evseId              = session?.EVSEId.ToOICP();
-
-            var remoteStopResponse  = await EMPRoaming.AuthorizeRemoteStop(
-                                            new AuthorizeRemoteStopRequest(
-                                                SessionId:            sessionId. Value,
-                                                ProviderId:           ProviderId.ToOICP() ?? DefaultProviderId,
-                                                EVSEId:               evseId.    Value,
-                                                CPOPartnerSessionId:  null,
-                                                EMPPartnerSessionId:  null,
-
-                                                Timestamp:            Timestamp,
-                                                CancellationToken:    CancellationToken,
-                                                EventTrackingId:      EventTrackingId,
-                                                RequestTimeout:       RequestTimeout)).
-                                            ConfigureAwait(false);
-
-            if (remoteStopResponse.IsSuccess())
-            {
-
-                result = WWCP.RemoteStopResult.Success(SessionId, System_Id.Local);
-
-            }
-
-            else
+            if (!RoamingNetwork.TryGetChargingSessionById(SessionId, out var session))
                 result = WWCP.RemoteStopResult.Error(
                              SessionId,
                              System_Id.Local,
-                             remoteStopResponse.Response.HTTPResponse.HTTPStatusCode.ToString(),
-                             Runtime: org.GraphDefined.Vanaheimr.Illias.Timestamp.Now - startTime
+                             $"Unknown charging session '{SessionId}'!",
+                             Runtime: Timestamp.Now - startTime
                          );
+
+            else
+            {
+
+                var sessionId  = SessionId.      ToOICP();
+                var evseId     = session?.EVSEId.ToOICP();
+
+                if (!sessionId.HasValue)
+                    result = WWCP.RemoteStopResult.Error(
+                                 SessionId,
+                                 System_Id.Local,
+                                 $"Invalid charging session identification '{SessionId}'!",
+                                 Runtime: Timestamp.Now - startTime
+                             );
+
+                else if (!evseId.HasValue)
+                    result = WWCP.RemoteStopResult.Error(
+                                 SessionId,
+                                 System_Id.Local,
+                                 $"Invalid EVSE identification '{session?.EVSEId?.ToString() ?? "-"}'!",
+                                 Runtime: Timestamp.Now - startTime
+                             );
+
+                else
+                {
+
+                    var remoteStopResponse  = await EMPRoaming.AuthorizeRemoteStop(
+                                                    new AuthorizeRemoteStopRequest(
+                                                        SessionId:            sessionId. Value,
+                                                        ProviderId:           ProviderId.ToOICP() ?? DefaultProviderId,
+                                                        EVSEId:               evseId.    Value,
+                                                        CPOPartnerSessionId:  null,
+                                                        EMPPartnerSessionId:  null,
+
+                                                        Timestamp:            RequestTimestamp,
+                                                        CancellationToken:    CancellationToken,
+                                                        EventTrackingId:      EventTrackingId,
+                                                        RequestTimeout:       RequestTimeout)).
+                                                    ConfigureAwait(false);
+
+                    if (remoteStopResponse.IsSuccess())
+                    {
+
+                        result = WWCP.RemoteStopResult.Success(
+                                     SessionId,
+                                     System_Id.Local
+                                 );
+
+                    }
+
+                    else
+                        result = WWCP.RemoteStopResult.Error(
+                                     SessionId,
+                                     System_Id.Local,
+                                     remoteStopResponse.Response?.HTTPResponse?.HTTPStatusCode.ToString(),
+                                     Runtime: Timestamp.Now - startTime
+                                 );
+
+                }
+
+            }
 
 
             #region Send OnRemoteStopResponse event
 
-            var endTime = org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+            var endTime = Timestamp.Now;
 
-            try
-            {
-
-                OnRemoteStopResponse?.Invoke(endTime,
-                                             Timestamp.Value,
-                                             this,
-                                             EventTrackingId,
-                                             RoamingNetwork.Id,
-                                             SessionId,
-                                             ReservationHandling,
-                                             Id,
-                                             null,
-                                             ProviderId,
-                                             RemoteAuthentication,
-                                             RequestTimeout,
-                                             result,
-                                             endTime - startTime);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPAdapter) + "." + nameof(OnRemoteStopResponse));
-            }
+            await LogEvent(
+                      OnRemoteStopResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endTime,
+                          RequestTimestamp.Value,
+                          this,
+                          EventTrackingId,
+                          RoamingNetwork.Id,
+                          SessionId,
+                          ReservationHandling,
+                          Id,
+                          null,
+                          ProviderId,
+                          RemoteAuthentication,
+                          RequestTimeout,
+                          result,
+                          endTime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -3764,6 +3822,26 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #endregion
 
         }
+
+        #endregion
+
+
+        #region (private) LogEvent(Logger, LogHandler, ...)
+
+        private Task LogEvent<TDelegate>(TDelegate?                                         Logger,
+                                         Func<TDelegate, Task>                              LogHandler,
+                                         [CallerArgumentExpression(nameof(Logger))] String  EventName   = "",
+                                         [CallerMemberName()]                       String  Command     = "")
+
+            where TDelegate : Delegate
+
+                => LogEvent(
+                       nameof(EMPAdapter),
+                       Logger,
+                       LogHandler,
+                       EventName,
+                       Command
+                   );
 
         #endregion
 
