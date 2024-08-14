@@ -20,6 +20,7 @@
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
+using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
@@ -70,7 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An optional description of this CPO client.
         /// </summary>
-        String?                                                     IHTTPClient.Description
+        I18NString?                                                 IHTTPClient.Description
         {
 
             get

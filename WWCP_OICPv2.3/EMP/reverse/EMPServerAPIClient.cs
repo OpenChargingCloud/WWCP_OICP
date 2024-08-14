@@ -490,7 +490,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="DNSClient">The DNS client to use.</param>
         public EMPServerAPIClient(URL?                                                       RemoteURL                    = null,
                                   HTTPHostname?                                              VirtualHostname              = null,
-                                  String?                                                    Description                  = null,
+                                  I18NString?                                                Description                  = null,
                                   Boolean?                                                   PreferIPv4                   = null,
                                   RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                                   LocalCertificateSelectionHandler?                          LocalCertificateSelector    = null,

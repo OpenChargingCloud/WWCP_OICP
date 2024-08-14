@@ -331,7 +331,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="DNSClient">The DNS client to use.</param>
         public CPOServerAPIClient(URL?                                                       RemoteURL                    = null,
                                   HTTPHostname?                                              VirtualHostname              = null,
-                                  String?                                                    Description                  = null,
+                                  I18NString?                                                Description                  = null,
                                   Boolean?                                                   PreferIPv4                   = null,
                                   RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                                   LocalCertificateSelectionHandler?                          LocalCertificateSelector    = null,
