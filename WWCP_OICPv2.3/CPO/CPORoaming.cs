@@ -24,6 +24,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using cloud.charging.open.protocols.OICPv2_3.EMP;
 
 #endregion
 
@@ -161,6 +162,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         DNSClient                                                   IHTTPClient.DNSClient
             => CPOClient.DNSClient;
+
+
+        Boolean IHTTPClient.Connected
+            => CPOClient.Connected;
+
+        IIPAddress? IHTTPClient.RemoteIPAddress
+            => CPOClient.RemoteIPAddress;
 
         #endregion
 
