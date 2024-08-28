@@ -71,7 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An optional description of this CPO client.
         /// </summary>
-        I18NString?                                                 IHTTPClient.Description
+        I18NString                                                  IHTTPClient.Description
         {
 
             get
