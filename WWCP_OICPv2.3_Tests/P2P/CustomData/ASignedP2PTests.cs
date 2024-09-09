@@ -134,7 +134,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                                      0, 32);
 
                 Request.CustomData ??= new ();
-                Request.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
+                Request.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBASE64()));
 
                 return Request;
 
@@ -180,7 +180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.Signed.CPO
                                      0, 32);
 
                 Response.CustomData ??= new ();
-                Response.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBase64()));
+                Response.CustomData?.Add("signatureValidation", verifier.VerifySignature(signatureTXT.FromBASE64()));
 
                 return Response;
 
