@@ -1386,7 +1386,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             PullEVSEStatus(DateTime?                   LastCall            = null,
                            GeoCoordinate?              SearchCenter        = null,
                            Single                      DistanceKM          = 0f,
-                           WWCP.EVSEStatusTypes?       EVSEStatusFilter    = null,
+                           WWCP.EVSEStatusType?       EVSEStatusFilter    = null,
                            WWCP.EMobilityProvider_Id?  ProviderId          = null,
 
                            DateTime?                   Timestamp           = null,
@@ -1471,7 +1471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                         else
                             importedEVSEStatus.Add(new WWCP.EVSEStatus(
                                                        evseId.Value,
-                                                       new Timestamped<WWCP.EVSEStatusTypes>(
+                                                       new Timestamped<WWCP.EVSEStatusType>(
                                                            importTimestamp,
                                                            evseStatus.Value
                                                        ))
@@ -3088,11 +3088,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                             evseStatusUpdates.Add(evseId.Value,
                                                                   new WWCP.EVSEStatusUpdate(
                                                                       evseId.Value,
-                                                                      new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                      new Timestamped<WWCP.EVSEStatusType>(
                                                                           downloadTime,
                                                                           newEVSEStatus.Value
                                                                       ),
-                                                                      new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                      new Timestamped<WWCP.EVSEStatusType>(
                                                                           downloadTime,
                                                                           newEVSEStatus.Value
                                                                       )
@@ -3100,7 +3100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                                             updates.Add(new WWCP.EVSEStatusUpdate(
                                                             evseId.Value,
-                                                            new Timestamped<WWCP.EVSEStatusTypes>(
+                                                            new Timestamped<WWCP.EVSEStatusType>(
                                                                 downloadTime,
                                                                 newEVSEStatus.Value
                                                             )
@@ -3113,7 +3113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                             var value = new WWCP.EVSEStatusUpdate(
                                                                 Id:          evseId.Value,
                                                                 OldStatus:   oldEVSEStatus.NewStatus,
-                                                                NewStatus:   new Timestamped<WWCP.EVSEStatusTypes>(
+                                                                NewStatus:   new Timestamped<WWCP.EVSEStatusType>(
                                                                                  downloadTime,
                                                                                  newEVSEStatus.Value
                                                                              )
@@ -3431,7 +3431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 {
 
                                     var newStatus = new WWCP.EVSEStatus(currentEVSEId.Value,
-                                                                        new Timestamped<WWCP.EVSEStatusTypes>(DownloadTime,
+                                                                        new Timestamped<WWCP.EVSEStatusType>(DownloadTime,
                                                                                                               currentEVSEStatus.Value));
 
                                     validStatusList.Add(newStatus);
