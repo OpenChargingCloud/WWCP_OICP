@@ -1292,7 +1292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               ContentType     = HTTPContentType.Text.PLAIN,
                                               Content         = "This is an OICP v2.3 CPO Client HTTP/JSON endpoint!".ToUTF8Bytes(),
                                               CacheControl    = "public, max-age=300",
-                                              Connection      = "close"
+                                              Connection      = ConnectionType.Close
                                           }.AsImmutable);
                                   },
                                   AllowReplacement: URLReplacement.Allow);
@@ -1535,7 +1535,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                          ToUTF8Bytes()
                                                                                                ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -1775,7 +1775,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                            ToUTF8Bytes()
                                                                                                  ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -2016,7 +2016,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                    ToUTF8Bytes()
                                                                                                          ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -2256,7 +2256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                             ToUTF8Bytes()
                                                                                                   ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -2504,7 +2504,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                    ToUTF8Bytes()
                                                                                                          ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -2732,7 +2732,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                ToUTF8Bytes()
                                                                                                      ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -2958,7 +2958,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                               ToUTF8Bytes()
                                                                                                     ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -3770,7 +3770,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                  ToUTF8Bytes()
                                                                                                        ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -4011,7 +4011,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                ToUTF8Bytes()
                                                                                                      ?? [],
                                              ProcessID                  = processId.ToString(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);

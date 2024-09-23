@@ -749,7 +749,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               ContentType     = HTTPContentType.Text.PLAIN,
                                               Content         = "This is an OICP v2.3 EMP Server HTTP/JSON endpoint!".ToUTF8Bytes(),
                                               CacheControl    = "public, max-age=300",
-                                              Connection      = "close"
+                                              Connection      = ConnectionType.Close
                                           }.AsImmutable);
                                   },
                                   AllowReplacement: URLReplacement.Allow);
@@ -943,7 +943,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                             CustomStatusCodeSerializer).
                                                                                                      ToString(JSONFormatting).
                                                                                                      ToUTF8Bytes(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -1134,7 +1134,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                            CustomStatusCodeSerializer).
                                                                                                     ToString(JSONFormatting).
                                                                                                     ToUTF8Bytes(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -1793,7 +1793,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                                CustomStatusCodeSerializer).
                                                                                                         ToString(JSONFormatting).
                                                                                                         ToUTF8Bytes(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                                }, AllowReplacement: URLReplacement.Allow);
@@ -1985,7 +1985,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                             CustomStatusCodeSerializer).
                                                                                                      ToString(JSONFormatting).
                                                                                                      ToUTF8Bytes(),
-                                             Connection                 = "close"
+                                             Connection                 = ConnectionType.Close
                                          }.AsImmutable;
 
                               }, AllowReplacement: URLReplacement.Allow);

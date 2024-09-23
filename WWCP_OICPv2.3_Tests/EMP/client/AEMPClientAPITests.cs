@@ -538,11 +538,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.client
         //    return await new HTTPSClient(URL.Parse("http://127.0.0.1:8000")).
         //                     Execute(client => client.POSTRequest(HTTPPath.Parse("/api/oicp/charging/v21/operators/DE*GEF/authorize/start"),
         //                                                          requestbuilder => {
-        //                                                              requestbuilder.Host         = HTTPHostname.Localhost;
-        //                                                              requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-        //                                                              requestbuilder.Content      = Request.ToJSON().ToUTF8Bytes(Newtonsoft.Json.Formatting.None);
-        //                                                              requestbuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
-        //                                                              requestbuilder.Connection   = "close";
+        //                                                              requestBuilder.Host         = HTTPHostname.Localhost;
+        //                                                              requestBuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
+        //                                                              requestBuilder.Content      = Request.ToJSON().ToUTF8Bytes(Newtonsoft.Json.Formatting.None);
+        //                                                              requestBuilder.Accept.Add(HTTPContentType.Application.JSON_UTF8);
+        //                                                              requestBuilder.Connection   = ConnectionType.Close;
         //                                                          }),
         //                             //CancellationToken:    CancellationToken,
         //                             //EventTrackingId:      EventTrackingId,

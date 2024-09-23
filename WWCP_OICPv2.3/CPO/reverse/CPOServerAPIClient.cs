@@ -318,8 +318,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RemoteCertificateValidator">The remote TLS certificate validator.</param>
         /// <param name="LocalCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use of HTTP authentication.</param>
+        /// <param name="Authentication">The optional HTTP authentication to use, e.g. HTTP Basic Auth.</param>
         /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
-        /// <param name="HTTPAuthentication">The optional HTTP authentication to use.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
         /// <param name="TransmissionRetryDelay">The delay between transmission retries.</param>
         /// <param name="MaxNumberOfRetries">The maximum number of transmission retries for HTTP request.</param>
@@ -334,11 +334,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   I18NString?                                                Description                  = null,
                                   Boolean?                                                   PreferIPv4                   = null,
                                   RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
-                                  LocalCertificateSelectionHandler?                          LocalCertificateSelector    = null,
+                                  LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
                                   X509Certificate?                                           ClientCert                   = null,
                                   SslProtocols?                                              TLSProtocol                  = null,
-                                  String                                                     HTTPUserAgent                = DefaultHTTPUserAgent,
-                                  IHTTPAuthentication?                                       HTTPAuthentication           = null,
+                                  IHTTPAuthentication?                                       Authentication               = null,
+                                  String?                                                    HTTPUserAgent                = DefaultHTTPUserAgent,
                                   TimeSpan?                                                  RequestTimeout               = null,
                                   TransmissionRetryDelayDelegate?                            TransmissionRetryDelay       = null,
                                   UInt16?                                                    MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -357,8 +357,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    LocalCertificateSelector,
                    ClientCert,
                    TLSProtocol,
+                   HTTPContentType.Application.JSON_UTF8,
+                   AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
+                   Authentication,
                    HTTPUserAgent       ?? DefaultHTTPUserAgent,
-                   HTTPAuthentication,
+                   ConnectionType.Close,
                    RequestTimeout,
                    TransmissionRetryDelay,
                    MaxNumberOfRetries  ?? DefaultMaxNumberOfRetries,
@@ -446,70 +449,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote-reservation/start"),
-                                                                                   requestbuilder => {
-                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStartRequestSerializer,
-                                                                                                                                    CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormatting).
-                                                                                                                             ToUTF8Bytes();
-                                                                                       requestbuilder.Connection   = "close";
-                                                                                       requestbuilder.Set("Process-ID", processId.ToString());
-                                                                                   }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote-reservation/start",
+                                                 Content:              Request.ToJSON(CustomAuthorizeRemoteReservationStartRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnAuthorizeRemoteReservationStartHTTPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteReservationStartHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 RequestBuilder:       requestBuilder => {
+                                                                           requestBuilder.Set("Process-ID", processId.ToString());
+                                                                       }
+                                             ).
 
-                                                      RequestLogDelegate:   OnAuthorizeRemoteReservationStartHTTPRequest,
-                                                      ResponseLogDelegate:  OnAuthorizeRemoteReservationStartHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
-                                                      EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                              ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
                     // Re-read it from the HTTP response!
-                    var processId2 = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId2 = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
                     //ToDo: Verify that processId == processId2!
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStartRequest>.TryParse(Request,
-                                                                                                     JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                                     JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                      out Acknowledgement<AuthorizeRemoteReservationStartRequest>?  authorizeRemoteReservationStartResponse,
                                                                                                      out String?                                                   ErrorResponse,
-                                                                                                     HTTPResponse,
-                                                                                                     HTTPResponse.Timestamp,
-                                                                                                     HTTPResponse.EventTrackingId,
-                                                                                                     HTTPResponse.Runtime,
+                                                                                                     httpResponse,
+                                                                                                     httpResponse.Timestamp,
+                                                                                                     httpResponse.EventTrackingId,
+                                                                                                     httpResponse.Runtime,
                                                                                                      processId,
                                                                                                      CustomAuthorizeRemoteReservationStartAcknowledgementParser))
                                 {
@@ -535,11 +540,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              ),
                                              processId
@@ -554,11 +559,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -592,7 +597,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrorList,
                                                              out var errorResponse))
                             {
@@ -609,7 +614,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -618,7 +623,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -639,15 +644,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
 #pragma warning disable CS8604 // Possible null reference argument.
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -660,11 +665,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                             Request.SessionId,
                                                                                                                             Request.CPOPartnerSessionId,
                                                                                                                             Request.EMPPartnerSessionId,
-                                                                                                                            HTTPResponse.Timestamp,
-                                                                                                                            HTTPResponse.EventTrackingId,
-                                                                                                                            HTTPResponse.Runtime,
+                                                                                                                            httpResponse.Timestamp,
+                                                                                                                            httpResponse.EventTrackingId,
+                                                                                                                            httpResponse.Runtime,
                                                                                                                             processId,
-                                                                                                                            HTTPResponse,
+                                                                                                                            httpResponse,
                                                                                                                             Request.CustomData
                                                                                                                         ),
                                                                                                                         processId);
@@ -685,11 +690,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              )
                                          );
@@ -702,7 +707,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -838,69 +843,71 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote-reservation/stop"),
-                                                                                   requestbuilder => {
-                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteReservationStopRequestSerializer).
-                                                                                                                             ToString(JSONFormatting).
-                                                                                                                             ToUTF8Bytes();
-                                                                                       requestbuilder.Connection   = "close";
-                                                                                       requestbuilder.Set("Process-ID", processId.ToString());
-                                                                                   }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote-reservation/stop",
+                                                 Content:              Request.ToJSON(CustomAuthorizeRemoteReservationStopRequestSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnAuthorizeRemoteReservationStopHTTPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteReservationStopHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 RequestBuilder:       requestBuilder => {
+                                                                           requestBuilder.Set("Process-ID", processId.ToString());
+                                                                       }
+                                             ).
 
-                                                      RequestLogDelegate:   OnAuthorizeRemoteReservationStopHTTPRequest,
-                                                      ResponseLogDelegate:  OnAuthorizeRemoteReservationStopHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
-                                                      EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                              ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
                     // Re-read it from the HTTP response!
-                    var processId2 = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId2 = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
                     //ToDo: Verify that processId == processId2!
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteReservationStopRequest>.TryParse(Request,
-                                                                                                    JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                                    JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                     out Acknowledgement<AuthorizeRemoteReservationStopRequest>?  authorizeRemoteReservationStopResponse,
                                                                                                     out String?                                                  ErrorResponse,
-                                                                                                    HTTPResponse,
-                                                                                                    HTTPResponse.Timestamp,
-                                                                                                    HTTPResponse.EventTrackingId,
-                                                                                                    HTTPResponse.Runtime,
+                                                                                                    httpResponse,
+                                                                                                    httpResponse.Timestamp,
+                                                                                                    httpResponse.EventTrackingId,
+                                                                                                    httpResponse.Runtime,
                                                                                                     processId,
                                                                                                     CustomAuthorizeRemoteReservationStopAcknowledgementParser))
                                 {
@@ -926,11 +933,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              ),
                                              processId
@@ -945,11 +952,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -983,7 +990,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrorList,
                                                              out var errorResponse))
                             {
@@ -1000,7 +1007,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -1009,7 +1016,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -1030,15 +1037,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
 #pragma warning disable CS8604 // Possible null reference argument.
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -1051,11 +1058,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                            Request.SessionId,
                                                                                                                            Request.CPOPartnerSessionId,
                                                                                                                            Request.EMPPartnerSessionId,
-                                                                                                                           HTTPResponse.Timestamp,
-                                                                                                                           HTTPResponse.EventTrackingId,
-                                                                                                                           HTTPResponse.Runtime,
+                                                                                                                           httpResponse.Timestamp,
+                                                                                                                           httpResponse.EventTrackingId,
+                                                                                                                           httpResponse.Runtime,
                                                                                                                            processId,
-                                                                                                                           HTTPResponse,
+                                                                                                                           httpResponse,
                                                                                                                            Request.CustomData
                                                                                                                        ),
                                                                                                                        processId);
@@ -1076,11 +1083,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              )
                                          );
@@ -1093,7 +1100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -1230,70 +1237,72 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote/start"),
-                                                                                   requestbuilder => {
-                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStartRequestSerializer,
-                                                                                                                                    CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormatting).
-                                                                                                                             ToUTF8Bytes();
-                                                                                       requestbuilder.Connection   = "close";
-                                                                                       requestbuilder.Set("Process-ID", processId.ToString());
-                                                                                   }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote/start",
+                                                 Content:              Request.ToJSON(CustomAuthorizeRemoteStartRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnAuthorizeRemoteStartHTTPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteStartHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 RequestBuilder:       requestBuilder => {
+                                                                           requestBuilder.Set("Process-ID", processId.ToString());
+                                                                       }
+                                             ).
 
-                                                      RequestLogDelegate:   OnAuthorizeRemoteStartHTTPRequest,
-                                                      ResponseLogDelegate:  OnAuthorizeRemoteStartHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
-                                                      EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                              ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
                     // Re-read it from the HTTP response!
-                    var processId2 = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId2 = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
                     //ToDo: Verify that processId == processId2!
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStartRequest>.TryParse(Request,
-                                                                                          JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                          JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                           out Acknowledgement<AuthorizeRemoteStartRequest>?  authorizeRemoteStartResponse,
                                                                                           out String?                                        ErrorResponse,
-                                                                                          HTTPResponse,
-                                                                                          HTTPResponse.Timestamp,
-                                                                                          HTTPResponse.EventTrackingId,
-                                                                                          HTTPResponse.Runtime,
+                                                                                          httpResponse,
+                                                                                          httpResponse.Timestamp,
+                                                                                          httpResponse.EventTrackingId,
+                                                                                          httpResponse.Runtime,
                                                                                           processId,
                                                                                           CustomAuthorizeRemoteStartAcknowledgementParser))
                                 {
@@ -1319,11 +1328,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              ),
                                              processId
@@ -1338,11 +1347,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -1376,7 +1385,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrorList,
                                                              out var errorResponse))
                             {
@@ -1393,7 +1402,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -1402,7 +1411,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -1423,15 +1432,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
 #pragma warning disable CS8604 // Possible null reference argument.
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -1444,11 +1453,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                  Request.SessionId,
                                                                                                                  Request.CPOPartnerSessionId,
                                                                                                                  Request.EMPPartnerSessionId,
-                                                                                                                 HTTPResponse.Timestamp,
-                                                                                                                 HTTPResponse.EventTrackingId,
-                                                                                                                 HTTPResponse.Runtime,
+                                                                                                                 httpResponse.Timestamp,
+                                                                                                                 httpResponse.EventTrackingId,
+                                                                                                                 httpResponse.Runtime,
                                                                                                                  processId,
-                                                                                                                 HTTPResponse,
+                                                                                                                 httpResponse,
                                                                                                                  Request.CustomData
                                                                                                              ),
                                                                                                              processId);
@@ -1469,11 +1478,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              )
                                          );
@@ -1486,7 +1495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -1622,69 +1631,71 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("api/oicp/charging/v21/providers/" + Request.ProviderId.ToString().Replace("*", "%2A") + "/authorize-remote/stop"),
-                                                                                   requestbuilder => {
-                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeRemoteStopRequestSerializer).
-                                                                                                                             ToString(JSONFormatting).
-                                                                                                                             ToUTF8Bytes();
-                                                                                       requestbuilder.Connection   = "close";
-                                                                                       requestbuilder.Set("Process-ID", processId.ToString());
-                                                                                   }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote/stop",
+                                                 Content:              Request.ToJSON(CustomAuthorizeRemoteStopRequestSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnAuthorizeRemoteStopHTTPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeRemoteStopHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken,
+                                                 RequestBuilder:       requestBuilder => {
+                                                                           requestBuilder.Set("Process-ID", processId.ToString());
+                                                                       }
+                                             ).
 
-                                                      RequestLogDelegate:   OnAuthorizeRemoteStopHTTPRequest,
-                                                      ResponseLogDelegate:  OnAuthorizeRemoteStopHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
-                                                      EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                              ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
                     // Re-read it from the HTTP response!
-                    var processId2 = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId2 = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
                     //ToDo: Verify that processId == processId2!
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
                                 if (Acknowledgement<AuthorizeRemoteStopRequest>.TryParse(Request,
-                                                                                         JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                         JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                          out Acknowledgement<AuthorizeRemoteStopRequest>?  authorizeRemoteStopResponse,
                                                                                          out String?                                       ErrorResponse,
-                                                                                         HTTPResponse,
-                                                                                         HTTPResponse.Timestamp,
-                                                                                         HTTPResponse.EventTrackingId,
-                                                                                         HTTPResponse.Runtime,
+                                                                                         httpResponse,
+                                                                                         httpResponse.Timestamp,
+                                                                                         httpResponse.EventTrackingId,
+                                                                                         httpResponse.Runtime,
                                                                                          processId,
                                                                                          CustomAuthorizeRemoteStopAcknowledgementParser))
                                 {
@@ -1710,11 +1721,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              ),
                                              processId
@@ -1729,11 +1740,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -1767,7 +1778,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrorList,
                                                              out var errorResponse))
                             {
@@ -1784,7 +1795,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -1793,7 +1804,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -1814,15 +1825,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
 #pragma warning disable CS8604 // Possible null reference argument.
-                                if (StatusCode.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
+                                if (StatusCode.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String())["StatusCode"] as JObject,
                                                         out StatusCode?  statusCode,
                                                         out String?      ErrorResponse))
                                 {
@@ -1835,11 +1846,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                                 Request.SessionId,
                                                                                                                 Request.CPOPartnerSessionId,
                                                                                                                 Request.EMPPartnerSessionId,
-                                                                                                                HTTPResponse.Timestamp,
-                                                                                                                HTTPResponse.EventTrackingId,
-                                                                                                                HTTPResponse.Runtime,
+                                                                                                                httpResponse.Timestamp,
+                                                                                                                httpResponse.EventTrackingId,
+                                                                                                                httpResponse.Runtime,
                                                                                                                 processId,
-                                                                                                                HTTPResponse,
+                                                                                                                httpResponse,
                                                                                                                 Request.CustomData
                                                                                                             ),
                                                                                                             processId);
@@ -1860,11 +1871,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                  Request.SessionId,
                                                  Request.CPOPartnerSessionId,
                                                  Request.EMPPartnerSessionId,
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
+                                                 httpResponse.Runtime,
                                                  processId,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  Request.CustomData
                                              )
                                          );
@@ -1877,7 +1888,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }

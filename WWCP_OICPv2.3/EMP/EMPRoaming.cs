@@ -111,6 +111,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => EMPClient.PreferIPv4;
 
         /// <summary>
+        /// The optional HTTP connection type.
+        /// </summary>
+        ConnectionType?                                             IHTTPClient.Connection
+            => EMPClient.Connection;
+
+        /// <summary>
+        /// The optional HTTP content type.
+        /// </summary>
+        HTTPContentType?                                            IHTTPClient.ContentType
+            => EMPClient.ContentType;
+
+        /// <summary>
+        /// The optional HTTP accept header.
+        /// </summary>
+        AcceptTypes?                                                IHTTPClient.Accept
+            => EMPClient.Accept;
+
+        /// <summary>
+        /// The optional HTTP authentication to use.
+        /// </summary>
+        IHTTPAuthentication?                                        IHTTPClient.Authentication
+            => EMPClient.Authentication;
+
+        /// <summary>
         /// The HTTP user agent identification.
         /// </summary>
         String                                                      IHTTPClient.HTTPUserAgent

@@ -596,7 +596,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                                   ContentType     = HTTPContentType.Text.PLAIN,
                                                   Content         = "This is an OICP v2.3 CPO p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
                                                   CacheControl    = "public, max-age=300",
-                                                  Connection      = "close"
+                                                  Connection      = ConnectionType.Close
                                               }.AsImmutable);
                                       });
 
@@ -651,7 +651,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                                                       ContentType     = HTTPContentType.Text.PLAIN,
                                                       Content         = "This is an OICP v2.3 CPO p2p HTTP/JSON endpoint!".ToUTF8Bytes(),
                                                       CacheControl    = "public, max-age=300",
-                                                      Connection      = "close"
+                                                      Connection      = ConnectionType.Close
                                                   }.AsImmutable);
                                           });
 

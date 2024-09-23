@@ -220,7 +220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
                                                   ContentType     = HTTPContentType.Text.PLAIN,
                                                   Content         = "This is an OICP v2.3 Central Service HTTP/JSON endpoint!".ToUTF8Bytes(),
                                                   CacheControl    = "public, max-age=300",
-                                                  Connection      = "close"
+                                                  Connection      = ConnectionType.Close
                                               }.AsImmutable);
                                       });
 

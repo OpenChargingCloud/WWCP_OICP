@@ -84,6 +84,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public ProviderIdFormats  Format        { get; }
 
         /// <summary>
+        /// Return an URL encoded text representation of the e-mobility provider identification.
+        /// </summary>
+        public String             URLEncoded
+            => ToString(Format).Replace("*", "%2A");
+
+        /// <summary>
         /// Indicates whether this identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
@@ -534,29 +540,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
-        {
-
-            switch (Format)
-            {
-
-                case ProviderIdFormats.DIN:
-                    return CountryCode.Alpha2Code       + Suffix;
-
-                case ProviderIdFormats.DIN_STAR:
-                    return CountryCode.Alpha2Code + "*" + Suffix;
-
-                case ProviderIdFormats.DIN_HYPHEN:
-                    return CountryCode.Alpha2Code + "-" + Suffix;
-
-                case ProviderIdFormats.ISO:
-                    return CountryCode.Alpha2Code +       Suffix;
-
-                default: // ISO_HYPHEN
-                    return CountryCode.Alpha2Code + "-" + Suffix;
-
-            }
-
-        }
+            => ToString(Format);
 
         #endregion
 
@@ -567,37 +551,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Format">The format of the identification.</param>
         public String ToString(ProviderIdFormats Format)
-        {
 
-            switch (Format)
-            {
-
-                case ProviderIdFormats.DIN:
-                    return String.Concat(CountryCode.Alpha2Code,
-                                         Suffix);
-
-                case ProviderIdFormats.DIN_STAR:
-                    return String.Concat(CountryCode.Alpha2Code,
-                                         "*",
-                                         Suffix);
-
-                case ProviderIdFormats.DIN_HYPHEN:
-                    return String.Concat(CountryCode.Alpha2Code,
-                                         "-",
-                                         Suffix);
-
-                case ProviderIdFormats.ISO:
-                    return String.Concat(CountryCode.Alpha2Code,
-                                         Suffix);
-
-                default: // ISO_HYPHEN
-                    return String.Concat(CountryCode.Alpha2Code,
-                                         "-",
-                                         Suffix);
-
-            }
-
-        }
+            => Format switch {
+                   ProviderIdFormats.DIN       => CountryCode.Alpha2Code + Suffix,
+                   ProviderIdFormats.DIN_STAR  => $"{CountryCode.Alpha2Code}*{Suffix}",
+                   ProviderIdFormats.ISO       => CountryCode.Alpha2Code + Suffix,
+                   _                           => $"{CountryCode.Alpha2Code}-{Suffix}"  // ISO_HYPHEN
+               };
 
         #endregion
 

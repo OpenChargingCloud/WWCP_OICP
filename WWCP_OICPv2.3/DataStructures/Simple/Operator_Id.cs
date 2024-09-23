@@ -86,6 +86,12 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public OperatorIdFormats  Format        { get; }
 
         /// <summary>
+        /// Return an URL encoded text representation of the charging station operator identification.
+        /// </summary>
+        public String             URLEncoded
+            => ToString(Format).Replace("*", "%2A");
+
+        /// <summary>
         /// Indicates whether this charging station operator identification is null or empty.
         /// </summary>
         public Boolean IsNullOrEmpty
@@ -551,23 +557,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Return a text representation of this object.
         /// </summary>
         public override String ToString()
-        {
-
-            switch (Format)
-            {
-
-                case OperatorIdFormats.DIN:
-                    return "+" + CountryCode.TelefonCode.ToString() + "*" + Suffix;
-
-                case OperatorIdFormats.ISO_STAR:
-                    return CountryCode.Alpha2Code + "*" + Suffix;
-
-                default: // ISO
-                    return CountryCode.Alpha2Code       + Suffix;
-
-            }
-
-        }
+            => ToString(Format);
 
         #endregion
 
@@ -578,31 +568,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Format">The format of the identification.</param>
         public String ToString(OperatorIdFormats Format)
-        {
 
-            switch (Format)
-            {
-
-                case OperatorIdFormats.ISO:
-                    return String.Concat(CountryCode.Alpha2Code,
-                                         Suffix);
-
-                case OperatorIdFormats.ISO_STAR:
-                    return String.Concat(CountryCode.Alpha2Code,
-                                         "*",
-                                         Suffix);
-
-                default: // DIN
-                    return String.Concat("+",
-                                         CountryCode.TelefonCode,
-                                         "*",
-                                         Suffix);
-
-            }
-
-        }
+            => Format switch {
+                   OperatorIdFormats.DIN       => $"+{CountryCode.TelefonCode}*{Suffix}",
+                   OperatorIdFormats.ISO_STAR  => $"{ CountryCode.Alpha2Code }*{Suffix}",
+                   _                           =>     CountryCode.Alpha2Code + Suffix  // ISO
+               };
 
         #endregion
+
 
     }
 

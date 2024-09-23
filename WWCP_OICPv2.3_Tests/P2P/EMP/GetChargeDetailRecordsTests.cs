@@ -163,23 +163,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.EMP
                 var cdr = oicpResult.Response?.ChargeDetailRecords.FirstOrDefault();
 
                 ClassicAssert.AreEqual(Session_Id.          Parse  ("4cfe3192-87ec-4757-9560-a6ce896bb88b"),        cdr?.SessionId);
-                ClassicAssert.AreEqual(EVSE_Id.             Parse  ("DE*GEF*E1234567*A*1"),                           cdr?.EVSEId);
+                ClassicAssert.AreEqual(EVSE_Id.             Parse  ("DE*GEF*E1234567*A*1"),                         cdr?.EVSEId);
                 ClassicAssert.AreEqual(Identification.      FromUID(UID.Parse("AABBCCDD")),                         cdr?.Identification);
                 ClassicAssert.AreEqual(DateTime.            Parse  ("2022-08-09T10:18:25.229Z").ToUniversalTime(),  cdr?.SessionStart);
                 ClassicAssert.AreEqual(DateTime.            Parse  ("2022-08-09T11:18:25.229Z").ToUniversalTime(),  cdr?.SessionEnd);
                 ClassicAssert.AreEqual(DateTime.            Parse  ("2022-08-09T10:20:25.229Z").ToUniversalTime(),  cdr?.ChargingStart);
                 ClassicAssert.AreEqual(DateTime.            Parse  ("2022-08-09T11:13:25.229Z").ToUniversalTime(),  cdr?.ChargingEnd);
-                ClassicAssert.AreEqual(35,                                                                          cdr?.ConsumedEnergy);
+                ClassicAssert.AreEqual(35,                                                                          cdr?.ConsumedEnergy.kWh);
 
                 ClassicAssert.AreEqual(PartnerProduct_Id.   Parse("AC3"),                                           cdr?.PartnerProductId);
                 ClassicAssert.AreEqual(CPOPartnerSession_Id.Parse("e9c6faad-75c8-4f5b-9b5c-164ae7459804"),          cdr?.CPOPartnerSessionId);
                 ClassicAssert.AreEqual(EMPPartnerSession_Id.Parse("290b96b3-57df-4021-b8f8-50d9c211c767"),          cdr?.EMPPartnerSessionId);
-                ClassicAssert.AreEqual(3,                                                                           cdr?.MeterValueStart);
-                ClassicAssert.AreEqual(38,                                                                          cdr?.MeterValueEnd);
+                ClassicAssert.AreEqual(3,                                                                           cdr?.MeterValueStart?.kWh);
+                ClassicAssert.AreEqual(38,                                                                          cdr?.MeterValueEnd?.  kWh);
                 ClassicAssert.AreEqual(3,                                                                           cdr?.MeterValuesInBetween?.Count());
-                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseKWh(4)));
-                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseKWh(5)));
-                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseKWh(6)));
+                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseWh(4)));
+                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseWh(5)));
+                ClassicAssert.IsTrue  (cdr?.MeterValuesInBetween?.Contains(WattHour.ParseWh(6)));
 
                 ClassicAssert.AreEqual(3,                                                                           cdr?.SignedMeteringValues?.Count());
                 ClassicAssert.AreEqual("loooong start...",                                                          cdr?.SignedMeteringValues?.ElementAt(0).Value);

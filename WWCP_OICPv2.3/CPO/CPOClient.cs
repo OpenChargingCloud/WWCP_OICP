@@ -751,8 +751,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="RemoteCertificateValidator">The remote TLS certificate validator.</param>
         /// <param name="LocalCertificateSelector">A delegate to select a TLS client certificate.</param>
         /// <param name="ClientCert">The TLS client certificate to use of HTTP authentication.</param>
+        /// <param name="Authentication">The optional HTTP authentication to use, e.g. HTTP Basic Auth.</param>
         /// <param name="HTTPUserAgent">The HTTP user agent identification.</param>
-        /// <param name="HTTPAuthentication">The optional HTTP authentication to use.</param>
         /// <param name="RequestTimeout">An optional request timeout.</param>
         /// <param name="TransmissionRetryDelay">The delay between transmission retries.</param>
         /// <param name="MaxNumberOfRetries">The maximum number of transmission retries for HTTP request.</param>
@@ -766,11 +766,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          I18NString?                                                Description                  = null,
                          Boolean?                                                   PreferIPv4                   = null,
                          RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
-                         LocalCertificateSelectionHandler?                          LocalCertificateSelector    = null,
+                         LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
                          X509Certificate?                                           ClientCert                   = null,
                          SslProtocols?                                              TLSProtocol                  = null,
-                         String                                                     HTTPUserAgent                = DefaultHTTPUserAgent,
-                         IHTTPAuthentication?                                       HTTPAuthentication           = null,
+                         IHTTPAuthentication?                                       Authentication               = null,
+                         String?                                                    HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                                                  RequestTimeout               = null,
                          TransmissionRetryDelayDelegate?                            TransmissionRetryDelay       = null,
                          UInt16?                                                    MaxNumberOfRetries           = DefaultMaxNumberOfRetries,
@@ -789,8 +789,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    LocalCertificateSelector,
                    ClientCert,
                    TLSProtocol,
+                   HTTPContentType.Application.JSON_UTF8,
+                   AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
+                   Authentication,
                    HTTPUserAgent       ?? DefaultHTTPUserAgent,
-                   HTTPAuthentication,
+                   ConnectionType.Close,
                    RequestTimeout,
                    TransmissionRetryDelay,
                    MaxNumberOfRetries  ?? DefaultMaxNumberOfRetries,
@@ -912,64 +915,64 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                          VirtualHostname,
-                                                                          Description,
-                                                                          PreferIPv4,
-                                                                          RemoteCertificateValidator,
-                                                                          LocalCertificateSelector,
-                                                                          ClientCert,
-                                                                          TLSProtocol,
-                                                                          HTTPUserAgent,
-                                                                          HTTPAuthentication,
-                                                                          RequestTimeout,
-                                                                          TransmissionRetryDelay,
-                                                                          MaxNumberOfRetries,
-                                                                          InternalBufferSize,
-                                                                          UseHTTPPipelining,
-                                                                          DisableLogging,
-                                                                          null,
-                                                                          DNSClient).
+                        var httpResponse = await HTTPClientFactory.Create(
+                                                     RemoteURL,
+                                                     VirtualHostname,
+                                                     Description,
+                                                     PreferIPv4,
+                                                     RemoteCertificateValidator,
+                                                     LocalCertificateSelector,
+                                                     ClientCert,
+                                                     TLSProtocol,
+                                                     ContentType,
+                                                     Accept,
+                                                     Authentication,
+                                                     HTTPUserAgent,
+                                                     Connection,
+                                                     RequestTimeout,
+                                                     TransmissionRetryDelay,
+                                                     MaxNumberOfRetries,
+                                                     InternalBufferSize,
+                                                     UseHTTPPipelining,
+                                                     DisableLogging,
+                                                     null,
+                                                     DNSClient
+                                                 ).
 
-                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v23/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/data-records"),
-                                                                                       requestbuilder => {
-                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushEVSEDataRequestSerializer,
-                                                                                                                                        CustomOperatorEVSEDataSerializer,
-                                                                                                                                        CustomEVSEDataRecordSerializer,
-                                                                                                                                        CustomAddressSerializer,
-                                                                                                                                        CustomChargingFacilitySerializer,
-                                                                                                                                        CustomGeoCoordinatesSerializer,
-                                                                                                                                        CustomEnergyMeterSerializer,
-                                                                                                                                        CustomTransparencySoftwareStatusSerializer,
-                                                                                                                                        CustomTransparencySoftwareSerializer,
-                                                                                                                                        CustomEnergySourceSerializer,
-                                                                                                                                        CustomEnvironmentalImpactSerializer,
-                                                                                                                                        CustomOpeningTimesSerializer).
-                                                                                                                                 ToString(JSONFormatting).
-                                                                                                                                 ToUTF8Bytes();
-                                                                                           requestbuilder.Connection   = "close";
-                                                                                       }),
+                                                 POST(
+                                                     Path:                RemoteURL.Path + $"/api/oicp/evsepush/v23/operators/{Request.OperatorId.URLEncoded}/data-records",
+                                                     Content:             Request.ToJSON(CustomPushEVSEDataRequestSerializer,
+                                                                                         CustomOperatorEVSEDataSerializer,
+                                                                                         CustomEVSEDataRecordSerializer,
+                                                                                         CustomAddressSerializer,
+                                                                                         CustomChargingFacilitySerializer,
+                                                                                         CustomGeoCoordinatesSerializer,
+                                                                                         CustomEnergyMeterSerializer,
+                                                                                         CustomTransparencySoftwareStatusSerializer,
+                                                                                         CustomTransparencySoftwareSerializer,
+                                                                                         CustomEnergySourceSerializer,
+                                                                                         CustomEnvironmentalImpactSerializer,
+                                                                                         CustomOpeningTimesSerializer).
+                                                                                  ToUTF8Bytes(JSONFormatting),
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                     RequestLogDelegate:   OnPushEVSEDataHTTPRequest,
+                                                     ResponseLogDelegate:  OnPushEVSEDataHTTPResponse,
+                                                     CancellationToken:    Request.CancellationToken
+                                                 ).
 
-                                                          RequestLogDelegate:   OnPushEVSEDataHTTPRequest,
-                                                          ResponseLogDelegate:  OnPushEVSEDataHTTPResponse,
-                                                          CancellationToken:    Request.CancellationToken,
-                                                          EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                  ConfigureAwait(false);
+                                                 ConfigureAwait(false);
 
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -996,13 +999,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEDataRequest>.TryParse(Request,
-                                                                                      JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                                      JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                       out var acknowledgement,
                                                                                       out var ErrorResponse,
-                                                                                      HTTPResponse,
-                                                                                      HTTPResponse.Timestamp,
-                                                                                      HTTPResponse.EventTrackingId,
-                                                                                      HTTPResponse.Runtime,
+                                                                                      httpResponse,
+                                                                                      httpResponse.Timestamp,
+                                                                                      httpResponse.EventTrackingId,
+                                                                                      httpResponse.Runtime,
                                                                                       processId,
                                                                                       CustomPushEVSEDataAcknowledgementParser))
                                     {
@@ -1024,16 +1027,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEDataRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -1047,11 +1050,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400
@@ -1085,7 +1088,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                  out var validationErrors,
                                                                  out var errorResponse))
                                 {
@@ -1104,7 +1107,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                         {
 
                             // HTTP/1.1 403 Forbidden
@@ -1127,7 +1130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
                             // HTTP/1.1 401 Unauthorized
@@ -1148,14 +1151,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -1168,10 +1171,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushEVSEDataRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -1187,16 +1190,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEDataRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -1209,7 +1212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                         {
 
                             // HTTP/1.1 404 NotFound
@@ -1228,14 +1231,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -1248,10 +1251,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushEVSEDataRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -1267,16 +1270,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEDataRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEDataRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -1289,7 +1292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 
                     }
@@ -1452,55 +1455,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                          VirtualHostname,
-                                                                          Description,
-                                                                          PreferIPv4,
-                                                                          RemoteCertificateValidator,
-                                                                          LocalCertificateSelector,
-                                                                          ClientCert,
-                                                                          TLSProtocol,
-                                                                          HTTPUserAgent,
-                                                                          HTTPAuthentication,
-                                                                          RequestTimeout,
-                                                                          TransmissionRetryDelay,
-                                                                          MaxNumberOfRetries,
-                                                                          InternalBufferSize,
-                                                                          UseHTTPPipelining,
-                                                                          DisableLogging,
-                                                                          null,
-                                                                          DNSClient).
+                        var httpResponse = await HTTPClientFactory.Create(
+                                                     RemoteURL,
+                                                     VirtualHostname,
+                                                     Description,
+                                                     PreferIPv4,
+                                                     RemoteCertificateValidator,
+                                                     LocalCertificateSelector,
+                                                     ClientCert,
+                                                     TLSProtocol,
+                                                     ContentType,
+                                                     Accept,
+                                                     Authentication,
+                                                     HTTPUserAgent,
+                                                     Connection,
+                                                     RequestTimeout,
+                                                     TransmissionRetryDelay,
+                                                     MaxNumberOfRetries,
+                                                     InternalBufferSize,
+                                                     UseHTTPPipelining,
+                                                     DisableLogging,
+                                                     null,
+                                                     DNSClient
+                                                 ).
 
-                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/evsepush/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/status-records"),
-                                                                                       requestbuilder => {
-                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushEVSEStatusRequestSerializer,
-                                                                                                                                        CustomOperatorEVSEStatusSerializer,
-                                                                                                                                        CustomEVSEStatusRecordSerializer).
-                                                                                                                                 ToString(JSONFormatting).
-                                                                                                                                 ToUTF8Bytes();
-                                                                                           requestbuilder.Connection   = "close";
-                                                                                       }),
+                                                 POST(
+                                                     Path:                 RemoteURL.Path + $"/api/oicp/evsepush/v21/operators/{Request.OperatorId.URLEncoded}/status-records",
+                                                     Content:              Request.ToJSON(CustomPushEVSEStatusRequestSerializer,
+                                                                                          CustomOperatorEVSEStatusSerializer,
+                                                                                          CustomEVSEStatusRecordSerializer).
+                                                                                   ToUTF8Bytes(JSONFormatting),
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                     RequestLogDelegate:   OnPushEVSEStatusHTTPRequest,
+                                                     ResponseLogDelegate:  OnPushEVSEStatusHTTPResponse,
+                                                     CancellationToken:    Request.CancellationToken
+                                                 ).
 
-                                                          RequestLogDelegate:   OnPushEVSEStatusHTTPRequest,
-                                                          ResponseLogDelegate:  OnPushEVSEStatusHTTPResponse,
-                                                          CancellationToken:    Request.CancellationToken,
-                                                          EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                  ConfigureAwait(false);
+                                                 ConfigureAwait(false);
 
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -1527,13 +1530,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEStatusRequest>.TryParse(Request,
-                                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                                        JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                         out var acknowledgement,
                                                                                         out var ErrorResponse,
-                                                                                        HTTPResponse,
-                                                                                        HTTPResponse.Timestamp,
-                                                                                        HTTPResponse.EventTrackingId,
-                                                                                        HTTPResponse.Runtime,
+                                                                                        httpResponse,
+                                                                                        httpResponse.Timestamp,
+                                                                                        httpResponse.EventTrackingId,
+                                                                                        httpResponse.Runtime,
                                                                                         processId,
                                                                                         CustomPushEVSEStatusAcknowledgementParser))
                                     {
@@ -1555,16 +1558,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEStatusRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -1578,11 +1581,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400 BadRequest
@@ -1615,7 +1618,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                  out var validationErrors,
                                                                  out var errorResponse))
                                 {
@@ -1632,7 +1635,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                         {
 
                             // HTTP/1.1 403 Forbidden
@@ -1655,7 +1658,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
                             // HTTP/1.1 401 Unauthorized
@@ -1676,14 +1679,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -1696,10 +1699,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushEVSEStatusRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -1715,16 +1718,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEStatusRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -1737,7 +1740,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                         {
 
                             // HTTP/1.1 404 NotFound
@@ -1756,14 +1759,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -1776,10 +1779,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushEVSEStatusRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -1795,16 +1798,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEStatusRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEStatusRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -1817,7 +1820,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 
                     }
@@ -1979,55 +1982,55 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                          VirtualHostname,
-                                                                          Description,
-                                                                          PreferIPv4,
-                                                                          RemoteCertificateValidator,
-                                                                          LocalCertificateSelector,
-                                                                          ClientCert,
-                                                                          TLSProtocol,
-                                                                          HTTPUserAgent,
-                                                                          HTTPAuthentication,
-                                                                          RequestTimeout,
-                                                                          TransmissionRetryDelay,
-                                                                          MaxNumberOfRetries,
-                                                                          InternalBufferSize,
-                                                                          UseHTTPPipelining,
-                                                                          DisableLogging,
-                                                                          null,
-                                                                          DNSClient).
+                        var httpResponse = await HTTPClientFactory.Create(
+                                                     RemoteURL,
+                                                     VirtualHostname,
+                                                     Description,
+                                                     PreferIPv4,
+                                                     RemoteCertificateValidator,
+                                                     LocalCertificateSelector,
+                                                     ClientCert,
+                                                     TLSProtocol,
+                                                     ContentType,
+                                                     Accept,
+                                                     Authentication,
+                                                     HTTPUserAgent,
+                                                     Connection,
+                                                     RequestTimeout,
+                                                     TransmissionRetryDelay,
+                                                     MaxNumberOfRetries,
+                                                     InternalBufferSize,
+                                                     UseHTTPPipelining,
+                                                     DisableLogging,
+                                                     null,
+                                                     DNSClient
+                                                 ).
 
-                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pricing-products"),
-                                                                                       requestbuilder => {
-                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushPricingProductDataRequestSerializer,
-                                                                                                                                        CustomPricingProductDataSerializer,
-                                                                                                                                        CustomPricingProductDataRecordSerializer).
-                                                                                                                                 ToString(JSONFormatting).
-                                                                                                                                 ToUTF8Bytes();
-                                                                                           requestbuilder.Connection   = "close";
-                                                                                       }),
+                                                 POST(
+                                                     Path:                 RemoteURL.Path + $"/api/oicp/dynamicpricing/v10/operators/{Request.OperatorId.URLEncoded}/pricing-products",
+                                                     Content:              Request.ToJSON(CustomPushPricingProductDataRequestSerializer,
+                                                                                          CustomPricingProductDataSerializer,
+                                                                                          CustomPricingProductDataRecordSerializer).
+                                                                                   ToUTF8Bytes(JSONFormatting),
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                     RequestLogDelegate:   OnPushPricingProductDataHTTPRequest,
+                                                     ResponseLogDelegate:  OnPushPricingProductDataHTTPResponse,
+                                                     CancellationToken:    Request.CancellationToken
+                                                 ).
 
-                                                          RequestLogDelegate:   OnPushPricingProductDataHTTPRequest,
-                                                          ResponseLogDelegate:  OnPushPricingProductDataHTTPResponse,
-                                                          CancellationToken:    Request.CancellationToken,
-                                                          EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                  ConfigureAwait(false);
+                                                 ConfigureAwait(false);
 
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2054,13 +2057,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushPricingProductDataRequest>.TryParse(Request,
-                                                                                                JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                                                JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                                 out var acknowledgement,
                                                                                                 out var ErrorResponse,
-                                                                                                HTTPResponse,
-                                                                                                HTTPResponse.Timestamp,
-                                                                                                HTTPResponse.EventTrackingId,
-                                                                                                HTTPResponse.Runtime,
+                                                                                                httpResponse,
+                                                                                                httpResponse.Timestamp,
+                                                                                                httpResponse.EventTrackingId,
+                                                                                                httpResponse.Runtime,
                                                                                                 processId,
                                                                                                 CustomPushPricingProductDataAcknowledgementParser))
                                     {
@@ -2082,16 +2085,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushPricingProductDataRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -2105,11 +2108,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400
@@ -2143,7 +2146,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                  out var validationErrors,
                                                                  out var errorResponse))
                                 {
@@ -2162,7 +2165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                         {
 
                             // HTTP/1.1 403 Forbidden
@@ -2185,7 +2188,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
                             // HTTP/1.1 401 Unauthorized
@@ -2206,14 +2209,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -2226,10 +2229,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushPricingProductDataRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -2245,16 +2248,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushPricingProductDataRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -2267,7 +2270,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                         {
 
                             // HTTP/1.1 404 NotFound
@@ -2286,14 +2289,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -2306,10 +2309,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushPricingProductDataRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -2325,16 +2328,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushPricingProductDataRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushPricingProductDataRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -2347,7 +2350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 
                     }
@@ -2508,54 +2511,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                          VirtualHostname,
-                                                                          Description,
-                                                                          PreferIPv4,
-                                                                          RemoteCertificateValidator,
-                                                                          LocalCertificateSelector,
-                                                                          ClientCert,
-                                                                          TLSProtocol,
-                                                                          HTTPUserAgent,
-                                                                          HTTPAuthentication,
-                                                                          RequestTimeout,
-                                                                          TransmissionRetryDelay,
-                                                                          MaxNumberOfRetries,
-                                                                          InternalBufferSize,
-                                                                          UseHTTPPipelining,
-                                                                          DisableLogging,
-                                                                          null,
-                                                                          DNSClient).
+                        var httpResponse = await HTTPClientFactory.Create(
+                                                     RemoteURL,
+                                                     VirtualHostname,
+                                                     Description,
+                                                     PreferIPv4,
+                                                     RemoteCertificateValidator,
+                                                     LocalCertificateSelector,
+                                                     ClientCert,
+                                                     TLSProtocol,
+                                                     ContentType,
+                                                     Accept,
+                                                     Authentication,
+                                                     HTTPUserAgent,
+                                                     Connection,
+                                                     RequestTimeout,
+                                                     TransmissionRetryDelay,
+                                                     MaxNumberOfRetries,
+                                                     InternalBufferSize,
+                                                     UseHTTPPipelining,
+                                                     DisableLogging,
+                                                     null,
+                                                     DNSClient
+                                                 ).
 
-                                                  Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/dynamicpricing/v10/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/evse-pricing"),
-                                                                                       requestbuilder => {
-                                                                                           requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                           requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                           requestbuilder.Content      = Request.ToJSON(CustomPushEVSEPricingRequestSerializer,
-                                                                                                                                        CustomEVSEPricingSerializer).
-                                                                                                                                 ToString(JSONFormatting).
-                                                                                                                                 ToUTF8Bytes();
-                                                                                           requestbuilder.Connection   = "close";
-                                                                                       }),
+                                                 POST(
+                                                     Path:                 RemoteURL.Path + $"/api/oicp/dynamicpricing/v10/operators/{Request.OperatorId.URLEncoded}/evse-pricing",
+                                                     Content:              Request.ToJSON(CustomPushEVSEPricingRequestSerializer,
+                                                                                          CustomEVSEPricingSerializer).
+                                                                                   ToUTF8Bytes(JSONFormatting),
+                                                     EventTrackingId:      Request.EventTrackingId,
+                                                     RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                     RequestLogDelegate:   OnPushEVSEPricingHTTPRequest,
+                                                     ResponseLogDelegate:  OnPushEVSEPricingHTTPResponse,
+                                                     CancellationToken:    Request.CancellationToken
+                                                 ).
 
-                                                          RequestLogDelegate:   OnPushEVSEPricingHTTPRequest,
-                                                          ResponseLogDelegate:  OnPushEVSEPricingHTTPResponse,
-                                                          CancellationToken:    Request.CancellationToken,
-                                                          EventTrackingId:      Request.EventTrackingId,
-                                                          RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                  ConfigureAwait(false);
+                                                 ConfigureAwait(false);
 
                         #endregion
 
 
-                        var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                        var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
@@ -2582,13 +2585,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     // }
 
                                     if (Acknowledgement<PushEVSEPricingRequest>.TryParse(Request,
-                                                                                         JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                                         JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                          out var acknowledgement,
                                                                                          out var ErrorResponse,
-                                                                                         HTTPResponse,
-                                                                                         HTTPResponse.Timestamp,
-                                                                                         HTTPResponse.EventTrackingId,
-                                                                                         HTTPResponse.Runtime,
+                                                                                         httpResponse,
+                                                                                         httpResponse.Timestamp,
+                                                                                         httpResponse.EventTrackingId,
+                                                                                         httpResponse.Runtime,
                                                                                          processId,
                                                                                          CustomPushEVSEPricingAcknowledgementParser))
                                     {
@@ -2610,16 +2613,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEPricingRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -2633,11 +2636,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                         {
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 // HTTP/1.1 400
@@ -2671,7 +2674,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 //     ]
                                 // }
 
-                                if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                                if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                  out var validationErrors,
                                                                  out var errorResponse))
                                 {
@@ -2690,7 +2693,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                         {
 
                             // HTTP/1.1 403 Forbidden
@@ -2713,7 +2716,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                         {
 
                             // HTTP/1.1 401 Unauthorized
@@ -2734,14 +2737,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                             statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -2754,10 +2757,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushEVSEPricingRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -2773,16 +2776,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEPricingRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -2795,7 +2798,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                         {
 
                             // HTTP/1.1 404 NotFound
@@ -2814,14 +2817,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     }
                             // }
 
-                            if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                                HTTPResponse.HTTPBody?.Length > 0)
+                            if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                                httpResponse.HTTPBody?.Length > 0)
                             {
 
                                 try
                                 {
 
-                                    var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                    var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
@@ -2834,10 +2837,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                         result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                      Request,
                                                      new Acknowledgement<PushEVSEPricingRequest>(
-                                                         HTTPResponse.Timestamp,
-                                                         HTTPResponse.EventTrackingId,
+                                                         httpResponse.Timestamp,
+                                                         httpResponse.EventTrackingId,
                                                          processId,
-                                                         HTTPResponse.Runtime,
+                                                         httpResponse.Runtime,
                                                          statusCode!,
                                                          Request
                                                      ),
@@ -2853,16 +2856,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<PushEVSEPricingRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<PushEVSEPricingRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      new StatusCode(
                                                          StatusCodes.SystemError,
                                                          e.Message,
                                                          e.StackTrace),
                                                      Request,
-                                                     HTTPResponse,
+                                                     httpResponse,
                                                      false
                                                  )
                                              );
@@ -2875,7 +2878,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         }
 
-                        if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                        if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                         { }
 
                     }
@@ -3018,53 +3021,53 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                                Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/authdata/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/pull-request"),
-                                                                                     requestbuilder => {
-                                                                                         requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                         requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                         requestbuilder.Content      = Request.ToJSON(CustomPullAuthenticationDataRequestSerializer).
-                                                                                                                               ToString(JSONFormatting).
-                                                                                                                               ToUTF8Bytes();
-                                                                                         requestbuilder.Connection   = "close";
-                                                                                     }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/authdata/v21/operators/{Request.OperatorId.URLEncoded}/pull-request",
+                                                 Content:              Request.ToJSON(CustomPullAuthenticationDataRequestSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnPullAuthenticationDataHTTPRequest,
+                                                 ResponseLogDelegate:  OnPullAuthenticationDataHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                        RequestLogDelegate:   OnPullAuthenticationDataHTTPRequest,
-                                                        ResponseLogDelegate:  OnPullAuthenticationDataHTTPResponse,
-                                                        CancellationToken:    Request.CancellationToken,
-                                                        EventTrackingId:      Request.EventTrackingId,
-                                                        RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3091,14 +3094,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (PullAuthenticationDataResponse.TryParse(Request,
-                                                                            JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
-                                                                            HTTPResponse.Timestamp,
-                                                                            HTTPResponse.EventTrackingId,
-                                                                            HTTPResponse.Runtime,
+                                                                            JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
+                                                                            httpResponse.Timestamp,
+                                                                            httpResponse.EventTrackingId,
+                                                                            httpResponse.Runtime,
                                                                             out var pullAuthenticationDataResponse,
                                                                             out var ErrorResponse,
                                                                             processId,
-                                                                            HTTPResponse,
+                                                                            httpResponse,
                                                                             CustomPullAuthenticationDataResponseParser))
                                 {
 
@@ -3119,10 +3122,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<PullAuthenticationDataResponse>.Failed(
                                              Request,
                                              new PullAuthenticationDataResponse(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  [],
                                                  Request,
                                                  StatusCode: new StatusCode(
@@ -3141,11 +3144,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -3179,7 +3182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
@@ -3198,7 +3201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // HTTP/1.1 403
@@ -3234,14 +3237,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         statusDescription = "Hubject firewall problem!";
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -3254,10 +3257,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<PullAuthenticationDataResponse>.Failed(
                                                  Request,
                                                  new PullAuthenticationDataResponse(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      [],
                                                      Request,
                                                      StatusCode: statusCode
@@ -3274,10 +3277,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<PullAuthenticationDataResponse>.Failed(
                                              Request,
                                              new PullAuthenticationDataResponse(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  [],
                                                  Request,
                                                  StatusCode: new StatusCode(
@@ -3296,7 +3299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -3317,14 +3320,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         statusDescription = "Operator/provider identification is not linked to the TLS client certificate!";
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -3337,10 +3340,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<PullAuthenticationDataResponse>.Failed(
                                                  Request,
                                                  new PullAuthenticationDataResponse(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      [],
                                                      Request,
                                                      StatusCode: statusCode
@@ -3357,10 +3360,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<PullAuthenticationDataResponse>.Failed(
                                              Request,
                                              new PullAuthenticationDataResponse(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  [],
                                                  Request,
                                                  StatusCode: new StatusCode(
@@ -3379,7 +3382,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404 NotFound
@@ -3398,14 +3401,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -3418,10 +3421,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<PullAuthenticationDataResponse>.Failed(
                                                  Request,
                                                  new PullAuthenticationDataResponse(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      [],
                                                      Request,
                                                      StatusCode: statusCode
@@ -3438,10 +3441,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<PullAuthenticationDataResponse>.Failed(
                                              Request,
                                              new PullAuthenticationDataResponse(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  [],
                                                  Request,
                                                  StatusCode: new StatusCode(
@@ -3459,7 +3462,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -3595,54 +3598,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/start"),
-                                                                                   requestbuilder => {
-                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStartRequestSerializer,
-                                                                                                                                    CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormatting).
-                                                                                                                             ToUTF8Bytes();
-                                                                                       requestbuilder.Connection   = "close";
-                                                                                   }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/operators/{Request.OperatorId.URLEncoded}/authorize/start",
+                                                 Content:              Request.ToJSON(CustomAuthorizeStartRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                      RequestLogDelegate:   OnAuthorizeStartHTTPRequest,
-                                                      ResponseLogDelegate:  OnAuthorizeStartHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
-                                                      EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                              ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -3696,14 +3699,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // 102 (RFID Authentication failed – invalid UID)  => No positive authorization from any EMP!
 
                                 if (AuthorizationStartResponse.TryParse(Request,
-                                                                        JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                        JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                         out var authorizationStartResponse,
                                                                         out var ErrorResponse,
-                                                                        HTTPResponse.Timestamp,
-                                                                        HTTPResponse.EventTrackingId,
-                                                                        HTTPResponse.Runtime,
+                                                                        httpResponse.Timestamp,
+                                                                        httpResponse.EventTrackingId,
+                                                                        httpResponse.Runtime,
                                                                         processId,
-                                                                        HTTPResponse,
+                                                                        httpResponse,
                                                                         CustomAuthorizationStartResponseParser))
                                 {
 
@@ -3743,11 +3746,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -3780,7 +3783,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
@@ -3797,7 +3800,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -3806,7 +3809,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -3827,14 +3830,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -3881,7 +3884,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -4006,68 +4009,68 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/charging/v21/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/authorize/stop"),
-                                                                                   requestbuilder => {
-                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON(CustomAuthorizeStopRequestSerializer,
-                                                                                                                                    CustomIdentificationSerializer).
-                                                                                                                             ToString(JSONFormatting).
-                                                                                                                             ToUTF8Bytes();
-                                                                                       requestbuilder.Connection   = "close";
-                                                                                   }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/operators/{Request.OperatorId.URLEncoded}/authorize/stop",
+                                                 Content:              Request.ToJSON(CustomAuthorizeStopRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
+                                                 ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                      RequestLogDelegate:   OnAuthorizeStopHTTPRequest,
-                                                      ResponseLogDelegate:  OnAuthorizeStopHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
-                                                      EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                              ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
                                 if (AuthorizationStopResponse.TryParse(Request,
-                                                                       JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                       JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                        out var authorizationStopResponse,
                                                                        out var ErrorResponse,
-                                                                       HTTPResponse.Timestamp,
-                                                                       HTTPResponse.EventTrackingId,
-                                                                       HTTPResponse.Runtime,
+                                                                       httpResponse.Timestamp,
+                                                                       httpResponse.EventTrackingId,
+                                                                       httpResponse.Runtime,
                                                                        processId,
-                                                                       HTTPResponse,
+                                                                       httpResponse,
                                                                        CustomAuthorizationStopResponseParser))
                                 {
 
@@ -4108,11 +4111,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -4145,7 +4148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
@@ -4162,7 +4165,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -4171,7 +4174,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -4192,14 +4195,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -4246,7 +4249,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 401
@@ -4267,14 +4270,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -4321,7 +4324,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -4447,54 +4450,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                      requestbuilder => {
-                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
-                                                                                                                                       CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormatting).
-                                                                                                                                ToUTF8Bytes();
-                                                                                          requestbuilder.Connection   = "close";
-                                                                                      }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                 Content:              Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnChargingStartNotificationHTTPRequest,
+                                                 ResponseLogDelegate:  OnChargingStartNotificationHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                         RequestLogDelegate:   OnChargingStartNotificationHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingStartNotificationHTTPResponse,
-                                                         CancellationToken:    Request.CancellationToken,
-                                                         EventTrackingId:      Request.EventTrackingId,
-                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                 ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -4521,13 +4524,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
-                                                                                               JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                               JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                out var acknowledgement,
                                                                                                out var ErrorResponse,
-                                                                                               HTTPResponse,
-                                                                                               HTTPResponse.Timestamp,
-                                                                                               HTTPResponse.EventTrackingId,
-                                                                                               HTTPResponse.Runtime,
+                                                                                               httpResponse,
+                                                                                               httpResponse.Timestamp,
+                                                                                               httpResponse.EventTrackingId,
+                                                                                               httpResponse.Runtime,
                                                                                                processId,
                                                                                                CustomChargingStartNotificationAcknowledgementParser))
                                 {
@@ -4549,16 +4552,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingStartNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -4572,11 +4575,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -4609,7 +4612,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
@@ -4626,7 +4629,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -4635,7 +4638,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -4656,14 +4659,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -4676,10 +4679,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingStartNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -4695,16 +4698,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingStartNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -4717,7 +4720,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404
@@ -4736,14 +4739,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -4756,10 +4759,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingStartNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -4775,16 +4778,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingStartNotificationRequest>>.Failed(
                                                 Request,
                                                 new Acknowledgement<ChargingStartNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
+                                                    httpResponse.Timestamp,
+                                                    httpResponse.EventTrackingId,
                                                     processId,
-                                                    HTTPResponse.Runtime,
+                                                    httpResponse.Runtime,
                                                     new StatusCode(
                                                         StatusCodes.SystemError,
                                                         e.Message,
                                                         e.StackTrace),
                                                     Request,
-                                                    HTTPResponse,
+                                                    httpResponse,
                                                     false
                                                 )
                                             );
@@ -4797,7 +4800,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -4935,54 +4938,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                      requestbuilder => {
-                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
-                                                                                                                                       CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormatting).
-                                                                                                                                ToUTF8Bytes();
-                                                                                          requestbuilder.Connection   = "close";
-                                                                                      }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                 Content:              Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnChargingProgressNotificationHTTPRequest,
+                                                 ResponseLogDelegate:  OnChargingProgressNotificationHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                         RequestLogDelegate:   OnChargingProgressNotificationHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingProgressNotificationHTTPResponse,
-                                                         CancellationToken:    Request.CancellationToken,
-                                                         EventTrackingId:      Request.EventTrackingId,
-                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                 ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5009,13 +5012,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingProgressNotificationRequest>.TryParse(Request,
-                                                                                                  JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                                  JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                   out var acknowledgement,
                                                                                                   out var ErrorResponse,
-                                                                                                  HTTPResponse,
-                                                                                                  HTTPResponse.Timestamp,
-                                                                                                  HTTPResponse.EventTrackingId,
-                                                                                                  HTTPResponse.Runtime,
+                                                                                                  httpResponse,
+                                                                                                  httpResponse.Timestamp,
+                                                                                                  httpResponse.EventTrackingId,
+                                                                                                  httpResponse.Runtime,
                                                                                                   processId,
                                                                                                   CustomChargingProgressNotificationAcknowledgementParser))
                                 {
@@ -5037,16 +5040,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -5060,11 +5063,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400
@@ -5097,7 +5100,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
@@ -5114,7 +5117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -5123,7 +5126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401
@@ -5144,14 +5147,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -5164,10 +5167,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -5183,16 +5186,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -5205,7 +5208,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404
@@ -5224,14 +5227,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -5244,10 +5247,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -5263,16 +5266,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingProgressNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -5285,7 +5288,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -5423,54 +5426,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                      requestbuilder => {
-                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
-                                                                                                                                       CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormatting).
-                                                                                                                                ToUTF8Bytes();
-                                                                                          requestbuilder.Connection   = "close";
-                                                                                      }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                 Content:              Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnChargingEndNotificationHTTPRequest,
+                                                 ResponseLogDelegate:  OnChargingEndNotificationHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                         RequestLogDelegate:   OnChargingEndNotificationHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingEndNotificationHTTPResponse,
-                                                         CancellationToken:    Request.CancellationToken,
-                                                         EventTrackingId:      Request.EventTrackingId,
-                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                 ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5497,13 +5500,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
-                                                                                             JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                             JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                              out var acknowledgement,
                                                                                              out var ErrorResponse,
-                                                                                             HTTPResponse,
-                                                                                             HTTPResponse.Timestamp,
-                                                                                             HTTPResponse.EventTrackingId,
-                                                                                             HTTPResponse.Runtime,
+                                                                                             httpResponse,
+                                                                                             httpResponse.Timestamp,
+                                                                                             httpResponse.EventTrackingId,
+                                                                                             httpResponse.Runtime,
                                                                                              processId,
                                                                                              CustomChargingEndNotificationAcknowledgementParser))
                                 {
@@ -5525,16 +5528,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingEndNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -5548,11 +5551,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -5585,7 +5588,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
@@ -5602,7 +5605,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -5611,7 +5614,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -5632,14 +5635,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -5652,10 +5655,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingEndNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -5671,16 +5674,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingEndNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -5693,7 +5696,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404 NotFound
@@ -5712,14 +5715,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -5732,10 +5735,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingEndNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -5751,16 +5754,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingEndNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingEndNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -5773,7 +5776,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
                 }
@@ -5911,54 +5914,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var HTTPResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                                 Execute(client => client.POSTRequest(RemoteURL.Path + "/api/oicp/notificationmgmt/v11/charging-notifications",
-                                                                                      requestbuilder => {
-                                                                                          requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                          requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                          requestbuilder.Content      = Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
-                                                                                                                                       CustomIdentificationSerializer).
-                                                                                                                                ToString(JSONFormatting).
-                                                                                                                                ToUTF8Bytes();
-                                                                                          requestbuilder.Connection   = "close";
-                                                                                      }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
+                                                 Content:              Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
+                                                                                      CustomIdentificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnChargingErrorNotificationHTTPRequest,
+                                                 ResponseLogDelegate:  OnChargingErrorNotificationHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                         RequestLogDelegate:   OnChargingErrorNotificationHTTPRequest,
-                                                         ResponseLogDelegate:  OnChargingErrorNotificationHTTPResponse,
-                                                         CancellationToken:    Request.CancellationToken,
-                                                         EventTrackingId:      Request.EventTrackingId,
-                                                         RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                                 ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
 
-                    var processId = HTTPResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
+                    var processId = httpResponse.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse) ?? Process_Id.NewRandom();
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.OK)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.OK)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
@@ -5985,13 +5988,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 // }
 
                                 if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
-                                                                                               JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String()),
+                                                                                               JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                out var acknowledgement,
                                                                                                out var ErrorResponse,
-                                                                                               HTTPResponse,
-                                                                                               HTTPResponse.Timestamp,
-                                                                                               HTTPResponse.EventTrackingId,
-                                                                                               HTTPResponse.Runtime,
+                                                                                               httpResponse,
+                                                                                               httpResponse.Timestamp,
+                                                                                               httpResponse.EventTrackingId,
+                                                                                               httpResponse.Runtime,
                                                                                                processId,
                                                                                                CustomChargingErrorNotificationAcknowledgementParser))
                                 {
@@ -6013,16 +6016,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -6036,11 +6039,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.BadRequest)
                     {
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             // HTTP/1.1 400 BadRequest
@@ -6073,7 +6076,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             //     ]
                             // }
 
-                            if (ValidationErrorList.TryParse(JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String() ?? ""),
+                            if (ValidationErrorList.TryParse(JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                              out var validationErrors,
                                                              out var errorResponse))
                             {
@@ -6090,7 +6093,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Forbidden)
                     {
 
                         // Hubject firewall problem!
@@ -6099,7 +6102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.Unauthorized)
                     {
 
                         // HTTP/1.1 401 Unauthorized
@@ -6120,14 +6123,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         // Operator/provider identification is not linked to the TLS client certificate!
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -6140,10 +6143,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -6159,16 +6162,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -6181,7 +6184,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.NotFound)
                     {
 
                         // HTTP/1.1 404 NotFound
@@ -6200,14 +6203,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         //     }
                         // }
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -6220,10 +6223,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime, 
+                                                     httpResponse.Runtime, 
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -6239,16 +6242,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                 Request,
                                                 new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                    HTTPResponse.Timestamp,
-                                                    HTTPResponse.EventTrackingId,
+                                                    httpResponse.Timestamp,
+                                                    httpResponse.EventTrackingId,
                                                     processId,
-                                                    HTTPResponse.Runtime,
+                                                    httpResponse.Runtime,
                                                     new StatusCode(
                                                         StatusCodes.SystemError,
                                                         e.Message,
                                                         e.StackTrace),
                                                     Request,
-                                                    HTTPResponse,
+                                                    httpResponse,
                                                     false
                                                 )
                                             );
@@ -6261,10 +6264,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.RequestTimeout)
                     { }
 
-                    if (HTTPResponse.HTTPStatusCode == HTTPStatusCode.InternalServerError)
+                    if (httpResponse.HTTPStatusCode == HTTPStatusCode.InternalServerError)
                     {
 
                         // HTTP/1.1 500
@@ -6278,14 +6281,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                         // {"StatusCode":{"Code":"001","Description":"Unexpected error checking partners: null","AdditionalInfo":null}}
 
 
-                        if (HTTPResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
-                            HTTPResponse.HTTPBody?.Length > 0)
+                        if (httpResponse.ContentType == HTTPContentType.Application.JSON_UTF8 &&
+                            httpResponse.HTTPBody?.Length > 0)
                         {
 
                             try
                             {
 
-                                var json = JObject.Parse(HTTPResponse.HTTPBody.ToUTF8String());
+                                var json = JObject.Parse(httpResponse.HTTPBody.ToUTF8String());
 
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
@@ -6298,10 +6301,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                                  Request,
                                                  new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                     HTTPResponse.Timestamp,
-                                                     HTTPResponse.EventTrackingId,
+                                                     httpResponse.Timestamp,
+                                                     httpResponse.EventTrackingId,
                                                      processId,
-                                                     HTTPResponse.Runtime,
+                                                     httpResponse.Runtime,
                                                      statusCode!,
                                                      Request
                                                  ),
@@ -6317,16 +6320,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 result = OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>.Failed(
                                              Request,
                                              new Acknowledgement<ChargingErrorNotificationRequest>(
-                                                 HTTPResponse.Timestamp,
-                                                 HTTPResponse.EventTrackingId,
+                                                 httpResponse.Timestamp,
+                                                 httpResponse.EventTrackingId,
                                                  processId,
-                                                 HTTPResponse.Runtime,
+                                                 httpResponse.Runtime,
                                                  new StatusCode(
                                                      StatusCodes.SystemError,
                                                      e.Message,
                                                      e.StackTrace),
                                                  Request,
-                                                 HTTPResponse,
+                                                 httpResponse,
                                                  false
                                              )
                                          );
@@ -6475,46 +6478,46 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(RemoteURL,
-                                                                      VirtualHostname,
-                                                                      Description,
-                                                                      PreferIPv4,
-                                                                      RemoteCertificateValidator,
-                                                                      LocalCertificateSelector,
-                                                                      ClientCert,
-                                                                      TLSProtocol,
-                                                                      HTTPUserAgent,
-                                                                      HTTPAuthentication,
-                                                                      RequestTimeout,
-                                                                      TransmissionRetryDelay,
-                                                                      MaxNumberOfRetries,
-                                                                      InternalBufferSize,
-                                                                      UseHTTPPipelining,
-                                                                      DisableLogging,
-                                                                      null,
-                                                                      DNSClient).
+                    var httpResponse = await HTTPClientFactory.Create(
+                                                 RemoteURL,
+                                                 VirtualHostname,
+                                                 Description,
+                                                 PreferIPv4,
+                                                 RemoteCertificateValidator,
+                                                 LocalCertificateSelector,
+                                                 ClientCert,
+                                                 TLSProtocol,
+                                                 ContentType,
+                                                 Accept,
+                                                 Authentication,
+                                                 HTTPUserAgent,
+                                                 Connection,
+                                                 RequestTimeout,
+                                                 TransmissionRetryDelay,
+                                                 MaxNumberOfRetries,
+                                                 InternalBufferSize,
+                                                 UseHTTPPipelining,
+                                                 DisableLogging,
+                                                 null,
+                                                 DNSClient
+                                             ).
 
-                                              Execute(client => client.POSTRequest(RemoteURL.Path + ("/api/oicp/cdrmgmt/v22/operators/" + Request.OperatorId.ToString().Replace("*", "%2A") + "/charge-detail-record"),
-                                                                                   requestbuilder => {
-                                                                                       requestbuilder.Accept?.Add(HTTPContentType.Application.JSON_UTF8);
-                                                                                       requestbuilder.ContentType  = HTTPContentType.Application.JSON_UTF8;
-                                                                                       requestbuilder.Content      = Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
-                                                                                                                                    CustomChargeDetailRecordSerializer,
-                                                                                                                                    CustomIdentificationSerializer,
-                                                                                                                                    CustomSignedMeteringValueSerializer,
-                                                                                                                                    CustomCalibrationLawVerificationSerializer).
-                                                                                                                             ToString(JSONFormatting).
-                                                                                                                             ToUTF8Bytes();
-                                                                                       requestbuilder.Connection   = "close";
-                                                                                   }),
+                                             POST(
+                                                 Path:                 RemoteURL.Path + $"/api/oicp/cdrmgmt/v22/operators/{Request.OperatorId.URLEncoded}/charge-detail-record",
+                                                 Content:              Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
+                                                                                      CustomChargeDetailRecordSerializer,
+                                                                                      CustomIdentificationSerializer,
+                                                                                      CustomSignedMeteringValueSerializer,
+                                                                                      CustomCalibrationLawVerificationSerializer).
+                                                                               ToUTF8Bytes(JSONFormatting),
+                                                 EventTrackingId:      Request.EventTrackingId,
+                                                 RequestTimeout:       Request.RequestTimeout ?? RequestTimeout,
+                                                 RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,
+                                                 ResponseLogDelegate:  OnSendChargeDetailRecordHTTPResponse,
+                                                 CancellationToken:    Request.CancellationToken
+                                             ).
 
-                                                      RequestLogDelegate:   OnSendChargeDetailRecordHTTPRequest,
-                                                      ResponseLogDelegate:  OnSendChargeDetailRecordHTTPResponse,
-                                                      CancellationToken:    Request.CancellationToken,
-                                                      EventTrackingId:      Request.EventTrackingId,
-                                                      RequestTimeout:       Request.RequestTimeout ?? RequestTimeout).
-
-                                              ConfigureAwait(false);
+                                             ConfigureAwait(false);
 
                     #endregion
 
