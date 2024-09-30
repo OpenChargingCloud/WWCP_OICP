@@ -207,7 +207,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
 
             var request = new PushEVSEDataRequest(
                               new OperatorEVSEData(
-                                  new EVSEDataRecord[] {
+                                  [
                                       new EVSEDataRecord(
 
                                           Id:                                EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
@@ -233,32 +233,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                                                                  11.5892372,
                                                                                  GeoCoordinatesFormats.DecimalDegree
                                                                              ),
-                                          PlugTypes:                         new PlugTypes[] {
+                                          PlugTypes:                         [
                                                                                  PlugTypes.CCSCombo2Plug_CableAttached
-                                                                             },
-                                          ChargingFacilities:                new ChargingFacility[] {
+                                                                             ],
+                                          ChargingFacilities:                [
                                                                                  new ChargingFacility(
                                                                                      PowerType:      PowerTypes.AC_3_PHASE,
                                                                                      Power:          22,
                                                                                      Voltage:        400,
                                                                                      Amperage:       32,
-                                                                                     ChargingModes:  new ChargingModes[] {
-                                                                                                         ChargingModes.Mode_2
-                                                                                                     },
+                                                                                     ChargingModes:  [ ChargingModes.Mode_2 ],
                                                                                      CustomData:     null
                                                                                  )
-                                                                             },
+                                                                             ],
                                           RenewableEnergy:                   true,
                                           CalibrationLawDataAvailability:    CalibrationLawDataAvailabilities.External,
-                                          AuthenticationModes:               new AuthenticationModes[] {
+                                          AuthenticationModes:               [
                                                                                  AuthenticationModes.NFC_RFID_Classic,
                                                                                  AuthenticationModes.REMOTE
-                                                                             },
-                                          PaymentOptions:                    new PaymentOptions[] {
+                                                                             ],
+                                          PaymentOptions:                    [
                                                                                  PaymentOptions.Contract,
                                                                                  PaymentOptions.Direct
-                                                                             },
-                                          ValueAddedServices:                new ValueAddedServices[] {
+                                                                             ],
+                                          ValueAddedServices:                [
                                                                                  ValueAddedServices.Reservation,
                                                                                  ValueAddedServices.DynamicPricing,
                                                                                  ValueAddedServices.ParkingSensors,
@@ -266,7 +264,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                                                                  ValueAddedServices.PredictiveChargePointUsage,
                                                                                  ValueAddedServices.ChargingPlans,
                                                                                  ValueAddedServices.RoofProvided
-                                                                             },
+                                                                             ],
                                           Accessibility:                     AccessibilityTypes.PayingPubliclyAccessible,
                                           HotlinePhoneNumber:                Phone_Number.Parse("+49555123456"),
                                           IsOpen24Hours:                     true,
@@ -282,7 +280,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                           ChargingStationImageURL:           URL.Parse("https://open.charging.cloud"),
                                           SubOperatorName:                   "GraphDefined Low Voltage Services",
                                           DynamicPowerLevel:                 true,
-                                          EnergySources:                     new EnergySource[] {
+                                          EnergySources:                     [
                                                                                  new EnergySource(
                                                                                      EnergyTypes.Solar,
                                                                                      60
@@ -291,12 +289,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                                                                      EnergyTypes.Wind,
                                                                                      40
                                                                                  )
-                                                                             },
+                                                                             ],
                                           EnvironmentalImpact:               new EnvironmentalImpact(
                                                                                  CO2Emission:  400,
                                                                                  NuclearWaste:   0
                                                                              ),
-                                          MaxCapacity:                       350,
+                                          MaxCapacity:                       WattHour.ParseKWh(350),
                                           AccessibilityLocationType:         AccessibilityLocationTypes.OnStreet,
                                           AdditionalInfo:                    I18NText.Create(LanguageCode.de, "Wird mit Schokolade betrieben!").
                                                                                       Add   (LanguageCode.en, "Runs on chocolate!"),
@@ -307,30 +305,30 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                                                                  11.6,
                                                                                  GeoCoordinatesFormats.DecimalDegree
                                                                              ),
-                                          OpeningTimes:                      new OpeningTime[] {
+                                          OpeningTimes:                      [
                                                                                  new OpeningTime(
-                                                                                     Periods:            new Period[] {
+                                                                                     Periods:            [
                                                                                                              new Period(
                                                                                                                  Begin: HourMinute.Parse("09:00"),
                                                                                                                  End:   HourMinute.Parse("18:00")
                                                                                                              )
-                                                                                                         },
+                                                                                                         ],
                                                                                      On:                 DaysOfWeek.Workdays,
                                                                                      UnstructuredText:  "Only in short weeks!",
                                                                                      CustomData:         null
                                                                                  ),
                                                                                  new OpeningTime(
-                                                                                     Periods:            new Period[] {
+                                                                                     Periods:            [
                                                                                                              new Period(
                                                                                                                  Begin: HourMinute.Parse("10:00"),
                                                                                                                  End:   HourMinute.Parse("20:00")
                                                                                                              )
-                                                                                                         },
+                                                                                                         ],
                                                                                      On:                 DaysOfWeek.Weekend,
                                                                                      UnstructuredText:  "Lazy weekends!",
                                                                                      CustomData:         null
                                                                                  )
-                                                                             },
+                                                                             ],
                                           HubOperatorId:                     Operator_Id.     Parse("DE*HUB"),
                                           ClearingHouseId:                   ClearingHouse_Id.Parse("DE*CLR"),
 
@@ -338,7 +336,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.P2P.CPO
                                           InternalData:                      null
 
                                       )
-                                  },
+                                  ],
                                   Operator_Id.Parse("DE*GEF"),
                                   "GraphDefined"
                               ),

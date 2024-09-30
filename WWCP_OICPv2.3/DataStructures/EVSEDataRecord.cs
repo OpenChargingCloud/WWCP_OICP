@@ -178,10 +178,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public EnvironmentalImpact?                 EnvironmentalImpact                    { get; }
 
         /// <summary>
-        /// The maximum in kWh capacity the EVSE provides.
+        /// The maximum in kWh capacity the EVSE provides, e.g. caused by a built-in battery.
         /// </summary>
         [Optional]
-        public UInt32?                              MaxCapacity                            { get; }
+        public WattHour?                            MaxCapacity                            { get; }
 
         /// <summary>
         /// An enumeration of payment options that are supported.
@@ -306,7 +306,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="DynamicPowerLevel">Whether the EVSE is able to deliver different power outputs.</param>
         /// <param name="EnergySources">Optional enumeration of energy sources that the EVSE uses to supply electric energy.</param>
         /// <param name="EnvironmentalImpact">Optional environmental impact produced by the energy sources used by the EVSE.</param>
-        /// <param name="MaxCapacity">The maximum in kWh capacity the EVSE provides.</param>
+        /// <param name="MaxCapacity">The maximum in kWh capacity the EVSE provides, e.g. caused by a built-in battery.</param>
         /// <param name="AccessibilityLocationType">Optional information where the EVSE could be accessed.</param>
         /// <param name="AdditionalInfo">Optional multi-language information about the EVSE.</param>
         /// <param name="ChargingStationLocationReference">Optional last meters information regarding the location of the EVSE.</param>
@@ -348,7 +348,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               Boolean?                          DynamicPowerLevel                  = null,
                               IEnumerable<EnergySource>?        EnergySources                      = null,
                               EnvironmentalImpact?              EnvironmentalImpact                = null,
-                              UInt32?                           MaxCapacity                        = null,
+                              WattHour?                         MaxCapacity                        = null,
                               AccessibilityLocationTypes?       AccessibilityLocationType          = null,
                               I18NText?                         AdditionalInfo                     = null,
                               I18NText?                         ChargingStationLocationReference   = null,
@@ -1055,7 +1055,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                 if (JSON.ParseOptional("MaxCapacity",
                                        "max capacity",
-                                       out UInt32? MaxCapacity,
+                                       WattHour.TryParseKWh,
+                                       out WattHour? MaxCapacity,
                                        out ErrorResponse))
                 {
                     if (ErrorResponse is not null)
@@ -1346,7 +1347,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            MaxCapacity.                     HasValue
-                               ? new JProperty("MaxCapacity",                       MaxCapacity.                 Value)
+                               ? new JProperty("MaxCapacity",                       MaxCapacity.                 Value.kWh)
                                : null,
 
                            AccessibilityLocationType.       HasValue
@@ -1857,10 +1858,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public EnvironmentalImpact?               EnvironmentalImpact                 { get; set; }
 
             /// <summary>
-            /// The maximum in kWh capacity the EVSE provides.
+            /// The maximum in kWh capacity the EVSE provides, e.g. caused by a built-in battery.
             /// </summary>
             [Optional]
-            public UInt32?                            MaxCapacity                         { get; set; }
+            public WattHour?                          MaxCapacity                         { get; set; }
 
             /// <summary>
             /// An enumeration of payment options that are supported.
@@ -1987,7 +1988,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="DynamicPowerLevel">Whether the EVSE is able to deliver different power outputs.</param>
             /// <param name="EnergySources">Optional enumeration of energy sources that the EVSE uses to supply electric energy.</param>
             /// <param name="EnvironmentalImpact">Optional environmental impact produced by the energy sources used by the EVSE.</param>
-            /// <param name="MaxCapacity">The maximum in kWh capacity the EVSE provides.</param>
+            /// <param name="MaxCapacity">The maximum in kWh capacity the EVSE provides, e.g. caused by a built-in battery.</param>
             /// <param name="AccessibilityLocationType">Optional information where the EVSE could be accessed.</param>
             /// <param name="AdditionalInfo">Optional multi-language information about the EVSE.</param>
             /// <param name="ChargingStationLocationReference">Optional last meters information regarding the location of the EVSE.</param>
@@ -2028,7 +2029,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            Boolean?                           DynamicPowerLevel                  = null,
                            IEnumerable<EnergySource>?         EnergySources                      = null,
                            EnvironmentalImpact?               EnvironmentalImpact                = null,
-                           UInt32?                            MaxCapacity                        = null,
+                           WattHour?                          MaxCapacity                        = null,
                            AccessibilityLocationTypes?        AccessibilityLocationType          = null,
                            I18NText?                          AdditionalInfo                     = null,
                            I18NText?                          ChargingStationLocationReference   = null,
