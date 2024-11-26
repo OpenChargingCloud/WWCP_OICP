@@ -115,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public EMPClientLogger(EMPClient                EMPClient,
                                    String?                  LoggingPath                 = null,
-                                   String?                  Context                     = null,
+                                   String?                  Context                     = DefaultContext,
 
                                    RequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
                                    ResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,

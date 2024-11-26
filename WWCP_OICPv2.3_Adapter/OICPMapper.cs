@@ -1007,17 +1007,27 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToOICP(this AccessibilityType)
 
-        public static AccessibilityTypes ToOICP(this WWCP.AccessibilityTypes AccessibilityType)
+        public static AccessibilityTypes ToOICP(this WWCP.AccessibilityType AccessibilityType)
+        {
 
-            => AccessibilityType switch {
-                   WWCP.AccessibilityTypes.FreePubliclyAccessible    => AccessibilityTypes.FreePubliclyAccessible,
-                   WWCP.AccessibilityTypes.RestrictedAccess          => AccessibilityTypes.RestrictedAccess,
-                   WWCP.AccessibilityTypes.PayingPubliclyAccessible  => AccessibilityTypes.PayingPubliclyAccessible,
-                   WWCP.AccessibilityTypes.TestStation               => AccessibilityTypes.TestStation,
-                   _                                                 => throw new ArgumentException("Invalid accessibility type!")
-               };
+            if (AccessibilityType == WWCP.AccessibilityType.FreePubliclyAccessible)
+                return AccessibilityTypes.FreePubliclyAccessible;
 
-        public static AccessibilityTypes? ToOICP(this WWCP.AccessibilityTypes? AccessibilityType)
+            if (AccessibilityType == WWCP.AccessibilityType.RestrictedAccess)
+                return AccessibilityTypes.RestrictedAccess;
+
+            if (AccessibilityType == WWCP.AccessibilityType.PayingPubliclyAccessible)
+                return AccessibilityTypes.PayingPubliclyAccessible;
+
+            if (AccessibilityType == WWCP.AccessibilityType.TestStation)
+                return AccessibilityTypes.TestStation;
+
+            throw new ArgumentException("Invalid accessibility type!");
+
+        }
+
+
+        public static AccessibilityTypes? ToOICP(this WWCP.AccessibilityType? AccessibilityType)
 
             => AccessibilityType.HasValue
                    ? AccessibilityType.Value.ToOICP()
@@ -1027,21 +1037,21 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #region ToWWCP(this AccessibilityType)
 
-        public static WWCP.AccessibilityTypes ToWWCP(this AccessibilityTypes AccessibilityType)
+        public static WWCP.AccessibilityType ToWWCP(this AccessibilityTypes AccessibilityType)
 
             => AccessibilityType switch {
-                   AccessibilityTypes.FreePubliclyAccessible    => WWCP.AccessibilityTypes.FreePubliclyAccessible,
-                   AccessibilityTypes.RestrictedAccess          => WWCP.AccessibilityTypes.RestrictedAccess,
-                   AccessibilityTypes.PayingPubliclyAccessible  => WWCP.AccessibilityTypes.PayingPubliclyAccessible,
-                   AccessibilityTypes.TestStation               => WWCP.AccessibilityTypes.TestStation,
+                   AccessibilityTypes.FreePubliclyAccessible    => WWCP.AccessibilityType.FreePubliclyAccessible,
+                   AccessibilityTypes.RestrictedAccess          => WWCP.AccessibilityType.RestrictedAccess,
+                   AccessibilityTypes.PayingPubliclyAccessible  => WWCP.AccessibilityType.PayingPubliclyAccessible,
+                   AccessibilityTypes.TestStation               => WWCP.AccessibilityType.TestStation,
                    _                                            => throw new ArgumentException("Invalid accessibility type!")
                };
 
-        public static WWCP.AccessibilityTypes? ToWWCP(this AccessibilityTypes? AccessibilityType)
+        public static WWCP.AccessibilityType? ToWWCP(this AccessibilityTypes? AccessibilityType)
 
             => AccessibilityType.HasValue
                    ? AccessibilityType.Value.ToWWCP()
-                   : new WWCP.AccessibilityTypes?();
+                   : new WWCP.AccessibilityType?();
 
         #endregion
 

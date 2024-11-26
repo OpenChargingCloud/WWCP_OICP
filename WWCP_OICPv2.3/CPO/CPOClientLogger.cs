@@ -74,7 +74,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                 : this(CPOClient,
                        LoggingPath,
-                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                       Context is not null && Context.IsNotNullOrEmpty()
+                           ? Context
+                           : DefaultContext,
                        null,
                        null,
                        null,
@@ -113,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public CPOClientLogger(CPOClient                CPOClient,
                                    String?                  LoggingPath             = null,
-                                   String?                  Context                 = null,
+                                   String?                  Context                 = DefaultContext,
 
                                    RequestLoggerDelegate?   LogRequest_toConsole    = null,
                                    ResponseLoggerDelegate?  LogResponse_toConsole   = null,

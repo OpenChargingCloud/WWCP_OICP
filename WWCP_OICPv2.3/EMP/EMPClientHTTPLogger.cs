@@ -74,7 +74,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                 : this(EMPClient,
                        LoggingPath,
-                       Context.IsNotNullOrEmpty() ? Context : DefaultContext,
+                       Context is not null && Context.IsNotNullOrEmpty()
+                           ? Context
+                           : DefaultContext,
                        null,
                        null,
                        null,
@@ -113,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             /// <param name="LogfileCreator">A delegate to create a log file from the given context and log file name.</param>
             public HTTP_Logger(EMPClient                    EMPClient,
                                String?                      LoggingPath                 = null,
-                               String?                      Context                     = null,
+                               String?                      Context                     = DefaultContext,
 
                                HTTPRequestLoggerDelegate?   LogHTTPRequest_toConsole    = null,
                                HTTPResponseLoggerDelegate?  LogHTTPResponse_toConsole   = null,
