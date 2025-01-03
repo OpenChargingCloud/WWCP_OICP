@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -356,24 +356,28 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this EVSE pricing information.
         /// </summary>
-        public EVSEPricing Clone
+        public EVSEPricing Clone()
 
-            => new (EVSEId.Clone,
+            => new (
 
-                    ProviderId.HasValue
-                        ? ProviderId.Value.Clone
-                        : default,
+                   EVSEId.Clone(),
 
-                    EVSEIdProductList.SafeSelect(productId => productId.Clone).ToArray(),
+                   ProviderId.HasValue
+                       ? ProviderId.Value.Clone()
+                       : default,
 
-                    CustomData is not null
-                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
-                        : null);
+                   EVSEIdProductList.SafeSelect(productId => productId.Clone()).ToArray(),
+
+                   CustomData is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null
+
+               );
 
         #endregion
 

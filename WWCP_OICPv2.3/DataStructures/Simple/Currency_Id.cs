@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -193,18 +193,22 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
         /// Clone this currency identification.
         /// </summary>
-        public Currency_Id Clone
+        public Currency_Id Clone()
 
-            => new(AlphabeticCode:  new String(InternalId?.ToCharArray()),
+            => new (
+
+                   AlphabeticCode:  InternalId.CloneString(),
                    NumericCode:     null,
                    MinorUnit:       null,
                    Currency:        null,
-                   Entity:          null);
+                   Entity:          null
+
+               );
 
         #endregion
 

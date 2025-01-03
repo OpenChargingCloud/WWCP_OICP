@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -448,26 +448,30 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this pricing product data record.
         /// </summary>
-        public PricingProductDataRecord Clone
+        public PricingProductDataRecord Clone()
 
-            => new (ProductId.           Clone,
-                    ReferenceUnit.       Clone,
-                    ProductPriceCurrency.Clone,
-                    PricePerReferenceUnit,
-                    MaximumProductChargingPower,
-                    IsValid24hours,
-                    ProductAvailabilityTimes.Select(productAvailabilityTime => productAvailabilityTime.Clone).ToArray(),
+            => new (
 
-                    AdditionalReferences?.Select(additionalReference => additionalReference.Clone).ToArray(),
+                   ProductId.           Clone(),
+                   ReferenceUnit.       Clone(),
+                   ProductPriceCurrency.Clone(),
+                   PricePerReferenceUnit,
+                   MaximumProductChargingPower,
+                   IsValid24hours,
+                   ProductAvailabilityTimes.Select(productAvailabilityTime => productAvailabilityTime.Clone()),
 
-                    CustomData is not null
-                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
-                        : null);
+                   AdditionalReferences?.   Select(additionalReference     => additionalReference.    Clone()),
+
+                   CustomData is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null
+
+               );
 
         #endregion
 

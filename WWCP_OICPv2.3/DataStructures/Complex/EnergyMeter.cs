@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -542,25 +542,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this energy meter.
         /// </summary>
         public EnergyMeter Clone()
 
-            => new (Id.Clone,
-                    Model                     is not null ? new String(Model.          ToCharArray()) : null,
-                    ModelURL.                 HasValue    ? ModelURL.                 Value.Clone     : null,
-                    HardwareVersion           is not null ? new String(HardwareVersion.ToCharArray()) : null,
-                    FirmwareVersion           is not null ? new String(FirmwareVersion.ToCharArray()) : null,
-                    Manufacturer              is not null ? new String(Manufacturer.   ToCharArray()) : null,
-                    ManufacturerURL.          HasValue    ? ManufacturerURL.          Value.Clone     : null,
-                    PublicKeys.           Select(publicKey                  => publicKey.                 Clone).  ToArray(),
-                    PublicKeyCertificateChain.HasValue    ? PublicKeyCertificateChain.Value.Clone     : null,
-                    TransparencySoftwares.Select(transparencySoftwareStatus => transparencySoftwareStatus.Clone()).ToArray(),
-                    Description.IsNotNullOrEmpty()        ? Description.Clone()                       : I18NString.Empty,
+            => new (
 
-                    CustomData,
-                    InternalData,
-                    LastUpdate);
+                   Id.              Clone(),
+                   Model?.          CloneString(),
+                   ModelURL?.       Clone(),
+                   HardwareVersion?.CloneString(),
+                   FirmwareVersion?.CloneString(),
+                   Manufacturer?.   CloneString(),
+                   ManufacturerURL?.Clone(),
+                   PublicKeys.           Select(publicKey                  => publicKey.                 Clone()),
+                   PublicKeyCertificateChain.HasValue ? PublicKeyCertificateChain.Value.Clone() : null,
+                   TransparencySoftwares.Select(transparencySoftwareStatus => transparencySoftwareStatus.Clone()),
+                   Description?.    Clone(),
+
+                   CustomData,
+                   InternalData,
+                   LastUpdate
+
+               );
 
         #endregion
 

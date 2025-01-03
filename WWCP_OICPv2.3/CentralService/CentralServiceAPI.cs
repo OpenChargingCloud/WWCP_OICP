@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -297,20 +297,40 @@ namespace cloud.charging.open.protocols.OICPv2_3.CentralService
 
         #endregion
 
-        #region Shutdown(Message = null, Wait = true)
+        #region Shutdown(EventTrackingId = null, Message = null, Wait = true)
 
-        public void Shutdown(String?  Message   = null,
-                             Boolean  Wait      = true)
+        /// <summary>
+        /// Shutdown this HTTP API.
+        /// </summary>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="Message">An optional shutdown message.</param>
+        /// <param name="Wait">Whether to wait for the shutdown to complete.</param>
+        public async Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
+                                            String?            Message           = null,
+                                            Boolean            Wait              = true)
         {
 
             if (httpAPI is not null)
-                httpAPI.Shutdown(Message, Wait);
+                return await httpAPI.Shutdown(
+                                 EventTrackingId ?? EventTracking_Id.New,
+                                 Message,
+                                 Wait
+                             );
 
-            else
-            {
-                EMPClientAPI.Shutdown(Message, Wait);
-                CPOClientAPI.Shutdown(Message, Wait);
-            }
+
+            var empResult = await EMPClientAPI.Shutdown(
+                                        EventTrackingId ?? EventTracking_Id.New,
+                                        Message,
+                                        Wait
+                                    );
+
+            var cpoResult = await CPOClientAPI.Shutdown(
+                                        EventTrackingId ?? EventTracking_Id.New,
+                                        Message,
+                                        Wait
+                                    );
+
+            return empResult && cpoResult;
 
         }
 

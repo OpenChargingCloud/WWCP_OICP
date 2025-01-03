@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -198,15 +198,17 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this validation error.
         /// </summary>
-        public ValidationError Clone
+        public ValidationError Clone()
 
-            => new (FieldReference,
-                    ErrorMessage);
+            => new (
+                   FieldReference,
+                   ErrorMessage
+               );
 
         #endregion
 

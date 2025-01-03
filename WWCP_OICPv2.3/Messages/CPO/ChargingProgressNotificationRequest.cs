@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -682,35 +682,42 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this request.
+        /// Clone this ChargingProgressNotification request.
         /// </summary>
-        public ChargingProgressNotificationRequest Clone
+        public ChargingProgressNotificationRequest Clone()
 
-            => new (SessionId,
-                    Identification,
-                    EVSEId,
-                    ChargingStart,
-                    EventOccurred,
+            => new (
 
-                    CPOPartnerSessionId,
-                    EMPPartnerSessionId,
-                    ChargingDuration,
-                    SessionStart,
-                    ConsumedEnergyProgress,
-                    MeterValueStart,
-                    MeterValuesInBetween,
-                    OperatorId,
-                    PartnerProductId,
-                    ProcessId,
-                    CustomData,
+                   SessionId.            Clone(),
+                   Identification.       Clone(),
+                   EVSEId.               Clone(),
+                   ChargingStart,
+                   EventOccurred,
 
-                    Timestamp,
-                    EventTrackingId,
-                    RequestTimeout,
-                    CancellationToken);
+                   CPOPartnerSessionId?. Clone(),
+                   EMPPartnerSessionId?. Clone(),
+                   ChargingDuration,
+                   SessionStart,
+                   ConsumedEnergyProgress,
+                   MeterValueStart,
+                   MeterValuesInBetween?.ToArray(),
+                   OperatorId?.          Clone(),
+                   PartnerProductId?.    Clone(),
+                   ProcessId?.           Clone(),
+
+                   CustomData is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null,
+
+                   Timestamp,
+                   EventTrackingId.      Clone(),
+                   RequestTimeout,
+                   CancellationToken
+
+               );
 
         #endregion
 

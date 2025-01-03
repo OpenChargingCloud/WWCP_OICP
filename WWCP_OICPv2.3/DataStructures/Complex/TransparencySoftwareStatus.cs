@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -330,16 +330,20 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this transparency software status.
         /// </summary>
         public TransparencySoftwareStatus Clone()
 
-            => new (TransparencySoftware.Clone(),
-                    LegalStatus.Clone,
-                    Certificate       is not null ? new String(Certificate.      ToCharArray()) : null,
-                    CertificateIssuer is not null ? new String(CertificateIssuer.ToCharArray()) : null,
-                    NotBefore.        HasValue    ? NotBefore.Value                             : null,
-                    NotAfter.         HasValue    ? NotAfter. Value                             : null);
+            => new (
+
+                   TransparencySoftware.Clone(),
+                   LegalStatus.         Clone(),
+                   Certificate?.        CloneString(),
+                   CertificateIssuer?.  CloneString(),
+                   NotBefore,
+                   NotAfter
+
+               );
 
         #endregion
 

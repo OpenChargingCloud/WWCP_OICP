@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -2021,18 +2021,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
         #endregion
 
 
-        #region Start()
+        #region Start(EventTrackingId = null)
 
-        public void Start()
+        /// <summary>
+        /// Start this peer.
+        /// </summary>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        public async Task<Boolean> Start(EventTracking_Id? EventTrackingId = null)
         {
 
             if (httpAPI is not null)
-                httpAPI.Start();
+                return await httpAPI.Start(EventTrackingId);
 
-            else
-            {
-                EMPClientAPI.Start();
-            }
+            return await EMPClientAPI.Start(EventTrackingId);
 
         }
 
@@ -2040,17 +2041,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
 
         #region Shutdown(Message = null, Wait = true)
 
-        public void Shutdown(String?  Message   = null,
-                             Boolean  Wait      = true)
+        /// <summary>
+        /// Shutdown this peer.
+        /// </summary>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="Message">An optional shutdown message.</param>
+        /// <param name="Wait">Whether to wait for the shutdown to complete.</param>
+        public async Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
+                                            String?            Message           = null,
+                                            Boolean            Wait              = true)
         {
 
             if (httpAPI is not null)
-                httpAPI.Shutdown(Message, Wait);
+                return await httpAPI.Shutdown(
+                                 EventTrackingId ?? EventTracking_Id.New,
+                                 Message,
+                                 Wait
+                             );
 
-            else
-            {
-                EMPClientAPI.Shutdown(Message, Wait);
-            }
+            return await EMPClientAPI.Shutdown(
+                             EventTrackingId ?? EventTracking_Id.New,
+                             Message,
+                             Wait
+                         );
 
         }
 
@@ -2065,9 +2078,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.CPO
                 httpAPI.Dispose();
 
             else
-            {
                 EMPClientAPI?.Dispose();
-            }
 
             foreach (var cpoClient in cpoClients.Values)
                 cpoClient.Dispose();

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -813,31 +813,35 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="NewSessionId">An optional new charging session identification.</param>
         public ChargeDetailRecord Clone(Session_Id? NewSessionId = null)
 
-            => new (NewSessionId ?? SessionId.      Clone,
-                    EVSEId.                         Clone,
-                    Identification.                 Clone,
-                    SessionStart,
-                    SessionEnd,
-                    ChargingStart,
-                    ChargingEnd,
-                    ConsumedEnergy,
+            => new (
 
-                    PartnerProductId?.              Clone,
-                    CPOPartnerSessionId?.           Clone,
-                    EMPPartnerSessionId?.           Clone,
-                    MeterValueStart,
-                    MeterValueEnd,
-                    MeterValuesInBetween?.ToArray(),
-                    SignedMeteringValues is not null && SignedMeteringValues.Any()
-                        ? SignedMeteringValues.SafeSelect(signedMeteringValue => signedMeteringValue.Clone).ToArray()
-                        : [],
-                    CalibrationLawVerificationInfo?.Clone,
-                    HubOperatorId?.                 Clone,
-                    HubProviderId?.                 Clone,
+                   NewSessionId ?? SessionId.      Clone(),
+                   EVSEId.                         Clone(),
+                   Identification.                 Clone(),
+                   SessionStart,
+                   SessionEnd,
+                   ChargingStart,
+                   ChargingEnd,
+                   ConsumedEnergy,
 
-                    CustomData is not null
-                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
-                        : null);
+                   PartnerProductId?.              Clone(),
+                   CPOPartnerSessionId?.           Clone(),
+                   EMPPartnerSessionId?.           Clone(),
+                   MeterValueStart,
+                   MeterValueEnd,
+                   MeterValuesInBetween?.          ToArray(),
+                   SignedMeteringValues is not null && SignedMeteringValues.Any()
+                       ? SignedMeteringValues.Select(signedMeteringValue => signedMeteringValue.Clone())
+                       : [],
+                   CalibrationLawVerificationInfo?.Clone(),
+                   HubOperatorId?.                 Clone(),
+                   HubProviderId?.                 Clone(),
+
+                   CustomData is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null
+
+               );
 
         #endregion
 

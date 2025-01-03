@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
 
 #endregion
 
@@ -1736,22 +1737,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region Start()
+        #region Start(EventTrackingId = null)
 
-        public void Start()
-        {
-            EMPServer.Start();
-        }
+        /// <summary>
+        /// Start this API.
+        /// </summary>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        public Task<Boolean> Start(EventTracking_Id? EventTrackingId = null)
+
+            => EMPServer.Start(EventTrackingId);
 
         #endregion
 
-        #region Shutdown(Message = null, Wait = true)
+        #region Shutdown(EventTrackingId = null, Message = null, Wait = true)
 
-        public void Shutdown(String?  Message   = null,
-                             Boolean  Wait      = true)
-        {
-            EMPServer.Shutdown(Message, Wait);
-        }
+        /// <summary>
+        /// Shutdown this API.
+        /// </summary>
+        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        /// <param name="Message">An optional shutdown message.</param>
+        /// <param name="Wait">Whether to wait for the shutdown to complete.</param>
+        public Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
+                                      String?            Message           = null,
+                                      Boolean            Wait              = true)
+
+            => EMPServer.Shutdown(
+                   EventTrackingId ?? EventTracking_Id.New,
+                   Message,
+                   Wait
+               );
 
         #endregion
 

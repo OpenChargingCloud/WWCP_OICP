@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -432,27 +432,29 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this pricing product data.
         /// </summary>
-        public PricingProductData Clone
+        public PricingProductData Clone()
 
-            => new (OperatorId.                 Clone,
-                    ProviderId?.                Clone,
-                    PricingDefaultPrice,
-                    PricingDefaultPriceCurrency.Clone,
-                    PricingDefaultReferenceUnit.Clone,
-                    PricingProductDataRecords.SafeSelect(pricingProductDataRecord => pricingProductDataRecord.Clone).ToArray(),
+            => new (
 
-                    OperatorName is not null
-                        ? new String(OperatorName.ToCharArray())
-                        : null,
+                   OperatorId.                 Clone(),
+                   ProviderId?.                Clone(),
+                   PricingDefaultPrice,
+                   PricingDefaultPriceCurrency.Clone(),
+                   PricingDefaultReferenceUnit.Clone(),
+                   PricingProductDataRecords.Select(pricingProductDataRecord => pricingProductDataRecord.Clone()),
 
-                    CustomData   is not null
-                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
-                        : null);
+                   OperatorName?.              CloneString(),
+
+                   CustomData   is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null
+
+               );
 
         #endregion
 

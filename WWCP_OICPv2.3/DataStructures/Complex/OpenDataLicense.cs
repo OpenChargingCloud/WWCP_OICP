@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -109,8 +109,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// </summary>
         /// <param name="Id">The unique identification of the Open Data license.</param>
         /// <param name="URLs">Optional URLs for more information on the Open Data license.</param>
-        public OpenDataLicense(OpenDataLicense_Id  Id,
-                               params URL[]        URLs)
+        public OpenDataLicense(OpenDataLicense_Id       Id,
+                               params IEnumerable<URL>  URLs)
 
             : this(Id,
                    I18NString.Empty,
@@ -128,9 +128,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="Id">The unique identification of the Open Data license.</param>
         /// <param name="Description">The description of the Open Data license.</param>
         /// <param name="URLs">Optional URLs for more information on the Open Data license.</param>
-        public OpenDataLicense(OpenDataLicense_Id  Id,
-                               I18NString          Description,
-                               params URL[]        URLs)
+        public OpenDataLicense(OpenDataLicense_Id       Id,
+                               I18NString               Description,
+                               params IEnumerable<URL>  URLs)
         {
 
             this.Id           = Id;
@@ -322,13 +322,15 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this Open Data license.
         /// </summary>
         public OpenDataLicense Clone()
 
-            => new (Id.         Clone,
-                    Description.Clone(),
-                    URLs.Select(url => url.Clone).ToArray());
+            => new (
+                   Id.         Clone(),
+                   Description.Clone(),
+                   URLs.Select(url => url.Clone())
+               );
 
         #endregion
 

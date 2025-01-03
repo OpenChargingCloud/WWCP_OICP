@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -469,29 +469,36 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this request.
+        /// Clone this ChargingErrorNotification request.
         /// </summary>
-        public ChargingErrorNotificationRequest Clone
+        public ChargingErrorNotificationRequest Clone()
 
-            => new (SessionId,
-                    Identification,
-                    OperatorId,
-                    EVSEId,
-                    ErrorType,
+            => new (
 
-                    CPOPartnerSessionId,
-                    EMPPartnerSessionId,
-                    ErrorAdditionalInfo,
-                    ProcessId,
-                    CustomData,
+                   SessionId.           Clone(),
+                   Identification.      Clone(),
+                   OperatorId.          Clone(),
+                   EVSEId.              Clone(),
+                   ErrorType,
 
-                    Timestamp,
-                    EventTrackingId,
-                    RequestTimeout,
-                    CancellationToken);
+                   CPOPartnerSessionId?.Clone(),
+                   EMPPartnerSessionId?.Clone(),
+                   ErrorAdditionalInfo?.CloneString(),
+                   ProcessId?.          Clone(),
+
+                   CustomData is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null,
+
+                   Timestamp,
+                   EventTrackingId.     Clone(),
+                   RequestTimeout,
+                   CancellationToken
+
+               );
 
         #endregion
 

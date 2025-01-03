@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1392,60 +1392,60 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this EVSE data record.
         /// </summary>
-        public EVSEDataRecord Clone
+        public EVSEDataRecord Clone()
 
-            => new (Id.                               Clone,
-                    OperatorId.                       Clone,
-                    new String(OperatorName.ToCharArray()),
-                    ChargingStationName.              Clone,
-                    Address.                          Clone,
-                    GeoCoordinates.                   Clone,
-                    PlugTypes.                        ToArray(),
-                    ChargingFacilities.               ToArray(),
-                    RenewableEnergy,
-                    CalibrationLawDataAvailability,
-                    AuthenticationModes.              ToArray(),
-                    PaymentOptions.                   ToArray(),
-                    ValueAddedServices.               ToArray(),
-                    Accessibility,
-                    HotlinePhoneNumber?.              Clone,
-                    IsOpen24Hours,
-                    IsHubjectCompatible,
-                    DynamicInfoAvailable,
+            => new (
 
-                    DeltaType,
-                    LastUpdate,
+                   Id.                               Clone(),
+                   OperatorId.                       Clone(),
+                   OperatorName.                     CloneString(),
+                   ChargingStationName.              Clone(),
+                   Address.                          Clone(),
+                   GeoCoordinates.                   Clone(),
+                   PlugTypes.                        ToArray(),
+                   ChargingFacilities.               ToArray(),
+                   RenewableEnergy,
+                   CalibrationLawDataAvailability,
+                   AuthenticationModes.              ToArray(),
+                   PaymentOptions.                   ToArray(),
+                   ValueAddedServices.               ToArray(),
+                   Accessibility,
+                   HotlinePhoneNumber?.              Clone(),
+                   IsOpen24Hours,
+                   IsHubjectCompatible,
+                   DynamicInfoAvailable,
 
-                    ChargingStationId?.               Clone,
-                    ChargingPoolId?.                  Clone,
-                    HardwareManufacturer is not null
-                        ? new String(HardwareManufacturer.ToCharArray())
-                        : null,
-                    ChargingStationImageURL?.         Clone,
-                    SubOperatorName      is not null
-                        ? new String(SubOperatorName.     ToCharArray())
-                        : null,
-                    EnergyMeter?.Clone(),
-                    DynamicPowerLevel,
-                    EnergySources?.Select(enerygSource => enerygSource.Clone).ToArray(),
-                    EnvironmentalImpact?.             Clone,
-                    MaxCapacity,
-                    AccessibilityLocationType,
-                    AdditionalInfo?.                  Clone,
-                    ChargingStationLocationReference?.Clone,
-                    GeoChargingPointEntrance?.        Clone,
-                    OpeningTimes?. Select(openingTime  => openingTime. Clone).ToArray(),
-                    HubOperatorId?.                   Clone,
-                    ClearingHouseId?.                 Clone,
+                   DeltaType,
+                   LastUpdate,
 
-                    CustomData           is not null
-                        ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
-                        : null);
+                   ChargingStationId?.               Clone(),
+                   ChargingPoolId?.                  Clone(),
+                   HardwareManufacturer?.            CloneString(),
+                   ChargingStationImageURL?.         Clone(),
+                   SubOperatorName?.                 CloneString(),
+                   EnergyMeter?.                     Clone(),
+                   DynamicPowerLevel,
+                   EnergySources?.Select(enerygSource => enerygSource.Clone()),
+                   EnvironmentalImpact?.             Clone(),
+                   MaxCapacity,
+                   AccessibilityLocationType,
+                   AdditionalInfo?.                  Clone(),
+                   ChargingStationLocationReference?.Clone(),
+                   GeoChargingPointEntrance?.        Clone(),
+                   OpeningTimes?. Select(openingTime  => openingTime. Clone()),
+                   HubOperatorId?.                   Clone(),
+                   ClearingHouseId?.                 Clone(),
+
+                   CustomData           is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null
+
+               );
 
         #endregion
 

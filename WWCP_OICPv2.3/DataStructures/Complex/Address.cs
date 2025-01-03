@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2014-2024 GraphDefined GmbH <achim.friedland@graphdefined.com>
+ * Copyright (c) 2014-2025 GraphDefined GmbH <achim.friedland@graphdefined.com>
  * This file is part of WWCP OICP <https://github.com/OpenChargingCloud/WWCP_OICP>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -477,24 +477,31 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region Clone
+        #region Clone()
 
         /// <summary>
-        /// Clone this object.
+        /// Clone this address.
         /// </summary>
-        public Address Clone
+        public Address Clone()
 
-            => new (Country.Clone,
-                    new String(City.       ToCharArray()),
-                    new String(Street.     ToCharArray()),
-                    new String(PostalCode. ToCharArray()),
-                    new String(HouseNumber.ToCharArray()),
-                    Floor       is not null ? new String(Floor.      ToCharArray())                               : null,
-                    Region      is not null ? new String(Region.     ToCharArray())                               : null,
-                    ParkingFacility,
-                    ParkingSpot is not null ? new String(ParkingSpot.ToCharArray())                               : null,
-                    TimeZone?.Clone,
-                    CustomData  is not null ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None)) : null);
+            => new (
+
+                   Country.     Clone(),
+                   City.        CloneString(),
+                   Street.      CloneString(),
+                   PostalCode.  CloneString(),
+                   HouseNumber. CloneString(),
+                   Floor?.      CloneString(),
+                   Region?.     CloneString(),
+                   ParkingFacility,
+                   ParkingSpot?.CloneString(),
+                   TimeZone?.   Clone(),
+
+                   CustomData  is not null
+                       ? JObject.Parse(CustomData.ToString(Newtonsoft.Json.Formatting.None))
+                       : null
+
+               );
 
         #endregion
 
