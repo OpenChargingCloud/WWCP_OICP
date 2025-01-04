@@ -14,10 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Hermod\HermodTests\HermodTests.csproj" />
-    <ProjectReference Include="..\..\Hermod\Hermod\Hermod.csproj" />
     <ProjectReference Include="..\..\Styx\StyxTests\StyxTests.csproj" />
-    <ProjectReference Include="..\..\Styx\Styx\Styx.csproj" />
-    <ProjectReference Include="..\WWCP_OICPv2.3\WWCP_OICPv2.3.csproj" />
     <ProjectReference Include="..\WWCP_OICPv2.3_Adapter\WWCP_OICPv2.3_Adapter.csproj" />
     <ProjectReference Include="..\WWCP_OICPv2.3_WebAPI\WWCP_OICPv2.3_WebAPI.csproj" />
   </ItemGroup>
