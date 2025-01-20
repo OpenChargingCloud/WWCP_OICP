@@ -150,7 +150,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomConverter">A delegate to process an EVSE data record, e.g. before importing it into a roaming network.</param>
         public static WWCP.EVSE? ToWWCP(this EVSEDataRecord                                 EVSEDataRecord,
 
-                                        Timestamped<WWCP.EVSEAdminStatusTypes>?             InitialEVSEAdminStatus                  = null,
+                                        Timestamped<WWCP.EVSEAdminStatusType>?              InitialEVSEAdminStatus                  = null,
                                         Timestamped<WWCP.ChargingStationAdminStatusTypes>?  InitialChargingStationAdminStatus       = null,
                                         Timestamped<WWCP.EVSEStatusType>?                   InitialEVSEStatus                       = null,
                                         Timestamped<WWCP.ChargingStationStatusTypes>?       InitialChargingStationStatus            = null,
@@ -200,6 +200,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  null,          // AuthenticationModes
                                                  null,          // PaymentOptions
                                                  null,          // Features
+                                                 null,          // VehicleTypes
+                                                 null,          // Images
 
                                                  null,          // ServiceIdentification
                                                  null,          // ModelCode
@@ -208,7 +210,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                  null,          // Disabled
 
                                                  null,          // Brands
-                                                 null,          // Mobility Root CAs
+                                                 null,          // MobilityRootCAs
+                                                 null,          // EVRoamingPartners
+                                                 null,          // CertificationInfo
+                                                 null,          // CalibrationInfo
 
                                                  InitialChargingStationAdminStatus,
                                                  InitialChargingStationStatus,
@@ -230,8 +235,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                              null,          // PhotoURLs
                                              null,          // Brands
-                                             null,          // Mobility Root CAs
-                                             null,          // OpenDataLicenses
+                                             null,          // MobilityRootCAs
+                                             null,          // DataLicenses
                                              null,          // ChargingModes
                                              null,          // ChargingTariffs
                                              null,          // CurrentType
@@ -252,16 +257,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              null,          // EnergyMixPrognoses
                                              null,          // EnergyMeter
                                              null,          // IsFreeOfCharge
+                                             null,          // CalibrationInfo
                                              null,          // ChargingConnectors
+
                                              null,          // ChargingSession
 
-                                             InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusTypes.Operational,
+                                             InitialEVSEAdminStatus ?? WWCP.EVSEAdminStatusType.Operational,
                                              InitialEVSEStatus      ?? WWCP.EVSEStatusType.OutOfService,
                                              MaxEVSEAdminStatusListSize,
                                              MaxEVSEStatusListSize,
                                              null,          // LastStatusUpdate
 
                                              DataSource,
+                                             null,          // Created
                                              null,          // LastChange
 
                                              EVSEDataRecord.CustomData,
