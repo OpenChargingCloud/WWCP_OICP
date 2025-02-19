@@ -1608,6 +1608,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
+
         #region Add/Update/Replace/Delete WWCP EVSE(s)... OICP only manages EVSEs!
 
         #region AddEVSE           (EVSE,  TransmissionType = Enqueue, ...)
@@ -1938,36 +1939,35 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region UpdateEVSE        (EVSE,  PropertyName, NewValue, OldValue = null, DataSource = null, TransmissionType = Enqueue, ...)
+        #region UpdateEVSE      (EVSE, PropertyName = null, NewValue = null, OldValue = null, DataSource = null, TransmissionType = Enqueue, ...)
 
         /// <summary>
-        /// Update the static data of the given EVSE.
-        /// The EVSE can be uploaded as a whole, or just a single property of the EVSE.
+        /// Update the EVSE data of the given charging pool within the static EVSE data at the OICP server.
         /// </summary>
-        /// <param name="EVSE">An EVSE to update.</param>
+        /// <param name="EVSE">An EVSE.</param>
         /// <param name="PropertyName">The name of the EVSE property to update.</param>
-        /// <param name="NewValue">The new value of the EVSE property to update.</param>
+        /// <param name="NewValue">The new value of the EVSE property to update, if any specific.</param>
         /// <param name="OldValue">The optional old value of the EVSE property to update.</param>
         /// <param name="DataSource">An optional data source or context for the EVSE property update.</param>
-        /// <param name="TransmissionType">Whether to send the EVSE update directly or enqueue it for a while.</param>
+        /// <param name="TransmissionType">Whether to send the charging pool update directly or enqueue it for a while.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
+        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
-        /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public override async Task<WWCP.UpdateEVSEResult>
 
-            UpdateEVSE(WWCP.IEVSE               EVSE,
-                       String                   PropertyName,
-                       Object?                  NewValue,
-                       Object?                  OldValue            = null,
-                       Context?                 DataSource          = null,
-                       WWCP.TransmissionTypes   TransmissionType    = WWCP.TransmissionTypes.Enqueue,
+            UpdateEVSE(WWCP.IEVSE              EVSE,
+                       String?                 PropertyName        = null,
+                       Object?                 NewValue            = null,
+                       Object?                 OldValue            = null,
+                       Context?                DataSource          = null,
+                       WWCP.TransmissionTypes  TransmissionType    = WWCP.TransmissionTypes.Enqueue,
 
-                       DateTime?                Timestamp           = null,
-                       EventTracking_Id?        EventTrackingId     = null,
-                       TimeSpan?                RequestTimeout      = null,
-                       CancellationToken        CancellationToken   = default)
+                       DateTime?               Timestamp           = null,
+                       EventTracking_Id?       EventTrackingId     = null,
+                       TimeSpan?               RequestTimeout      = null,
+                       CancellationToken       CancellationToken   = default)
 
         {
 
@@ -2004,18 +2004,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 {
 
                     if (IncludeEVSEs is     null ||
-                       IncludeEVSEs is not null && IncludeEVSEs(EVSE))
+                        IncludeEVSEs is not null && IncludeEVSEs(EVSE))
                     {
 
                         if (!evsesUpdateLog.TryGetValue(EVSE, out var propertyUpdateInfo))
                             propertyUpdateInfo = evsesUpdateLog.AddAndReturnValue(EVSE, []);
 
-                        propertyUpdateInfo.Add(new PropertyUpdateInfo(
-                                                   PropertyName,
-                                                   NewValue,
-                                                   OldValue,
-                                                   DataSource
-                                               ));
+                        if (PropertyName is not null)
+                            propertyUpdateInfo.Add(
+                                new PropertyUpdateInfo(
+                                    PropertyName,
+                                    NewValue,
+                                    OldValue,
+                                    DataSource
+                                )
+                            );
 
                         evsesToUpdateQueue.Add(EVSE);
 
