@@ -944,7 +944,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region (override) GetHashCode()
 
         /// <summary>
-        /// Return the hashcode of this object.
+        /// Return the hash code of this object.
         /// </summary>
         /// <returns></returns>
         public override Int32 GetHashCode()

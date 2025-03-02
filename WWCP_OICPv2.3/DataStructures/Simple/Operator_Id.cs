@@ -76,7 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Country            CountryCode   { get; }
 
         /// <summary>
-        /// The identificator suffix.
+        /// The identifier suffix.
         /// </summary>
         public String             Suffix        { get; }
 

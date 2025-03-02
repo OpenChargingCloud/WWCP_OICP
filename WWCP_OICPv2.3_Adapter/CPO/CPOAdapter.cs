@@ -238,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Create a new WWCP wrapper for the OICP roaming client for Charging Station Operators/CPOs.
         /// </summary>
         /// <param name="Id">The unique identification of the roaming provider.</param>
-        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
+        /// <param name="Name">The official (multi-language) name of the roaming provider.</param>
         /// <param name="Description">An optional (multi-language) description of the charging station operator roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// 
@@ -4799,7 +4799,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #region (override) GetHashCode()
 
         /// <summary>
-        /// Get the hashcode of this object.
+        /// Get the hash code of this object.
         /// </summary>
         public override Int32 GetHashCode()
 

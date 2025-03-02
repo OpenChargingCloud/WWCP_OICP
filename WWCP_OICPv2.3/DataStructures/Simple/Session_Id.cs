@@ -85,7 +85,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => InternalId.IsNotNullOrEmpty();
 
         /// <summary>
-        /// The length of the charging session identificator.
+        /// The length of the charging session identifier.
         /// </summary>
         public UInt64 Length
             => (UInt64) (InternalId?.Length ?? 0);

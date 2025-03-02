@@ -472,7 +472,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// Create a new WWCP wrapper for the OICP EMP Roaming client for e-mobility providers/EMPs.
         /// </summary>
         /// <param name="Id">The unique identification of the roaming provider.</param>
-        /// <param name="Name">The offical (multi-language) name of the roaming provider.</param>
+        /// <param name="Name">The official (multi-language) name of the roaming provider.</param>
         /// <param name="RoamingNetwork">A WWCP roaming network.</param>
         /// 
         /// <param name="EMPRoaming">A OICP EMP roaming object to be mapped to WWCP.</param>
@@ -4031,7 +4031,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #region (override) GetHashCode()
 
         /// <summary>
-        /// Get the hashcode of this object.
+        /// Get the hash code of this object.
         /// </summary>
         public override Int32 GetHashCode()
 
