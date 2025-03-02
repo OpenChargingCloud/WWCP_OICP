@@ -1611,7 +1611,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Add/Update/Replace/Delete WWCP EVSE(s)... OICP only manages EVSEs!
 
-        #region AddEVSE           (EVSE,  TransmissionType = Enqueue, ...)
+        #region AddEVSE            (EVSE,  TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the given EVSE to the static EVSE data at the OICP server.
@@ -1720,7 +1720,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AddEVSEIfNotExists(EVSE,  TransmissionType = Enqueue, ...)
+        #region AddEVSEIfNotExists (EVSE,  TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the given EVSE to the static EVSE data at the OICP server.
@@ -1829,7 +1829,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AddOrUpdateEVSE   (EVSE,  TransmissionType = Enqueue, ...)
+        #region AddOrUpdateEVSE    (EVSE,  TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Set the given EVSE as new static EVSE data at the OICP server.
@@ -1939,7 +1939,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region UpdateEVSE      (EVSE, PropertyName = null, NewValue = null, OldValue = null, DataSource = null, TransmissionType = Enqueue, ...)
+        #region UpdateEVSE         (EVSE, PropertyName = null, NewValue = null, OldValue = null, DataSource = null, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the EVSE data of the given charging pool within the static EVSE data at the OICP server.
@@ -2071,7 +2071,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region DeleteEVSE        (EVSE,  TransmissionType = Enqueue, ...)
+        #region DeleteEVSE         (EVSE,  TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the static data of the given EVSE.
@@ -2180,7 +2180,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region AddEVSEs          (EVSEs, TransmissionType = Enqueue, ...)
+        #region AddEVSEs           (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the given enumeration of EVSEs.
@@ -2340,7 +2340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AddEVSEsIfNotExist(EVSEs, TransmissionType = Enqueue, ...)
+        #region AddEVSEsIfNotExist (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add the given enumeration of EVSEs, if they do not already exist.
@@ -2500,7 +2500,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AddOrUpdateEVSEs  (EVSEs, TransmissionType = Enqueue, ...)
+        #region AddOrUpdateEVSEs   (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Add or update the given enumeration of EVSEs.
@@ -2660,7 +2660,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region UpdateEVSEs       (EVSEs, TransmissionType = Enqueue, ...)
+        #region UpdateEVSEs        (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSEs.
@@ -2820,7 +2820,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region ReplaceEVSEs      (EVSEs, TransmissionType = Enqueue, ...)
+        #region ReplaceEVSEs       (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Replace the given enumeration of EVSEs.
@@ -2980,7 +2980,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region DeleteEVSEs       (EVSEs, TransmissionType = Enqueue, ...)
+        #region DeleteEVSEs        (EVSEs, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Delete the given enumeration of EVSEs from the static EVSE data at the OICP server.
@@ -3141,7 +3141,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region UpdateEVSEStatus  (EVSEStatusUpdates, TransmissionType = Enqueue, ...)
+        #region UpdateEVSEStatus   (EVSEStatusUpdates, TransmissionType = Enqueue, ...)
 
         /// <summary>
         /// Update the given enumeration of EVSE status updates.
