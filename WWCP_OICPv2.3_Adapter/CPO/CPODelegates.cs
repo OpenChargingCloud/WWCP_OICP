@@ -29,7 +29,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     ///// <summary>
-    ///// A delegate which allows you to modify the convertion from WWCP EVSEs to EVSE data records.
+    ///// A delegate which allows you to modify the conversion from WWCP EVSEs to EVSE data records.
     ///// </summary>
     ///// <param name="EVSE">A WWCP EVSE.</param>
     ///// <param name="EVSEDataRecord">An EVSE data record.</param>
@@ -37,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     //                                                                                      EVSEDataRecord           EVSEDataRecord);
 
     ///// <summary>
-    ///// A delegate which allows you to modify the convertion from WWCP EVSE status updates to EVSE status records.
+    ///// A delegate which allows you to modify the conversion from WWCP EVSE status updates to EVSE status records.
     ///// </summary>
     ///// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
     ///// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
@@ -45,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     //                                                                                      EVSEStatusRecord         EVSEStatusRecord);
 
     ///// <summary>
-    ///// A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.
+    ///// A delegate which allows you to modify the conversion from WWCP charge detail records to OICP charge detail records.
     ///// </summary>
     ///// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
     ///// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
@@ -53,7 +53,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     //                                                                                      ChargeDetailRecord       OCIPChargeDetailRecord);
 
     ///// <summary>
-    ///// A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.
+    ///// A delegate which allows you to modify the conversion from OICP charge detail records to WWCP charge detail records.
     ///// </summary>
     ///// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
     ///// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>

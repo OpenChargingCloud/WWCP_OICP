@@ -130,7 +130,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.WebAPI
             this.DebugLog        = httpAPI.AddJSONEventSource(EventIdentification:      DebugLogId,
                                                               URLTemplate:              this.URLPathPrefix + "/" + DebugLogId.ToString(),
                                                               MaxNumberOfCachedEvents:  10000,
-                                                              RetryIntervall:           TimeSpan.FromSeconds(5),
+                                                              RetryInterval:           TimeSpan.FromSeconds(5),
                                                               EnableLogging:            true,
                                                               LogfilePath:              this.LoggingPath);
 
