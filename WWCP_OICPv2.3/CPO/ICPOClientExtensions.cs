@@ -578,8 +578,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ChargingStart">The timestamp when the charging process started.</param>
         /// 
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="SessionStart">An optional timestamp when the charging session started.</param>
         /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
         /// <param name="OperatorId">An optional operator identification of the hub operator.</param>
@@ -650,8 +650,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="ChargingStart">The timestamp when the charging process started.</param>
         /// <param name="EventOcurred">The timestamp when the charging progress parameters had been captured.</param>
         /// 
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="ChargingDuration">Charging Duration = EventOccurred - Charging Duration.</param>
         /// <param name="SessionStart">An optional timestamp when the charging session started.</param>
         /// <param name="ConsumedEnergyProgress">The optional consumed energy till now.</param>
@@ -733,8 +733,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="ChargingStart">The timestamp when the charging process started.</param>
         /// <param name="ChargingEnd">The timestamp when the charging process stopped.</param>
         /// 
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="SessionStart">An optional timestamp when the charging session started.</param>
         /// <param name="SessionEnd">An optional timestamp when the charging session stopped.</param>
         /// <param name="ConsumedEnergy">The optional consumed energy.</param>
@@ -822,8 +822,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ErrorType">The error class.</param>
         /// 
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="ErrorAdditionalInfo">Additional information about the error.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 

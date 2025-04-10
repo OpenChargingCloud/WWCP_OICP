@@ -49,13 +49,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Session_Id                 SessionId                 { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the CPO partner.
+        /// The optional session identification assigned by the CPO partner.
         /// </summary>
         [Optional]
         public CPOPartnerSession_Id?      CPOPartnerSessionId       { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the EMP partner.
+        /// The optional session identification assigned by the EMP partner.
         /// </summary>
         [Optional]
         public EMPPartnerSession_Id?      EMPPartnerSessionId       { get; }
@@ -103,8 +103,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ErrorType">The error class.</param>
         /// 
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="ErrorAdditionalInfo">Additional information about the error.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 

@@ -51,13 +51,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Session_Id                        SessionId                          { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the CPO partner.
+        /// The optional session identification assigned by the CPO partner.
         /// </summary>
         [Optional]
         public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the EMP partner.
+        /// The optional session identification assigned by the EMP partner.
         /// </summary>
         [Optional]
         public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; }
@@ -141,8 +141,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ChargingStart">The timestamp when the charging process started.</param>
         /// <param name="EventOccurred">The timestamp when the charging progress parameters had been captured.</param>
         /// 
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="ChargingDuration">Charging Duration = EventOccurred - Charging Duration.</param>
         /// <param name="SessionStart">An optional timestamp when the charging session started.</param>
         /// <param name="ConsumedEnergyProgress">The optional consumed energy till now.</param>

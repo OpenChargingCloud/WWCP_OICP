@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #endregion
 
 
-        #region (static) FromUID                        (MifareUID,                       CustomData = null)
+        #region (static) FromUID                         (MifareUID,                       CustomData = null)
 
         /// <summary>
         /// Create a new Mifare identification.
@@ -168,7 +168,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) FromRFIDIdentification         (RFIDIdentification,              CustomData = null)
+        #region (static) FromRFIDIdentification          (RFIDIdentification,              CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -183,7 +183,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) FromQRCodeIdentification       (QRCodeIdentification,            CustomData = null)
+        #region (static) FromQRCodeIdentification        (QRCodeIdentification,            CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -198,7 +198,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) FromQRCodeIdentification       (EVCOId, PIN,                     CustomData = null)
+        #region (static) FromQRCodeIdentification        (EVCOId, PIN,                     CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) FromQRCodeIdentification       (EVCOId, HashedPIN,               CustomData = null)
+        #region (static) FromQRCodeIdentification        (EVCOId, HashedPIN,               CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -238,7 +238,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) FromQRCodeIdentification       (EVCOId, HashValue, HashFunction, CustomData = null)
+        #region (static) FromQRCodeIdentification        (EVCOId, HashValue, HashFunction, CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -263,7 +263,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) FromPlugAndChargeIdentification(PlugAndChargeIdentification,     CustomData = null)
+        #region (static) FromPlugAndChargeIdentification (PlugAndChargeIdentification,     CustomData = null)
 
         /// <summary>
         /// Create a new identification.
@@ -278,7 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
         #endregion
 
-        #region (static) FromRemoteIdentification       (RemoteIdentification,            CustomData = null)
+        #region (static) FromRemoteIdentification        (RemoteIdentification,            CustomData = null)
 
         /// <summary>
         /// Create a new identification.

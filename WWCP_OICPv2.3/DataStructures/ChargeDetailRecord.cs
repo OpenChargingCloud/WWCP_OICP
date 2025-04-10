@@ -95,13 +95,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public PartnerProduct_Id?                PartnerProductId                   { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the CPO partner.
+        /// The optional session identification assigned by the CPO partner.
         /// </summary>
         [Optional]
         public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the EMP partner.
+        /// The optional session identification assigned by the EMP partner.
         /// </summary>
         [Optional]
         public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; }
@@ -166,8 +166,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="ConsumedEnergy">The amount of consumed energy [kWh].</param>
         /// 
         /// <param name="PartnerProductId">An optional pricing product name (for identifying a tariff) that must be unique.</param>
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
         /// <param name="MeterValueEnd">An optional final value of the energy meter [kWh].</param>
         /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session [kWh].</param>
@@ -1253,13 +1253,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public PartnerProduct_Id?                PartnerProductId                   { get; set; }
 
             /// <summary>
-            /// An optional session identification assinged by the CPO partner.
+            /// An optional session identification assigned by the CPO partner.
             /// </summary>
             [Optional]
             public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; set; }
 
             /// <summary>
-            /// An optional session identification assinged by the EMP partner.
+            /// An optional session identification assigned by the EMP partner.
             /// </summary>
             [Optional]
             public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; set; }
@@ -1327,8 +1327,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ConsumedEnergy">The amount of consumed energy [kWh].</param>
             /// 
             /// <param name="PartnerProductId">An optional pricing product name (for identifying a tariff) that must be unique.</param>
-            /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-            /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+            /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+            /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
             /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
             /// <param name="MeterValueEnd">An optional final value of the energy meter [kWh].</param>
             /// <param name="MeterValuesInBetween">An optional enumeration of meter values during the charging session [kWh].</param>

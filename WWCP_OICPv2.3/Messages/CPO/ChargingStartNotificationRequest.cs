@@ -49,13 +49,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public Session_Id                        SessionId                          { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the CPO partner.
+        /// The optional session identification assigned by the CPO partner.
         /// </summary>
         [Optional]
         public CPOPartnerSession_Id?             CPOPartnerSessionId                { get; }
 
         /// <summary>
-        /// The optional session identification assinged by the EMP partner.
+        /// The optional session identification assigned by the EMP partner.
         /// </summary>
         [Optional]
         public EMPPartnerSession_Id?             EMPPartnerSessionId                { get; }
@@ -114,8 +114,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EVSEId">The EVSE identification, that identifies the location of the charging process.</param>
         /// <param name="ChargingStart">The timestamp when the charging process started.</param>
         /// 
-        /// <param name="CPOPartnerSessionId">An optional session identification assinged by the CPO partner.</param>
-        /// <param name="EMPPartnerSessionId">An optional session identification assinged by the EMP partner.</param>
+        /// <param name="CPOPartnerSessionId">An optional session identification assigned by the CPO partner.</param>
+        /// <param name="EMPPartnerSessionId">An optional session identification assigned by the EMP partner.</param>
         /// <param name="SessionStart">An optional timestamp when the charging session started.</param>
         /// <param name="MeterValueStart">An optional starting value of the energy meter [kWh].</param>
         /// <param name="OperatorId">An optional operator identification of the hub operator.</param>
