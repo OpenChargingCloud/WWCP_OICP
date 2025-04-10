@@ -26,13 +26,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP EVSE identifications to OICP EVSE identifications.
+    /// A delegate which allows you to modify the conversion from WWCP EVSE identifications to OICP EVSE identifications.
     /// </summary>
     /// <param name="EVSEId">A WWCP EVSE identification.</param>
     public delegate EVSE_Id                  WWCPEVSEId_2_EVSEId_Delegate                     (WWCP.EVSE_Id             EVSEId);
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP EVSEs to EVSE data records.
+    /// A delegate which allows you to modify the conversion from WWCP EVSEs to EVSE data records.
     /// </summary>
     /// <param name="EVSE">A WWCP EVSE.</param>
     /// <param name="EVSEDataRecord">An EVSE data record.</param>
@@ -40,7 +40,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                EVSEDataRecord           EVSEDataRecord);
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP EVSE status updates to EVSE status records.
+    /// A delegate which allows you to modify the conversion from WWCP EVSE status updates to EVSE status records.
     /// </summary>
     /// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
     /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                EVSEStatusRecord         EVSEStatusRecord);
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.
+    /// A delegate which allows you to modify the conversion from WWCP charge detail records to OICP charge detail records.
     /// </summary>
     /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
     /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
@@ -57,7 +57,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from EVSE data records to WWCP EVSEs.
+    /// A delegate which allows you to modify the conversion from EVSE data records to WWCP EVSEs.
     /// </summary>
     /// <param name="EVSEDataRecord">An OICP EVSE data record.</param>
     /// <param name="EVSE">A WWCP EVSE.</param>
@@ -65,7 +65,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                WWCP.EVSE                EVSE);
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from EVSE status records to WWCP EVSE status updates.
+    /// A delegate which allows you to modify the conversion from EVSE status records to WWCP EVSE status updates.
     /// </summary>
     /// <param name="EVSEStatusRecord">An OICP EVSE status record.</param>
     /// <param name="EVSEStatusUpdate">A WWCP EVSE status update.</param>
@@ -73,7 +73,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                                                                WWCP.EVSEStatusUpdate    EVSEStatusUpdate);
 
     /// <summary>
-    /// A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.
+    /// A delegate which allows you to modify the conversion from OICP charge detail records to WWCP charge detail records.
     /// </summary>
     /// <param name="OCIPChargeDetailRecord">An OICP charge detail record.</param>
     /// <param name="WWCPChargeDetailRecord">A WWCP charge detail record.</param>
@@ -1569,7 +1569,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Convert the given OICP charge detail record into a corresponding WWCP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecord">An OICP charge detail record.</param>
-        /// <param name="ChargeDetailRecord2WWCPChargeDetailRecord">A delegate which allows you to modify the convertion from OICP charge detail records to WWCP charge detail records.</param>
+        /// <param name="ChargeDetailRecord2WWCPChargeDetailRecord">A delegate which allows you to modify the conversion from OICP charge detail records to WWCP charge detail records.</param>
         public static WWCP.ChargeDetailRecord? ToWWCP(this ChargeDetailRecord                             ChargeDetailRecord,
                                                       ChargeDetailRecord2WWCPChargeDetailRecordDelegate?  ChargeDetailRecord2WWCPChargeDetailRecord   = null)
         {
@@ -1690,7 +1690,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Convert the given WWCP charge detail record into a corresponding OICP charge detail record.
         /// </summary>
         /// <param name="ChargeDetailRecord">A WWCP charge detail record.</param>
-        /// <param name="WWCPChargeDetailRecord2ChargeDetailRecord">A delegate which allows you to modify the convertion from WWCP charge detail records to OICP charge detail records.</param>
+        /// <param name="WWCPChargeDetailRecord2ChargeDetailRecord">A delegate which allows you to modify the conversion from WWCP charge detail records to OICP charge detail records.</param>
         public static ChargeDetailRecord? ToOICP(this WWCP.ChargeDetailRecord                        ChargeDetailRecord,
                                                  WWCPChargeDetailRecord2ChargeDetailRecordDelegate?  WWCPChargeDetailRecord2ChargeDetailRecord = null)
         {
@@ -1742,7 +1742,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     );
             }
 
-            // Maybe only a signle OCMF container!
+            // Maybe only a single OCMF container!
             if (signedMeteringValues.Count == 1 &&
                 signedMeteringValues.First().MeteringStatus == MeteringStatusType.End)
             {
