@@ -387,8 +387,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             var json = JSONObject.Create(
 
                                  new JProperty("ProviderID",   ProviderId.ToString()),
-                                 new JProperty("From",         From.      ToIso8601()),
-                                 new JProperty("To",           To.        ToIso8601()),
+                                 new JProperty("From",         From.      ToISO8601()),
+                                 new JProperty("To",           To.        ToISO8601()),
 
                            SessionIds  is not null && SessionIds .Any()
                                ? new JProperty("SessionID",    new JArray(SessionIds. Select(sessionId  => sessionId. ToString())))

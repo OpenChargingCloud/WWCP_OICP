@@ -330,7 +330,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            ExpiryDate.HasValue
-                               ? new JProperty("ExpiryDate",        ExpiryDate.Value.ToIso8601())
+                               ? new JProperty("ExpiryDate",        ExpiryDate.Value.ToISO8601())
                                : null,
 
                            CustomData?.HasValues == true

@@ -1304,7 +1304,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                : null,
 
                            LastUpdate.                      HasValue
-                               ? new JProperty("lastUpdate",                        LastUpdate.                  Value.ToIso8601())
+                               ? new JProperty("lastUpdate",                        LastUpdate.                  Value.ToISO8601())
                                : null,
 
 

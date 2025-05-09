@@ -233,6 +233,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              null,          // Name
                                              null,          // Description
 
+                                             null,          // PhysicalReference
+                                             null,          // GeoLocation
                                              null,          // PhotoURLs
                                              null,          // Brands
                                              null,          // MobilityRootCAs
