@@ -81,13 +81,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     {
 
 
-        #region (protected) LogEvent     (OCPIIO, Logger, LogHandler, ...)
+        #region (protected) LogEvent     (OICPIO, Logger, LogHandler, ...)
 
-        protected async Task LogEvent<TDelegate>(String                                             OCPIIO,
+        protected async Task LogEvent<TDelegate>(String                                             OICPIO,
                                                  TDelegate?                                         Logger,
                                                  Func<TDelegate, Task>                              LogHandler,
                                                  [CallerArgumentExpression(nameof(Logger))] String  EventName     = "",
-                                                 [CallerMemberName()]                       String  OCPICommand   = "")
+                                                 [CallerMemberName()]                       String  OICPCommand   = "")
 
             where TDelegate : Delegate
 
@@ -106,7 +106,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 }
                 catch (Exception e)
                 {
-                    await HandleErrors(OCPIIO, $"{OCPICommand}.{EventName}", e);
+                    await HandleErrors(OICPIO, $"{OICPCommand}.{EventName}", e);
                 }
             }
         }

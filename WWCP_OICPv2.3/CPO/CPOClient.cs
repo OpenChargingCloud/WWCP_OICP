@@ -6649,7 +6649,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         private Task LogEvent<TDelegate>(TDelegate?                                         Logger,
                                          Func<TDelegate, Task>                              LogHandler,
                                          [CallerArgumentExpression(nameof(Logger))] String  EventName     = "",
-                                         [CallerMemberName()]                       String  OCPICommand   = "")
+                                         [CallerMemberName()]                       String  OICPCommand   = "")
 
             where TDelegate : Delegate
 
@@ -6658,7 +6658,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    Logger,
                    LogHandler,
                    EventName,
-                   OCPICommand
+                   OICPCommand
                );
 
         #endregion
