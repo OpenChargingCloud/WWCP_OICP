@@ -19,6 +19,7 @@
 
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using System.Runtime.CompilerServices;
 
 using Newtonsoft.Json.Linq;
 
@@ -28,6 +29,8 @@ using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
+using cloud.charging.open.protocols.OICPv2_3.CPO;
+
 #endregion
 
 namespace cloud.charging.open.protocols.OICPv2_3.EMP
@@ -36,7 +39,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// The EMP client.
     /// </summary>
-    public partial class EMPClient : AHTTPClient,
+    public partial class EMPClient : AOICPClient,
                                      IEMPClient
     {
 
@@ -844,7 +847,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         //    => base.ToJSON(nameof(EMPClient));
 
 
-        #region PullEVSEData                   (Request)
+        #region PullEVSEData                    (Request)
 
         /// <summary>
         /// Download EVSE data records.
@@ -860,7 +863,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomPullEVSEDataRequestMapper(Request);
+            //Request = _CustomPullEVSEDataRequestMapper (Request);
 
             Byte                               TransmissionRetry   = 0;
             OICPResult<PullEVSEDataResponse>?  result              = null;
@@ -873,22 +876,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.PullEVSEData.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPullEVSEDataRequest is not null)
-                    await Task.WhenAll(OnPullEVSEDataRequest.GetInvocationList().
-                                       Cast<OnPullEVSEDataRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEDataRequest));
-            }
+            await LogEvent(
+                      OnPullEVSEDataRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -978,7 +973,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                   httpResponse.EventTrackingId,
                                                                   httpResponse.Runtime,
                                                                   out var pullEVSEDataResponse,
-                                                                  out var ErrorResponse,
+                                                                  out var errorResponse,
                                                                   processId,
                                                                   httpResponse,
                                                                   CustomPullEVSEDataResponseParser))
@@ -1219,24 +1214,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPullEVSEDataResponse is not null)
-                    await Task.WhenAll(OnPullEVSEDataResponse.GetInvocationList().
-                                       Cast<OnPullEVSEDataResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEDataResponse));
-            }
+            await LogEvent(
+                      OnPullEVSEDataResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -1246,7 +1233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region PullEVSEStatus                 (Request)
+        #region PullEVSEStatus                  (Request)
 
         /// <summary>
         /// Download EVSE status records.
@@ -1261,7 +1248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomPullEVSEStatusRequestMapper(Request);
+            //Request = _CustomPullEVSEStatusRequestMapper (Request);
 
             Byte                                 TransmissionRetry   = 0;
             OICPResult<PullEVSEStatusResponse>?  result              = null;
@@ -1274,22 +1261,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.PullEVSEStatus.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPullEVSEStatusRequest is not null)
-                    await Task.WhenAll(OnPullEVSEStatusRequest.GetInvocationList().
-                                       Cast<OnPullEVSEStatusRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusRequest));
-            }
+            await LogEvent(
+                      OnPullEVSEStatusRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -1361,7 +1340,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                     httpResponse.EventTrackingId,
                                                                     httpResponse.Runtime,
                                                                     out var pullEVSEStatusResponse,
-                                                                    out var ErrorResponse,
+                                                                    out var errorResponse,
                                                                     processId,
                                                                     httpResponse,
                                                                     CustomPullEVSEStatusResponseParser))
@@ -1619,24 +1598,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPullEVSEStatusResponse is not null)
-                    await Task.WhenAll(OnPullEVSEStatusResponse.GetInvocationList().
-                                       Cast<OnPullEVSEStatusResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusResponse));
-            }
+            await LogEvent(
+                      OnPullEVSEStatusResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -1646,7 +1617,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region PullEVSEStatusById             (Request)
+        #region PullEVSEStatusById              (Request)
 
         /// <summary>
         /// Download the current status of up to 100 EVSEs.
@@ -1660,7 +1631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomPullEVSEStatusByIdRequestMapper(Request);
+            //Request = _CustomPullEVSEStatusByIdRequestMapper (Request);
 
             Byte                                     TransmissionRetry   = 0;
             OICPResult<PullEVSEStatusByIdResponse>?  result              = null;
@@ -1673,22 +1644,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.PullEVSEStatusById.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPullEVSEStatusByIdRequest is not null)
-                    await Task.WhenAll(OnPullEVSEStatusByIdRequest.GetInvocationList().
-                                       Cast<OnPullEVSEStatusByIdRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdRequest));
-            }
+            await LogEvent(
+                      OnPullEVSEStatusByIdRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -1759,7 +1722,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                         httpResponse.EventTrackingId,
                                                                         httpResponse.Runtime,
                                                                         out var pullEVSEStatusByIdResponse,
-                                                                        out var ErrorResponse,
+                                                                        out var errorResponse,
                                                                         processId,
                                                                         httpResponse,
                                                                         CustomPullEVSEStatusByIdResponseParser))
@@ -2002,24 +1965,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPullEVSEStatusByIdResponse is not null)
-                    await Task.WhenAll(OnPullEVSEStatusByIdResponse.GetInvocationList().
-                                       Cast<OnPullEVSEStatusByIdResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByIdResponse));
-            }
+            await LogEvent(
+                      OnPullEVSEStatusByIdResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -2029,7 +1984,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region PullEVSEStatusByOperatorId     (Request)
+        #region PullEVSEStatusByOperatorId      (Request)
 
         /// <summary>
         /// Download the current EVSE status of the given charge point operators.
@@ -2043,7 +1998,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomPullEVSEStatusByOperatorIdRequestMapper(Request);
+            //Request = _CustomPullEVSEStatusByOperatorIdRequestMapper (Request);
 
             Byte                                             TransmissionRetry   = 0;
             OICPResult<PullEVSEStatusByOperatorIdResponse>?  result              = null;
@@ -2056,22 +2011,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.PullEVSEStatusByOperatorId.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPullEVSEStatusByOperatorIdRequest is not null)
-                    await Task.WhenAll(OnPullEVSEStatusByOperatorIdRequest.GetInvocationList().
-                                       Cast<OnPullEVSEStatusByOperatorIdRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdRequest));
-            }
+            await LogEvent(
+                      OnPullEVSEStatusByOperatorIdRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -2142,7 +2089,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                 httpResponse.EventTrackingId,
                                                                                 httpResponse.Runtime,
                                                                                 out var pullEVSEStatusResponse,
-                                                                                out var ErrorResponse,
+                                                                                out var errorResponse,
                                                                                 processId,
                                                                                 httpResponse,
                                                                                 CustomPullEVSEStatusByOperatorIdResponseParser))
@@ -2385,24 +2332,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPullEVSEStatusByOperatorIdResponse is not null)
-                    await Task.WhenAll(OnPullEVSEStatusByOperatorIdResponse.GetInvocationList().
-                                       Cast<OnPullEVSEStatusByOperatorIdResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEStatusByOperatorIdResponse));
-            }
+            await LogEvent(
+                      OnPullEVSEStatusByOperatorIdResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -2413,7 +2352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region PullPricingProductData         (Request)
+        #region PullPricingProductData          (Request)
 
         /// <summary>
         /// Download pricing product data.
@@ -2427,7 +2366,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomPullPricingProductDataRequestMapper(Request);
+            //Request = _CustomPullPricingProductDataRequestMapper (Request);
 
             Byte                                         TransmissionRetry   = 0;
             OICPResult<PullPricingProductDataResponse>?  result              = null;
@@ -2440,22 +2379,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.PullPricingProductData.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPullPricingProductDataRequest is not null)
-                    await Task.WhenAll(OnPullPricingProductDataRequest.GetInvocationList().
-                                       Cast<OnPullPricingProductDataRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullPricingProductDataRequest));
-            }
+            await LogEvent(
+                      OnPullPricingProductDataRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -2544,7 +2475,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             httpResponse.EventTrackingId,
                                                                             httpResponse.Runtime,
                                                                             out var pullEVSEDataResponse,
-                                                                            out var ErrorResponse,
+                                                                            out var errorResponse,
                                                                             processId,
                                                                             httpResponse,
                                                                             CustomPullPricingProductDataResponseParser))
@@ -2864,24 +2795,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPullPricingProductDataResponse is not null)
-                    await Task.WhenAll(OnPullPricingProductDataResponse.GetInvocationList().
-                                       Cast<OnPullPricingProductDataResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullPricingProductDataResponse));
-            }
+            await LogEvent(
+                      OnPullPricingProductDataResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -2891,7 +2814,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region PullEVSEPricing                (Request)
+        #region PullEVSEPricing                 (Request)
 
         /// <summary>
         /// Download EVSE pricing data.
@@ -2905,7 +2828,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomPullEVSEPricingRequestMapper(Request);
+            //Request = _CustomPullEVSEPricingRequestMapper (Request);
 
             Byte                                  TransmissionRetry   = 0;
             OICPResult<PullEVSEPricingResponse>?  result              = null;
@@ -2918,22 +2841,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.PullEVSEPricing.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPullEVSEPricingRequest is not null)
-                    await Task.WhenAll(OnPullEVSEPricingRequest.GetInvocationList().
-                                       Cast<OnPullEVSEPricingRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEPricingRequest));
-            }
+            await LogEvent(
+                      OnPullEVSEPricingRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -3022,7 +2937,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                      httpResponse.EventTrackingId,
                                                                      httpResponse.Runtime,
                                                                      out var pullEVSEDataResponse,
-                                                                     out var ErrorResponse,
+                                                                     out var errorResponse,
                                                                      processId,
                                                                      httpResponse,
                                                                      CustomPullEVSEPricingResponseParser))
@@ -3342,24 +3257,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPullEVSEPricingResponse is not null)
-                    await Task.WhenAll(OnPullEVSEPricingResponse.GetInvocationList().
-                                       Cast<OnPullEVSEPricingResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPullEVSEPricingResponse));
-            }
+            await LogEvent(
+                      OnPullEVSEPricingResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -3370,7 +3277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region PushAuthenticationData         (Request)
+        #region PushAuthenticationData          (Request)
 
         /// <summary>
         /// Upload provider authentication data records.
@@ -3384,7 +3291,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomPushAuthenticationDataRequestMapper(Request);
+            //Request = _CustomPushAuthenticationDataRequestMapper (Request);
 
             Byte                                                         TransmissionRetry   = 0;
             OICPResult<Acknowledgement<PushAuthenticationDataRequest>>?  result              = null;
@@ -3397,22 +3304,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.PushAuthenticationData.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPushAuthenticationDataRequest is not null)
-                    await Task.WhenAll(OnPushAuthenticationDataRequest.GetInvocationList().
-                                       Cast<OnPushAuthenticationDataRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPushAuthenticationDataRequest));
-            }
+            await LogEvent(
+                      OnPushAuthenticationDataRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -3482,7 +3381,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 if (Acknowledgement<PushAuthenticationDataRequest>.TryParse(Request,
                                                                                             JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                             out var pushAuthenticationDataResponse,
-                                                                                            out var ErrorResponse,
+                                                                                            out var errorResponse,
                                                                                             httpResponse,
                                                                                             httpResponse.Timestamp,
                                                                                             httpResponse.EventTrackingId,
@@ -3929,24 +3828,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPushAuthenticationDataResponse is not null)
-                    await Task.WhenAll(OnPushAuthenticationDataResponse.GetInvocationList().
-                                       Cast<OnPushAuthenticationDataResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnPushAuthenticationDataResponse));
-            }
+            await LogEvent(
+                      OnPushAuthenticationDataResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -3957,7 +3848,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region AuthorizeRemoteReservationStart(Request)
+        #region AuthorizeRemoteReservationStart (Request)
 
         /// <summary>
         /// Create a charging reservation at the given EVSE.
@@ -3971,7 +3862,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomAuthorizeRemoteReservationStartRequestMapper(Request);
+            //Request = _CustomAuthorizeRemoteReservationStartRequestMapper (Request);
 
             Byte                                                                  TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>?  result              = null;
@@ -3984,22 +3875,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
-            try
-            {
-
-                if (OnAuthorizeRemoteReservationStartRequest is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteReservationStartRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -4068,7 +3951,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 if (Acknowledgement<AuthorizeRemoteReservationStartRequest>.TryParse(Request,
                                                                                                      JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                      out var authorizeRemoteReservationStartResponse,
-                                                                                                     out var ErrorResponse,
+                                                                                                     out var errorResponse,
                                                                                                      httpResponse,
                                                                                                      httpResponse.Timestamp,
                                                                                                      httpResponse.EventTrackingId,
@@ -4338,24 +4221,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnAuthorizeRemoteReservationStartResponse is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteReservationStartResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -4365,7 +4240,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region AuthorizeRemoteReservationStop (Request)
+        #region AuthorizeRemoteReservationStop  (Request)
 
         /// <summary>
         /// Stop the given charging reservation.
@@ -4379,7 +4254,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomAuthorizeRemoteReservationStopRequestMapper(Request);
+            //Request = _CustomAuthorizeRemoteReservationStopRequestMapper (Request);
 
             Byte                                                                 TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>?  result              = null;
@@ -4392,22 +4267,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
-            try
-            {
-
-                if (OnAuthorizeRemoteReservationStopRequest is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteReservationStopRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -4475,7 +4342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 if (Acknowledgement<AuthorizeRemoteReservationStopRequest>.TryParse(Request,
                                                                                                     JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                     out var authorizeRemoteReservationStopResponse,
-                                                                                                    out var ErrorResponse,
+                                                                                                    out var errorResponse,
                                                                                                     httpResponse,
                                                                                                     httpResponse.Timestamp,
                                                                                                     httpResponse.EventTrackingId,
@@ -4745,24 +4612,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnAuthorizeRemoteReservationStopResponse is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteReservationStopResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -4772,7 +4631,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region AuthorizeRemoteStart           (Request)
+        #region AuthorizeRemoteStart            (Request)
 
         /// <summary>
         /// Start a charging session at the given EVSE.
@@ -4786,7 +4645,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomAuthorizeRemoteStartRequestMapper(Request);
+            //Request = _CustomAuthorizeRemoteStartRequestMapper (Request);
 
             Byte                                                       TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>?  result              = null;
@@ -4799,22 +4658,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.AuthorizeRemoteStart.IncRequests_OK();
 
-            try
-            {
-
-                if (OnAuthorizeRemoteStartRequest is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteStartRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteStartRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -5152,24 +5003,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnAuthorizeRemoteStartResponse is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteStartResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStartResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteStartResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -5179,7 +5022,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #endregion
 
-        #region AuthorizeRemoteStop            (Request)
+        #region AuthorizeRemoteStop             (Request)
 
         /// <summary>
         /// Stop the given charging session.
@@ -5193,7 +5036,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomAuthorizeRemoteStopRequestMapper(Request);
+            //Request = _CustomAuthorizeRemoteStopRequestMapper (Request);
 
             Byte                                                      TransmissionRetry   = 0;
             OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>?  result              = null;
@@ -5206,22 +5049,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.AuthorizeRemoteStop.IncRequests_OK();
 
-            try
-            {
-
-                if (OnAuthorizeRemoteStopRequest is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteStopRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteStopRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -5289,7 +5124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 if (Acknowledgement<AuthorizeRemoteStopRequest>.TryParse(Request,
                                                                                          JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                          out var authorizeRemoteStopResponse,
-                                                                                         out var ErrorResponse,
+                                                                                         out var errorResponse,
                                                                                          httpResponse,
                                                                                          httpResponse.Timestamp,
                                                                                          httpResponse.EventTrackingId,
@@ -5559,24 +5394,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnAuthorizeRemoteStopResponse is not null)
-                    await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
-                                       Cast<OnAuthorizeRemoteStopResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnAuthorizeRemoteStopResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeRemoteStopResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -5587,7 +5414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         #endregion
 
 
-        #region GetChargeDetailRecords         (Request)
+        #region GetChargeDetailRecords          (Request)
 
         /// <summary>
         /// Download charge detail records.
@@ -5601,7 +5428,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Initial checks
 
-            //Request = _CustomGetChargeDetailRecordsRequestMapper(Request);
+            //Request = _CustomGetChargeDetailRecordsRequestMapper (Request);
 
             Byte                                         TransmissionRetry   = 0;
             OICPResult<GetChargeDetailRecordsResponse>?  result              = null;
@@ -5614,22 +5441,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             Counters.GetChargeDetailRecords.IncRequests_OK();
 
-            try
-            {
-
-                if (OnGetChargeDetailRecordsRequest is not null)
-                    await Task.WhenAll(OnGetChargeDetailRecordsRequest.GetInvocationList().
-                                       Cast<OnGetChargeDetailRecordsRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsRequest));
-            }
+            await LogEvent(
+                      OnGetChargeDetailRecordsRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -5718,7 +5537,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                             httpResponse.EventTrackingId,
                                                                             httpResponse.Runtime,
                                                                             out var getChargeDetailRecordsResponse,
-                                                                            out var ErrorResponse,
+                                                                            out var errorResponse,
                                                                             httpResponse,
                                                                             processId,
                                                                             CustomGetChargeDetailRecordsResponseParser))
@@ -5968,30 +5787,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnGetChargeDetailRecordsResponse is not null)
-                    await Task.WhenAll(OnGetChargeDetailRecordsResponse.GetInvocationList().
-                                       Cast<OnGetChargeDetailRecordsResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(EMPClient) + "." + nameof(OnGetChargeDetailRecordsResponse));
-            }
+            await LogEvent(
+                      OnGetChargeDetailRecordsResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
             return result;
 
         }
+
+        #endregion
+
+
+
+        #region (private) LogEvent (Logger, LogHandler, ...)
+
+        private Task LogEvent<TDelegate>(TDelegate?                                         Logger,
+                                         Func<TDelegate, Task>                              LogHandler,
+                                         [CallerArgumentExpression(nameof(Logger))] String  EventName     = "",
+                                         [CallerMemberName()]                       String  OCPICommand   = "")
+
+            where TDelegate : Delegate
+
+            => LogEvent(
+                   nameof(EMPClient),
+                   Logger,
+                   LogHandler,
+                   EventName,
+                   OCPICommand
+               );
 
         #endregion
 

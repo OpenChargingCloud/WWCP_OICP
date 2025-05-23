@@ -19,6 +19,7 @@
 
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using System.Runtime.CompilerServices;
 
 using Newtonsoft.Json.Linq;
 
@@ -36,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The CPO client.
     /// </summary>
-    public partial class CPOClient : AHTTPClient,
+    public partial class CPOClient : AOICPClient,
                                      ICPOClient
     {
 
@@ -836,7 +837,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         //    => base.ToJSON(nameof(CPOClient));
 
 
-        #region PushEVSEData                    (Request)
+        #region PushEVSEData                     (Request)
 
         /// <summary>
         /// Upload the given EVSE data records.
@@ -863,22 +864,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.PushEVSEData.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPushEVSEDataRequest is not null)
-                    await Task.WhenAll(OnPushEVSEDataRequest.GetInvocationList().
-                                       Cast<OnPushEVSEDataRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEDataRequest));
-            }
+            await LogEvent(
+                      OnPushEVSEDataRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -1001,7 +994,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (Acknowledgement<PushEVSEDataRequest>.TryParse(Request,
                                                                                       JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                       out var acknowledgement,
-                                                                                      out var ErrorResponse,
+                                                                                      out var errorResponse,
                                                                                       httpResponse,
                                                                                       httpResponse.Timestamp,
                                                                                       httpResponse.EventTrackingId,
@@ -1163,7 +1156,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -1243,7 +1236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -1349,24 +1342,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPushEVSEDataResponse is not null)
-                    await Task.WhenAll(OnPushEVSEDataResponse.GetInvocationList().
-                                       Cast<OnPushEVSEDataResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEDataResponse));
-            }
+            await LogEvent(
+                      OnPushEVSEDataResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -1376,7 +1361,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region PushEVSEStatus                  (Request)
+        #region PushEVSEStatus                   (Request)
 
         /// <summary>
         /// Upload the given EVSE status records.
@@ -1403,22 +1388,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.PushEVSEStatus.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPushEVSEStatusRequest is not null)
-                    await Task.WhenAll(OnPushEVSEStatusRequest.GetInvocationList().
-                                       Cast<OnPushEVSEStatusRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEStatusRequest));
-            }
+            await LogEvent(
+                      OnPushEVSEStatusRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -1532,7 +1509,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (Acknowledgement<PushEVSEStatusRequest>.TryParse(Request,
                                                                                         JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                         out var acknowledgement,
-                                                                                        out var ErrorResponse,
+                                                                                        out var errorResponse,
                                                                                         httpResponse,
                                                                                         httpResponse.Timestamp,
                                                                                         httpResponse.EventTrackingId,
@@ -1691,7 +1668,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -1771,7 +1748,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -1877,24 +1854,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPushEVSEStatusResponse is not null)
-                    await Task.WhenAll(OnPushEVSEStatusResponse.GetInvocationList().
-                                       Cast<OnPushEVSEStatusResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEStatusResponse));
-            }
+            await LogEvent(
+                      OnPushEVSEStatusResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -1905,7 +1874,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region PushPricingProductData          (Request)
+        #region PushPricingProductData           (Request)
 
         /// <summary>
         /// Upload the given pricing product data.
@@ -1932,22 +1901,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.PushPricingProductData.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPushPricingProductDataRequest is not null)
-                    await Task.WhenAll(OnPushPricingProductDataRequest.GetInvocationList().
-                                       Cast<OnPushPricingProductDataRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushPricingProductDataRequest));
-            }
+            await LogEvent(
+                      OnPushPricingProductDataRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -2059,7 +2020,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (Acknowledgement<PushPricingProductDataRequest>.TryParse(Request,
                                                                                                 JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                                 out var acknowledgement,
-                                                                                                out var ErrorResponse,
+                                                                                                out var errorResponse,
                                                                                                 httpResponse,
                                                                                                 httpResponse.Timestamp,
                                                                                                 httpResponse.EventTrackingId,
@@ -2221,7 +2182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -2301,7 +2262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -2407,24 +2368,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPushPricingProductDataResponse is not null)
-                    await Task.WhenAll(OnPushPricingProductDataResponse.GetInvocationList().
-                                       Cast<OnPushPricingProductDataResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushPricingProductDataResponse));
-            }
+            await LogEvent(
+                      OnPushPricingProductDataResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -2434,7 +2387,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region PushEVSEPricing                 (Request)
+        #region PushEVSEPricing                  (Request)
 
         /// <summary>
         /// Upload the given EVSE pricing data.
@@ -2461,22 +2414,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.PushEVSEPricing.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPushEVSEPricingRequest is not null)
-                    await Task.WhenAll(OnPushEVSEPricingRequest.GetInvocationList().
-                                       Cast<OnPushEVSEPricingRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEPricingRequest));
-            }
+            await LogEvent(
+                      OnPushEVSEPricingRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -2587,7 +2532,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (Acknowledgement<PushEVSEPricingRequest>.TryParse(Request,
                                                                                          JObject.Parse(httpResponse.HTTPBody.ToUTF8String() ?? ""),
                                                                                          out var acknowledgement,
-                                                                                         out var ErrorResponse,
+                                                                                         out var errorResponse,
                                                                                          httpResponse,
                                                                                          httpResponse.Timestamp,
                                                                                          httpResponse.EventTrackingId,
@@ -2749,7 +2694,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -2829,7 +2774,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                     if (json is not null &&
                                         json["StatusCode"] is JObject JSONObject &&
                                         StatusCode.TryParse(JSONObject,
-                                                            out StatusCode? statusCode,
+                                                            out var statusCode,
                                                             out String? ErrorResponse,
                                                             CustomStatusCodeParser))
                                     {
@@ -2935,24 +2880,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPushEVSEPricingResponse is not null)
-                    await Task.WhenAll(OnPushEVSEPricingResponse.GetInvocationList().
-                                       Cast<OnPushEVSEPricingResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPushEVSEPricingResponse));
-            }
+            await LogEvent(
+                      OnPushEVSEPricingResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -2963,7 +2900,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region PullAuthenticationData          (Request)  [Obsolete!]
+        #region PullAuthenticationData           (Request)  [Obsolete!]
 
         /// <summary>
         /// Download provider authentication data.
@@ -2991,22 +2928,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.PullAuthenticationData.IncRequests_OK();
 
-            try
-            {
-
-                if (OnPullAuthenticationDataRequest is not null)
-                    await Task.WhenAll(OnPullAuthenticationDataRequest.GetInvocationList().
-                                       Cast<OnPullAuthenticationDataRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataRequest));
-            }
+            await LogEvent(
+                      OnPullAuthenticationDataRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -3099,7 +3028,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                             httpResponse.EventTrackingId,
                                                                             httpResponse.Runtime,
                                                                             out var pullAuthenticationDataResponse,
-                                                                            out var ErrorResponse,
+                                                                            out var errorResponse,
                                                                             processId,
                                                                             httpResponse,
                                                                             CustomPullAuthenticationDataResponseParser))
@@ -3249,7 +3178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
+                                                        out var statusCode,
                                                         out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
@@ -3332,7 +3261,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
+                                                        out var statusCode,
                                                         out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
@@ -3413,7 +3342,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
+                                                        out var statusCode,
                                                         out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
@@ -3515,24 +3444,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnPullAuthenticationDataResponse is not null)
-                    await Task.WhenAll(OnPullAuthenticationDataResponse.GetInvocationList().
-                                       Cast<OnPullAuthenticationDataResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnPullAuthenticationDataResponse));
-            }
+            await LogEvent(
+                      OnPullAuthenticationDataResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -3543,7 +3464,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region AuthorizeStart                  (Request)
+        #region AuthorizeStart                   (Request)
 
         /// <summary>
         /// Authorize for starting a charging session.
@@ -3570,22 +3491,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.AuthorizeStart.IncRequests_OK();
 
-            try
-            {
-
-                if (OnAuthorizeStartRequest is not null)
-                    await Task.WhenAll(OnAuthorizeStartRequest.GetInvocationList().
-                                       Cast<OnAuthorizeStartRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStartRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeStartRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -3701,7 +3614,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (AuthorizationStartResponse.TryParse(Request,
                                                                         JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                         out var authorizationStartResponse,
-                                                                        out var ErrorResponse,
+                                                                        out var errorResponse,
                                                                         httpResponse.Timestamp,
                                                                         httpResponse.EventTrackingId,
                                                                         httpResponse.Runtime,
@@ -3927,24 +3840,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnAuthorizeStartResponse is not null)
-                    await Task.WhenAll(OnAuthorizeStartResponse.GetInvocationList().
-                                       Cast<OnAuthorizeStartResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStartResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeStartResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -3954,7 +3859,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region AuthorizeStop                   (Request)
+        #region AuthorizeStop                    (Request)
 
         /// <summary>
         /// Authorize for stopping a charging session.
@@ -3981,22 +3886,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.AuthorizeStop.IncRequests_OK();
 
-            try
-            {
-
-                if (OnAuthorizeStopRequest is not null)
-                    await Task.WhenAll(OnAuthorizeStopRequest.GetInvocationList().
-                                       Cast<OnAuthorizeStopRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStopRequest));
-            }
+            await LogEvent(
+                      OnAuthorizeStopRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -4065,7 +3962,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (AuthorizationStopResponse.TryParse(Request,
                                                                        JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                        out var authorizationStopResponse,
-                                                                       out var ErrorResponse,
+                                                                       out var errorResponse,
                                                                        httpResponse.Timestamp,
                                                                        httpResponse.EventTrackingId,
                                                                        httpResponse.Runtime,
@@ -4207,8 +4104,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4282,8 +4179,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4367,24 +4264,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnAuthorizeStopResponse is not null)
-                    await Task.WhenAll(OnAuthorizeStopResponse.GetInvocationList().
-                                       Cast<OnAuthorizeStopResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnAuthorizeStopResponse));
-            }
+            await LogEvent(
+                      OnAuthorizeStopResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -4395,7 +4284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region SendChargingStartNotification   (Request)
+        #region SendChargingStartNotification    (Request)
 
         /// <summary>
         /// Send a charging start notification.
@@ -4422,22 +4311,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.SendChargingStartNotification.IncRequests_OK();
 
-            try
-            {
-
-                if (OnChargingStartNotificationRequest is not null)
-                    await Task.WhenAll(OnChargingStartNotificationRequest.GetInvocationList().
-                                       Cast<OnChargingStartNotificationRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingStartNotificationRequest));
-            }
+            await LogEvent(
+                      OnChargingStartNotificationRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -4526,7 +4407,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (Acknowledgement<ChargingStartNotificationRequest>.TryParse(Request,
                                                                                                JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                out var acknowledgement,
-                                                                                               out var ErrorResponse,
+                                                                                               out var errorResponse,
                                                                                                httpResponse,
                                                                                                httpResponse.Timestamp,
                                                                                                httpResponse.EventTrackingId,
@@ -4671,8 +4552,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4751,8 +4632,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -4856,24 +4737,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnChargingStartNotificationResponse is not null)
-                    await Task.WhenAll(OnChargingStartNotificationResponse.GetInvocationList().
-                                       Cast<OnChargingStartNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingStartNotificationResponse));
-            }
+            await LogEvent(
+                      OnChargingStartNotificationResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -4883,7 +4756,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargingProgressNotification(Request)
+        #region SendChargingProgressNotification (Request)
 
         /// <summary>
         /// Send a charging progress notification.
@@ -4910,22 +4783,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.SendChargingProgressNotification.IncRequests_OK();
 
-            try
-            {
-
-                if (OnChargingProgressNotificationRequest is not null)
-                    await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
-                                       Cast<OnChargingProgressNotificationRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationRequest));
-            }
+            await LogEvent(
+                      OnChargingProgressNotificationRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -5014,7 +4879,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (Acknowledgement<ChargingProgressNotificationRequest>.TryParse(Request,
                                                                                                   JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                   out var acknowledgement,
-                                                                                                  out var ErrorResponse,
+                                                                                                  out var errorResponse,
                                                                                                   httpResponse,
                                                                                                   httpResponse.Timestamp,
                                                                                                   httpResponse.EventTrackingId,
@@ -5159,8 +5024,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5239,8 +5104,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -5344,24 +5209,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnChargingProgressNotificationResponse is not null)
-                    await Task.WhenAll(OnChargingProgressNotificationResponse.GetInvocationList().
-                                       Cast<OnChargingProgressNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingProgressNotificationResponse));
-            }
+            await LogEvent(
+                      OnChargingProgressNotificationResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -5371,7 +5228,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargingEndNotification     (Request)
+        #region SendChargingEndNotification      (Request)
 
         /// <summary>
         /// Send a charging start notification.
@@ -5398,22 +5255,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.SendChargingEndNotification.IncRequests_OK();
 
-            try
-            {
-
-                if (OnChargingEndNotificationRequest is not null)
-                    await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
-                                       Cast<OnChargingEndNotificationRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingEndNotificationRequest));
-            }
+            await LogEvent(
+                      OnChargingEndNotificationRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -5502,7 +5351,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (Acknowledgement<ChargingEndNotificationRequest>.TryParse(Request,
                                                                                              JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                              out var acknowledgement,
-                                                                                             out var ErrorResponse,
+                                                                                             out var errorResponse,
                                                                                              httpResponse,
                                                                                              httpResponse.Timestamp,
                                                                                              httpResponse.EventTrackingId,
@@ -5647,7 +5496,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
+                                                        out var statusCode,
                                                         out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
@@ -5727,7 +5576,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
+                                                        out var statusCode,
                                                         out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
@@ -5832,24 +5681,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnChargingEndNotificationResponse is not null)
-                    await Task.WhenAll(OnChargingEndNotificationResponse.GetInvocationList().
-                                       Cast<OnChargingEndNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingEndNotificationResponse));
-            }
+            await LogEvent(
+                      OnChargingEndNotificationResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -5859,7 +5700,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #endregion
 
-        #region SendChargingErrorNotification   (Request)
+        #region SendChargingErrorNotification    (Request)
 
         /// <summary>
         /// Send a charging error notification.
@@ -5886,22 +5727,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.SendChargingErrorNotification.IncRequests_OK();
 
-            try
-            {
-
-                if (OnChargingErrorNotificationRequest is not null)
-                    await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
-                                       Cast<OnChargingErrorNotificationRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationRequest));
-            }
+            await LogEvent(
+                      OnChargingErrorNotificationRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -5990,7 +5823,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (Acknowledgement<ChargingErrorNotificationRequest>.TryParse(Request,
                                                                                                JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                                out var acknowledgement,
-                                                                                               out var ErrorResponse,
+                                                                                               out var errorResponse,
                                                                                                httpResponse,
                                                                                                httpResponse.Timestamp,
                                                                                                httpResponse.EventTrackingId,
@@ -6135,8 +5968,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -6215,8 +6048,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -6293,8 +6126,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
-                                                        out String?     ErrorResponse,
+                                                        out var statusCode,
+                                                        out var errorResponse,
                                                         CustomStatusCodeParser))
                                 {
 
@@ -6395,24 +6228,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnChargingErrorNotificationResponse is not null)
-                    await Task.WhenAll(OnChargingErrorNotificationResponse.GetInvocationList().
-                                       Cast<OnChargingErrorNotificationResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnChargingErrorNotificationResponse));
-            }
+            await LogEvent(
+                      OnChargingErrorNotificationResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
@@ -6423,7 +6248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
-        #region SendChargeDetailRecord          (Request)
+        #region SendChargeDetailRecord           (Request)
 
         /// <summary>
         /// Send a charge detail record.
@@ -6450,22 +6275,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             Counters.SendChargeDetailRecord.IncRequests_OK();
 
-            try
-            {
-
-                if (OnSendChargeDetailRecordRequest is not null)
-                    await Task.WhenAll(OnSendChargeDetailRecordRequest.GetInvocationList().
-                                       Cast<OnSendChargeDetailRecordRequestDelegate>().
-                                       Select(e => e(startTime,
-                                                     this,
-                                                     Request))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordRequest));
-            }
+            await LogEvent(
+                      OnSendChargeDetailRecordRequest,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          startTime,
+                          this,
+                          Request
+                      )
+                  );
 
             #endregion
 
@@ -6537,7 +6354,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (Acknowledgement<ChargeDetailRecordRequest>.TryParse(Request,
                                                                                         JObject.Parse(httpResponse.HTTPBody.ToUTF8String()),
                                                                                         out var acknowledgement,
-                                                                                        out var ErrorResponse,
+                                                                                        out var errorResponse,
                                                                                         httpResponse,
                                                                                         httpResponse.Timestamp,
                                                                                         httpResponse.EventTrackingId,
@@ -6701,7 +6518,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 if (json is not null &&
                                     json["StatusCode"] is JObject JSONObject &&
                                     StatusCode.TryParse(JSONObject,
-                                                        out StatusCode? statusCode,
+                                                        out var statusCode,
                                                         out String? ErrorResponse,
                                                         CustomStatusCodeParser))
                                 {
@@ -6806,30 +6623,43 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             var endtime = Timestamp.Now;
 
-            try
-            {
-
-                if (OnSendChargeDetailRecordResponse is not null)
-                    await Task.WhenAll(OnSendChargeDetailRecordResponse.GetInvocationList().
-                                       Cast<OnSendChargeDetailRecordResponseDelegate>().
-                                       Select(e => e(endtime,
-                                                     this,
-                                                     Request,
-                                                     result,
-                                                     endtime - startTime))).
-                                       ConfigureAwait(false);
-
-            }
-            catch (Exception e)
-            {
-                DebugX.LogException(e, nameof(CPOClient) + "." + nameof(OnSendChargeDetailRecordResponse));
-            }
+            await LogEvent(
+                      OnSendChargeDetailRecordResponse,
+                      loggingDelegate => loggingDelegate.Invoke(
+                          endtime,
+                          this,
+                          Request,
+                          result,
+                          endtime - startTime
+                      )
+                  );
 
             #endregion
 
             return result;
 
         }
+
+        #endregion
+
+
+
+        #region (private) LogEvent (Logger, LogHandler, ...)
+
+        private Task LogEvent<TDelegate>(TDelegate?                                         Logger,
+                                         Func<TDelegate, Task>                              LogHandler,
+                                         [CallerArgumentExpression(nameof(Logger))] String  EventName     = "",
+                                         [CallerMemberName()]                       String  OCPICommand   = "")
+
+            where TDelegate : Delegate
+
+            => LogEvent(
+                   nameof(CPOClient),
+                   Logger,
+                   LogHandler,
+                   EventName,
+                   OCPICommand
+               );
 
         #endregion
 
