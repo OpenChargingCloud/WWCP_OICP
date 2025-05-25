@@ -33,6 +33,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// The ChargingProgressNotification request.
     /// </summary>
+    /// <remarks>
+    /// Hubject has a rate limit of 1 request per 5 minutes!
+    /// </remarks>
     public class ChargingProgressNotificationRequest : ARequest<ChargingProgressNotificationRequest>
     {
 
