@@ -242,9 +242,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              null,          // ChargingModes
                                              null,          // ChargingTariffs
                                              null,          // CurrentType
-                                             null,          // AverageVoltage
-                                             null,          // AverageVoltageRealTime
-                                             null,          // AverageVoltagePrognoses
+                                             null,          // RMSVoltage
+                                             null,          // RMSVoltageRealTime
+                                             null,          // RMSVoltagePrognoses
                                              null,          // MaxCurrent
                                              null,          // MaxCurrentRealTime
                                              null,          // MaxCurrentPrognoses
@@ -1315,9 +1315,9 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
             return new ChargingFacility(
                        powerType,
-                                                                  Convert.ToUInt32(EVSE.MaxPower.      Value.Value),
-                       EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage.Value.Value)) : null,
-                       EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent.    Value.Value)) : null,
+                                                              Convert.ToUInt32(EVSE.MaxPower.  Value.Value),
+                       EVSE.RMSVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.RMSVoltage.Value.Value)) : null,
+                       EVSE.MaxCurrent.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent.Value.Value)) : null,
                        EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
                    );
 
@@ -1365,7 +1365,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                        new ChargingFacility(
                            powerType,
                                                                       Convert.ToUInt32(EVSE.MaxPower.      Value.Value),
-                           EVSE.AverageVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.AverageVoltage.Value.Value)) : null,
+                           EVSE.RMSVoltage.HasValue ? new UInt32?(Convert.ToUInt32(EVSE.RMSVoltage.Value.Value)) : null,
                            EVSE.MaxCurrent.    HasValue ? new UInt32?(Convert.ToUInt32(EVSE.MaxCurrent.    Value.Value)) : null,
                            EVSE.ChargingModes.Select(chargingMode => chargingMode.ToOICP())
                        )
@@ -1386,8 +1386,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         //        if (chargingFacility.PowerType.HasValue && !EVSE.CurrentType.HasValue)
         //            EVSE.CurrentType = chargingFacility.PowerType.ToWWCP();
 
-        //        if (chargingFacility.Voltage.HasValue && (!EVSE.AverageVoltage.HasValue || EVSE.AverageVoltage.Value < Convert.ToDecimal(chargingFacility.Voltage. Value)))
-        //            EVSE.AverageVoltage = chargingFacility.Voltage;
+        //        if (chargingFacility.Voltage.HasValue && (!EVSE.RMSVoltage.HasValue || EVSE.RMSVoltage.Value < Convert.ToDecimal(chargingFacility.Voltage. Value)))
+        //            EVSE.RMSVoltage = chargingFacility.Voltage;
 
         //        if (chargingFacility.Amperage.HasValue && (!EVSE.MaxCurrent.   HasValue || EVSE.MaxCurrent.    Value < Convert.ToDecimal(chargingFacility.Amperage.Value)))
         //            EVSE.MaxCurrent     = chargingFacility.Amperage;
