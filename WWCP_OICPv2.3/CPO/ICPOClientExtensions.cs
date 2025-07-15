@@ -83,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CPOClient">A CPO client.</param>
         /// 
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
+        /// <param name="OperatorId">The unique identification of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="Action">The server-side data management operation.</param>
         /// <param name="IncludeEVSEDataRecords">An optional delegate for filtering EVSE data records before pushing them to the server.</param>
@@ -139,7 +139,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// 
         /// <param name="EVSEDataRecord">An EVSE data record.</param>
         /// <param name="Action">The server-side data management operation.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE data records.</param>
+        /// <param name="OperatorId">The unique identification of the charging station operator maintaining the given EVSE data records.</param>
         /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE data records.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -233,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CPOClient">A CPO client.</param>
         /// 
         /// <param name="EVSEStatusRecords">An enumeration of EVSE status records.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
+        /// <param name="OperatorId">The unique identification of the charging station operator maintaining the given EVSE status records.</param>
         /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE status records.</param>
         /// <param name="Action">The server-side status management operation.</param>
         /// <param name="IncludeEVSEStatusRecords">An optional delegate for filtering EVSE status records before pushing them to the server.</param>
@@ -289,7 +289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// 
         /// <param name="EVSEStatusRecord">An EVSE status record.</param>
         /// <param name="Action">The server-side status management operation.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator maintaining the given EVSE status records.</param>
+        /// <param name="OperatorId">The unique identification of the charging station operator maintaining the given EVSE status records.</param>
         /// <param name="OperatorName">The name of the charging station operator maintaining the given EVSE status records.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -464,7 +464,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Authorize for starting a charging session.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
+        /// <param name="OperatorId">The unique identification of the charging station operator.</param>
         /// <param name="Identification">Authentication data used to authorize the user or the car.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification (for identifying a charging tariff).</param>
@@ -517,7 +517,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// Authorize for stopping a charging session.
         /// </summary>
         /// <param name="CPOClient">A CPO client.</param>
-        /// <param name="OperatorId">The unqiue identification of the charging station operator.</param>
+        /// <param name="OperatorId">The unique identification of the charging station operator.</param>
         /// <param name="SessionId">The charging session identification.</param>
         /// <param name="Identification">Authentication data used to authorize the user or the car.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
@@ -883,7 +883,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="CPOClient">A CPO client.</param>
         /// 
         /// <param name="ChargeDetailRecord">A charge detail record.</param>
-        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorId">The unique identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>

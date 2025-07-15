@@ -45,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public IEnumerable<EVSEDataRecord>  EVSEDataRecords    { get; }
 
         /// <summary>
-        /// The unqiue identification of the EVSE operator maintaining the given EVSE data records.
+        /// The unique identification of the EVSE operator maintaining the given EVSE data records.
         /// </summary>
         [Mandatory]
         public Operator_Id                  OperatorId         { get; }
@@ -70,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new operator EVSE data object.
         /// </summary>
         /// <param name="EVSEDataRecords">An enumeration of EVSE data records.</param>
-        /// <param name="OperatorId">The unqiue identification of the EVSE operator maintaining the given EVSE data records.</param>
+        /// <param name="OperatorId">The unique identification of the EVSE operator maintaining the given EVSE data records.</param>
         /// <param name="OperatorName">The name of the EVSE operator maintaining the given EVSE data records.</param>
         /// 
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>

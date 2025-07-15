@@ -55,7 +55,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => OperatorEVSEData.EVSEDataRecords;
 
         /// <summary>
-        /// The unqiue identification of the charging station operator maintaining the given EVSE data records.
+        /// The unique identification of the charging station operator maintaining the given EVSE data records.
         /// </summary>
         public Operator_Id                  OperatorId
             => OperatorEVSEData.OperatorId;

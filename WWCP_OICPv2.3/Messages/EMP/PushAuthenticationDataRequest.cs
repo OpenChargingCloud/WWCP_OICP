@@ -55,7 +55,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => ProviderAuthenticationData.Identifications;
 
         /// <summary>
-        /// The unqiue identification of the e-mobility provider maintaining the given user identification data records.</param>
+        /// The unique identification of the e-mobility provider maintaining the given user identification data records.</param>
         /// </summary>
         public Provider_Id                  ProviderId
             => ProviderAuthenticationData.ProviderId;

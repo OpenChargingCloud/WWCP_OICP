@@ -37,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// The unqiue identification of the EVSE operator sending this request.
+        /// The unique identification of the EVSE operator sending this request.
         /// </summary>
         [Mandatory]
         public Operator_Id            OperatorId             { get; }
@@ -85,7 +85,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// Create a new AuthorizeStart request.
         /// </summary>
-        /// <param name="OperatorId">The unqiue identification of the EVSE operator sending this request.</param>
+        /// <param name="OperatorId">The unique identification of the EVSE operator sending this request.</param>
         /// <param name="Identification">Authentication data used to authorize the user or the car.</param>
         /// <param name="EVSEId">An optional EVSE identification.</param>
         /// <param name="PartnerProductId">An optional partner product identification (for identifying a charging tariff).</param>

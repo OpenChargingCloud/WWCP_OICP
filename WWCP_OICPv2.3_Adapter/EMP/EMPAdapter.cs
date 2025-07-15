@@ -220,7 +220,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         public Boolean         GetChargeDetailRecords_IsDisabled                 { get; set; }
 
         /// <summary>
-        /// The 'GetChargeDetailRecords' service intervall.
+        /// The 'GetChargeDetailRecords' service interval.
         /// </summary>
         public TimeSpan        GetChargeDetailRecords_Every                      { get; set; }
 

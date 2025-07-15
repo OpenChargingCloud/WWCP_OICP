@@ -45,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public IEnumerable<Identification>  Identifications    { get; }
 
         /// <summary>
-        /// The unqiue identification of the e-mobility provider maintaining the given user identification data records.
+        /// The unique identification of the e-mobility provider maintaining the given user identification data records.
         /// </summary>
         [Mandatory]
         public Provider_Id                  ProviderId         { get; }
@@ -64,7 +64,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create new provider authentication data.
         /// </summary>
         /// <param name="Identifications">An enumeration of user identification data records.</param>
-        /// <param name="ProviderId">The unqiue identification of the e-mobility provider maintaining the given user identification data records.</param>
+        /// <param name="ProviderId">The unique identification of the e-mobility provider maintaining the given user identification data records.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         public ProviderAuthenticationData(IEnumerable<Identification>  Identifications,
                                           Provider_Id                  ProviderId,

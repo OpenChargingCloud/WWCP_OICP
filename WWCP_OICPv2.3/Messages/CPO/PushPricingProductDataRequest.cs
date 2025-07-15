@@ -55,7 +55,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             => PricingProductData.PricingProductDataRecords;
 
         /// <summary>
-        /// The unqiue identification of the charging station operator maintaining the given pricing product data records.
+        /// The unique identification of the charging station operator maintaining the given pricing product data records.
         /// </summary>
         public Operator_Id                  OperatorId
             => PricingProductData.OperatorId;

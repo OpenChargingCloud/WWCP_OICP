@@ -252,9 +252,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="IncludeEVSEs">Only include the EVSEs matching the given delegate.</param>
         /// <param name="ChargeDetailRecordFilter"></param>
         /// 
-        /// <param name="ServiceCheckEvery">The service check intervall.</param>
-        /// <param name="StatusCheckEvery">The status check intervall.</param>
-        /// <param name="CDRCheckEvery">The charge detail record intervall.</param>
+        /// <param name="ServiceCheckEvery">The service check interval.</param>
+        /// <param name="StatusCheckEvery">The status check interval.</param>
+        /// <param name="CDRCheckEvery">The charge detail record interval.</param>
         /// 
         /// <param name="DisablePushData">This service can be disabled, e.g. for debugging reasons.</param>
         /// <param name="DisablePushStatus">This service can be disabled, e.g. for debugging reasons.</param>

@@ -43,7 +43,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public ChargeDetailRecord  ChargeDetailRecord    { get; }
 
         /// <summary>
-        /// The unqiue identification of the operator sending the given charge detail record
+        /// The unique identification of the operator sending the given charge detail record
         /// This means: Not the sub operator or the operator of the EVSE!
         /// </summary>
         [Mandatory]
@@ -59,7 +59,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Create a new ChargeDetailRecord request.
         /// </summary>
         /// <param name="ChargeDetailRecord">A charge detail record to send.</param>
-        /// <param name="OperatorId">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorId">The unique identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers. This means: Not the sub operator or the operator of the EVSE!</param>
         /// 
         /// <param name="Timestamp">The optional timestamp of the request.</param>
@@ -173,7 +173,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Parse the given JSON representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="OperatorIdURL">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorIdURL">The unique identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="Timestamp">The optional timestamp of the request.</param>
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// Try to parse the given JSON representation of a ChargeDetailRecord request.
         /// </summary>
         /// <param name="JSON">The JSON to parse.</param>
-        /// <param name="OperatorIdURL">The unqiue identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
+        /// <param name="OperatorIdURL">The unique identification of the operator sending the given charge detail record (not the suboperator or the operator of the EVSE).</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="ChargeDetailRecordRequest">The parsed ChargeDetailRecord request.</param>
         /// <param name="ErrorResponse">An optional error response.</param>

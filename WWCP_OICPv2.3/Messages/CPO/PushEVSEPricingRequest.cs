@@ -37,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         #region Properties
 
         /// <summary>
-        /// The unqiue identification of the charging station operator maintaining the given EVSE pricing information.
+        /// The unique identification of the charging station operator maintaining the given EVSE pricing information.
         /// </summary>
         [Mandatory]
         public Operator_Id               OperatorId     { get; }
