@@ -17,6 +17,7 @@
 
 #region Usings
 
+using System.Diagnostics;
 using System.Security.Authentication;
 
 using Newtonsoft.Json.Linq;
@@ -694,7 +695,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEDataRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PullEVSEData.IncRequests_OK();
 
@@ -756,6 +758,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnPullEVSEDataResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -801,7 +804,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEStatusRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PullEVSEStatus.IncRequests_OK();
 
@@ -863,6 +867,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnPullEVSEStatusResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -907,7 +912,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEStatusByIdRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PullEVSEStatusById.IncRequests_OK();
 
@@ -969,6 +975,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnPullEVSEStatusByIdResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1015,7 +1022,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullPricingProductDataRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PullPricingProductData.IncRequests_OK();
 
@@ -1077,6 +1085,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnPullPricingProductDataResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1122,7 +1131,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPullEVSEPricingRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PullEVSEPricing.IncRequests_OK();
 
@@ -1184,6 +1194,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnPullEVSEPricingResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1229,7 +1240,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnPushAuthenticationDataRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PushAuthenticationData.IncRequests_OK();
 
@@ -1280,6 +1292,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnPushAuthenticationDataResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1323,7 +1336,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
@@ -1374,6 +1388,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1416,7 +1431,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
@@ -1467,6 +1483,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1510,7 +1527,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteStart.IncRequests_OK();
 
@@ -1561,6 +1579,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnAuthorizeRemoteStartResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1603,7 +1622,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteStop.IncRequests_OK();
 
@@ -1654,6 +1674,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnAuthorizeRemoteStopResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1700,7 +1721,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
 
             #region Send OnGetChargeDetailRecordsRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.GetChargeDetailRecords.IncRequests_OK();
 
@@ -1763,6 +1785,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.p2p.EMP
             #region Send OnGetChargeDetailRecordsResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {

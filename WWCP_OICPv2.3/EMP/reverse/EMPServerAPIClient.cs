@@ -17,6 +17,7 @@
 
 #region Usings
 
+using System.Diagnostics;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -580,7 +581,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeStartClientRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeStart.IncRequests_OK();
 
@@ -930,6 +932,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnAuthorizeStartClientResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -979,7 +982,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnAuthorizeStopClientRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeStop.IncRequests_OK();
 
@@ -1329,6 +1333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnAuthorizeStopClientResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1379,7 +1384,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingStartNotificationRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingStartNotification.IncRequests_OK();
 
@@ -1724,6 +1730,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnChargingStartNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1773,7 +1780,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingProgressNotificationRequest event
 
-            var progressTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingProgressNotification.IncRequests_OK();
 
@@ -1783,7 +1791,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargingProgressNotificationRequest is not null)
                     await Task.WhenAll(OnChargingProgressNotificationRequest.GetInvocationList().
                                        Cast<OnChargingProgressNotificationClientRequestDelegate>().
-                                       Select(e => e(progressTime,
+                                       Select(e => e(startTime,
                                                      this,
                                                      Request))).
                                        ConfigureAwait(false);
@@ -2118,6 +2126,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnChargingProgressNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -2167,7 +2176,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingEndNotificationRequest event
 
-            var endTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingEndNotification.IncRequests_OK();
 
@@ -2177,7 +2187,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargingEndNotificationRequest is not null)
                     await Task.WhenAll(OnChargingEndNotificationRequest.GetInvocationList().
                                        Cast<OnChargingEndNotificationClientRequestDelegate>().
-                                       Select(e => e(endTime,
+                                       Select(e => e(startTime,
                                                      this,
                                                      Request))).
                                        ConfigureAwait(false);
@@ -2512,6 +2522,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnChargingEndNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -2561,7 +2572,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargingErrorNotificationRequest event
 
-            var errorTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingErrorNotification.IncRequests_OK();
 
@@ -2571,7 +2583,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                 if (OnChargingErrorNotificationRequest is not null)
                     await Task.WhenAll(OnChargingErrorNotificationRequest.GetInvocationList().
                                        Cast<OnChargingErrorNotificationClientRequestDelegate>().
-                                       Select(e => e(errorTime,
+                                       Select(e => e(startTime,
                                                      this,
                                                      Request))).
                                        ConfigureAwait(false);
@@ -2906,6 +2918,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnChargingErrorNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -2956,7 +2969,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             #region Send OnChargeDetailRecordClientRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargeDetailRecord.IncRequests_OK();
 
@@ -3304,6 +3318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             #region Send OnChargeDetailRecordClientResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {

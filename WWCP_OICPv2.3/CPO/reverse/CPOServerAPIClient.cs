@@ -17,6 +17,7 @@
 
 #region Usings
 
+using System.Diagnostics;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -417,7 +418,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteReservationStartRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
@@ -762,6 +764,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnAuthorizeRemoteReservationStartResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -811,7 +814,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteReservationStopRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
@@ -1155,6 +1159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnAuthorizeRemoteReservationStopResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1205,7 +1210,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteStartRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteStart.IncRequests_OK();
 
@@ -1550,6 +1556,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnAuthorizeRemoteStartClientResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {
@@ -1599,7 +1606,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeRemoteStopRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeRemoteStop.IncRequests_OK();
 
@@ -1943,6 +1951,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnAuthorizeRemoteStopResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             try
             {

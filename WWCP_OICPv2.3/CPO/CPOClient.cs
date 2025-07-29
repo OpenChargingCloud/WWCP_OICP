@@ -17,17 +17,16 @@
 
 #region Usings
 
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
-using System.Runtime.CompilerServices;
-
 using Newtonsoft.Json.Linq;
-
-using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
+using org.GraphDefined.Vanaheimr.Illias;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 
 #endregion
 
@@ -860,7 +859,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEDataRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PushEVSEData.IncRequests_OK();
 
@@ -1341,6 +1341,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnPushEVSEDataResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnPushEVSEDataResponse,
@@ -1349,7 +1350,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -1384,7 +1385,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEStatusRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PushEVSEStatus.IncRequests_OK();
 
@@ -1853,6 +1855,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnPushEVSEStatusResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnPushEVSEStatusResponse,
@@ -1861,7 +1864,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -1897,7 +1900,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushPricingProductDataRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PushPricingProductData.IncRequests_OK();
 
@@ -2367,6 +2371,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnPushPricingProductDataResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnPushPricingProductDataResponse,
@@ -2375,7 +2380,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -2410,7 +2415,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPushEVSEPricingRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PushEVSEPricing.IncRequests_OK();
 
@@ -2879,6 +2885,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnPushEVSEPricingResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnPushEVSEPricingResponse,
@@ -2887,7 +2894,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -2924,7 +2931,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnPullAuthenticationDataRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.PullAuthenticationData.IncRequests_OK();
 
@@ -3443,6 +3451,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnPullAuthenticationDataResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnPullAuthenticationDataResponse,
@@ -3451,7 +3460,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -3487,7 +3496,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStartRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeStart.IncRequests_OK();
 
@@ -3839,6 +3849,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnAuthorizeStartResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeStartResponse,
@@ -3847,7 +3858,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -3882,7 +3893,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnAuthorizeStopRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.AuthorizeStop.IncRequests_OK();
 
@@ -4263,6 +4275,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnAuthorizeStopResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnAuthorizeStopResponse,
@@ -4271,7 +4284,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -4307,7 +4320,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingStartNotificationRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingStartNotification.IncRequests_OK();
 
@@ -4736,6 +4750,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region  OnChargingStartNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnChargingStartNotificationResponse,
@@ -4744,7 +4759,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -4779,7 +4794,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingProgressNotificationRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingProgressNotification.IncRequests_OK();
 
@@ -5208,6 +5224,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region  OnChargingProgressNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
+
 
             await LogEvent(
                       OnChargingProgressNotificationResponse,
@@ -5216,7 +5234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -5251,7 +5269,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingEndNotificationRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingEndNotification.IncRequests_OK();
 
@@ -5680,6 +5699,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region  OnChargingEndNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
+
 
             await LogEvent(
                       OnChargingEndNotificationResponse,
@@ -5688,7 +5709,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -5723,7 +5744,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region  OnChargingErrorNotificationRequest event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargingErrorNotification.IncRequests_OK();
 
@@ -6227,6 +6249,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region  OnChargingErrorNotificationResponse event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
+
 
             await LogEvent(
                       OnChargingErrorNotificationResponse,
@@ -6235,7 +6259,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
@@ -6271,7 +6295,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             #region Send OnSendChargeDetailRecord event
 
-            var startTime = Timestamp.Now;
+            var startTime  = Timestamp.Now;
+            var stopwatch  = Stopwatch.StartNew();
 
             Counters.SendChargeDetailRecord.IncRequests_OK();
 
@@ -6622,6 +6647,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             #region Send OnChargeDetailRecordSent event
 
             var endtime = Timestamp.Now;
+            stopwatch.Stop();
 
             await LogEvent(
                       OnSendChargeDetailRecordResponse,
@@ -6630,7 +6656,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           this,
                           Request,
                           result,
-                          endtime - startTime
+                          stopwatch.Elapsed
                       )
                   );
 
