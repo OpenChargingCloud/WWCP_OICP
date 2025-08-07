@@ -70,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An optional description of this CPO client.
         /// </summary>
-        I18NString?                                                 IHTTPClient.Description
+        I18NString                                                  IHTTPClient.Description
         {
 
             get
@@ -78,10 +78,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 return CPOClient.Description;
             }
 
-            set
-            {
-                CPOClient.Description = value;
-            }
+            //set
+            //{
+            //    CPOClient.Description = value;
+            //}
 
         }
 
@@ -100,8 +100,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The TLS protocol to use.
         /// </summary>
-        SslProtocols                                                IHTTPClient.TLSProtocol
-            => CPOClient.TLSProtocol;
+        SslProtocols                                                IHTTPClient.TLSProtocols
+            => CPOClient.TLSProtocols;
 
         /// <summary>
         /// Prefer IPv4 instead of IPv6.

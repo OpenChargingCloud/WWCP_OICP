@@ -17,16 +17,18 @@
 
 #region Usings
 
-using Newtonsoft.Json.Linq;
-using org.GraphDefined.Vanaheimr.Hermod;
-using org.GraphDefined.Vanaheimr.Hermod.DNS;
-using org.GraphDefined.Vanaheimr.Hermod.HTTP;
-using org.GraphDefined.Vanaheimr.Hermod.Logging;
-using org.GraphDefined.Vanaheimr.Illias;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+
+using Newtonsoft.Json.Linq;
+
+using org.GraphDefined.Vanaheimr.Illias;
+using org.GraphDefined.Vanaheimr.Hermod;
+using org.GraphDefined.Vanaheimr.Hermod.DNS;
+using org.GraphDefined.Vanaheimr.Hermod.HTTP;
+using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
@@ -128,6 +130,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// The default remote HTTP URL.
         /// </summary>
         public static readonly  URL       DefaultRemoteURL            = URL.Parse("https://service.hubject-qa.com");
+
+
+        private HTTPTestClient newHTTPClient;
 
         #endregion
 
@@ -765,10 +770,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          HTTPHostname?                                              VirtualHostname              = null,
                          I18NString?                                                Description                  = null,
                          Boolean?                                                   PreferIPv4                   = null,
-                         RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
+                         RemoteTLSServerCertificateValidationHandler<CPOClient>?  RemoteCertificateValidator   = null,
                          LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
                          X509Certificate?                                           ClientCert                   = null,
-                         SslProtocols?                                              TLSProtocol                  = null,
+                         SslProtocols?                                              TLSProtocols                 = null,
                          IHTTPAuthentication?                                       Authentication               = null,
                          String?                                                    HTTPUserAgent                = DefaultHTTPUserAgent,
                          TimeSpan?                                                  RequestTimeout               = null,
@@ -785,10 +790,45 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    VirtualHostname,
                    Description,
                    PreferIPv4,
-                   RemoteCertificateValidator,
+
+                   null, // Will be set later!
+
+                   //RemoteCertificateValidator is not null
+                   //    ? (sender,
+                   //       certificate,
+                   //       certificateChain,
+                   //       httpClient,
+                   //       policyErrors) => {
+
+                   //           return (true, []);
+
+                   //           //return RemoteCertificateValidator.Invoke(
+                   //           //                    sender,
+                   //           //                    certificate,
+                   //           //                    certificateChain,
+                   //           //                    this as IHTTPClient, //httpClient,
+                   //           //                    policyErrors
+                   //           //                );
+
+                   //       }
+                   //    : null,
+
+                  // RemoteCertificateValidator is not null
+                  //     ? new RemoteTLSServerCertificateValidationHandler<IHTTPClient>(
+                  //         (sender, certificate, certificateChain, httpClient, policyErrors) =>
+                  //             RemoteCertificateValidator.Invoke(
+                  //                 sender,
+                  //                 certificate,
+                  //                 certificateChain,
+                  //                 httpClient is CPOClient cpoClient ? cpoClient : this as IHTTPClient,
+                  //                 policyErrors
+                  //             )
+                  //       )
+                  //     : null,
+
                    LocalCertificateSelector,
                    ClientCert,
-                   TLSProtocol,
+                   TLSProtocols,
                    HTTPContentType.Application.JSON_UTF8,
                    AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
                    Authentication,
@@ -804,6 +844,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    DNSClient)
 
         {
+
+            //base.RemoteCertificateValidator = RemoteCertificateValidator is not null
+            //           ? (sender,
+            //              certificate,
+            //              certificateChain,
+            //              httpClient,
+            //              policyErrors) => {
+
+            //                  return RemoteCertificateValidator.Invoke(
+            //                                      sender,
+            //                                      certificate,
+            //                                      certificateChain,
+            //                                      this, //httpClient,
+            //                                      policyErrors
+            //                                  );
+
+            //              }
+            //           : null;
+
 
             this.Counters        = new APICounters();
 
@@ -826,6 +885,74 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                              LogfileCreator
                                          )
                                        : null;
+
+
+            // HTTPClientFactory.Create(
+            //     VirtualHostname,
+            //
+            //     ContentType,
+            //     Authentication,
+            //     Connection,
+            //
+            //     RequestTimeout,
+            //     TransmissionRetryDelay,
+            //     MaxNumberOfRetries,
+            //     InternalBufferSize,
+            //
+            //     DisableLogging,
+            // )
+
+            this.newHTTPClient  = new HTTPTestClient(
+
+                                      URL:                              base.RemoteURL,
+                                      Description:                      Description,
+
+                                      HTTPUserAgent:                    HTTPUserAgent,
+                                      DefaultRequestBuilder:            () => new HTTPRequest.Builder(this, CancellationToken.None) {
+                                                                                  Host         = this.RemoteURL.Hostname,
+                                                                                  Accept       = AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
+                                                                                  ContentType  = HTTPContentType.Application.JSON_UTF8,
+                                                                                  UserAgent    = this.HTTPUserAgent ?? DefaultHTTPUserAgent,
+                                                                                  Connection   = ConnectionType.KeepAlive
+                                                                              },
+
+                                      RemoteCertificateValidator:       RemoteCertificateValidator is not null
+                                                                            ? (sender,
+                                                                               certificate,
+                                                                               certificateChain,
+                                                                               httpTestClient,
+                                                                               policyErrors) => {
+
+                                                                                   return RemoteCertificateValidator.Invoke(
+                                                                                              sender,
+                                                                                              certificate,
+                                                                                              certificateChain,
+                                                                                              this,
+                                                                                              policyErrors
+                                                                                          );
+
+                                                                               }
+                                                                            :  null,
+                                      LocalCertificateSelector:         LocalCertificateSelector,
+                                      ClientCertificateChain:           ClientCert is not null
+                                                                            ? [ ClientCert ]
+                                                                            : null,
+                                      TLSProtocols:                     TLSProtocols,
+                                      CertificateRevocationCheckMode:   X509RevocationMode.NoCheck,
+                                      ApplicationProtocols:             null,
+                                      AllowRenegotiation:               null,
+                                      AllowTLSResume:                   null,
+
+                                      PreferIPv4:                       PreferIPv4,
+                                      ConnectTimeout:                   null,
+                                      ReceiveTimeout:                   null,
+                                      SendTimeout:                      null,
+                                      BufferSize:                       null,
+
+                                      LoggingHandler:                   null,
+                                      DNSClient:                        DNSClient
+
+                                  );
 
         }
 
@@ -908,31 +1035,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var httpResponse = await HTTPClientFactory.Create(
-                                                     RemoteURL,
-                                                     VirtualHostname,
-                                                     Description,
-                                                     PreferIPv4,
-                                                     RemoteCertificateValidator,
-                                                     LocalCertificateSelector,
-                                                     ClientCert,
-                                                     TLSProtocol,
-                                                     ContentType,
-                                                     Accept,
-                                                     Authentication,
-                                                     HTTPUserAgent,
-                                                     Connection,
-                                                     RequestTimeout,
-                                                     TransmissionRetryDelay,
-                                                     MaxNumberOfRetries,
-                                                     InternalBufferSize,
-                                                     UseHTTPPipelining,
-                                                     DisableLogging,
-                                                     null,
-                                                     DNSClient
-                                                 ).
+                        //var httpResponse = await HTTPClientFactory.Create(
+                        //                             RemoteURL,
+                        //                             VirtualHostname,
+                        //                             Description,
+                        //                             PreferIPv4,
+                        //                             RemoteCertificateValidator,
+                        //                             LocalCertificateSelector,
+                        //                             ClientCert,
+                        //                             TLSProtocols,
+                        //                             ContentType,
+                        //                             Accept,
+                        //                             Authentication,
+                        //                             HTTPUserAgent,
+                        //                             Connection,
+                        //                             RequestTimeout,
+                        //                             TransmissionRetryDelay,
+                        //                             MaxNumberOfRetries,
+                        //                             InternalBufferSize,
+                        //                             UseHTTPPipelining,
+                        //                             DisableLogging,
+                        //                             null,
+                        //                             DNSClient
+                        //                         ).
 
-                                                 POST(
+                        var httpResponse = await newHTTPClient.POST(
                                                      Path:                RemoteURL.Path + $"/api/oicp/evsepush/v23/operators/{Request.OperatorId.URLEncoded}/data-records",
                                                      Content:             Request.ToJSON(CustomPushEVSEDataRequestSerializer,
                                                                                          CustomOperatorEVSEDataSerializer,
@@ -1434,31 +1561,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var httpResponse = await HTTPClientFactory.Create(
-                                                     RemoteURL,
-                                                     VirtualHostname,
-                                                     Description,
-                                                     PreferIPv4,
-                                                     RemoteCertificateValidator,
-                                                     LocalCertificateSelector,
-                                                     ClientCert,
-                                                     TLSProtocol,
-                                                     ContentType,
-                                                     Accept,
-                                                     Authentication,
-                                                     HTTPUserAgent,
-                                                     Connection,
-                                                     RequestTimeout,
-                                                     TransmissionRetryDelay,
-                                                     MaxNumberOfRetries,
-                                                     InternalBufferSize,
-                                                     UseHTTPPipelining,
-                                                     DisableLogging,
-                                                     null,
-                                                     DNSClient
-                                                 ).
+                        //var httpResponse = await HTTPClientFactory.Create(
+                        //                             RemoteURL,
+                        //                             VirtualHostname,
+                        //                             Description,
+                        //                             PreferIPv4,
+                        //                             RemoteCertificateValidator,
+                        //                             LocalCertificateSelector,
+                        //                             ClientCert,
+                        //                             TLSProtocols,
+                        //                             ContentType,
+                        //                             Accept,
+                        //                             Authentication,
+                        //                             HTTPUserAgent,
+                        //                             Connection,
+                        //                             RequestTimeout,
+                        //                             TransmissionRetryDelay,
+                        //                             MaxNumberOfRetries,
+                        //                             InternalBufferSize,
+                        //                             UseHTTPPipelining,
+                        //                             DisableLogging,
+                        //                             null,
+                        //                             DNSClient
+                        //                         ).
 
-                                                 POST(
+                        var httpResponse = await newHTTPClient.POST(
                                                      Path:                 RemoteURL.Path + $"/api/oicp/evsepush/v21/operators/{Request.OperatorId.URLEncoded}/status-records",
                                                      Content:              Request.ToJSON(CustomPushEVSEStatusRequestSerializer,
                                                                                           CustomOperatorEVSEStatusSerializer,
@@ -1947,31 +2074,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var httpResponse = await HTTPClientFactory.Create(
-                                                     RemoteURL,
-                                                     VirtualHostname,
-                                                     Description,
-                                                     PreferIPv4,
-                                                     RemoteCertificateValidator,
-                                                     LocalCertificateSelector,
-                                                     ClientCert,
-                                                     TLSProtocol,
-                                                     ContentType,
-                                                     Accept,
-                                                     Authentication,
-                                                     HTTPUserAgent,
-                                                     Connection,
-                                                     RequestTimeout,
-                                                     TransmissionRetryDelay,
-                                                     MaxNumberOfRetries,
-                                                     InternalBufferSize,
-                                                     UseHTTPPipelining,
-                                                     DisableLogging,
-                                                     null,
-                                                     DNSClient
-                                                 ).
+                        //var httpResponse = await HTTPClientFactory.Create(
+                        //                             RemoteURL,
+                        //                             VirtualHostname,
+                        //                             Description,
+                        //                             PreferIPv4,
+                        //                             RemoteCertificateValidator,
+                        //                             LocalCertificateSelector,
+                        //                             ClientCert,
+                        //                             TLSProtocols,
+                        //                             ContentType,
+                        //                             Accept,
+                        //                             Authentication,
+                        //                             HTTPUserAgent,
+                        //                             Connection,
+                        //                             RequestTimeout,
+                        //                             TransmissionRetryDelay,
+                        //                             MaxNumberOfRetries,
+                        //                             InternalBufferSize,
+                        //                             UseHTTPPipelining,
+                        //                             DisableLogging,
+                        //                             null,
+                        //                             DNSClient
+                        //                         ).
 
-                                                 POST(
+                        var httpResponse = await newHTTPClient.POST(
                                                      Path:                 RemoteURL.Path + $"/api/oicp/dynamicpricing/v10/operators/{Request.OperatorId.URLEncoded}/pricing-products",
                                                      Content:              Request.ToJSON(CustomPushPricingProductDataRequestSerializer,
                                                                                           CustomPricingProductDataSerializer,
@@ -2462,31 +2589,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Upstream HTTP request...
 
-                        var httpResponse = await HTTPClientFactory.Create(
-                                                     RemoteURL,
-                                                     VirtualHostname,
-                                                     Description,
-                                                     PreferIPv4,
-                                                     RemoteCertificateValidator,
-                                                     LocalCertificateSelector,
-                                                     ClientCert,
-                                                     TLSProtocol,
-                                                     ContentType,
-                                                     Accept,
-                                                     Authentication,
-                                                     HTTPUserAgent,
-                                                     Connection,
-                                                     RequestTimeout,
-                                                     TransmissionRetryDelay,
-                                                     MaxNumberOfRetries,
-                                                     InternalBufferSize,
-                                                     UseHTTPPipelining,
-                                                     DisableLogging,
-                                                     null,
-                                                     DNSClient
-                                                 ).
+                        //var httpResponse = await HTTPClientFactory.Create(
+                        //                             RemoteURL,
+                        //                             VirtualHostname,
+                        //                             Description,
+                        //                             PreferIPv4,
+                        //                             RemoteCertificateValidator,
+                        //                             LocalCertificateSelector,
+                        //                             ClientCert,
+                        //                             TLSProtocols,
+                        //                             ContentType,
+                        //                             Accept,
+                        //                             Authentication,
+                        //                             HTTPUserAgent,
+                        //                             Connection,
+                        //                             RequestTimeout,
+                        //                             TransmissionRetryDelay,
+                        //                             MaxNumberOfRetries,
+                        //                             InternalBufferSize,
+                        //                             UseHTTPPipelining,
+                        //                             DisableLogging,
+                        //                             null,
+                        //                             DNSClient
+                        //                         ).
 
-                                                 POST(
+                        var httpResponse = await newHTTPClient.POST(
                                                      Path:                 RemoteURL.Path + $"/api/oicp/dynamicpricing/v10/operators/{Request.OperatorId.URLEncoded}/evse-pricing",
                                                      Content:              Request.ToJSON(CustomPushEVSEPricingRequestSerializer,
                                                                                           CustomEVSEPricingSerializer).
@@ -2958,31 +3085,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocols,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/authdata/v21/operators/{Request.OperatorId.URLEncoded}/pull-request",
                                                  Content:              Request.ToJSON(CustomPullAuthenticationDataRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -3521,31 +3648,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocol,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/operators/{Request.OperatorId.URLEncoded}/authorize/start",
                                                  Content:              Request.ToJSON(CustomAuthorizeStartRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -3918,31 +4045,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocol,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/operators/{Request.OperatorId.URLEncoded}/authorize/stop",
                                                  Content:              Request.ToJSON(CustomAuthorizeStopRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -4345,31 +4472,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocol,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
                                                  Content:              Request.ToJSON(CustomChargingStartNotificationRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -4819,31 +4946,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocol,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
                                                  Content:              Request.ToJSON(CustomChargingProgressNotificationRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -5294,31 +5421,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocol,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
                                                  Content:              Request.ToJSON(CustomChargingEndNotificationRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -5769,31 +5896,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocol,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/notificationmgmt/v11/charging-notifications",
                                                  Content:              Request.ToJSON(CustomChargingErrorNotificationRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -6320,31 +6447,31 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocol,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
+                    //var httpResponse = await HTTPClientFactory.Create(
+                    //                             RemoteURL,
+                    //                             VirtualHostname,
+                    //                             Description,
+                    //                             PreferIPv4,
+                    //                             RemoteCertificateValidator,
+                    //                             LocalCertificateSelector,
+                    //                             ClientCert,
+                    //                             TLSProtocols,
+                    //                             ContentType,
+                    //                             Accept,
+                    //                             Authentication,
+                    //                             HTTPUserAgent,
+                    //                             Connection,
+                    //                             RequestTimeout,
+                    //                             TransmissionRetryDelay,
+                    //                             MaxNumberOfRetries,
+                    //                             InternalBufferSize,
+                    //                             UseHTTPPipelining,
+                    //                             DisableLogging,
+                    //                             null,
+                    //                             DNSClient
+                    //                         ).
 
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/cdrmgmt/v22/operators/{Request.OperatorId.URLEncoded}/charge-detail-record",
                                                  Content:              Request.ToJSON(CustomChargeDetailRecordRequestSerializer,
                                                                                       CustomChargeDetailRecordSerializer,
@@ -6667,7 +6794,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         }
 
         #endregion
-
 
 
         #region (private) LogEvent (Logger, LogHandler, ...)
