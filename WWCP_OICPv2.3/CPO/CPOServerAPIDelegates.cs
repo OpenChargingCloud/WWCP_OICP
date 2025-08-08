@@ -25,7 +25,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteReservationStartRequestDelegate(DateTime                                  Timestamp,
+        OnAuthorizeRemoteReservationStartRequestDelegate(DateTimeOffset                            Timestamp,
                                                          CPOServerAPI                              Sender,
                                                          AuthorizeRemoteReservationStartRequest    Request);
 
@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">An AuthorizeStart request.</param>
     public delegate Task<Acknowledgement<AuthorizeRemoteReservationStartRequest>>
 
-        OnAuthorizeRemoteReservationStartDelegate(DateTime                                  Timestamp,
+        OnAuthorizeRemoteReservationStartDelegate(DateTimeOffset                            Timestamp,
                                                   CPOServerAPI                              Sender,
                                                   AuthorizeRemoteReservationStartRequest    Request);
 
@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteReservationStartResponseDelegate(DateTime                                                   Timestamp,
+        OnAuthorizeRemoteReservationStartResponseDelegate(DateTimeOffset                                             Timestamp,
                                                           CPOServerAPI                                               Sender,
                                                           AuthorizeRemoteReservationStartRequest                     Request,
                                                           Acknowledgement<AuthorizeRemoteReservationStartRequest>    Response,
@@ -63,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteReservationStopRequestDelegate(DateTime                                 Timestamp,
+        OnAuthorizeRemoteReservationStopRequestDelegate(DateTimeOffset                           Timestamp,
                                                         CPOServerAPI                             Sender,
                                                         AuthorizeRemoteReservationStopRequest    Request);
 
@@ -76,7 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">An AuthorizeStop request.</param>
     public delegate Task<Acknowledgement<AuthorizeRemoteReservationStopRequest>>
 
-        OnAuthorizeRemoteReservationStopDelegate(DateTime                                 Timestamp,
+        OnAuthorizeRemoteReservationStopDelegate(DateTimeOffset                           Timestamp,
                                                  CPOServerAPI                             Sender,
                                                  AuthorizeRemoteReservationStopRequest    Request);
 
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteReservationStopResponseDelegate(DateTime                                                  Timestamp,
+        OnAuthorizeRemoteReservationStopResponseDelegate(DateTimeOffset                                            Timestamp,
                                                          CPOServerAPI                                              Sender,
                                                          AuthorizeRemoteReservationStopRequest                     Request,
                                                          Acknowledgement<AuthorizeRemoteReservationStopRequest>    Response,
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStartRequestDelegate(DateTime                       Timestamp,
+        OnAuthorizeRemoteStartRequestDelegate(DateTimeOffset                 Timestamp,
                                               CPOServerAPI                   Sender,
                                               AuthorizeRemoteStartRequest    Request);
 
@@ -115,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">An AuthorizeStart request.</param>
     public delegate Task<Acknowledgement<AuthorizeRemoteStartRequest>>
 
-        OnAuthorizeRemoteStartDelegate(DateTime                       Timestamp,
+        OnAuthorizeRemoteStartDelegate(DateTimeOffset                 Timestamp,
                                        CPOServerAPI                   Sender,
                                        AuthorizeRemoteStartRequest    Request);
 
@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStartResponseDelegate(DateTime                                        Timestamp,
+        OnAuthorizeRemoteStartResponseDelegate(DateTimeOffset                                  Timestamp,
                                                CPOServerAPI                                    Sender,
                                                AuthorizeRemoteStartRequest                     Request,
                                                Acknowledgement<AuthorizeRemoteStartRequest>    Response,
@@ -140,7 +140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStopRequestDelegate(DateTime                      Timestamp,
+        OnAuthorizeRemoteStopRequestDelegate(DateTimeOffset                Timestamp,
                                              CPOServerAPI                  Sender,
                                              AuthorizeRemoteStopRequest    Request);
 
@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">An AuthorizeStop request.</param>
     public delegate Task<Acknowledgement<AuthorizeRemoteStopRequest>>
 
-        OnAuthorizeRemoteStopDelegate(DateTime                      Timestamp,
+        OnAuthorizeRemoteStopDelegate(DateTimeOffset                Timestamp,
                                       CPOServerAPI                  Sender,
                                       AuthorizeRemoteStopRequest    Request);
 
@@ -163,7 +163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeRemoteStopResponseDelegate(DateTime                                       Timestamp,
+        OnAuthorizeRemoteStopResponseDelegate(DateTimeOffset                                 Timestamp,
                                               CPOServerAPI                                   Sender,
                                               AuthorizeRemoteStopRequest                     Request,
                                               Acknowledgement<AuthorizeRemoteStopRequest>    Response,

@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnPullEVSEDataDelegate          (DateTime                             Timestamp,
+    public delegate Task OnPullEVSEDataDelegate          (DateTimeOffset                       Timestamp,
                                                           EMPAdapter                           Sender,
                                                           String                               SenderDescription,
                                                           String                               CorrelationId,
@@ -58,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new page of EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnPullEVSEDataPageDelegate      (DateTime                             Timestamp,
+    public delegate Task OnPullEVSEDataPageDelegate      (DateTimeOffset                       Timestamp,
                                                           EMPAdapter                           Sender,
                                                           String                               SenderDescription,
                                                           String                               CorrelationId,
@@ -70,7 +70,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new OperatorInfos had been fetched.
     /// </summary>
-    public delegate Task OnPullOperatorInfosDelegate     (DateTime                             Timestamp,
+    public delegate Task OnPullOperatorInfosDelegate     (DateTimeOffset                       Timestamp,
                                                           EMPAdapter                           Sender,
                                                           String                               SenderDescription,
                                                           String                               CorrelationId,
@@ -79,7 +79,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnPullEVSEStatusDelegate        (DateTime                             Timestamp,
+    public delegate Task OnPullEVSEStatusDelegate        (DateTimeOffset                       Timestamp,
                                                           EMPAdapter                           Sender,
                                                           String                               SenderDescription,
                                                           IEnumerable<EVSEStatusRecord>        EVSEStatusRecords);
@@ -87,7 +87,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new EVSE status changes had been received.
     /// </summary>
-    public delegate Task OnEVSEStatusChangesDelegate     (DateTime                             Timestamp,
+    public delegate Task OnEVSEStatusChangesDelegate     (DateTimeOffset                       Timestamp,
                                                           EMPAdapter                           Sender,
                                                           String                               SenderDescription,
                                                           IEnumerable<WWCP.EVSEStatusUpdate>   EVSEStatusChanges);
@@ -96,7 +96,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new EVSE status had been received.
     /// </summary>
-    public delegate Task OnNewEVSEStatusDelegate         (DateTime                             Timestamp,
+    public delegate Task OnNewEVSEStatusDelegate         (DateTimeOffset                       Timestamp,
                                                           EMPAdapter                           Sender,
                                                           String                               SenderDescription,
                                                           IEnumerable<WWCP.EVSEStatus>         NewEVSEStatus);
@@ -105,7 +105,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <summary>
     /// A delegate called whenever new EVSEStatusRecords had been received.
     /// </summary>
-    public delegate Task OnGetChargeDetailRecordsDelegate(DateTime                             Timestamp,
+    public delegate Task OnGetChargeDetailRecordsDelegate(DateTimeOffset                       Timestamp,
                                                           EMPAdapter                           Sender,
                                                           String                               SenderDescription,
                                                           IEnumerable<ChargeDetailRecord>      ChargeDetailRecords);

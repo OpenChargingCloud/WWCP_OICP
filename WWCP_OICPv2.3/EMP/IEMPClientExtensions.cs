@@ -63,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             PullEVSEData(this IEMPClient                                 EMPClient,
                          Provider_Id                                     ProviderId,
-                         DateTime?                                       LastCall                               = null,
+                         DateTimeOffset?                                 LastCall                               = null,
 
                          IEnumerable<Operator_Id>?                       OperatorIdFilter                       = null,
                          IEnumerable<Country>?                           CountryCodeFilter                      = null,
@@ -83,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                          IEnumerable<String>?                            SortOrder                              = null,
                          JObject?                                        CustomData                             = null,
 
-                         DateTime?                                       Timestamp                              = null,
+                         DateTimeOffset?                                 Timestamp                              = null,
                          CancellationToken                               CancellationToken                      = default,
                          EventTracking_Id?                               EventTrackingId                        = null,
                          TimeSpan?                                       RequestTimeout                         = null)
@@ -148,7 +148,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                            EVSEStatusTypes?   EVSEStatusFilter    = null,
                            JObject?           CustomData          = null,
 
-                           DateTime?          Timestamp           = null,
+                           DateTimeOffset?    Timestamp           = null,
                            EventTracking_Id?  EventTrackingId     = null,
                            TimeSpan?          RequestTimeout      = null,
                            CancellationToken  CancellationToken   = default)
@@ -193,7 +193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                IEnumerable<EVSE_Id>  EVSEIds,
                                JObject?              CustomData          = null,
 
-                               DateTime?             Timestamp           = null,
+                               DateTimeOffset?       Timestamp           = null,
                                EventTracking_Id?     EventTrackingId     = null,
                                TimeSpan?             RequestTimeout      = null,
                                CancellationToken     CancellationToken   = default)
@@ -236,7 +236,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                        IEnumerable<Operator_Id>  OperatorIds,
                                        JObject?                  CustomData          = null,
 
-                                       DateTime?                 Timestamp           = null,
+                                       DateTimeOffset?           Timestamp           = null,
                                        EventTracking_Id?         EventTrackingId     = null,
                                        TimeSpan?                 RequestTimeout      = null,
                                        CancellationToken         CancellationToken   = default)
@@ -281,7 +281,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             PullPricingProductData(this IEMPClient           EMPClient,
                                    Provider_Id               ProviderId,
                                    IEnumerable<Operator_Id>  OperatorIds,
-                                   DateTime?                 LastCall            = null,
+                                   DateTimeOffset?           LastCall            = null,
 
                                    Process_Id?               ProcessId           = null,
                                    UInt32?                   Page                = null,
@@ -289,7 +289,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    IEnumerable<String>?      SortOrder           = null,
                                    JObject?                  CustomData          = null,
 
-                                   DateTime?                 Timestamp           = null,
+                                   DateTimeOffset?           Timestamp           = null,
                                    EventTracking_Id?         EventTrackingId     = null,
                                    TimeSpan?                 RequestTimeout      = null,
                                    CancellationToken         CancellationToken   = default)
@@ -337,7 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             PullEVSEPricing(this IEMPClient           EMPClient,
                             Provider_Id               ProviderId,
                             IEnumerable<Operator_Id>  OperatorIds,
-                            DateTime?                 LastCall            = null,
+                            DateTimeOffset?           LastCall            = null,
 
                             Process_Id?               ProcessId           = null,
                             UInt32?                   Page                = null,
@@ -345,7 +345,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                             IEnumerable<String>?      SortOrder           = null,
                             JObject?                  CustomData          = null,
 
-                            DateTime?                 Timestamp           = null,
+                            DateTimeOffset?           Timestamp           = null,
                             EventTracking_Id?         EventTrackingId     = null,
                             TimeSpan?                 RequestTimeout      = null,
                             CancellationToken         CancellationToken   = default)
@@ -393,7 +393,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    Process_Id?                 ProcessId           = null,
                                    JObject?                    CustomData          = null,
 
-                                   DateTime?                   Timestamp           = null,
+                                   DateTimeOffset?             Timestamp           = null,
                                    EventTracking_Id?           EventTrackingId     = null,
                                    TimeSpan?                   RequestTimeout      = null,
                                    CancellationToken           CancellationToken   = default)
@@ -449,7 +449,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                             TimeSpan?              Duration              = null,
                                             JObject?               CustomData            = null,
 
-                                            DateTime?              Timestamp             = null,
+                                            DateTimeOffset?        Timestamp             = null,
                                             EventTracking_Id?      EventTrackingId       = null,
                                             TimeSpan?              RequestTimeout        = null,
                                             CancellationToken      CancellationToken     = default)
@@ -505,7 +505,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                            JObject?               CustomData            = null,
 
-                                           DateTime?              Timestamp             = null,
+                                           DateTimeOffset?        Timestamp             = null,
                                            EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null,
                                            CancellationToken      CancellationToken     = default)
@@ -561,7 +561,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                  PartnerProduct_Id?     PartnerProductId      = null,
                                  JObject?               CustomData            = null,
 
-                                 DateTime?              Timestamp             = null,
+                                 DateTimeOffset?        Timestamp             = null,
                                  EventTracking_Id?      EventTrackingId       = null,
                                  TimeSpan?              RequestTimeout        = null,
                                  CancellationToken      CancellationToken     = default)
@@ -615,7 +615,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                 EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                                 JObject?               CustomData            = null,
 
-                                DateTime?              Timestamp             = null,
+                                DateTimeOffset?        Timestamp             = null,
                                 EventTracking_Id?      EventTrackingId       = null,
                                 TimeSpan?              RequestTimeout        = null,
                                 CancellationToken      CancellationToken     = default)
@@ -679,7 +679,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    IEnumerable<String>?       SortOrder           = null,
                                    JObject?                   CustomData          = null,
 
-                                   DateTime?                  Timestamp           = null,
+                                   DateTimeOffset?            Timestamp           = null,
                                    EventTracking_Id?          EventTrackingId     = null,
                                    TimeSpan?                  RequestTimeout      = null,
                                    CancellationToken          CancellationToken   = default)

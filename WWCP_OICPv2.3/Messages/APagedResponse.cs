@@ -42,7 +42,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <param name="HTTPResponse">The optional HTTP response.</param>
     /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
     /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
-    public abstract class APagedResponse<TRequest, TResponse>(DateTime                ResponseTimestamp,
+    public abstract class APagedResponse<TRequest, TResponse>(DateTimeOffset          ResponseTimestamp,
                                                               EventTracking_Id        EventTrackingId,
                                                               Process_Id              ProcessId,
                                                               TimeSpan                Runtime,
@@ -203,7 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
         public new abstract class Builder(TRequest?               Request             = null,
-                                          DateTime?               ResponseTimestamp   = null,
+                                          DateTimeOffset?         ResponseTimestamp   = null,
                                           EventTracking_Id?       EventTrackingId     = null,
                                           TimeSpan?               Runtime             = null,
 

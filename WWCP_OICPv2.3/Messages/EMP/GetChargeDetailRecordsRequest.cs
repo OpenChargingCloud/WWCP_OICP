@@ -46,13 +46,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The start of the requested time range.
         /// </summary>
         [Mandatory]
-        public DateTime                   From             { get; }
+        public DateTimeOffset             From             { get; }
 
         /// <summary>
         /// The end of the requested time range.
         /// </summary>
         [Mandatory]
-        public DateTime                   To               { get; }
+        public DateTimeOffset             To               { get; }
 
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="RequestTimeout">The timeout for this request.</param>
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public GetChargeDetailRecordsRequest(Provider_Id                ProviderId,
-                                             DateTime                   From,
-                                             DateTime                   To,
+                                             DateTimeOffset             From,
+                                             DateTimeOffset             To,
                                              IEnumerable<Session_Id>?   SessionIds          = null,
                                              IEnumerable<Operator_Id>?  OperatorIds         = null,
                                              Boolean?                   CDRForwarded        = null,
@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              IEnumerable<String>?       SortOrder           = null,
                                              JObject?                   CustomData          = null,
 
-                                             DateTime?                  Timestamp           = null,
+                                             DateTimeOffset?            Timestamp           = null,
                                              EventTracking_Id?          EventTrackingId     = null,
                                              TimeSpan?                  RequestTimeout      = null,
                                              CancellationToken          CancellationToken   = default)
@@ -183,7 +183,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
 
-                                                          DateTime?                                                    Timestamp                                   = null,
+                                                          DateTimeOffset?                                              Timestamp                                   = null,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
                                                           CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null,
@@ -233,7 +233,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
 
-                                       DateTime?                                                    Timestamp                                   = null,
+                                       DateTimeOffset?                                              Timestamp                                   = null,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,
                                        CustomJObjectParserDelegate<GetChargeDetailRecordsRequest>?  CustomGetChargeDetailRecordsRequestParser   = null,

@@ -200,13 +200,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region PushEVSEData                (Request/Response)Converter
 
-        public Func<DateTime, Object, PushEVSEDataRequest, String>
+        public Func<DateTimeOffset, Object, PushEVSEDataRequest, String>
             PushEVSEDataRequestConverter                     { get; set; }
 
             = (timestamp, sender, pushEVSEDataRequest)
             => String.Concat(pushEVSEDataRequest.Action, " of ", pushEVSEDataRequest.EVSEDataRecords.Count(), " evse(s)");
 
-        public Func<DateTime, Object, PushEVSEDataRequest, OICPResult<Acknowledgement<PushEVSEDataRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PushEVSEDataRequest, OICPResult<Acknowledgement<PushEVSEDataRequest>>, TimeSpan, String>
             PushEVSEDataResponseConverter                    { get; set; }
 
             = (timestamp, sender, pushEVSEDataRequest, pushEVSEDataResponse, runtime)
@@ -216,13 +216,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region PushEVSEStatus              (Request/Response)Converter
 
-        public Func<DateTime, Object, PushEVSEStatusRequest, String>
+        public Func<DateTimeOffset, Object, PushEVSEStatusRequest, String>
             PushEVSEStatusRequestConverter                   { get; set; }
 
             = (timestamp, sender, pushEVSEStatusRequest)
             => String.Concat(pushEVSEStatusRequest.Action, " of ", pushEVSEStatusRequest.EVSEStatusRecords.Count(), " evse status");
 
-        public Func<DateTime, Object, PushEVSEStatusRequest, OICPResult<Acknowledgement<PushEVSEStatusRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PushEVSEStatusRequest, OICPResult<Acknowledgement<PushEVSEStatusRequest>>, TimeSpan, String>
             PushEVSEStatusResponseConverter                  { get; set; }
 
             = (timestamp, sender, pushEVSEStatusRequest, pushEVSEStatusResponse, runtime)
@@ -233,13 +233,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region PushPricingProductData      (Request/Response)Converter
 
-        public Func<DateTime, Object, PushPricingProductDataRequest, String>
+        public Func<DateTimeOffset, Object, PushPricingProductDataRequest, String>
             PushPricingProductDataRequestConverter                     { get; set; }
 
             = (timestamp, sender, pushPricingProductDataRequest)
             => String.Concat(pushPricingProductDataRequest.Action, " of ", pushPricingProductDataRequest.PricingProductData.PricingProductDataRecords.Count(), " pricing product data record(s)");
 
-        public Func<DateTime, Object, PushPricingProductDataRequest, OICPResult<Acknowledgement<PushPricingProductDataRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PushPricingProductDataRequest, OICPResult<Acknowledgement<PushPricingProductDataRequest>>, TimeSpan, String>
             PushPricingProductDataResponseConverter                    { get; set; }
 
             = (timestamp, sender, pushPricingProductDataRequest, pushPricingProductDataResponse, runtime)
@@ -249,13 +249,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region PushEVSEPricing             (Request/Response)Converter
 
-        public Func<DateTime, Object, PushEVSEPricingRequest, String>
+        public Func<DateTimeOffset, Object, PushEVSEPricingRequest, String>
             PushEVSEPricingRequestConverter                   { get; set; }
 
             = (timestamp, sender, pushEVSEPricingRequest)
             => String.Concat(pushEVSEPricingRequest.Action, " of ", pushEVSEPricingRequest.EVSEPricing.Count(), " evse pricing record(s)");
 
-        public Func<DateTime, Object, PushEVSEPricingRequest, OICPResult<Acknowledgement<PushEVSEPricingRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PushEVSEPricingRequest, OICPResult<Acknowledgement<PushEVSEPricingRequest>>, TimeSpan, String>
             PushEVSEPricingResponseConverter                  { get; set; }
 
             = (timestamp, sender, pushEVSEPricingRequest, pushEVSEPricingResponse, runtime)
@@ -266,13 +266,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeStart              (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeStartRequest, String>
             AuthorizeStartRequestConverter                   { get; set; }
 
             = (timestamp, sender, authorizeStartRequest)
             => String.Concat(authorizeStartRequest.Identification, " at ", authorizeStartRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeStartRequest, OICPResult<AuthorizationStartResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeStartRequest, OICPResult<AuthorizationStartResponse>, TimeSpan, String>
             AuthorizationStartResponseConverter              { get; set; }
 
             = (timestamp, sender, authorizeStartRequest, authorizationStartResponse, runtime)
@@ -282,13 +282,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeStop               (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeStopRequest, String>
             AuthorizeStopRequestConverter                    { get; set; }
 
             = (timestamp, sender, authorizeStopRequest)
             => String.Concat(authorizeStopRequest.Identification, " at ", authorizeStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeStopRequest, OICPResult<AuthorizationStopResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeStopRequest, OICPResult<AuthorizationStopResponse>, TimeSpan, String>
             AuthorizationStopResponseConverter               { get; set; }
 
             = (timestamp, sender, authorizeStopRequest, authorizationStopResponse, runtime)
@@ -299,13 +299,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region ChargingStartNotification   (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingStartNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingStartNotificationRequest, String>
             ChargingStartNotificationRequestConverter        { get; set; }
 
             = (timestamp, sender, chargingStartNotificationRequest)
             => String.Concat(chargingStartNotificationRequest.Identification, " at ", chargingStartNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingStartNotificationRequest, OICPResult<Acknowledgement<ChargingStartNotificationRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingStartNotificationRequest, OICPResult<Acknowledgement<ChargingStartNotificationRequest>>, TimeSpan, String>
             ChargingStartNotificationResponseConverter       { get; set; }
 
             = (timestamp, sender, chargingStartNotificationRequest, chargingStartNotificationResponse, runtime)
@@ -315,13 +315,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region ChargingProgressNotification(Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingProgressNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingProgressNotificationRequest, String>
             ChargingProgressNotificationRequestConverter     { get; set; }
 
             = (timestamp, sender, chargingProgressNotificationRequest)
             => String.Concat(chargingProgressNotificationRequest.Identification, " at ", chargingProgressNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingProgressNotificationRequest, OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingProgressNotificationRequest, OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>, TimeSpan, String>
             ChargingProgressNotificationResponseConverter    { get; set; }
 
             = (timestamp, sender, chargingProgressNotificationRequest, chargingProgressNotificationResponse, runtime)
@@ -331,13 +331,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region ChargingEndNotification     (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingEndNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingEndNotificationRequest, String>
             ChargingEndNotificationRequestConverter          { get; set; }
 
             = (timestamp, sender, chargingEndNotificationRequest)
             => String.Concat(chargingEndNotificationRequest.Identification, " at ", chargingEndNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingEndNotificationRequest, OICPResult<Acknowledgement<ChargingEndNotificationRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingEndNotificationRequest, OICPResult<Acknowledgement<ChargingEndNotificationRequest>>, TimeSpan, String>
             ChargingEndNotificationResponseConverter         { get; set; }
 
             = (timestamp, sender, chargingEndNotificationRequest, chargingEndNotificationResponse, runtime)
@@ -347,13 +347,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region ChargingErrorNotification   (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingErrorNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingErrorNotificationRequest, String>
             ChargingErrorNotificationRequestConverter        { get; set; }
 
             = (timestamp, sender, chargingErrorNotificationRequest)
             => String.Concat(chargingErrorNotificationRequest.Identification, " at ", chargingErrorNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingErrorNotificationRequest, OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingErrorNotificationRequest, OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>, TimeSpan, String>
             ChargingErrorNotificationResponseConverter       { get; set; }
 
             = (timestamp, sender, chargingErrorNotificationRequest, chargingErrorNotificationResponse, runtime)
@@ -364,13 +364,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region SendChargeDetailRecord      (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargeDetailRecordRequest, String>
+        public Func<DateTimeOffset, Object, ChargeDetailRecordRequest, String>
             SendChargeDetailRecordRequestConverter           { get; set; }
 
             = (timestamp, sender, chargeDetailRecordRequest)
             => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification, " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId, " (", chargeDetailRecordRequest.ChargeDetailRecord.SessionId, ")");
 
-        public Func<DateTime, Object, ChargeDetailRecordRequest, OICPResult<Acknowledgement<ChargeDetailRecordRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargeDetailRecordRequest, OICPResult<Acknowledgement<ChargeDetailRecordRequest>>, TimeSpan, String>
             SendChargeDetailRecordResponseConverter          { get; set; }
 
             = (timestamp, sender, chargeDetailRecordRequest, chargeDetailRecordResponse, runtime)
@@ -395,9 +395,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushEVSEDataHTTPRequest(DateTime     Timestamp,
-                                                           HTTPAPI      API,
-                                                           HTTPRequest  Request)
+        protected internal Task logPushEVSEDataHTTPRequest(DateTimeOffset  Timestamp,
+                                                           HTTPAPI         API,
+                                                           HTTPRequest     Request)
 
             => OnPushEVSEDataHTTPRequest.WhenAll(Timestamp,
                                                  API ?? this,
@@ -438,10 +438,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushEVSEDataHTTPResponse(DateTime      Timestamp,
-                                                            HTTPAPI       API,
-                                                            HTTPRequest   Request,
-                                                            HTTPResponse  Response)
+        protected internal Task logPushEVSEDataHTTPResponse(DateTimeOffset  Timestamp,
+                                                            HTTPAPI         API,
+                                                            HTTPRequest     Request,
+                                                            HTTPResponse    Response)
 
             => OnPushEVSEDataHTTPResponse.WhenAll(Timestamp,
                                                   API ?? this,
@@ -464,9 +464,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushEVSEStatusHTTPRequest(DateTime     Timestamp,
-                                                             HTTPAPI      API,
-                                                             HTTPRequest  Request)
+        protected internal Task logPushEVSEStatusHTTPRequest(DateTimeOffset  Timestamp,
+                                                             HTTPAPI         API,
+                                                             HTTPRequest     Request)
 
             => OnPushEVSEStatusHTTPRequest.WhenAll(Timestamp,
                                                    API ?? this,
@@ -507,10 +507,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushEVSEStatusHTTPResponse(DateTime      Timestamp,
-                                                              HTTPAPI       API,
-                                                              HTTPRequest   Request,
-                                                              HTTPResponse  Response)
+        protected internal Task logPushEVSEStatusHTTPResponse(DateTimeOffset  Timestamp,
+                                                              HTTPAPI         API,
+                                                              HTTPRequest     Request,
+                                                              HTTPResponse    Response)
 
             => OnPushEVSEStatusHTTPResponse.WhenAll(Timestamp,
                                                     API ?? this,
@@ -534,9 +534,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushPricingProductDataHTTPRequest(DateTime     Timestamp,
-                                                                     HTTPAPI      API,
-                                                                     HTTPRequest  Request)
+        protected internal Task logPushPricingProductDataHTTPRequest(DateTimeOffset  Timestamp,
+                                                                     HTTPAPI         API,
+                                                                     HTTPRequest     Request)
 
             => OnPushPricingProductDataHTTPRequest.WhenAll(Timestamp,
                                                            API ?? this,
@@ -577,10 +577,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushPricingProductDataHTTPResponse(DateTime      Timestamp,
-                                                                      HTTPAPI       API,
-                                                                      HTTPRequest   Request,
-                                                                      HTTPResponse  Response)
+        protected internal Task logPushPricingProductDataHTTPResponse(DateTimeOffset  Timestamp,
+                                                                      HTTPAPI         API,
+                                                                      HTTPRequest     Request,
+                                                                      HTTPResponse    Response)
 
             => OnPushPricingProductDataHTTPResponse.WhenAll(Timestamp,
                                                             API ?? this,
@@ -603,9 +603,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushEVSEPricingHTTPRequest(DateTime     Timestamp,
-                                                              HTTPAPI      API,
-                                                              HTTPRequest  Request)
+        protected internal Task logPushEVSEPricingHTTPRequest(DateTimeOffset  Timestamp,
+                                                              HTTPAPI         API,
+                                                              HTTPRequest     Request)
 
             => OnPushEVSEPricingHTTPRequest.WhenAll(Timestamp,
                                                     API ?? this,
@@ -646,10 +646,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushEVSEPricingHTTPResponse(DateTime      Timestamp,
-                                                               HTTPAPI       API,
-                                                               HTTPRequest   Request,
-                                                               HTTPResponse  Response)
+        protected internal Task logPushEVSEPricingHTTPResponse(DateTimeOffset  Timestamp,
+                                                               HTTPAPI         API,
+                                                               HTTPRequest     Request,
+                                                               HTTPResponse    Response)
 
             => OnPushEVSEPricingHTTPResponse.WhenAll(Timestamp,
                                                      API ?? this,
@@ -673,9 +673,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullAuthenticationDataHTTPRequest(DateTime     Timestamp,
-                                                                     HTTPAPI      API,
-                                                                     HTTPRequest  Request)
+        protected internal Task logPullAuthenticationDataHTTPRequest(DateTimeOffset  Timestamp,
+                                                                     HTTPAPI         API,
+                                                                     HTTPRequest     Request)
 
             => OnPullAuthenticationDataHTTPRequest.WhenAll(Timestamp,
                                                            API ?? this,
@@ -716,10 +716,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullAuthenticationDataHTTPResponse(DateTime      Timestamp,
-                                                                      HTTPAPI       API,
-                                                                      HTTPRequest   Request,
-                                                                      HTTPResponse  Response)
+        protected internal Task logPullAuthenticationDataHTTPResponse(DateTimeOffset  Timestamp,
+                                                                      HTTPAPI         API,
+                                                                      HTTPRequest     Request,
+                                                                      HTTPResponse    Response)
 
             => OnPullAuthenticationDataHTTPResponse.WhenAll(Timestamp,
                                                             API ?? this,
@@ -743,9 +743,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeStartHTTPRequest(DateTime     Timestamp,
-                                                             HTTPAPI      API,
-                                                             HTTPRequest  Request)
+        protected internal Task logAuthorizeStartHTTPRequest(DateTimeOffset  Timestamp,
+                                                             HTTPAPI         API,
+                                                             HTTPRequest     Request)
 
             => OnAuthorizeStartHTTPRequest.WhenAll(Timestamp,
                                                    API ?? this,
@@ -786,10 +786,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizationStartHTTPResponse(DateTime      Timestamp,
-                                                                  HTTPAPI       API,
-                                                                  HTTPRequest   Request,
-                                                                  HTTPResponse  Response)
+        protected internal Task logAuthorizationStartHTTPResponse(DateTimeOffset  Timestamp,
+                                                                  HTTPAPI         API,
+                                                                  HTTPRequest     Request,
+                                                                  HTTPResponse    Response)
 
             => OnAuthorizationStartHTTPResponse.WhenAll(Timestamp,
                                                         API ?? this,
@@ -812,9 +812,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeStopHTTPRequest(DateTime     Timestamp,
-                                                            HTTPAPI      API,
-                                                            HTTPRequest  Request)
+        protected internal Task logAuthorizeStopHTTPRequest(DateTimeOffset  Timestamp,
+                                                            HTTPAPI         API,
+                                                            HTTPRequest     Request)
 
             => OnAuthorizeStopHTTPRequest.WhenAll(Timestamp,
                                                   API ?? this,
@@ -855,10 +855,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizationStopHTTPResponse(DateTime      Timestamp,
-                                                                 HTTPAPI       API,
-                                                                 HTTPRequest   Request,
-                                                                 HTTPResponse  Response)
+        protected internal Task logAuthorizationStopHTTPResponse(DateTimeOffset  Timestamp,
+                                                                 HTTPAPI         API,
+                                                                 HTTPRequest     Request,
+                                                                 HTTPResponse    Response)
 
             => OnAuthorizationStopHTTPResponse.WhenAll(Timestamp,
                                                        API ?? this,
@@ -882,9 +882,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logChargingNotificationHTTPRequest(DateTime     Timestamp,
-                                                                   HTTPAPI      API,
-                                                                   HTTPRequest  Request)
+        protected internal Task logChargingNotificationHTTPRequest(DateTimeOffset  Timestamp,
+                                                                   HTTPAPI         API,
+                                                                   HTTPRequest     Request)
 
             => OnChargingNotificationHTTPRequest.WhenAll(Timestamp,
                                                          API ?? this,
@@ -982,10 +982,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logChargingNotificationHTTPResponse(DateTime      Timestamp,
-                                                                    HTTPAPI       API,
-                                                                    HTTPRequest   Request,
-                                                                    HTTPResponse  Response)
+        protected internal Task logChargingNotificationHTTPResponse(DateTimeOffset  Timestamp,
+                                                                    HTTPAPI         API,
+                                                                    HTTPRequest     Request,
+                                                                    HTTPResponse    Response)
 
             => OnChargingNotificationHTTPResponse.WhenAll(Timestamp,
                                                           API ?? this,
@@ -1009,9 +1009,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logChargeDetailRecordHTTPRequest(DateTime     Timestamp,
-                                                                 HTTPAPI      API,
-                                                                 HTTPRequest  Request)
+        protected internal Task logChargeDetailRecordHTTPRequest(DateTimeOffset  Timestamp,
+                                                                 HTTPAPI         API,
+                                                                 HTTPRequest     Request)
 
             => OnChargeDetailRecordHTTPRequest.WhenAll(Timestamp,
                                                        API ?? this,
@@ -1052,10 +1052,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logChargeDetailRecordHTTPResponse(DateTime      Timestamp,
-                                                                  HTTPAPI       API,
-                                                                  HTTPRequest   Request,
-                                                                  HTTPResponse  Response)
+        protected internal Task logChargeDetailRecordHTTPResponse(DateTimeOffset  Timestamp,
+                                                                  HTTPAPI         API,
+                                                                  HTTPRequest     Request,
+                                                                  HTTPResponse    Response)
 
             => OnChargeDetailRecordHTTPResponse.WhenAll(Timestamp,
                                                         API ?? this,

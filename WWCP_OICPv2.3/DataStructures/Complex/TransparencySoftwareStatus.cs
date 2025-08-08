@@ -69,13 +69,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp when the certificate becomes valid.
         /// </summary>
         [Optional]
-        public DateTime?             NotBefore               { get; }
+        public DateTimeOffset?       NotBefore               { get; }
 
         /// <summary>
         /// The timestamp when the certificate becomes invalid.
         /// </summary>
         [Optional]
-        public DateTime?             NotAfter                { get; }
+        public DateTimeOffset?       NotAfter                { get; }
 
         #endregion
 
@@ -94,8 +94,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                           LegalStatus           LegalStatus,
                                           String?               Certificate         = null,
                                           String?               CertificateIssuer   = null,
-                                          DateTime?             NotBefore           = null,
-                                          DateTime?             NotAfter            = null)
+                                          DateTimeOffset?       NotBefore           = null,
+                                          DateTimeOffset?       NotAfter            = null)
         {
 
             this.TransparencySoftware  = TransparencySoftware;

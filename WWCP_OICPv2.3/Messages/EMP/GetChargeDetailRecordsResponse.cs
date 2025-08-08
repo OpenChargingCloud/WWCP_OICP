@@ -63,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode">An optional status code of this response.</param>
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public GetChargeDetailRecordsResponse(DateTime                         ResponseTimestamp,
+        public GetChargeDetailRecordsResponse(DateTimeOffset                   ResponseTimestamp,
                                               EventTracking_Id                 EventTrackingId,
                                               Process_Id                       ProcessId,
                                               TimeSpan                         Runtime,
@@ -204,7 +204,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomGetChargeDetailRecordsResponseParser">A delegate to parse custom GetChargeDetailRecords response JSON objects.</param>
         public static Boolean TryParse(GetChargeDetailRecordsRequest                                 Request,
                                        JObject                                                       JSON,
-                                       DateTime                                                      ResponseTimestamp,
+                                       DateTimeOffset                                                ResponseTimestamp,
                                        EventTracking_Id                                              EventTrackingId,
                                        TimeSpan                                                      Runtime,
                                        [NotNullWhen(true)]  out GetChargeDetailRecordsResponse?      GetChargeDetailRecordsResponse,
@@ -599,7 +599,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(GetChargeDetailRecordsRequest?    Request               = null,
-                           DateTime?                         ResponseTimestamp     = null,
+                           DateTimeOffset?                   ResponseTimestamp     = null,
                            EventTracking_Id?                 EventTrackingId       = null,
                            Process_Id?                       ProcessId             = null,
                            TimeSpan?                         Runtime               = null,

@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Warnings">Optional warnings.</param>
-        public PullAuthenticationDataResponse(DateTime                                 ResponseTimestamp,
+        public PullAuthenticationDataResponse(DateTimeOffset                           ResponseTimestamp,
                                               EventTracking_Id                         EventTrackingId,
                                               Process_Id                               ProcessId,
                                               TimeSpan                                 Runtime,
@@ -212,7 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullAuthenticationDataResponseParser">A delegate to parse custom PullAuthenticationData response JSON objects.</param>
         public static Boolean TryParse(PullAuthenticationDataRequest                                 Request,
                                        JObject                                                       JSON,
-                                       DateTime                                                      ResponseTimestamp,
+                                       DateTimeOffset                                                ResponseTimestamp,
                                        EventTracking_Id                                              EventTrackingId,
                                        TimeSpan                                                      Runtime,
                                        [NotNullWhen(true)]  out PullAuthenticationDataResponse?      PullAuthenticationDataResponse,
@@ -674,7 +674,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(PullAuthenticationDataRequest?            Request                      = null,
-                           DateTime?                                 ResponseTimestamp            = null,
+                           DateTimeOffset?                           ResponseTimestamp            = null,
                            EventTracking_Id?                         EventTrackingId              = null,
                            TimeSpan?                                 Runtime                      = null,
                            IEnumerable<ProviderAuthenticationData>?  ProviderAuthenticationData   = null,

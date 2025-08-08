@@ -82,7 +82,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              Process_Id?                 ProcessId           = null,
                                              JObject?                    CustomData          = null,
 
-                                             DateTime?                   Timestamp           = null,
+                                             DateTimeOffset?             Timestamp           = null,
                                              EventTracking_Id?           EventTrackingId     = null,
                                              TimeSpan?                   RequestTimeout      = null,
                                              CancellationToken           CancellationToken   = default)
@@ -136,7 +136,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static PushAuthenticationDataRequest Parse(JObject                                                      JSON,
                                                           Process_Id?                                                  ProcessId                                   = null,
 
-                                                          DateTime?                                                    Timestamp                                   = null,
+                                                          DateTimeOffset?                                              Timestamp                                   = null,
                                                           CancellationToken                                            CancellationToken                           = default,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
@@ -178,7 +178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        [NotNullWhen(false)] out String?                             ErrorResponse,
                                        Process_Id?                                                  ProcessId                                   = null,
 
-                                       DateTime?                                                    Timestamp                                   = null,
+                                       DateTimeOffset?                                              Timestamp                                   = null,
                                        CancellationToken                                            CancellationToken                           = default,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,

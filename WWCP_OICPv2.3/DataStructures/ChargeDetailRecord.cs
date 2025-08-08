@@ -62,25 +62,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp when the charging session started.
         /// </summary>
         [Mandatory]
-        public DateTime                          SessionStart                       { get; }
+        public DateTimeOffset                    SessionStart                       { get; }
 
         /// <summary>
         /// The timestamp when the charging session ended.
         /// </summary>
         [Mandatory]
-        public DateTime                          SessionEnd                         { get; }
+        public DateTimeOffset                    SessionEnd                         { get; }
 
         /// <summary>
         /// The timestamp when the charging process started.
         /// </summary>
         [Mandatory]
-        public DateTime                          ChargingStart                      { get; }
+        public DateTimeOffset                    ChargingStart                      { get; }
 
         /// <summary>
         /// The timestamp when the charging process stopped.
         /// </summary>
         [Mandatory]
-        public DateTime                          ChargingEnd                        { get; }
+        public DateTimeOffset                    ChargingEnd                        { get; }
 
         /// <summary>
         /// The amount of consumed energy [kWh].
@@ -181,10 +181,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public ChargeDetailRecord(Session_Id                         SessionId,
                                   EVSE_Id                            EVSEId,
                                   Identification                     Identification,
-                                  DateTime                           SessionStart,
-                                  DateTime                           SessionEnd,
-                                  DateTime                           ChargingStart,
-                                  DateTime                           ChargingEnd,
+                                  DateTimeOffset                     SessionStart,
+                                  DateTimeOffset                     SessionEnd,
+                                  DateTimeOffset                     ChargingStart,
+                                  DateTimeOffset                     ChargingEnd,
                                   WattHour                           ConsumedEnergy,
 
                                   PartnerProduct_Id?                 PartnerProductId                 = null,
@@ -200,7 +200,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                   JObject?                           CustomData                       = null,
                                   UserDefinedDictionary?             InternalData                     = null,
-                                  DateTime?                          LastUpdate                       = null)
+                                  DateTimeOffset?                    LastUpdate                       = null)
 
                 : base(CustomData,
                        InternalData,
@@ -1220,25 +1220,25 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The timestamp when the charging session started.
             /// </summary>
             [Mandatory]
-            public DateTime?                         SessionStart                       { get; set; }
+            public DateTimeOffset?                   SessionStart                       { get; set; }
 
             /// <summary>
             /// The timestamp when the charging session ended.
             /// </summary>
             [Mandatory]
-            public DateTime?                         SessionEnd                         { get; set; }
+            public DateTimeOffset?                   SessionEnd                         { get; set; }
 
             /// <summary>
             /// The timestamp when the charging process started.
             /// </summary>
             [Mandatory]
-            public DateTime?                         ChargingStart                      { get; set; }
+            public DateTimeOffset?                   ChargingStart                      { get; set; }
 
             /// <summary>
             /// The timestamp when the charging process stopped.
             /// </summary>
             [Mandatory]
-            public DateTime?                         ChargingEnd                        { get; set; }
+            public DateTimeOffset?                   ChargingEnd                        { get; set; }
 
             /// <summary>
             /// The amount of consumed energy [kWh].
@@ -1342,10 +1342,10 @@ namespace cloud.charging.open.protocols.OICPv2_3
             public Builder(Session_Id?                        SessionId                        = null,
                            EVSE_Id?                           EVSEId                           = null,
                            Identification?                    Identification                   = null,
-                           DateTime?                          SessionStart                     = null,
-                           DateTime?                          SessionEnd                       = null,
-                           DateTime?                          ChargingStart                    = null,
-                           DateTime?                          ChargingEnd                      = null,
+                           DateTimeOffset?                    SessionStart                     = null,
+                           DateTimeOffset?                    SessionEnd                       = null,
+                           DateTimeOffset?                    ChargingStart                    = null,
+                           DateTimeOffset?                    ChargingEnd                      = null,
                            WattHour?                          ConsumedEnergy                   = null,
 
                            PartnerProduct_Id?                 PartnerProductId                 = null,

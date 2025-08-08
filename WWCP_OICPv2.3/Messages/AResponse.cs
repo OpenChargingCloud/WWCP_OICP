@@ -41,7 +41,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <param name="HTTPResponse">The optional HTTP response.</param>
     /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
     /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
-    public abstract class AResponse<TRequest, TResponse>(DateTime                ResponseTimestamp,
+    public abstract class AResponse<TRequest, TResponse>(DateTimeOffset          ResponseTimestamp,
                                                          EventTracking_Id        EventTrackingId,
                                                          Process_Id              ProcessId,
                                                          TimeSpan                Runtime,
@@ -63,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp of the response creation.
         /// </summary>
         [Mandatory]
-        public DateTime                ResponseTimestamp    { get; }      = ResponseTimestamp;
+        public DateTimeOffset          ResponseTimestamp    { get; }      = ResponseTimestamp;
 
         /// <summary>
         /// An optional event tracking identification for correlating this response with other events.
@@ -142,7 +142,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The timestamp of the response message creation.
             /// </summary>
             [Mandatory]
-            public DateTime?               ResponseTimestamp    { get; set; }
+            public DateTimeOffset?         ResponseTimestamp    { get; set; }
 
             /// <summary>
             /// An optional event tracking identification for correlating this response with other events.
@@ -201,7 +201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             /// <param name="InternalData">Optional internal customer specific data, e.g. in combination with custom parsers and serializers, which will not be serialized.</param>
-            protected Builder(DateTime?               ResponseTimestamp   = null,
+            protected Builder(DateTimeOffset?         ResponseTimestamp   = null,
                               EventTracking_Id?       EventTrackingId     = null,
                               TimeSpan?               Runtime             = null,
                               TRequest?               Request             = null,

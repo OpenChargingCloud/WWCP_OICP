@@ -67,7 +67,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="StatusCode">An optional status code of this response.</param>
         /// <param name="HTTPResponse">The HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public PullEVSEStatusByOperatorIdResponse(DateTime                            ResponseTimestamp,
+        public PullEVSEStatusByOperatorIdResponse(DateTimeOffset                      ResponseTimestamp,
                                                   EventTracking_Id                    EventTrackingId,
                                                   Process_Id                          ProcessId,
                                                   TimeSpan                            Runtime,
@@ -193,7 +193,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullEVSEStatusByOperatorIdResponseParser">A delegate to parse custom PullEVSEStatusByOperatorId response JSON objects.</param>
         public static Boolean TryParse(PullEVSEStatusByOperatorIdRequest                                 Request,
                                        JObject                                                           JSON,
-                                       DateTime                                                          ResponseTimestamp,
+                                       DateTimeOffset                                                    ResponseTimestamp,
                                        EventTracking_Id                                                  EventTrackingId,
                                        TimeSpan                                                          Runtime,
                                        [NotNullWhen(true)]  out PullEVSEStatusByOperatorIdResponse?      PullEVSEStatusByOperatorIdResponse,
@@ -495,7 +495,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(PullEVSEStatusByOperatorIdRequest?  Request              = null,
-                           DateTime?                           ResponseTimestamp    = null,
+                           DateTimeOffset?                     ResponseTimestamp    = null,
                            EventTracking_Id?                   EventTrackingId      = null,
                            TimeSpan?                           Runtime              = null,
                            IEnumerable<OperatorEVSEStatus>?    OperatorEVSEStatus   = null,

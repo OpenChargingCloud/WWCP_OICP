@@ -151,7 +151,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp when this energy meter was last updated (or created).
         /// </summary>
         [Mandatory]
-        public DateTime                                 LastUpdate                    { get; }
+        public DateTimeOffset                           LastUpdate                    { get; }
 
         #endregion
 
@@ -186,7 +186,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                            JObject?                                  CustomData                  = null,
                            UserDefinedDictionary?                    InternalData                = null,
-                           DateTime?                                 LastUpdate                  = null)
+                           DateTimeOffset?                           LastUpdate                  = null)
 
             : base(CustomData,
                    InternalData,

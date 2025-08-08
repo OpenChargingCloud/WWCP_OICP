@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Warnings">Optional warnings.</param>
-        public PullEVSEPricingResponse(DateTime                          ResponseTimestamp,
+        public PullEVSEPricingResponse(DateTimeOffset                    ResponseTimestamp,
                                        EventTracking_Id                  EventTrackingId,
                                        Process_Id                        ProcessId,
                                        TimeSpan                          Runtime,
@@ -212,7 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullEVSEPricingResponseParser">A delegate to parse custom PullEVSEPricing response JSON objects.</param>
         public static Boolean TryParse(PullEVSEPricingRequest                                 Request,
                                        JObject                                                JSON,
-                                       DateTime                                               ResponseTimestamp,
+                                       DateTimeOffset                                         ResponseTimestamp,
                                        EventTracking_Id                                       EventTrackingId,
                                        TimeSpan                                               Runtime,
                                        [NotNullWhen(true)]  out PullEVSEPricingResponse?      PullEVSEPricingResponse,
@@ -679,7 +679,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(PullEVSEPricingRequest?            Request                = null,
-                           DateTime?                          ResponseTimestamp      = null,
+                           DateTimeOffset?                    ResponseTimestamp      = null,
                            EventTracking_Id?                  EventTrackingId        = null,
                            TimeSpan?                          Runtime                = null,
                            IEnumerable<OperatorEVSEPricing>?  OperatorEVSEPricings   = null,

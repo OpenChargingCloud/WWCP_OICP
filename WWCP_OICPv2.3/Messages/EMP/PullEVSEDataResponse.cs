@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Warnings">Optional warnings.</param>
-        public PullEVSEDataResponse(DateTime                     ResponseTimestamp,
+        public PullEVSEDataResponse(DateTimeOffset               ResponseTimestamp,
                                     EventTracking_Id             EventTrackingId,
                                     Process_Id                   ProcessId,
                                     TimeSpan                     Runtime,
@@ -248,7 +248,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullEVSEDataResponseParser">A delegate to parse custom PullEVSEData response JSON objects.</param>
         public static Boolean TryParse(PullEVSEDataRequest                                 Request,
                                        JObject                                             JSON,
-                                       DateTime                                            ResponseTimestamp,
+                                       DateTimeOffset                                      ResponseTimestamp,
                                        EventTracking_Id                                    EventTrackingId,
                                        TimeSpan                                            Runtime,
                                        [NotNullWhen(true)]  out PullEVSEDataResponse?      PullEVSEDataResponse,
@@ -739,7 +739,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(PullEVSEDataRequest?          Request             = null,
-                           DateTime?                     ResponseTimestamp   = null,
+                           DateTimeOffset?               ResponseTimestamp   = null,
                            EventTracking_Id?             EventTrackingId     = null,
                            TimeSpan?                     Runtime             = null,
                            IEnumerable<EVSEDataRecord>?  EVSEDataRecords     = null,

@@ -46,7 +46,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional timestamp of the last call.
         /// </summary>
         [Optional]
-        public DateTime?                                       LastCall                                { get; }
+        public DateTimeOffset?                                 LastCall                                { get; }
 
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EventTrackingId">An optional event tracking identification for correlating this request with other events.</param>
         /// <param name="RequestTimeout">The timeout for this request.</param>
         public PullEVSEDataRequest(Provider_Id                                     ProviderId,
-                                   DateTime?                                       LastCall                               = null,
+                                   DateTimeOffset?                                 LastCall                               = null,
 
                                    IEnumerable<Operator_Id>?                       OperatorIdFilter                       = null,
                                    IEnumerable<Country>?                           CountryCodeFilter                      = null,
@@ -159,7 +159,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                    IEnumerable<String>?                            SortOrder                              = null,
                                    JObject?                                        CustomData                             = null,
 
-                                   DateTime?                                       Timestamp                              = null,
+                                   DateTimeOffset?                                 Timestamp                              = null,
                                    EventTracking_Id?                               EventTrackingId                        = null,
                                    TimeSpan?                                       RequestTimeout                         = null,
                                    CancellationToken                               CancellationToken                      = default)
@@ -269,7 +269,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                 UInt32?                                            Size                              = null,
                                                 IEnumerable<String>?                               SortOrder                         = null,
 
-                                                DateTime?                                          Timestamp                         = null,
+                                                DateTimeOffset?                                    Timestamp                         = null,
                                                 EventTracking_Id?                                  EventTrackingId                   = null,
                                                 TimeSpan?                                          RequestTimeout                    = null,
                                                 CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null,
@@ -316,7 +316,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                            Size                              = null,
                                        IEnumerable<String>?                               SortOrder                         = null,
 
-                                       DateTime?                                          Timestamp                         = null,
+                                       DateTimeOffset?                                    Timestamp                         = null,
                                        EventTracking_Id?                                  EventTrackingId                   = null,
                                        TimeSpan?                                          RequestTimeout                    = null,
                                        CustomJObjectParserDelegate<PullEVSEDataRequest>?  CustomPullEVSEDataRequestParser   = null,

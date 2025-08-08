@@ -157,13 +157,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region AuthorizeStart              (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeStartRequest, String>
             AuthorizeStartRequestConverter                     { get; set; }
 
             = (timestamp, sender, authorizeStartRequest)
             => String.Concat(authorizeStartRequest.Identification.ToString(), " at ", authorizeStartRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeStartRequest, AuthorizationStartResponse, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeStartRequest, AuthorizationStartResponse, TimeSpan, String>
             AuthorizeStartResponseConverter                    { get; set; }
 
             = (timestamp, sender, authorizeStartRequest, authorizationStartResponse, runtime)
@@ -175,13 +175,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region AuthorizeStop               (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeStopRequest, String>
             AuthorizeStopRequestConverter                     { get; set; }
 
             = (timestamp, sender, authorizeStopRequest)
             => String.Concat(authorizeStopRequest.Identification.ToString(), " at ", authorizeStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeStopRequest, AuthorizationStopResponse, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeStopRequest, AuthorizationStopResponse, TimeSpan, String>
             AuthorizeStopResponseConverter                    { get; set; }
 
             = (timestamp, sender, authorizeStopRequest, authorizationStopResponse, runtime)
@@ -194,13 +194,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region ChargingStartNotification   (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingStartNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingStartNotificationRequest, String>
             ChargingStartNotificationRequestConverter                     { get; set; }
 
             = (timestamp, sender, chargingStartNotificationRequest)
             => String.Concat(chargingStartNotificationRequest.Identification.ToString(), " at ", chargingStartNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingStartNotificationRequest, Acknowledgement<ChargingStartNotificationRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingStartNotificationRequest, Acknowledgement<ChargingStartNotificationRequest>, TimeSpan, String>
             ChargingStartNotificationResponseConverter                    { get; set; }
 
             = (timestamp, sender, chargingStartNotificationRequest, chargingStartNotificationResponse, runtime)
@@ -212,13 +212,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region ChargingProgressNotification(Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingProgressNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingProgressNotificationRequest, String>
             ChargingProgressNotificationRequestConverter                     { get; set; }
 
             = (timestamp, sender, chargingProgressNotificationRequest)
             => String.Concat(chargingProgressNotificationRequest.Identification.ToString(), " at ", chargingProgressNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingProgressNotificationRequest, Acknowledgement<ChargingProgressNotificationRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingProgressNotificationRequest, Acknowledgement<ChargingProgressNotificationRequest>, TimeSpan, String>
             ChargingProgressNotificationResponseConverter                    { get; set; }
 
             = (timestamp, sender, chargingProgressNotificationRequest, chargingProgressNotificationResponse, runtime)
@@ -230,13 +230,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region ChargingEndNotification     (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingEndNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingEndNotificationRequest, String>
             ChargingEndNotificationRequestConverter                     { get; set; }
 
             = (timestamp, sender, chargingEndNotificationRequest)
             => String.Concat(chargingEndNotificationRequest.Identification.ToString(), " at ", chargingEndNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingEndNotificationRequest, Acknowledgement<ChargingEndNotificationRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingEndNotificationRequest, Acknowledgement<ChargingEndNotificationRequest>, TimeSpan, String>
             ChargingEndNotificationResponseConverter                    { get; set; }
 
             = (timestamp, sender, chargingEndNotificationRequest, chargingEndNotificationResponse, runtime)
@@ -248,13 +248,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region ChargingErrorNotification   (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargingErrorNotificationRequest, String>
+        public Func<DateTimeOffset, Object, ChargingErrorNotificationRequest, String>
             ChargingErrorNotificationRequestConverter                     { get; set; }
 
             = (timestamp, sender, chargingErrorNotificationRequest)
             => String.Concat(chargingErrorNotificationRequest.Identification.ToString(), " at ", chargingErrorNotificationRequest.EVSEId);
 
-        public Func<DateTime, Object, ChargingErrorNotificationRequest, Acknowledgement<ChargingErrorNotificationRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargingErrorNotificationRequest, Acknowledgement<ChargingErrorNotificationRequest>, TimeSpan, String>
             ChargingErrorNotificationResponseConverter                    { get; set; }
 
             = (timestamp, sender, chargingErrorNotificationRequest, chargingErrorNotificationResponse, runtime)
@@ -267,13 +267,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region ChargeDetailRecord          (Request/Response)Converter
 
-        public Func<DateTime, Object, ChargeDetailRecordRequest, String>
+        public Func<DateTimeOffset, Object, ChargeDetailRecordRequest, String>
             ChargeDetailRecordRequestConverter                     { get; set; }
 
             = (timestamp, sender, chargeDetailRecordRequest)
             => String.Concat(chargeDetailRecordRequest.ChargeDetailRecord.Identification.ToString(), " at ", chargeDetailRecordRequest.ChargeDetailRecord.EVSEId);
 
-        public Func<DateTime, Object, ChargeDetailRecordRequest, Acknowledgement<ChargeDetailRecordRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, ChargeDetailRecordRequest, Acknowledgement<ChargeDetailRecordRequest>, TimeSpan, String>
             ChargeDetailRecordResponseConverter                    { get; set; }
 
             = (timestamp, sender, chargeDetailRecordRequest, chargeDetailRecordResponse, runtime)
@@ -300,9 +300,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeStartHTTPRequest(DateTime     Timestamp,
-                                                             HTTPAPI      API,
-                                                             HTTPRequest  Request)
+        protected internal Task logAuthorizeStartHTTPRequest(DateTimeOffset  Timestamp,
+                                                             HTTPAPI         API,
+                                                             HTTPRequest     Request)
 
             => OnAuthorizeStartHTTPRequest.WhenAll(Timestamp,
                                                    API ?? this,
@@ -343,10 +343,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizationStartHTTPResponse(DateTime      Timestamp,
-                                                                  HTTPAPI       API,
-                                                                  HTTPRequest   Request,
-                                                                  HTTPResponse  Response)
+        protected internal Task logAuthorizationStartHTTPResponse(DateTimeOffset  Timestamp,
+                                                                  HTTPAPI         API,
+                                                                  HTTPRequest     Request,
+                                                                  HTTPResponse    Response)
 
             => OnAuthorizationStartHTTPResponse.WhenAll(Timestamp,
                                                         API ?? this,
@@ -369,9 +369,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeStopHTTPRequest(DateTime     Timestamp,
-                                                            HTTPAPI      API,
-                                                            HTTPRequest  Request)
+        protected internal Task logAuthorizeStopHTTPRequest(DateTimeOffset  Timestamp,
+                                                            HTTPAPI         API,
+                                                            HTTPRequest     Request)
 
             => OnAuthorizeStopHTTPRequest.WhenAll(Timestamp,
                                                   API ?? this,
@@ -412,10 +412,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizationStopHTTPResponse(DateTime      Timestamp,
-                                                                 HTTPAPI       API,
-                                                                 HTTPRequest   Request,
-                                                                 HTTPResponse  Response)
+        protected internal Task logAuthorizationStopHTTPResponse(DateTimeOffset  Timestamp,
+                                                                 HTTPAPI         API,
+                                                                 HTTPRequest     Request,
+                                                                 HTTPResponse    Response)
 
             => OnAuthorizationStopHTTPResponse.WhenAll(Timestamp,
                                                        API ?? this,
@@ -439,9 +439,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the notification.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logChargingNotificationsHTTPRequest(DateTime     Timestamp,
-                                                                    HTTPAPI      API,
-                                                                    HTTPRequest  Request)
+        protected internal Task logChargingNotificationsHTTPRequest(DateTimeOffset  Timestamp,
+                                                                    HTTPAPI         API,
+                                                                    HTTPRequest     Request)
 
             => OnChargingNotificationsHTTPRequest.WhenAll(Timestamp,
                                                           API ?? this,
@@ -483,10 +483,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logChargingNotificationsHTTPResponse(DateTime      Timestamp,
-                                                                     HTTPAPI       API,
-                                                                     HTTPRequest   Request,
-                                                                     HTTPResponse  Response)
+        protected internal Task logChargingNotificationsHTTPResponse(DateTimeOffset  Timestamp,
+                                                                     HTTPAPI         API,
+                                                                     HTTPRequest     Request,
+                                                                     HTTPResponse    Response)
 
             => OnChargingNotificationsHTTPResponse.WhenAll(Timestamp,
                                                            API ?? this,
@@ -510,9 +510,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logChargeDetailRecordHTTPRequest(DateTime      Timestamp,
-                                                                 HTTPAPI       API,
-                                                                 HTTPRequest   Request)
+        protected internal Task logChargeDetailRecordHTTPRequest(DateTimeOffset  Timestamp,
+                                                                 HTTPAPI         API,
+                                                                 HTTPRequest     Request)
 
             => OnChargeDetailRecordHTTPRequest.WhenAll(Timestamp,
                                                        API ?? this,
@@ -553,10 +553,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logChargeDetailRecordHTTPResponse(DateTime      Timestamp,
-                                                                  HTTPAPI       API,
-                                                                  HTTPRequest   Request,
-                                                                  HTTPResponse  Response)
+        protected internal Task logChargeDetailRecordHTTPResponse(DateTimeOffset  Timestamp,
+                                                                  HTTPAPI         API,
+                                                                  HTTPRequest     Request,
+                                                                  HTTPResponse    Response)
 
             => OnChargeDetailRecordHTTPResponse.WhenAll(Timestamp,
                                                         API ?? this,

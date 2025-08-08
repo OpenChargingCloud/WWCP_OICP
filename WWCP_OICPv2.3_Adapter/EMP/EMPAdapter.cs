@@ -160,7 +160,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public TimeSpan                                        PullEVSEData_RequestTimeout                          { get; }
 
-        public DateTime?                                       TimestampOfLastPullDataRun                           { get; private set; }
+        public DateTimeOffset?                                 TimestampOfLastPullDataRun                           { get; private set; }
 
         /// <summary>
         /// Only return EVSEs belonging to the given optional enumeration of EVSE operators.
@@ -211,7 +211,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public TimeSpan        PullEVSEStatus_RequestTimeout                { get; }
 
-        public DateTime?       PullStatus_LastRunTimestamp                  { get; private set; }
+        public DateTimeOffset? PullStatus_LastRunTimestamp                  { get; private set; }
 
         #endregion
 
@@ -226,7 +226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         public TimeSpan        GetChargeDetailRecords_RequestTimeout             { get; }
 
-        public DateTime        GetChargeDetailRecords_LastRunTimestamp           { get; private set; }
+        public DateTimeOffset  GetChargeDetailRecords_LastRunTimestamp           { get; private set; }
 
         #endregion
 
@@ -513,7 +513,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                           Boolean                                         GetChargeDetailRecords_IsDisabled                   = false,
                           TimeSpan?                                       GetChargeDetailRecords_InitialDelay                 = null,
                           TimeSpan?                                       GetChargeDetailRecords_Every                        = null,
-                          DateTime?                                       GetChargeDetailRecords_LastRunTimestamp             = null,
+                          DateTimeOffset?                                 GetChargeDetailRecords_LastRunTimestamp             = null,
                           TimeSpan?                                       GetChargeDetailRecords_RequestTimeout               = null,
 
                           WWCP.IEMobilityProvider?                        DefaultProvider                                     = null,
@@ -1209,17 +1209,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<WWCP.POIDataPull<WWCP.EVSE>>
 
-            PullEVSEData(DateTime?                                      LastCall            = null,
+            PullEVSEData(DateTimeOffset?                                LastCall            = null,
                          GeoCoordinate?                                 SearchCenter        = null,
                          Single                                         DistanceKM          = 0f,
                          WWCP.EMobilityProvider_Id?                     ProviderId          = null,
                          IEnumerable<WWCP.ChargingStationOperator_Id>?  OperatorIdFilter    = null,
                          IEnumerable<Country>?                          CountryCodeFilter   = null,
 
-                         DateTime?                                      Timestamp           = null,
-                         CancellationToken                              CancellationToken   = default,
+                         DateTimeOffset?                                Timestamp           = null,
                          EventTracking_Id?                              EventTrackingId     = null,
-                         TimeSpan?                                      RequestTimeout      = null)
+                         TimeSpan?                                      RequestTimeout      = null,
+                         CancellationToken                              CancellationToken   = default)
 
         {
 
@@ -1383,16 +1383,16 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="RequestTimeout">An optional timeout for this request.</param>
         public async Task<WWCP.StatusPull<WWCP.EVSEStatus>>
 
-            PullEVSEStatus(DateTime?                   LastCall            = null,
+            PullEVSEStatus(DateTimeOffset?             LastCall            = null,
                            GeoCoordinate?              SearchCenter        = null,
                            Single                      DistanceKM          = 0f,
                            WWCP.EVSEStatusType?       EVSEStatusFilter    = null,
                            WWCP.EMobilityProvider_Id?  ProviderId          = null,
 
-                           DateTime?                   Timestamp           = null,
-                           CancellationToken           CancellationToken   = default,
+                           DateTimeOffset?             Timestamp           = null,
                            EventTracking_Id?           EventTrackingId     = null,
-                           TimeSpan?                   RequestTimeout      = null)
+                           TimeSpan?                   RequestTimeout      = null,
+                           CancellationToken           CancellationToken   = default)
 
         {
 
@@ -1551,7 +1551,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         //                           WWCP.ActionTypes                   Action              = WWCP.ActionTypes.fullLoad,
         //                           eMobilityProvider_Id?        ProviderId          = null,
 
-        //                           DateTime?                    Timestamp           = null,
+        //                           DateTimeOffset?              Timestamp           = null,
         //                           CancellationToken?           CancellationToken   = null,
         //                           EventTracking_Id             EventTrackingId     = null,
         //                           TimeSpan?                    RequestTimeout      = null)
@@ -1702,7 +1702,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
             WWCP.IChargingReservations.Reserve(WWCP.ChargingLocation                   ChargingLocation,
                                                WWCP.ChargingReservationLevel           ReservationLevel,
-                                               DateTime?                               ReservationStartTime,
+                                               DateTimeOffset?                         ReservationStartTime,
                                                TimeSpan?                               Duration,
                                                WWCP.ChargingReservation_Id?            ReservationId,
                                                WWCP.ChargingReservation_Id?            LinkedReservationId,
@@ -1714,7 +1714,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                IEnumerable<WWCP.EMobilityAccount_Id>?  eMAIds,
                                                IEnumerable<UInt32>?                    PINs,
 
-                                               DateTime?                               Timestamp,
+                                               DateTimeOffset?                         Timestamp,
                                                EventTracking_Id?                       EventTrackingId,
                                                TimeSpan?                               RequestTimeout,
                                                CancellationToken                       CancellationToken)
@@ -1862,7 +1862,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                            Timestamp:                 org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                                                            StartTime:                 org.GraphDefined.Vanaheimr.Illias.Timestamp.Now,
                                                                                            Duration:                  Duration ?? DefaultReservationTime,
-                                                                                           EndTime:                   org.GraphDefined.Vanaheimr.Illias.Timestamp.Now + (Duration ?? DefaultReservationTime),
+                                                                                           //EndTime:                   org.GraphDefined.Vanaheimr.Illias.Timestamp.Now + (Duration ?? DefaultReservationTime),
                                                                                            ConsumedReservationTime:   TimeSpan.FromSeconds(0),
                                                                                            ReservationLevel:          WWCP.ChargingReservationLevel.EVSE,
                                                                                            ProviderId:                ProviderId,
@@ -1942,7 +1942,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             WWCP.IChargingReservations.CancelReservation(WWCP.ChargingReservation_Id                 ReservationId,
                                                          WWCP.ChargingReservationCancellationReason  Reason,
 
-                                                         DateTime?                                   Timestamp,
+                                                         DateTimeOffset?                             Timestamp,
                                                          EventTracking_Id?                           EventTrackingId,
                                                          TimeSpan?                                   RequestTimeout,
                                                          CancellationToken                           CancellationToken)
@@ -2049,7 +2049,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                               JObject?                      AdditionalSessionInfos,  // = null,
                                               WWCP.Auth_Path?               AuthenticationPath,      // = null,
 
-                                              DateTime?                     RequestTimestamp,
+                                              DateTimeOffset?               RequestTimestamp,
                                               EventTracking_Id?             EventTrackingId,
                                               TimeSpan?                     RequestTimeout,
                                               CancellationToken             CancellationToken)
@@ -2317,7 +2317,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                              WWCP.RemoteAuthentication?  RemoteAuthentication,  // = null,
                                              WWCP.Auth_Path?             AuthenticationPath,    // = null,
 
-                                             DateTime?                   RequestTimestamp,
+                                             DateTimeOffset?             RequestTimestamp,
                                              EventTracking_Id?           EventTrackingId,
                                              TimeSpan?                   RequestTimeout,
                                              CancellationToken           CancellationToken)
@@ -2477,8 +2477,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public async Task<IEnumerable<WWCP.ChargeDetailRecord>>
 
-            GetChargeDetailRecords(DateTime                    From,
-                                   DateTime?                   To                  = null,
+            GetChargeDetailRecords(DateTimeOffset              From,
+                                   DateTimeOffset?             To                  = null,
                                    WWCP.EMobilityProvider_Id?  ProviderId          = null,
                                    //IEnumerable<Session_Id>?    SessionIds          = null,
                                    //IEnumerable<Operator_Id>?   OperatorIds         = null,
@@ -2490,7 +2490,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                    //IEnumerable<String>?        SortOrder           = null,
                                    //JObject?                    CustomData          = null,
 
-                                   DateTime?                   Timestamp           = null,
+                                   DateTimeOffset?             Timestamp           = null,
                                    EventTracking_Id?           EventTrackingId     = null,
                                    TimeSpan?                   RequestTimeout      = null,
                                    CancellationToken           CancellationToken   = default)
@@ -3369,7 +3369,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         }
 
         public static async Task<StatusUpdate> UpdateRoamingNetwork(WWCP.IRoamingNetwork             RoamingNetwork,
-                                                                    DateTime                         DownloadTime,
+                                                                    DateTimeOffset                   DownloadTime,
                                                                     IEnumerable<OperatorEVSEStatus>  OperatorEVSEStatus,
                                                                     IncludeEVSEOperatorIdDelegate?   IncludeEVSEOperatorId = null)
         {

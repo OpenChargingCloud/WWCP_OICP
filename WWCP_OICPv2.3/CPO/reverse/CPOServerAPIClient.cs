@@ -120,13 +120,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteReservationStart(Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStartRequest, String>
             AuthorizeRemoteReservationStartRequestConverter         { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStartRequest)
             => String.Concat(authorizeRemoteReservationStartRequest.Identification, " at ", authorizeRemoteReservationStartRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>, TimeSpan, String>
             AuthorizeRemoteReservationStartResponseConverter        { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStartRequest, authorizeRemoteReservationStartResponse, runtime)
@@ -136,13 +136,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteReservationStop (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStopRequest, String>
             AuthorizeRemoteReservationStopRequestConverter         { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStopRequest)
             => String.Concat(authorizeRemoteReservationStopRequest.SessionId, " at ", authorizeRemoteReservationStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>, TimeSpan, String>
             AuthorizeRemoteReservationStopResponseConverter        { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStopRequest, authorizeRemoteReservationStopResponse, runtime)
@@ -153,13 +153,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteStart           (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStartRequest, String>
             AuthorizeRemoteStartRequestConverter         { get; set; }
 
             = (timestamp, sender, authorizeRemoteStartRequest)
             => String.Concat(authorizeRemoteStartRequest.Identification, " at ", authorizeRemoteStartRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>, TimeSpan, String>
             AuthorizeRemoteStartResponseConverter        { get; set; }
 
             = (timestamp, sender, authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime)
@@ -169,13 +169,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteStop            (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStopRequest, String>
             AuthorizeRemoteStopRequestConverter         { get; set; }
 
             = (timestamp, sender, authorizeRemoteStopRequest)
             => String.Concat(authorizeRemoteStopRequest.SessionId, " at ", authorizeRemoteStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>, TimeSpan, String>
             AuthorizeRemoteStopResponseConverter        { get; set; }
 
             = (timestamp, sender, authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime)

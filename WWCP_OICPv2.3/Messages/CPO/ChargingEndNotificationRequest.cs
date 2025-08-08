@@ -90,13 +90,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp when the charging session started.
         /// </summary>
         [Optional]
-        public DateTime?                         SessionStart                       { get; }
+        public DateTimeOffset?                   SessionStart                       { get; }
 
         /// <summary>
         /// The timestamp when the charging session stopped.
         /// </summary>
         [Optional]
-        public DateTime?                         SessionEnd                         { get; }
+        public DateTimeOffset?                   SessionEnd                         { get; }
 
         /// <summary>
         /// The optional consumed energy.
@@ -138,7 +138,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The optional timestamp when the penalty time start after the grace period.
         /// </summary>
         [Optional]
-        public DateTime?                         PenaltyTimeStart                   { get; }
+        public DateTimeOffset?                   PenaltyTimeStart                   { get; }
 
         #endregion
 
@@ -178,19 +178,19 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                               CPOPartnerSession_Id?  CPOPartnerSessionId    = null,
                                               EMPPartnerSession_Id?  EMPPartnerSessionId    = null,
-                                              DateTime?              SessionStart           = null,
-                                              DateTime?              SessionEnd             = null,
+                                              DateTimeOffset?        SessionStart           = null,
+                                              DateTimeOffset?        SessionEnd             = null,
                                               Decimal?               ConsumedEnergy         = null,
                                               Decimal?               MeterValueStart        = null,
                                               Decimal?               MeterValueEnd          = null,
                                               IEnumerable<Decimal>?  MeterValuesInBetween   = null,
                                               Operator_Id?           OperatorId             = null,
                                               PartnerProduct_Id?     PartnerProductId       = null,
-                                              DateTime?              PenaltyTimeStart       = null,
+                                              DateTimeOffset?        PenaltyTimeStart       = null,
                                               Process_Id?            ProcessId              = null,
                                               JObject?               CustomData             = null,
 
-                                              DateTime?              Timestamp              = null,
+                                              DateTimeOffset?        Timestamp              = null,
                                               EventTracking_Id?      EventTrackingId        = null,
                                               TimeSpan?              RequestTimeout         = null,
                                               CancellationToken      CancellationToken      = default)
@@ -299,7 +299,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingEndNotificationRequest Parse(JObject                                                       JSON,
                                                            Process_Id?                                                   ProcessId                                    = null,
 
-                                                           DateTime?                                                     Timestamp                                    = null,
+                                                           DateTimeOffset?                                               Timestamp                                    = null,
                                                            EventTracking_Id?                                             EventTrackingId                              = null,
                                                            TimeSpan?                                                     RequestTimeout                               = null,
                                                            CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null,
@@ -343,7 +343,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        [NotNullWhen(false)] out String?                              ErrorResponse,
                                        Process_Id?                                                   ProcessId                                    = null,
 
-                                       DateTime?                                                     Timestamp                                    = null,
+                                       DateTimeOffset?                                               Timestamp                                    = null,
                                        EventTracking_Id?                                             EventTrackingId                              = null,
                                        TimeSpan?                                                     RequestTimeout                               = null,
                                        CustomJObjectParserDelegate<ChargingEndNotificationRequest>?  CustomChargingEndNotificationRequestParser   = null,

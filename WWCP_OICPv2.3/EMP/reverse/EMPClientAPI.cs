@@ -246,13 +246,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullEVSEData                   (Request/Response)Converter
 
-        public Func<DateTime, Object, PullEVSEDataRequest, String>
+        public Func<DateTimeOffset, Object, PullEVSEDataRequest, String>
             PullEVSEDataRequestConverter                     { get; set; }
 
             = (timestamp, sender, pullEVSEDataRequest)
             => String.Concat(pullEVSEDataRequest.ProviderId, pullEVSEDataRequest.LastCall.HasValue ? ", last call: " + pullEVSEDataRequest.LastCall.Value.ToLocalTime().ToString() : "");
 
-        public Func<DateTime, Object, PullEVSEDataRequest, OICPResult<PullEVSEDataResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PullEVSEDataRequest, OICPResult<PullEVSEDataResponse>, TimeSpan, String>
             PullEVSEDataResponseConverter                    { get; set; }
 
             = (timestamp, sender, pullEVSEDataRequest, pullEVSEDataResponse, runtime)
@@ -264,13 +264,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullEVSEStatus                 (Request/Response)Converter
 
-        public Func<DateTime, Object, PullEVSEStatusRequest, String>
+        public Func<DateTimeOffset, Object, PullEVSEStatusRequest, String>
             PullEVSEStatusRequestConverter                   { get; set; }
 
             = (timestamp, sender, pullEVSEStatusRequest)
             => String.Concat(pullEVSEStatusRequest.ProviderId, pullEVSEStatusRequest.EVSEStatusFilter.HasValue ? ", status filter: " + pullEVSEStatusRequest.EVSEStatusFilter.Value.ToString() : "");
 
-        public Func<DateTime, Object, PullEVSEStatusRequest, OICPResult<PullEVSEStatusResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PullEVSEStatusRequest, OICPResult<PullEVSEStatusResponse>, TimeSpan, String>
             PullEVSEStatusResponseConverter                  { get; set; }
 
             = (timestamp, sender, pullEVSEStatusRequest, pullEVSEStatusResponse, runtime)
@@ -282,13 +282,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullEVSEStatusById             (Request/Response)Converter
 
-        public Func<DateTime, Object, PullEVSEStatusByIdRequest, String>
+        public Func<DateTimeOffset, Object, PullEVSEStatusByIdRequest, String>
             PullEVSEStatusByIdRequestConverter               { get; set; }
 
             = (timestamp, sender, pullEVSEStatusByIdRequest)
             => String.Concat(pullEVSEStatusByIdRequest.ProviderId, ", ids: " + pullEVSEStatusByIdRequest.EVSEIds.Count());
 
-        public Func<DateTime, Object, PullEVSEStatusByIdRequest, OICPResult<PullEVSEStatusByIdResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PullEVSEStatusByIdRequest, OICPResult<PullEVSEStatusByIdResponse>, TimeSpan, String>
             PullEVSEStatusByIdResponseConverter              { get; set; }
 
             = (timestamp, sender, pullEVSEStatusByIdRequest, pullEVSEStatusByIdResponse, runtime)
@@ -300,13 +300,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullEVSEStatusByOperatorId     (Request/Response)Converter
 
-        public Func<DateTime, Object, PullEVSEStatusByOperatorIdRequest, String>
+        public Func<DateTimeOffset, Object, PullEVSEStatusByOperatorIdRequest, String>
             PullEVSEStatusByOperatorIdRequestConverter       { get; set; }
 
             = (timestamp, sender, pullEVSEStatusByOperatorIdRequest)
             => String.Concat(pullEVSEStatusByOperatorIdRequest.ProviderId, ", operator ids: " + pullEVSEStatusByOperatorIdRequest.OperatorIds.Count());
 
-        public Func<DateTime, Object, PullEVSEStatusByOperatorIdRequest, OICPResult<PullEVSEStatusByOperatorIdResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PullEVSEStatusByOperatorIdRequest, OICPResult<PullEVSEStatusByOperatorIdResponse>, TimeSpan, String>
             PullEVSEStatusByOperatorIdResponseConverter      { get; set; }
 
             = (timestamp, sender, pullEVSEStatusByOperatorIdRequest, pullEVSEStatusByOperatorIdResponse, runtime)
@@ -319,13 +319,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullPricingProductData         (Request/Response)Converter
 
-        public Func<DateTime, Object, PullPricingProductDataRequest, String>
+        public Func<DateTimeOffset, Object, PullPricingProductDataRequest, String>
             PullPricingProductDataRequestConverter           { get; set; }
 
             = (timestamp, sender, pullPricingProductDataRequest)
             => String.Concat(pullPricingProductDataRequest.ProviderId, pullPricingProductDataRequest.LastCall.HasValue ? ", last call: " + pullPricingProductDataRequest.LastCall.Value.ToLocalTime().ToString() : "");
 
-        public Func<DateTime, Object, PullPricingProductDataRequest, OICPResult<PullPricingProductDataResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PullPricingProductDataRequest, OICPResult<PullPricingProductDataResponse>, TimeSpan, String>
             PullPricingProductDataResponseConverter          { get; set; }
 
             = (timestamp, sender, pullPricingProductDataRequest, pullPricingProductDataResponse, runtime)
@@ -337,13 +337,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PullEVSEPricing                (Request/Response)Converter
 
-        public Func<DateTime, Object, PullEVSEPricingRequest, String>
+        public Func<DateTimeOffset, Object, PullEVSEPricingRequest, String>
             PullEVSEPricingRequestConverter                  { get; set; }
 
             = (timestamp, sender, pullEVSEPricingRequest)
             => String.Concat(pullEVSEPricingRequest.ProviderId, pullEVSEPricingRequest.LastCall.HasValue ? ", last call: " + pullEVSEPricingRequest.LastCall.Value.ToLocalTime().ToString() : "");
 
-        public Func<DateTime, Object, PullEVSEPricingRequest, OICPResult<PullEVSEPricingResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PullEVSEPricingRequest, OICPResult<PullEVSEPricingResponse>, TimeSpan, String>
             PullEVSEPricingResponseConverter                 { get; set; }
 
             = (timestamp, sender, pullEVSEPricingRequest, pullEVSEPricingResponse, runtime)
@@ -356,13 +356,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region PushAuthenticationData         (Request/Response)Converter
 
-        public Func<DateTime, Object, PushAuthenticationDataRequest, String>
+        public Func<DateTimeOffset, Object, PushAuthenticationDataRequest, String>
             PushAuthenticationDataRequestConverter           { get; set; }
 
             = (timestamp, sender, pushAuthenticationDataRequest)
             => String.Concat(pushAuthenticationDataRequest.Action, " of ", pushAuthenticationDataRequest.ProviderAuthenticationData.Identifications.Count(), " identifications(s)");
 
-        public Func<DateTime, Object, PushAuthenticationDataRequest, OICPResult<Acknowledgement<PushAuthenticationDataRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, PushAuthenticationDataRequest, OICPResult<Acknowledgement<PushAuthenticationDataRequest>>, TimeSpan, String>
             PushAuthenticationDataResponseConverter          { get; set; }
 
             = (timestamp, sender, pushAuthenticationDataRequest, pushAuthenticationDataResponse, runtime)
@@ -375,7 +375,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region AuthorizeRemoteReservationStart(Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStartRequest, String>
             AuthorizeRemoteReservationStartRequestConverter           { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStartRequest)
@@ -384,7 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                 ? " (" + authorizeRemoteReservationStartRequest.PartnerProductId.Value.ToString() + ")"
                                                                                                 : "");
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStartRequest>>, TimeSpan, String>
             AuthorizeRemoteReservationStartResponseConverter          { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStartRequest, authorizeRemoteReservationStartResponse, runtime)
@@ -399,13 +399,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region AuthorizeRemoteReservationStop (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStopRequest, String>
             AuthorizeRemoteReservationStopRequestConverter           { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStopRequest)
             => String.Concat(authorizeRemoteReservationStopRequest.SessionId, " at ", authorizeRemoteReservationStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteReservationStopRequest>>, TimeSpan, String>
             AuthorizeRemoteReservationStopResponseConverter          { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStopRequest, authorizeRemoteReservationStopResponse, runtime)
@@ -417,7 +417,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region AuthorizeRemoteStart           (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStartRequest, String>
             AuthorizeRemoteStartRequestConverter           { get; set; }
 
             = (timestamp, sender, authorizeRemoteStartRequest)
@@ -426,7 +426,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                                                                                                 ? " (" + authorizeRemoteStartRequest.PartnerProductId.Value.ToString() + ")"
                                                                                                 : "");
 
-        public Func<DateTime, Object, AuthorizeRemoteStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStartRequest, OICPResult<Acknowledgement<AuthorizeRemoteStartRequest>>, TimeSpan, String>
             AuthorizeRemoteStartResponseConverter          { get; set; }
 
             = (timestamp, sender, authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime)
@@ -441,13 +441,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region AuthorizeRemoteStop            (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStopRequest, String>
             AuthorizeRemoteStopRequestConverter           { get; set; }
 
             = (timestamp, sender, authorizeRemoteStopRequest)
             => String.Concat(authorizeRemoteStopRequest.SessionId, " at ", authorizeRemoteStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStopRequest, OICPResult<Acknowledgement<AuthorizeRemoteStopRequest>>, TimeSpan, String>
             AuthorizeRemoteStopResponseConverter          { get; set; }
 
             = (timestamp, sender, authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime)
@@ -460,13 +460,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region GetChargeDetailRecords         (Request/Response)Converter
 
-        public Func<DateTime, Object, GetChargeDetailRecordsRequest, String>
+        public Func<DateTimeOffset, Object, GetChargeDetailRecordsRequest, String>
             GetChargeDetailRecordsRequestConverter                     { get; set; }
 
             = (timestamp, sender, getChargeDetailRecordsRequest)
             => String.Concat(getChargeDetailRecordsRequest.ProviderId, " from ", getChargeDetailRecordsRequest.From.ToLocalTime().ToString(), " to " + getChargeDetailRecordsRequest.To.ToLocalTime().ToString());
 
-        public Func<DateTime, Object, GetChargeDetailRecordsRequest, OICPResult<GetChargeDetailRecordsResponse>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, GetChargeDetailRecordsRequest, OICPResult<GetChargeDetailRecordsResponse>, TimeSpan, String>
             GetChargeDetailRecordsResponseConverter                    { get; set; }
 
             = (timestamp, sender, getChargeDetailRecordsRequest, getChargeDetailRecordsResponse, runtime)
@@ -493,9 +493,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEDataHTTPRequest(DateTime     Timestamp,
-                                                           HTTPAPI      API,
-                                                           HTTPRequest  Request)
+        protected internal Task logPullEVSEDataHTTPRequest(DateTimeOffset  Timestamp,
+                                                           HTTPAPI         API,
+                                                           HTTPRequest     Request)
 
             => OnPullEVSEDataHTTPRequest.WhenAll(Timestamp,
                                                  API ?? this,
@@ -536,10 +536,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEDataHTTPResponse(DateTime      Timestamp,
-                                                            HTTPAPI       API,
-                                                            HTTPRequest   Request,
-                                                            HTTPResponse  Response)
+        protected internal Task logPullEVSEDataHTTPResponse(DateTimeOffset  Timestamp,
+                                                            HTTPAPI         API,
+                                                            HTTPRequest     Request,
+                                                            HTTPResponse    Response)
 
             => OnPullEVSEDataHTTPResponse.WhenAll(Timestamp,
                                                   API ?? this,
@@ -562,9 +562,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEStatusHTTPRequest(DateTime     Timestamp,
-                                                             HTTPAPI      API,
-                                                             HTTPRequest  Request)
+        protected internal Task logPullEVSEStatusHTTPRequest(DateTimeOffset  Timestamp,
+                                                             HTTPAPI         API,
+                                                             HTTPRequest     Request)
 
             => OnPullEVSEStatusHTTPRequest.WhenAll(Timestamp,
                                                    API ?? this,
@@ -605,10 +605,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEStatusHTTPResponse(DateTime      Timestamp,
-                                                              HTTPAPI       API,
-                                                              HTTPRequest   Request,
-                                                              HTTPResponse  Response)
+        protected internal Task logPullEVSEStatusHTTPResponse(DateTimeOffset  Timestamp,
+                                                              HTTPAPI         API,
+                                                              HTTPRequest     Request,
+                                                              HTTPResponse    Response)
 
             => OnPullEVSEStatusHTTPResponse.WhenAll(Timestamp,
                                                     API ?? this,
@@ -631,9 +631,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEStatusByIdHTTPRequest(DateTime     Timestamp,
-                                                                 HTTPAPI      API,
-                                                                 HTTPRequest  Request)
+        protected internal Task logPullEVSEStatusByIdHTTPRequest(DateTimeOffset  Timestamp,
+                                                                 HTTPAPI         API,
+                                                                 HTTPRequest     Request)
 
             => OnPullEVSEStatusByIdHTTPRequest.WhenAll(Timestamp,
                                                        API ?? this,
@@ -674,10 +674,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEStatusByIdHTTPResponse(DateTime      Timestamp,
-                                                                  HTTPAPI       API,
-                                                                  HTTPRequest   Request,
-                                                                  HTTPResponse  Response)
+        protected internal Task logPullEVSEStatusByIdHTTPResponse(DateTimeOffset  Timestamp,
+                                                                  HTTPAPI         API,
+                                                                  HTTPRequest     Request,
+                                                                  HTTPResponse    Response)
 
             => OnPullEVSEStatusByIdHTTPResponse.WhenAll(Timestamp,
                                                         API ?? this,
@@ -700,9 +700,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEStatusByOperatorIdHTTPRequest(DateTime     Timestamp,
-                                                                         HTTPAPI      API,
-                                                                         HTTPRequest  Request)
+        protected internal Task logPullEVSEStatusByOperatorIdHTTPRequest(DateTimeOffset  Timestamp,
+                                                                         HTTPAPI         API,
+                                                                         HTTPRequest     Request)
 
             => OnPullEVSEStatusByOperatorIdHTTPRequest.WhenAll(Timestamp,
                                                                API ?? this,
@@ -743,10 +743,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEStatusByOperatorIdHTTPResponse(DateTime      Timestamp,
-                                                                          HTTPAPI       API,
-                                                                          HTTPRequest   Request,
-                                                                          HTTPResponse  Response)
+        protected internal Task logPullEVSEStatusByOperatorIdHTTPResponse(DateTimeOffset  Timestamp,
+                                                                          HTTPAPI         API,
+                                                                          HTTPRequest     Request,
+                                                                          HTTPResponse    Response)
 
             => OnPullEVSEStatusByOperatorIdHTTPResponse.WhenAll(Timestamp,
                                                                 API ?? this,
@@ -770,9 +770,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullPricingProductDataHTTPRequest(DateTime     Timestamp,
-                                                                     HTTPAPI      API,
-                                                                     HTTPRequest  Request)
+        protected internal Task logPullPricingProductDataHTTPRequest(DateTimeOffset  Timestamp,
+                                                                     HTTPAPI         API,
+                                                                     HTTPRequest     Request)
 
             => OnPullPricingProductDataHTTPRequest.WhenAll(Timestamp,
                                                            API ?? this,
@@ -813,10 +813,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullPricingProductDataHTTPResponse(DateTime      Timestamp,
-                                                                      HTTPAPI       API,
-                                                                      HTTPRequest   Request,
-                                                                      HTTPResponse  Response)
+        protected internal Task logPullPricingProductDataHTTPResponse(DateTimeOffset  Timestamp,
+                                                                      HTTPAPI         API,
+                                                                      HTTPRequest     Request,
+                                                                      HTTPResponse    Response)
 
             => OnPullPricingProductDataHTTPResponse.WhenAll(Timestamp,
                                                             API ?? this,
@@ -839,9 +839,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPullEVSEPricingHTTPRequest(DateTime     Timestamp,
-                                                              HTTPAPI      API,
-                                                              HTTPRequest  Request)
+        protected internal Task logPullEVSEPricingHTTPRequest(DateTimeOffset  Timestamp,
+                                                              HTTPAPI         API,
+                                                              HTTPRequest     Request)
 
             => OnPullEVSEPricingHTTPRequest.WhenAll(Timestamp,
                                                     API ?? this,
@@ -882,10 +882,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPullEVSEPricingHTTPResponse(DateTime      Timestamp,
-                                                               HTTPAPI       API,
-                                                               HTTPRequest   Request,
-                                                               HTTPResponse  Response)
+        protected internal Task logPullEVSEPricingHTTPResponse(DateTimeOffset  Timestamp,
+                                                               HTTPAPI         API,
+                                                               HTTPRequest     Request,
+                                                               HTTPResponse    Response)
 
             => OnPullEVSEPricingHTTPResponse.WhenAll(Timestamp,
                                                      API ?? this,
@@ -909,9 +909,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logPushAuthenticationDataHTTPRequest(DateTime     Timestamp,
-                                                                     HTTPAPI      API,
-                                                                     HTTPRequest  Request)
+        protected internal Task logPushAuthenticationDataHTTPRequest(DateTimeOffset  Timestamp,
+                                                                     HTTPAPI         API,
+                                                                     HTTPRequest     Request)
 
             => OnPushAuthenticationDataHTTPRequest.WhenAll(Timestamp,
                                                            API ?? this,
@@ -952,10 +952,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logPushAuthenticationDataHTTPResponse(DateTime      Timestamp,
-                                                                      HTTPAPI       API,
-                                                                      HTTPRequest   Request,
-                                                                      HTTPResponse  Response)
+        protected internal Task logPushAuthenticationDataHTTPResponse(DateTimeOffset  Timestamp,
+                                                                      HTTPAPI         API,
+                                                                      HTTPRequest     Request,
+                                                                      HTTPResponse    Response)
 
             => OnPushAuthenticationDataHTTPResponse.WhenAll(Timestamp,
                                                             API ?? this,
@@ -979,9 +979,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTime     Timestamp,
-                                                                              HTTPAPI      API,
-                                                                              HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTimeOffset  Timestamp,
+                                                                              HTTPAPI         API,
+                                                                              HTTPRequest     Request)
 
             => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Timestamp,
                                                                     API ?? this,
@@ -1022,10 +1022,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTime      Timestamp,
-                                                                               HTTPAPI       API,
-                                                                               HTTPRequest   Request,
-                                                                               HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTimeOffset  Timestamp,
+                                                                               HTTPAPI         API,
+                                                                               HTTPRequest     Request,
+                                                                               HTTPResponse    Response)
 
             => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Timestamp,
                                                                      API ?? this,
@@ -1048,9 +1048,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTime     Timestamp,
-                                                                             HTTPAPI      API,
-                                                                             HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTimeOffset  Timestamp,
+                                                                             HTTPAPI         API,
+                                                                             HTTPRequest     Request)
 
             => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Timestamp,
                                                                    API ?? this,
@@ -1091,10 +1091,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTime      Timestamp,
-                                                                              HTTPAPI       API,
-                                                                              HTTPRequest   Request,
-                                                                              HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTimeOffset  Timestamp,
+                                                                              HTTPAPI         API,
+                                                                              HTTPRequest     Request,
+                                                                              HTTPResponse    Response)
 
             => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Timestamp,
                                                                     API ?? this,
@@ -1117,9 +1117,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTime     Timestamp,
-                                                                   HTTPAPI      API,
-                                                                   HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTimeOffset  Timestamp,
+                                                                   HTTPAPI         API,
+                                                                   HTTPRequest     Request)
 
             => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Timestamp,
                                                          API ?? this,
@@ -1160,10 +1160,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTime      Timestamp,
-                                                                    HTTPAPI       API,
-                                                                    HTTPRequest   Request,
-                                                                    HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTimeOffset  Timestamp,
+                                                                    HTTPAPI         API,
+                                                                    HTTPRequest     Request,
+                                                                    HTTPResponse    Response)
 
             => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Timestamp,
                                                           API ?? this,
@@ -1186,9 +1186,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTime     Timestamp,
-                                                                  HTTPAPI      API,
-                                                                  HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTimeOffset  Timestamp,
+                                                                  HTTPAPI         API,
+                                                                  HTTPRequest     Request)
 
             => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Timestamp,
                                                         API ?? this,
@@ -1229,10 +1229,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTime      Timestamp,
-                                                                   HTTPAPI       API,
-                                                                   HTTPRequest   Request,
-                                                                   HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTimeOffset  Timestamp,
+                                                                   HTTPAPI         API,
+                                                                   HTTPRequest     Request,
+                                                                   HTTPResponse    Response)
 
             => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Timestamp,
                                                          API ?? this,
@@ -1256,9 +1256,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logGetChargeDetailRecordsHTTPRequest(DateTime     Timestamp,
-                                                                     HTTPAPI      API,
-                                                                     HTTPRequest  Request)
+        protected internal Task logGetChargeDetailRecordsHTTPRequest(DateTimeOffset  Timestamp,
+                                                                     HTTPAPI         API,
+                                                                     HTTPRequest     Request)
 
             => OnGetChargeDetailRecordsHTTPRequest.WhenAll(Timestamp,
                                                            API ?? this,
@@ -1299,10 +1299,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <param name="API">The EMP Client HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logGetChargeDetailRecordsHTTPResponse(DateTime      Timestamp,
-                                                                      HTTPAPI       API,
-                                                                      HTTPRequest   Request,
-                                                                      HTTPResponse  Response)
+        protected internal Task logGetChargeDetailRecordsHTTPResponse(DateTimeOffset  Timestamp,
+                                                                      HTTPAPI         API,
+                                                                      HTTPRequest     Request,
+                                                                      HTTPResponse    Response)
 
             => OnGetChargeDetailRecordsHTTPResponse.WhenAll(Timestamp,
                                                             API ?? this,

@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <param name="CancellationToken">An optional token to cancel this request.</param>
     public abstract class ARequest<TRequest>(Process_Id?        ProcessId           = null,
                                              JObject?           CustomData          = null,
-                                             DateTime?          Timestamp           = null,
+                                             DateTimeOffset?    Timestamp           = null,
                                              EventTracking_Id?  EventTrackingId     = null,
                                              TimeSpan?          RequestTimeout      = null,
                                              CancellationToken  CancellationToken   = default) : IRequest,
@@ -67,7 +67,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The optional timestamp of the request.
         /// </summary>
-        public DateTime           Timestamp            { get; }      = Timestamp ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
+        public DateTimeOffset     Timestamp            { get; }      = Timestamp ?? org.GraphDefined.Vanaheimr.Illias.Timestamp.Now;
 
         /// <summary>
         /// An optional event tracking identification for correlating this request with other events.

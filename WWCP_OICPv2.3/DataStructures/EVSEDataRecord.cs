@@ -58,7 +58,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The last update timestamp of the EVSE data record.
         /// </summary>
         [Optional]
-        public DateTime?                            LastUpdate                             { get; }
+        public DateTimeOffset?                      LastUpdate                             { get; }
 
 
         /// <summary>
@@ -337,7 +337,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                               FalseTrueAuto                     DynamicInfoAvailable,
 
                               DeltaTypes?                       DeltaType                          = null,
-                              DateTime?                         LastUpdate                         = null,
+                              DateTimeOffset?                   LastUpdate                         = null,
 
                               ChargingStation_Id?               ChargingStationId                  = null,
                               ChargingPool_Id?                  ChargingPoolId                     = null,
@@ -1739,7 +1739,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The last update timestamp of the EVSE data record.
             /// </summary>
             [Optional]
-            public DateTime?                          LastUpdate                          { get; set; }
+            public DateTimeOffset?                    LastUpdate                          { get; set; }
 
 
             /// <summary>
@@ -2019,7 +2019,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                            FalseTrueAuto?                     DynamicInfoAvailable               = null,
 
                            DeltaTypes?                        DeltaType                          = null,
-                           DateTime?                          LastUpdate                         = null,
+                           DateTimeOffset?                    LastUpdate                         = null,
 
                            ChargingStation_Id?                ChargingStationId                  = null,
                            ChargingPool_Id?                   ChargingPoolId                     = null,

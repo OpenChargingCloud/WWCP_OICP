@@ -71,7 +71,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                          Process_Id?         ProcessId           = null,
                                          JObject?            CustomData          = null,
 
-                                         DateTime?           Timestamp           = null,
+                                         DateTimeOffset?     Timestamp           = null,
                                          EventTracking_Id?   EventTrackingId     = null,
                                          TimeSpan?           RequestTimeout      = null,
                                          CancellationToken   CancellationToken   = default)
@@ -182,7 +182,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                       Operator_Id                                              OperatorIdURL,
                                                       Process_Id?                                              ProcessId                               = null,
 
-                                                      DateTime?                                                Timestamp                               = null,
+                                                      DateTimeOffset?                                          Timestamp                               = null,
                                                       EventTracking_Id?                                        EventTrackingId                         = null,
                                                       TimeSpan?                                                RequestTimeout                          = null,
                                                       CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null,
@@ -229,7 +229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        [NotNullWhen(false)] out String?                         ErrorResponse,
                                        Process_Id?                                              ProcessId                               = null,
 
-                                       DateTime?                                                Timestamp                               = null,
+                                       DateTimeOffset?                                          Timestamp                               = null,
                                        EventTracking_Id?                                        EventTrackingId                         = null,
                                        TimeSpan?                                                RequestTimeout                          = null,
                                        CustomJObjectParserDelegate<ChargeDetailRecordRequest>?  CustomChargeDetailRecordRequestParser   = null,

@@ -143,13 +143,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteReservationStart(Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStartRequest, String>
             AuthorizeRemoteReservationStartRequestConverter                     { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStartRequest)
             => String.Concat(authorizeRemoteReservationStartRequest.Identification.ToString(), " at ", authorizeRemoteReservationStartRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStartRequest, Acknowledgement<AuthorizeRemoteReservationStartRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStartRequest, Acknowledgement<AuthorizeRemoteReservationStartRequest>, TimeSpan, String>
             AuthorizeRemoteReservationStartResponseConverter                    { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStartRequest, authorizeRemoteReservationStartResponse, runtime)
@@ -161,13 +161,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteReservationStop (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStopRequest, String>
             AuthorizeRemoteReservationStopRequestConverter                     { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStopRequest)
             => String.Concat(authorizeRemoteReservationStopRequest.SessionId.ToString(), " at ", authorizeRemoteReservationStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteReservationStopRequest, Acknowledgement<AuthorizeRemoteReservationStopRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteReservationStopRequest, Acknowledgement<AuthorizeRemoteReservationStopRequest>, TimeSpan, String>
             AuthorizeRemoteReservationStopResponseConverter                    { get; set; }
 
             = (timestamp, sender, authorizeRemoteReservationStopRequest, authorizeRemoteReservationStopResponse, runtime)
@@ -179,13 +179,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteStart           (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteStartRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStartRequest, String>
             AuthorizeRemoteStartRequestConverter                     { get; set; }
 
             = (timestamp, sender, authorizeRemoteStartRequest)
             => String.Concat(authorizeRemoteStartRequest.Identification.ToString(), " at ", authorizeRemoteStartRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteStartRequest, Acknowledgement<AuthorizeRemoteStartRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStartRequest, Acknowledgement<AuthorizeRemoteStartRequest>, TimeSpan, String>
             AuthorizeRemoteStartResponseConverter                    { get; set; }
 
             = (timestamp, sender, authorizeRemoteStartRequest, authorizeRemoteStartResponse, runtime)
@@ -197,13 +197,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region AuthorizeRemoteStop            (Request/Response)Converter
 
-        public Func<DateTime, Object, AuthorizeRemoteStopRequest, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStopRequest, String>
             AuthorizeRemoteStopRequestConverter                     { get; set; }
 
             = (timestamp, sender, authorizeRemoteStopRequest)
             => String.Concat(authorizeRemoteStopRequest.SessionId.ToString(), " at ", authorizeRemoteStopRequest.EVSEId);
 
-        public Func<DateTime, Object, AuthorizeRemoteStopRequest, Acknowledgement<AuthorizeRemoteStopRequest>, TimeSpan, String>
+        public Func<DateTimeOffset, Object, AuthorizeRemoteStopRequest, Acknowledgement<AuthorizeRemoteStopRequest>, TimeSpan, String>
             AuthorizeRemoteStopResponseConverter                    { get; set; }
 
             = (timestamp, sender, authorizeRemoteStopRequest, authorizeRemoteStopResponse, runtime)
@@ -230,9 +230,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTime     Timestamp,
-                                                                              HTTPAPI      API,
-                                                                              HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTimeOffset  Timestamp,
+                                                                              HTTPAPI         API,
+                                                                              HTTPRequest     Request)
 
             => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Timestamp,
                                                                     API ?? this,
@@ -273,10 +273,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTime      Timestamp,
-                                                                               HTTPAPI       API,
-                                                                               HTTPRequest   Request,
-                                                                               HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTimeOffset  Timestamp,
+                                                                               HTTPAPI         API,
+                                                                               HTTPRequest     Request,
+                                                                               HTTPResponse    Response)
 
             => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Timestamp,
                                                                      API ?? this,
@@ -299,9 +299,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTime     Timestamp,
-                                                                             HTTPAPI      API,
-                                                                             HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTimeOffset  Timestamp,
+                                                                             HTTPAPI         API,
+                                                                             HTTPRequest     Request)
 
             => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Timestamp,
                                                                    API ?? this,
@@ -342,10 +342,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTime      Timestamp,
-                                                                              HTTPAPI       API,
-                                                                              HTTPRequest   Request,
-                                                                              HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTimeOffset  Timestamp,
+                                                                              HTTPAPI         API,
+                                                                              HTTPRequest     Request,
+                                                                              HTTPResponse    Response)
 
             => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Timestamp,
                                                                     API ?? this,
@@ -369,9 +369,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTime     Timestamp,
-                                                                   HTTPAPI      API,
-                                                                   HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTimeOffset  Timestamp,
+                                                                   HTTPAPI         API,
+                                                                   HTTPRequest     Request)
 
             => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Timestamp,
                                                          API ?? this,
@@ -412,10 +412,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTime      Timestamp,
-                                                                    HTTPAPI       API,
-                                                                    HTTPRequest   Request,
-                                                                    HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTimeOffset  Timestamp,
+                                                                    HTTPAPI         API,
+                                                                    HTTPRequest     Request,
+                                                                    HTTPResponse    Response)
 
             => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Timestamp,
                                                           API ?? this,
@@ -438,9 +438,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTime     Timestamp,
-                                                                  HTTPAPI      API,
-                                                                  HTTPRequest  Request)
+        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTimeOffset  Timestamp,
+                                                                  HTTPAPI         API,
+                                                                  HTTPRequest     Request)
 
             => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Timestamp,
                                                         API ?? this,
@@ -481,10 +481,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTime      Timestamp,
-                                                                   HTTPAPI       API,
-                                                                   HTTPRequest   Request,
-                                                                   HTTPResponse  Response)
+        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTimeOffset  Timestamp,
+                                                                   HTTPAPI         API,
+                                                                   HTTPRequest     Request,
+                                                                   HTTPResponse    Response)
 
             => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Timestamp,
                                                          API ?? this,

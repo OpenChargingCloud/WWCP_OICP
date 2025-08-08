@@ -82,7 +82,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp when the charging session started.
         /// </summary>
         [Optional]
-        public DateTime?                         SessionStart                       { get; }
+        public DateTimeOffset?                   SessionStart                       { get; }
 
         /// <summary>
         /// The optional starting value of the energy meter [kWh].
@@ -133,14 +133,14 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                                 CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                                 EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                                DateTime?              SessionStart          = null,
+                                                DateTimeOffset?        SessionStart          = null,
                                                 Decimal?               MeterValueStart       = null,
                                                 Operator_Id?           OperatorId            = null,
                                                 PartnerProduct_Id?     PartnerProductId      = null,
                                                 Process_Id?            ProcessId             = null,
                                                 JObject?               CustomData            = null,
 
-                                                DateTime?              Timestamp             = null,
+                                                DateTimeOffset?        Timestamp             = null,
                                                 EventTracking_Id?      EventTrackingId       = null,
                                                 TimeSpan?              RequestTimeout        = null,
                                                 CancellationToken      CancellationToken     = default)
@@ -213,7 +213,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static ChargingStartNotificationRequest Parse(JObject                                                         JSON,
                                                              Process_Id?                                                     ProcessId                                      = null,
 
-                                                             DateTime?                                                       Timestamp                                      = null,
+                                                             DateTimeOffset?                                                 Timestamp                                      = null,
                                                              EventTracking_Id?                                               EventTrackingId                                = null,
                                                              TimeSpan?                                                       RequestTimeout                                 = null,
                                                              CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null,
@@ -257,7 +257,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        [NotNullWhen(false)] out String?                                ErrorResponse,
                                        Process_Id?                                                     ProcessId                                      = null,
 
-                                       DateTime?                                                       Timestamp                                      = null,
+                                       DateTimeOffset?                                                 Timestamp                                      = null,
                                        EventTracking_Id?                                               EventTrackingId                                = null,
                                        TimeSpan?                                                       RequestTimeout                                 = null,
                                        CustomJObjectParserDelegate<ChargingStartNotificationRequest>?  CustomChargingStartNotificationRequestParser   = null,

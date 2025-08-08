@@ -83,7 +83,7 @@ namespace cloud.charging.open.protocols.WWCP
                                       Boolean                                                  GetChargeDetailRecords_IsDisabled                   = false,
                                       TimeSpan?                                                GetChargeDetailRecords_InitialDelay                 = null,
                                       TimeSpan?                                                GetChargeDetailRecords_Every                        = null,
-                                      DateTime?                                                GetChargeDetailRecords_LastRunTimestamp             = null,
+                                      DateTimeOffset?                                          GetChargeDetailRecords_LastRunTimestamp             = null,
                                       TimeSpan?                                                GetChargeDetailRecords_RequestTimeout               = null,
 
                                       IEMobilityProvider?                                      DefaultProvider                                     = null,

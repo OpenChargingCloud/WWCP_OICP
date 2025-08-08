@@ -25,7 +25,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartClientRequestDelegate (DateTime                                  Timestamp,
+        OnAuthorizeStartClientRequestDelegate (DateTimeOffset                            Timestamp,
                                                EMPServerAPIClient                        Sender,
                                                AuthorizeStartRequest                     Request);
 
@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">An AuthorizeStart request.</param>
     public delegate Task<OICPResult<AuthorizationStartResponse>>
 
-        OnAuthorizeStartClientDelegate        (DateTime                                  Timestamp,
+        OnAuthorizeStartClientDelegate        (DateTimeOffset                            Timestamp,
                                                EMPServerAPIClient                        Sender,
                                                AuthorizeStartRequest                     Request);
 
@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartClientResponseDelegate(DateTime                                  Timestamp,
+        OnAuthorizeStartClientResponseDelegate(DateTimeOffset                            Timestamp,
                                                EMPServerAPIClient                        Sender,
                                                AuthorizeStartRequest                     Request,
                                                OICPResult<AuthorizationStartResponse>    Response,
@@ -63,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStopClientRequestDelegate (DateTime                                  Timestamp,
+        OnAuthorizeStopClientRequestDelegate (DateTimeOffset                            Timestamp,
                                               EMPServerAPIClient                        Sender,
                                               AuthorizeStopRequest                      Request);
 
@@ -76,7 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<AuthorizationStopResponse>>
 
-        OnAuthorizeStopClientDelegate        (DateTime                                 Timestamp,
+        OnAuthorizeStopClientDelegate        (DateTimeOffset                           Timestamp,
                                               EMPServerAPIClient                       Sender,
                                               AuthorizeStopRequest                     Request);
 
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStopClientResponseDelegate(DateTime                                 Timestamp,
+        OnAuthorizeStopClientResponseDelegate(DateTimeOffset                           Timestamp,
                                               EMPServerAPIClient                       Sender,
                                               AuthorizeStopRequest                     Request,
                                               OICPResult<AuthorizationStopResponse>    Response,
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingStartNotificationClientRequestDelegate (DateTime                                                         Timestamp,
+        OnChargingStartNotificationClientRequestDelegate (DateTimeOffset                                                   Timestamp,
                                                           EMPServerAPIClient                                               Sender,
                                                           ChargingStartNotificationRequest                                 Request);
 
@@ -115,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
 
-        OnChargingStartNotificationClientDelegate        (DateTime                                                         Timestamp,
+        OnChargingStartNotificationClientDelegate        (DateTimeOffset                                                   Timestamp,
                                                           EMPServerAPIClient                                               Sender,
                                                           ChargingStartNotificationRequest                                 Request);
 
@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingStartNotificationClientResponseDelegate(DateTime                                                         Timestamp,
+        OnChargingStartNotificationClientResponseDelegate(DateTimeOffset                                                   Timestamp,
                                                           EMPServerAPIClient                                               Sender,
                                                           ChargingStartNotificationRequest                                 Request,
                                                           OICPResult<Acknowledgement<ChargingStartNotificationRequest>>    Response,
@@ -140,7 +140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingProgressNotificationClientRequestDelegate (DateTime                                                            Timestamp,
+        OnChargingProgressNotificationClientRequestDelegate (DateTimeOffset                                                      Timestamp,
                                                              EMPServerAPIClient                                                  Sender,
                                                              ChargingProgressNotificationRequest                                 Request);
 
@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
-        OnChargingProgressNotificationClientDelegate        (DateTime                                                            Timestamp,
+        OnChargingProgressNotificationClientDelegate        (DateTimeOffset                                                      Timestamp,
                                                              EMPServerAPIClient                                                  Sender,
                                                              ChargingProgressNotificationRequest                                 Request);
 
@@ -163,7 +163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingProgressNotificationClientResponseDelegate(DateTime                                                            Timestamp,
+        OnChargingProgressNotificationClientResponseDelegate(DateTimeOffset                                                      Timestamp,
                                                              EMPServerAPIClient                                                  Sender,
                                                              ChargingProgressNotificationRequest                                 Request,
                                                              OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>    Response,
@@ -178,7 +178,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingEndNotificationClientRequestDelegate (DateTime                                                       Timestamp,
+        OnChargingEndNotificationClientRequestDelegate (DateTimeOffset                                                 Timestamp,
                                                         EMPServerAPIClient                                             Sender,
                                                         ChargingEndNotificationRequest                                 Request);
 
@@ -191,7 +191,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
-        OnChargingEndNotificationClientDelegate        (DateTime                                                       Timestamp,
+        OnChargingEndNotificationClientDelegate        (DateTimeOffset                                                 Timestamp,
                                                         EMPServerAPIClient                                             Sender,
                                                         ChargingEndNotificationRequest                                 Request);
 
@@ -201,7 +201,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingEndNotificationClientResponseDelegate(DateTime                                                       Timestamp,
+        OnChargingEndNotificationClientResponseDelegate(DateTimeOffset                                                 Timestamp,
                                                         EMPServerAPIClient                                             Sender,
                                                         ChargingEndNotificationRequest                                 Request,
                                                         OICPResult<Acknowledgement<ChargingEndNotificationRequest>>    Response,
@@ -216,7 +216,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingErrorNotificationClientRequestDelegate (DateTime                                                         Timestamp,
+        OnChargingErrorNotificationClientRequestDelegate (DateTimeOffset                                                   Timestamp,
                                                           EMPServerAPIClient                                               Sender,
                                                           ChargingErrorNotificationRequest                                 Request);
 
@@ -229,7 +229,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
-        OnChargingErrorNotificationClientDelegate        (DateTime                                                         Timestamp,
+        OnChargingErrorNotificationClientDelegate        (DateTimeOffset                                                   Timestamp,
                                                           EMPServerAPIClient                                               Sender,
                                                           ChargingErrorNotificationRequest                                 Request);
 
@@ -239,7 +239,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargingErrorNotificationClientResponseDelegate(DateTime                                                         Timestamp,
+        OnChargingErrorNotificationClientResponseDelegate(DateTimeOffset                                                   Timestamp,
                                                           EMPServerAPIClient                                               Sender,
                                                           ChargingErrorNotificationRequest                                 Request,
                                                           OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>    Response,
@@ -255,7 +255,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordClientRequestDelegate (DateTime                                                  Timestamp,
+        OnChargeDetailRecordClientRequestDelegate (DateTimeOffset                                            Timestamp,
                                                    EMPServerAPIClient                                        Sender,
                                                    ChargeDetailRecordRequest                                 Request);
 
@@ -268,7 +268,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
-        OnChargeDetailRecordClientDelegate        (DateTime                                                  Timestamp,
+        OnChargeDetailRecordClientDelegate        (DateTimeOffset                                            Timestamp,
                                                    EMPServerAPIClient                                        Sender,
                                                    ChargeDetailRecordRequest                                 Request);
 
@@ -278,7 +278,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordClientResponseDelegate(DateTime                                                  Timestamp,
+        OnChargeDetailRecordClientResponseDelegate(DateTimeOffset                                            Timestamp,
                                                    EMPServerAPIClient                                        Sender,
                                                    ChargeDetailRecordRequest                                 Request,
                                                    OICPResult<Acknowledgement<ChargeDetailRecordRequest>>    Response,

@@ -53,7 +53,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          ActionTypes         Action              = ActionTypes.FullLoad,
                          JObject?            CustomData          = null,
 
-                         DateTime?           Timestamp           = null,
+                         DateTimeOffset?     Timestamp           = null,
                          EventTracking_Id?   EventTrackingId     = null,
                          TimeSpan?           RequestTimeout      = null,
                          CancellationToken   CancellationToken   = default)
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          IncludeEVSEDataRecordsDelegate?  IncludeEVSEDataRecords   = null,
                          JObject?                         CustomData               = null,
 
-                         DateTime?                        Timestamp                = null,
+                         DateTimeOffset?                  Timestamp                = null,
                          EventTracking_Id?                EventTrackingId          = null,
                          TimeSpan?                        RequestTimeout           = null,
                          CancellationToken                CancellationToken        = default)
@@ -155,7 +155,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                          ActionTypes         Action              = ActionTypes.Insert,
                          JObject?            CustomData          = null,
 
-                         DateTime?           Timestamp           = null,
+                         DateTimeOffset?     Timestamp           = null,
                          EventTracking_Id?   EventTrackingId     = null,
                          TimeSpan?           RequestTimeout      = null,
                          CancellationToken   CancellationToken   = default)
@@ -203,7 +203,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            ActionTypes         Action              = ActionTypes.Update,
                            JObject?            CustomData          = null,
 
-                           DateTime?           Timestamp           = null,
+                           DateTimeOffset?     Timestamp           = null,
                            EventTracking_Id?   EventTrackingId     = null,
                            TimeSpan?           RequestTimeout      = null,
                            CancellationToken   CancellationToken   = default)
@@ -252,7 +252,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            IncludeEVSEStatusRecordsDelegate?  IncludeEVSEStatusRecords   = null,
                            JObject?                           CustomData                 = null,
 
-                           DateTime?                          Timestamp                  = null,
+                           DateTimeOffset?                    Timestamp                  = null,
                            EventTracking_Id?                  EventTrackingId            = null,
                            TimeSpan?                          RequestTimeout             = null,
                            CancellationToken                  CancellationToken          = default)
@@ -305,7 +305,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            ActionTypes         Action              = ActionTypes.Update,
                            JObject?            CustomData          = null,
 
-                           DateTime?           Timestamp           = null,
+                           DateTimeOffset?     Timestamp           = null,
                            EventTracking_Id?   EventTrackingId     = null,
                            TimeSpan?           RequestTimeout      = null,
                            CancellationToken   CancellationToken   = default)
@@ -352,7 +352,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Process_Id?         ProcessId           = null,
                                    JObject?            CustomData          = null,
 
-                                   DateTime?           Timestamp           = null,
+                                   DateTimeOffset?     Timestamp           = null,
                                    EventTracking_Id?   EventTrackingId     = null,
                                    TimeSpan?           RequestTimeout      = null,
                                    CancellationToken   CancellationToken   = default)
@@ -394,7 +394,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             Process_Id?               ProcessId           = null,
                             JObject?                  CustomData          = null,
 
-                            DateTime?                 Timestamp           = null,
+                            DateTimeOffset?           Timestamp           = null,
                             EventTracking_Id?         EventTrackingId     = null,
                             TimeSpan?                 RequestTimeout      = null,
                             CancellationToken         CancellationToken   = default)
@@ -437,7 +437,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Process_Id?        ProcessId           = null,
                                    JObject?           CustomData          = null,
 
-                                   DateTime?          Timestamp           = null,
+                                   DateTimeOffset?    Timestamp           = null,
                                    EventTracking_Id?  EventTrackingId     = null,
                                    TimeSpan?          RequestTimeout      = null,
                                    CancellationToken  CancellationToken   = default)
@@ -485,7 +485,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                            JObject?               CustomData            = null,
 
-                           DateTime?              Timestamp             = null,
+                           DateTimeOffset?        Timestamp             = null,
                            EventTracking_Id?      EventTrackingId       = null,
                            TimeSpan?              RequestTimeout        = null,
                            CancellationToken      CancellationToken     = default)
@@ -540,7 +540,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                           EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
                           JObject?               CustomData            = null,
 
-                          DateTime?              Timestamp             = null,
+                          DateTimeOffset?        Timestamp             = null,
                           EventTracking_Id?      EventTrackingId       = null,
                           TimeSpan?              RequestTimeout        = null,
                           CancellationToken      CancellationToken     = default)
@@ -600,13 +600,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                            CPOPartnerSession_Id?  CPOPartnerSessionId   = null,
                                            EMPPartnerSession_Id?  EMPPartnerSessionId   = null,
-                                           DateTime?              SessionStart          = null,
+                                           DateTimeOffset?        SessionStart          = null,
                                            Decimal?               MeterValueStart       = null,
                                            Operator_Id?           OperatorId            = null,
                                            PartnerProduct_Id?     PartnerProductId      = null,
                                            JObject?               CustomData            = null,
 
-                                           DateTime?              Timestamp             = null,
+                                           DateTimeOffset?        Timestamp             = null,
                                            EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null,
                                            CancellationToken      CancellationToken     = default)
@@ -677,7 +677,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               CPOPartnerSession_Id?  CPOPartnerSessionId      = null,
                                               EMPPartnerSession_Id?  EMPPartnerSessionId      = null,
                                               TimeSpan?              ChargingDuration         = null,
-                                              DateTime?              SessionStart             = null,
+                                              DateTimeOffset?        SessionStart             = null,
                                               Decimal?               ConsumedEnergyProgress   = null,
                                               Decimal?               MeterValueStart          = null,
                                               IEnumerable<Decimal>?  MeterValuesInBetween     = null,
@@ -685,7 +685,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                               PartnerProduct_Id?     PartnerProductId         = null,
                                               JObject?               CustomData               = null,
 
-                                              DateTime?              Timestamp                = null,
+                                              DateTimeOffset?        Timestamp                = null,
                                               EventTracking_Id?      EventTrackingId          = null,
                                               TimeSpan?              RequestTimeout           = null,
                                               CancellationToken      CancellationToken        = default)
@@ -761,18 +761,18 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                          CPOPartnerSession_Id?   CPOPartnerSessionId      = null,
                                          EMPPartnerSession_Id?   EMPPartnerSessionId      = null,
-                                         DateTime?               SessionStart             = null,
-                                         DateTime?               SessionEnd               = null,
+                                         DateTimeOffset?         SessionStart             = null,
+                                         DateTimeOffset?         SessionEnd               = null,
                                          Decimal?                ConsumedEnergy           = null,
                                          Decimal?                MeterValueStart          = null,
                                          Decimal?                MeterValueEnd            = null,
                                          IEnumerable<Decimal>?   MeterValuesInBetween     = null,
                                          Operator_Id?            OperatorId               = null,
                                          PartnerProduct_Id?      PartnerProductId         = null,
-                                         DateTime?               PenaltyTimeStart         = null,
+                                         DateTimeOffset?         PenaltyTimeStart         = null,
                                          JObject?                CustomData               = null,
 
-                                         DateTime?               Timestamp                = null,
+                                         DateTimeOffset?         Timestamp                = null,
                                          EventTracking_Id?       EventTrackingId          = null,
                                          TimeSpan?               RequestTimeout           = null,
                                          CancellationToken       CancellationToken        = default)
@@ -845,7 +845,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                            String?                ErrorAdditionalInfo   = null,
                                            JObject?               CustomData            = null,
 
-                                           DateTime?              Timestamp             = null,
+                                           DateTimeOffset?        Timestamp             = null,
                                            EventTracking_Id?      EventTrackingId       = null,
                                            TimeSpan?              RequestTimeout        = null,
                                            CancellationToken      CancellationToken     = default)
@@ -897,7 +897,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                    Operator_Id         OperatorId,
                                    JObject?            CustomData         = null,
 
-                                   DateTime?           Timestamp          = null,
+                                   DateTimeOffset?     Timestamp          = null,
                                    EventTracking_Id?   EventTrackingId    = null,
                                    TimeSpan?           RequestTimeout     = null,
                                    CancellationToken   CancellationToken  = default)

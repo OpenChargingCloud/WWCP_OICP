@@ -84,7 +84,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="HTTPResponse">The optional HTTP response.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
         /// <param name="Warnings">Optional warnings.</param>
-        public PullPricingProductDataResponse(DateTime                         ResponseTimestamp,
+        public PullPricingProductDataResponse(DateTimeOffset                   ResponseTimestamp,
                                               EventTracking_Id                 EventTrackingId,
                                               Process_Id                       ProcessId,
                                               TimeSpan                         Runtime,
@@ -212,7 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomPullPricingProductDataResponseParser">A delegate to parse custom PullPricingProductData response JSON objects.</param>
         public static Boolean TryParse(PullPricingProductDataRequest                                 Request,
                                        JObject                                                       JSON,
-                                       DateTime                                                      ResponseTimestamp,
+                                       DateTimeOffset                                                ResponseTimestamp,
                                        EventTracking_Id                                              EventTrackingId,
                                        TimeSpan                                                      Runtime,
                                        [NotNullWhen(true)]  out PullPricingProductDataResponse?      PullPricingProductDataResponse,
@@ -681,7 +681,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="HTTPResponse">The optional HTTP response.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(PullPricingProductDataRequest?    Request              = null,
-                           DateTime?                         ResponseTimestamp    = null,
+                           DateTimeOffset?                   ResponseTimestamp    = null,
                            EventTracking_Id?                 EventTrackingId      = null,
                            TimeSpan?                         Runtime              = null,
                            IEnumerable<PricingProductData>?  PricingProductData   = null,

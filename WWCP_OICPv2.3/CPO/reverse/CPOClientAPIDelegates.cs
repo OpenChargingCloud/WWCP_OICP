@@ -25,7 +25,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushEVSEDataAPIRequestDelegate (DateTime                                            Timestamp,
+        OnPushEVSEDataAPIRequestDelegate (DateTimeOffset                                      Timestamp,
                                           CPOClientAPI                                        Sender,
                                           PushEVSEDataRequest                                 Request);
 
@@ -38,7 +38,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<PushEVSEDataRequest>>>
 
-        OnPushEVSEDataAPIDelegate        (DateTime                                            Timestamp,
+        OnPushEVSEDataAPIDelegate        (DateTimeOffset                                      Timestamp,
                                           CPOClientAPI                                        Sender,
                                           PushEVSEDataRequest                                 Request);
 
@@ -48,7 +48,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushEVSEDataAPIResponseDelegate(DateTime                                            Timestamp,
+        OnPushEVSEDataAPIResponseDelegate(DateTimeOffset                                      Timestamp,
                                           CPOClientAPI                                        Sender,
                                           PushEVSEDataRequest                                 Request,
                                           OICPResult<Acknowledgement<PushEVSEDataRequest>>    Response,
@@ -63,7 +63,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushEVSEStatusAPIRequestDelegate (DateTime                                              Timestamp,
+        OnPushEVSEStatusAPIRequestDelegate (DateTimeOffset                                        Timestamp,
                                             CPOClientAPI                                          Sender,
                                             PushEVSEStatusRequest                                 Request);
 
@@ -76,7 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<PushEVSEStatusRequest>>>
 
-        OnPushEVSEStatusAPIDelegate        (DateTime                                              Timestamp,
+        OnPushEVSEStatusAPIDelegate        (DateTimeOffset                                        Timestamp,
                                             CPOClientAPI                                          Sender,
                                             PushEVSEStatusRequest                                 Request);
 
@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushEVSEStatusAPIResponseDelegate(DateTime                                              Timestamp,
+        OnPushEVSEStatusAPIResponseDelegate(DateTimeOffset                                        Timestamp,
                                             CPOClientAPI                                          Sender,
                                             PushEVSEStatusRequest                                 Request,
                                             OICPResult<Acknowledgement<PushEVSEStatusRequest>>    Response,
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushPricingProductDataAPIRequestDelegate (DateTime                                                      Timestamp,
+        OnPushPricingProductDataAPIRequestDelegate (DateTimeOffset                                                Timestamp,
                                                     CPOClientAPI                                                  Sender,
                                                     PushPricingProductDataRequest                                 Request);
 
@@ -115,7 +115,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<PushPricingProductDataRequest>>>
 
-        OnPushPricingProductDataAPIDelegate        (DateTime                                                      Timestamp,
+        OnPushPricingProductDataAPIDelegate        (DateTimeOffset                                                Timestamp,
                                                     CPOClientAPI                                                  Sender,
                                                     PushPricingProductDataRequest                                 Request);
 
@@ -125,7 +125,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushPricingProductDataAPIResponseDelegate(DateTime                                                      Timestamp,
+        OnPushPricingProductDataAPIResponseDelegate(DateTimeOffset                                                Timestamp,
                                                     CPOClientAPI                                                  Sender,
                                                     PushPricingProductDataRequest                                 Request,
                                                     OICPResult<Acknowledgement<PushPricingProductDataRequest>>    Response,
@@ -140,7 +140,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushEVSEPricingAPIRequestDelegate (DateTime                                               Timestamp,
+        OnPushEVSEPricingAPIRequestDelegate (DateTimeOffset                                         Timestamp,
                                              CPOClientAPI                                           Sender,
                                              PushEVSEPricingRequest                                 Request);
 
@@ -153,7 +153,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<PushEVSEPricingRequest>>>
 
-        OnPushEVSEPricingAPIDelegate        (DateTime                                               Timestamp,
+        OnPushEVSEPricingAPIDelegate        (DateTimeOffset                                         Timestamp,
                                              CPOClientAPI                                           Sender,
                                              PushEVSEPricingRequest                                 Request);
 
@@ -163,7 +163,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPushEVSEPricingAPIResponseDelegate(DateTime                                               Timestamp,
+        OnPushEVSEPricingAPIResponseDelegate(DateTimeOffset                                         Timestamp,
                                              CPOClientAPI                                           Sender,
                                              PushEVSEPricingRequest                                 Request,
                                              OICPResult<Acknowledgement<PushEVSEPricingRequest>>    Response,
@@ -179,7 +179,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPullAuthenticationDataAPIRequestDelegate (DateTime                                      Timestamp,
+        OnPullAuthenticationDataAPIRequestDelegate (DateTimeOffset                                Timestamp,
                                                     CPOClientAPI                                  Sender,
                                                     PullAuthenticationDataRequest                 Request);
 
@@ -192,7 +192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<PullAuthenticationDataResponse>>
 
-        OnPullAuthenticationDataAPIDelegate        (DateTime                                      Timestamp,
+        OnPullAuthenticationDataAPIDelegate        (DateTimeOffset                                Timestamp,
                                                     CPOClientAPI                                  Sender,
                                                     PullAuthenticationDataRequest                 Request);
 
@@ -202,7 +202,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnPullAuthenticationDataAPIResponseDelegate(DateTime                                      Timestamp,
+        OnPullAuthenticationDataAPIResponseDelegate(DateTimeOffset                                Timestamp,
                                                     CPOClientAPI                                  Sender,
                                                     PullAuthenticationDataRequest                 Request,
                                                     OICPResult<PullAuthenticationDataResponse>    Response,
@@ -218,7 +218,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartAPIRequestDelegate (DateTime                                  Timestamp,
+        OnAuthorizeStartAPIRequestDelegate (DateTimeOffset                            Timestamp,
                                             CPOClientAPI                              Sender,
                                             AuthorizeStartRequest                     Request);
 
@@ -231,7 +231,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<AuthorizationStartResponse>>
 
-        OnAuthorizeStartAPIDelegate        (DateTime                                  Timestamp,
+        OnAuthorizeStartAPIDelegate        (DateTimeOffset                            Timestamp,
                                             CPOClientAPI                              Sender,
                                             AuthorizeStartRequest                     Request);
 
@@ -241,7 +241,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStartAPIResponseDelegate(DateTime                                  Timestamp,
+        OnAuthorizeStartAPIResponseDelegate(DateTimeOffset                            Timestamp,
                                             CPOClientAPI                              Sender,
                                             AuthorizeStartRequest                     Request,
                                             OICPResult<AuthorizationStartResponse>    Response,
@@ -256,7 +256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStopAPIRequestDelegate (DateTime                                 Timestamp,
+        OnAuthorizeStopAPIRequestDelegate (DateTimeOffset                           Timestamp,
                                            CPOClientAPI                             Sender,
                                            AuthorizeStopRequest                     Request);
 
@@ -269,7 +269,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<AuthorizationStopResponse>>
 
-        OnAuthorizeStopAPIDelegate        (DateTime                                 Timestamp,
+        OnAuthorizeStopAPIDelegate        (DateTimeOffset                           Timestamp,
                                            CPOClientAPI                             Sender,
                                            AuthorizeStopRequest                     Request);
 
@@ -279,7 +279,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnAuthorizeStopAPIResponseDelegate(DateTime                                 Timestamp,
+        OnAuthorizeStopAPIResponseDelegate(DateTimeOffset                           Timestamp,
                                            CPOClientAPI                             Sender,
                                            AuthorizeStopRequest                     Request,
                                            OICPResult<AuthorizationStopResponse>    Response,
@@ -295,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingStartNotificationAPIRequestDelegate (DateTime                                                          Timestamp,
+        OnChargingStartNotificationAPIRequestDelegate (DateTimeOffset                                                    Timestamp,
                                                        CPOClientAPI                                                      Sender,
                                                        ChargingStartNotificationRequest                                  Request);
 
@@ -308,7 +308,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargingStartNotificationRequest>>>
 
-        OnChargingStartNotificationAPIDelegate        (DateTime                                                         Timestamp,
+        OnChargingStartNotificationAPIDelegate        (DateTimeOffset                                                   Timestamp,
                                                        CPOClientAPI                                                     Sender,
                                                        ChargingStartNotificationRequest                                 Request);
 
@@ -318,7 +318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingStartNotificationAPIResponseDelegate(DateTime                                                         Timestamp,
+        OnChargingStartNotificationAPIResponseDelegate(DateTimeOffset                                                   Timestamp,
                                                        CPOClientAPI                                                     Sender,
                                                        ChargingStartNotificationRequest                                 Request,
                                                        OICPResult<Acknowledgement<ChargingStartNotificationRequest>>    Response,
@@ -333,7 +333,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingProgressNotificationAPIRequestDelegate (DateTime                                                            Timestamp,
+        OnChargingProgressNotificationAPIRequestDelegate (DateTimeOffset                                                      Timestamp,
                                                           CPOClientAPI                                                        Sender,
                                                           ChargingProgressNotificationRequest                                 Request);
 
@@ -346,7 +346,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>>
 
-        OnChargingProgressNotificationAPIDelegate        (DateTime                                                            Timestamp,
+        OnChargingProgressNotificationAPIDelegate        (DateTimeOffset                                                      Timestamp,
                                                           CPOClientAPI                                                        Sender,
                                                           ChargingProgressNotificationRequest                                 Request);
 
@@ -356,7 +356,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingProgressNotificationAPIResponseDelegate(DateTime                                                            Timestamp,
+        OnChargingProgressNotificationAPIResponseDelegate(DateTimeOffset                                                      Timestamp,
                                                           CPOClientAPI                                                        Sender,
                                                           ChargingProgressNotificationRequest                                 Request,
                                                           OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>    Response,
@@ -371,7 +371,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingEndNotificationAPIRequestDelegate (DateTime                                                        Timestamp,
+        OnChargingEndNotificationAPIRequestDelegate (DateTimeOffset                                                  Timestamp,
                                                      CPOClientAPI                                                    Sender,
                                                      ChargingEndNotificationRequest                                  Request);
 
@@ -384,7 +384,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargingEndNotificationRequest>>>
 
-        OnChargingEndNotificationAPIDelegate        (DateTime                                                       Timestamp,
+        OnChargingEndNotificationAPIDelegate        (DateTimeOffset                                                 Timestamp,
                                                      CPOClientAPI                                                   Sender,
                                                      ChargingEndNotificationRequest                                 Request);
 
@@ -394,7 +394,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingEndNotificationAPIResponseDelegate(DateTime                                                       Timestamp,
+        OnChargingEndNotificationAPIResponseDelegate(DateTimeOffset                                                 Timestamp,
                                                      CPOClientAPI                                                   Sender,
                                                      ChargingEndNotificationRequest                                 Request,
                                                      OICPResult<Acknowledgement<ChargingEndNotificationRequest>>    Response,
@@ -409,7 +409,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingErrorNotificationAPIRequestDelegate (DateTime                                                          Timestamp,
+        OnChargingErrorNotificationAPIRequestDelegate (DateTimeOffset                                                    Timestamp,
                                                        CPOClientAPI                                                      Sender,
                                                        ChargingErrorNotificationRequest                                  Request);
 
@@ -422,7 +422,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>>
 
-        OnChargingErrorNotificationAPIDelegate        (DateTime                                                         Timestamp,
+        OnChargingErrorNotificationAPIDelegate        (DateTimeOffset                                                   Timestamp,
                                                        CPOClientAPI                                                     Sender,
                                                        ChargingErrorNotificationRequest                                 Request);
 
@@ -432,7 +432,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargingErrorNotificationAPIResponseDelegate(DateTime                                                         Timestamp,
+        OnChargingErrorNotificationAPIResponseDelegate(DateTimeOffset                                                   Timestamp,
                                                        CPOClientAPI                                                     Sender,
                                                        ChargingErrorNotificationRequest                                 Request,
                                                        OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>    Response,
@@ -448,7 +448,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordAPIRequestDelegate (DateTime                                                   Timestamp,
+        OnChargeDetailRecordAPIRequestDelegate (DateTimeOffset                                             Timestamp,
                                                 CPOClientAPI                                               Sender,
                                                 ChargeDetailRecordRequest                                  Request);
 
@@ -461,7 +461,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <param name="Request">The request.</param>
     public delegate Task<OICPResult<Acknowledgement<ChargeDetailRecordRequest>>>
 
-        OnChargeDetailRecordAPIDelegate        (DateTime                                                  Timestamp,
+        OnChargeDetailRecordAPIDelegate        (DateTimeOffset                                            Timestamp,
                                                 CPOClientAPI                                              Sender,
                                                 ChargeDetailRecordRequest                                 Request);
 
@@ -471,7 +471,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// </summary>
     public delegate Task
 
-        OnChargeDetailRecordAPIResponseDelegate(DateTime                                                  Timestamp,
+        OnChargeDetailRecordAPIResponseDelegate(DateTimeOffset                                            Timestamp,
                                                 CPOClientAPI                                              Sender,
                                                 ChargeDetailRecordRequest                                 Request,
                                                 OICPResult<Acknowledgement<ChargeDetailRecordRequest>>    Response,

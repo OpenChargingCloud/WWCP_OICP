@@ -313,7 +313,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
 
                                              EVSE2EVSEDataRecordDelegate?  EVSE2EVSEDataRecord   = null,
                                              DeltaTypes?                   DeltaType             = null,
-                                             DateTime?                     LastUpdate            = null)
+                                             DateTimeOffset?               LastUpdate            = null)
 
         {
 

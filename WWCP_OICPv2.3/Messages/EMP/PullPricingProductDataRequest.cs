@@ -45,7 +45,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <summary>
         /// The optional timestamp of the last call.
         /// </summary>
-        public DateTime?                 LastCall       { get; }
+        public DateTimeOffset?           LastCall       { get; }
 
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CancellationToken">An optional token to cancel this request.</param>
         public PullPricingProductDataRequest(Provider_Id               ProviderId,
                                              IEnumerable<Operator_Id>  OperatorIds,
-                                             DateTime?                 LastCall            = null,
+                                             DateTimeOffset?           LastCall            = null,
 
                                              Process_Id?               ProcessId           = null,
                                              UInt32?                   Page                = null,
@@ -83,7 +83,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                              IEnumerable<String>?      SortOrder           = null,
                                              JObject?                  CustomData          = null,
 
-                                             DateTime?                 Timestamp           = null,
+                                             DateTimeOffset?           Timestamp           = null,
                                              EventTracking_Id?         EventTrackingId     = null,
                                              TimeSpan?                 RequestTimeout      = null,
                                              CancellationToken         CancellationToken   = default)
@@ -147,7 +147,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                                           UInt32?                                                      Size                                        = null,
                                                           IEnumerable<String>?                                         SortOrder                                   = null,
 
-                                                          DateTime?                                                    Timestamp                                   = null,
+                                                          DateTimeOffset?                                              Timestamp                                   = null,
                                                           EventTracking_Id?                                            EventTrackingId                             = null,
                                                           TimeSpan?                                                    RequestTimeout                              = null,
                                                           CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null,
@@ -197,7 +197,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        UInt32?                                                      Size                                        = null,
                                        IEnumerable<String>?                                         SortOrder                                   = null,
 
-                                       DateTime?                                                    Timestamp                                   = null,
+                                       DateTimeOffset?                                              Timestamp                                   = null,
                                        EventTracking_Id?                                            EventTrackingId                             = null,
                                        TimeSpan?                                                    RequestTimeout                              = null,
                                        CustomJObjectParserDelegate<PullPricingProductDataRequest>?  CustomPullPricingProductDataRequestParser   = null,

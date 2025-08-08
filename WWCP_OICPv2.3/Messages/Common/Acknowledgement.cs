@@ -41,13 +41,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp of the request.
         /// </summary>
         [Mandatory]
-        public DateTime               RequestTimestamp       { get; }
+        public DateTimeOffset         RequestTimestamp       { get; }
 
         /// <summary>
         /// The timestamp of the response creation.
         /// </summary>
         [Mandatory]
-        public DateTime               ResponseTimestamp      { get; }
+        public DateTimeOffset         ResponseTimestamp      { get; }
 
         /// <summary>
         /// An optional event tracking identification for correlating this response with other events.
@@ -127,8 +127,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public Acknowledgement(DateTime               RequestTimestamp,
-                               DateTime               ResponseTimestamp,
+        public Acknowledgement(DateTimeOffset         RequestTimestamp,
+                               DateTimeOffset         ResponseTimestamp,
                                EventTracking_Id       EventTrackingId,
                                TimeSpan               Runtime,
                                StatusCode             StatusCode,
@@ -194,8 +194,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       Session_Id?            SessionId                  = null,
                       CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                       EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                      DateTime?              RequestTimestamp           = null,
-                      DateTime?              ResponseTimestamp          = null,
+                      DateTimeOffset?        RequestTimestamp           = null,
+                      DateTimeOffset?        ResponseTimestamp          = null,
                       EventTracking_Id?      EventTrackingId            = null,
                       TimeSpan?              Runtime                    = null,
                       Process_Id?            ProcessId                  = null,
@@ -243,8 +243,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         Session_Id?            SessionId                  = null,
                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                        DateTime?              RequestTimestamp           = null,
-                        DateTime?              ResponseTimestamp          = null,
+                        DateTimeOffset?        RequestTimestamp           = null,
+                        DateTimeOffset?        ResponseTimestamp          = null,
                         EventTracking_Id?      EventTrackingId            = null,
                         TimeSpan?              Runtime                    = null,
                         Process_Id?            ProcessId                  = null,
@@ -292,8 +292,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                DateTime?              RequestTimestamp           = null,
-                                DateTime?              ResponseTimestamp          = null,
+                                DateTimeOffset?        RequestTimestamp           = null,
+                                DateTimeOffset?        ResponseTimestamp          = null,
                                 EventTracking_Id?      EventTrackingId            = null,
                                 TimeSpan?              Runtime                    = null,
                                 Process_Id?            ProcessId                  = null,
@@ -365,8 +365,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CustomAcknowledgementParser">A delegate to parse custom acknowledgement JSON objects.</param>
         public static Acknowledgement Parse(JObject                                        JSON,
                                             HTTPResponse?                                  HTTPResponse                  = null,
-                                            DateTime?                                      RequestTimestamp              = null,
-                                            DateTime?                                      ResponseTimestamp             = null,
+                                            DateTimeOffset?                                RequestTimestamp              = null,
+                                            DateTimeOffset?                                ResponseTimestamp             = null,
                                             EventTracking_Id?                              EventTrackingId               = null,
                                             TimeSpan?                                      Runtime                       = null,
                                             Process_Id?                                    ProcessId                     = null,
@@ -412,8 +412,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        [NotNullWhen(true)]  out Acknowledgement?      Acknowledgement,
                                        [NotNullWhen(false)] out String?               ErrorResponse,
                                        HTTPResponse?                                  HTTPResponse                  = null,
-                                       DateTime?                                      RequestTimestamp              = null,
-                                       DateTime?                                      ResponseTimestamp             = null,
+                                       DateTimeOffset?                                RequestTimestamp              = null,
+                                       DateTimeOffset?                                ResponseTimestamp             = null,
                                        EventTracking_Id?                              EventTrackingId               = null,
                                        TimeSpan?                                      Runtime                       = null,
                                        Process_Id?                                    ProcessId                     = null,
@@ -739,13 +739,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// The timestamp of the request.
             /// </summary>
             [Mandatory]
-            public DateTime?              RequestTimestamp       { get; set; }
+            public DateTimeOffset?        RequestTimestamp       { get; set; }
 
             /// <summary>
             /// The timestamp of the response creation.
             /// </summary>
             [Mandatory]
-            public DateTime?              ResponseTimestamp      { get; set; }
+            public DateTimeOffset?        ResponseTimestamp      { get; set; }
 
             /// <summary>
             /// An optional event tracking identification for correlating this response with other events.
@@ -827,8 +827,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
             /// <param name="ProcessId">The optional Hubject process identification of the request.</param>
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-            public Builder(DateTime?              RequestTimestamp      = null,
-                           DateTime?              ResponseTimestamp     = null,
+            public Builder(DateTimeOffset?        RequestTimestamp      = null,
+                           DateTimeOffset?        ResponseTimestamp     = null,
                            EventTracking_Id?      EventTrackingId       = null,
                            TimeSpan?              Runtime               = null,
                            StatusCode?            StatusCode            = null,
@@ -963,7 +963,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// <param name="CPOPartnerSessionId">An optional EMP partner charging session identification.</param>
         /// <param name="EMPPartnerSessionId">An optional CPO partner charging session identification.</param>
         /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
-        public Acknowledgement(DateTime               ResponseTimestamp,
+        public Acknowledgement(DateTimeOffset         ResponseTimestamp,
                                EventTracking_Id       EventTrackingId,
                                Process_Id             ProcessId,
                                TimeSpan               Runtime,
@@ -1022,7 +1022,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                     EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
                     String?                StatusCodeDescription      = null,
                     String?                StatusCodeAdditionalInfo   = null,
-                    DateTime?              ResponseTimestamp          = null,
+                    DateTimeOffset?        ResponseTimestamp          = null,
                     EventTracking_Id?      EventTrackingId            = null,
                     TimeSpan?              Runtime                    = null,
                     Process_Id?            ProcessId                  = null,
@@ -1073,7 +1073,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                       Session_Id?            SessionId                  = null,
                       CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                       EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                      DateTime?              ResponseTimestamp          = null,
+                      DateTimeOffset?        ResponseTimestamp          = null,
                       EventTracking_Id?      EventTrackingId            = null,
                       TimeSpan?              Runtime                    = null,
                       Process_Id?            ProcessId                  = null,
@@ -1124,7 +1124,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                         Session_Id?            SessionId                  = null,
                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                        DateTime?              ResponseTimestamp          = null,
+                        DateTimeOffset?        ResponseTimestamp          = null,
                         EventTracking_Id?      EventTrackingId            = null,
                         TimeSpan?              Runtime                    = null,
                         Process_Id?            ProcessId                  = null,
@@ -1175,7 +1175,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                DateTime?              ResponseTimestamp          = null,
+                                DateTimeOffset?        ResponseTimestamp          = null,
                                 EventTracking_Id?      EventTrackingId            = null,
                                 TimeSpan?              Runtime                    = null,
                                 Process_Id?            ProcessId                  = null,
@@ -1226,7 +1226,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              Session_Id?            SessionId                  = null,
                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                             DateTime?              ResponseTimestamp          = null,
+                             DateTimeOffset?        ResponseTimestamp          = null,
                              EventTracking_Id?      EventTrackingId            = null,
                              TimeSpan?              Runtime                    = null,
                              Process_Id?            ProcessId                  = null,
@@ -1277,7 +1277,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                       Session_Id?            SessionId                  = null,
                                       CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                       EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                      DateTime?              ResponseTimestamp          = null,
+                                      DateTimeOffset?        ResponseTimestamp          = null,
                                       EventTracking_Id?      EventTrackingId            = null,
                                       TimeSpan?              Runtime                    = null,
                                       Process_Id?            ProcessId                  = null,
@@ -1328,7 +1328,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                DateTime?              ResponseTimestamp          = null,
+                                DateTimeOffset?        ResponseTimestamp          = null,
                                 EventTracking_Id?      EventTrackingId            = null,
                                 TimeSpan?              Runtime                    = null,
                                 Process_Id?            ProcessId                  = null,
@@ -1379,7 +1379,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                         Session_Id?            SessionId                  = null,
                                         CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                         EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                        DateTime?              ResponseTimestamp          = null,
+                                        DateTimeOffset?        ResponseTimestamp          = null,
                                         EventTracking_Id?      EventTrackingId            = null,
                                         TimeSpan?              Runtime                    = null,
                                         Process_Id?            ProcessId                  = null,
@@ -1430,7 +1430,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                           Session_Id?            SessionId                  = null,
                           CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                           EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                          DateTime?              ResponseTimestamp          = null,
+                          DateTimeOffset?        ResponseTimestamp          = null,
                           EventTracking_Id?      EventTrackingId            = null,
                           TimeSpan?              Runtime                    = null,
                           Process_Id?            ProcessId                  = null,
@@ -1481,7 +1481,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              Session_Id?            SessionId                  = null,
                              CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                              EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                             DateTime?              ResponseTimestamp          = null,
+                             DateTimeOffset?        ResponseTimestamp          = null,
                              EventTracking_Id?      EventTrackingId            = null,
                              TimeSpan?              Runtime                    = null,
                              Process_Id?            ProcessId                  = null,
@@ -1532,7 +1532,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                             Session_Id?            SessionId                  = null,
                             CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                             EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                            DateTime?              ResponseTimestamp          = null,
+                            DateTimeOffset?        ResponseTimestamp          = null,
                             EventTracking_Id?      EventTrackingId            = null,
                             TimeSpan?              Runtime                    = null,
                             Process_Id?            ProcessId                  = null,
@@ -1583,7 +1583,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                 Session_Id?            SessionId                  = null,
                                 CPOPartnerSession_Id?  CPOPartnerSessionId        = null,
                                 EMPPartnerSession_Id?  EMPPartnerSessionId        = null,
-                                DateTime?              ResponseTimestamp          = null,
+                                DateTimeOffset?        ResponseTimestamp          = null,
                                 EventTracking_Id?      EventTrackingId            = null,
                                 TimeSpan?              Runtime                    = null,
                                 Process_Id?            ProcessId                  = null,
@@ -1686,7 +1686,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public static Acknowledgement<TRequest> Parse(TRequest                                                 Request,
                                                       JObject                                                  JSON,
                                                       HTTPResponse?                                            HTTPResponse                  = null,
-                                                      DateTime?                                                ResponseTimestamp             = null,
+                                                      DateTimeOffset?                                          ResponseTimestamp             = null,
                                                       EventTracking_Id?                                        EventTrackingId               = null,
                                                       TimeSpan?                                                Runtime                       = null,
                                                       Process_Id?                                              ProcessId                     = null,
@@ -1733,7 +1733,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                                        [NotNullWhen(true)]  out Acknowledgement<TRequest>?      Acknowledgement,
                                        [NotNullWhen(false)] out String?                         ErrorResponse,
                                        HTTPResponse?                                            HTTPResponse                  = null,
-                                       DateTime?                                                ResponseTimestamp             = null,
+                                       DateTimeOffset?                                          ResponseTimestamp             = null,
                                        EventTracking_Id?                                        EventTrackingId               = null,
                                        TimeSpan?                                                Runtime                       = null,
                                        Process_Id?                                              ProcessId                     = null,
@@ -2117,7 +2117,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
             /// <param name="CustomData">Optional customer specific data, e.g. in combination with custom parsers and serializers.</param>
             public Builder(TRequest?              Request               = null,
                            HTTPResponse?          HTTPResponse          = null,
-                           DateTime?              ResponseTimestamp     = null,
+                           DateTimeOffset?        ResponseTimestamp     = null,
                            EventTracking_Id?      EventTrackingId       = null,
                            TimeSpan?              Runtime               = null,
                            StatusCode?            StatusCode            = null,

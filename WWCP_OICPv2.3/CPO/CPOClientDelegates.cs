@@ -36,14 +36,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever new EVSE data record will be send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEDataRequestDelegate (DateTime                                           Timestamp,
+    public delegate Task OnPushEVSEDataRequestDelegate (DateTimeOffset                                     Timestamp,
                                                         ICPOClient                                         Sender,
                                                         PushEVSEDataRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever new EVSE data record had been send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEDataResponseDelegate(DateTime                                           Timestamp,
+    public delegate Task OnPushEVSEDataResponseDelegate(DateTimeOffset                                     Timestamp,
                                                         ICPOClient                                         Sender,
                                                         PushEVSEDataRequest                                Request,
                                                         OICPResult<Acknowledgement<PushEVSEDataRequest>>   Result,
@@ -56,14 +56,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever new EVSE status record will be send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEStatusRequestDelegate (DateTime                                             Timestamp,
+    public delegate Task OnPushEVSEStatusRequestDelegate (DateTimeOffset                                       Timestamp,
                                                           ICPOClient                                           Sender,
                                                           PushEVSEStatusRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever new EVSE status record had been send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEStatusResponseDelegate(DateTime                                             Timestamp,
+    public delegate Task OnPushEVSEStatusResponseDelegate(DateTimeOffset                                       Timestamp,
                                                           ICPOClient                                           Sender,
                                                           PushEVSEStatusRequest                                Request,
                                                           OICPResult<Acknowledgement<PushEVSEStatusRequest>>   Result,
@@ -77,14 +77,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever new PricingProductData will be send upstream.
     /// </summary>
-    public delegate Task OnPushPricingProductDataRequestDelegate (DateTime                                                     Timestamp,
+    public delegate Task OnPushPricingProductDataRequestDelegate (DateTimeOffset                                               Timestamp,
                                                                   ICPOClient                                                   Sender,
                                                                   PushPricingProductDataRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever new PricingProductData had been send upstream.
     /// </summary>
-    public delegate Task OnPushPricingProductDataResponseDelegate(DateTime                                                     Timestamp,
+    public delegate Task OnPushPricingProductDataResponseDelegate(DateTimeOffset                                               Timestamp,
                                                                   ICPOClient                                                   Sender,
                                                                   PushPricingProductDataRequest                                Request,
                                                                   OICPResult<Acknowledgement<PushPricingProductDataRequest>>   Result,
@@ -97,14 +97,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever new EVSEPricing will be send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEPricingRequestDelegate (DateTime                                              Timestamp,
+    public delegate Task OnPushEVSEPricingRequestDelegate (DateTimeOffset                                        Timestamp,
                                                            ICPOClient                                            Sender,
                                                            PushEVSEPricingRequest                                Request);
 
     /// <summary>
     /// A delegate called whenever new EVSEPricing had been send upstream.
     /// </summary>
-    public delegate Task OnPushEVSEPricingResponseDelegate(DateTime                                              Timestamp,
+    public delegate Task OnPushEVSEPricingResponseDelegate(DateTimeOffset                                        Timestamp,
                                                            ICPOClient                                            Sender,
                                                            PushEVSEPricingRequest                                Request,
                                                            OICPResult<Acknowledgement<PushEVSEPricingRequest>>   Result,
@@ -118,14 +118,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a PullAuthenticationData request will be send.
     /// </summary>
-    public delegate Task OnPullAuthenticationDataRequestDelegate (DateTime                                     Timestamp,
+    public delegate Task OnPullAuthenticationDataRequestDelegate (DateTimeOffset                               Timestamp,
                                                                   ICPOClient                                   Sender,
                                                                   PullAuthenticationDataRequest                Request);
 
     /// <summary>
     /// A delegate called whenever a response for a PullAuthenticationData request had been received.
     /// </summary>
-    public delegate Task OnPullAuthenticationDataResponseDelegate(DateTime                                     Timestamp,
+    public delegate Task OnPullAuthenticationDataResponseDelegate(DateTimeOffset                               Timestamp,
                                                                   ICPOClient                                   Sender,
                                                                   PullAuthenticationDataRequest                Request,
                                                                   OICPResult<PullAuthenticationDataResponse>   Result,
@@ -139,14 +139,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever an AuthorizeStart request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStartRequestDelegate (DateTime                                  Timestamp,
+    public delegate Task OnAuthorizeStartRequestDelegate (DateTimeOffset                            Timestamp,
                                                           ICPOClient                                Sender,
                                                           AuthorizeStartRequest                     Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeStart request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStartResponseDelegate(DateTime                                  Timestamp,
+    public delegate Task OnAuthorizeStartResponseDelegate(DateTimeOffset                            Timestamp,
                                                           ICPOClient                                Sender,
                                                           AuthorizeStartRequest                     Request,
                                                           OICPResult<AuthorizationStartResponse>    Result,
@@ -159,14 +159,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever an AuthorizeStop request will be send.
     /// </summary>
-    public delegate Task OnAuthorizeStopRequestDelegate (DateTime                                 Timestamp,
+    public delegate Task OnAuthorizeStopRequestDelegate (DateTimeOffset                           Timestamp,
                                                          ICPOClient                               Sender,
                                                          AuthorizeStopRequest                     Request);
 
     /// <summary>
     /// A delegate called whenever a response for an AuthorizeStop request had been received.
     /// </summary>
-    public delegate Task OnAuthorizeStopResponseDelegate(DateTime                                 Timestamp,
+    public delegate Task OnAuthorizeStopResponseDelegate(DateTimeOffset                           Timestamp,
                                                          ICPOClient                               Sender,
                                                          AuthorizeStopRequest                     Request,
                                                          OICPResult<AuthorizationStopResponse>    Result,
@@ -180,14 +180,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingStartNotification will be send.
     /// </summary>
-    public delegate Task OnChargingStartNotificationRequestDelegate (DateTime                                                         Timestamp,
+    public delegate Task OnChargingStartNotificationRequestDelegate (DateTimeOffset                                                   Timestamp,
                                                                      ICPOClient                                                       Sender,
                                                                      ChargingStartNotificationRequest                                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingStartNotification had been received.
     /// </summary>
-    public delegate Task OnChargingStartNotificationResponseDelegate(DateTime                                                         Timestamp,
+    public delegate Task OnChargingStartNotificationResponseDelegate(DateTimeOffset                                                   Timestamp,
                                                                      ICPOClient                                                       Sender,
                                                                      ChargingStartNotificationRequest                                 Request,
                                                                      OICPResult<Acknowledgement<ChargingStartNotificationRequest>>    Result,
@@ -200,14 +200,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingProgressNotification will be send.
     /// </summary>
-    public delegate Task OnChargingProgressNotificationRequestDelegate (DateTime                                                            Timestamp,
+    public delegate Task OnChargingProgressNotificationRequestDelegate (DateTimeOffset                                                      Timestamp,
                                                                         ICPOClient                                                          Sender,
                                                                         ChargingProgressNotificationRequest                                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingProgressNotification had been received.
     /// </summary>
-    public delegate Task OnChargingProgressNotificationResponseDelegate(DateTime                                                            Timestamp,
+    public delegate Task OnChargingProgressNotificationResponseDelegate(DateTimeOffset                                                      Timestamp,
                                                                         ICPOClient                                                          Sender,
                                                                         ChargingProgressNotificationRequest                                 Request,
                                                                         OICPResult<Acknowledgement<ChargingProgressNotificationRequest>>    Result,
@@ -220,14 +220,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingEndNotification will be send.
     /// </summary>
-    public delegate Task OnChargingEndNotificationRequestDelegate (DateTime                                                       Timestamp,
+    public delegate Task OnChargingEndNotificationRequestDelegate (DateTimeOffset                                                 Timestamp,
                                                                    ICPOClient                                                     Sender,
                                                                    ChargingEndNotificationRequest                                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingEndNotification had been received.
     /// </summary>
-    public delegate Task OnChargingEndNotificationResponseDelegate(DateTime                                                       Timestamp,
+    public delegate Task OnChargingEndNotificationResponseDelegate(DateTimeOffset                                                 Timestamp,
                                                                    ICPOClient                                                     Sender,
                                                                    ChargingEndNotificationRequest                                 Request,
                                                                    OICPResult<Acknowledgement<ChargingEndNotificationRequest>>    Result,
@@ -240,14 +240,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a ChargingErrorNotification will be send.
     /// </summary>
-    public delegate Task OnChargingErrorNotificationRequestDelegate (DateTime                                                         Timestamp,
+    public delegate Task OnChargingErrorNotificationRequestDelegate (DateTimeOffset                                                   Timestamp,
                                                                      ICPOClient                                                       Sender,
                                                                      ChargingErrorNotificationRequest                                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a ChargingErrorNotification had been received.
     /// </summary>
-    public delegate Task OnChargingErrorNotificationResponseDelegate(DateTime                                                         Timestamp,
+    public delegate Task OnChargingErrorNotificationResponseDelegate(DateTimeOffset                                                   Timestamp,
                                                                      ICPOClient                                                       Sender,
                                                                      ChargingErrorNotificationRequest                                 Request,
                                                                      OICPResult<Acknowledgement<ChargingErrorNotificationRequest>>    Result,
@@ -261,14 +261,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// A delegate called whenever a SendChargeDetailRecord request will be send.
     /// </summary>
-    public delegate Task OnSendChargeDetailRecordRequestDelegate (DateTime                                                  Timestamp,
+    public delegate Task OnSendChargeDetailRecordRequestDelegate (DateTimeOffset                                            Timestamp,
                                                                   ICPOClient                                                Sender,
                                                                   ChargeDetailRecordRequest                                 Request);
 
     /// <summary>
     /// A delegate called whenever a response for a SendChargeDetailRecord request had been received.
     /// </summary>
-    public delegate Task OnSendChargeDetailRecordResponseDelegate(DateTime                                                  Timestamp,
+    public delegate Task OnSendChargeDetailRecordResponseDelegate(DateTimeOffset                                            Timestamp,
                                                                   ICPOClient                                                Sender,
                                                                   ChargeDetailRecordRequest                                 Request,
                                                                   OICPResult<Acknowledgement<ChargeDetailRecordRequest>>    Result,

@@ -17,11 +17,7 @@
 
 #region Usings
 
-using System;
-using System.Collections.Generic;
-
 using org.GraphDefined.Vanaheimr.Illias;
-using WWCP = cloud.charging.open.protocols.WWCP;
 
 #endregion
 
@@ -66,8 +62,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE data records will be send upstream.
     /// </summary>
-    public delegate void OnPushDataRequestDelegate   (DateTime                         LogTimestamp,
-                                                      DateTime                         RequestTimestamp,
+    public delegate void OnPushDataRequestDelegate   (DateTimeOffset                   LogTimestamp,
+                                                      DateTimeOffset                   RequestTimestamp,
                                                       Object                           Sender,
                                                       WWCP.CSORoamingProvider_Id       SenderId,
                                                       EventTracking_Id                 EventTrackingId,
@@ -81,8 +77,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE data records had been send upstream.
     /// </summary>
-    public delegate void OnPushDataResponseDelegate  (DateTime                         LogTimestamp,
-                                                      DateTime                         RequestTimestamp,
+    public delegate void OnPushDataResponseDelegate  (DateTimeOffset                   LogTimestamp,
+                                                      DateTimeOffset                   RequestTimestamp,
                                                       Object                           Sender,
                                                       WWCP.CSORoamingProvider_Id       SenderId,
                                                       EventTracking_Id                 EventTrackingId,
@@ -100,8 +96,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE status will be send upstream.
     /// </summary>
-    public delegate void OnPushEVSEStatusWWCPRequestDelegate (DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
+    public delegate void OnPushEVSEStatusWWCPRequestDelegate (DateTimeOffset                   LogTimestamp,
+                                                              DateTimeOffset                   RequestTimestamp,
                                                               Object                           Sender,
                                                               WWCP.CSORoamingProvider_Id       SenderId,
                                                               EventTracking_Id                 EventTrackingId,
@@ -115,8 +111,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
     /// <summary>
     /// A delegate called whenever new EVSE status had been send upstream.
     /// </summary>
-    public delegate void OnPushEVSEStatusWWCPResponseDelegate(DateTime                         LogTimestamp,
-                                                              DateTime                         RequestTimestamp,
+    public delegate void OnPushEVSEStatusWWCPResponseDelegate(DateTimeOffset                   LogTimestamp,
+                                                              DateTimeOffset                   RequestTimestamp,
                                                               Object                           Sender,
                                                               WWCP.CSORoamingProvider_Id       SenderId,
                                                               EventTracking_Id                 EventTrackingId,

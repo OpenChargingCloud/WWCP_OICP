@@ -76,7 +76,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                              IEnumerable<String>?  SortOrder           = null,
                              JObject?              CustomData          = null,
 
-                             DateTime?             Timestamp           = null,
+                             DateTimeOffset?       Timestamp           = null,
                              EventTracking_Id?     EventTrackingId     = null,
                              TimeSpan?             RequestTimeout      = null,
                              CancellationToken     CancellationToken   = default)
