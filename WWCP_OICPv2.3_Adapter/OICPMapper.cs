@@ -570,7 +570,7 @@ namespace cloud.charging.open.protocols.OICPv2_3
                 }
                 catch (Exception e)
                 {
-                    DebugX.Log(e, $"{nameof(Address)}.{nameof(ToOICP)} => TimeZoneInfo.FindSystemTimeZoneById('{WWCPAddress.TimeZone.Value}') failed:{Environment.NewLine}{e.Message}");
+                    DebugX.LogException(e, $"{nameof(Address)}.{nameof(ToOICP)} => TimeZoneInfo.FindSystemTimeZoneById('{WWCPAddress.TimeZone.Value}') failed:{Environment.NewLine}{e.Message}");
                 }
             }
 
