@@ -110,7 +110,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
                                                                       Identification:          Identification.FromUID(UID.Parse("AABBCCDD")),
                                                                       EVSEId:                  EVSE_Id.Parse("DE*GEF*E1234567*A*1"),
                                                                       ChargingStart:           Timestamp.Now - TimeSpan.FromSeconds(5),
-                                                                      EventOccurred:            Timestamp.Now,
+                                                                      EventOccurred:           Timestamp.Now,
                                                                       CPOPartnerSessionId:     CPOPartnerSession_Id.NewRandom(),
                                                                       EMPPartnerSessionId:     null,
                                                                       ChargingDuration:        TimeSpan.FromSeconds(5),

@@ -78,13 +78,13 @@ namespace cloud.charging.open.protocols.OICPv2_3
         /// The timestamp when the charging process started.
         /// </summary>
         [Mandatory]
-        public DateTime                          ChargingStart                      { get; }
+        public DateTimeOffset                    ChargingStart                      { get; }
 
         /// <summary>
         /// The timestamp when the charging process stopped.
         /// </summary>
         [Mandatory]
-        public DateTime                          ChargingEnd                        { get; }
+        public DateTimeOffset                    ChargingEnd                        { get; }
 
         /// <summary>
         /// The timestamp when the charging session started.
@@ -173,8 +173,8 @@ namespace cloud.charging.open.protocols.OICPv2_3
         public ChargingEndNotificationRequest(Session_Id             SessionId,
                                               Identification         Identification,
                                               EVSE_Id                EVSEId,
-                                              DateTime               ChargingStart,
-                                              DateTime               ChargingEnd,
+                                              DateTimeOffset         ChargingStart,
+                                              DateTimeOffset         ChargingEnd,
 
                                               CPOPartnerSession_Id?  CPOPartnerSessionId    = null,
                                               EMPPartnerSession_Id?  EMPPartnerSessionId    = null,
