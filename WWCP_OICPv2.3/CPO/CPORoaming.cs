@@ -188,11 +188,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             => CPOClient.DNSClient;
 
 
-        Boolean IHTTPClient.Connected
+        Boolean                                                     IHTTPClient.Connected
             => CPOClient.Connected;
 
-        IIPAddress? IHTTPClient.RemoteIPAddress
+        IIPAddress?                                                 IHTTPClient.RemoteIPAddress
             => CPOClient.RemoteIPAddress;
+
+        UInt64                                                      IHTTPClient.KeepAliveMessageCount
+            => CPOClient.KeepAliveMessageCount;
 
         #endregion
 

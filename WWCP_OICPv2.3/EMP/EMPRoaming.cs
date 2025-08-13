@@ -166,7 +166,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => EMPClient.TransmissionRetryDelay;
 
         /// <summary>
-        /// The maximum number of retries when communicationg with the remote OICP service.
+        /// The maximum number of retries when communicating with the remote OICP service.
         /// </summary>
         UInt16                                                      IHTTPClient.MaxNumberOfRetries
             => EMPClient.MaxNumberOfRetries;
@@ -190,11 +190,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
             => EMPClient.DNSClient;
 
 
-        Boolean IHTTPClient.Connected
+        Boolean                                                     IHTTPClient.Connected
             => EMPClient.Connected;
 
-        IIPAddress? IHTTPClient.RemoteIPAddress
+        IIPAddress?                                                 IHTTPClient.RemoteIPAddress
             => EMPClient.RemoteIPAddress;
+
+        UInt64                                                      IHTTPClient.KeepAliveMessageCount
+            => EMPClient.KeepAliveMessageCount;
 
         #endregion
 
