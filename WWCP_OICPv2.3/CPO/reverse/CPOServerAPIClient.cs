@@ -37,7 +37,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The CPO server API client, aka. the Hubject side of the API.
     /// </summary>
-    public partial class CPOServerAPIClient : AHTTPClient//,
+    public partial class CPOServerAPIClient : AOICPClient//,
                                       //        ICPOServerAPIClient
     {
 
@@ -190,19 +190,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new HTTP_Logger             HTTPLogger
+        public new CPOServerAPIHTTPClientLogger  HTTPLogger
 #pragma warning disable CS8603 // Possible null reference return.
-            => base.HTTPLogger as HTTP_Logger;
+            => base.HTTPLogger as CPOServerAPIHTTPClientLogger;
 #pragma warning restore CS8603 // Possible null reference return.
 
         /// <summary>
         /// The attached client logger.
         /// </summary>
-        public CPOServerAPIClientLogger?   Logger            { get; }
+        public CPOServerAPIClientLogger?         Logger      { get; }
 
-        public APICounters                 Counters          { get; }
-
-        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
+        public APICounters                       Counters    { get; }
 
         #endregion
 
@@ -337,7 +335,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
                                   LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
                                   X509Certificate?                                           ClientCert                   = null,
-                                  SslProtocols?                                              TLSProtocol                  = null,
+                                  SslProtocols?                                              TLSProtocols                 = null,
                                   IHTTPAuthentication?                                       Authentication               = null,
                                   String?                                                    HTTPUserAgent                = DefaultHTTPUserAgent,
                                   TimeSpan?                                                  RequestTimeout               = null,
@@ -346,51 +344,54 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                   UInt32?                                                    InternalBufferSize           = null,
                                   Boolean?                                                   DisableLogging               = false,
                                   String?                                                    LoggingPath                  = null,
-                                  String                                                     LoggingContext               = HTTP_Logger.DefaultContext,
+                                  String                                                     LoggingContext               = CPOServerAPIHTTPClientLogger.DefaultContext,
                                   LogfileCreatorDelegate?                                    LogfileCreator               = null,
                                   DNSClient?                                                 DNSClient                    = null)
 
-            : base(RemoteURL           ?? DefaultRemoteURL,
+            : base(RemoteURL ?? DefaultRemoteURL,
                    VirtualHostname,
                    Description,
                    PreferIPv4,
-                   RemoteCertificateValidator,
+
+                   null, // Will be set later!
+
                    LocalCertificateSelector,
                    ClientCert,
-                   TLSProtocol,
+                   TLSProtocols,
                    HTTPContentType.Application.JSON_UTF8,
                    AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
                    Authentication,
-                   HTTPUserAgent       ?? DefaultHTTPUserAgent,
+                   HTTPUserAgent ?? DefaultHTTPUserAgent,
                    ConnectionType.Close,
                    RequestTimeout,
                    TransmissionRetryDelay,
-                   MaxNumberOfRetries  ?? DefaultMaxNumberOfRetries,
+                   MaxNumberOfRetries ?? DefaultMaxNumberOfRetries,
                    InternalBufferSize,
                    false,
                    DisableLogging,
-                   null,
                    DNSClient)
 
         {
 
-            this.Counters        = new APICounters();
+            this.Counters    = new APICounters();
 
-            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+            base.HTTPLogger  = this.DisableLogging == false
+                                   ? new CPOServerAPIHTTPClientLogger(
+                                         this,
+                                         LoggingPath,
+                                         LoggingContext,
+                                         LogfileCreator
+                                     )
+                                   : null;
 
-            base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(this,
-                                                         LoggingPath,
-                                                         LoggingContext,
-                                                         LogfileCreator)
-                                       : null;
-
-            this.Logger          = this.DisableLogging == false
-                                       ? new CPOServerAPIClientLogger(this,
-                                                                      LoggingPath,
-                                                                      LoggingContext,
-                                                                      LogfileCreator)
-                                       : null;
+            this.Logger      = this.DisableLogging == false
+                                   ? new CPOServerAPIClientLogger(
+                                         this,
+                                         LoggingPath,
+                                         LoggingContext,
+                                         LogfileCreator
+                                     )
+                                   : null;
 
         }
 

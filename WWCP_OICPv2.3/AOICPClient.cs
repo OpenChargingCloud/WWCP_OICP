@@ -34,51 +34,128 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// An abstract OICP client.
     /// </summary>
-    public abstract class AOICPClient(URL                                                        RemoteURL,
-                                      HTTPHostname?                                              VirtualHostname              = null,
-                                      I18NString?                                                Description                  = null,
-                                      Boolean?                                                   PreferIPv4                   = null,
-                                      RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
-                                      LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                                      X509Certificate?                                           ClientCert                   = null,
-                                      SslProtocols?                                              TLSProtocol                  = null,
-                                      HTTPContentType?                                           ContentType                  = null,
-                                      AcceptTypes?                                               Accept                       = null,
-                                      IHTTPAuthentication?                                       HTTPAuthentication           = null,
-                                      String?                                                    HTTPUserAgent                = null,
-                                      ConnectionType?                                            Connection                   = null,
-                                      TimeSpan?                                                  RequestTimeout               = null,
-                                      TransmissionRetryDelayDelegate?                            TransmissionRetryDelay       = null,
-                                      UInt16?                                                    MaxNumberOfRetries           = null,
-                                      UInt32?                                                    InternalBufferSize           = null,
-                                      Boolean?                                                   UseHTTPPipelining            = null,
-                                      Boolean?                                                   DisableLogging               = null,
-                                      HTTPClientLogger?                                          HTTPLogger                   = null,
-                                      DNSClient?                                                 DNSClient                    = null)
-
-        : AHTTPClient(RemoteURL,
-                      VirtualHostname,
-                      Description,
-                      PreferIPv4,
-                      RemoteCertificateValidator,
-                      LocalCertificateSelector,
-                      ClientCert,
-                      TLSProtocol,
-                      ContentType,
-                      Accept,
-                      HTTPAuthentication,
-                      HTTPUserAgent,
-                      Connection,
-                      RequestTimeout,
-                      TransmissionRetryDelay,
-                      MaxNumberOfRetries,
-                      InternalBufferSize,
-                      UseHTTPPipelining,
-                      DisableLogging,
-                      HTTPLogger,
-                      DNSClient)
-
+    public abstract class AOICPClient : AHTTPClient
     {
+
+        #region Data
+
+        /// <summary>
+        /// The HTTP client.
+        /// </summary>
+        protected HTTPTestClient newHTTPClient;
+
+        #endregion
+
+        #region Properties
+
+        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
+
+        #endregion
+
+        #region Constructor(s)
+
+        public AOICPClient(URL                                                        RemoteURL,
+                           HTTPHostname?                                              VirtualHostname              = null,
+                           I18NString?                                                Description                  = null,
+                           Boolean?                                                   PreferIPv4                   = null,
+                           RemoteTLSServerCertificateValidationHandler<IHTTPClient>?  RemoteCertificateValidator   = null,
+                           LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
+                           X509Certificate?                                           ClientCert                   = null,
+                           SslProtocols?                                              TLSProtocol                  = null,
+                           HTTPContentType?                                           ContentType                  = null,
+                           AcceptTypes?                                               Accept                       = null,
+                           IHTTPAuthentication?                                       HTTPAuthentication           = null,
+                           String?                                                    HTTPUserAgent                = null,
+                           ConnectionType?                                            Connection                   = null,
+                           TimeSpan?                                                  RequestTimeout               = null,
+                           TransmissionRetryDelayDelegate?                            TransmissionRetryDelay       = null,
+                           UInt16?                                                    MaxNumberOfRetries           = null,
+                           UInt32?                                                    InternalBufferSize           = null,
+                           Boolean?                                                   UseHTTPPipelining            = null,
+                           Boolean?                                                   DisableLogging               = null,
+                           DNSClient?                                                 DNSClient                    = null)
+
+            : base(RemoteURL,
+                   VirtualHostname,
+                   Description,
+                   PreferIPv4,
+                   RemoteCertificateValidator,
+                   LocalCertificateSelector,
+                   ClientCert,
+                   TLSProtocol,
+                   ContentType,
+                   Accept,
+                   HTTPAuthentication,
+                   HTTPUserAgent,
+                   Connection,
+                   RequestTimeout,
+                   TransmissionRetryDelay,
+                   MaxNumberOfRetries,
+                   InternalBufferSize,
+                   UseHTTPPipelining,
+                   DisableLogging,
+                   null,
+                   DNSClient)
+
+        {
+
+            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+
+            this.newHTTPClient   = new HTTPTestClient(
+
+                                       URL:                              base.RemoteURL,
+                                       Description:                      Description,
+
+                                       HTTPUserAgent:                    HTTPUserAgent,
+                                       DefaultRequestBuilder:            () => new HTTPRequest.Builder(this, CancellationToken.None) {
+                                                                                   Host         = this.RemoteURL.Hostname,
+                                                                                   Accept       = AcceptTypes.FromHTTPContentTypes(HTTPContentType.Application.JSON_UTF8),
+                                                                                   ContentType  = HTTPContentType.Application.JSON_UTF8,
+                                                                                   UserAgent    = this.HTTPUserAgent ?? DefaultHTTPUserAgent,
+                                                                                   Connection   = ConnectionType.KeepAlive
+                                                                               },
+
+                                       RemoteCertificateValidator:       RemoteCertificateValidator is not null
+                                                                             ? (sender,
+                                                                                certificate,
+                                                                                certificateChain,
+                                                                                httpTestClient,
+                                                                                policyErrors) => {
+
+                                                                                    return RemoteCertificateValidator.Invoke(
+                                                                                                sender,
+                                                                                                certificate,
+                                                                                                certificateChain,
+                                                                                                this,
+                                                                                                policyErrors
+                                                                                            );
+
+                                                                                }
+                                                                             :  null,
+                                       LocalCertificateSelector:         LocalCertificateSelector,
+                                       ClientCertificateChain:           ClientCert is not null
+                                                                             ? [ ClientCert ]
+                                                                             : null,
+                                       TLSProtocols:                     TLSProtocols,
+                                       CertificateRevocationCheckMode:   X509RevocationMode.NoCheck,
+                                       ApplicationProtocols:             null,
+                                       AllowRenegotiation:               null,
+                                       AllowTLSResume:                   null,
+
+                                       PreferIPv4:                       PreferIPv4,
+                                       ConnectTimeout:                   null,
+                                       ReceiveTimeout:                   null,
+                                       SendTimeout:                      null,
+                                       BufferSize:                       null,
+
+                                       LoggingHandler:                   null,
+                                       DNSClient:                        DNSClient
+
+                                   );
+
+        }
+
+        #endregion
 
 
         #region (protected) LogEvent     (OICPIO, Logger, LogHandler, ...)

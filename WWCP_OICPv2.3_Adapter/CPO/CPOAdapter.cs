@@ -95,13 +95,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The CPO client HTTP logger.
         /// </summary>
-        public CPOClient.HTTP_Logger? ClientHTTPLogger
+        public CPOClientHTTPLogger? ClientHTTPLogger
             => CPORoaming?.CPOClient?.HTTPLogger;
 
         /// <summary>
         /// The CPO client logger.
         /// </summary>
-        public CPOClient.CPOClientLogger? ClientLogger
+        public CPOClientLogger? ClientLogger
             => CPORoaming?.CPOClient?.Logger;
 
 

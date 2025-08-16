@@ -137,17 +137,15 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The attached HTTP client logger.
         /// </summary>
-        public new HTTP_Logger?            HTTPLogger
-            => base.HTTPLogger as HTTP_Logger;
+        public new EMPClientHTTPLogger?  HTTPLogger
+            => base.HTTPLogger as EMPClientHTTPLogger;
 
         /// <summary>
         /// The attached client logger.
         /// </summary>
-        public EMPClientLogger?            Logger            { get; }
+        public EMPClientLogger?          Logger      { get; }
 
-        public APICounters                 Counters          { get; }
-
-        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
+        public APICounters               Counters    { get; }
 
         #endregion
 
@@ -812,32 +810,29 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
                    InternalBufferSize,
                    false,
                    DisableLogging,
-                   null,
                    DNSClient)
 
         {
 
-            this.Counters        = new APICounters();
+            this.Counters    = new APICounters();
 
-            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
+            base.HTTPLogger  = this.DisableLogging == false
+                                   ? new EMPClientHTTPLogger(
+                                         this,
+                                         LoggingPath,
+                                         LoggingContext,
+                                         LogfileCreator
+                                     )
+                                   : null;
 
-            base.HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(
-                                             this,
-                                             LoggingPath,
-                                             LoggingContext,
-                                             LogfileCreator
-                                         )
-                                       : null;
-
-            this.Logger          = this.DisableLogging == false
-                                       ? new EMPClientLogger(
-                                             this,
-                                             LoggingPath,
-                                             LoggingContext,
-                                             LogfileCreator
-                                         )
-                                       : null;
+            this.Logger      = this.DisableLogging == false
+                                   ? new EMPClientLogger(
+                                         this,
+                                         LoggingPath,
+                                         LoggingContext,
+                                         LogfileCreator
+                                     )
+                                   : null;
 
         }
 
@@ -916,31 +911,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #endregion
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/evsepull/v23/providers/{Request.ProviderId.URLEncoded}/data-records{queryString}",
                                                  Content:              Request.ToJSON(CustomPullEVSEDataRequestSerializer,
                                                                                       CustomGeoCoordinatesSerializer).
@@ -1285,31 +1256,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/evsepull/v21/providers/{Request.ProviderId.URLEncoded}/status-records",
                                                  Content:              Request.ToJSON(CustomPullEVSEStatusRequestSerializer,
                                                                                       CustomGeoCoordinatesSerializer).
@@ -1670,31 +1617,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/evsepull/v21/providers/{Request.ProviderId.URLEncoded}/status-records-by-id",
                                                  Content:              Request.ToJSON(CustomPullEVSEStatusByIdRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -2039,31 +1962,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/evsepull/v21/providers/{Request.ProviderId.URLEncoded}/status-records-by-operator-id",
                                                  Content:              Request.ToJSON(CustomPullEVSEStatusByOperatorIdRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -2427,31 +2326,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #endregion
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/dynamicpricing/v10/providers/{Request.ProviderId.URLEncoded}/pricing-products{queryString}",
                                                  Content:              Request.ToJSON(CustomPullPricingProductDataRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -2891,31 +2766,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #endregion
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/dynamicpricing/v10/providers/{Request.ProviderId.URLEncoded}/evse-pricing{queryString}",
                                                  Content:              Request.ToJSON(CustomPullEVSEPricingRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -3338,31 +3189,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/authdata/v21/providers/{Request.ProviderId.URLEncoded}/push-request",
                                                  Content:              Request.ToJSON(CustomPushAuthenticationDataRequestSerializer,
                                                                                       CustomProviderAuthenticationDataSerializer,
@@ -3911,31 +3738,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote-reservation/start",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteReservationStartRequestSerializer,
                                                                                       CustomIdentificationSerializer).
@@ -4305,31 +4108,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote-reservation/stop",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteReservationStopRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -4698,31 +4477,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote/start",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteStartRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -5091,31 +4846,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #region Upstream HTTP request...
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/charging/v21/providers/{Request.ProviderId.URLEncoded}/authorize-remote/stop",
                                                  Content:              Request.ToJSON(CustomAuthorizeRemoteStopRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
@@ -5503,31 +5234,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
                     #endregion
 
-                    var httpResponse = await HTTPClientFactory.Create(
-                                                 RemoteURL,
-                                                 VirtualHostname,
-                                                 Description,
-                                                 PreferIPv4,
-                                                 RemoteCertificateValidator,
-                                                 LocalCertificateSelector,
-                                                 ClientCert,
-                                                 TLSProtocols,
-                                                 ContentType,
-                                                 Accept,
-                                                 Authentication,
-                                                 HTTPUserAgent,
-                                                 Connection,
-                                                 RequestTimeout,
-                                                 TransmissionRetryDelay,
-                                                 MaxNumberOfRetries,
-                                                 InternalBufferSize,
-                                                 UseHTTPPipelining,
-                                                 DisableLogging,
-                                                 null,
-                                                 DNSClient
-                                             ).
-
-                                             POST(
+                    var httpResponse = await newHTTPClient.POST(
                                                  Path:                 RemoteURL.Path + $"/api/oicp/cdrmgmt/v22/providers/{Request.ProviderId.URLEncoded}/get-charge-detail-records-request{queryString}",
                                                  Content:              Request.ToJSON(CustomGetChargeDetailRecordsRequestSerializer).
                                                                                ToUTF8Bytes(JSONFormatting),
