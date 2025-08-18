@@ -18,7 +18,6 @@
 #region Usings
 
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -58,19 +57,19 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
         #region SetupEachTest()
 
         [SetUp]
-        public void SetupEachTest()
+        public async Task SetupEachTest()
         {
 
             Timestamp.Reset();
 
-            empServerAPI = new EMPServerAPI(
+            empServerAPI = await EMPServerAPI.CreateServer(
                                ExternalDNSName:  "open.charging.cloud",
                                HTTPServerPort:   IPPort.Parse(8000),
                                LoggingPath:      "tests",
                                AutoStart:        true
                            );
 
-            ClassicAssert.IsNotNull(empServerAPI);
+            Assert.That(empServerAPI,  Is.Not.Null);
 
 
             empServerAPI.OnAuthorizeStart               += (timestamp, empServerAPI, authorizeStartRequest) => {
@@ -410,10 +409,12 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
 
 
 
-            empServerAPIClient = new EMPServerAPIClient(URL.Parse("http://127.0.0.1:8000"),
-                                                        RequestTimeout: TimeSpan.FromSeconds(10));
+            empServerAPIClient = new EMPServerAPIClient(
+                                     URL.Parse("http://127.0.0.1:8000"),
+                                     RequestTimeout: TimeSpan.FromSeconds(10)
+                                 );
 
-            ClassicAssert.IsNotNull(empServerAPIClient);
+            Assert.That(empServerAPIClient,  Is.Not.Null);
 
         }
 
@@ -423,9 +424,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.EMP.server
         #region ShutdownEachTest()
 
         [TearDown]
-        public void ShutdownEachTest()
+        public async Task ShutdownEachTest()
         {
-            empServerAPI?.Shutdown();
+
+            var server = empServerAPI?.HTTPTestServer;
+
+            if (server is not null)
+                await server.Stop();
+
         }
 
         #endregion

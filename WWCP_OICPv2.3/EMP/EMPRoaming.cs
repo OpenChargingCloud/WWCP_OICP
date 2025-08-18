@@ -25,6 +25,7 @@ using org.GraphDefined.Vanaheimr.Hermod;
 using org.GraphDefined.Vanaheimr.Hermod.DNS;
 using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
+using org.GraphDefined.Vanaheimr.Hermod.HTTPTest;
 
 #endregion
 
@@ -53,7 +54,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// The EMP server part.
         /// </summary>
-        public EMPServerAPI  EMPServer    { get; } = EMPServer ?? new EMPServerAPI(AutoStart: false);
+        public EMPServerAPI  EMPServer    { get; } = EMPServer ?? new EMPServerAPI();
 
         #region IEMPClient
 
@@ -1131,7 +1132,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStartHTTPRequest
+        public HTTPRequestLogEventX OnAuthorizeStartHTTPRequest
             => EMPServer.OnAuthorizeStartHTTPRequest;
 
         /// <summary>
@@ -1191,7 +1192,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStartHTTPResponse
+        public HTTPResponseLogEventX OnAuthorizationStartHTTPResponse
             => EMPServer.OnAuthorizationStartHTTPResponse;
 
         #endregion
@@ -1201,7 +1202,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizeStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeStopHTTPRequest
+        public HTTPRequestLogEventX OnAuthorizeStopHTTPRequest
             => EMPServer.OnAuthorizeStopHTTPRequest;
 
         /// <summary>
@@ -1261,7 +1262,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever an AuthorizationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizationStopHTTPResponse
+        public HTTPResponseLogEventX OnAuthorizationStopHTTPResponse
             => EMPServer.OnAuthorizationStopHTTPResponse;
 
         #endregion
@@ -1272,7 +1273,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargingNotificationsHTTPRequest
+        public HTTPRequestLogEventX OnChargingNotificationsHTTPRequest
             => EMPServer.OnChargingNotificationsHTTPRequest;
 
 
@@ -1463,7 +1464,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargingNotification HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargingNotificationsHTTPResponse
+        public HTTPResponseLogEventX OnChargingNotificationsHTTPResponse
             => EMPServer.OnChargingNotificationsHTTPResponse;
 
         #endregion
@@ -1474,7 +1475,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnChargeDetailRecordHTTPRequest
+        public HTTPRequestLogEventX OnChargeDetailRecordHTTPRequest
             => EMPServer.OnChargeDetailRecordHTTPRequest;
 
         /// <summary>
@@ -1534,7 +1535,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// <summary>
         /// An event sent whenever a ChargeDetailRecord HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnChargeDetailRecordHTTPResponse
+        public HTTPResponseLogEventX OnChargeDetailRecordHTTPResponse
             => EMPServer.OnChargeDetailRecordHTTPResponse;
 
         #endregion
@@ -1543,23 +1544,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region HTTP server logging
 
-        /// <summary>
-        /// An event called whenever a HTTP request came in.
-        /// </summary>
-        public HTTPRequestLogEvent   RequestLog
-            => EMPServer.RequestLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request came in.
+        ///// </summary>
+        //public HTTPRequestLogEvent   RequestLog
+        //    => EMPServer.RequestLog;
 
-        /// <summary>
-        /// An event called whenever a HTTP request could successfully be processed.
-        /// </summary>
-        public HTTPResponseLogEvent  ResponseLog
-            => EMPServer.ResponseLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request could successfully be processed.
+        ///// </summary>
+        //public HTTPResponseLogEvent  ResponseLog
+        //    => EMPServer.ResponseLog;
 
-        /// <summary>
-        /// An event called whenever a HTTP request resulted in an error.
-        /// </summary>
-        public HTTPErrorLogEvent     ErrorLog
-            => EMPServer.ErrorLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request resulted in an error.
+        ///// </summary>
+        //public HTTPErrorLogEvent     ErrorLog
+        //    => EMPServer.ErrorLog;
 
         #endregion
 
@@ -1742,33 +1743,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
 
         #region Start(EventTrackingId = null)
 
-        /// <summary>
-        /// Start this API.
-        /// </summary>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        public Task<Boolean> Start(EventTracking_Id? EventTrackingId = null)
+        ///// <summary>
+        ///// Start this API.
+        ///// </summary>
+        ///// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        //public Task<Boolean> Start(EventTracking_Id? EventTrackingId = null)
 
-            => EMPServer.Start(EventTrackingId);
+        //    => EMPServer.Start(EventTrackingId);
 
         #endregion
 
         #region Shutdown(EventTrackingId = null, Message = null, Wait = true)
 
-        /// <summary>
-        /// Shutdown this API.
-        /// </summary>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="Message">An optional shutdown message.</param>
-        /// <param name="Wait">Whether to wait for the shutdown to complete.</param>
-        public Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
-                                      String?            Message           = null,
-                                      Boolean            Wait              = true)
+        ///// <summary>
+        ///// Shutdown this API.
+        ///// </summary>
+        ///// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        ///// <param name="Message">An optional shutdown message.</param>
+        ///// <param name="Wait">Whether to wait for the shutdown to complete.</param>
+        //public Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
+        //                              String?            Message           = null,
+        //                              Boolean            Wait              = true)
 
-            => EMPServer.Shutdown(
-                   EventTrackingId ?? EventTracking_Id.New,
-                   Message,
-                   Wait
-               );
+        //    => EMPServer.Shutdown(
+        //           EventTrackingId ?? EventTracking_Id.New,
+        //           Message,
+        //           Wait
+        //       );
 
         #endregion
 
@@ -1779,7 +1780,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.EMP
         /// </summary>
         public void Dispose()
         {
-            EMPServer?.Dispose();
+        //    EMPServer?.Dispose();
         }
 
         #endregion

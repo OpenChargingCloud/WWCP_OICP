@@ -28,7 +28,7 @@ using org.GraphDefined.Vanaheimr.Hermod.Logging;
 
 #endregion
 
-namespace cloud.charging.open.protocols.OICPv2_3.CPO
+namespace cloud.charging.open.protocols.OICPv2_3
 {
 
     /// <summary>
@@ -39,11 +39,11 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Data
 
-        private const String DefaultHTTPServerName        = "OICP HTTP Server";
-        private const String DefaultHTTPServiceName       = "OICP HTTP Service";
-        private const String DefaultHTTPAPI_LoggingPath   = "logs/oicp/httpAPI";
-        private const String DefaultLoggingContext        = "OICP HTTP API";
-        private const String DefaultHTTPAPI_LogfileName   = "OICP_HTTP_API.log";
+        private   const String  DefaultHTTPServerName        = "OICP HTTP Server";
+        private   const String  DefaultHTTPServiceName       = "OICP HTTP Service";
+        private   const String  DefaultHTTPAPI_LoggingPath   = "logs/oicp/httpAPI";
+        private   const String  DefaultLoggingContext        = "OICP HTTP API";
+        private   const String  DefaultHTTPAPI_LogfileName   = "OICP_HTTP_API.log";
 
         #endregion
 
@@ -52,10 +52,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The optional URL path prefix, used when defining URL templates.
         /// </summary>
-        public HTTPPath    URLPathPrefix     { get; }
+        public HTTPPath         URLPathPrefix     { get; }
 
 
-        public Formatting  JSONFormatting    { get; }
+        public Formatting       JSONFormatting    { get; }
+
+
+        public ConnectionType?  Connection        { get; }
 
         #endregion
 
@@ -146,6 +149,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             Boolean                        RegisterRootService   = true,
                             HTTPPath?                      URLPathPrefix         = null,
                             Formatting?                    JSONFormatting        = null,
+                            ConnectionType?                Connection            = null,
 
                             Boolean                                                    DisableLogging               = false,
                             String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
@@ -208,6 +212,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
             this.URLPathPrefix   = URLPathPrefix  ?? HTTPPath.Root;
             this.JSONFormatting  = JSONFormatting ?? Formatting.None;
+            this.Connection      = Connection     ?? ConnectionType.KeepAlive;
 
         }
 

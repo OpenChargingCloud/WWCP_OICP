@@ -18,7 +18,6 @@
 #region Usings
 
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
 
 using org.GraphDefined.Vanaheimr.Illias;
 using org.GraphDefined.Vanaheimr.Hermod;
@@ -99,7 +98,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                     AutoStart:        true
                                 );
 
-            ClassicAssert.IsNotNull(centralServiceAPI);
+            Assert.That(centralServiceAPI,  Is.Not.Null);
 
 
             #region CPOClientAPI delegates...
@@ -1440,10 +1439,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                                );
 
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF);
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF.CPOClient);
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF.CPOServer);
-
+            Assert.That(cpoRoaming_DEGEF,            Is.Not.Null);
+            Assert.That(cpoRoaming_DEGEF.CPOClient,  Is.Not.Null);
+            Assert.That(cpoRoaming_DEGEF.CPOServer,  Is.Not.Null);
 
             cpoRoaming_DEGEF.CPOServer.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
 
@@ -1679,10 +1677,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                                );
 
-            ClassicAssert.IsNotNull(cpoRoaming_DEBDO);
-            ClassicAssert.IsNotNull(cpoRoaming_DEBDO.CPOClient);
-            ClassicAssert.IsNotNull(cpoRoaming_DEBDO.CPOServer);
-
+            Assert.That(cpoRoaming_DEBDO,            Is.Not.Null);
+            Assert.That(cpoRoaming_DEBDO.CPOClient,  Is.Not.Null);
+            Assert.That(cpoRoaming_DEBDO.CPOServer,  Is.Not.Null);
 
             cpoRoaming_DEBDO.CPOServer.OnAuthorizeRemoteReservationStart += (timestamp, cpoServerAPI, authorizeRemoteReservationStartRequest) => {
 
@@ -1910,7 +1907,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
-                                   new EMPServerAPI(
+                                   await EMPServerAPI.CreateServer(
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(8001),
                                        LoggingPath:      "tests",
@@ -1919,10 +1916,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                                );
 
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF);
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF.CPOClient);
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF.CPOServer);
-
+            Assert.That(empRoaming_DEGDF,            Is.Not.Null);
+            Assert.That(empRoaming_DEGDF.EMPClient,  Is.Not.Null);
+            Assert.That(empRoaming_DEGDF.EMPServer,  Is.Not.Null);
 
             empRoaming_DEGDF.OnAuthorizeStart     += (timestamp, empClientAPI, authorizeStartRequest)     => {
 
@@ -2010,7 +2006,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
-                                   new EMPServerAPI(
+                                   await EMPServerAPI.CreateServer(
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(8002),
                                        LoggingPath:      "tests",
@@ -2019,10 +2015,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
                                );
 
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF);
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF.CPOClient);
-            ClassicAssert.IsNotNull(cpoRoaming_DEGEF.CPOServer);
-
+            Assert.That(empRoaming_DEBDP,            Is.Not.Null);
+            Assert.That(empRoaming_DEBDP.EMPClient,  Is.Not.Null);
+            Assert.That(empRoaming_DEBDP.EMPServer,  Is.Not.Null);
 
             empRoaming_DEBDP.OnAuthorizeStart     += (timestamp, empClientAPI, authorizeStartRequest)     => {
 
@@ -2113,8 +2108,8 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI?.Shutdown();
 
-            //cpoRoaming_DEGEF?. Shutdown();
-            empRoaming_DEGDF?. Shutdown();
+            cpoRoaming_DEGEF?.CPOServer.HTTPTestServer?.Stop();
+            empRoaming_DEGDF?.EMPServer.HTTPTestServer?.Stop();
 
         }
 

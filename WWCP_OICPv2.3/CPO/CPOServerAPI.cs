@@ -79,21 +79,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The default HTTP server name.
         /// </summary>
-        public new const String  DefaultHTTPServerName   = "GraphDefined OICP " + Version.String + " CPO HTTP API";
+        public const String  DefaultHTTPServerName        = $"GraphDefined OICP {Version.String} CPO HTTP API";
 
         /// <summary>
         /// The default HTTP service name.
         /// </summary>
-        public new const String  DefaultHTTPServiceName  = "GraphDefined OICP " + Version.String + " CPO HTTP API";
+        public const String  DefaultHTTPServiceName       = $"GraphDefined OICP {Version.String} CPO HTTP API";
 
         /// <summary>
         /// The default logging context.
         /// </summary>
-        public     const String  DefaultLoggingContext   = "CPOServerAPI";
+        public const String  DefaultLoggingContext        = "CPOServerAPI";
 
 
-        public const String DefaultHTTPAPI_LoggingPath = "";
-        public const String DefaultHTTPAPI_LogfileName = "";
+        public const String  DefaultHTTPAPI_LoggingPath   = "";
+        public const String  DefaultHTTPAPI_LogfileName   = "";
 
         #endregion
 
@@ -102,7 +102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached HTTP logger.
         /// </summary>
-        public new HTTP_Logger             HTTPLogger { get; }
+        public  HTTP_Logger?      HTTPLogger    { get; }
 #pragma warning disable CS8603 // Possible null reference return.
            // => base.HTTPLogger as HTTP_Logger;
 #pragma warning restore CS8603 // Possible null reference return.
@@ -110,10 +110,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The attached Server API logger.
         /// </summary>
-        public ServerAPILogger?            Logger            { get; }
+        public  ServerAPILogger?  Logger        { get; }
 
 
-        public APICounters                 Counters          { get; }
+        public  APICounters       Counters      { get; }
 
         #endregion
 
@@ -352,9 +352,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                               HTTPTestServerX    HTTPServer,
                                                                               HTTPResponse       Response,
                                                                               CancellationToken  CancellationToken)
-                                                                             // HTTPAPIX        API,
-                                                                             // HTTPRequest     Request,
-                                                                             // HTTPResponse    Response)
+                                                                              // HTTPAPIX        API,
+                                                                              // HTTPRequest     Request,
+                                                                              // HTTPResponse    Response)
 
             => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Response.Timestamp,
                                                                     this, //API ?? this,
@@ -532,6 +532,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                             Boolean                        RegisterRootService   = true,
                             HTTPPath?                      URLPathPrefix         = null,
                             Formatting?                    JSONFormatting        = null,
+                            ConnectionType?                Connection            = null,
 
                             Boolean                        DisableLogging        = false,
                             String                         LoggingPath           = DefaultHTTPAPI_LoggingPath,
@@ -548,6 +549,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                    RegisterRootService,
                    URLPathPrefix,
                    JSONFormatting,
+                   Connection,
 
                    DisableLogging,
                    LoggingPath,
@@ -557,25 +559,25 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         {
 
-            this.Counters        = new APICounters();
+            this.Counters    = new APICounters();
 
-                 HTTPLogger      = this.DisableLogging == false
-                                       ? new HTTP_Logger(
-                                             this,
-                                             LoggingPath,
-                                             LoggingContext ?? DefaultLoggingContext,
-                                             LogfileCreator
-                                         )
-                                       : null;
+                 HTTPLogger  = this.DisableLogging == false
+                                   ? new HTTP_Logger(
+                                         this,
+                                         LoggingPath,
+                                         LoggingContext ?? DefaultLoggingContext,
+                                         LogfileCreator
+                                     )
+                                   : null;
 
-            this.Logger          = this.DisableLogging == false
-                                       ? new ServerAPILogger(
-                                             this,
-                                             LoggingPath,
-                                             LoggingContext ?? DefaultLoggingContext,
-                                             LogfileCreator
-                                         )
-                                       : null;
+            this.Logger      = this.DisableLogging == false
+                                   ? new ServerAPILogger(
+                                         this,
+                                         LoggingPath,
+                                         LoggingContext ?? DefaultLoggingContext,
+                                         LogfileCreator
+                                     )
+                                   : null;
 
 
             #region Register root service: / (HTTPRoot)
@@ -593,7 +595,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 ContentType     = HTTPContentType.Text.PLAIN,
                                 Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
                                 CacheControl    = "public, max-age=300",
-                                Connection      = ConnectionType.Close
+                                Connection      = this.Connection
                             }.AsImmutable);
                     },
                     AllowReplacement: URLReplacement.Allow
@@ -612,7 +614,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                 ContentType     = HTTPContentType.Text.PLAIN,
                                 Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
                                 CacheControl    = "public, max-age=300",
-                                Connection      = ConnectionType.Close
+                                Connection      = this.Connection
                             }.AsImmutable);
                     },
                     AllowReplacement: URLReplacement.Allow
@@ -650,7 +652,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
-                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start"),
+                URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote-reservation/start"),
                 HTTPMethod:          HTTPMethod.POST,
                 HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
@@ -658,7 +660,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 HTTPDelegate:        async request => {
 
                     var startTime  = Timestamp.Now;
-                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId  = request.TryParseProcessId();
 
                     Acknowledgement<AuthorizeRemoteReservationStartRequest>? authorizeRemoteReservationStartResponse = null;
 
@@ -667,8 +669,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Try to parse ProviderId URL parameter
 
-                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
-                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        if (!request.TryParseProviderId(out var providerId))
                         {
 
                             Counters.AuthorizeRemoteReservationStart.IncRequests_Error();
@@ -816,6 +817,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                       StatusCodeDescription:     e.Message,
                                                                       StatusCodeAdditionalInfo:  e.StackTrace
                                                                   );
+
                     }
 
 
@@ -831,7 +833,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                            CustomStatusCodeSerializer).
                                                                                                     ToString(this.JSONFormatting).
                                                                                                     ToUTF8Bytes(),
-                               Connection                 = ConnectionType.Close
+                               Connection                 = this.Connection
                            }.AsImmutable;
 
                 }, AllowReplacement: URLReplacement.Allow);
@@ -866,7 +868,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
-                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop"),
+                URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote-reservation/stop"),
                 HTTPMethod:          HTTPMethod.POST,
                 HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
@@ -874,7 +876,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 HTTPDelegate:        async request => {
 
                     var startTime  = Timestamp.Now;
-                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId  = request.TryParseProcessId();
 
                     Acknowledgement<AuthorizeRemoteReservationStopRequest>? authorizeRemoteReservationStopResponse = null;
 
@@ -883,8 +885,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Try to parse ProviderId URL parameter
 
-                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
-                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        if (!request.TryParseProviderId(out var providerId))
                         {
 
                             Counters.AuthorizeRemoteReservationStop.IncRequests_Error();
@@ -1048,7 +1049,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                           CustomStatusCodeSerializer).
                                                                                                    ToString(this.JSONFormatting).
                                                                                                    ToUTF8Bytes(),
-                               Connection                 = ConnectionType.Close
+                               Connection                 = this.Connection
                            }.AsImmutable;
 
                 }, AllowReplacement: URLReplacement.Allow);
@@ -1084,7 +1085,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
-                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote/start"),
+                URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote/start"),
                 HTTPMethod:          HTTPMethod.POST,
                 HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteStartHTTPRequest,
@@ -1092,7 +1093,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 HTTPDelegate:        async request => {
 
                     var startTime  = Timestamp.Now;
-                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId  = request.TryParseProcessId();
 
                     Acknowledgement<AuthorizeRemoteStartRequest>? authorizeRemoteStartResponse = null;
 
@@ -1101,8 +1102,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Try to parse ProviderId URL parameter
 
-                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
-                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        if (!request.TryParseProviderId(out var providerId))
                         {
 
                             Counters.AuthorizeRemoteStart.IncRequests_Error();
@@ -1266,7 +1266,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                 CustomStatusCodeSerializer).
                                                                                          ToString(this.JSONFormatting).
                                                                                          ToUTF8Bytes(),
-                               Connection                 = ConnectionType.Close
+                               Connection                 = this.Connection
                            }.AsImmutable;
 
                 }, AllowReplacement: URLReplacement.Allow);
@@ -1301,7 +1301,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------
             AddHandler(
-                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop"),
+                URLPathPrefix + HTTPPath.Parse($"api/oicp/charging/v21/providers/{{{OICPExtensions.ProviderId}}}/authorize-remote/stop"),
                 HTTPMethod:          HTTPMethod.POST,
                 HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
                 HTTPRequestLogger:   logAuthorizeRemoteStopHTTPRequest,
@@ -1309,7 +1309,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                 HTTPDelegate:        async request => {
 
                     var startTime  = Timestamp.Now;
-                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var processId  = request.TryParseProcessId();
 
                     Acknowledgement<AuthorizeRemoteStopRequest>? authorizeRemoteStopResponse = null;
 
@@ -1318,8 +1318,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                         #region Try to parse ProviderId URL parameter
 
-                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
-                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        if (!request.TryParseProviderId(out var providerId))
                         {
 
                             Counters.AuthorizeRemoteStop.IncRequests_Error();
@@ -1483,7 +1482,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                                                                                CustomStatusCodeSerializer).
                                                                                         ToString(this.JSONFormatting).
                                                                                         ToUTF8Bytes(),
-                               Connection                 = ConnectionType.Close
+                               Connection                 = this.Connection
                            }.AsImmutable;
 
                 }, AllowReplacement: URLReplacement.Allow);
@@ -1547,13 +1546,13 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         {
 
             var server  = new HTTPTestServerX(
-                              IPAddress:          null,
-                              TCPPort:            HTTPServerPort,
-                              HTTPServerName:     HTTPServerName,
-                              BufferSize:         null,
-                              ReceiveTimeout:     null,
-                              SendTimeout:        null,
-                              LoggingHandler:     null
+                              IPAddress:             null,
+                              TCPPort:               HTTPServerPort,
+                              HTTPServerName:        HTTPServerName,
+                              BufferSize:            null,
+                              ReceiveTimeout:        null,
+                              SendTimeout:           null,
+                              LoggingHandler:        null
                           );
 
             var api     = new CPOServerAPI(
