@@ -51,7 +51,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// The CPO server.
         /// </summary>
-        public CPOServerAPI  CPOServer    { get; } = CPOServer ?? new CPOServerAPI(AutoStart: false);
+        public CPOServerAPI  CPOServer    { get; } = CPOServer ?? new CPOServerAPI();
 
         #region ICPOClient
 
@@ -1142,23 +1142,23 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region HTTP server logging
 
-        /// <summary>
-        /// An event called whenever a HTTP request came in.
-        /// </summary>
-        public HTTPRequestLogEvent   RequestLog
-            => CPOServer.RequestLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request came in.
+        ///// </summary>
+        //public HTTPRequestLogEvent   RequestLog
+        //    => CPOServer.RequestLog;
 
-        /// <summary>
-        /// An event called whenever a HTTP request could successfully be processed.
-        /// </summary>
-        public HTTPResponseLogEvent  ResponseLog
-            => CPOServer.ResponseLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request could successfully be processed.
+        ///// </summary>
+        //public HTTPResponseLogEvent  ResponseLog
+        //    => CPOServer.ResponseLog;
 
-        /// <summary>
-        /// An event called whenever a HTTP request resulted in an error.
-        /// </summary>
-        public HTTPErrorLogEvent     ErrorLog
-            => CPOServer.ErrorLog;
+        ///// <summary>
+        ///// An event called whenever a HTTP request resulted in an error.
+        ///// </summary>
+        //public HTTPErrorLogEvent     ErrorLog
+        //    => CPOServer.ErrorLog;
 
         #endregion
 
@@ -1340,33 +1340,33 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
         #region Start(EventTrackingId = null)
 
-        /// <summary>
-        /// Start this API.
-        /// </summary>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        public Task<Boolean> Start(EventTracking_Id? EventTrackingId = null)
+        ///// <summary>
+        ///// Start this API.
+        ///// </summary>
+        ///// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        //public Task<Boolean> Start(EventTracking_Id? EventTrackingId = null)
 
-            => CPOServer.Start(EventTrackingId);
+        //    => CPOServer.Start(EventTrackingId);
 
         #endregion
 
         #region Shutdown(EventTrackingId = null, Message = null, Wait = true)
 
-        /// <summary>
-        /// Shutdown this API.
-        /// </summary>
-        /// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
-        /// <param name="Message">An optional shutdown message.</param>
-        /// <param name="Wait">Whether to wait for the shutdown to complete.</param>
-        public Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
-                                      String?            Message           = null,
-                                      Boolean            Wait              = true)
+        ///// <summary>
+        ///// Shutdown this API.
+        ///// </summary>
+        ///// <param name="EventTrackingId">An unique event tracking identification for correlating this request with other events.</param>
+        ///// <param name="Message">An optional shutdown message.</param>
+        ///// <param name="Wait">Whether to wait for the shutdown to complete.</param>
+        //public Task<Boolean> Shutdown(EventTracking_Id?  EventTrackingId   = null,
+        //                              String?            Message           = null,
+        //                              Boolean            Wait              = true)
 
-            => CPOServer.Shutdown(
-                   EventTrackingId ?? EventTracking_Id.New,
-                   Message,
-                   Wait
-               );
+        //    => CPOServer.Shutdown(
+        //           EventTrackingId ?? EventTracking_Id.New,
+        //           Message,
+        //           Wait
+        //       );
 
         #endregion
 
@@ -1377,7 +1377,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         public void Dispose()
         {
-            CPOServer?.Dispose();
+            //CPOServer?.Dispose();
         }
 
         #endregion

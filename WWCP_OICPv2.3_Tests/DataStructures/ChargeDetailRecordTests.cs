@@ -18,7 +18,6 @@
 #region Usings
 
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
 
 using Newtonsoft.Json.Linq;
 
@@ -57,7 +56,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          new JProperty("SessionEnd",             "2022-07-15T06:53:54Z"),
                                          new JProperty("MeterValueStart",          2.1),
                                          new JProperty("MeterValueEnd",           22.714),
-                                         new JProperty("MeterValueInBetween",     null),
+                                         new JProperty("MeterValueInBetween",     (Object?) null),
                                          new JProperty("SignedMeteringValues", new JArray(
                                              new JObject(
                                                  new JProperty("SignedMeteringValue", @"OCMF|{\""FV\"" : \""1.0\"",\""GI\"" : \""DZG-GSH01.1K2L\"",\""GS\"" : \""1DZG0028210907\"",\""GV\"" : \""230\"",\""PG\"" : \""T1264\"",\""MV\"" : \""DZG\"",\""MM\"" : \""GSH01.1K2L\"",\""MS\"" : \""1DZG0028210907\"",\""MF\"" : \""230\"",\""IS\"" : true,\""IT\"" : \""CENTRAL_1\"",\""ID\"" : \""A4A44E64\"",\""CT\"" : \""EVSEID\"",\""CI\"" : \""20BZ0413B1\"",\""RD\"" : [{\""TM\"" : \""2022-07-15T08:27:11,000+0200 I\"",\""TX\"" : \""B\"",\""RV\"" : \""0.000\"",\""RI\"" : \""01-00:98.08.00.FF\"",\""RU\"" : \""kWh\"",\""RT\"" : \""DC\"",\""EF\"" : \""\"",\""ST\"" : \""G\""},{\""TM\"" : \""2022-07-15T08:53:43,000+0200 I\"",\""TX\"" : \""E\"",\""RV\"" : \""20.614\"",\""RI\"" : \""01-00:98.08.00.FF\"",\""RU\"" : \""kWh\"",\""RT\"" : \""DC\"",\""EF\"" : \""\"",\""ST\"" : \""G\""}],\""U\"" : [{\""TM\"" : \""2022-07-15T08:27:11,000+0200 I\"",\""TX\"" : \""B\"",\""RV\"" : \""17359.195\"",\""RI\"" : \""01-00:9C.08.00.FF\"",\""RU\"" : \""kWh\"",\""RT\"" : \""DC\"",\""EF\"" : \""\"",\""ST\"" : \""G\""},{\""TM\"" : \""2022-07-15T08:53:43,000+0200 I\"",\""TX\"" : \""E\"",\""RV\"" : \""17379.809\"",\""RI\"" : \""01-00:9C.08.00.FF\"",\""RU\"" : \""kWh\"",\""RT\"" : \""DC\"",\""EF\"" : \""\"",\""ST\"" : \""G\""},{\""TM\"" : \""2022-07-15T08:27:11,000+0200 I\"",\""TX\"" : \""B\"",\""RV\"" : \""0.0031\"",\""RI\"" : \""01-00:8C.07.00.FF\"",\""RU\"" : \""Ohm\"",\""RT\"" : \""DC\"",\""EF\"" : \""\"",\""ST\"" : \""G\""},{\""TM\"" : \""2022-07-15T08:53:43,000+0200 I\"",\""TX\"" : \""E\"",\""RV\"" : \""1592\"",\""RI\"" : \""01-00:00.08.06.FF\"",\""RU\"" : \""s\"",\""RT\"" : \""DC\"",\""EF\"" : \""\"",\""ST\"" : \""G\""}]}|{\""SA\"" : \""ECDSA-secp256k1-SHA256\"",\""SD\"" : \""3046022100AEF09929FF8DAC28334BD8F19D52A955D7A19F7667A9ECE8FAA2422CFCD3580E022100C0DA212592607735D8838D7CB08A2F75D14970E6FDD757A2ADCF818E153AA0F0\"),
@@ -80,9 +79,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          new JProperty("HubProviderID",          "DE-GDF")
                                      ));
 
-            ClassicAssert.IsNotNull(chargeDetailRecord);
-            ClassicAssert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
-            ClassicAssert.AreEqual("OCMF", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
+            Assert.That(chargeDetailRecord,                                                                   Is.Not.Null);
+            Assert.That(chargeDetailRecord.CalibrationLawVerificationInfo,                                    Is.Not.Null);
+            Assert.That(chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat,   Is.EqualTo("OCMF"));
 
         }
 
@@ -135,9 +134,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          ""HubProviderID"": ""DE-GDF""
                                      }"));
 
-            ClassicAssert.IsNotNull(chargeDetailRecord);
-            ClassicAssert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
-            ClassicAssert.AreEqual ("OCMF", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
+            Assert.That(chargeDetailRecord,                                                                   Is.Not.Null);
+            Assert.That(chargeDetailRecord.CalibrationLawVerificationInfo,                                    Is.Not.Null);
+            Assert.That(chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat,   Is.EqualTo("OCMF"));
 
         }
 
@@ -186,9 +185,9 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
                                          ""HubProviderID"":         ""DE-GDF""
                                      }"));
 
-            ClassicAssert.IsNotNull(chargeDetailRecord);
-            ClassicAssert.IsNotNull(chargeDetailRecord.CalibrationLawVerificationInfo);
-            ClassicAssert.AreEqual("EDL", chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat);
+            Assert.That(chargeDetailRecord,                                                                   Is.Not.Null);
+            Assert.That(chargeDetailRecord.CalibrationLawVerificationInfo,                                    Is.Not.Null);
+            Assert.That(chargeDetailRecord.CalibrationLawVerificationInfo?.MeteringSignatureEncodingFormat,   Is.EqualTo("EDL"));
 
         }
 

@@ -129,7 +129,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
                                    LogfileCreatorDelegate?  LogfileCreator          = null)
 
-                : base(CPOServerAPI.HTTPServer,
+                : base(CPOServerAPI.HTTPTestServer,
                        LoggingPath,
                        Context,
 

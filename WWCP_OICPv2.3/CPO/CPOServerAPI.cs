@@ -19,6 +19,7 @@
 
 using System.Security.Authentication;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using org.GraphDefined.Vanaheimr.Illias;
@@ -28,6 +29,7 @@ using org.GraphDefined.Vanaheimr.Hermod.HTTP;
 using org.GraphDefined.Vanaheimr.Hermod.Logging;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets;
 using org.GraphDefined.Vanaheimr.Hermod.Sockets.TCP;
+using org.GraphDefined.Vanaheimr.Hermod.HTTPTest;
 
 #endregion
 
@@ -37,7 +39,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
     /// <summary>
     /// The CPO Server API.
     /// </summary>
-    public partial class CPOServerAPI : HTTPAPI
+    public partial class CPOServerAPI : AOICPHTTPAPI
     {
 
         #region (class) APICounters
@@ -89,21 +91,20 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// </summary>
         public     const String  DefaultLoggingContext   = "CPOServerAPI";
 
+
+        public const String DefaultHTTPAPI_LoggingPath = "";
+        public const String DefaultHTTPAPI_LogfileName = "";
+
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The optional URL path prefix, used when defining URL templates.
-        /// </summary>
-        public new HTTPPath                URLPathPrefix     { get; }
-
-        /// <summary>
         /// The attached HTTP logger.
         /// </summary>
-        public new HTTP_Logger             HTTPLogger
+        public new HTTP_Logger             HTTPLogger { get; }
 #pragma warning disable CS8603 // Possible null reference return.
-            => base.HTTPLogger as HTTP_Logger;
+           // => base.HTTPLogger as HTTP_Logger;
 #pragma warning restore CS8603 // Possible null reference return.
 
         /// <summary>
@@ -113,8 +114,6 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
 
 
         public APICounters                 Counters          { get; }
-
-        public Newtonsoft.Json.Formatting  JSONFormatting    { get; set; }
 
         #endregion
 
@@ -222,7 +221,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStartHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteReservationStartHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP request was received.
@@ -230,12 +229,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(DateTimeOffset  Timestamp,
-                                                                              HTTPAPI         API,
-                                                                              HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPRequest(//DateTimeOffset     Timestamp,
+                                                                              HTTPTestServerX    HTTPServer,
+                                                                              //HTTPAPIX           API,
+                                                                              HTTPRequest        Request,
+                                                                              CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Timestamp,
-                                                                    API ?? this,
+            => OnAuthorizeRemoteReservationStartHTTPRequest.WhenAll(Request.Timestamp,
+                                                                    this, //API ?? this,
                                                                     Request);
 
         #endregion
@@ -264,7 +265,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStartHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteReservationStartHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStart HTTP response was sent.
@@ -273,14 +274,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(DateTimeOffset  Timestamp,
-                                                                               HTTPAPI         API,
-                                                                               HTTPRequest     Request,
-                                                                               HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteReservationStartHTTPResponse(//DateTimeOffset  Timestamp,
+                                                                               HTTPTestServerX    HTTPServer,
+                                                                               HTTPResponse       Response,
+                                                                               CancellationToken  CancellationToken)
+                                                                              // HTTPAPIX        API,
+                                                                              // HTTPRequest     Request,
+                                                                              // HTTPResponse    Response)
 
-            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Timestamp,
-                                                                     API ?? this,
-                                                                     Request,
+            => OnAuthorizeRemoteReservationStartHTTPResponse.WhenAll(Response.Timestamp,
+                                                                     this, //API ?? this,
+                                                                     Response.HTTPRequest,
                                                                      Response);
 
         #endregion
@@ -291,7 +295,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteReservationStopHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteReservationStopHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP request was received.
@@ -299,12 +303,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(DateTimeOffset  Timestamp,
-                                                                             HTTPAPI         API,
-                                                                             HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPRequest(//DateTimeOffset     Timestamp,
+                                                                             HTTPTestServerX    HTTPServer,
+                                                                             //HTTPAPIX           API,
+                                                                             HTTPRequest        Request,
+                                                                             CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Timestamp,
-                                                                   API ?? this,
+            => OnAuthorizeRemoteReservationStopHTTPRequest.WhenAll(Request.Timestamp,
+                                                                   this, //API ?? this,
                                                                    Request);
 
         #endregion
@@ -333,7 +339,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteReservationStopHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteReservationStopHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteReservationStop HTTP response was sent.
@@ -342,14 +348,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(DateTimeOffset  Timestamp,
-                                                                              HTTPAPI         API,
-                                                                              HTTPRequest     Request,
-                                                                              HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteReservationStopHTTPResponse(//DateTimeOffset  Timestamp,
+                                                                              HTTPTestServerX    HTTPServer,
+                                                                              HTTPResponse       Response,
+                                                                              CancellationToken  CancellationToken)
+                                                                             // HTTPAPIX        API,
+                                                                             // HTTPRequest     Request,
+                                                                             // HTTPResponse    Response)
 
-            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Timestamp,
-                                                                    API ?? this,
-                                                                    Request,
+            => OnAuthorizeRemoteReservationStopHTTPResponse.WhenAll(Response.Timestamp,
+                                                                    this, //API ?? this,
+                                                                    Response.HTTPRequest,
                                                                     Response);
 
         #endregion
@@ -361,7 +370,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStartHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteStartHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP request was received.
@@ -369,12 +378,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPRequest(DateTimeOffset  Timestamp,
-                                                                   HTTPAPI         API,
-                                                                   HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteStartHTTPRequest(//DateTimeOffset     Timestamp,
+                                                                   HTTPTestServerX    HTTPServer,
+                                                                   //HTTPAPIX           API,
+                                                                   HTTPRequest        Request,
+                                                                   CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Timestamp,
-                                                         API ?? this,
+            => OnAuthorizeRemoteStartHTTPRequest.WhenAll(Request.Timestamp,
+                                                         this, //API ?? this,
                                                          Request);
 
         #endregion
@@ -403,7 +414,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStartHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteStartHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStart HTTP response was sent.
@@ -412,14 +423,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStartHTTPResponse(DateTimeOffset  Timestamp,
-                                                                    HTTPAPI         API,
-                                                                    HTTPRequest     Request,
-                                                                    HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteStartHTTPResponse(//DateTimeOffset  Timestamp,
+                                                                    HTTPTestServerX    HTTPServer,
+                                                                    HTTPResponse       Response,
+                                                                    CancellationToken  CancellationToken)
+                                                                   // HTTPAPIX        API,
+                                                                   // HTTPRequest     Request,
+                                                                   // HTTPResponse    Response)
 
-            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Timestamp,
-                                                          API ?? this,
-                                                          Request,
+            => OnAuthorizeRemoteStartHTTPResponse.WhenAll(Response.Timestamp,
+                                                          this, //API ?? this,
+                                                          Response.HTTPRequest,
                                                           Response);
 
         #endregion
@@ -430,7 +444,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
         /// </summary>
-        public HTTPRequestLogEvent OnAuthorizeRemoteStopHTTPRequest = new ();
+        public HTTPRequestLogEventX OnAuthorizeRemoteStopHTTPRequest = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP request was received.
@@ -438,12 +452,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="Timestamp">The timestamp of the request.</param>
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPRequest(DateTimeOffset  Timestamp,
-                                                                  HTTPAPI         API,
-                                                                  HTTPRequest     Request)
+        protected internal Task logAuthorizeRemoteStopHTTPRequest(//DateTimeOffset     Timestamp,
+                                                                  HTTPTestServerX    HTTPServer,
+                                                                  //HTTPAPIX           API,
+                                                                  HTTPRequest        Request,
+                                                                  CancellationToken  CancellationToken)
 
-            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Timestamp,
-                                                        API ?? this,
+            => OnAuthorizeRemoteStopHTTPRequest.WhenAll(Request.Timestamp,
+                                                        this, //API ?? this,
                                                         Request);
 
         #endregion
@@ -472,7 +488,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
         /// </summary>
-        public HTTPResponseLogEvent OnAuthorizeRemoteStopHTTPResponse = new ();
+        public HTTPResponseLogEventX OnAuthorizeRemoteStopHTTPResponse = new ();
 
         /// <summary>
         /// An event sent whenever an AuthorizeRemoteStop HTTP response was sent.
@@ -481,14 +497,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <param name="API">The CPO Server HTTP API.</param>
         /// <param name="Request">The HTTP request.</param>
         /// <param name="Response">The HTTP response.</param>
-        protected internal Task logAuthorizeRemoteStopHTTPResponse(DateTimeOffset  Timestamp,
-                                                                   HTTPAPI         API,
-                                                                   HTTPRequest     Request,
-                                                                   HTTPResponse    Response)
+        protected internal Task logAuthorizeRemoteStopHTTPResponse(//DateTimeOffset  Timestamp,
+                                                                   HTTPTestServerX    HTTPServer,
+                                                                   HTTPResponse       Response,
+                                                                   CancellationToken  CancellationToken)
+                                                                  // HTTPAPIX        API,
+                                                                  // HTTPRequest     Request,
+                                                                  // HTTPResponse    Response)
 
-            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Timestamp,
-                                                         API ?? this,
-                                                         Request,
+            => OnAuthorizeRemoteStopHTTPResponse.WhenAll(Response.Timestamp,
+                                                         this, //API ?? this,
+                                                         Response.HTTPRequest,
                                                          Response);
 
         #endregion
@@ -500,137 +519,47 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         /// <summary>
         /// Create a new CPO HTTP Server API.
         /// </summary>
-        /// <param name="HTTPHostname">The HTTP hostname for all URLs within this API.</param>
-        /// <param name="ExternalDNSName">The official URL/DNS name of this service, e.g. for sending e-mails.</param>
-        /// <param name="HTTPServerPort">A TCP port to listen on.</param>
-        /// <param name="BasePath">When the API is served from an optional subdirectory path.</param>
-        /// <param name="HTTPServerName">The default HTTP server name, used whenever no HTTP Host-header has been given.</param>
-        /// 
-        /// <param name="URLPathPrefix">A common prefix for all URLs.</param>
-        /// <param name="HTTPServiceName">The name of the HTTP service.</param>
-        /// <param name="APIVersionHashes">The API version hashes (git commit hash values).</param>
-        /// 
-        /// <param name="ServerCertificateSelector">An optional delegate to select a TLS server certificate.</param>
-        /// <param name="ClientCertificateValidator">An optional delegate to verify the TLS client certificate used for authentication.</param>
-        /// <param name="LocalCertificateSelector">An optional delegate to select the TLS client certificate used for authentication.</param>
-        /// <param name="AllowedTLSProtocols">The TLS protocol(s) allowed for this connection.</param>
-        /// 
-        /// <param name="ServerThreadName">The optional name of the TCP server thread.</param>
-        /// <param name="ServerThreadPriority">The optional priority of the TCP server thread.</param>
-        /// <param name="ServerThreadIsBackground">Whether the TCP server thread is a background thread or not.</param>
-        /// <param name="ConnectionIdBuilder">An optional delegate to build a connection identification based on IP socket information.</param>
-        /// <param name="ConnectionTimeout">The TCP client timeout for all incoming client connections in seconds (default: 30 sec).</param>
-        /// <param name="MaxClientConnections">The maximum number of concurrent TCP client connections (default: 4096).</param>
-        /// 
-        /// <param name="DisableMaintenanceTasks">Disable all maintenance tasks.</param>
-        /// <param name="MaintenanceInitialDelay">The initial delay of the maintenance tasks.</param>
-        /// <param name="MaintenanceEvery">The maintenance interval.</param>
-        /// 
-        /// <param name="DisableWardenTasks">Disable all warden tasks.</param>
-        /// <param name="WardenInitialDelay">The initial delay of the warden tasks.</param>
-        /// <param name="WardenCheckEvery">The warden interval.</param>
-        /// 
-        /// <param name="IsDevelopment">This HTTP API runs in development mode.</param>
-        /// <param name="DevelopmentServers">An enumeration of server names which will imply to run this service in development mode.</param>
         /// <param name="DisableLogging">Disable the log file.</param>
         /// <param name="LoggingPath">The path for all logfiles.</param>
         /// <param name="LoggingContext">The context of all logfiles.</param>
         /// <param name="LogfileCreator">A delegate for creating the name of the logfile for this API.</param>
-        /// <param name="DNSClient">The DNS client of the API.</param>
-        /// <param name="AutoStart">Whether to start the API automatically.</param>
-        public CPOServerAPI(HTTPHostname?                                              HTTPHostname                 = null,
-                            String?                                                    ExternalDNSName              = null,
-                            IPPort?                                                    HTTPServerPort               = null,
-                            HTTPPath?                                                  BasePath                     = null,
-                            String                                                     HTTPServerName               = DefaultHTTPServerName,
+        public CPOServerAPI(HTTPTestServerX?               HTTPTestServer        = null,
+                            IEnumerable<HTTPHostname>?     Hostnames             = null,
+                            HTTPPath?                      RootPath              = null,
+                            IEnumerable<HTTPContentType>?  HTTPContentTypes      = null,
+                            I18NString?                    Description           = null,
 
-                            HTTPPath?                                                  URLPathPrefix                = null,
-                            String                                                     HTTPServiceName              = DefaultHTTPServiceName,
-                            JObject?                                                   APIVersionHashes             = null,
+                            Boolean                        RegisterRootService   = true,
+                            HTTPPath?                      URLPathPrefix         = null,
+                            Formatting?                    JSONFormatting        = null,
 
-                            ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
-                            LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
-                            RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
-                            SslProtocols?                                              AllowedTLSProtocols          = null,
-                            Boolean?                                                   ClientCertificateRequired    = null,
-                            Boolean?                                                   CheckCertificateRevocation   = null,
+                            Boolean                        DisableLogging        = false,
+                            String                         LoggingPath           = DefaultHTTPAPI_LoggingPath,
+                            String                         LoggingContext        = DefaultLoggingContext,
+                            String                         LogfileName           = DefaultHTTPAPI_LogfileName,
+                            LogfileCreatorDelegate?        LogfileCreator        = null)
 
-                            ServerThreadNameCreatorDelegate?                           ServerThreadNameCreator      = null,
-                            ServerThreadPriorityDelegate?                              ServerThreadPrioritySetter   = null,
-                            Boolean?                                                   ServerThreadIsBackground     = null,
-                            ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
-                            TimeSpan?                                                  ConnectionTimeout            = null,
-                            UInt32?                                                    MaxClientConnections         = null,
+            : base(HTTPTestServer,
+                   Hostnames,
+                   RootPath,
+                   HTTPContentTypes,
+                   Description,
 
-                            Boolean?                                                   DisableMaintenanceTasks      = false,
-                            TimeSpan?                                                  MaintenanceInitialDelay      = null,
-                            TimeSpan?                                                  MaintenanceEvery             = null,
-
-                            Boolean?                                                   DisableWardenTasks           = false,
-                            TimeSpan?                                                  WardenInitialDelay           = null,
-                            TimeSpan?                                                  WardenCheckEvery             = null,
-
-                            Boolean?                                                   IsDevelopment                = null,
-                            IEnumerable<String>?                                       DevelopmentServers           = null,
-                            Boolean                                                    DisableLogging               = false,
-                            String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
-                            String                                                     LoggingContext               = DefaultLoggingContext,
-                            String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
-                            LogfileCreatorDelegate?                                    LogfileCreator               = null,
-                            DNSClient?                                                 DNSClient                    = null,
-                            Boolean                                                    AutoStart                    = false)
-
-            : base(HTTPHostname,
-                   ExternalDNSName,
-                   HTTPServerPort,
-                   BasePath,
-                   HTTPServerName,
-
+                   RegisterRootService,
                    URLPathPrefix,
-                   HTTPServiceName,
-                   null, //HTMLTemplate,
-                   APIVersionHashes,
+                   JSONFormatting,
 
-                   ServerCertificateSelector,
-                   ClientCertificateValidator,
-                   LocalCertificateSelector,
-                   AllowedTLSProtocols,
-                   ClientCertificateRequired,
-                   CheckCertificateRevocation,
-
-                   ServerThreadNameCreator,
-                   ServerThreadPrioritySetter,
-                   ServerThreadIsBackground,
-                   ConnectionIdBuilder,
-                   ConnectionTimeout,
-                   MaxClientConnections,
-
-                   DisableMaintenanceTasks,
-                   MaintenanceInitialDelay,
-                   MaintenanceEvery,
-
-                   DisableWardenTasks,
-                   WardenInitialDelay,
-                   WardenCheckEvery,
-
-                   IsDevelopment,
-                   DevelopmentServers,
                    DisableLogging,
                    LoggingPath,
+                   LoggingContext,
                    LogfileName,
-                   LogfileCreator,
-                   DNSClient,
-                   false) //AutoStart)
+                   LogfileCreator)
 
         {
 
-            this.URLPathPrefix   = base.URLPathPrefix + (URLPathPrefix ?? HTTPPath.Root);
-
             this.Counters        = new APICounters();
 
-            this.JSONFormatting  = Newtonsoft.Json.Formatting.None;
-
-            base.HTTPLogger      = this.DisableLogging == false
+                 HTTPLogger      = this.DisableLogging == false
                                        ? new HTTP_Logger(
                                              this,
                                              LoggingPath,
@@ -648,46 +577,50 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
                                          )
                                        : null;
 
-            RegisterURLTemplates();
 
-            if (AutoStart)
-                Start();
-
-        }
-
-        #endregion
-
-
-        #region (private) RegisterURLTemplates(RegisterRootService = true)
-
-        private void RegisterURLTemplates(Boolean RegisterRootService = true)
-        {
-
-            #region / (HTTPRoot)
+            #region Register root service: / (HTTPRoot)
 
             if (RegisterRootService)
-                AddMethodCallback(HTTPHostname.Any,
-                                  HTTPMethod.GET,
-                                  [
-                                      URLPathPrefix + "/",
-                                      URLPathPrefix + "/{FileName}"
-                                  ],
-                                  HTTPDelegate: Request => {
-                                      return Task.FromResult(
-                                          new HTTPResponse.Builder(Request) {
-                                              HTTPStatusCode  = HTTPStatusCode.OK,
-                                              Server          = HTTPServer.DefaultServerName,
-                                              Date            = Timestamp.Now,
-                                              ContentType     = HTTPContentType.Text.PLAIN,
-                                              Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
-                                              CacheControl    = "public, max-age=300",
-                                              Connection      = ConnectionType.Close
-                                          }.AsImmutable);
-                                  },
-                                  AllowReplacement: URLReplacement.Allow);
+                AddHandler(
+                    HTTPPath.Root,
+                    HTTPMethod:    HTTPMethod.GET,
+                    HTTPDelegate:  request => {
+                        return Task.FromResult(
+                            new HTTPResponse.Builder(request) {
+                                HTTPStatusCode  = HTTPStatusCode.OK,
+                                Server          = DefaultServerName,
+                                Date            = Timestamp.Now,
+                                ContentType     = HTTPContentType.Text.PLAIN,
+                                Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                CacheControl    = "public, max-age=300",
+                                Connection      = ConnectionType.Close
+                            }.AsImmutable);
+                    },
+                    AllowReplacement: URLReplacement.Allow
+                );
+
+            if (RegisterRootService)
+                AddHandler(
+                    HTTPPath.Parse("/{FileName}"),
+                    HTTPMethod:    HTTPMethod.GET,
+                    HTTPDelegate:  request => {
+                        return Task.FromResult(
+                            new HTTPResponse.Builder(request) {
+                                HTTPStatusCode  = HTTPStatusCode.OK,
+                                Server          = DefaultServerName,
+                                Date            = Timestamp.Now,
+                                ContentType     = HTTPContentType.Text.PLAIN,
+                                Content         = "This is an OICP v2.3 CPO Server HTTP/JSON endpoint!".ToUTF8Bytes(),
+                                CacheControl    = "public, max-age=300",
+                                Connection      = ConnectionType.Close
+                            }.AsImmutable);
+                    },
+                    AllowReplacement: URLReplacement.Allow
+                );
 
             #endregion
 
+            #region RegisterURLTemplates
 
             #region POST  ~/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
 
@@ -716,191 +649,192 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
-                              HTTPMethod.POST,
-                              URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start",
-                              HTTPContentType.Application.JSON_UTF8,
-                              HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
-                              HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
-                              HTTPDelegate:        async Request => {
+            AddHandler(
+                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/start"),
+                HTTPMethod:          HTTPMethod.POST,
+                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPRequestLogger:   logAuthorizeRemoteReservationStartHTTPRequest,
+                HTTPResponseLogger:  logAuthorizeRemoteReservationStartHTTPResponse,
+                HTTPDelegate:        async request => {
 
-                                  var startTime  = Timestamp.Now;
-                                  var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var startTime  = Timestamp.Now;
+                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                                  Acknowledgement<AuthorizeRemoteReservationStartRequest>? authorizeRemoteReservationStartResponse = null;
+                    Acknowledgement<AuthorizeRemoteReservationStartRequest>? authorizeRemoteReservationStartResponse = null;
 
-                                  try
-                                  {
+                    try
+                    {
 
-                                      #region Try to parse ProviderId URL parameter
+                        #region Try to parse ProviderId URL parameter
 
-                                      if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
-                                      {
+                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
+                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        {
 
-                                          Counters.AuthorizeRemoteReservationStart.IncRequests_Error();
+                            Counters.AuthorizeRemoteReservationStart.IncRequests_Error();
 
-                                          authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.SystemError(
-                                                                                        null,
-                                                                                        "The expected 'providerId' URL parameter could not be parsed!"
-                                                                                    );
+                            authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.SystemError(
+                                                                          null,
+                                                                          "The expected 'providerId' URL parameter could not be parsed!"
+                                                                      );
 
-                                      }
+                        }
 
-                                      #endregion
+                        #endregion
 
-                                      else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
-                                                                                               providerId,
-                                                                                               out var authorizeRemoteReservationStartRequest,
-                                                                                               out var errorResponse,
-                                                                                               processId,
-                                                                                               Request.Timestamp,
-                                                                                               Request.EventTrackingId,
-                                                                                               Request.Timeout ?? DefaultRequestTimeout,
-                                                                                               CustomAuthorizeRemoteReservationStartRequestParser,
-                                                                                               Request.CancellationToken))
-                                      {
+                        else if (AuthorizeRemoteReservationStartRequest.TryParse(JObject.Parse(request.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                 providerId,
+                                                                                 out var authorizeRemoteReservationStartRequest,
+                                                                                 out var errorResponse,
+                                                                                 processId,
+                                                                                 request.Timestamp,
+                                                                                 request.EventTrackingId,
+                                                                                 request.Timeout ?? DefaultRequestTimeout,
+                                                                                 CustomAuthorizeRemoteReservationStartRequestParser,
+                                                                                 request.CancellationToken))
+                        {
 
-                                          Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
+                            Counters.AuthorizeRemoteReservationStart.IncRequests_OK();
 
-                                          #region Send OnAuthorizeRemoteReservationStartRequest event
+                            #region Send OnAuthorizeRemoteReservationStartRequest event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteReservationStartRequest is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteReservationStartRequest!))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteReservationStartRequest is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteReservationStartRequest.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteReservationStartRequestDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteReservationStartRequest!))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartRequest));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Call async subscribers
+                            #region Call async subscribers
 
-                                          var OnAuthorizeRemoteReservationStartLocal = OnAuthorizeRemoteReservationStart;
-                                          if (OnAuthorizeRemoteReservationStartLocal is not null)
-                                          {
+                            var OnAuthorizeRemoteReservationStartLocal = OnAuthorizeRemoteReservationStart;
+                            if (OnAuthorizeRemoteReservationStartLocal is not null)
+                            {
 
-                                              try
-                                              {
+                                try
+                                {
 
-                                                  authorizeRemoteReservationStartResponse = (await Task.WhenAll(OnAuthorizeRemoteReservationStartLocal.GetInvocationList().
-                                                                                                                                                       Cast<OnAuthorizeRemoteReservationStartDelegate>().
-                                                                                                                                                       Select(e => e(Timestamp.Now,
-                                                                                                                                                                     this,
-                                                                                                                                                                     authorizeRemoteReservationStartRequest!))))?.FirstOrDefault();
+                                    authorizeRemoteReservationStartResponse = (await Task.WhenAll(OnAuthorizeRemoteReservationStartLocal.GetInvocationList().
+                                                                                                                                         Cast<OnAuthorizeRemoteReservationStartDelegate>().
+                                                                                                                                         Select(e => e(Timestamp.Now,
+                                                                                                                                                       this,
+                                                                                                                                                       authorizeRemoteReservationStartRequest!))))?.FirstOrDefault();
 
-                                                  Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
+                                    Counters.AuthorizeRemoteReservationStart.IncResponses_OK();
 
-                                              }
-                                              catch (Exception e)
-                                              {
+                                }
+                                catch (Exception e)
+                                {
 
-                                                  Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
+                                    Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
 
-                                                  authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.DataError(
-                                                                                                Request:                   authorizeRemoteReservationStartRequest,
-                                                                                                StatusCodeDescription:     e.Message,
-                                                                                                StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                                SessionId:                 authorizeRemoteReservationStartRequest?.SessionId,
-                                                                                                CPOPartnerSessionId:       authorizeRemoteReservationStartRequest?.CPOPartnerSessionId
-                                                                                            );
+                                    authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.DataError(
+                                                                                  Request:                   authorizeRemoteReservationStartRequest,
+                                                                                  StatusCodeDescription:     e.Message,
+                                                                                  StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                  SessionId:                 authorizeRemoteReservationStartRequest?.SessionId,
+                                                                                  CPOPartnerSessionId:       authorizeRemoteReservationStartRequest?.CPOPartnerSessionId
+                                                                              );
 
-                                              }
+                                }
 
-                                          }
+                            }
 
-                                          if (authorizeRemoteReservationStartResponse is null)
-                                          {
+                            if (authorizeRemoteReservationStartResponse is null)
+                            {
 
-                                              Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
+                                Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
 
-                                              authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.SystemError(
-                                                                                            authorizeRemoteReservationStartRequest,
-                                                                                            "Could not process the received AuthorizeRemoteReservationStart request!"
-                                                                                        );
+                                authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.SystemError(
+                                                                              authorizeRemoteReservationStartRequest,
+                                                                              "Could not process the received AuthorizeRemoteReservationStart request!"
+                                                                          );
 
-                                          }
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Send OnAuthorizeRemoteReservationStartResponse event
+                            #region Send OnAuthorizeRemoteReservationStartResponse event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteReservationStartResponse is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteReservationStartRequest!,
-                                                                                   authorizeRemoteReservationStartResponse,
-                                                                                   Timestamp.Now - startTime))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteReservationStartResponse is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteReservationStartResponse.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteReservationStartResponseDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteReservationStartRequest!,
+                                                                     authorizeRemoteReservationStartResponse,
+                                                                     Timestamp.Now - startTime))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStartResponse));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                      }
-                                      else
-                                      {
+                        }
+                        else
+                        {
 
-                                          Counters.AuthorizeRemoteReservationStart.IncRequests_Error();
+                            Counters.AuthorizeRemoteReservationStart.IncRequests_Error();
 
-                                          authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.DataError(
-                                                                                        Request:                   authorizeRemoteReservationStartRequest,
-                                                                                        StatusCodeDescription:     "We could not handle the given AuthorizeRemoveReservationStart request!",
-                                                                                        StatusCodeAdditionalInfo:  errorResponse,
-                                                                                        SessionId:                 authorizeRemoteReservationStartRequest?.SessionId,
-                                                                                        CPOPartnerSessionId:       authorizeRemoteReservationStartRequest?.CPOPartnerSessionId
-                                                                                    );
+                            authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.DataError(
+                                                                          Request:                   authorizeRemoteReservationStartRequest,
+                                                                          StatusCodeDescription:     "We could not handle the given AuthorizeRemoveReservationStart request!",
+                                                                          StatusCodeAdditionalInfo:  errorResponse,
+                                                                          SessionId:                 authorizeRemoteReservationStartRequest?.SessionId,
+                                                                          CPOPartnerSessionId:       authorizeRemoteReservationStartRequest?.CPOPartnerSessionId
+                                                                      );
 
-                                      }
+                        }
 
-                                  }
-                                  catch (Exception e)
-                                  {
+                    }
+                    catch (Exception e)
+                    {
 
-                                      Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
+                        Counters.AuthorizeRemoteReservationStart.IncResponses_Error();
 
-                                      authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.SystemError(
-                                                                                    Request:                   null,
-                                                                                    StatusCodeDescription:     e.Message,
-                                                                                    StatusCodeAdditionalInfo:  e.StackTrace
-                                                                                );
-                                  }
+                        authorizeRemoteReservationStartResponse = Acknowledgement<AuthorizeRemoteReservationStartRequest>.SystemError(
+                                                                      Request:                   null,
+                                                                      StatusCodeDescription:     e.Message,
+                                                                      StatusCodeAdditionalInfo:  e.StackTrace
+                                                                  );
+                    }
 
 
-                                  return new HTTPResponse.Builder(Request) {
-                                             HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
-                                             Date                       = Timestamp.Now,
-                                             AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = [ "POST" ],
-                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
-                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
-                                             Content                    = authorizeRemoteReservationStartResponse.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                         CustomStatusCodeSerializer).
-                                                                                                                  ToString(JSONFormatting).
-                                                                                                                  ToUTF8Bytes(),
-                                             Connection                 = ConnectionType.Close
-                                         }.AsImmutable;
+                    return new HTTPResponse.Builder(request) {
+                               HTTPStatusCode             = HTTPStatusCode.OK,
+                               Server                     = DefaultServerName,
+                               Date                       = Timestamp.Now,
+                               AccessControlAllowOrigin   = "*",
+                               AccessControlAllowMethods  = [ "POST" ],
+                               AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
+                               ContentType                = HTTPContentType.Application.JSON_UTF8,
+                               Content                    = authorizeRemoteReservationStartResponse.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                           CustomStatusCodeSerializer).
+                                                                                                    ToString(this.JSONFormatting).
+                                                                                                    ToUTF8Bytes(),
+                               Connection                 = ConnectionType.Close
+                           }.AsImmutable;
 
-                               }, AllowReplacement: URLReplacement.Allow);
+                }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -931,192 +865,193 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // --------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
-                              HTTPMethod.POST,
-                              URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop",
-                              HTTPContentType.Application.JSON_UTF8,
-                              HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
-                              HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
-                              HTTPDelegate:        async Request => {
+            AddHandler(
+                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote-reservation/stop"),
+                HTTPMethod:          HTTPMethod.POST,
+                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPRequestLogger:   logAuthorizeRemoteReservationStopHTTPRequest,
+                HTTPResponseLogger:  logAuthorizeRemoteReservationStopHTTPResponse,
+                HTTPDelegate:        async request => {
 
-                                  var startTime  = Timestamp.Now;
-                                  var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var startTime  = Timestamp.Now;
+                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                                  Acknowledgement<AuthorizeRemoteReservationStopRequest>? authorizeRemoteReservationStopResponse = null;
+                    Acknowledgement<AuthorizeRemoteReservationStopRequest>? authorizeRemoteReservationStopResponse = null;
 
-                                  try
-                                  {
+                    try
+                    {
 
-                                      #region Try to parse ProviderId URL parameter
+                        #region Try to parse ProviderId URL parameter
 
-                                      if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
-                                      {
+                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
+                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        {
 
-                                          Counters.AuthorizeRemoteReservationStop.IncRequests_Error();
+                            Counters.AuthorizeRemoteReservationStop.IncRequests_Error();
 
-                                          authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.SystemError(
-                                                                                       null,
-                                                                                       "The expected 'providerId' URL parameter could not be parsed!"
-                                                                                   );
+                            authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.SystemError(
+                                                                         null,
+                                                                         "The expected 'providerId' URL parameter could not be parsed!"
+                                                                     );
 
-                                      }
+                        }
 
-                                      #endregion
+                        #endregion
 
-                                      else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
-                                                                                              providerId,
-                                                                                              out var authorizeRemoteReservationStopRequest,
-                                                                                              out var errorResponse,
-                                                                                              processId,
-                                                                                              Request.Timestamp,
-                                                                                              Request.EventTrackingId,
-                                                                                              Request.Timeout ?? DefaultRequestTimeout,
-                                                                                              CustomAuthorizeRemoteReservationStopRequestParser,
-                                                                                              Request.CancellationToken))
-                                      {
+                        else if (AuthorizeRemoteReservationStopRequest.TryParse(JObject.Parse(request.HTTPBody?.ToUTF8String() ?? ""),
+                                                                                providerId,
+                                                                                out var authorizeRemoteReservationStopRequest,
+                                                                                out var errorResponse,
+                                                                                processId,
+                                                                                request.Timestamp,
+                                                                                request.EventTrackingId,
+                                                                                request.Timeout ?? DefaultRequestTimeout,
+                                                                                CustomAuthorizeRemoteReservationStopRequestParser,
+                                                                                request.CancellationToken))
+                        {
 
-                                          Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
+                            Counters.AuthorizeRemoteReservationStop.IncRequests_OK();
 
-                                          #region Send OnAuthorizeRemoteReservationStopRequest event
+                            #region Send OnAuthorizeRemoteReservationStopRequest event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteReservationStopRequest is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteReservationStopRequest!))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteReservationStopRequest is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteReservationStopRequest.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteReservationStopRequestDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteReservationStopRequest!))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopRequest));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Call async subscribers
+                            #region Call async subscribers
 
-                                          var OnAuthorizeRemoteReservationStopLocal = OnAuthorizeRemoteReservationStop;
-                                          if (OnAuthorizeRemoteReservationStopLocal is not null)
-                                          {
+                            var OnAuthorizeRemoteReservationStopLocal = OnAuthorizeRemoteReservationStop;
+                            if (OnAuthorizeRemoteReservationStopLocal is not null)
+                            {
 
-                                              try
-                                              {
+                                try
+                                {
 
-                                                  authorizeRemoteReservationStopResponse = (await Task.WhenAll(OnAuthorizeRemoteReservationStopLocal.GetInvocationList().
-                                                                                                                                                     Cast<OnAuthorizeRemoteReservationStopDelegate>().
-                                                                                                                                                     Select(e => e(Timestamp.Now,
-                                                                                                                                                                   this,
-                                                                                                                                                                   authorizeRemoteReservationStopRequest!))))?.FirstOrDefault();
+                                    authorizeRemoteReservationStopResponse = (await Task.WhenAll(OnAuthorizeRemoteReservationStopLocal.GetInvocationList().
+                                                                                                                                       Cast<OnAuthorizeRemoteReservationStopDelegate>().
+                                                                                                                                       Select(e => e(Timestamp.Now,
+                                                                                                                                                     this,
+                                                                                                                                                     authorizeRemoteReservationStopRequest!))))?.FirstOrDefault();
 
-                                                  Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
+                                    Counters.AuthorizeRemoteReservationStop.IncResponses_OK();
 
-                                              }
-                                              catch (Exception e)
-                                              {
+                                }
+                                catch (Exception e)
+                                {
 
-                                                  Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
+                                    Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
 
-                                                  authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.DataError(
-                                                                                               Request:                   authorizeRemoteReservationStopRequest,
-                                                                                               StatusCodeDescription:     e.Message,
-                                                                                               StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                               SessionId:                 authorizeRemoteReservationStopRequest?.SessionId,
-                                                                                               CPOPartnerSessionId:       authorizeRemoteReservationStopRequest?.CPOPartnerSessionId
-                                                                                           );
+                                    authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.DataError(
+                                                                                 Request:                   authorizeRemoteReservationStopRequest,
+                                                                                 StatusCodeDescription:     e.Message,
+                                                                                 StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                                 SessionId:                 authorizeRemoteReservationStopRequest?.SessionId,
+                                                                                 CPOPartnerSessionId:       authorizeRemoteReservationStopRequest?.CPOPartnerSessionId
+                                                                             );
 
-                                              }
+                                }
 
-                                          }
+                            }
 
-                                          if (authorizeRemoteReservationStopResponse is null)
-                                          {
+                            if (authorizeRemoteReservationStopResponse is null)
+                            {
 
-                                              Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
+                                Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
 
-                                              authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.SystemError(
-                                                                                           authorizeRemoteReservationStopRequest,
-                                                                                           "Could not process the received AuthorizeRemoteReservationStop request!"
-                                                                                       );
+                                authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.SystemError(
+                                                                             authorizeRemoteReservationStopRequest,
+                                                                             "Could not process the received AuthorizeRemoteReservationStop request!"
+                                                                         );
 
-                                          }
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Send OnAuthorizeRemoteReservationStopResponse event
+                            #region Send OnAuthorizeRemoteReservationStopResponse event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteReservationStopResponse is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteReservationStopRequest!,
-                                                                                   authorizeRemoteReservationStopResponse,
-                                                                                   Timestamp.Now - startTime))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteReservationStopResponse is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteReservationStopResponse.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteReservationStopResponseDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteReservationStopRequest!,
+                                                                     authorizeRemoteReservationStopResponse,
+                                                                     Timestamp.Now - startTime))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteReservationStopResponse));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                      }
-                                      else
-                                      {
+                        }
+                        else
+                        {
 
-                                          Counters.AuthorizeRemoteReservationStop.IncRequests_Error();
+                            Counters.AuthorizeRemoteReservationStop.IncRequests_Error();
 
-                                          authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.DataError(
-                                                                                       Request:                   authorizeRemoteReservationStopRequest,
-                                                                                       StatusCodeDescription:     "We could not handle the given AuthorizeRemoveReservationStop request!",
-                                                                                       StatusCodeAdditionalInfo:  errorResponse,
-                                                                                       SessionId:                 authorizeRemoteReservationStopRequest?.SessionId,
-                                                                                       CPOPartnerSessionId:       authorizeRemoteReservationStopRequest?.CPOPartnerSessionId
-                                                                                   );
+                            authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.DataError(
+                                                                         Request:                   authorizeRemoteReservationStopRequest,
+                                                                         StatusCodeDescription:     "We could not handle the given AuthorizeRemoveReservationStop request!",
+                                                                         StatusCodeAdditionalInfo:  errorResponse,
+                                                                         SessionId:                 authorizeRemoteReservationStopRequest?.SessionId,
+                                                                         CPOPartnerSessionId:       authorizeRemoteReservationStopRequest?.CPOPartnerSessionId
+                                                                     );
 
-                                      }
+                        }
 
-                                  }
-                                  catch (Exception e)
-                                  {
+                    }
+                    catch (Exception e)
+                    {
 
-                                      Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
+                        Counters.AuthorizeRemoteReservationStop.IncResponses_Error();
 
-                                      authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.SystemError(
-                                                                                   Request:                   null,
-                                                                                   StatusCodeDescription:     e.Message,
-                                                                                   StatusCodeAdditionalInfo:  e.StackTrace
-                                                                               );
+                        authorizeRemoteReservationStopResponse = Acknowledgement<AuthorizeRemoteReservationStopRequest>.SystemError(
+                                                                     Request:                   null,
+                                                                     StatusCodeDescription:     e.Message,
+                                                                     StatusCodeAdditionalInfo:  e.StackTrace
+                                                                 );
 
-                                  }
+                    }
 
 
-                                  return new HTTPResponse.Builder(Request) {
-                                             HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
-                                             Date                       = Timestamp.Now,
-                                             AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = [ "POST" ],
-                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
-                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
-                                             Content                    = authorizeRemoteReservationStopResponse.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                                        CustomStatusCodeSerializer).
-                                                                                                                 ToString(JSONFormatting).
-                                                                                                                 ToUTF8Bytes(),
-                                             Connection                 = ConnectionType.Close
-                                         }.AsImmutable;
+                    return new HTTPResponse.Builder(request) {
+                               HTTPStatusCode             = HTTPStatusCode.OK,
+                               Server                     = DefaultServerName,
+                               Date                       = Timestamp.Now,
+                               AccessControlAllowOrigin   = "*",
+                               AccessControlAllowMethods  = [ "POST" ],
+                               AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
+                               ContentType                = HTTPContentType.Application.JSON_UTF8,
+                               Content                    = authorizeRemoteReservationStopResponse.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                          CustomStatusCodeSerializer).
+                                                                                                   ToString(this.JSONFormatting).
+                                                                                                   ToUTF8Bytes(),
+                               Connection                 = ConnectionType.Close
+                           }.AsImmutable;
 
-                               }, AllowReplacement: URLReplacement.Allow);
+                }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -1148,192 +1083,193 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/start
             // ---------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
-                              HTTPMethod.POST,
-                              URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote/start",
-                              HTTPContentType.Application.JSON_UTF8,
-                              HTTPRequestLogger:   logAuthorizeRemoteStartHTTPRequest,
-                              HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
-                              HTTPDelegate:        async Request => {
+            AddHandler(
+                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote/start"),
+                HTTPMethod:          HTTPMethod.POST,
+                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPRequestLogger:   logAuthorizeRemoteStartHTTPRequest,
+                HTTPResponseLogger:  logAuthorizeRemoteStartHTTPResponse,
+                HTTPDelegate:        async request => {
 
-                                  var startTime  = Timestamp.Now;
-                                  var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var startTime  = Timestamp.Now;
+                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                                  Acknowledgement<AuthorizeRemoteStartRequest>? authorizeRemoteStartResponse = null;
+                    Acknowledgement<AuthorizeRemoteStartRequest>? authorizeRemoteStartResponse = null;
 
-                                  try
-                                  {
+                    try
+                    {
 
-                                      #region Try to parse ProviderId URL parameter
+                        #region Try to parse ProviderId URL parameter
 
-                                      if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
-                                      {
+                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
+                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        {
 
-                                          Counters.AuthorizeRemoteStart.IncRequests_Error();
+                            Counters.AuthorizeRemoteStart.IncRequests_Error();
 
-                                          authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
-                                                                             null,
-                                                                             "The expected 'providerId' URL parameter could not be parsed!"
-                                                                         );
+                            authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
+                                                               null,
+                                                               "The expected 'providerId' URL parameter could not be parsed!"
+                                                           );
 
-                                      }
+                        }
 
-                                      #endregion
+                        #endregion
 
-                                      else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
-                                                                                    providerId,
-                                                                                    out var authorizeRemoteStartRequest,
-                                                                                    out var errorResponse,
-                                                                                    processId,
-                                                                                    Request.Timestamp,
-                                                                                    Request.EventTrackingId,
-                                                                                    Request.Timeout ?? DefaultRequestTimeout,
-                                                                                    CustomAuthorizeRemoteStartRequestParser,
-                                                                                    Request.CancellationToken))
-                                      {
+                        else if (AuthorizeRemoteStartRequest.TryParse(JObject.Parse(request.HTTPBody?.ToUTF8String() ?? ""),
+                                                                      providerId,
+                                                                      out var authorizeRemoteStartRequest,
+                                                                      out var errorResponse,
+                                                                      processId,
+                                                                      request.Timestamp,
+                                                                      request.EventTrackingId,
+                                                                      request.Timeout ?? DefaultRequestTimeout,
+                                                                      CustomAuthorizeRemoteStartRequestParser,
+                                                                      request.CancellationToken))
+                        {
 
-                                          Counters.AuthorizeRemoteStart.IncRequests_OK();
+                            Counters.AuthorizeRemoteStart.IncRequests_OK();
 
-                                          #region Send OnAuthorizeRemoteStartRequest event
+                            #region Send OnAuthorizeRemoteStartRequest event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteStartRequest is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteStartRequestDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteStartRequest!))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteStartRequest is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteStartRequest.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteStartRequestDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteStartRequest!))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartRequest));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartRequest));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Call async subscribers
+                            #region Call async subscribers
 
-                                          var OnAuthorizeRemoteStartLocal = OnAuthorizeRemoteStart;
-                                          if (OnAuthorizeRemoteStartLocal is not null)
-                                          {
+                            var OnAuthorizeRemoteStartLocal = OnAuthorizeRemoteStart;
+                            if (OnAuthorizeRemoteStartLocal is not null)
+                            {
 
-                                              try
-                                              {
+                                try
+                                {
 
-                                                  authorizeRemoteStartResponse = (await Task.WhenAll(OnAuthorizeRemoteStartLocal.GetInvocationList().
-                                                                                                                    Cast<OnAuthorizeRemoteStartDelegate>().
-                                                                                                                    Select(e => e(Timestamp.Now,
-                                                                                                                                  this,
-                                                                                                                                  authorizeRemoteStartRequest!))))?.FirstOrDefault();
+                                    authorizeRemoteStartResponse = (await Task.WhenAll(OnAuthorizeRemoteStartLocal.GetInvocationList().
+                                                                                                      Cast<OnAuthorizeRemoteStartDelegate>().
+                                                                                                      Select(e => e(Timestamp.Now,
+                                                                                                                    this,
+                                                                                                                    authorizeRemoteStartRequest!))))?.FirstOrDefault();
 
-                                                  Counters.AuthorizeRemoteStart.IncResponses_OK();
+                                    Counters.AuthorizeRemoteStart.IncResponses_OK();
 
-                                              }
-                                              catch (Exception e)
-                                              {
+                                }
+                                catch (Exception e)
+                                {
 
-                                                  Counters.AuthorizeRemoteStart.IncResponses_Error();
+                                    Counters.AuthorizeRemoteStart.IncResponses_Error();
 
-                                                  authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.DataError(
-                                                                                     Request:                   authorizeRemoteStartRequest,
-                                                                                     StatusCodeDescription:     e.Message,
-                                                                                     StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                     SessionId:                 authorizeRemoteStartRequest?.SessionId,
-                                                                                     CPOPartnerSessionId:       authorizeRemoteStartRequest?.CPOPartnerSessionId
-                                                                                 );
+                                    authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.DataError(
+                                                                       Request:                   authorizeRemoteStartRequest,
+                                                                       StatusCodeDescription:     e.Message,
+                                                                       StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                       SessionId:                 authorizeRemoteStartRequest?.SessionId,
+                                                                       CPOPartnerSessionId:       authorizeRemoteStartRequest?.CPOPartnerSessionId
+                                                                   );
 
-                                              }
+                                }
 
-                                          }
+                            }
 
-                                          if (authorizeRemoteStartResponse is null)
-                                          {
+                            if (authorizeRemoteStartResponse is null)
+                            {
 
-                                              Counters.AuthorizeRemoteStart.IncResponses_Error();
+                                Counters.AuthorizeRemoteStart.IncResponses_Error();
 
-                                              authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
-                                                                                 authorizeRemoteStartRequest,
-                                                                                 "Could not process the received AuthorizeRemoteStart request!"
-                                                                             );
+                                authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
+                                                                   authorizeRemoteStartRequest,
+                                                                   "Could not process the received AuthorizeRemoteStart request!"
+                                                               );
 
-                                          }
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Send OnAuthorizeRemoteStartResponse event
+                            #region Send OnAuthorizeRemoteStartResponse event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteStartResponse is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteStartResponseDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteStartRequest!,
-                                                                                   authorizeRemoteStartResponse,
-                                                                                   Timestamp.Now - startTime))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteStartResponse is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteStartResponse.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteStartResponseDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteStartRequest!,
+                                                                     authorizeRemoteStartResponse,
+                                                                     Timestamp.Now - startTime))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartResponse));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStartResponse));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                      }
-                                      else
-                                      {
+                        }
+                        else
+                        {
 
-                                          Counters.AuthorizeRemoteStart.IncRequests_Error();
+                            Counters.AuthorizeRemoteStart.IncRequests_Error();
 
-                                          authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.DataError(
-                                                                             Request:                   authorizeRemoteStartRequest,
-                                                                             StatusCodeDescription:     "We could not handle the given AuthorizeRemoveStart request!",
-                                                                             StatusCodeAdditionalInfo:  errorResponse,
-                                                                             SessionId:                 authorizeRemoteStartRequest?.SessionId,
-                                                                             CPOPartnerSessionId:       authorizeRemoteStartRequest?.CPOPartnerSessionId
-                                                                         );
+                            authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.DataError(
+                                                               Request:                   authorizeRemoteStartRequest,
+                                                               StatusCodeDescription:     "We could not handle the given AuthorizeRemoveStart request!",
+                                                               StatusCodeAdditionalInfo:  errorResponse,
+                                                               SessionId:                 authorizeRemoteStartRequest?.SessionId,
+                                                               CPOPartnerSessionId:       authorizeRemoteStartRequest?.CPOPartnerSessionId
+                                                           );
 
-                                      }
+                        }
 
-                                  }
-                                  catch (Exception e)
-                                  {
+                    }
+                    catch (Exception e)
+                    {
 
-                                      Counters.AuthorizeRemoteStart.IncResponses_Error();
+                        Counters.AuthorizeRemoteStart.IncResponses_Error();
 
-                                      authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
-                                                                         Request:                   null,
-                                                                         StatusCodeDescription:     e.Message,
-                                                                         StatusCodeAdditionalInfo:  e.StackTrace
-                                                                     );
+                        authorizeRemoteStartResponse = Acknowledgement<AuthorizeRemoteStartRequest>.SystemError(
+                                                           Request:                   null,
+                                                           StatusCodeDescription:     e.Message,
+                                                           StatusCodeAdditionalInfo:  e.StackTrace
+                                                       );
 
-                                  }
+                    }
 
 
-                                  return new HTTPResponse.Builder(Request) {
-                                             HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
-                                             Date                       = Timestamp.Now,
-                                             AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = [ "POST" ],
-                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
-                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
-                                             Content                    = authorizeRemoteStartResponse.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                              CustomStatusCodeSerializer).
-                                                                                                       ToString(JSONFormatting).
-                                                                                                       ToUTF8Bytes(),
-                                             Connection                 = ConnectionType.Close
-                                         }.AsImmutable;
+                    return new HTTPResponse.Builder(request) {
+                               HTTPStatusCode             = HTTPStatusCode.OK,
+                               Server                     = DefaultServerName,
+                               Date                       = Timestamp.Now,
+                               AccessControlAllowOrigin   = "*",
+                               AccessControlAllowMethods  = [ "POST" ],
+                               AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
+                               ContentType                = HTTPContentType.Application.JSON_UTF8,
+                               Content                    = authorizeRemoteStartResponse.ToJSON(CustomAcknowledgementSerializer,
+                                                                                                CustomStatusCodeSerializer).
+                                                                                         ToString(this.JSONFormatting).
+                                                                                         ToUTF8Bytes(),
+                               Connection                 = ConnectionType.Close
+                           }.AsImmutable;
 
-                               }, AllowReplacement: URLReplacement.Allow);
+                }, AllowReplacement: URLReplacement.Allow);
 
             #endregion
 
@@ -1364,192 +1300,195 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
             // --------------------------------------------------------------------------------------------------------------------------------------------------
             // curl -v -X POST -H "Accept: application/json" -d "test" http://127.0.0.1:3000/api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop
             // --------------------------------------------------------------------------------------------------------------------------------------------------
-            AddMethodCallback(HTTPHostname.Any,
-                              HTTPMethod.POST,
-                              URLPathPrefix + "api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop",
-                              HTTPContentType.Application.JSON_UTF8,
-                              HTTPRequestLogger:   logAuthorizeRemoteStopHTTPRequest,
-                              HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
-                              HTTPDelegate:        async Request => {
+            AddHandler(
+                URLPathPrefix + HTTPPath.Parse("api/oicp/charging/v21/providers/{providerId}/authorize-remote/stop"),
+                HTTPMethod:          HTTPMethod.POST,
+                HTTPContentType:     HTTPContentType.Application.JSON_UTF8,
+                HTTPRequestLogger:   logAuthorizeRemoteStopHTTPRequest,
+                HTTPResponseLogger:  logAuthorizeRemoteStopHTTPResponse,
+                HTTPDelegate:        async request => {
 
-                                  var startTime  = Timestamp.Now;
-                                  var processId  = Request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
+                    var startTime  = Timestamp.Now;
+                    var processId  = request.TryParseHeaderField<Process_Id>("Process-ID", Process_Id.TryParse);
 
-                                  Acknowledgement<AuthorizeRemoteStopRequest>? authorizeRemoteStopResponse = null;
+                    Acknowledgement<AuthorizeRemoteStopRequest>? authorizeRemoteStopResponse = null;
 
-                                  try
-                                  {
+                    try
+                    {
 
-                                      #region Try to parse ProviderId URL parameter
+                        #region Try to parse ProviderId URL parameter
 
-                                      if (Request.ParsedURLParameters.Length != 1 || !Provider_Id.TryParse(HTTPTools.URLDecode(Request.ParsedURLParameters[0]), out Provider_Id providerId))
-                                      {
+                        if (!request.ParsedURLParametersX.TryGetValue("providerId",    out var providerIdText) ||
+                            !Provider_Id.TryParse(HTTPTools.URLDecode(providerIdText), out var providerId))
+                        {
 
-                                          Counters.AuthorizeRemoteStop.IncRequests_Error();
+                            Counters.AuthorizeRemoteStop.IncRequests_Error();
 
-                                          authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.SystemError(
-                                                                            null,
-                                                                            "The expected 'providerId' URL parameter could not be parsed!"
-                                                                        );
+                            authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.SystemError(
+                                                              null,
+                                                              "The expected 'providerId' URL parameter could not be parsed!"
+                                                          );
 
-                                      }
+                        }
 
-                                      #endregion
+                        #endregion
 
-                                      else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(Request.HTTPBody?.ToUTF8String() ?? ""),
-                                                                                   providerId,
-                                                                                   out var authorizeRemoteStopRequest,
-                                                                                   out var errorResponse,
-                                                                                   processId,
-                                                                                   Request.Timestamp,
-                                                                                   Request.EventTrackingId,
-                                                                                   Request.Timeout ?? DefaultRequestTimeout,
-                                                                                   CustomAuthorizeRemoteStopRequestParser,
-                                                                                   Request.CancellationToken))
-                                      {
+                        else if (AuthorizeRemoteStopRequest.TryParse(JObject.Parse(request.HTTPBody?.ToUTF8String() ?? ""),
+                                                                     providerId,
+                                                                     out var authorizeRemoteStopRequest,
+                                                                     out var errorResponse,
+                                                                     processId,
+                                                                     request.Timestamp,
+                                                                     request.EventTrackingId,
+                                                                     request.Timeout ?? DefaultRequestTimeout,
+                                                                     CustomAuthorizeRemoteStopRequestParser,
+                                                                     request.CancellationToken))
+                        {
 
-                                          Counters.AuthorizeRemoteStop.IncRequests_OK();
+                            Counters.AuthorizeRemoteStop.IncRequests_OK();
 
-                                          #region Send OnAuthorizeRemoteStopRequest event
+                            #region Send OnAuthorizeRemoteStopRequest event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteStopRequest is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteStopRequestDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteStopRequest!))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteStopRequest is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteStopRequest.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteStopRequestDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteStopRequest!))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopRequest));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopRequest));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Call async subscribers
+                            #region Call async subscribers
 
-                                          var OnAuthorizeRemoteStopLocal = OnAuthorizeRemoteStop;
-                                          if (OnAuthorizeRemoteStopLocal is not null)
-                                          {
+                            var OnAuthorizeRemoteStopLocal = OnAuthorizeRemoteStop;
+                            if (OnAuthorizeRemoteStopLocal is not null)
+                            {
 
-                                              try
-                                              {
+                                try
+                                {
 
-                                                  authorizeRemoteStopResponse = (await Task.WhenAll(OnAuthorizeRemoteStopLocal.GetInvocationList().
-                                                                                                                               Cast<OnAuthorizeRemoteStopDelegate>().
-                                                                                                                               Select(e => e(Timestamp.Now,
-                                                                                                                                             this,
-                                                                                                                                             authorizeRemoteStopRequest!))))?.FirstOrDefault();
+                                    authorizeRemoteStopResponse = (await Task.WhenAll(OnAuthorizeRemoteStopLocal.GetInvocationList().
+                                                                                                                 Cast<OnAuthorizeRemoteStopDelegate>().
+                                                                                                                 Select(e => e(Timestamp.Now,
+                                                                                                                               this,
+                                                                                                                               authorizeRemoteStopRequest!))))?.FirstOrDefault();
 
-                                                  Counters.AuthorizeRemoteStop.IncResponses_OK();
+                                    Counters.AuthorizeRemoteStop.IncResponses_OK();
 
-                                              }
-                                              catch (Exception e)
-                                              {
+                                }
+                                catch (Exception e)
+                                {
 
-                                                  Counters.AuthorizeRemoteStop.IncResponses_Error();
+                                    Counters.AuthorizeRemoteStop.IncResponses_Error();
 
-                                                  authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.DataError(
-                                                                                    Request:                   authorizeRemoteStopRequest,
-                                                                                    StatusCodeDescription:     e.Message,
-                                                                                    StatusCodeAdditionalInfo:  e.StackTrace,
-                                                                                    SessionId:                 authorizeRemoteStopRequest?.SessionId,
-                                                                                    CPOPartnerSessionId:       authorizeRemoteStopRequest?.CPOPartnerSessionId
-                                                                                );
+                                    authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.DataError(
+                                                                      Request:                   authorizeRemoteStopRequest,
+                                                                      StatusCodeDescription:     e.Message,
+                                                                      StatusCodeAdditionalInfo:  e.StackTrace,
+                                                                      SessionId:                 authorizeRemoteStopRequest?.SessionId,
+                                                                      CPOPartnerSessionId:       authorizeRemoteStopRequest?.CPOPartnerSessionId
+                                                                  );
 
-                                              }
+                                }
 
-                                          }
+                            }
 
-                                          if (authorizeRemoteStopResponse is null)
-                                          {
+                            if (authorizeRemoteStopResponse is null)
+                            {
 
-                                              Counters.AuthorizeRemoteStop.IncResponses_Error();
+                                Counters.AuthorizeRemoteStop.IncResponses_Error();
 
-                                              authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.SystemError(
-                                                                                authorizeRemoteStopRequest,
-                                                                                "Could not process the received AuthorizeRemoteStop request!"
-                                                                            );
+                                authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.SystemError(
+                                                                  authorizeRemoteStopRequest,
+                                                                  "Could not process the received AuthorizeRemoteStop request!"
+                                                              );
 
-                                          }
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                          #region Send OnAuthorizeRemoteStopResponse event
+                            #region Send OnAuthorizeRemoteStopResponse event
 
-                                          try
-                                          {
+                            try
+                            {
 
-                                              if (OnAuthorizeRemoteStopResponse is not null)
-                                                  await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
-                                                                     Cast<OnAuthorizeRemoteStopResponseDelegate>().
-                                                                     Select(e => e(Timestamp.Now,
-                                                                                   this,
-                                                                                   authorizeRemoteStopRequest!,
-                                                                                   authorizeRemoteStopResponse,
-                                                                                   Timestamp.Now - startTime))).
-                                                                     ConfigureAwait(false);
+                                if (OnAuthorizeRemoteStopResponse is not null)
+                                    await Task.WhenAll(OnAuthorizeRemoteStopResponse.GetInvocationList().
+                                                       Cast<OnAuthorizeRemoteStopResponseDelegate>().
+                                                       Select(e => e(Timestamp.Now,
+                                                                     this,
+                                                                     authorizeRemoteStopRequest!,
+                                                                     authorizeRemoteStopResponse,
+                                                                     Timestamp.Now - startTime))).
+                                                       ConfigureAwait(false);
 
-                                          }
-                                          catch (Exception e)
-                                          {
-                                              DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopResponse));
-                                          }
+                            }
+                            catch (Exception e)
+                            {
+                                DebugX.LogException(e, nameof(CPOServerAPI) + "." + nameof(OnAuthorizeRemoteStopResponse));
+                            }
 
-                                          #endregion
+                            #endregion
 
-                                      }
-                                      else
-                                      {
+                        }
+                        else
+                        {
 
-                                          Counters.AuthorizeRemoteStop.IncRequests_Error();
+                            Counters.AuthorizeRemoteStop.IncRequests_Error();
 
-                                          authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.DataError(
-                                                                            Request:                   authorizeRemoteStopRequest,
-                                                                            StatusCodeDescription:     "We could not handle the given AuthorizeRemoteStop request!",
-                                                                            StatusCodeAdditionalInfo:  errorResponse,
-                                                                            SessionId:                 authorizeRemoteStopRequest?.SessionId,
-                                                                            CPOPartnerSessionId:       authorizeRemoteStopRequest?.CPOPartnerSessionId
-                                                                        );
+                            authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.DataError(
+                                                              Request:                   authorizeRemoteStopRequest,
+                                                              StatusCodeDescription:     "We could not handle the given AuthorizeRemoteStop request!",
+                                                              StatusCodeAdditionalInfo:  errorResponse,
+                                                              SessionId:                 authorizeRemoteStopRequest?.SessionId,
+                                                              CPOPartnerSessionId:       authorizeRemoteStopRequest?.CPOPartnerSessionId
+                                                          );
 
-                                      }
+                        }
 
-                                  }
-                                  catch (Exception e)
-                                  {
+                    }
+                    catch (Exception e)
+                    {
 
-                                      Counters.AuthorizeRemoteStop.IncResponses_Error();
+                        Counters.AuthorizeRemoteStop.IncResponses_Error();
 
-                                      authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.SystemError(
-                                                                        Request:                   null,
-                                                                        StatusCodeDescription:     e.Message,
-                                                                        StatusCodeAdditionalInfo:  e.StackTrace
-                                                                    );
+                        authorizeRemoteStopResponse = Acknowledgement<AuthorizeRemoteStopRequest>.SystemError(
+                                                          Request:                   null,
+                                                          StatusCodeDescription:     e.Message,
+                                                          StatusCodeAdditionalInfo:  e.StackTrace
+                                                      );
 
-                                  }
+                    }
 
 
-                                  return new HTTPResponse.Builder(Request) {
-                                             HTTPStatusCode             = HTTPStatusCode.OK,
-                                             Server                     = HTTPServer.DefaultServerName,
-                                             Date                       = Timestamp.Now,
-                                             AccessControlAllowOrigin   = "*",
-                                             AccessControlAllowMethods  = [ "POST" ],
-                                             AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
-                                             ContentType                = HTTPContentType.Application.JSON_UTF8,
-                                             Content                    = authorizeRemoteStopResponse.ToJSON(CustomAcknowledgementSerializer,
-                                                                                                             CustomStatusCodeSerializer).
-                                                                                                      ToString(JSONFormatting).
-                                                                                                      ToUTF8Bytes(),
-                                             Connection                 = ConnectionType.Close
-                                         }.AsImmutable;
+                    return new HTTPResponse.Builder(request) {
+                               HTTPStatusCode             = HTTPStatusCode.OK,
+                               Server                     = DefaultServerName,
+                               Date                       = Timestamp.Now,
+                               AccessControlAllowOrigin   = "*",
+                               AccessControlAllowMethods  = [ "POST" ],
+                               AccessControlAllowHeaders  = [ "Content-Type", "Accept", "Authorization" ],
+                               ContentType                = HTTPContentType.Application.JSON_UTF8,
+                               Content                    = authorizeRemoteStopResponse.ToJSON(CustomAcknowledgementSerializer,
+                                                                                               CustomStatusCodeSerializer).
+                                                                                        ToString(this.JSONFormatting).
+                                                                                        ToUTF8Bytes(),
+                               Connection                 = ConnectionType.Close
+                           }.AsImmutable;
 
-                               }, AllowReplacement: URLReplacement.Allow);
+                }, AllowReplacement: URLReplacement.Allow);
+
+            #endregion
 
             #endregion
 
@@ -1558,13 +1497,104 @@ namespace cloud.charging.open.protocols.OICPv2_3.CPO
         #endregion
 
 
+
+        public static async Task<CPOServerAPI>
+
+            CreateServer(HTTPHostname?                                              HTTPHostname                 = null,
+                         String?                                                    ExternalDNSName              = null,
+                         IPPort?                                                    HTTPServerPort               = null,
+                         HTTPPath?                                                  BasePath                     = null,
+                         String                                                     HTTPServerName               = DefaultHTTPServerName,
+
+                         HTTPPath?                                                  URLPathPrefix                = null,
+                         String                                                     HTTPServiceName              = DefaultHTTPServiceName,
+                         JObject?                                                   APIVersionHashes             = null,
+
+                         ServerCertificateSelectorDelegate?                         ServerCertificateSelector    = null,
+                         LocalCertificateSelectionHandler?                          LocalCertificateSelector     = null,
+                         RemoteTLSClientCertificateValidationHandler<IHTTPServer>?  ClientCertificateValidator   = null,
+                         SslProtocols?                                              AllowedTLSProtocols          = null,
+                         Boolean?                                                   ClientCertificateRequired    = null,
+                         Boolean?                                                   CheckCertificateRevocation   = null,
+
+                         ConnectionIdBuilder?                                       ConnectionIdBuilder          = null,
+                         TimeSpan?                                                  ConnectionTimeout            = null,
+                         UInt32?                                                    MaxClientConnections         = null,
+
+                         Boolean?                                                   DisableMaintenanceTasks      = false,
+                         TimeSpan?                                                  MaintenanceInitialDelay      = null,
+                         TimeSpan?                                                  MaintenanceEvery             = null,
+
+                         Boolean?                                                   DisableWardenTasks           = false,
+                         TimeSpan?                                                  WardenInitialDelay           = null,
+                         TimeSpan?                                                  WardenCheckEvery             = null,
+
+                         Boolean?                                                   IsDevelopment                = null,
+                         IEnumerable<String>?                                       DevelopmentServers           = null,
+                         Boolean                                                    DisableLogging               = false,
+                         String                                                     LoggingPath                  = DefaultHTTPAPI_LoggingPath,
+                         String                                                     LoggingContext               = DefaultLoggingContext,
+                         String                                                     LogfileName                  = DefaultHTTPAPI_LogfileName,
+                         LogfileCreatorDelegate?                                    LogfileCreator               = null,
+                         DNSClient?                                                 DNSClient                    = null,
+                         Boolean                                                    AutoStart                    = false,
+
+                         IEnumerable<HTTPHostname>?                                 Hostnames                    = null,
+                         HTTPPath?                                                  RootPath                     = null,
+                         IEnumerable<HTTPContentType>?                              HTTPContentTypes             = null,
+                         I18NString?                                                Description                  = null)
+
+        {
+
+            var server  = new HTTPTestServerX(
+                              IPAddress:          null,
+                              TCPPort:            HTTPServerPort,
+                              HTTPServerName:     HTTPServerName,
+                              BufferSize:         null,
+                              ReceiveTimeout:     null,
+                              SendTimeout:        null,
+                              LoggingHandler:     null
+                          );
+
+            var api     = new CPOServerAPI(
+
+                              HTTPTestServer:        server,
+                              Hostnames:             Hostnames,
+                              RootPath:              RootPath,
+                              HTTPContentTypes:      HTTPContentTypes,
+                              Description:           Description,
+
+                              RegisterRootService:   true,
+                              URLPathPrefix:         URLPathPrefix,
+
+                              DisableLogging:        DisableLogging,
+                              LoggingPath:           LoggingPath,
+                              LoggingContext:        LoggingContext,
+                              LogfileName:           LogfileName,
+                              LogfileCreator:        LogfileCreator
+
+                          );
+
+            server.AddHTTPAPI(
+                HTTPPath.Root,
+                HTTPHostname,
+                (s, p) => api
+            );
+
+            await server.Start();
+
+            return api;
+
+        }
+
+
         #region Dispose()
 
-        /// <summary>
-        /// Dispose this object.
-        /// </summary>
-        public override void Dispose()
-        { }
+        ///// <summary>
+        ///// Dispose this object.
+        ///// </summary>
+        //public override void Dispose()
+        //{ }
 
         #endregion
 

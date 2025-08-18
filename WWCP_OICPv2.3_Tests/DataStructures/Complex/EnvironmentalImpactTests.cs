@@ -18,7 +18,6 @@
 #region Usings
 
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
 
 using Newtonsoft.Json.Linq;
 
@@ -50,42 +49,41 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var environmentalImpact6 = new EnvironmentalImpact(CO2Emission: 30000, NuclearWaste: 50000);
             var environmentalImpact7 = new EnvironmentalImpact(CO2Emission: 30000, NuclearWaste: 50000);
 
-            ClassicAssert.IsNotNull  (environmentalImpact1);
-            ClassicAssert.IsNotNull  (environmentalImpact3);
-            ClassicAssert.IsNotNull  (environmentalImpact5);
-            ClassicAssert.IsNotNull  (environmentalImpact6);
+            Assert.That(environmentalImpact1,                           Is.Not.Null);
+            Assert.That(environmentalImpact3,                           Is.Not.Null);
+            Assert.That(environmentalImpact5,                           Is.Not.Null);
+            Assert.That(environmentalImpact6,                           Is.Not.Null);
 
-            ClassicAssert.IsNull     (environmentalImpact1.CO2Emission);
-            ClassicAssert.IsNull     (environmentalImpact1.NuclearWaste);
-            ClassicAssert.IsNull     (environmentalImpact3.NuclearWaste);
-            ClassicAssert.IsNull     (environmentalImpact5.NuclearWaste);
+            Assert.That(environmentalImpact1.CO2Emission,               Is.Null);
+            Assert.That(environmentalImpact1.NuclearWaste,              Is.Null);
+            Assert.That(environmentalImpact3.NuclearWaste,              Is.Null);
+            Assert.That(environmentalImpact5.NuclearWaste,              Is.Null);
 
-            ClassicAssert.AreEqual   (20000, environmentalImpact3.CO2Emission);
-            ClassicAssert.AreEqual   (25000, environmentalImpact5.CO2Emission);
-            ClassicAssert.AreEqual   (30000, environmentalImpact6.CO2Emission);
-            ClassicAssert.AreEqual   (50000, environmentalImpact6.NuclearWaste);
+            Assert.That(environmentalImpact3.CO2Emission,               Is.EqualTo(20000));
+            Assert.That(environmentalImpact5.CO2Emission,               Is.EqualTo(25000));
+            Assert.That(environmentalImpact6.CO2Emission,               Is.EqualTo(30000));
+            Assert.That(environmentalImpact6.NuclearWaste,              Is.EqualTo(50000));
 
-            ClassicAssert.AreEqual   (environmentalImpact1,   environmentalImpact2);
-            ClassicAssert.AreEqual   (environmentalImpact3,   environmentalImpact4);
-            ClassicAssert.AreEqual   (environmentalImpact6,   environmentalImpact7);
+            Assert.That(environmentalImpact1,                           Is.EqualTo(environmentalImpact2));
+            Assert.That(environmentalImpact3,                           Is.EqualTo(environmentalImpact4));
+            Assert.That(environmentalImpact6,                           Is.EqualTo(environmentalImpact7));
 
-            ClassicAssert.AreNotEqual(environmentalImpact1,   environmentalImpact3);
-            ClassicAssert.AreNotEqual(environmentalImpact1,   environmentalImpact5);
-            ClassicAssert.AreNotEqual(environmentalImpact1,   environmentalImpact6);
-            ClassicAssert.AreNotEqual(environmentalImpact3,   environmentalImpact5);
-            ClassicAssert.AreNotEqual(environmentalImpact3,   environmentalImpact6);
+            Assert.That(environmentalImpact1,                           Is.Not.EqualTo(environmentalImpact3));
+            Assert.That(environmentalImpact1,                           Is.Not.EqualTo(environmentalImpact5));
+            Assert.That(environmentalImpact1,                           Is.Not.EqualTo(environmentalImpact6));
+            Assert.That(environmentalImpact3,                           Is.Not.EqualTo(environmentalImpact5));
+            Assert.That(environmentalImpact3,                           Is.Not.EqualTo(environmentalImpact6));
 
-            ClassicAssert.IsFalse    (environmentalImpact3  < environmentalImpact4);
-            ClassicAssert.IsFalse    (environmentalImpact3  > environmentalImpact4);
-            ClassicAssert.IsTrue     (environmentalImpact3 == environmentalImpact4);
-            ClassicAssert.IsTrue     (environmentalImpact3 <= environmentalImpact4);
-            ClassicAssert.IsTrue     (environmentalImpact3 >= environmentalImpact4);
-
-            ClassicAssert.IsTrue     (environmentalImpact3  < environmentalImpact5);
-            ClassicAssert.IsFalse    (environmentalImpact3  > environmentalImpact5);
-            ClassicAssert.IsFalse    (environmentalImpact3 == environmentalImpact5);
-            ClassicAssert.IsTrue     (environmentalImpact3 <= environmentalImpact5);
-            ClassicAssert.IsFalse    (environmentalImpact3 >= environmentalImpact5);
+            Assert.That(environmentalImpact3  < environmentalImpact4,   Is.False);
+            Assert.That(environmentalImpact3  > environmentalImpact4,   Is.False);
+            Assert.That(environmentalImpact3 == environmentalImpact4,   Is.True);
+            Assert.That(environmentalImpact3 <= environmentalImpact4,   Is.True);
+            Assert.That(environmentalImpact3 >= environmentalImpact4,   Is.True);
+            Assert.That(environmentalImpact3  < environmentalImpact5,   Is.True);
+            Assert.That(environmentalImpact3  > environmentalImpact5,   Is.False);
+            Assert.That(environmentalImpact3 == environmentalImpact5,   Is.False);
+            Assert.That(environmentalImpact3 <= environmentalImpact5,   Is.True);
+            Assert.That(environmentalImpact3 >= environmentalImpact5,   Is.False);
 
         }
 
@@ -101,21 +99,21 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
             var environmentalImpact2 = new EnvironmentalImpact(CO2Emission: 20000);
             var environmentalImpact3 = new EnvironmentalImpact(CO2Emission: 30000, NuclearWaste: 50000);
 
-            ClassicAssert.IsNotNull(environmentalImpact1);
-            ClassicAssert.IsNotNull(environmentalImpact2);
-            ClassicAssert.IsNotNull(environmentalImpact3);
+            Assert.That(environmentalImpact1,                       Is.Not.Null);
+            Assert.That(environmentalImpact2,                       Is.Not.Null);
+            Assert.That(environmentalImpact3,                       Is.Not.Null);
 
             var json1 = environmentalImpact1.ToJSON();
             var json2 = environmentalImpact2.ToJSON();
             var json3 = environmentalImpact3.ToJSON();
 
-            ClassicAssert.IsNull   (json1);
-            ClassicAssert.IsNotNull(json2);
-            ClassicAssert.IsNotNull(json3);
+            Assert.That(json1,                                      Is.Null);
+            Assert.That(json2,                                      Is.Not.Null);
+            Assert.That(json3,                                      Is.Not.Null);
 
-            ClassicAssert.AreEqual (20000, json2?["CO2Emission"]?. Value<Decimal>());
-            ClassicAssert.AreEqual (30000, json3?["CO2Emission"]?. Value<Decimal>());
-            ClassicAssert.AreEqual (50000, json3?["NuclearWaste"]?.Value<Decimal>());
+            Assert.That(json2?["CO2Emission"]?. Value<Decimal>(),   Is.EqualTo(20000));
+            Assert.That(json3?["CO2Emission"]?. Value<Decimal>(),   Is.EqualTo(30000));
+            Assert.That(json3?["NuclearWaste"]?.Value<Decimal>(),   Is.EqualTo(50000));
 
         }
 
@@ -127,24 +125,24 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.datastructures
         public void EnvironmentalImpact_ParseJSON_Test1()
         {
 
-            var environmentalImpact1 = EnvironmentalImpact.Parse(new JObject());
+            var environmentalImpact1 = EnvironmentalImpact.Parse([]);
 
             var environmentalImpact2 = EnvironmentalImpact.Parse(new JObject(new JProperty("CO2Emission",  20000)));
 
             var environmentalImpact3 = EnvironmentalImpact.Parse(new JObject(new JProperty("CO2Emission",  30000),
                                                                              new JProperty("NuclearWaste", 50000)));
 
-            ClassicAssert.IsNotNull(environmentalImpact1);
-            ClassicAssert.IsNotNull(environmentalImpact2);
-            ClassicAssert.IsNotNull(environmentalImpact3);
+            Assert.That(environmentalImpact1,                Is.Not.Null);
+            Assert.That(environmentalImpact2,                Is.Not.Null);
+            Assert.That(environmentalImpact3,                Is.Not.Null);
 
-            ClassicAssert.IsNull   (environmentalImpact1.CO2Emission);
-            ClassicAssert.IsNull   (environmentalImpact1.NuclearWaste);
-            ClassicAssert.IsNull   (environmentalImpact2.NuclearWaste);
+            Assert.That(environmentalImpact1.CO2Emission,    Is.Null);
+            Assert.That(environmentalImpact1.NuclearWaste,   Is.Null);
+            Assert.That(environmentalImpact2.NuclearWaste,   Is.Null);
 
-            ClassicAssert.AreEqual (20000, environmentalImpact2.CO2Emission);
-            ClassicAssert.AreEqual (30000, environmentalImpact3.CO2Emission);
-            ClassicAssert.AreEqual (50000, environmentalImpact3.NuclearWaste);
+            Assert.That(environmentalImpact2.CO2Emission,    Is.EqualTo(20000));
+            Assert.That(environmentalImpact3.CO2Emission,    Is.EqualTo(30000));
+            Assert.That(environmentalImpact3.NuclearWaste,   Is.EqualTo(50000));
 
         }
 

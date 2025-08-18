@@ -86,7 +86,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
         #region SetupEachTest()
 
         [SetUp]
-        public void SetupEachTest()
+        public async Task SetupEachTest()
         {
 
             Timestamp.Reset();
@@ -1431,7 +1431,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
-                                   new CPOServerAPI(
+                                   await CPOServerAPI.CreateServer(
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(7001),
                                        LoggingPath:      "tests",
@@ -1670,7 +1670,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
                                        RequestTimeout:   TimeSpan.FromSeconds(10)
                                    ),
 
-                                   new CPOServerAPI(
+                                   await CPOServerAPI.CreateServer(
                                        ExternalDNSName:  "open.charging.cloud",
                                        HTTPServerPort:   IPPort.Parse(7002),
                                        LoggingPath:      "tests",
@@ -2113,7 +2113,7 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CentralService
 
             centralServiceAPI?.Shutdown();
 
-            cpoRoaming_DEGEF?. Shutdown();
+            //cpoRoaming_DEGEF?. Shutdown();
             empRoaming_DEGDF?. Shutdown();
 
         }

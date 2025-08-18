@@ -58,17 +58,17 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
         #region SetupEachTest()
 
         [SetUp]
-        public void SetupEachTest()
+        public async Task SetupEachTest()
         {
 
             Timestamp.Reset();
 
-            cpoServerAPI = new CPOServerAPI(
-                               ExternalDNSName:  "open.charging.cloud",
-                               HTTPServerPort:   IPPort.Parse(7000),
-                               LoggingPath:      "tests",
-                               AutoStart:        true
-                           );
+            cpoServerAPI = await CPOServerAPI.CreateServer(
+                                     ExternalDNSName:  "open.charging.cloud",
+                                     HTTPServerPort:   IPPort.Parse(7000),
+                                     LoggingPath:      "tests",
+                                     AutoStart:        true
+                                 );
 
             ClassicAssert.IsNotNull(cpoServerAPI);
 
@@ -281,8 +281,10 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
             };
 
 
-            cpoServerAPIClient = new CPOServerAPIClient(URL.Parse("http://127.0.0.1:7000"),
-                                                        RequestTimeout: TimeSpan.FromSeconds(10));
+            cpoServerAPIClient = new CPOServerAPIClient(
+                                     URL.Parse("http://127.0.0.1:7000"),
+                                     RequestTimeout: TimeSpan.FromSeconds(10)
+                                 );
 
             ClassicAssert.IsNotNull(cpoServerAPIClient);
 
@@ -293,9 +295,14 @@ namespace cloud.charging.open.protocols.OICPv2_3.tests.CPO.server
         #region ShutdownEachTest()
 
         [TearDown]
-        public void ShutdownEachTest()
+        public async Task ShutdownEachTest()
         {
-            cpoServerAPI?.Shutdown();
+
+            var server = cpoServerAPI?.HTTPTestServer;
+
+            if (server is not null)
+                await server.Stop();
+
         }
 
         #endregion
